@@ -162,7 +162,7 @@ public class DocumentsProvider extends ContentProvider {
             values = new ContentValues();
         }
 
-        Long now = Long.valueOf(System.currentTimeMillis());
+        Long now = Long.valueOf(System.currentTimeMillis()/1000);
 
         // Make sure that the fields are all set
         if (values.containsKey(DocumentsColumns.DATA) == false) {

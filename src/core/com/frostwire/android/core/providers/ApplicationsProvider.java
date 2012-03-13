@@ -77,6 +77,9 @@ public class ApplicationsProvider extends ContentProvider {
         projectionMap.put(ApplicationsColumns.VERSION, ApplicationsColumns.VERSION);
         projectionMap.put(ApplicationsColumns.SIZE, ApplicationsColumns.SIZE);
         projectionMap.put(ApplicationsColumns.PACKAGE_NAME, ApplicationsColumns.PACKAGE_NAME);
+        projectionMap.put(ApplicationsColumns.DATE_ADDED, ApplicationsColumns.DATE_ADDED);
+        projectionMap.put(ApplicationsColumns.DATE_MODIFIED, ApplicationsColumns.DATE_MODIFIED);
+
     }
 
     @Override
@@ -163,7 +166,7 @@ public class ApplicationsProvider extends ContentProvider {
             cv = new ContentValues();
         }
 
-        Long now = Long.valueOf(System.currentTimeMillis());
+        Long now = Long.valueOf(System.currentTimeMillis()/1000);
 
         if (cv.containsKey(ApplicationsColumns.DATA) == false) {
             cv.put(ApplicationsColumns.DATA, "");

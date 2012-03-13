@@ -1,3 +1,7 @@
+FrostWire 0.9.6
+ - Supports installation on external storage.
+ - Sends date added, date modified data to FrostWire for desktop when browsed.
+
 FrostWire 0.9.5:
  - Search box provides hints for less touch typing (powered by Google)
  - Application translated to 16 languages: Chinese, Czech, Danish
