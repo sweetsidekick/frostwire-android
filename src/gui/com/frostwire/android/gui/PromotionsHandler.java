@@ -98,10 +98,6 @@ public class PromotionsHandler {
      * @return
      */
     private SearchResult buildSearchResult(Slide slide) {
-        slide.httpUrl = "http://www.fightrice.com/mirrors/apache/lucene/java/3.5.0/lucene-3.5.0.zip";
-        slide.method = Slide.DOWNLOAD_METHOD_HTTP;
-        slide.uncompress = true;
-        
         switch (slide.method) {
         case Slide.DOWNLOAD_METHOD_TORRENT:
             return new BittorrentPromotionSearchResult(slide);
