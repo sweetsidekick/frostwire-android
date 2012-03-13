@@ -46,6 +46,7 @@ import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
 import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
+import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
@@ -229,6 +230,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populatePeerDownload(view, (PeerHttpDownload) transfer);
         } else if (transfer instanceof PeerHttpUpload) {
             populatePeerUpload(view, (PeerHttpUpload) transfer);
+        } else if (transfer instanceof HttpDownload) {
+            populateHttpDownload(view, (HttpDownload) transfer);
         }
     }
 
@@ -410,6 +413,28 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(upload.getSize()));
 
         buttonAction.setTag(upload);
+        buttonAction.setOnClickListener(actionOnClickListener);
+    }
+    
+    private void populateHttpDownload(View view, HttpDownload download) {
+        TextView title = findView(view, R.id.view_transfer_list_item_title);
+        ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
+        TextView status = findView(view, R.id.view_transfer_list_item_status);
+        TextView speed = findView(view, R.id.view_transfer_list_item_speed);
+        TextView size = findView(view, R.id.view_transfer_list_item_size);
+        TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
+        TextView peers = findView(view, R.id.view_transfer_list_item_peers);
+        ImageView buttonAction = findView(view, R.id.view_transfer_list_item_button_action);
+
+        seeds.setText("");
+        peers.setText("");
+        title.setText(download.getDisplayName());
+        progress.setProgress(download.getProgress());
+        status.setText(Integer.valueOf(download.getStatus()));
+        speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
+        size.setText(UIUtils.getBytesInHuman(download.getSize()));
+
+        buttonAction.setTag(download);
         buttonAction.setOnClickListener(actionOnClickListener);
     }
 

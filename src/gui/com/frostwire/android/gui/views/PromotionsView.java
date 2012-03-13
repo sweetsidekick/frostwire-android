@@ -61,7 +61,7 @@ public class PromotionsView extends WebView {
 
             addJavascriptInterface(new PromotionsHandler(getContext()), "phi");
 
-            loadUrl(Constants.SERVER_PROMOTIONS_URL);
+            loadUrl(String.format("%s?v=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING));
         } catch (Throwable e) {
             Log.e(TAG, "Error creating view", e);
         }

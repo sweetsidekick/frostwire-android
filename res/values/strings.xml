@@ -370,4 +370,5 @@
     <string name="type_here_to_search">Type here to Search</string>
     <string name="hints_by_google">Hints by Google</string>
     <string name="azureus_manager_not_created">Download can\'t be created with SD card shared</string>
+    <string name="http_download_status_uncompressing">Uncompressing</string>
 </resources>

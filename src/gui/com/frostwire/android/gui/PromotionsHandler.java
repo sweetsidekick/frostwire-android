@@ -26,8 +26,10 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.transfers.BittorrentPromotionSearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
+import com.frostwire.android.gui.transfers.HttpDownloadSearchResult;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
@@ -63,12 +65,15 @@ public class PromotionsHandler {
     }
 
     private void startTransfer(final Slide slide) {
-        final BittorrentPromotionSearchResult bittorrentSearchResult = new BittorrentPromotionSearchResult(slide);
-        
-        NewTransferDialog dlg = new NewTransferDialog(context,bittorrentSearchResult, false, new OnYesNoListener() {
+        final SearchResult sr = buildSearchResult(slide);
+        if (sr == null) {
+            return;
+        }
+
+        NewTransferDialog dlg = new NewTransferDialog(context, sr, false, new OnYesNoListener() {
             public void onYes(NewTransferDialog dialog) {
                 try {
-                    DownloadTransfer download = TransferManager.instance().download(bittorrentSearchResult);
+                    DownloadTransfer download = TransferManager.instance().download(sr);
                     if (!(download instanceof InvalidTransfer)) {
                         UIUtils.showShortMessage(context, R.string.downloading_promotion, download.getDisplayName());
                         if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
@@ -88,7 +93,25 @@ public class PromotionsHandler {
         dlg.show(); // this dialog will leak if the context is destroyed. Find a solution.
     }
 
+    /**
+     * This is to create a sort of "non real" search result.
+     * @return
+     */
+    private SearchResult buildSearchResult(Slide slide) {
+        switch (slide.method) {
+        case Slide.DOWNLOAD_METHOD_TORRENT:
+            return new BittorrentPromotionSearchResult(slide);
+        case Slide.DOWNLOAD_METHOD_HTTP:
+            return new HttpDownloadSearchResult(slide);
+        default:
+            return null;
+        }
+    }
+
     public static class Slide {
+
+        public static final int DOWNLOAD_METHOD_TORRENT = 0;
+        public static final int DOWNLOAD_METHOD_HTTP = 1;
 
         /**
          * http address where to go if user clicks on this slide
@@ -96,9 +119,20 @@ public class PromotionsHandler {
         public String url;
 
         /**
+         * Download method
+         * 0 - Torrent
+         * 1 - HTTP
+         */
+        public int method;
+
+        /**
          * url of torrent file that should be opened if user clicks on this slide
          */
         public String torrent;
+
+        public String httpUrl;
+        
+        public boolean uncompress;
 
         /**
          * url of image that will be displayed on this slide
@@ -126,10 +160,10 @@ public class PromotionsHandler {
          * linux
          */
         public String os;
-        
+
         /** Title of the promotion */
         public String title;
-        
+
         /** Total size in bytes */
         public long size;
     }
