@@ -19,26 +19,22 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.android.gui.PromotionsHandler.Slide;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
-import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.android.gui.search.SearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
-    
-    private static final String FROSTCLICK_VENDOR = "FrostClick";
+public class HttpDownloadSearchResult implements SearchResult {
 
     private final Slide slide;
-    private final long creationTime;
 
-    public BittorrentPromotionSearchResult(Slide slide) {
+    public HttpDownloadSearchResult(Slide slide) {
         this.slide = slide;
-        this.creationTime = System.currentTimeMillis();
     }
 
+    @Override
     public String getTitle() {
         return slide.title;
     }
@@ -48,43 +44,11 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
         return slide.size;
     }
 
-    @Override
-    public String getFileName() {
-        return FilenameUtils.getName(slide.url);
+    public String getHttpUrl() {
+        return slide.httpUrl;
     }
-
-    @Override
-    public int getSeeds() {
-        return 0;
-    }
-
-    @Override
-    public long getCreationTime() {
-        return creationTime;
-    }
-
-    @Override
-    public String getHash() {
-        return null;
-    }
-
-    @Override
-    public int getSearchEngineId() {
-        return -1;
-    }
-
-    @Override
-    public String getTorrentDetailsURL() {
-        return slide.url;
-    }
-
-    @Override
-    public String getTorrentURI() {
-        return slide.torrent;
-    }
-
-    @Override
-    public String getVendor() {
-        return FROSTCLICK_VENDOR;
+    
+    public boolean isCompressed() {
+        return slide.uncompress;
     }
 }

@@ -49,7 +49,7 @@ public final class TransferManager {
 
     private static final String TAG = "FW.TransferManager";
 
-    private final List<PeerHttpDownload> peerDownloads;
+    private final List<DownloadTransfer> downloads;
     private final List<PeerHttpUpload> peerUploads;
     private final List<BittorrentDownload> bittorrenDownloads;
 
@@ -65,7 +65,7 @@ public final class TransferManager {
     }
 
     private TransferManager() {
-        this.peerDownloads = new LinkedList<PeerHttpDownload>();
+        this.downloads = new LinkedList<DownloadTransfer>();
         this.peerUploads = new LinkedList<PeerHttpUpload>();
         this.bittorrenDownloads = new LinkedList<BittorrentDownload>();
 
@@ -75,7 +75,7 @@ public final class TransferManager {
     public List<Transfer> getTransfers() {
         List<Transfer> transfers = new ArrayList<Transfer>();
 
-        transfers.addAll(peerDownloads);
+        transfers.addAll(downloads);
         transfers.addAll(peerUploads);
         transfers.addAll(bittorrenDownloads);
 
@@ -85,6 +85,8 @@ public final class TransferManager {
     public DownloadTransfer download(SearchResult sr) throws Exception {
         if (sr instanceof BittorrentSearchResult) {
             return newBittorrentDownload((BittorrentSearchResult) sr);
+        } else if (sr instanceof HttpDownloadSearchResult) {
+            return newHttpDownload((HttpDownloadSearchResult) sr);
         } else {
             return new InvalidDownload();
         }
@@ -93,7 +95,7 @@ public final class TransferManager {
     public void download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
 
-        peerDownloads.add(download);
+        downloads.add(download);
 
         download.start();
     }
@@ -130,7 +132,7 @@ public final class TransferManager {
             }
         }
 
-        for (PeerHttpDownload d : peerDownloads) {
+        for (DownloadTransfer d : downloads) {
             if (!d.isComplete() && d.isDownloading()) {
                 count++;
             }
@@ -161,7 +163,7 @@ public final class TransferManager {
         long torrenDownloadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataReceiveRate() / 1000 : 0;
 
         long peerDownloadsBandwidth = 0;
-        for (PeerHttpDownload d : peerDownloads) {
+        for (DownloadTransfer d : downloads) {
             peerDownloadsBandwidth += d.getDownloadSpeed() / 1000;
         }
 
@@ -250,9 +252,30 @@ public final class TransferManager {
         if (transfer instanceof BittorrentDownload) {
             bittorrenDownloads.remove(transfer);
         } else if (transfer instanceof PeerHttpDownload) {
-            peerDownloads.remove(transfer);
+            downloads.remove(transfer);
         } else if (transfer instanceof PeerHttpUpload) {
             peerUploads.remove(transfer);
+        }
+    }
+
+    public void pauseTorrents() {
+        for (BittorrentDownload d : bittorrenDownloads) {
+            d.pause();
+        }
+    }
+
+    /**
+     * Start a torrent download from an intent.
+     */
+    public void download(Intent intent) {
+        Uri torrentURI = intent.getData();
+
+        boolean isFile = torrentURI.getScheme().equalsIgnoreCase("file");
+
+        try {
+            TransferManager.instance().download(isFile ? new BittorrentIntentFileResult(intent) : new BittorrentIntentHttpResult(intent));
+        } catch (Throwable e) {
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -266,22 +289,12 @@ public final class TransferManager {
         return download;
     }
 
-    public void pauseTorrents() {
-        for (BittorrentDownload d : bittorrenDownloads) {
-            d.pause();
-        }
-    }
+    private HttpDownload newHttpDownload(HttpDownloadSearchResult sr) throws Exception {
+        HttpDownload download = new HttpDownload(this, sr);
 
-    /** Start a torrent download from an intent */
-    public void download(Intent intent) {
-        Uri torrentURI = intent.getData();
+        downloads.add(download);
+        download.start();
 
-        boolean isFile = torrentURI.getScheme().equalsIgnoreCase("file");
-
-        try {
-            TransferManager.instance().download(isFile ? new BittorrentIntentFileResult(intent) : new BittorrentIntentHttpResult(intent));
-        } catch (Throwable e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
+        return download;
     }
 }
