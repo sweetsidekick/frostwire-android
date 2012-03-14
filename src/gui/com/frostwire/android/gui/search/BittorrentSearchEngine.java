@@ -87,6 +87,7 @@ public final class BittorrentSearchEngine {
         for (TorrentSearchTask task : searchTasks) {
             try {
                 task.cancel();
+                Log.d(TAG, "Task canceled ("+task.getName()+")");
             } catch (Throwable e) {
                 Log.e(TAG, "Failed to cancel search task", e);
             }

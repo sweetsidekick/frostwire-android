@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.webkit.WebSettings;
@@ -61,7 +62,8 @@ public class PromotionsView extends WebView {
 
             addJavascriptInterface(new PromotionsHandler(getContext()), "phi");
 
-            loadUrl(String.format("%s?v=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING));
+            loadUrl(String.format("%s?v=%s", Constants.SERVER_PROMOTIONS_URL, Build.VERSION.SDK_INT));
+            Log.d(TAG,String.format("%s?v=%s", Constants.SERVER_PROMOTIONS_URL, Build.VERSION.SDK_INT));
         } catch (Throwable e) {
             Log.e(TAG, "Error creating view", e);
         }

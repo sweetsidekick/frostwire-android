@@ -55,7 +55,7 @@ final class LocalSearchEngine {
 
     private static final String TAG = "FW.LocalSearchEngine";
 
-    private static final int MAX_TORRENT_DOWNLOADS = 1; // we are in a very constrained environment
+    private static final int MAX_TORRENT_DOWNLOADS = 2; // we are in a very constrained environment
     private static final ExecutorService downloads_torrents_executor; // enqueue the downloads tasks here
 
     private final Context context;
@@ -69,7 +69,8 @@ final class LocalSearchEngine {
     private final int seeds;
     private final int maxTorrentFiles;
     private final int ftsLimit;
-
+    
+    private List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
     private int downloaded;
@@ -93,6 +94,7 @@ final class LocalSearchEngine {
         maxTorrentFiles = configuration.getInt(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
         ftsLimit = configuration.getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
 
+        downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
     }
 
@@ -250,6 +252,7 @@ final class LocalSearchEngine {
 
     private void downloadAndScan(BittorrentWebSearchResult result) {
         DownloadTorrentTask downloadTask = new DownloadTorrentTask(query, result, task, this);
+        downloadTasks.add(downloadTask);
         downloads_torrents_executor.execute(downloadTask);
     }
 
@@ -294,5 +297,14 @@ final class LocalSearchEngine {
         }
 
         return fts.trim();
+    }
+
+    public void cancel() {
+        for (DownloadTorrentTask task : downloadTasks) {
+            Log.d(TAG,"Cancelled DownloadTorrent Task " + task.getName());
+            task.cancel();
+        }
+        
+        downloadTasks.clear();
     }
 }

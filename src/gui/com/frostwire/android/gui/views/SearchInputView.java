@@ -24,6 +24,7 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -154,12 +155,22 @@ public class SearchInputView extends LinearLayout {
 
         buttonOptions = (Button) findViewById(R.id.view_search_button_options);
         buttonOptions.setBackgroundResource(getDrawableId(mediaTypeId));
+        buttonOptions.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                quickAction.show(v);
+                return true;
+            }
+        });
+        /*
         buttonOptions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 quickAction.show(v);
             }
         });
+        */
     }
 
     private int getDrawableId(int mediaTypeId) {

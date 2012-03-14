@@ -33,6 +33,7 @@ class DeepSearchTask extends TorrentSearchTask {
     private final Context context;
     private final SearchResultDisplayer displayer;
     private final String query;
+    private LocalSearchEngine localSearchEngine;
 
     public DeepSearchTask(Context context, SearchResultDisplayer displayer, String query) {
         super("DeepSearchTask: " + query);
@@ -44,9 +45,20 @@ class DeepSearchTask extends TorrentSearchTask {
     @Override
     public void run() {
         try {
-            new LocalSearchEngine(context, this, displayer, query).deepSearch();
+            localSearchEngine = new LocalSearchEngine(context, this, displayer, query);
+            localSearchEngine.deepSearch();
         } catch (Throwable e) {
             Log.e(TAG, "Error performing the deep search", e);
         }
+    }
+    
+    @Override
+    public void cancel() {
+        super.cancel();
+        
+        if (localSearchEngine != null) {
+               localSearchEngine.cancel();
+        }
+        
     }
 }

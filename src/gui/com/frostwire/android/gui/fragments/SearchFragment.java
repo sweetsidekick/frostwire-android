@@ -24,6 +24,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -48,8 +51,6 @@ import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 public class SearchFragment extends AbstractListFragment implements
         SearchResultDisplayer {
 
-    private static final int MAX_EXPECT_COUNT = 5; // tuning constants for hide progress dialog
-
     private SearchInputView searchInput;
 
     private Object lockObj = new Object();
@@ -58,8 +59,6 @@ public class SearchFragment extends AbstractListFragment implements
     private BittorrentSearchEngine searchManager;
 
     private int mediaTypeId;
-
-    private int expectCount;
     private ProgressDialog progressDlg;
 
     public SearchFragment() {
@@ -124,12 +123,6 @@ public class SearchFragment extends AbstractListFragment implements
                     if (adapter != null) {
                         if (adapter.getCount() > 0) {
                             hideProgressDialog();
-                        } else {
-                            if (expectCount > MAX_EXPECT_COUNT) {
-                                hideProgressDialog();
-                            } else {
-                                expectCount++;
-                            }
                         }
                     }
                 }
@@ -207,12 +200,33 @@ public class SearchFragment extends AbstractListFragment implements
     private void showProgressDialog() {
         hideProgressDialog();
 
-        expectCount = 0;
-
         progressDlg = new ProgressDialog(getActivity());
         progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDlg.setMessage(getString(R.string.searching_indeterminate));
-        progressDlg.setCancelable(false);
+        progressDlg.setCancelable(true);
+        
+        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE,getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDlg.dismiss();
+            }
+        });
+        
+        progressDlg.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                searchManager.cancelSearch();
+            }
+        });
+
+        progressDlg.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                searchManager.cancelSearch();
+            }
+        });
+        
         trackDialog(progressDlg).show();
     }
 

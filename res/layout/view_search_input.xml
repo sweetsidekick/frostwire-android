@@ -46,6 +46,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginBottom="2sp"
+            android:layout_marginRight="8sp"
+        	android:layout_marginLeft="8sp"
             android:background="@drawable/search_button"
             android:padding="2sp"
             android:textColor="#FFFFFFFF" />
@@ -77,7 +79,8 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="3sp"
+        android:layout_marginRight="8sp"
+        android:layout_marginLeft="8sp"
         android:background="@drawable/search_button"
         android:padding="2sp"
         android:textColor="#FFFFFFFF" />

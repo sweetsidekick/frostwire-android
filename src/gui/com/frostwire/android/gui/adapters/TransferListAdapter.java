@@ -46,12 +46,14 @@ import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
 import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
+import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
+import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
@@ -269,17 +271,20 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             }
 
             items.add(new CancelMenuAction(context, download, !download.isComplete()));
-        } else if (tag instanceof PeerHttpDownload) {
-            PeerHttpDownload download = (PeerHttpDownload) tag;
+        } else if (tag instanceof DownloadTransfer) {
+            DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
 
             if (download.isComplete()) {
-                items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), download.getFD().mime));
+                items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
             } else {
                 items.add(new CancelMenuAction(context, download, true));
             }
 
-            items.add(new BrowsePeerMenuAction(context, download.getPeer()));
+            if (download instanceof PeerHttpDownload) {
+                PeerHttpDownload pdownload = (PeerHttpDownload) download;
+                items.add(new BrowsePeerMenuAction(context, pdownload.getPeer()));
+            }
         } else if (tag instanceof PeerHttpUpload) {
             PeerHttpUpload upload = (PeerHttpUpload) tag;
             title = upload.getDisplayName();
@@ -288,6 +293,14 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         }
 
         return items.size() > 0 ? new MenuAdapter(context, title, items) : null;
+    }
+    
+    protected String extractMime(DownloadTransfer download) {
+        if (download instanceof PeerHttpDownload) {
+            return ((PeerHttpDownload) download).getFD().mime;
+        } else  {
+           return  UIUtils.getMimeType(download.getSavePath().getAbsolutePath());
+        }
     }
 
     protected Dialog trackDialog(Dialog dialog) {
@@ -302,21 +315,40 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             if (item.getItems().size() <= 1) {
                 //show the file type for the only file there is
                 String extension = null;
-
+                String path = null;
+                
                 if (item instanceof BittorrentDownload) {
                     if (item.getItems().size() > 0) {
                         BittorrentDownloadItem transferItem = (BittorrentDownloadItem) item.getItems().get(0);
-                        extension = FilenameUtils.getExtension(transferItem.getSavePath().getAbsolutePath());
+                        path = transferItem.getSavePath().getAbsolutePath();
+                        extension = FilenameUtils.getExtension(path);
                     }
-                } else if (item instanceof PeerHttpDownload) {
-                    PeerHttpDownload transferItem = (PeerHttpDownload) item;
-                    extension = FilenameUtils.getExtension(transferItem.getSavePath().getAbsolutePath());
+                } else if (item instanceof DownloadTransfer) {
+                    DownloadTransfer transferItem = (DownloadTransfer) item;
+                    path = transferItem.getSavePath().getAbsolutePath();
+                    extension = FilenameUtils.getExtension(path);
                 } else if (item instanceof PeerHttpUpload) {
                     PeerHttpUpload transferItem = (PeerHttpUpload) item;
-                    extension = FilenameUtils.getExtension(transferItem.getFD().filePath);
+                    path = transferItem.getFD().filePath;
+                    extension = FilenameUtils.getExtension(path);
                 }
 
-                groupIndicator.setBackgroundResource(UIUtils.getFileTypeIconId(extension));
+                 if (extension!=null && extension.equals("apk")) {
+                     try {
+                         //Apk apk = new Apk(context,path);
+
+                         //TODO: Get the APK Icon so we can show the APK icon on the transfer manager once
+                         //it's finished downloading, or as it's uploading to another peer.
+                         //apk.getDrawable(id);
+                         
+                         //in the meantime, just hardcode it
+                         groupIndicator.setBackgroundResource(R.drawable.application); 
+                     } catch (Throwable e) {
+                         groupIndicator.setBackgroundResource(R.drawable.application);    
+                     } 
+                 } else {
+                     groupIndicator.setBackgroundResource(UIUtils.getFileTypeIconId(extension));
+                 }
             } else {
                 groupIndicator.setBackgroundResource(expanded ? R.drawable.minus : R.drawable.plus);
             }
