@@ -130,13 +130,14 @@ LocaleUtilDecoderReal
 			return( null );
 		}
 		
-		ByteBuffer bb = ByteBuffer.wrap(bytes);
-      		
-		CharBuffer cb = CharBuffer.allocate(bytes.length);
-      		
-		CoderResult cr = decoder.decode(bb,cb, true);
-			
 		try{
+		      //FROSTWIRE: moving this here fixes nasty NPE by dying silently, if you can't decode, oh well, fall back to default at the end of the method.
+		      ByteBuffer bb = ByteBuffer.wrap(bytes);
+	            
+ 	          CharBuffer cb = CharBuffer.allocate(bytes.length);
+		            
+		      CoderResult cr = decoder.decode(bb,cb, true);
+
 			
 			if ( !cr.isError() ){
 								
