@@ -25,8 +25,6 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -203,27 +201,14 @@ public class SearchFragment extends AbstractListFragment implements
         progressDlg = new ProgressDialog(getActivity());
         progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDlg.setMessage(getString(R.string.searching_indeterminate));
-        progressDlg.setCancelable(true);
+        progressDlg.setCancelable(false);
         
         progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE,getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressDlg.dismiss();
-            }
-        });
-        
-        progressDlg.setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
                 searchManager.cancelSearch();
-            }
-        });
-
-        progressDlg.setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                searchManager.cancelSearch();
+                hideProgressDialog();
             }
         });
         
