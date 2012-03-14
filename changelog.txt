@@ -1,6 +1,10 @@
 FrostWire 0.9.6
  - Supports installation on external storage.
  - Sends date added, date modified data to FrostWire for desktop when browsed.
+ - Improvements in search performance.
+ - Improvements in search experience.
+ - FrostClick promotions can be downloaded via HTTP.
+ - Multiple UI fixes.
 
 FrostWire 0.9.5:
  - Search box provides hints for less touch typing (powered by Google)
