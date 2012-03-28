@@ -19,6 +19,8 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -34,6 +36,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
 import com.frostwire.android.R;
@@ -42,6 +45,9 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.messages.PingMessage;
+import com.frostwire.android.core.player.EphimeralPlaylist;
+import com.frostwire.android.core.player.Playlist;
+import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
@@ -51,6 +57,7 @@ import com.frostwire.android.gui.httpserver.HttpServerManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
 /**
@@ -68,6 +75,7 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
     private MediaPlayer mediaPlayer;
     private FileDescriptor mediaFD;
+    private Playlist mediaPlaylist;
 
     private final ThreadPool threadPool;
 
@@ -99,7 +107,7 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         peerDiscoveryAnnouncer = new PeerDiscoveryAnnouncer(threadPool);
 
         registerPreferencesChangeListener();
-        
+
         audioFocusChangeListener = new PlayerAudioFocusChangeListener();
 
         state = STATE_DISCONNECTED;
@@ -140,9 +148,8 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
         try {
             if (setupMediaPlayer()) {
-                mediaPlayer.setDataSource(fd.filePath);
-                mediaPlayer.prepareAsync();
-                mediaFD = fd;
+                mediaPlaylist = createEphimeralPlaylist(fd);
+                playNextMedia();
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error in playMedia", e);
@@ -313,7 +320,7 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        stopMedia();
+        playNextMedia();
     }
 
     private boolean setupMediaPlayer() {
@@ -337,6 +344,37 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
         mediaPlayer = null;
         mediaFD = null;
+        mediaPlaylist = null;
+    }
+
+    private void playNextMedia() {
+        if (mediaPlaylist != null) {
+            FileDescriptor fd = mediaPlaylist.getNextItem().getFD();
+            if (fd != null) {
+                try {
+                    mediaFD = fd;
+                    
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    
+                    mediaPlayer.setDataSource(fd.filePath);
+                    mediaPlayer.prepareAsync();
+                } catch (Throwable e) {
+                    Log.e(TAG, "Error playing media", e);
+                }
+            }
+        }
+    }
+
+    private EphimeralPlaylist createEphimeralPlaylist(FileDescriptor fd) {
+        String where = MediaColumns.DATA + " LIKE ?";
+        String[] whereArgs = new String[] { "%" + FilenameUtils.getPath(fd.filePath) + "%" };
+        List<FileDescriptor> fds = Librarian.instance().getFiles(fd.fileType, where, whereArgs);
+
+        EphimeralPlaylist playlist = new EphimeralPlaylist(fds);
+        playlist.setCurrentItem(new PlaylistItem(fd));
+
+        return playlist;
     }
 
     private void registerPreferencesChangeListener() {
@@ -377,6 +415,8 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
+
+        sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
     }
 
     private static long[] buildVenezuelanVibe() {
@@ -409,13 +449,13 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
             return EngineService.this;
         }
     }
-    
+
     private final class PlayerAudioFocusChangeListener implements OnAudioFocusChangeListener {
 
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                stopMedia();
+                pauseMedia();
             }
         }
     }

@@ -53,7 +53,7 @@ import com.frostwire.android.util.StringUtils;
 public class MediaPlayerActivity extends AbstractActivity implements MediaControllerView.MediaPlayerControl {
 
     private static final String TAG = "FW.MediaPlayerActivity";
-    
+
     private static final String POLAROID_TAG_FONT = "fonts/aescrawl.ttf";
 
     private MediaControllerView mediaController;
@@ -71,6 +71,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
                 if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
                     try {
                         finish();
+                    } catch (Throwable e) {
+                        // ignore
+                    }
+                } else if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY)) {
+                    try {
+                        initComponents();
                     } catch (Throwable e) {
                         // ignore
                     }
@@ -165,10 +171,10 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
 
     @Override
     protected void initComponents() {
-        
+
         mediaPlayer = Engine.instance().getMediaPlayer();
         mediaFD = Engine.instance().getMediaFD();
-        
+
         setTitle(getString(R.string.application_label) + ": " + mediaFD.artist + " - " + mediaFD.title);
 
         if (mediaPlayer != null) {
@@ -192,6 +198,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         super.onResume();
 
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
+        filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
     }
 
