@@ -28,6 +28,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -81,6 +83,7 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
     private byte state;
 
     private OnSharedPreferenceChangeListener preferenceListener;
+    private final OnAudioFocusChangeListener audioFocusChangeListener;
 
     public EngineService() {
         binder = new EngineServiceBinder();
@@ -96,6 +99,8 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         peerDiscoveryAnnouncer = new PeerDiscoveryAnnouncer(threadPool);
 
         registerPreferencesChangeListener();
+        
+        audioFocusChangeListener = new PlayerAudioFocusChangeListener();
 
         state = STATE_DISCONNECTED;
     }
@@ -132,12 +137,13 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
     @Override
     public void playMedia(FileDescriptor fd) {
         stopMedia();
-        setupMediaPlayer();
 
         try {
-            mediaPlayer.setDataSource(fd.filePath);
-            mediaPlayer.prepareAsync();
-            mediaFD = fd;
+            if (setupMediaPlayer()) {
+                mediaPlayer.setDataSource(fd.filePath);
+                mediaPlayer.prepareAsync();
+                mediaFD = fd;
+            }
         } catch (Throwable e) {
             Log.e(TAG, "Error in playMedia", e);
             releaseMediaPlayer();
@@ -205,7 +211,7 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         }
 
         state = STATE_STARTING;
-        
+
         Librarian.instance().invalidateCountCache();
 
         AzureusManager.create(this);
@@ -310,12 +316,17 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         stopMedia();
     }
 
-    private void setupMediaPlayer() {
+    private boolean setupMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        int result = am.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
     private void releaseMediaPlayer() {
@@ -363,6 +374,9 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notification.setLatestEventInfo(context, getString(R.string.application_label), getString(R.string.playing_song_name, mediaFD.title), pi);
         startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
+
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 
     private static long[] buildVenezuelanVibe() {
@@ -393,6 +407,16 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
     public class EngineServiceBinder extends Binder {
         public IEngineService getService() {
             return EngineService.this;
+        }
+    }
+    
+    private final class PlayerAudioFocusChangeListener implements OnAudioFocusChangeListener {
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                stopMedia();
+            }
         }
     }
 }

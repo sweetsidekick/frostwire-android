@@ -352,7 +352,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
     public void cancel(boolean deleteData) {
         manager.remove(this);
-        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, false);
+        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, true);
     }
 
     DownloadManager getDownloadManager() {

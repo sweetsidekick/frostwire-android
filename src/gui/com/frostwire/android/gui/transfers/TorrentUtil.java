@@ -232,7 +232,7 @@ public class TorrentUtil {
                     if (deleteFailed != null) {
                         deleteFailed.runSupport();
                     }
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     Debug.printStackTrace(ex);
                     if (deleteFailed != null) {
                         deleteFailed.runSupport();

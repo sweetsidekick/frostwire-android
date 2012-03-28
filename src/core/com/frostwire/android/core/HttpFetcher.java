@@ -448,7 +448,7 @@ public class HttpFetcher {
         try {
             return new URI(uri);
         } catch (URISyntaxException e) {
-            return null;
+            throw new IllegalArgumentException(e);
         }
     }
 

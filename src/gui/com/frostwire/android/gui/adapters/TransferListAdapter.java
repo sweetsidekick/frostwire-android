@@ -53,7 +53,6 @@ import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
-import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
@@ -179,7 +178,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             convertView.setTag(item);
             populateGroupView(convertView, item);
         } catch (Throwable e) {
-            Log.e(TAG, "Fatal error getting the group view: " + e.getMessage(),e);            
+            Log.e(TAG, "Fatal error getting the group view: " + e.getMessage(), e);
         }
 
         return convertView;
@@ -226,7 +225,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
              */
             view.setClickable(transfer.getItems().size() <= 1);
             view.setLongClickable(transfer.getItems().size() <= 1);
-            
+
             populateBittorrentDownload(view, (BittorrentDownload) transfer);
         } else if (transfer instanceof PeerHttpDownload) {
             populatePeerDownload(view, (PeerHttpDownload) transfer);
@@ -255,7 +254,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             //If it's a torrent download with a single file, we should be able to open it.
-            if (download.isComplete() && download.getItems().size()==1) {
+            if (download.isComplete() && download.getItems().size() == 1) {
                 BittorrentDownloadItem transferItem = (BittorrentDownloadItem) download.getItems().get(0);
                 String path = transferItem.getSavePath().getAbsolutePath();
                 String mimeType = UIUtils.getMimeType(path);
@@ -294,12 +293,12 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
         return items.size() > 0 ? new MenuAdapter(context, title, items) : null;
     }
-    
+
     protected String extractMime(DownloadTransfer download) {
         if (download instanceof PeerHttpDownload) {
             return ((PeerHttpDownload) download).getFD().mime;
-        } else  {
-           return  UIUtils.getMimeType(download.getSavePath().getAbsolutePath());
+        } else {
+            return UIUtils.getMimeType(download.getSavePath().getAbsolutePath());
         }
     }
 
@@ -316,7 +315,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 //show the file type for the only file there is
                 String extension = null;
                 String path = null;
-                
+
                 if (item instanceof BittorrentDownload) {
                     if (item.getItems().size() > 0) {
                         BittorrentDownloadItem transferItem = (BittorrentDownloadItem) item.getItems().get(0);
@@ -333,22 +332,22 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                     extension = FilenameUtils.getExtension(path);
                 }
 
-                 if (extension!=null && extension.equals("apk")) {
-                     try {
-                         //Apk apk = new Apk(context,path);
+                if (extension != null && extension.equals("apk")) {
+                    try {
+                        //Apk apk = new Apk(context,path);
 
-                         //TODO: Get the APK Icon so we can show the APK icon on the transfer manager once
-                         //it's finished downloading, or as it's uploading to another peer.
-                         //apk.getDrawable(id);
-                         
-                         //in the meantime, just hardcode it
-                         groupIndicator.setBackgroundResource(R.drawable.application); 
-                     } catch (Throwable e) {
-                         groupIndicator.setBackgroundResource(R.drawable.application);    
-                     } 
-                 } else {
-                     groupIndicator.setBackgroundResource(UIUtils.getFileTypeIconId(extension));
-                 }
+                        //TODO: Get the APK Icon so we can show the APK icon on the transfer manager once
+                        //it's finished downloading, or as it's uploading to another peer.
+                        //apk.getDrawable(id);
+
+                        //in the meantime, just hardcode it
+                        groupIndicator.setBackgroundResource(R.drawable.application);
+                    } catch (Throwable e) {
+                        groupIndicator.setBackgroundResource(R.drawable.application);
+                    }
+                } else {
+                    groupIndicator.setBackgroundResource(UIUtils.getFileTypeIconId(extension));
+                }
             } else {
                 groupIndicator.setBackgroundResource(expanded ? R.drawable.minus : R.drawable.plus);
             }
@@ -447,7 +446,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonAction.setTag(upload);
         buttonAction.setOnClickListener(actionOnClickListener);
     }
-    
+
     private void populateHttpDownload(View view, HttpDownload download) {
         TextView title = findView(view, R.id.view_transfer_list_item_title);
         ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
@@ -496,7 +495,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                     return;
                 }
             } catch (Throwable e) {
-                Log.e(TAG, "Failed to create the menu",e);
+                Log.e(TAG, "Failed to create the menu", e);
             }
         }
     }
