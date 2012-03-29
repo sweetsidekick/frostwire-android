@@ -222,7 +222,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
-                Engine.instance().getMediaPlayer().pause();
+                Engine.instance().getMediaPlayer().togglePause();
                 return true;
             }
         });

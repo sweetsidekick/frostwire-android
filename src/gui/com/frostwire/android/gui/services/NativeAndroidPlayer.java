@@ -98,7 +98,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     }
 
     @Override
-    public void pause() {
+    public void togglePause() {
         try {
             if (mp != null) {
                 if (mp.isPlaying()) {
@@ -123,6 +123,23 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
     }
 
+    @Override
+    public boolean isPlaying() {
+        return (mp!=null) ? mp.isPlaying() :  false;
+    }
+    
+    @Override
+    public void seekTo(int position) {
+        if (mp != null) {
+            mp.seekTo(position);
+        }
+    }
+    
+    @Override
+    public int getPosition() {
+        return (mp != null) ? mp.getCurrentPosition() : -1;
+    }
+    
     @Override
     public FileDescriptor getCurrentFD() {
         return currentFD;
@@ -227,7 +244,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                pause();
+                togglePause();
             }
         }
     }
