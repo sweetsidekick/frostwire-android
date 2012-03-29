@@ -1,11 +1,16 @@
 Frostwire 0.9.7
- - Fixes freeze when stopping torrent transfer.
+ - Media player is now car driver safe. Skip songs with swipe gestures,
+   pause and play songs by tapping the screen with two or more fingers.
+ - When a user makes or receives a call, if the Media player was active it
+   will pause and rewind two seconds so the user won't miss a beat.
  - Media player will now create an automatic playlist using the files on the
    same folder as the one the user started playing.
  - Media player is always shown when the user starts playback. Users didn't
    look at the notification toolbar icon and were getting lost.
  - Media player has support for previous and next media item.
-
+ - Media player will pause if another player is started.
+ - Fixes freeze when stopping torrent transfer.
+ 
 FrostWire 0.9.6
  - Supports installation on external storage.
  - Sends date added, date modified data to FrostWire for desktop when browsed.
