@@ -7,6 +7,7 @@ import android.view.View.OnTouchListener;
 
 public abstract class AbstractSwipeDetector extends SimpleOnGestureListener implements OnTouchListener {
     
+    @SuppressWarnings("unused")
     private static final String TAG = "FW.AbstractSwipeDetector";
     
     private final int MIN_DISTANCE = 100;
