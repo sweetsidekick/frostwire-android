@@ -36,6 +36,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -216,6 +218,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             @Override
             public void onRightToLeftSwipe() {
                 Engine.instance().getMediaPlayer().playNext();
+            }
+            
+            @Override
+            public boolean onMultiTouchEvent(View v, MotionEvent event) {
+                Engine.instance().getMediaPlayer().pause();
+                return true;
             }
         });
     }
