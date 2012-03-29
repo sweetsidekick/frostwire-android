@@ -184,7 +184,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
                 Engine.instance().getMediaPlayer().stop();
             } else {
-                UIUtils.openAudioList(fd);
+                UIUtils.playEphemeralPlaylist(fd);
             }
             notifyDataSetChanged();
         } else {

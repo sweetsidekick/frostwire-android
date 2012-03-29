@@ -346,7 +346,11 @@ public final class UIUtils {
         }
     }
 
-    public static void openAudioList(FileDescriptor fd) {
+    /**
+     * Create an ephemeral playlist with the files of the same type that live on the folder of the given file descriptor and play it.
+     * @param fd
+     */
+    public static void playEphemeralPlaylist(FileDescriptor fd) {
         Engine.instance().getMediaPlayer().play(Librarian.instance().createEphemeralPlaylist(fd));
     }
 
@@ -358,7 +362,7 @@ public final class UIUtils {
             List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, where, whereArgs);
 
             if (fds.size() == 1) {
-                openAudioList(fds.get(0));
+                playEphemeralPlaylist(fds.get(0));
                 return true;
             } else {
                 return false;
