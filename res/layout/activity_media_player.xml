@@ -22,20 +22,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/layer_list_application_background"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/lowestLayout">
+        <ImageView
+            android:id="@+id/activity_media_player_image"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/activity_media_player_image_description"
+            android:src="@drawable/frostwire_350x350" />
 
-    <ImageView
-        android:id="@+id/activity_media_player_image"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
-        android:contentDescription="@string/activity_media_player_image_description"
-        android:src="@drawable/frostwire_350x350" />
-
-    <com.frostwire.android.gui.views.MediaControllerView
-        android:id="@+id/activity_media_player_media_controller"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        <com.frostwire.android.gui.views.MediaControllerView
+            android:id="@+id/activity_media_player_media_controller"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -34,6 +34,7 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -42,6 +43,7 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.MediaControllerView;
 import com.frostwire.android.util.StringUtils;
 
@@ -176,6 +178,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
             return;
         }
+        
+        initGestures();
 
         mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
         mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
@@ -196,6 +200,21 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
+    }
+    
+    private void initGestures() {
+        LinearLayout lowestLayout = findView(R.id.lowestLayout);
+        lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
+            @Override
+            public void onLeftToRightSwipe() {
+                Engine.instance().getMediaPlayer().playPrevious();
+            }
+            
+            @Override
+            public void onRightToLeftSwipe() {
+                Engine.instance().getMediaPlayer().playNext();
+            }
+        });
     }
 
     @Override
