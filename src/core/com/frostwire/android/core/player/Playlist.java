@@ -24,6 +24,9 @@ package com.frostwire.android.core.player;
  *
  */
 public interface Playlist {
+    public String getTitle();
+    
+    public void setTitle(String s);
 
     public PlaylistItem getPreviousItem();
 

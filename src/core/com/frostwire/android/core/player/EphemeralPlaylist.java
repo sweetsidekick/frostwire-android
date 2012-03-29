@@ -84,4 +84,13 @@ public final class EphemeralPlaylist implements Playlist {
             }
         }
     }
+
+    @Override
+    public String getTitle() {
+        return "";
+    }
+
+    @Override
+    public void setTitle(String s) {   
+    }
 }
