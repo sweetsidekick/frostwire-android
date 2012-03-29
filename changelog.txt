@@ -1,3 +1,11 @@
+Frostwire 0.9.7
+ - Fixes freeze when stopping torrent transfer.
+ - Media player will now create an automatic playlist using the files on the
+   same folder as the one the user started playing.
+ - Media player is always shown when the user starts playback. Users didn't
+   look at the notification toolbar icon and were getting lost.
+ - Media player has support for previous and next media item.
+
 FrostWire 0.9.6
  - Supports installation on external storage.
  - Sends date added, date modified data to FrostWire for desktop when browsed.
