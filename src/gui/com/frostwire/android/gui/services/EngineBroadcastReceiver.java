@@ -25,10 +25,12 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
@@ -45,6 +47,7 @@ import com.frostwire.android.gui.transfers.TransferManager;
 public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "FW.EngineBroadcastReceiver";
+    private boolean wasPlaying;
 
     public EngineBroadcastReceiver() {
     }
@@ -58,6 +61,8 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 if (Engine.instance().isDisconnected()) {
                     Engine.instance().startServices();
                 }
+            } else if (action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) { 
+                handleActionPhoneStateChanged(intent);              
             } else if (action.equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
                 Librarian.instance().syncMediaStore();
             } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
@@ -83,6 +88,26 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error processing broadcast message", e);
+        }
+    }
+
+    private void handleActionPhoneStateChanged(Intent intent) {
+        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+        String msg = "Phone state changed to " + state;
+        Log.v(TAG,msg);
+        
+        if (TelephonyManager.EXTRA_STATE_RINGING.equals(state) ||
+             TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state) ||
+             TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
+            CoreMediaPlayer mediaPlayer = Engine.instance().getMediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                wasPlaying = true;
+                mediaPlayer.togglePause();
+            } else if (wasPlaying && TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
+                mediaPlayer.seekTo(Math.max(0, mediaPlayer.getPosition()-2000));
+                wasPlaying = false;
+                mediaPlayer.togglePause();
+            }
         }
     }
 
