@@ -30,13 +30,13 @@ import com.frostwire.android.core.FileDescriptor;
  * @author aldenml
  *
  */
-public final class EphimeralPlaylist implements Playlist {
+public final class EphemeralPlaylist implements Playlist {
 
     private final List<PlaylistItem> items;
 
     private int currentIndex;
 
-    public EphimeralPlaylist(List<FileDescriptor> fds) {
+    public EphemeralPlaylist(List<FileDescriptor> fds) {
         this.items = new ArrayList<PlaylistItem>();
 
         for (FileDescriptor fd : fds) {

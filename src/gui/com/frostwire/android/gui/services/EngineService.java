@@ -45,7 +45,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.messages.PingMessage;
-import com.frostwire.android.core.player.EphimeralPlaylist;
+import com.frostwire.android.core.player.EphemeralPlaylist;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Librarian;
@@ -366,12 +366,12 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         }
     }
 
-    private EphimeralPlaylist createEphimeralPlaylist(FileDescriptor fd) {
+    private EphemeralPlaylist createEphimeralPlaylist(FileDescriptor fd) {
         String where = MediaColumns.DATA + " LIKE ?";
         String[] whereArgs = new String[] { "%" + FilenameUtils.getPath(fd.filePath) + "%" };
         List<FileDescriptor> fds = Librarian.instance().getFiles(fd.fileType, where, whereArgs);
 
-        EphimeralPlaylist playlist = new EphimeralPlaylist(fds);
+        EphemeralPlaylist playlist = new EphemeralPlaylist(fds);
         playlist.setCurrentItem(new PlaylistItem(fd));
 
         return playlist;
