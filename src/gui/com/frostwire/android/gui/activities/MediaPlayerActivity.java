@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -224,6 +227,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
+        
+        enableLock(false);
     }
 
     @Override
@@ -231,6 +236,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         super.onPause();
 
         unregisterReceiver(broadcastReceiver);
+        enableLock(true);
     }
 
     private Bitmap readCoverArt() {
@@ -322,5 +328,16 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         }
 
         return b;
+    }
+
+    private void enableLock(boolean enable) {
+        KeyguardManager keyguardManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
+        KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+           
+        if (enable) {
+            lock.reenableKeyguard();           
+        } else {
+            lock.disableKeyguard();
+        }
     }
 }

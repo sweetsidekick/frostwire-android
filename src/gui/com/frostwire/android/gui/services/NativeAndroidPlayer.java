@@ -204,7 +204,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             Context context = service.getApplicationContext();
 
             Intent i = new Intent(context, MediaPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             Notification notification = new Notification();
@@ -214,7 +214,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             notification.setLatestEventInfo(context, service.getString(R.string.application_label), service.getString(R.string.playing_song_name, currentFD.title), pi);
             service.startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
 
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
             
         } catch (Throwable e) {
