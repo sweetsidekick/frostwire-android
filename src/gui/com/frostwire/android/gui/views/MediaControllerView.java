@@ -177,7 +177,6 @@ public class MediaControllerView extends FrameLayout {
 
         buttonPrevious = (ImageButton) findViewById(R.id.view_media_controller_previous);
         if (buttonPrevious != null) {
-            buttonPrevious.requestFocus();
             buttonPrevious.setOnClickListener(previousListener);
         }
 
@@ -194,7 +193,6 @@ public class MediaControllerView extends FrameLayout {
 
         buttonNext = (ImageButton) findViewById(R.id.view_media_controller_next);
         if (buttonNext != null) {
-            buttonNext.requestFocus();
             buttonNext.setOnClickListener(nextListener);
         }
 
