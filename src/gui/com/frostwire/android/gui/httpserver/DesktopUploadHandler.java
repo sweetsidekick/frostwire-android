@@ -30,7 +30,7 @@ import com.frostwire.android.httpserver.HttpHandler;
  */
 final class DesktopUploadHandler implements HttpHandler {
     
-    private static final String TAG = "FW.DesktopUploadHandler";
+    //private static final String TAG = "FW.DesktopUploadHandler";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

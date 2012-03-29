@@ -35,6 +35,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.services.Engine;
 
 /**
  * @author gubatron
@@ -46,8 +47,10 @@ public class MediaControllerView extends FrameLayout {
     private static final int SHOW_PROGRESS = 1;
 
     private MediaPlayerControl player;
+    private ImageButton buttonPrevious;
     private ImageButton buttonPause;
     private ImageButton buttonStop;
+    private ImageButton buttonNext;
     private ProgressBar progress;
     private TextView endTime;
     private TextView currentTime;
@@ -86,6 +89,26 @@ public class MediaControllerView extends FrameLayout {
                 player.stop();
                 setProgress();
                 sync();
+            }
+        }
+    };
+
+    private View.OnClickListener previousListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (player != null) {
+                if (player.getCurrentPosition() < 5000) {
+                    Engine.instance().getMediaPlayer().playPrevious();
+                } else {
+                    player.seekTo(0);
+                }
+            }
+        }
+    };
+
+    private View.OnClickListener nextListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (player != null) {
+                Engine.instance().getMediaPlayer().playNext();
             }
         }
     };
@@ -152,6 +175,12 @@ public class MediaControllerView extends FrameLayout {
 
         View.inflate(getContext(), R.layout.view_media_controller, this);
 
+        buttonPrevious = (ImageButton) findViewById(R.id.view_media_controller_previous);
+        if (buttonPrevious != null) {
+            buttonPrevious.requestFocus();
+            buttonPrevious.setOnClickListener(previousListener);
+        }
+
         buttonPause = (ImageButton) findViewById(R.id.view_media_controller_pause);
         if (buttonPause != null) {
             buttonPause.requestFocus();
@@ -161,6 +190,12 @@ public class MediaControllerView extends FrameLayout {
         buttonStop = (ImageButton) findViewById(R.id.view_media_controller_stop);
         if (buttonStop != null) {
             buttonStop.setOnClickListener(stopListener);
+        }
+
+        buttonNext = (ImageButton) findViewById(R.id.view_media_controller_next);
+        if (buttonNext != null) {
+            buttonNext.requestFocus();
+            buttonNext.setOnClickListener(nextListener);
         }
 
         progress = (ProgressBar) findViewById(R.id.view_media_controller_progress);

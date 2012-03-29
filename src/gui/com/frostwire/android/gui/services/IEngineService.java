@@ -20,10 +20,8 @@ package com.frostwire.android.gui.services;
 
 import java.io.File;
 
-import android.media.MediaPlayer;
-
-import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.messages.FrostWireMessage;
+import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
 /**
@@ -40,20 +38,7 @@ public interface IEngineService {
     public static final byte STATE_STOPPING = 13;
     public static final byte STATE_DISCONNECTED = 14;
 
-    public MediaPlayer getMediaPlayer();
-
-    /**
-     * The current file the media player is playing.
-     * 
-     * @return
-     */
-    public FileDescriptor getMediaFD();
-
-    public void playMedia(FileDescriptor fd);
-
-    public void pauseMedia();
-
-    public void stopMedia();
+    public CoreMediaPlayer getMediaPlayer();
 
     public byte getState();
 
@@ -76,6 +61,6 @@ public interface IEngineService {
     public ThreadPool getThreadPool();
 
     public void notifyDownloadFinished(String displayName, File file);
-    
+
     //public DesktopUploadResult notifyDesktopUpload();
 }

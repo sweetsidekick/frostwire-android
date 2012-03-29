@@ -99,7 +99,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
     }
-    
+
     public byte getFileType() {
         return fileType;
     }
@@ -181,10 +181,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
 
         if (fd.mime != null && fd.mime.contains("audio")) {
-            if (fd.equals(Engine.instance().getMediaFD())) {
-                Engine.instance().stopMedia();
+            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+                Engine.instance().getMediaPlayer().stop();
             } else {
-                Engine.instance().playMedia(fd);
+                UIUtils.openAudioList(fd);
             }
             notifyDataSetChanged();
         } else {
@@ -331,7 +331,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         ImageButton downloadButton = findView(view, R.id.view_browse_peer_list_item_download);
 
         if (local) {
-            if (fd.equals(Engine.instance().getMediaFD())) {
+            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
                 downloadButton.setImageResource(R.drawable.stop);
             } else {
                 downloadButton.setImageResource(R.drawable.play);

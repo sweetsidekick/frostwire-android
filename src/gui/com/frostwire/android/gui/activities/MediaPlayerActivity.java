@@ -39,6 +39,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.MediaControllerView;
@@ -108,7 +109,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
     public void stop() {
         if (mediaPlayer != null) {
             finish();
-            Engine.instance().stopMedia();
+            Engine.instance().getMediaPlayer().stop();
         }
     }
 
@@ -171,9 +172,13 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
 
     @Override
     protected void initComponents() {
+        if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
+            Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
+            return;
+        }
 
-        mediaPlayer = Engine.instance().getMediaPlayer();
-        mediaFD = Engine.instance().getMediaFD();
+        mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
+        mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
 
         setTitle(getString(R.string.application_label) + ": " + mediaFD.artist + " - " + mediaFD.title);
 
@@ -189,7 +194,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
                 image.setImageBitmap(coverArt);
             }
         } else {
-            Engine.instance().stopMedia();
+            Engine.instance().getMediaPlayer().stop();
         }
     }
 

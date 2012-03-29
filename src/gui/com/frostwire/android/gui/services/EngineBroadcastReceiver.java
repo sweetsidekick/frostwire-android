@@ -70,7 +70,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                     handleConnectedNetwork(networkInfo);
                 }
             } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-                Engine.instance().stopMedia();
+                Engine.instance().getMediaPlayer().stop();
             } else if (action.equals(Intent.ACTION_PACKAGE_ADDED)) {
                 Librarian.instance().syncApplicationsProvider();
             } else if (action.equals(Intent.ACTION_PACKAGE_REMOVED)) {

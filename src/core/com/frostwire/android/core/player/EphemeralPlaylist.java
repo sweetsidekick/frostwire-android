@@ -43,7 +43,24 @@ public final class EphemeralPlaylist implements Playlist {
             this.items.add(new PlaylistItem(fd));
         }
 
-        this.currentIndex = 0;
+        this.currentIndex = -1;
+    }
+
+    @Override
+    public PlaylistItem getPreviousItem() {
+        if (items.size() == 0) {
+            return null;
+        }
+
+        if (currentIndex == 0 || currentIndex == -1) {
+            currentIndex = items.size() - 1;
+        } else {
+            currentIndex--;
+        }
+
+        PlaylistItem item = items.get(currentIndex);
+
+        return item;
     }
 
     @Override
@@ -52,17 +69,17 @@ public final class EphemeralPlaylist implements Playlist {
             return null;
         }
 
-        PlaylistItem item = items.get(currentIndex);
-
         currentIndex = ((currentIndex + 1) % items.size());
+
+        PlaylistItem item = items.get(currentIndex);
 
         return item;
     }
 
-    public void setCurrentItem(PlaylistItem playlistItem) {
+    public void setNextItem(PlaylistItem playlistItem) {
         for (int index = 0; index < items.size(); index++) {
             if (items.get(index).equals(playlistItem)) {
-                currentIndex = index;
+                currentIndex = index - 1;
                 break;
             }
         }

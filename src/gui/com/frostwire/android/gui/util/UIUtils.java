@@ -346,6 +346,10 @@ public final class UIUtils {
         }
     }
 
+    public static void openAudioList(FileDescriptor fd) {
+        Engine.instance().getMediaPlayer().play(Librarian.instance().createEphemeralPlaylist(fd));
+    }
+
     private static boolean openAudioInternal(String filePath) {
         try {
             String where = MediaColumns.DATA + " LIKE ?";
@@ -354,7 +358,7 @@ public final class UIUtils {
             List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, where, whereArgs);
 
             if (fds.size() == 1) {
-                Engine.instance().playMedia(fds.get(0));
+                openAudioList(fds.get(0));
                 return true;
             } else {
                 return false;

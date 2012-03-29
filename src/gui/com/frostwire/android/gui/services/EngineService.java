@@ -19,8 +19,6 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -30,34 +28,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.media.AudioManager;
-import android.media.AudioManager.OnAudioFocusChangeListener;
-import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.messages.PingMessage;
-import com.frostwire.android.core.player.EphemeralPlaylist;
-import com.frostwire.android.core.player.Playlist;
-import com.frostwire.android.core.player.PlaylistItem;
+import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.httpserver.HttpServerManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
 /**
@@ -65,17 +52,13 @@ import com.frostwire.android.util.concurrent.ThreadPool;
  * @author aldenml
  *
  */
-public class EngineService extends Service implements IEngineService, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
+public class EngineService extends Service implements IEngineService {
 
     private static final String TAG = "FW.EngineService";
 
     private final static long[] VENEZUELAN_VIBE = buildVenezuelanVibe();
 
     private final IBinder binder;
-
-    private MediaPlayer mediaPlayer;
-    private FileDescriptor mediaFD;
-    private Playlist mediaPlaylist;
 
     private final ThreadPool threadPool;
 
@@ -87,12 +70,13 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
     private final MessageCourier messageCourier;
 
     private final PeerDiscoveryAnnouncer peerDiscoveryAnnouncer;
+    
+    private final CoreMediaPlayer mediaPlayer;
 
     private byte state;
 
     private OnSharedPreferenceChangeListener preferenceListener;
-    private final OnAudioFocusChangeListener audioFocusChangeListener;
-
+    
     public EngineService() {
         binder = new EngineServiceBinder();
 
@@ -105,10 +89,10 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         messageCourier = new MessageCourier(threadPool);
 
         peerDiscoveryAnnouncer = new PeerDiscoveryAnnouncer(threadPool);
+        
+        mediaPlayer = new NativeAndroidPlayer(this);
 
         registerPreferencesChangeListener();
-
-        audioFocusChangeListener = new PlayerAudioFocusChangeListener();
 
         state = STATE_DISCONNECTED;
     }
@@ -131,52 +115,12 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
         stopServices(false);
-        stopMedia();
+        
+        mediaPlayer.stop();
     }
 
-    public MediaPlayer getMediaPlayer() {
+    public CoreMediaPlayer getMediaPlayer() {
         return mediaPlayer;
-    }
-
-    public FileDescriptor getMediaFD() {
-        return mediaFD;
-    }
-
-    @Override
-    public void playMedia(FileDescriptor fd) {
-        stopMedia();
-
-        try {
-            if (setupMediaPlayer()) {
-                mediaPlaylist = createEphimeralPlaylist(fd);
-                playNextMedia();
-            }
-        } catch (Throwable e) {
-            Log.e(TAG, "Error in playMedia", e);
-            releaseMediaPlayer();
-        }
-    }
-
-    @Override
-    public void pauseMedia() {
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-            } else {
-                mediaPlayer.start();
-            }
-        }
-    }
-
-    @Override
-    public void stopMedia() {
-        if (mediaPlayer != null) {
-            stopForeground(true);
-        }
-
-        releaseMediaPlayer();
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_MEDIA_PLAYING_ID);
-        sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
     }
 
     public byte getState() {
@@ -299,84 +243,6 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
         }
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        if (mediaPlayer != null) {
-            mediaPlayer.start();
-
-            notifyMediaPlay();
-        }
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        UIUtils.showShortMessage(this, R.string.media_player_failed);
-
-        releaseMediaPlayer();
-        stopForeground(true);
-
-        return false;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        playNextMedia();
-    }
-
-    private boolean setupMediaPlayer() {
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnCompletionListener(this);
-        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-
-        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        int result = am.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-
-        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-    }
-
-    private void releaseMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        }
-
-        mediaPlayer = null;
-        mediaFD = null;
-        mediaPlaylist = null;
-    }
-
-    private void playNextMedia() {
-        if (mediaPlaylist != null) {
-            FileDescriptor fd = mediaPlaylist.getNextItem().getFD();
-            if (fd != null) {
-                try {
-                    mediaFD = fd;
-                    
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                    
-                    mediaPlayer.setDataSource(fd.filePath);
-                    mediaPlayer.prepareAsync();
-                } catch (Throwable e) {
-                    Log.e(TAG, "Error playing media", e);
-                }
-            }
-        }
-    }
-
-    private EphemeralPlaylist createEphimeralPlaylist(FileDescriptor fd) {
-        String where = MediaColumns.DATA + " LIKE ?";
-        String[] whereArgs = new String[] { "%" + FilenameUtils.getPath(fd.filePath) + "%" };
-        List<FileDescriptor> fds = Librarian.instance().getFiles(fd.fileType, where, whereArgs);
-
-        EphemeralPlaylist playlist = new EphemeralPlaylist(fds);
-        playlist.setCurrentItem(new PlaylistItem(fd));
-
-        return playlist;
-    }
-
     private void registerPreferencesChangeListener() {
         preferenceListener = new OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -397,26 +263,6 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
 
         messageClerk.startProcessing();
         messageCourier.startProcessing();
-    }
-
-    private void notifyMediaPlay() {
-        Context context = getApplicationContext();
-
-        Intent i = new Intent(context, MediaPlayerActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = new Notification();
-        notification.tickerText = getString(R.string.playing_song_name, mediaFD.title);
-        notification.icon = R.drawable.play_notification;
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.setLatestEventInfo(context, getString(R.string.application_label), getString(R.string.playing_song_name, mediaFD.title), pi);
-        startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
-
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
-
-        sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
     }
 
     private static long[] buildVenezuelanVibe() {
@@ -447,16 +293,6 @@ public class EngineService extends Service implements IEngineService, MediaPlaye
     public class EngineServiceBinder extends Binder {
         public IEngineService getService() {
             return EngineService.this;
-        }
-    }
-
-    private final class PlayerAudioFocusChangeListener implements OnAudioFocusChangeListener {
-
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                pauseMedia();
-            }
         }
     }
 }

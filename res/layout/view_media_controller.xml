@@ -38,6 +38,13 @@
         android:paddingTop="4dip" >
 
         <ImageButton
+            android:id="@+id/view_media_controller_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/stop"
+            android:contentDescription="@null" />
+
+        <ImageButton
             android:id="@+id/view_media_controller_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,6 +54,13 @@
 
         <ImageButton
             android:id="@+id/view_media_controller_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/stop"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/view_media_controller_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/stop"

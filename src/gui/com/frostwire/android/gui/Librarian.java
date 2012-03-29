@@ -53,6 +53,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.player.EphemeralPlaylist;
+import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.core.providers.TableFetcher;
 import com.frostwire.android.core.providers.TableFetchers;
 import com.frostwire.android.core.providers.UniversalStore;
@@ -365,6 +367,21 @@ public final class Librarian {
      */
     public void halt() {
         Process.killProcess(Process.myPid());
+    }
+
+    public EphemeralPlaylist createEphemeralPlaylist(FileDescriptor fd) {
+        String where = MediaColumns.DATA + " LIKE ?";
+        String[] whereArgs = new String[] { "%" + FilenameUtils.getPath(fd.filePath) + "%" };
+        List<FileDescriptor> fds = Librarian.instance().getFiles(fd.fileType, where, whereArgs);
+
+        if (fds.size() == 0) { // just in case
+            Log.w(TAG, "Logic error creating ephemeral playlist");
+            fds.add(fd);
+        }
+        EphemeralPlaylist playlist = new EphemeralPlaylist(fds);
+        playlist.setNextItem(new PlaylistItem(fd));
+
+        return playlist;
     }
 
     public void invalidateCountCache() {

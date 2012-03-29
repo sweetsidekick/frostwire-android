@@ -27,14 +27,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.messages.FrostWireMessage;
+import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
@@ -65,6 +64,11 @@ public final class Engine implements IEngineService {
 
     private Engine(Application context) {
         startEngineService(context);
+    }
+
+    @Override
+    public CoreMediaPlayer getMediaPlayer() {
+        return service != null ? service.getMediaPlayer() : null;
     }
 
     public byte getState() {
@@ -100,36 +104,6 @@ public final class Engine implements IEngineService {
     public void stopServices(boolean disconnected) {
         if (service != null) {
             service.stopServices(disconnected);
-        }
-    }
-
-    @Override
-    public MediaPlayer getMediaPlayer() {
-        return service != null ? service.getMediaPlayer() : null;
-    }
-
-    public FileDescriptor getMediaFD() {
-        return service != null ? service.getMediaFD() : null;
-    }
-
-    @Override
-    public void playMedia(FileDescriptor fd) {
-        if (service != null) {
-            service.playMedia(fd);
-        }
-    }
-
-    @Override
-    public void pauseMedia() {
-        if (service != null) {
-            service.pauseMedia();
-        }
-    }
-
-    @Override
-    public void stopMedia() {
-        if (service != null) {
-            service.stopMedia();
         }
     }
 

@@ -18,14 +18,29 @@
 
 package com.frostwire.android.core.player;
 
+import com.frostwire.android.core.FileDescriptor;
+
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface Playlist {
+public interface CoreMediaPlayer {
 
-    public PlaylistItem getPreviousItem();
+    public void play(Playlist playlist);
 
-    public PlaylistItem getNextItem();
+    public void playPrevious();
+
+    public void playNext();
+
+    public void pause();
+
+    public void stop();
+
+    /**
+     * The current file the media player is playing.
+     * 
+     * @return
+     */
+    public FileDescriptor getCurrentFD();
 }
