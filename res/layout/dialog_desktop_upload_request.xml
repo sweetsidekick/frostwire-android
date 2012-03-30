@@ -26,37 +26,47 @@
     android:scrollbars="vertical" >
 
     <TextView
-        android:id="@+id/dialog_new_transfer_text"
+        android:id="@+id/dialog_desktop_upload_request_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
+        android:text="@string/dialog_desktop_upload_request_text_text"
         android:textColor="@android:color/white"
-        android:text="@string/dialog_new_transfer_text_text"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <Button
-            android:id="@+id/dialog_new_transfer_button_yes"
+            android:id="@+id/dialog_desktop_upload_request_button_accept"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:minLines="1"
-            android:text="@android:string/yes"
+            android:text="@string/accept"
             android:textSize="15sp" />
 
         <Button
-            android:id="@+id/dialog_desktop_upload_request_button_no"
+            android:id="@+id/dialog_desktop_upload_request_button_reject"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:minLines="1"
-            android:text="@android:string/no"
+            android:text="@string/reject"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/dialog_desktop_upload_request_button_block"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="0.5"
+            android:minLines="1"
+            android:text="@string/block_computer"
             android:textSize="15sp" />
     </LinearLayout>
 

@@ -33,6 +33,8 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.transfers.DesktopTransfer;
+import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.httpserver.Code;
 import com.frostwire.android.httpserver.HttpExchange;
@@ -83,7 +85,7 @@ final class DesktopUploadHandler implements HttpHandler {
             }
 
             if (!readFile(exchange.getRequestBody(), fileName, token)) {
-                exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
+                exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
                 return;
             }
 
@@ -94,6 +96,16 @@ final class DesktopUploadHandler implements HttpHandler {
         } finally {
             exchange.close();
         }
+    }
+
+    private FileDescriptor findFD(DesktopUploadRequest dur, String fileName) {
+        for (FileDescriptor fd : dur.files) {
+            if (fd.filePath.equals(fileName)) {
+                return fd;
+            }
+        }
+
+        return null;
     }
 
     private boolean durAllowed(String fileName, String token, String address) {
@@ -107,15 +119,7 @@ final class DesktopUploadHandler implements HttpHandler {
             return false;
         }
 
-        boolean validFD = false;
-        for (FileDescriptor fd : dur.files) {
-            if (fd.filePath.equals(fileName)) {
-                validFD = true;
-                break;
-            }
-        }
-
-        if (!validFD) {
+        if (findFD(dur, fileName) == null) {
             return false;
         }
 
@@ -133,19 +137,33 @@ final class DesktopUploadHandler implements HttpHandler {
 
             fos = new FileOutputStream(file);
 
+            DesktopUploadRequest dur = sessionManager.getDUR(token);
+            FileDescriptor fd = findFD(dur, fileName);
+            DesktopTransfer transfer = TransferManager.instance().desktopTransfer(fd);
+
             byte[] buffer = new byte[4 * 1024];
             int n;
 
             while ((n = is.read(buffer, 0, buffer.length)) != -1) {
                 fos.write(buffer, 0, n);
-                sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.UPLOADING);
+                if (transfer.isCanceled()) {
+                    sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.REJECTED);
+                    file.delete();
+                    return false;
+                } else {
+                    sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.UPLOADING);
+                }
             }
+
+            sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.ACCEPTED);
 
             File finalFile = new File(SystemUtils.getDesktopFilesirectory(), file.getName());
 
             if (file.renameTo(finalFile)) {
                 Librarian.instance().scan(finalFile.getAbsoluteFile());
                 return true;
+            } else {
+                file.delete();
             }
 
         } catch (Throwable e) {
@@ -163,8 +181,6 @@ final class DesktopUploadHandler implements HttpHandler {
             } catch (Throwable e) {
                 // ignore
             }
-
-            sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.ACCEPTED);
         }
 
         return false;

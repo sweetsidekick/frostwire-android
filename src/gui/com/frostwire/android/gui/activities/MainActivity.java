@@ -213,7 +213,7 @@ public class MainActivity extends AbstractActivity {
         DesktopUploadRequest dur = dum.getRequest(durToken);
 
         if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
-            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
+            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, dur, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
                 @Override
                 public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
                     switch (result) {
@@ -225,6 +225,7 @@ public class MainActivity extends AbstractActivity {
                         break;
                     case BLOCK:
                         dum.blockComputer(durToken);
+                        break;
                     }
                     durToken = null;
                 }

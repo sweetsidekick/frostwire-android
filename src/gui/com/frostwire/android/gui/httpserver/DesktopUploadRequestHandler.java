@@ -29,11 +29,13 @@ import android.util.Log;
 
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
+import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.httpserver.Code;
 import com.frostwire.android.httpserver.HttpExchange;
 import com.frostwire.android.httpserver.HttpHandler;
 import com.frostwire.android.util.JsonUtils;
+import com.frostwire.android.util.StringUtils;
 
 /**
  * @author gubatron
@@ -61,9 +63,21 @@ final class DesktopUploadRequestHandler implements HttpHandler {
 
             DesktopUploadRequest dur = readPOST(exchange.getRequestBody());
 
-            if (dur == null || sessionManager.hasDURPending()) {
+            if (dur == null || StringUtils.isNullOrEmpty(dur.computerName, true) || sessionManager.hasDURPending()) {
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
+            }
+
+            if (dur.files == null || dur.files.size() == 0) {
+                exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
+                return;
+            }
+
+            for (FileDescriptor fd : dur.files) {
+                if (StringUtils.isNullOrEmpty(fd.filePath, true) || fd.fileSize == 0) {
+                    exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
+                    return;
+                }
             }
 
             String token = sessionManager.addDUR(dur);

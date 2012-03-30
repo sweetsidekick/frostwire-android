@@ -50,7 +50,7 @@ public final class TransferManager {
     private static final String TAG = "FW.TransferManager";
 
     private final List<DownloadTransfer> downloads;
-    private final List<PeerHttpUpload> peerUploads;
+    private final List<UploadTransfer> uploads;
     private final List<BittorrentDownload> bittorrenDownloads;
 
     private int downloadsToReview;
@@ -66,7 +66,7 @@ public final class TransferManager {
 
     private TransferManager() {
         this.downloads = new LinkedList<DownloadTransfer>();
-        this.peerUploads = new LinkedList<PeerHttpUpload>();
+        this.uploads = new LinkedList<UploadTransfer>();
         this.bittorrenDownloads = new LinkedList<BittorrentDownload>();
 
         this.downloadsToReview = 0;
@@ -76,7 +76,7 @@ public final class TransferManager {
         List<Transfer> transfers = new ArrayList<Transfer>();
 
         transfers.addAll(downloads);
-        transfers.addAll(peerUploads);
+        transfers.addAll(uploads);
         transfers.addAll(bittorrenDownloads);
 
         return transfers;
@@ -102,8 +102,14 @@ public final class TransferManager {
 
     public PeerHttpUpload upload(FileDescriptor fd) {
         PeerHttpUpload upload = new PeerHttpUpload(this, fd);
-        peerUploads.add(upload);
+        uploads.add(upload);
         return upload;
+    }
+
+    public DesktopTransfer desktopTransfer(FileDescriptor fd) {
+        DesktopTransfer transfer = new DesktopTransfer(this, fd);
+        downloads.add(transfer);
+        return transfer;
     }
 
     public void clearComplete() {
@@ -150,7 +156,7 @@ public final class TransferManager {
             }
         }
 
-        for (PeerHttpUpload u : peerUploads) {
+        for (UploadTransfer u : uploads) {
             if (!u.isComplete() && u.isUploading()) {
                 count++;
             }
@@ -174,7 +180,7 @@ public final class TransferManager {
         long torrenUploadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataSendRate() / 1000 : 0;
 
         long peerUploadsBandwidth = 0;
-        for (PeerHttpUpload u : peerUploads) {
+        for (UploadTransfer u : uploads) {
             peerUploadsBandwidth += u.getUploadSpeed() / 1000;
         }
 
@@ -254,7 +260,7 @@ public final class TransferManager {
         } else if (transfer instanceof PeerHttpDownload) {
             downloads.remove(transfer);
         } else if (transfer instanceof PeerHttpUpload) {
-            peerUploads.remove(transfer);
+            uploads.remove(transfer);
         }
     }
 

@@ -20,12 +20,16 @@ package com.frostwire.android.gui.views;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.DesktopUploadRequest;
+import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.util.UIUtils;
 
 /**
  * @author gubatron
@@ -34,13 +38,16 @@ import com.frostwire.android.R;
  */
 public class DesktopUploadRequestDialog extends Dialog {
 
-    private Button buttonNo;
-    private Button buttonYes;
+    private Button buttonAccept;
+    private Button buttonReject;
+    private Button buttonBlock;
 
+    private final DesktopUploadRequest request;
     private final OnDesktopUploadListener listener;
 
-    public DesktopUploadRequestDialog(Context context, OnDesktopUploadListener listener) {
+    public DesktopUploadRequestDialog(Context context, DesktopUploadRequest request, OnDesktopUploadListener listener) {
         super(context);
+        this.request = request;
         this.listener = listener;
         initComponents();
     }
@@ -53,19 +60,41 @@ public class DesktopUploadRequestDialog extends Dialog {
     private void initComponents() {
         getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
-        setTitle(R.string.dialog_new_transfer_title);
+        setTitle(R.string.dialog_desktop_upload_request_title);
         setContentView(R.layout.dialog_desktop_upload_request);
 
-        TextView textQuestion = (TextView) findViewById(R.id.dialog_new_transfer_text);
+        TextView text = (TextView) findViewById(R.id.dialog_desktop_upload_request_text);
 
-        String sizeString = getContext().getString(R.string.size_unknown);
+        String filesStr = getContext().getResources().getQuantityString(R.plurals.num_files, request.files.size(), request.files.size());
+        String totalFilesSizeStr = calculateTotalFilesSizeStr();
 
-        textQuestion.setText(getContext().getString(R.string.dialog_new_transfer_text_text, "title", sizeString));
+        text.setText(getContext().getString(R.string.dialog_desktop_upload_request_text_text, request.computerName, filesStr, totalFilesSizeStr));
 
         setCancelable(true);
+        this.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismiss();
+                if (listener != null) {
+                    listener.onResult(DesktopUploadRequestDialog.this, DesktopUploadRequestDialogResult.REJECT);
+                }
+            }
+        });
 
-        buttonNo = (Button) findViewById(R.id.dialog_desktop_upload_request_button_no);
-        buttonNo.setOnClickListener(new View.OnClickListener() {
+        buttonAccept = (Button) findViewById(R.id.dialog_desktop_upload_request_button_accept);
+        buttonAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                if (listener != null) {
+                    listener.onResult(DesktopUploadRequestDialog.this, DesktopUploadRequestDialogResult.ACCEPT);
+                }
+            }
+        });
+
+        buttonReject = (Button) findViewById(R.id.dialog_desktop_upload_request_button_reject);
+        buttonReject.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 dismiss();
                 if (listener != null) {
@@ -74,12 +103,26 @@ public class DesktopUploadRequestDialog extends Dialog {
             }
         });
 
-        buttonYes = (Button) findViewById(R.id.dialog_new_transfer_button_yes);
-        buttonYes.setOnClickListener(new View.OnClickListener() {
+        buttonBlock = (Button) findViewById(R.id.dialog_desktop_upload_request_button_block);
+        buttonBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 dismiss();
+                if (listener != null) {
+                    listener.onResult(DesktopUploadRequestDialog.this, DesktopUploadRequestDialogResult.BLOCK);
+                }
             }
         });
+    }
+
+    private String calculateTotalFilesSizeStr() {
+        long total = 0;
+
+        for (FileDescriptor fd : request.files) {
+            total += fd.fileSize;
+        }
+
+        return UIUtils.getBytesInHuman(total);
     }
 
     public interface OnDesktopUploadListener {
