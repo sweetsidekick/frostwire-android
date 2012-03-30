@@ -54,7 +54,7 @@ public class DesktopUploadRequestDialog extends Dialog {
         getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
         setTitle(R.string.dialog_new_transfer_title);
-        setContentView(R.layout.dialog_new_transfer);
+        setContentView(R.layout.dialog_desktop_upload_request);
 
         TextView textQuestion = (TextView) findViewById(R.id.dialog_new_transfer_text);
 
@@ -64,7 +64,7 @@ public class DesktopUploadRequestDialog extends Dialog {
 
         setCancelable(true);
 
-        buttonNo = (Button) findViewById(R.id.dialog_new_transfer_button_no);
+        buttonNo = (Button) findViewById(R.id.dialog_desktop_upload_request_button_no);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dismiss();

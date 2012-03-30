@@ -56,7 +56,6 @@ final class DesktopUploadHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        byte type = -1;
         String fileName = null;
         String token = null;
 
@@ -65,13 +64,6 @@ final class DesktopUploadHandler implements HttpHandler {
             List<NameValuePair> query = URLEncodedUtils.parse(exchange.getRequestURI(), "UTF-8");
 
             for (NameValuePair item : query) {
-                if (item.getName().equals("type")) {
-                    try {
-                        type = Byte.parseByte(item.getValue());
-                    } catch (Throwable e) {
-                        type = -1;
-                    }
-                }
                 if (item.getName().equals("fileName")) {
                     fileName = item.getValue();
                 }
@@ -80,17 +72,17 @@ final class DesktopUploadHandler implements HttpHandler {
                 }
             }
 
-            if (type == -1 || fileName == null || token == null) {
+            if (fileName == null || token == null) {
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
             }
 
-            if (!durAllowed(type, fileName, token, exchange.getRemoteAddress().getAddress().getHostAddress())) {
+            if (!durAllowed(fileName, token, exchange.getRemoteAddress().getAddress().getHostAddress())) {
                 exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
                 return;
             }
 
-            if (!readFile(exchange.getRequestBody(), type, fileName, token)) {
+            if (!readFile(exchange.getRequestBody(), fileName, token)) {
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
             }
@@ -98,14 +90,14 @@ final class DesktopUploadHandler implements HttpHandler {
             exchange.sendResponseHeaders(Code.HTTP_OK, 0);
 
         } catch (Throwable e) {
-            Log.e(TAG, String.format("Error receiving file from desktop type=%d, fileName=%s, token=%s", type, fileName, token), e);
+            Log.e(TAG, String.format("Error receiving file from desktop: fileName=%s, token=%s", fileName, token), e);
         } finally {
             exchange.close();
         }
     }
 
-    private boolean durAllowed(byte type, String fileName, String token, String address) {
-        DesktopUploadRequest dur = sessionManager.getDesktopUploadRequest(token);
+    private boolean durAllowed(String fileName, String token, String address) {
+        DesktopUploadRequest dur = sessionManager.getDUR(token);
 
         if (dur == null || dur.status != DesktopUploadRequestStatus.ACCEPTED) {
             return false;
@@ -117,7 +109,7 @@ final class DesktopUploadHandler implements HttpHandler {
 
         boolean validFD = false;
         for (FileDescriptor fd : dur.files) {
-            if (fd.fileType == type && fd.filePath.equals(fileName)) {
+            if (fd.filePath.equals(fileName)) {
                 validFD = true;
                 break;
             }
@@ -130,7 +122,7 @@ final class DesktopUploadHandler implements HttpHandler {
         return true;
     }
 
-    private boolean readFile(InputStream is, byte type, String fileName, String token) {
+    private boolean readFile(InputStream is, String fileName, String token) {
         FileOutputStream fos = null;
 
         try {
@@ -149,7 +141,7 @@ final class DesktopUploadHandler implements HttpHandler {
                 sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.UPLOADING);
             }
 
-            File finalFile = new File(SystemUtils.getSaveDirectory(type), file.getName());
+            File finalFile = new File(SystemUtils.getDesktopFilesirectory(), file.getName());
 
             if (file.renameTo(finalFile)) {
                 Librarian.instance().scan(finalFile.getAbsoluteFile());
@@ -157,7 +149,7 @@ final class DesktopUploadHandler implements HttpHandler {
             }
 
         } catch (Throwable e) {
-            Log.e(TAG, String.format("Error saving file type=%d, fileName=%s, token=%s", type, fileName, token));
+            Log.e(TAG, String.format("Error saving file: fileName=%s, token=%s", fileName, token));
         } finally {
             if (fos != null) {
                 try {

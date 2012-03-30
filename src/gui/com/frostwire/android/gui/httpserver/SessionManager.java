@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
@@ -32,10 +33,12 @@ import com.frostwire.android.core.DesktopUploadRequestStatus;
  * @author aldenml
  *
  */
-public class SessionManager {
+public final class SessionManager {
+
+    private static final String TAG = "FW.SessionManager";
 
     private static final int MAX_DESKTOP_UPLOAD_REQUESTS = 1;
-    private static final int DESKTIP_UPLOAD_REQUEST_UPDATE_TIMEOUT = 5000;
+    private static final int DESKTOP_UPLOAD_REQUEST_UPDATE_TIMEOUT = 5000;
 
     private final LruCache<String, DesktopUploadRequest> durCache;
 
@@ -43,12 +46,21 @@ public class SessionManager {
         this.durCache = new LruCache<String, DesktopUploadRequest>(MAX_DESKTOP_UPLOAD_REQUESTS);
     }
 
-    public DesktopUploadRequest getDesktopUploadRequest(String token) {
+    public DesktopUploadRequest getDUR(String token) {
         purgeDUROld();
         return durCache.get(token);
     }
 
-    String addDUR(DesktopUploadRequest request) {
+    public void updateDURStatus(String token, DesktopUploadRequestStatus status) {
+        purgeDUROld();
+        DesktopUploadRequest dur = durCache.get(token);
+        if (dur != null) {
+            dur.status = status;
+            dur.updateTimestamp = System.currentTimeMillis();
+        }
+    }
+
+    String addDUR(DesktopUploadRequest dur) {
         purgeDUROld();
         if (durCache.size() == durCache.maxSize()) {
             return null; // not possible to accept more requests
@@ -56,8 +68,10 @@ public class SessionManager {
 
         String token = createDURToken();
 
-        request.token = token;
-        updateDURStatus(token, DesktopUploadRequestStatus.PENDING);
+        dur.status = DesktopUploadRequestStatus.PENDING;
+        dur.updateTimestamp = System.currentTimeMillis();
+
+        durCache.put(token, dur);
 
         return token;
     }
@@ -68,11 +82,9 @@ public class SessionManager {
         return dur != null ? dur.status : DesktopUploadRequestStatus.REJECTED;
     }
 
-    void updateDURStatus(String token, DesktopUploadRequestStatus status) {
-        purgeDUROld();
+    void refreshDUR(String token) {
         DesktopUploadRequest dur = durCache.get(token);
         if (dur != null) {
-            dur.status = status;
             dur.updateTimestamp = System.currentTimeMillis();
         }
     }
@@ -99,7 +111,8 @@ public class SessionManager {
 
         long now = System.currentTimeMillis();
         for (Entry<String, DesktopUploadRequest> entry : snapshot.entrySet()) {
-            if (now - entry.getValue().updateTimestamp > DESKTIP_UPLOAD_REQUEST_UPDATE_TIMEOUT) {
+            if (now - entry.getValue().updateTimestamp > DESKTOP_UPLOAD_REQUEST_UPDATE_TIMEOUT) {
+                Log.d(TAG, "token removed");
                 durCache.remove(entry.getKey());
             }
         }

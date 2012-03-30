@@ -32,10 +32,10 @@ public class DesktopUploadRequest {
      * IP address string representation
      */
     public String address;
+    public String computerName;
 
     public List<FileDescriptor> files;
 
-    public String token;
     public DesktopUploadRequestStatus status;
     public long updateTimestamp;
 }

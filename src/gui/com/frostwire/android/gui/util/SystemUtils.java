@@ -41,6 +41,7 @@ public final class SystemUtils {
     private static final String RINGTONES_FOLDER_NAME = "Ringtones";
     private static final String TORRENTS_FOLDER_NAME = "Torrents";
     private static final String TORRENT_DATA_FOLDER_NAME = "TorrentsData";
+    private static final String DESKTOP_FILES_FOLDER_NAME = "DesktopFiles";
     private static final String TEMP_FOLDER_NAME = "Temp";
     private static final String AZUREUS_FOLDER_NAME = ".azureus";
     private static final String DEEPSCAN_FOLDER_NAME = ".deepscan";
@@ -63,6 +64,10 @@ public final class SystemUtils {
 
     public static File getTorrentDataDirectory() {
         return FileUtils.createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
+    }
+
+    public static File getDesktopFilesirectory() {
+        return FileUtils.createFolder(getApplicationStorageDirectory(), DESKTOP_FILES_FOLDER_NAME);
     }
 
     public static File getTempDirectory() {

@@ -33,7 +33,6 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
@@ -124,15 +123,9 @@ public final class Engine implements IEngineService {
             service.notifyDownloadFinished(displayName, file);
         }
     }
-    
-    public void notifyDesktopUploadRequest(String token) {
-        if (service != null) {
-            service.notifyDesktopUploadRequest(token);
-        }
-    }
-    
-    public DesktopUploadRequest getDesktopUploadRequest(String token) {
-        return service != null ? service.getDesktopUploadRequest(token) : null;
+
+    public DesktopUploadManager getDesktopUploadManager() {
+        return service != null ? service.getDesktopUploadManager() : null;
     }
 
     /**
@@ -182,7 +175,7 @@ public final class Engine implements IEngineService {
         fileFilter.addAction(Intent.ACTION_UMS_CONNECTED);
         fileFilter.addAction(Intent.ACTION_UMS_DISCONNECTED);
         fileFilter.addDataScheme("file");
-        
+
         IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         IntentFilter audioFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
@@ -192,7 +185,7 @@ public final class Engine implements IEngineService {
         packageFilter.addDataScheme("package");
 
         IntentFilter telephonyFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        
+
         context.registerReceiver(receiver, wifiFilter);
         context.registerReceiver(receiver, fileFilter);
         context.registerReceiver(receiver, connectivityFilter);

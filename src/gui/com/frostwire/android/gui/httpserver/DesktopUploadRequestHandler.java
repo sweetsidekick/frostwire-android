@@ -45,7 +45,7 @@ final class DesktopUploadRequestHandler implements HttpHandler {
     private static final String TAG = "FW.DesktopUploadRequestHandler";
 
     private static final int READ_BUFFER_SIZE = 4 * 1024;
-    private static final int MAX_SECONDS_WAIT_AUTHORIZATION = 30;
+    private static final int MAX_SECONDS_WAIT_AUTHORIZATION = 60;
 
     private final SessionManager sessionManager;
 
@@ -59,16 +59,16 @@ final class DesktopUploadRequestHandler implements HttpHandler {
 
         try {
 
-            DesktopUploadRequest request = readPOST(exchange.getRequestBody());
+            DesktopUploadRequest dur = readPOST(exchange.getRequestBody());
 
-            if (request == null || sessionManager.hasDURPending()) {
+            if (dur == null || sessionManager.hasDURPending()) {
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
             }
 
-            String token = sessionManager.addDUR(request);
+            String token = sessionManager.addDUR(dur);
             if (token != null) {
-                Engine.instance().notifyDesktopUploadRequest(token);
+                Engine.instance().getDesktopUploadManager().notifyRequest(token);
             } else {
                 exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
                 return;
@@ -83,6 +83,7 @@ final class DesktopUploadRequestHandler implements HttpHandler {
 
                 os.write(response);
             } else {
+                Log.d(TAG, "Request not accepted");
                 exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
             }
 
@@ -129,14 +130,20 @@ final class DesktopUploadRequestHandler implements HttpHandler {
         return request;
     }
 
-    private boolean waitForAccept(String key) {
+    private boolean waitForAccept(String token) {
         int count = MAX_SECONDS_WAIT_AUTHORIZATION;
 
-        while (count >= 0 && sessionManager.getDURStatus(key) != DesktopUploadRequestStatus.ACCEPTED) {
+        while (count >= 0 && sessionManager.getDURStatus(token) != DesktopUploadRequestStatus.ACCEPTED) {
             SystemClock.sleep(1000);
             count--;
+
+            if (sessionManager.getDURStatus(token) == DesktopUploadRequestStatus.REJECTED) {
+                break;
+            }
+
+            sessionManager.refreshDUR(token);
         }
 
-        return sessionManager.getDURStatus(key) == DesktopUploadRequestStatus.ACCEPTED;
+        return sessionManager.getDURStatus(token) == DesktopUploadRequestStatus.ACCEPTED;
     }
 }

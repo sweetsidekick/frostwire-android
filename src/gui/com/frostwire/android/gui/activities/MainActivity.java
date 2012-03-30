@@ -49,6 +49,7 @@ import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
@@ -121,9 +122,8 @@ public class MainActivity extends AbstractActivity {
 
         if (savedInstanceState != null) {
             tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_SAVE_INSTANCE_KEY));
+            durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
         }
-
-        durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
 
         onNewIntent(getIntent());
     }
@@ -164,23 +164,7 @@ public class MainActivity extends AbstractActivity {
             //go!
             TransferManager.instance().download(intent);
         } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
-
-            if (durToken != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
-                durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
-            }
-
-            DesktopUploadRequest dur = Engine.instance().getDesktopUploadRequest(durToken);
-
-            if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
-                DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
-                    @Override
-                    public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
-                        durToken = null;
-                    }
-                });
-
-                trackDialog(dlg).show();
-            }
+            handleDesktopUploadRequest(intent);
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
@@ -215,6 +199,39 @@ public class MainActivity extends AbstractActivity {
 
         outState.putString(CURRENT_TAB_SAVE_INSTANCE_KEY, tabHost.getCurrentTabTag());
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
+    }
+
+    private void handleDesktopUploadRequest(Intent intent) {
+        String action = intent.getAction();
+
+        if (durToken == null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
+            durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
+        }
+
+        final DesktopUploadManager dum = Engine.instance().getDesktopUploadManager();
+
+        DesktopUploadRequest dur = dum.getRequest(durToken);
+
+        if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
+            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
+                @Override
+                public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
+                    switch (result) {
+                    case ACCEPT:
+                        dum.authorizeRequest(durToken);
+                        break;
+                    case REJECT:
+                        dum.rejectRequest(durToken);
+                        break;
+                    case BLOCK:
+                        dum.blockComputer(durToken);
+                    }
+                    durToken = null;
+                }
+            });
+
+            trackDialog(dlg).show();
+        }
     }
 
     // from an android example:
