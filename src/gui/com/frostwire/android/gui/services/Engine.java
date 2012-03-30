@@ -32,6 +32,7 @@ import android.net.wifi.WifiManager;
 import android.os.IBinder;
 
 import com.frostwire.android.core.CoreRuntimeException;
+import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
@@ -121,6 +122,16 @@ public final class Engine implements IEngineService {
         if (service != null) {
             service.notifyDownloadFinished(displayName, file);
         }
+    }
+    
+    public void notifyDesktopUploadRequest(String token) {
+        if (service != null) {
+            service.notifyDesktopUploadRequest(token);
+        }
+    }
+    
+    public DesktopUploadRequest getDesktopUploadRequest(String token) {
+        return service != null ? service.getDesktopUploadRequest(token) : null;
     }
 
     /**

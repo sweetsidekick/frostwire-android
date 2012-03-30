@@ -16,26 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.core;
-
-import java.util.List;
+package com.frostwire.android.gui.views;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
-public class DesktopUploadRequest {
-
-    /**
-     * IP address string representation
-     */
-    public String address;
-
-    public List<FileDescriptor> files;
-
-    public String token;
-    public DesktopUploadRequestStatus status;
-    public long updateTimestamp;
+public enum DesktopUploadRequestDialogResult {
+    ACCEPT, REJECT, BLOCK
 }

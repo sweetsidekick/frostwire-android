@@ -35,11 +35,18 @@ public class HttpServerManager {
 
     private static final String TAG = "FW.HttpServerManager";
 
-    private ThreadPool threadPool;
+    private final ThreadPool threadPool;
+    private final SessionManager sessionManager;
+
     private HttpServer httpServer;
 
     public HttpServerManager(ThreadPool threadPool) {
         this.threadPool = threadPool;
+        this.sessionManager = new SessionManager();
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 
     public void start(int port) {
@@ -58,6 +65,8 @@ public class HttpServerManager {
             httpServer.createContext("/finger", new FingerHandler());
             httpServer.createContext("/browse", new BrowseHandler());
             httpServer.createContext("/download", new DownloadHandler());
+            httpServer.createContext("/dekstop-upload-request", new DesktopUploadRequestHandler(sessionManager));
+            httpServer.createContext("/desktop-upload", new DesktopUploadHandler(sessionManager));
 
             httpServer.setExecutor(threadPool);
             httpServer.start();

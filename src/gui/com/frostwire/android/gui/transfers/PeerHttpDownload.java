@@ -177,6 +177,7 @@ public final class PeerHttpDownload implements DownloadTransfer {
                     status = STATUS_DOWNLOADING;
                     String uri = peer.getDownloadUri(fd);
                     new HttpFetcher(uri).save(savePath, new DownloadListener(retry));
+                    Librarian.instance().scan(savePath);
                 } catch (Throwable e) {
                     error(e);
                 }

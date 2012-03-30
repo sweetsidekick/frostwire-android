@@ -43,6 +43,8 @@ import android.widget.TabWidget;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.DesktopUploadRequest;
+import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
@@ -51,6 +53,8 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
+import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 
 /**
  * @author gubatron
@@ -65,9 +69,15 @@ public class MainActivity extends AbstractActivity {
     private static final String TAB_TRANSFERS_KEY = "tab_transfers";
     private static final String TAB_PEERS_KEY = "tab_peers";
 
+    private static final String CURRENT_TAB_SAVE_INSTANCE_KEY = "current_tab";
+    private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
+
     private TabHost tabHost;
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
+
+    // not sure about this variable, quick solution for now
+    private String durToken;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 1);
@@ -76,13 +86,11 @@ public class MainActivity extends AbstractActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            trackDialog(UIUtils.showYesNoDialog(this,
-                    R.string.are_you_sure_you_wanna_leave,
-                    R.string.minimize_frostwire, new OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            moveTaskToBack(true);
-                        }
-                    }));
+            trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    moveTaskToBack(true);
+                }
+            }));
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             tabHost.setCurrentTabByTag(TAB_SEARCH_KEY);
         } else {
@@ -103,27 +111,19 @@ public class MainActivity extends AbstractActivity {
 
         tabsAdapter = new TabsAdapter(this, tabHost, viewPager);
 
-        View searchIndicator = getLayoutInflater().inflate(
-                R.layout.view_tab_indicator_search, null);
-        View transfersIndicator = getLayoutInflater().inflate(
-                R.layout.view_tab_indicator_transfers, null);
-        View peersIndicator = getLayoutInflater().inflate(
-                R.layout.view_tab_indicator_peers, null);
+        View searchIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_search, null);
+        View transfersIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_transfers, null);
+        View peersIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_peers, null);
 
-        tabsAdapter.addTab(
-                tabHost.newTabSpec(TAB_SEARCH_KEY)
-                        .setIndicator(searchIndicator), SearchFragment.class,
-                null);
-        tabsAdapter.addTab(
-                tabHost.newTabSpec(TAB_TRANSFERS_KEY).setIndicator(
-                        transfersIndicator), TransfersFragment.class, null);
-        tabsAdapter.addTab(
-                tabHost.newTabSpec(TAB_PEERS_KEY).setIndicator(peersIndicator),
-                BrowsePeersFragment.class, null);
+        tabsAdapter.addTab(tabHost.newTabSpec(TAB_SEARCH_KEY).setIndicator(searchIndicator), SearchFragment.class, null);
+        tabsAdapter.addTab(tabHost.newTabSpec(TAB_TRANSFERS_KEY).setIndicator(transfersIndicator), TransfersFragment.class, null);
+        tabsAdapter.addTab(tabHost.newTabSpec(TAB_PEERS_KEY).setIndicator(peersIndicator), BrowsePeersFragment.class, null);
 
         if (savedInstanceState != null) {
-            tabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+            tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_SAVE_INSTANCE_KEY));
         }
+
+        durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
 
         onNewIntent(getIntent());
     }
@@ -132,11 +132,9 @@ public class MainActivity extends AbstractActivity {
     protected void onNewIntent(Intent intent) {
         String action = intent.getAction();
 
-        if (action != null
-                && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
+        if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
             tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
-        } else if (action != null
-                && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
+        } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
              * TODO: Ask @aldenml the best way to plug in NewTransferDialog.
@@ -156,27 +154,43 @@ public class MainActivity extends AbstractActivity {
              * 
              * c) Forget about showing that dialog, and just start the download, the user can cancel it.
              */
-            
+
             //Show me the transfer tab
             Intent i = new Intent(this, MainActivity.class);
             i.setAction(Constants.ACTION_SHOW_TRANSFERS);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
-            
+
             //go!
             TransferManager.instance().download(intent);
+        } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
+
+            if (durToken != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
+                durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
+            }
+
+            DesktopUploadRequest dur = Engine.instance().getDesktopUploadRequest(durToken);
+
+            if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
+                DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
+                    @Override
+                    public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
+                        durToken = null;
+                    }
+                });
+
+                trackDialog(dlg).show();
+            }
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
             tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
             TransferManager.instance().clearDownloadsToReview();
             try {
-                ((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
-                        .cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
+                ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
                 Bundle extras = intent.getExtras();
                 if (extras.containsKey(Constants.EXTRA_DOWNLOAD_COMPLETE_PATH)) {
-                    File file = new File(
-                            extras.getString(Constants.EXTRA_DOWNLOAD_COMPLETE_PATH));
+                    File file = new File(extras.getString(Constants.EXTRA_DOWNLOAD_COMPLETE_PATH));
                     if (file.isFile()) {
                         UIUtils.openFile(this, file.getAbsoluteFile());
                     }
@@ -199,21 +213,20 @@ public class MainActivity extends AbstractActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("tab", tabHost.getCurrentTabTag());
+        outState.putString(CURRENT_TAB_SAVE_INSTANCE_KEY, tabHost.getCurrentTabTag());
+        outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
     }
 
     // from an android example:
     // http://developer.android.com/resources/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabsPager.html
-    private class TabsAdapter extends FragmentPagerAdapter implements
-            OnTabChangeListener, OnPageChangeListener {
+    private class TabsAdapter extends FragmentPagerAdapter implements OnTabChangeListener, OnPageChangeListener {
 
         private final Context context;
         private final TabHost tabHost;
         private final ViewPager viewPager;
         private final ArrayList<TabInfo> tabs = new ArrayList<TabInfo>();
 
-        public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-                ViewPager pager) {
+        public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
             super(activity.getSupportFragmentManager());
             this.context = activity;
             this.tabHost = tabHost;
@@ -240,8 +253,7 @@ public class MainActivity extends AbstractActivity {
         @Override
         public Fragment getItem(int position) {
             TabInfo info = tabs.get(position);
-            return Fragment.instantiate(context, info.clazz.getName(),
-                    info.args);
+            return Fragment.instantiate(context, info.clazz.getName(), info.args);
         }
 
         @Override
@@ -249,15 +261,12 @@ public class MainActivity extends AbstractActivity {
             int position = tabHost.getCurrentTab();
             viewPager.setCurrentItem(position);
 
-            InputMethodManager manager = (InputMethodManager) context
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(
-                    tabHost.getApplicationWindowToken(), 0);
+            InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(tabHost.getApplicationWindowToken(), 0);
         }
 
         @Override
-        public void onPageScrolled(int position, float positionOffset,
-                int positionOffsetPixels) {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
         @Override

@@ -35,6 +35,7 @@ import android.util.Log;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
@@ -70,13 +71,13 @@ public class EngineService extends Service implements IEngineService {
     private final MessageCourier messageCourier;
 
     private final PeerDiscoveryAnnouncer peerDiscoveryAnnouncer;
-    
+
     private final CoreMediaPlayer mediaPlayer;
 
     private byte state;
 
     private OnSharedPreferenceChangeListener preferenceListener;
-    
+
     public EngineService() {
         binder = new EngineServiceBinder();
 
@@ -89,7 +90,7 @@ public class EngineService extends Service implements IEngineService {
         messageCourier = new MessageCourier(threadPool);
 
         peerDiscoveryAnnouncer = new PeerDiscoveryAnnouncer(threadPool);
-        
+
         mediaPlayer = new NativeAndroidPlayer(this);
 
         registerPreferencesChangeListener();
@@ -115,7 +116,7 @@ public class EngineService extends Service implements IEngineService {
 
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
         stopServices(false);
-        
+
         mediaPlayer.stop();
     }
 
@@ -241,6 +242,18 @@ public class EngineService extends Service implements IEngineService {
         } catch (Throwable e) {
             Log.e(TAG, "Error creating notification for download finished", e);
         }
+    }
+
+    @Override
+    public void notifyDesktopUploadRequest(String token) {
+        Intent i = new Intent(Constants.ACTION_DESKTOP_UPLOAD_REQUEST);
+        i.putExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN, token);
+        startActivity(i.setClass(this, MainActivity.class));
+    }
+
+    @Override
+    public DesktopUploadRequest getDesktopUploadRequest(String token) {
+        return httpServerManager.getSessionManager().getDesktopUploadRequest(token);
     }
 
     private void registerPreferencesChangeListener() {

@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.services;
+package com.frostwire.android.core;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public enum DesktopUploadResult {
-    ACCEPT, REJECT, BLOCK
+public enum DesktopUploadRequestStatus {
+    PENDING, ACCEPTED, REJECTED, UPLOADING
 }

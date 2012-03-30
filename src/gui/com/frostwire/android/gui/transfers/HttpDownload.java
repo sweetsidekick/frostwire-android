@@ -171,6 +171,7 @@ public final class HttpDownload implements DownloadTransfer {
                     status = STATUS_DOWNLOADING;
                     String uri = sr.getHttpUrl();
                     new HttpFetcher(uri).save(savePath, new DownloadListener(retry));
+                    Librarian.instance().scan(savePath);
                 } catch (Throwable e) {
                     error(e);
                 }

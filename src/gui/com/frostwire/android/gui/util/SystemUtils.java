@@ -41,6 +41,7 @@ public final class SystemUtils {
     private static final String RINGTONES_FOLDER_NAME = "Ringtones";
     private static final String TORRENTS_FOLDER_NAME = "Torrents";
     private static final String TORRENT_DATA_FOLDER_NAME = "TorrentsData";
+    private static final String TEMP_FOLDER_NAME = "Temp";
     private static final String AZUREUS_FOLDER_NAME = ".azureus";
     private static final String DEEPSCAN_FOLDER_NAME = ".deepscan";
 
@@ -64,6 +65,10 @@ public final class SystemUtils {
         return FileUtils.createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
     }
 
+    public static File getTempDirectory() {
+        return FileUtils.createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
+    }
+
     public static File getDeepScanTorrentsDirectory() {
         return FileUtils.createFolder(getApplicationStorageDirectory(), DEEPSCAN_FOLDER_NAME);
     }
@@ -72,7 +77,7 @@ public final class SystemUtils {
         File parentFolder = getApplicationStorageDirectory();
 
         String folderName = null;
-        
+
         switch (fileType) {
         case Constants.FILE_TYPE_AUDIO:
             folderName = AUDIO_FOLDER_NAME;
@@ -95,7 +100,7 @@ public final class SystemUtils {
         default: // We will treat anything else like documents (unknown types)
             folderName = DOCUMENTS_FOLDER_NAME;
         }
-        
+
         return FileUtils.createFolder(parentFolder, folderName);
     }
 

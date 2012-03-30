@@ -118,9 +118,11 @@ public final class Constants {
     public static final String ACTION_MEDIA_PLAYER_PLAY = "com.frostwire.android.ACTION_MEDIA_PLAYER_PLAY";
     public static final String ACTION_MEDIA_PLAYER_STOPPED = "com.frostwire.android.ACTION_MEDIA_PLAYER_STOPPED";
     public static final String ACTION_REFRESH_FINGER = "com.frostwire.android.ACTION_REFRESH_FINGER";
+    public static final String ACTION_DESKTOP_UPLOAD_REQUEST = "com.frostwire.android.ACTION_DESKTOP_UPLOAD_REQUEST";
     public static final String EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION = "com.frostwire.android.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION";
     public static final String EXTRA_DOWNLOAD_COMPLETE_PATH = "com.frostwire.android.EXTRA_DOWNLOAD_COMPLETE_PATH";
     public static final String EXTRA_PEER_UUID = "com.frostwire.android.EXTRA_PEER_UUID";
+    public static final String EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN = "com.frostwire.android.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN";
 
     public static final int NOTIFICATION_MEDIA_PLAYING_ID = 1000;
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;

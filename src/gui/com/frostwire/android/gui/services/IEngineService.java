@@ -20,6 +20,7 @@ package com.frostwire.android.gui.services;
 
 import java.io.File;
 
+import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.util.concurrent.ThreadPool;
@@ -62,5 +63,7 @@ public interface IEngineService {
 
     public void notifyDownloadFinished(String displayName, File file);
 
-    //public DesktopUploadResult notifyDesktopUpload();
+    public void notifyDesktopUploadRequest(String token);
+    
+    public DesktopUploadRequest getDesktopUploadRequest(String token);
 }
