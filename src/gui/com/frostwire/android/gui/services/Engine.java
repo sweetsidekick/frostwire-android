@@ -30,6 +30,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.DesktopUploadRequest;
@@ -181,7 +182,7 @@ public final class Engine implements IEngineService {
         fileFilter.addAction(Intent.ACTION_UMS_CONNECTED);
         fileFilter.addAction(Intent.ACTION_UMS_DISCONNECTED);
         fileFilter.addDataScheme("file");
-
+        
         IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         IntentFilter audioFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
@@ -190,10 +191,13 @@ public final class Engine implements IEngineService {
         packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         packageFilter.addDataScheme("package");
 
+        IntentFilter telephonyFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        
         context.registerReceiver(receiver, wifiFilter);
         context.registerReceiver(receiver, fileFilter);
         context.registerReceiver(receiver, connectivityFilter);
         context.registerReceiver(receiver, audioFilter);
         context.registerReceiver(receiver, packageFilter);
+        context.registerReceiver(receiver, telephonyFilter);
     }
 }

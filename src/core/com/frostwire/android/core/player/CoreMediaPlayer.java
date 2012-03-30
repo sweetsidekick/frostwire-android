@@ -33,14 +33,23 @@ public interface CoreMediaPlayer {
 
     public void playNext();
 
-    public void pause();
+    public void togglePause();
 
     public void stop();
 
+    public boolean isPlaying();
+    
+    public void seekTo(int position);
+    
+    /** Return -1 if player isn't ready or not playing. */
+    public int getPosition();
+    
     /**
      * The current file the media player is playing.
      * 
      * @return
      */
     public FileDescriptor getCurrentFD();
+
+    
 }

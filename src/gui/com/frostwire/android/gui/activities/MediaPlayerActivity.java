@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +36,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -42,6 +48,7 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.MediaControllerView;
 import com.frostwire.android.util.StringUtils;
 
@@ -176,6 +183,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
             return;
         }
+        
+        initGestures();
 
         mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
         mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
@@ -197,6 +206,27 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             Engine.instance().getMediaPlayer().stop();
         }
     }
+    
+    private void initGestures() {
+        LinearLayout lowestLayout = findView(R.id.lowestLayout);
+        lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
+            @Override
+            public void onLeftToRightSwipe() {
+                Engine.instance().getMediaPlayer().playPrevious();
+            }
+            
+            @Override
+            public void onRightToLeftSwipe() {
+                Engine.instance().getMediaPlayer().playNext();
+            }
+            
+            @Override
+            public boolean onMultiTouchEvent(View v, MotionEvent event) {
+                Engine.instance().getMediaPlayer().togglePause();
+                return true;
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
@@ -205,6 +235,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
+        
+        enableLock(false);
     }
 
     @Override
@@ -212,6 +244,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         super.onPause();
 
         unregisterReceiver(broadcastReceiver);
+        enableLock(true);
     }
 
     private Bitmap readCoverArt() {
@@ -303,5 +336,16 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         }
 
         return b;
+    }
+
+    private void enableLock(boolean enable) {
+        KeyguardManager keyguardManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
+        KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+           
+        if (enable) {
+            lock.reenableKeyguard();           
+        } else {
+            lock.disableKeyguard();
+        }
     }
 }

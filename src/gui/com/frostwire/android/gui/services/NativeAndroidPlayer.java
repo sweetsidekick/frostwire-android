@@ -98,7 +98,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     }
 
     @Override
-    public void pause() {
+    public void togglePause() {
         try {
             if (mp != null) {
                 if (mp.isPlaying()) {
@@ -123,6 +123,23 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
     }
 
+    @Override
+    public boolean isPlaying() {
+        return (mp!=null) ? mp.isPlaying() :  false;
+    }
+    
+    @Override
+    public void seekTo(int position) {
+        if (mp != null) {
+            mp.seekTo(position);
+        }
+    }
+    
+    @Override
+    public int getPosition() {
+        return (mp != null) ? mp.getCurrentPosition() : -1;
+    }
+    
     @Override
     public FileDescriptor getCurrentFD() {
         return currentFD;
@@ -204,7 +221,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             Context context = service.getApplicationContext();
 
             Intent i = new Intent(context, MediaPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             Notification notification = new Notification();
@@ -214,7 +231,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             notification.setLatestEventInfo(context, service.getString(R.string.application_label), service.getString(R.string.playing_song_name, currentFD.title), pi);
             service.startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
 
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
             
         } catch (Throwable e) {
@@ -227,7 +244,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                pause();
+                togglePause();
             }
         }
     }
