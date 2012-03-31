@@ -40,7 +40,6 @@ public class DesktopUploadRequestDialog extends Dialog {
 
     private Button buttonAccept;
     private Button buttonReject;
-    private Button buttonBlock;
 
     private final DesktopUploadRequest request;
     private final OnDesktopUploadListener listener;
@@ -99,17 +98,6 @@ public class DesktopUploadRequestDialog extends Dialog {
                 dismiss();
                 if (listener != null) {
                     listener.onResult(DesktopUploadRequestDialog.this, DesktopUploadRequestDialogResult.REJECT);
-                }
-            }
-        });
-
-        buttonBlock = (Button) findViewById(R.id.dialog_desktop_upload_request_button_block);
-        buttonBlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                if (listener != null) {
-                    listener.onResult(DesktopUploadRequestDialog.this, DesktopUploadRequestDialogResult.BLOCK);
                 }
             }
         });

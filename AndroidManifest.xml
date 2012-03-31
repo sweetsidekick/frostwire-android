@@ -43,7 +43,7 @@
 
     <application
         android:name=".gui.MainApplication"
-        android:debuggable="true"
+        android:debuggable="false"
         android:icon="@drawable/application_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >

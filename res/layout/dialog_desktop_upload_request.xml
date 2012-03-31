@@ -37,7 +37,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/dialog_desktop_upload_request_button_accept"
@@ -57,16 +57,6 @@
             android:layout_weight="0.5"
             android:minLines="1"
             android:text="@string/reject"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/dialog_desktop_upload_request_button_block"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="0.5"
-            android:minLines="1"
-            android:text="@string/block_computer"
             android:textSize="15sp" />
     </LinearLayout>
 

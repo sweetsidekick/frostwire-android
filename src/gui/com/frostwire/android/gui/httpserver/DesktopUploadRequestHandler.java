@@ -63,7 +63,7 @@ final class DesktopUploadRequestHandler implements HttpHandler {
 
             DesktopUploadRequest dur = readPOST(exchange.getRequestBody());
 
-            if (dur == null || StringUtils.isNullOrEmpty(dur.computerName, true) || sessionManager.hasDURPending()) {
+            if (dur == null || StringUtils.isNullOrEmpty(dur.address, true) || StringUtils.isNullOrEmpty(dur.computerName, true) || sessionManager.hasDURPending()) {
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
             }
