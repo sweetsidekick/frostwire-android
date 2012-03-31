@@ -134,13 +134,12 @@ final class DesktopUploadHandler implements HttpHandler {
         String fileName = FilenameUtils.getName(filePath);
         FileOutputStream fos = null;
 
+        File file = null;
         DesktopTransfer transfer = null;
 
         try {
 
-            File tempFolder = SystemUtils.getTempDirectory();
-
-            File file = new File(tempFolder, fileName);
+            file = new File(SystemUtils.getTempDirectory(), fileName);
 
             fos = new FileOutputStream(file);
 
@@ -177,6 +176,10 @@ final class DesktopUploadHandler implements HttpHandler {
 
         } catch (Throwable e) {
             Log.e(TAG, String.format("Error saving file: fileName=%s, token=%s", fileName, token), e);
+
+            if (file != null) {
+                file.delete();
+            }
         } finally {
             if (fos != null) {
                 try {
