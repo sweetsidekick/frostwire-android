@@ -111,7 +111,7 @@ public final class SessionManager {
 
         long now = System.currentTimeMillis();
         for (Entry<String, DesktopUploadRequest> entry : snapshot.entrySet()) {
-            if (now - entry.getValue().updateTimestamp > DESKTOP_UPLOAD_REQUEST_UPDATE_TIMEOUT) {
+            if (now - entry.getValue().updateTimestamp > DESKTOP_UPLOAD_REQUEST_UPDATE_TIMEOUT || entry.getValue().status == DesktopUploadRequestStatus.REJECTED) {
                 Log.d(TAG, "token removed");
                 durCache.remove(entry.getKey());
             }

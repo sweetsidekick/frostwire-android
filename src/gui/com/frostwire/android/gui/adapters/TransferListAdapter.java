@@ -46,6 +46,7 @@ import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
 import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
+import com.frostwire.android.gui.transfers.DesktopTransfer;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
@@ -233,6 +234,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populatePeerUpload(view, (PeerHttpUpload) transfer);
         } else if (transfer instanceof HttpDownload) {
             populateHttpDownload(view, (HttpDownload) transfer);
+        } else if (transfer instanceof DesktopTransfer) {
+            populateDesktopTransfer(view, (DesktopTransfer) transfer);
         }
     }
 
@@ -274,7 +277,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
 
-            if (download.isComplete()) {
+            if (download.isComplete() && tag instanceof HttpDownload) {
                 items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
             } else {
                 items.add(new CancelMenuAction(context, download, true));
@@ -466,6 +469,28 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
+        buttonAction.setOnClickListener(actionOnClickListener);
+    }
+
+    private void populateDesktopTransfer(View view, DesktopTransfer transfer) {
+        TextView title = findView(view, R.id.view_transfer_list_item_title);
+        ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
+        TextView status = findView(view, R.id.view_transfer_list_item_status);
+        TextView speed = findView(view, R.id.view_transfer_list_item_speed);
+        TextView size = findView(view, R.id.view_transfer_list_item_size);
+        TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
+        TextView peers = findView(view, R.id.view_transfer_list_item_peers);
+        ImageView buttonAction = findView(view, R.id.view_transfer_list_item_button_action);
+
+        seeds.setText("");
+        peers.setText("");
+        title.setText(transfer.getDisplayName());
+        progress.setProgress(transfer.getProgress());
+        status.setText(Integer.valueOf(transfer.getStatus()));
+        speed.setText(UIUtils.getBytesInHuman(transfer.getDownloadSpeed()) + "/s");
+        size.setText(UIUtils.getBytesInHuman(transfer.getSize()));
+
+        buttonAction.setTag(transfer);
         buttonAction.setOnClickListener(actionOnClickListener);
     }
 

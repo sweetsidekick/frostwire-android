@@ -39,6 +39,7 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.httpserver.Code;
 import com.frostwire.android.httpserver.HttpExchange;
 import com.frostwire.android.httpserver.HttpHandler;
+import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron
@@ -58,7 +59,7 @@ final class DesktopUploadHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        String fileName = null;
+        String filePath = null;
         String token = null;
 
         try {
@@ -66,25 +67,28 @@ final class DesktopUploadHandler implements HttpHandler {
             List<NameValuePair> query = URLEncodedUtils.parse(exchange.getRequestURI(), "UTF-8");
 
             for (NameValuePair item : query) {
-                if (item.getName().equals("fileName")) {
-                    fileName = item.getValue();
+                if (item.getName().equals("filePath")) {
+                    filePath = item.getValue();
                 }
                 if (item.getName().equals("token")) {
                     token = item.getValue();
                 }
             }
 
-            if (fileName == null || token == null) {
+            if (filePath == null || token == null) {
+                sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.REJECTED);
                 exchange.sendResponseHeaders(Code.HTTP_BAD_REQUEST, 0);
                 return;
             }
 
-            if (!durAllowed(fileName, token, exchange.getRemoteAddress().getAddress().getHostAddress())) {
+            if (!durAllowed(filePath, token, exchange.getRemoteAddress().getAddress().getHostAddress())) {
+                sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.REJECTED);
                 exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
                 return;
             }
 
-            if (!readFile(exchange.getRequestBody(), fileName, token)) {
+            if (!readFile(exchange.getRequestBody(), filePath, token)) {
+                sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.REJECTED);
                 exchange.sendResponseHeaders(Code.HTTP_FORBIDDEN, 0);
                 return;
             }
@@ -92,15 +96,15 @@ final class DesktopUploadHandler implements HttpHandler {
             exchange.sendResponseHeaders(Code.HTTP_OK, 0);
 
         } catch (Throwable e) {
-            Log.e(TAG, String.format("Error receiving file from desktop: fileName=%s, token=%s", fileName, token), e);
+            Log.e(TAG, String.format("Error receiving file from desktop: fileName=%s, token=%s", filePath, token), e);
         } finally {
             exchange.close();
         }
     }
 
-    private FileDescriptor findFD(DesktopUploadRequest dur, String fileName) {
+    private FileDescriptor findFD(DesktopUploadRequest dur, String filePath) {
         for (FileDescriptor fd : dur.files) {
-            if (fd.filePath.equals(fileName)) {
+            if (fd.filePath.equals(filePath)) {
                 return fd;
             }
         }
@@ -126,8 +130,11 @@ final class DesktopUploadHandler implements HttpHandler {
         return true;
     }
 
-    private boolean readFile(InputStream is, String fileName, String token) {
+    private boolean readFile(InputStream is, String filePath, String token) {
+        String fileName = FilenameUtils.getName(filePath);
         FileOutputStream fos = null;
+
+        DesktopTransfer transfer = null;
 
         try {
 
@@ -138,8 +145,9 @@ final class DesktopUploadHandler implements HttpHandler {
             fos = new FileOutputStream(file);
 
             DesktopUploadRequest dur = sessionManager.getDUR(token);
-            FileDescriptor fd = findFD(dur, fileName);
-            DesktopTransfer transfer = TransferManager.instance().desktopTransfer(fd);
+            FileDescriptor fd = findFD(dur, filePath);
+
+            transfer = TransferManager.instance().desktopTransfer(fd);
 
             byte[] buffer = new byte[4 * 1024];
             int n;
@@ -151,6 +159,7 @@ final class DesktopUploadHandler implements HttpHandler {
                     file.delete();
                     return false;
                 } else {
+                    transfer.addBytesTransferred(n);
                     sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.UPLOADING);
                 }
             }
@@ -167,7 +176,7 @@ final class DesktopUploadHandler implements HttpHandler {
             }
 
         } catch (Throwable e) {
-            Log.e(TAG, String.format("Error saving file: fileName=%s, token=%s", fileName, token));
+            Log.e(TAG, String.format("Error saving file: fileName=%s, token=%s", fileName, token), e);
         } finally {
             if (fos != null) {
                 try {
@@ -180,6 +189,10 @@ final class DesktopUploadHandler implements HttpHandler {
                 is.close();
             } catch (Throwable e) {
                 // ignore
+            }
+
+            if (transfer != null) {
+                transfer.complete();
             }
         }
 

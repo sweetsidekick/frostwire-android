@@ -25,6 +25,8 @@ import java.util.List;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron
@@ -42,6 +44,7 @@ public class DesktopTransfer implements DownloadTransfer {
     private final TransferManager manager;
     private final FileDescriptor fd;
     private final Date dateCreated;
+    private final File savePath;
 
     private int status;
     public long bytesTransferred;
@@ -56,12 +59,14 @@ public class DesktopTransfer implements DownloadTransfer {
         this.fd = fd;
         this.dateCreated = new Date();
 
+        this.savePath = new File(SystemUtils.getDesktopFilesirectory(), FilenameUtils.getName(fd.filePath));
+
         status = STATUS_TRANSFERRING;
     }
 
     @Override
     public String getDisplayName() {
-        return fd.filePath;
+        return FilenameUtils.getName(fd.filePath);
     }
 
     @Override
@@ -130,7 +135,7 @@ public class DesktopTransfer implements DownloadTransfer {
 
     @Override
     public File getSavePath() {
-        return null;
+        return savePath;
     }
 
     @Override
@@ -147,7 +152,12 @@ public class DesktopTransfer implements DownloadTransfer {
         bytesTransferred += n;
         updateAverageTransferSpeed();
     }
-    
+
+    public void complete() {
+        status = STATUS_COMPLETE;
+        cancel();
+    }
+
     public boolean isCanceled() {
         return status == STATUS_CANCELLED;
     }

@@ -257,9 +257,9 @@ public final class TransferManager {
     void remove(Transfer transfer) {
         if (transfer instanceof BittorrentDownload) {
             bittorrenDownloads.remove(transfer);
-        } else if (transfer instanceof PeerHttpDownload) {
+        } else if (transfer instanceof DownloadTransfer) {
             downloads.remove(transfer);
-        } else if (transfer instanceof PeerHttpUpload) {
+        } else if (transfer instanceof UploadTransfer) {
             uploads.remove(transfer);
         }
     }
