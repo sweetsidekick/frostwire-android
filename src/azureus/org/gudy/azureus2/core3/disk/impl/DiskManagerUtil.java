@@ -754,7 +754,7 @@ DiskManagerUtil
 	
 	            		// for a simple torrent the target file can be changed
 	
-	            		if ( tor.isSimpleTorrent()){
+	            		if ( tor == null || tor.isSimpleTorrent()){ // fix NPE in android
 	
 	            			simpleFile = download_manager.getAbsoluteSaveLocation();
 	
