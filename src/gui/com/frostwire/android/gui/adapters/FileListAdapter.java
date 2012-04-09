@@ -25,13 +25,9 @@ import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -62,6 +58,7 @@ import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.android.gui.views.ThumbnailLoader;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -81,6 +78,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     private final byte fileType;
     private final Drawable fileTypeDrawable;
 
+    private final ThumbnailLoader thumbnailLoader;
+
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
 
@@ -95,6 +94,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.fileType = fileType;
         this.fileTypeDrawable = context.getResources().getDrawable(UIUtils.getFileTypeIconId(fileType)).mutate();
         this.fileTypeDrawable.setAlpha(255);
+
+        this.thumbnailLoader = new ThumbnailLoader(this.fileType, this.fileTypeDrawable);
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -206,6 +207,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
+        /*
         Drawable d = getDrawable(fd);
 
         if (d != null) {
@@ -213,6 +215,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         } else {
             fileThumbnail.setImageDrawable(fileTypeDrawable);
         }
+        */
+        thumbnailLoader.displayImage(fd.id, fileThumbnail);
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
 
@@ -234,6 +238,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         fileThumbnail.setOnClickListener(downloadButtonClickListener);
     }
 
+    /*
     private Drawable getDrawable(FileDescriptor fd) {
         Bitmap bmp = null;
 
@@ -251,6 +256,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
         return bmp != null ? new BitmapDrawable(bmp) : null;
     }
+    */
 
     /**
      * Makes sure the color of the title appears black or gray depending on
