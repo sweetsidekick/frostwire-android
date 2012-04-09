@@ -408,11 +408,16 @@ public class TorrentUtil {
     }
 
     public static int getDownloadPercent(DiskManagerFileInfo fileInfo) {
-        long length = fileInfo.getLength();
-        if (length == 0 || fileInfo.getDownloaded() == length) {
-            return 100;
-        } else {
-            return (int) (fileInfo.getDownloaded() * 100 / length);
+        try {
+            long length = fileInfo.getLength();
+            if (length == 0 || fileInfo.getDownloaded() == length) {
+                return 100;
+            } else {
+                return (int) (fileInfo.getDownloaded() * 100 / length);
+            }
+        } catch (Throwable e) {
+            Log.e(TAG, "Error calculating download percent", e);
+            return 0;
         }
     }
 
