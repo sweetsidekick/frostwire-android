@@ -67,7 +67,7 @@ public class MediaControllerView extends FrameLayout {
             switch (msg.what) {
             case SHOW_PROGRESS:
                 pos = setProgress();
-                if (!dragging && player.isPlaying()) {
+                if (!dragging && player != null && player.isPlaying()) {
                     msg = obtainMessage(SHOW_PROGRESS);
                     sendMessageDelayed(msg, 1000 - (pos % 1000));
                 }
