@@ -92,9 +92,14 @@ public class WizardActivity extends AbstractActivity {
             view.setTag(i);
         }
 
-        Integer currentIndex = (Integer) getLastCustomNonConfigurationInstance();
-        if (currentIndex != null) {
-            viewFlipper.setDisplayedChild(currentIndex);
+        try {
+            Integer currentIndex = (Integer) getLastCustomNonConfigurationInstance();
+            if (currentIndex != null) {
+                viewFlipper.setDisplayedChild(currentIndex);
+            }
+        } catch (NoSuchMethodError e) {
+            // why? I don't know, reported by a few android devices
+            // ignore
         }
 
         setupViewPage();
