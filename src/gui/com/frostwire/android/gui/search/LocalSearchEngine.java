@@ -116,6 +116,9 @@ final class LocalSearchEngine {
             ContentResolver cr = context.getContentResolver();
             c = cr.query(Torrents.Media.CONTENT_URI, new String[] { TorrentFilesColumns._ID }, null, null, null);
             return c.getCount();
+        } catch (Throwable e) {
+            Log.e(TAG, "Error in torrents content provider", e);
+            return 0;
         } finally {
             if (c != null) {
                 c.close();
