@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
@@ -152,27 +154,33 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     private void startTransfer(final BittorrentSearchResult sr) {
         NewTransferDialog dlg = new NewTransferDialog(getContext(), sr, false, new OnYesNoListener() {
             public void onYes(NewTransferDialog dialog) {
-                try {
-                    DownloadTransfer transfer = TransferManager.instance().download(sr);
-                    if (!(transfer instanceof InvalidTransfer)) {
-                        UIUtils.showShortMessage(getContext(), R.string.download_added_to_queue);
-                        notifyDataSetChanged();
+                // putting this logic in a thread to avoid ANR errors. Needs refactor to avoid context leaks
+                Engine.instance().getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            DownloadTransfer transfer = TransferManager.instance().download(sr);
+                            Looper.prepare();
+                            if (!(transfer instanceof InvalidTransfer)) {
+                                UIUtils.showShortMessage(getContext(), R.string.download_added_to_queue);
+                                notifyDataSetChanged();
 
-                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                            Intent i = new Intent(getContext(), MainActivity.class);
-                            i.setAction(Constants.ACTION_SHOW_TRANSFERS);
-                            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                            getContext().startActivity(i);
+                                if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+                                    Intent i = new Intent(getContext(), MainActivity.class);
+                                    i.setAction(Constants.ACTION_SHOW_TRANSFERS);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                    getContext().startActivity(i);
+                                }
+
+                                onTransferStarted(transfer);
+                            } else {
+                                UIUtils.showShortMessage(getContext(), ((InvalidTransfer) transfer).getReasonResId());
+                            }
+                        } catch (Throwable e) {
+                            Log.e(TAG, "Error adding new download from result: " + sr, e);
                         }
-
-                        onTransferStarted(transfer);
-                    } else {
-                        UIUtils.showShortMessage(getContext(), ((InvalidTransfer) transfer).getReasonResId());
                     }
-                } catch (Throwable e) {
-                    UIUtils.showShortMessage(getContext(), R.string.failed_to_add_download);
-                    Log.e(TAG, "Error adding new download from result: " + sr, e);
-                }
+                });
             }
 
             public void onNo(NewTransferDialog dialog) {

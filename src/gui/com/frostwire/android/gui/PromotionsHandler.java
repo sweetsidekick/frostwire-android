@@ -20,6 +20,7 @@ package com.frostwire.android.gui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Looper;
 import android.util.Log;
 
 import com.frostwire.android.R;
@@ -27,6 +28,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.BittorrentPromotionSearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownloadSearchResult;
@@ -72,18 +74,25 @@ public class PromotionsHandler {
 
         NewTransferDialog dlg = new NewTransferDialog(context, sr, false, new OnYesNoListener() {
             public void onYes(NewTransferDialog dialog) {
-                try {
-                    DownloadTransfer download = TransferManager.instance().download(sr);
-                    if (!(download instanceof InvalidTransfer)) {
-                        UIUtils.showShortMessage(context, R.string.downloading_promotion, download.getDisplayName());
-                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                            Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
-                            context.startActivity(i.setClass(context, MainActivity.class));
+                // putting this logic in a thread to avoid ANR errors. Needs refactor to avoid context leaks
+                Engine.instance().getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            DownloadTransfer download = TransferManager.instance().download(sr);
+                            if (!(download instanceof InvalidTransfer)) {
+                                Looper.prepare();
+                                UIUtils.showShortMessage(context, R.string.downloading_promotion, download.getDisplayName());
+                                if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+                                    Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
+                                    context.startActivity(i.setClass(context, MainActivity.class));
+                                }
+                            }
+                        } catch (Throwable e) {
+                            Log.e(TAG, "Error processing promotion", e);
                         }
                     }
-                } catch (Throwable e) {
-                    Log.e(TAG, "Error processing promotion", e);
-                }
+                });
             }
 
             public void onNo(NewTransferDialog dialog) {
@@ -131,7 +140,7 @@ public class PromotionsHandler {
         public String torrent;
 
         public String httpUrl;
-        
+
         public boolean uncompress;
 
         /**
