@@ -103,13 +103,21 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
 
     public void pause() {
         if (mediaPlayer != null) {
-            mediaPlayer.pause();
+            try {
+                mediaPlayer.pause();
+            } catch (Throwable e) {
+                Log.e(TAG, String.format("Review logic: %s", e.getMessage()));
+            }
         }
     }
 
     public void resume() {
         if (mediaPlayer != null) {
-            mediaPlayer.start();
+            try {
+                mediaPlayer.start();
+            } catch (Throwable e) {
+                Log.e(TAG, String.format("Review logic: %s", e.getMessage()));
+            }
         }
     }
 
@@ -183,7 +191,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
             return;
         }
-        
+
         initGestures();
 
         mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
@@ -196,7 +204,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
 
         if (mediaFD != null) {
             setTitle(getString(R.string.application_label) + ": " + mediaFD.artist + " - " + mediaFD.title);
-            
+
             ImageView image = findView(R.id.activity_media_player_image);
             Bitmap coverArt = readCoverArt();
             if (coverArt != null) {
@@ -206,7 +214,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             Engine.instance().getMediaPlayer().stop();
         }
     }
-    
+
     private void initGestures() {
         LinearLayout lowestLayout = findView(R.id.lowestLayout);
         lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
@@ -214,12 +222,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             public void onLeftToRightSwipe() {
                 Engine.instance().getMediaPlayer().playPrevious();
             }
-            
+
             @Override
             public void onRightToLeftSwipe() {
                 Engine.instance().getMediaPlayer().playNext();
             }
-            
+
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
                 Engine.instance().getMediaPlayer().togglePause();
@@ -235,7 +243,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
-        
+
         enableLock(false);
     }
 
@@ -339,11 +347,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
     }
 
     private void enableLock(boolean enable) {
-        KeyguardManager keyguardManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
+        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
         KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-           
+
         if (enable) {
-            lock.reenableKeyguard();           
+            lock.reenableKeyguard();
         } else {
             lock.disableKeyguard();
         }
