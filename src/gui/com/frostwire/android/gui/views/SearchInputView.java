@@ -45,7 +45,7 @@ import com.frostwire.android.gui.views.QuickAction.OnActionItemClickListener;
 public class SearchInputView extends LinearLayout {
 
     private static final String TAG = "FW.SearchInputView";
-    
+
     private final SuggestionsAdapter adapter;
 
     private Button buttonOptions;
@@ -60,7 +60,7 @@ public class SearchInputView extends LinearLayout {
 
     public SearchInputView(Context context, AttributeSet set) {
         super(context, set);
-        
+
         this.adapter = new SuggestionsAdapter(context);
     }
 
@@ -77,7 +77,9 @@ public class SearchInputView extends LinearLayout {
     }
 
     public void hideQuickAction() {
-        quickAction.dismiss();
+        if (quickAction != null) {
+            quickAction.dismiss();
+        }
     }
 
     @Override
@@ -128,7 +130,7 @@ public class SearchInputView extends LinearLayout {
         QuickActionItem document = new QuickActionItem(MediaType.getDocumentMediaType().getId(), rs.getString(R.string.media_type_documents), rs.getDrawable(R.drawable.document));
         QuickActionItem application = new QuickActionItem(MediaType.getApplicationsMediaType().getId(), rs.getString(R.string.media_type_applications), rs.getDrawable(R.drawable.application));
         QuickActionItem torrent = new QuickActionItem(MediaType.getTorrentMediaType().getId(), rs.getString(R.string.media_type_torrents), rs.getDrawable(R.drawable.torrent));
-        
+
         quickAction = new QuickAction(getContext(), isLandscape() ? QuickAction.HORIZONTAL : QuickAction.VERTICAL);
 
         // add action items into QuickAction
@@ -156,7 +158,7 @@ public class SearchInputView extends LinearLayout {
         buttonOptions = (Button) findViewById(R.id.view_search_button_options);
         buttonOptions.setBackgroundResource(getDrawableId(mediaTypeId));
         buttonOptions.setOnTouchListener(new OnTouchListener() {
-            
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 quickAction.show(v);
@@ -174,7 +176,7 @@ public class SearchInputView extends LinearLayout {
     }
 
     private int getDrawableId(int mediaTypeId) {
-        
+
         if (MediaType.getApplicationsMediaType().getId() == mediaTypeId) {
             return R.drawable.application;
         } else if (MediaType.getAudioMediaType().getId() == mediaTypeId) {
