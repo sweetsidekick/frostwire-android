@@ -156,7 +156,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
 
     public void seekTo(int i) {
         if (mediaPlayer != null) {
-            mediaPlayer.seekTo(i);
+            try {
+                mediaPlayer.seekTo(i);
+            } catch (Throwable e) {
+                // ignore
+            }
         }
     }
 
