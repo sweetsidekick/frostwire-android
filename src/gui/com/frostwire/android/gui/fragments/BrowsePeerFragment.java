@@ -216,8 +216,12 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             byte[] uuid = intent.getByteArrayExtra(Constants.EXTRA_PEER_UUID);
 
             if (uuid != null) {
-                peer = PeerManager.instance().findPeerByUUID(uuid);
-                local = peer.isLocalHost();
+                try {
+                    peer = PeerManager.instance().findPeerByUUID(uuid);
+                    local = peer.isLocalHost();
+                } catch (Throwable e) {
+                    peer = null; // weird situation reported by a strange bug.
+                }
             }
         }
     }
