@@ -338,11 +338,16 @@ public class MediaControllerView extends FrameLayout {
     }
 
     private void doPauseResume() {
+        if (player == null) {
+            return;
+        }
+
         if (player.isPlaying()) {
             player.pause();
         } else {
             player.resume();
         }
+
         updatePausePlay();
     }
 
