@@ -79,7 +79,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
     @Override
     public void playPrevious() {
-        if (mp != null) {
+        if (mp != null && playlist != null) {
             PlaylistItem item = playlist.getPreviousItem();
             if (item != null && item.getFD() != null) {
                 playInternal(item.getFD());
@@ -89,7 +89,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
     @Override
     public void playNext() {
-        if (mp != null) {
+        if (mp != null && playlist != null) {
             PlaylistItem item = playlist.getNextItem();
             if (item != null && item.getFD() != null) {
                 playInternal(item.getFD());
@@ -125,21 +125,21 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
     @Override
     public boolean isPlaying() {
-        return (mp!=null) ? mp.isPlaying() :  false;
+        return (mp != null) ? mp.isPlaying() : false;
     }
-    
+
     @Override
     public void seekTo(int position) {
         if (mp != null) {
             mp.seekTo(position);
         }
     }
-    
+
     @Override
     public int getPosition() {
         return (mp != null) ? mp.getCurrentPosition() : -1;
     }
-    
+
     @Override
     public FileDescriptor getCurrentFD() {
         return currentFD;
@@ -233,7 +233,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
-            
+
         } catch (Throwable e) {
             Log.e(TAG, "Error creating player notification", e);
         }
