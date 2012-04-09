@@ -189,14 +189,14 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
         mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
 
-        setTitle(getString(R.string.application_label) + ": " + mediaFD.artist + " - " + mediaFD.title);
-
         if (mediaPlayer != null) {
             mediaController = findView(R.id.activity_media_player_media_controller);
             mediaController.setMediaPlayer(this);
         }
 
         if (mediaFD != null) {
+            setTitle(getString(R.string.application_label) + ": " + mediaFD.artist + " - " + mediaFD.title);
+            
             ImageView image = findView(R.id.activity_media_player_image);
             Bitmap coverArt = readCoverArt();
             if (coverArt != null) {

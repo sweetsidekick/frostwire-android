@@ -41,7 +41,9 @@ public interface CoreMediaPlayer {
     
     public void seekTo(int position);
     
-    /** Return -1 if player isn't ready or not playing. */
+    /**
+     * Return -1 if player isn't ready or not playing.
+     */
     public int getPosition();
     
     /**
@@ -50,6 +52,4 @@ public interface CoreMediaPlayer {
      * @return
      */
     public FileDescriptor getCurrentFD();
-
-    
 }
