@@ -142,7 +142,7 @@ public final class Peer implements Cloneable {
 
     @Override
     public String toString() {
-        return "Peer(" + nickname + "@" + address.getHostAddress() + ", v:" + clientVersion + ")";
+        return "Peer(" + nickname + "@" + (address != null ? address.getHostAddress() : "unknown") + ", v:" + clientVersion + ")";
     }
 
     @Override
