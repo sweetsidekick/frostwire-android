@@ -61,8 +61,8 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 if (Engine.instance().isDisconnected()) {
                     Engine.instance().startServices();
                 }
-            } else if (action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) { 
-                handleActionPhoneStateChanged(intent);              
+            } else if (action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
+                handleActionPhoneStateChanged(intent);
             } else if (action.equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
                 Librarian.instance().syncMediaStore();
             } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
@@ -94,17 +94,15 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
     private void handleActionPhoneStateChanged(Intent intent) {
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
         String msg = "Phone state changed to " + state;
-        Log.v(TAG,msg);
-        
-        if (TelephonyManager.EXTRA_STATE_RINGING.equals(state) ||
-             TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state) ||
-             TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
+        Log.v(TAG, msg);
+
+        if (TelephonyManager.EXTRA_STATE_RINGING.equals(state) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state) || TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
             CoreMediaPlayer mediaPlayer = Engine.instance().getMediaPlayer();
             if (mediaPlayer.isPlaying()) {
                 wasPlaying = true;
                 mediaPlayer.togglePause();
             } else if (wasPlaying && TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
-                mediaPlayer.seekTo(Math.max(0, mediaPlayer.getPosition()-2000));
+                mediaPlayer.seekTo(Math.max(0, mediaPlayer.getPosition() - 2000));
                 wasPlaying = false;
                 mediaPlayer.togglePause();
             }
@@ -120,11 +118,17 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
         if (NetworkManager.instance().isDataUp()) {
             Log.v(TAG, "Connected to " + networkInfo.getTypeName());
             if (Engine.instance().isDisconnected()) {
-                Engine.instance().startServices();
+                // avoid ANR error inside a broadcast receiver
+                Engine.instance().getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Engine.instance().startServices();
 
-                if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                    TransferManager.instance().stopSeedingTorrents();
-                }
+                        if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
+                            TransferManager.instance().stopSeedingTorrents();
+                        }
+                    }
+                });
             }
 
             NetworkManager.instance().printNetworkInfo();
