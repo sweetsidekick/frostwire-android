@@ -72,7 +72,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     public void filter(int mediaTypeId) {
         visualList = new ArrayList<SearchResult>();
-        for (SearchResult sr : list) {
+        for (SearchResult sr : new ArrayList<SearchResult>(list)) {
             if (sr instanceof BittorrentSearchResult) {
                 BittorrentSearchResult bsr = (BittorrentSearchResult) sr;
                 if (accept(bsr, mediaTypeId)) {

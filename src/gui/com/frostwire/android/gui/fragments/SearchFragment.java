@@ -46,8 +46,7 @@ import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements
-        SearchResultDisplayer {
+public class SearchFragment extends AbstractListFragment implements SearchResultDisplayer {
 
     private SearchInputView searchInput;
 
@@ -85,11 +84,9 @@ public class SearchFragment extends AbstractListFragment implements
                 public void run() {
                     if (!searchInput.isEmpty()) {
                         if (adapter == null) {
-                            adapter = new SearchResultListAdapter(
-                                    getActivity(), results) {
+                            adapter = new SearchResultListAdapter(getActivity(), results) {
                                 @Override
-                                protected void onTransferStarted(
-                                        DownloadTransfer transfer) {
+                                protected void onTransferStarted(DownloadTransfer transfer) {
                                     searchManager.cancelSearch();
                                 }
                             };
@@ -99,14 +96,10 @@ public class SearchFragment extends AbstractListFragment implements
                             List<SearchResult> list = adapter.getList();
                             list.addAll(results); // heavy use of OO references
                             adapter.sort(new Comparator<SearchResult>() {
-                                public int compare(SearchResult lhs,
-                                        SearchResult rhs) {
+                                public int compare(SearchResult lhs, SearchResult rhs) {
                                     if (lhs instanceof BittorrentSearchResult) {
                                         if (rhs instanceof BittorrentSearchResult) {
-                                            return ((BittorrentSearchResult) rhs)
-                                                    .getSeeds()
-                                                    - ((BittorrentSearchResult) lhs)
-                                                            .getSeeds();
+                                            return ((BittorrentSearchResult) rhs).getSeeds() - ((BittorrentSearchResult) lhs).getSeeds();
                                         } else {
                                             return -1;
                                         }
@@ -133,8 +126,7 @@ public class SearchFragment extends AbstractListFragment implements
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     hideProgressDialog();
-                    if (!searchInput.isEmpty() && adapter != null
-                            && sr instanceof BittorrentSearchResult) {
+                    if (!searchInput.isEmpty() && adapter != null && sr instanceof BittorrentSearchResult) {
                         BittorrentSearchResult bsr = (BittorrentSearchResult) sr;
                         adapter.addItem(sr, adapter.accept(bsr, mediaTypeId));
                     }
@@ -159,7 +151,7 @@ public class SearchFragment extends AbstractListFragment implements
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
                 SearchFragment.this.mediaTypeId = mediaTypeId;
-                switchView(view,android.R.id.list);
+                switchView(view, android.R.id.list);
                 showProgressDialog();
                 searchManager.performSearch(query);
             }
@@ -172,7 +164,7 @@ public class SearchFragment extends AbstractListFragment implements
             }
 
             public void onClear(View v) {
-                switchView(view,R.id.fragment_search_promos);
+                switchView(view, R.id.fragment_search_promos);
                 searchManager.cancelSearch();
                 adapter = null;
                 setListAdapter(null);
@@ -180,8 +172,8 @@ public class SearchFragment extends AbstractListFragment implements
         });
 
         searchManager = new BittorrentSearchEngine(getActivity(), this);
-        
-        switchView(view,R.id.fragment_search_promos);
+
+        switchView(view, R.id.fragment_search_promos);
     }
 
     @Override
@@ -202,16 +194,16 @@ public class SearchFragment extends AbstractListFragment implements
         progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDlg.setMessage(getString(R.string.searching_indeterminate));
         progressDlg.setCancelable(false);
-        
-        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE,getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            
+
+        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 searchManager.cancelSearch();
                 hideProgressDialog();
             }
         });
-        
+
         trackDialog(progressDlg).show();
     }
 
@@ -226,14 +218,12 @@ public class SearchFragment extends AbstractListFragment implements
     }
 
     private void switchView(View v, int id) {
-        FrameLayout frameLayout = findView(v,
-                R.id.fragment_search_framelayout);
+        FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
 
         int childCount = frameLayout.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = frameLayout.getChildAt(i);
-            childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE
-                    : View.INVISIBLE);
+            childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
         }
     }
 }
