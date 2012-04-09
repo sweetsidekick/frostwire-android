@@ -23,12 +23,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ViewFlipper
+    <com.frostwire.android.gui.views.ViewFlipper
         android:id="@+id/activity_wizard_view_flipper"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.0"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1.0" >
 
         <com.frostwire.android.gui.views.GeneralWizardPage
             android:layout_width="fill_parent"
@@ -37,7 +37,7 @@
         <com.frostwire.android.gui.views.IntentWizardPage
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
-    </ViewFlipper>
+    </com.frostwire.android.gui.views.ViewFlipper>
 
     <LinearLayout
         android:id="@+id/activity_wizard_buttons"
