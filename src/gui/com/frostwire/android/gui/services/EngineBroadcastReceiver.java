@@ -111,7 +111,12 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private void handleDisconnectedNetwork(NetworkInfo networkInfo) {
         Log.v(TAG, "Disconnected from network (" + networkInfo.getTypeName() + ")");
-        Engine.instance().stopServices(true);
+        Engine.instance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                Engine.instance().stopServices(true);
+            }
+        });
     }
 
     private void handleConnectedNetwork(NetworkInfo networkInfo) {
