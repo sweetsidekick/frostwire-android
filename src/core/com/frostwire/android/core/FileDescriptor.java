@@ -34,7 +34,6 @@ public class FileDescriptor implements Cloneable {
     public boolean shared;
     public long dateAdded;
     public long dateModified;
-    
 
     /**
      * The title of the content.
@@ -92,7 +91,15 @@ public class FileDescriptor implements Cloneable {
 
         FileDescriptor fd = (FileDescriptor) o;
 
-        return this.id == fd.id && this.fileType == fd.fileType;
+        if (this.id == fd.id && this.fileType == fd.fileType) {
+            return true;
+        }
+
+        if (this.filePath != null && fd.filePath != null && this.filePath.equals(fd.filePath)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

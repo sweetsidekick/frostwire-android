@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -49,6 +52,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
     private final Service service;
     private final FocusListener focusListener;
+    private final List<FileDescriptor> failedFDs;
 
     private MediaPlayer mp;
     private Playlist playlist;
@@ -58,6 +62,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     public NativeAndroidPlayer(Service service) {
         this.service = service;
         this.focusListener = new FocusListener();
+        this.failedFDs = new ArrayList<FileDescriptor>();
     }
 
     @Override
@@ -160,6 +165,10 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
 
         //releaseMediaPlayer();
         //service.stopForeground(true);
+        if (currentFD != null) {
+            failedFDs.add(currentFD);
+            Log.e(TAG, String.format("Error playing media, what=%d, file=%s", what, currentFD.filePath));
+        }
 
         return false;
     }
@@ -167,13 +176,21 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     @Override
     public void onPrepared(MediaPlayer mp) {
         if (mp != null) {
-            mp.start();
+            try {
+                mp.start();
 
-            if (launchActivity) {
-                launchActivity = false;
-                notifyMediaPlay();
+                if (launchActivity) {
+                    launchActivity = false;
+                    notifyMediaPlay();
+                }
+
+                service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
+            } catch (Throwable e) {
+                if (currentFD != null) {
+                    failedFDs.add(currentFD);
+                }
+                Log.e(TAG, String.format("Error starting media player for file: %s", currentFD != null ? currentFD.filePath : "unknown"), e);
             }
-            service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
         }
     }
 
@@ -199,11 +216,19 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         mp = null;
         playlist = null;
         currentFD = null;
+
+        failedFDs.clear();
     }
 
     private void playInternal(FileDescriptor fd) {
         if (mp != null && fd != null) {
             try {
+                if (failedFDs.contains(fd)) {
+                    Log.w(TAG, String.format("File play just failed: %s", fd.filePath));
+                    stop();
+                    return;
+                }
+
                 currentFD = fd;
 
                 mp.stop();
@@ -211,7 +236,8 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
                 mp.setDataSource(currentFD.filePath);
                 mp.prepareAsync();
             } catch (Throwable e) {
-                Log.e(TAG, "Error playing media: " + currentFD.filePath, e);
+                failedFDs.add(currentFD);
+                Log.e(TAG, String.format("Error playing media: %s", currentFD.filePath), e);
             }
         }
     }
