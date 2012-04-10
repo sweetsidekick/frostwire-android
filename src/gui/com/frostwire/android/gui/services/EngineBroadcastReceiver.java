@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.services;
 
+import java.util.concurrent.ExecutorService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +37,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
 /**
  * Receives and controls messages from the external world. Depending on the
@@ -47,9 +50,13 @@ import com.frostwire.android.gui.transfers.TransferManager;
 public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "FW.EngineBroadcastReceiver";
+
+    private final ExecutorService engineExecutor;
+
     private boolean wasPlaying;
 
     public EngineBroadcastReceiver() {
+        engineExecutor = ExecutorsHelper.newFixedSizeThreadPool(1, "BroadcastReceiver-EngineExecutor");
     }
 
     @Override
@@ -59,7 +66,12 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
             if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
                 if (Engine.instance().isDisconnected()) {
-                    Engine.instance().startServices();
+                    engineExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Engine.instance().startServices();
+                        }
+                    });
                 }
             } else if (action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
                 handleActionPhoneStateChanged(intent);
@@ -111,7 +123,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private void handleDisconnectedNetwork(NetworkInfo networkInfo) {
         Log.v(TAG, "Disconnected from network (" + networkInfo.getTypeName() + ")");
-        Engine.instance().getThreadPool().execute(new Runnable() {
+        engineExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 Engine.instance().stopServices(true);
@@ -124,7 +136,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             Log.v(TAG, "Connected to " + networkInfo.getTypeName());
             if (Engine.instance().isDisconnected()) {
                 // avoid ANR error inside a broadcast receiver
-                Engine.instance().getThreadPool().execute(new Runnable() {
+                engineExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         Engine.instance().startServices();

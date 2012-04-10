@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.clearbits.ClearBitsWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.extratorrent.ExtratorrentWebSearchPerformer;
@@ -112,7 +113,7 @@ public final class SearchEngine {
     }
 
     public static List<SearchEngine> getSearchEngines() {
-        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, /*TPB,*/ KAT);
+        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, /*TPB,*/KAT);
     }
 
     public static SearchEngine getSearchEngine(int id) {
@@ -135,6 +136,7 @@ public final class SearchEngine {
         return null;
     }
 
+    @SuppressLint("UseSparseArrays")
     public static Map<Integer, SearchEngine> getSearchEngineMap() {
         HashMap<Integer, SearchEngine> map = new HashMap<Integer, SearchEngine>();
 
