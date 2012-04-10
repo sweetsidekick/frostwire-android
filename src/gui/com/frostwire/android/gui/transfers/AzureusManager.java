@@ -107,7 +107,7 @@ public final class AzureusManager {
     public void resume() {
         try {
             COConfigurationManager.setParameter("UDP.Listen.Port.Enable", NetworkManager.instance().isDataWIFIUp());
-            COConfigurationManager.save();
+            asyncSaveConfiguration();
 
             SimpleTimer.resume();
             azureusCore.getGlobalManager().resumeDownloads();
@@ -209,7 +209,7 @@ public final class AzureusManager {
         COConfigurationManager.setParameter("network.control.write.idle.time", 1000);
         COConfigurationManager.setParameter("network.control.read.idle.time", 1000);
 
-        COConfigurationManager.save();
+        asyncSaveConfiguration();
     }
 
     private void azureusInit() {
@@ -281,7 +281,7 @@ public final class AzureusManager {
 
     private void setAzureusParameter(String key) {
         COConfigurationManager.setParameter(key, ConfigurationManager.instance().getLong(key));
-        COConfigurationManager.save();
+        asyncSaveConfiguration();
     }
 
     private void loadMessages(Context context) {
@@ -310,5 +310,17 @@ public final class AzureusManager {
         map.put("GeneralView.no", context.getString(R.string.azureus_general_view_no));
 
         DisplayFormatters.loadMessages(map);
+    }
+
+    private void asyncSaveConfiguration() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                COConfigurationManager.save();
+            }
+        }, "Azureus-SaveConfiguration");
+
+        t.setDaemon(true);
+        t.start();
     }
 }

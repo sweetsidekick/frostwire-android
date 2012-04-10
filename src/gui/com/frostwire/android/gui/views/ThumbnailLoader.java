@@ -110,9 +110,9 @@ public final class ThumbnailLoader {
         public final Integer key;
         public final ImageView imageView;
 
-        public ThumbnailToLoad(Integer key, ImageView i) {
+        public ThumbnailToLoad(Integer key, ImageView imageView) {
             this.key = key;
-            imageView = i;
+            this.imageView = imageView;
         }
     }
 
