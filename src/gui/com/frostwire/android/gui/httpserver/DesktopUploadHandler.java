@@ -34,6 +34,7 @@ import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.transfers.DesktopTransfer;
+import com.frostwire.android.gui.transfers.DesktopTransferItem;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.httpserver.Code;
@@ -136,6 +137,7 @@ final class DesktopUploadHandler implements HttpHandler {
 
         File file = null;
         DesktopTransfer transfer = null;
+        DesktopTransferItem transferItem = null;
 
         try {
 
@@ -146,7 +148,8 @@ final class DesktopUploadHandler implements HttpHandler {
             DesktopUploadRequest dur = sessionManager.getDUR(token);
             FileDescriptor fd = findFD(dur, filePath);
 
-            transfer = TransferManager.instance().desktopTransfer(fd);
+            transfer = TransferManager.instance().desktopTransfer(dur, fd);
+            transferItem = transfer.getItem(fd);
 
             byte[] buffer = new byte[4 * 1024];
             int n;
@@ -158,7 +161,7 @@ final class DesktopUploadHandler implements HttpHandler {
                     file.delete();
                     return false;
                 } else {
-                    transfer.addBytesTransferred(n);
+                    transferItem.addBytesTransferred(n);
                     sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.UPLOADING);
                 }
             }
@@ -180,6 +183,10 @@ final class DesktopUploadHandler implements HttpHandler {
             if (file != null) {
                 file.delete();
             }
+
+            if (transferItem != null) {
+                transferItem.setFailed();
+            }
         } finally {
             if (fos != null) {
                 try {
@@ -192,10 +199,6 @@ final class DesktopUploadHandler implements HttpHandler {
                 is.close();
             } catch (Throwable e) {
                 // ignore
-            }
-
-            if (transfer != null) {
-                transfer.complete();
             }
         }
 

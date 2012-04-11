@@ -31,6 +31,7 @@ import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
@@ -106,9 +107,26 @@ public final class TransferManager {
         return upload;
     }
 
-    public DesktopTransfer desktopTransfer(FileDescriptor fd) {
-        DesktopTransfer transfer = new DesktopTransfer(this, fd);
-        downloads.add(transfer);
+    public DesktopTransfer desktopTransfer(DesktopUploadRequest dur, FileDescriptor fd) {
+        DesktopTransfer transfer = null;
+
+        for (DownloadTransfer downloadTransfer : downloads) {
+            if (downloadTransfer instanceof DesktopTransfer) {
+                DesktopTransfer desktopTransfer = (DesktopTransfer) downloadTransfer;
+                if (desktopTransfer.getDUR().equals(dur)) {
+                    transfer = desktopTransfer;
+                    break;
+                }
+            }
+        }
+
+        if (transfer == null) {
+            transfer = new DesktopTransfer(this, dur, fd);
+            downloads.add(transfer);
+        } else {
+            transfer.addFileDescriptor(fd);
+        }
+
         return transfer;
     }
 

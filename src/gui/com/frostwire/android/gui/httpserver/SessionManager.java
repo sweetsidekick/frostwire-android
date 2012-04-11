@@ -68,6 +68,7 @@ public final class SessionManager {
 
         String token = createDURToken();
 
+        dur.token = token;
         dur.status = DesktopUploadRequestStatus.PENDING;
         dur.updateTimestamp = System.currentTimeMillis();
 

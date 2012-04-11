@@ -19,11 +19,13 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FilenameUtils;
@@ -39,34 +41,58 @@ public class DesktopTransfer implements DownloadTransfer {
     private static final int STATUS_COMPLETE = 2;
     private static final int STATUS_CANCELLED = 3;
 
-    private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
-
     private final TransferManager manager;
+    private final DesktopUploadRequest dur;
     private final FileDescriptor fd;
     private final Date dateCreated;
+
     private final File savePath;
+    private final List<DesktopTransferItem> items;
 
     private int status;
-    public long bytesTransferred;
-    public long averageSpeed; // in bytes
+    private long lastSpeed;
 
-    // variables to keep the upload rate of this transfer
-    private long speedMarkTimestamp;
-    private long totalTransferredSinceLastSpeedStamp;
-
-    DesktopTransfer(TransferManager manager, FileDescriptor fd) {
+    DesktopTransfer(TransferManager manager, DesktopUploadRequest dur, FileDescriptor fd) {
         this.manager = manager;
+        this.dur = dur;
         this.fd = fd;
         this.dateCreated = new Date();
 
         this.savePath = new File(SystemUtils.getDesktopFilesirectory(), FilenameUtils.getName(fd.filePath));
+        this.items = new ArrayList<DesktopTransferItem>();
+
+        addFileDescriptor(fd);
 
         status = STATUS_TRANSFERRING;
     }
 
+    public DesktopUploadRequest getDUR() {
+        return dur;
+    }
+
+    public DesktopTransferItem getItem(FileDescriptor fd) {
+        for (DesktopTransferItem item : items) {
+            if (item.getFD().filePath.equals(fd.filePath)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public DesktopTransferItem addFileDescriptor(FileDescriptor fd) {
+        DesktopTransferItem item = new DesktopTransferItem(fd);
+        items.add(item);
+        return item;
+    }
+
     @Override
     public String getDisplayName() {
-        return FilenameUtils.getName(fd.filePath);
+        if (items.size() == 1) {
+            return FilenameUtils.getName(fd.filePath);
+        } else {
+            return dur.computerName;
+        }
     }
 
     @Override
@@ -76,12 +102,33 @@ public class DesktopTransfer implements DownloadTransfer {
 
     @Override
     public int getProgress() {
-        return isComplete() ? 100 : (int) ((bytesTransferred * 100) / fd.fileSize);
+        int progress = 0;
+
+        if (isComplete()) {
+            progress = 100;
+        } else {
+            long bytesTransferred = getBytesReceived();
+            long totalSize = getSize();
+
+            progress = bytesTransferred == totalSize ? 100 : (int) ((bytesTransferred * 100) / totalSize);
+        }
+
+        if (progress == 100) {
+            complete();
+        }
+
+        return progress;
     }
 
     @Override
     public long getSize() {
-        return fd.fileSize;
+        int totalSize = 0;
+
+        for (FileDescriptor fd : dur.files) {
+            totalSize += fd.fileSize;
+        }
+
+        return totalSize;
     }
 
     @Override
@@ -91,6 +138,12 @@ public class DesktopTransfer implements DownloadTransfer {
 
     @Override
     public long getBytesReceived() {
+        long bytesTransferred = 0;
+
+        for (DesktopTransferItem item : items) {
+            bytesTransferred += item.bytesTransferred;
+        }
+
         return bytesTransferred;
     }
 
@@ -101,7 +154,25 @@ public class DesktopTransfer implements DownloadTransfer {
 
     @Override
     public long getDownloadSpeed() {
-        return averageSpeed;
+        if (isComplete()) {
+            return 0;
+        } else {
+            long speed = 0;
+            int n = 0;
+
+            for (DesktopTransferItem item : items) {
+                if (!item.isComplete() && item.averageSpeed > 0) {
+                    speed += item.averageSpeed;
+                    n++;
+                }
+            }
+
+            if (n > 0) {
+                lastSpeed = speed / n;
+            }
+
+            return lastSpeed;
+        }
     }
 
     @Override
@@ -111,18 +182,22 @@ public class DesktopTransfer implements DownloadTransfer {
 
     @Override
     public long getETA() {
-        long speed = getUploadSpeed();
-        return speed > 0 ? (fd.fileSize - getBytesSent()) / speed : Long.MAX_VALUE;
+        long speed = getDownloadSpeed();
+        return speed > 0 ? (getSize() - getBytesReceived()) / speed : Long.MAX_VALUE;
     }
 
     @Override
     public boolean isComplete() {
-        return bytesTransferred == fd.fileSize;
+        return getBytesReceived() == getSize();
     }
 
     @Override
     public List<? extends TransferItem> getItems() {
-        return Collections.emptyList();
+        if (items.size() > 1) {
+            return items;
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -148,14 +223,8 @@ public class DesktopTransfer implements DownloadTransfer {
         cancel();
     }
 
-    public void addBytesTransferred(int n) {
-        bytesTransferred += n;
-        updateAverageTransferSpeed();
-    }
-
     public void complete() {
         status = STATUS_COMPLETE;
-        cancel();
     }
 
     public boolean isCanceled() {
@@ -179,15 +248,5 @@ public class DesktopTransfer implements DownloadTransfer {
             break;
         }
         return String.valueOf(resId);
-    }
-
-    private void updateAverageTransferSpeed() {
-        long now = System.currentTimeMillis();
-
-        if (now - speedMarkTimestamp > SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS) {
-            averageSpeed = ((bytesTransferred - totalTransferredSinceLastSpeedStamp) * 1000) / (now - speedMarkTimestamp);
-            speedMarkTimestamp = now;
-            totalTransferredSinceLastSpeedStamp = bytesTransferred;
-        }
     }
 }

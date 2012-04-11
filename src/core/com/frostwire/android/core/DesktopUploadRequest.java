@@ -36,6 +36,18 @@ public class DesktopUploadRequest {
 
     public List<FileDescriptor> files;
 
+    public String token;
     public DesktopUploadRequestStatus status;
     public long updateTimestamp;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof DesktopUploadRequest)) {
+            return false;
+        }
+
+        DesktopUploadRequest dur = (DesktopUploadRequest) o;
+
+        return this.token.equals(dur.token);
+    }
 }

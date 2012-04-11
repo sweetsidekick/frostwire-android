@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,7 @@ import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
 import com.frostwire.android.gui.transfers.DesktopTransfer;
+import com.frostwire.android.gui.transfers.DesktopTransferItem;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
@@ -242,6 +244,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     protected void populateChildView(View view, TransferItem item) {
         if (item instanceof BittorrentDownloadItem) {
             populateBittorrentDownloadItem(view, (BittorrentDownloadItem) item);
+        } else if (item instanceof DesktopTransferItem) {
+            populateDesktopTransferItem(view, (DesktopTransferItem) item);
         }
     }
 
@@ -277,7 +281,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
 
-            if (download.isComplete() && tag instanceof HttpDownload) {
+            boolean openMenu = false;
+            openMenu |= download.isComplete() && tag instanceof HttpDownload;
+            openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 1;
+
+            if (openMenu) {
                 items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
             } else {
                 items.add(new CancelMenuAction(context, download, true));
@@ -511,6 +519,23 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonPlay.setOnClickListener(playOnClickListener);
     }
 
+    private void populateDesktopTransferItem(View view, DesktopTransferItem item) {
+        ImageView icon = findView(view, R.id.view_transfer_item_list_item_icon);
+        TextView title = findView(view, R.id.view_transfer_item_list_item_title);
+        ProgressBar progress = findView(view, R.id.view_transfer_item_list_item_progress);
+        TextView size = findView(view, R.id.view_transfer_item_list_item_size);
+        ImageButton buttonPlay = findView(view, R.id.view_transfer_item_list_item_button_play);
+
+        icon.setBackgroundResource(UIUtils.getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
+        title.setText(item.getDisplayName());
+        progress.setProgress(item.getProgress());
+        size.setText(UIUtils.getBytesInHuman(item.getSize()));
+
+        buttonPlay.setTag(item);
+        buttonPlay.setVisibility(item.isComplete() ? View.VISIBLE : View.GONE);
+        buttonPlay.setOnClickListener(playOnClickListener);
+    }
+
     private final class ViewOnClickListener implements OnClickListener {
         public void onClick(View v) {
             try {
@@ -547,16 +572,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             if (transfer instanceof BittorrentDownload) {
                 viewOnClickListener.onClick(v);
             } else {
-                if (transfer.isComplete()) {
-                    transfer.cancel();
-                } else {
-                    trackDialog(UIUtils.showYesNoDialog(context, R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            transfer.cancel();
-                        }
-                    }));
-                }
-
+                trackDialog(UIUtils.showYesNoDialog(context, R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        transfer.cancel();
+                    }
+                }));
             }
         }
     }
@@ -565,8 +585,21 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         public void onClick(View v) {
             TransferItem item = (TransferItem) v.getTag();
 
-            if (item instanceof BittorrentDownloadItem && item.isComplete()) {
-                UIUtils.openFile(context, ((BittorrentDownloadItem) item).getSavePath());
+            boolean canOpen = false;
+            canOpen |= item.isComplete() && item instanceof BittorrentDownloadItem;
+            canOpen |= item.isComplete() && item instanceof DesktopTransferItem;
+
+            if (canOpen) {
+                File savePath = null;
+                if (item instanceof BittorrentDownloadItem) {
+                    savePath = ((BittorrentDownloadItem) item).getSavePath();
+                } else if (item instanceof DesktopTransferItem) {
+                    savePath = ((DesktopTransferItem) item).getSavePath();
+                }
+
+                if (savePath != null) {
+                    UIUtils.openFile(context, savePath);
+                }
             }
         }
     }
