@@ -50,4 +50,9 @@ public class DesktopUploadRequest {
 
         return this.token.equals(dur.token);
     }
+
+    @Override
+    public int hashCode() {
+        return token != null ? token.hashCode() : super.hashCode();
+    }
 }
