@@ -1,3 +1,7 @@
+FrostWire 0.9.8
+ - Accepts uploads from FrostWire for Desktop.
+ - 24 Force close errors and freezes fixed.
+
 Frostwire 0.9.7
  - Media player is now car driver safe. Skip songs with swipe gestures,
    pause and play songs by tapping the screen with two or more fingers.
