@@ -42,6 +42,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
@@ -210,6 +211,10 @@ public class MainActivity extends AbstractActivity {
 
         final DesktopUploadManager dum = Engine.instance().getDesktopUploadManager();
 
+        if (dum == null) {
+            return;
+        }
+        
         DesktopUploadRequest dur = dum.getRequest(durToken);
 
         if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
@@ -219,6 +224,10 @@ public class MainActivity extends AbstractActivity {
                     switch (result) {
                     case ACCEPT:
                         dum.authorizeRequest(durToken);
+                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+                            Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
+                            MainActivity.this.startActivity(i.setClass(MainActivity.this, MainActivity.class));
+                        }
                         break;
                     case REJECT:
                         dum.rejectRequest(durToken);
