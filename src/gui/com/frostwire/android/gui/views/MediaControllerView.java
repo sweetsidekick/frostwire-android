@@ -145,11 +145,13 @@ public class MediaControllerView extends FrameLayout {
                 return;
             }
 
-            long duration = player.getDuration();
-            long newposition = (duration * progress) / 1000L;
-            player.seekTo((int) newposition);
-            if (currentTime != null)
-                currentTime.setText(stringForTime((int) newposition));
+            if (player != null) {
+                long duration = player.getDuration();
+                long newposition = (duration * progress) / 1000L;
+                player.seekTo((int) newposition);
+                if (currentTime != null)
+                    currentTime.setText(stringForTime((int) newposition));
+            }
         }
 
         public void onStopTrackingTouch(SeekBar bar) {
