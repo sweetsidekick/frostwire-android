@@ -38,10 +38,12 @@ public interface BittorrentDownload extends DownloadTransfer {
     public boolean isResumable();
 
     public boolean isPausable();
-    
+
     public boolean isSeeding();
 
     public void pause();
 
     public void resume();
+
+    public void cancel(boolean deleteData, boolean async);
 }

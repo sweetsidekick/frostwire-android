@@ -272,14 +272,16 @@ public final class TransferManager {
         return new LinkedList<BittorrentDownload>(bittorrenDownloads);
     }
 
-    void remove(Transfer transfer) {
+    boolean remove(Transfer transfer) {
         if (transfer instanceof BittorrentDownload) {
-            bittorrenDownloads.remove(transfer);
+            return bittorrenDownloads.remove(transfer);
         } else if (transfer instanceof DownloadTransfer) {
-            downloads.remove(transfer);
+            return downloads.remove(transfer);
         } else if (transfer instanceof UploadTransfer) {
-            uploads.remove(transfer);
+            return uploads.remove(transfer);
         }
+
+        return false;
     }
 
     public void pauseTorrents() {

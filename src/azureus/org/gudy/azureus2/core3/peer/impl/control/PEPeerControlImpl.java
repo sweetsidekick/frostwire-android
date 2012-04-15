@@ -447,7 +447,9 @@ DiskManagerCheckRequestListener, IPFilterListener
 
 		// activate after marked as running as we may synchronously add connections here due to pending activations
 
-		adapter.getPeerManagerRegistration().activate( this );
+		if (adapter != null && adapter.getPeerManagerRegistration() != null) { // FrostWire Team hack
+		    adapter.getPeerManagerRegistration().activate( this );
+		}
 
 		PeerNATTraverser.getSingleton().register( this );
 
@@ -466,7 +468,9 @@ DiskManagerCheckRequestListener, IPFilterListener
 
 		// remove legacy controller activation
 
-		adapter.getPeerManagerRegistration().deactivate();
+		if (adapter != null && adapter.getPeerManagerRegistration() != null) { //FrostWire Team hack
+		    adapter.getPeerManagerRegistration().deactivate();
+		}
 
 		closeAndRemoveAllPeers("download stopped", false);
 

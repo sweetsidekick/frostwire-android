@@ -161,6 +161,11 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
         return Collections.emptyList();
     }
 
+    @Override
     public void cancel(boolean deleteData) {
+    }
+
+    @Override
+    public void cancel(boolean deleteData, boolean async) {
     }
 }

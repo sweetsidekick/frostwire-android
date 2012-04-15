@@ -26,10 +26,11 @@ import java.util.Set;
 
 import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
 import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.torrent.TOTorrentException;
 import org.gudy.azureus2.core3.tracker.client.TRTrackerScraperResponse;
 import org.gudy.azureus2.core3.util.Constants;
 import org.gudy.azureus2.core3.util.DisplayFormatters;
+
+import android.util.Log;
 
 import com.frostwire.android.util.FilenameUtils;
 
@@ -39,6 +40,8 @@ import com.frostwire.android.util.FilenameUtils;
  *
  */
 final class AzureusBittorrentDownload implements BittorrentDownload {
+
+    private static final String TAG = "FW.AzureusBittorrentDownload";
 
     private final TransferManager manager;
     private DownloadManager downloadManager;
@@ -56,7 +59,8 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
         try {
             hash = TorrentUtil.hashToString(downloadManager.getTorrent().getHash());
-        } catch (TOTorrentException e) {
+        } catch (Throwable e) {
+            Log.e(TAG, String.format("Error getting hash %s", e.getMessage()));
             hash = "";
         }
 
@@ -351,8 +355,12 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public void cancel(boolean deleteData) {
+        cancel(deleteData, true);
+    }
+
+    public void cancel(boolean deleteData, boolean async) {
         manager.remove(this);
-        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, true);
+        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, async);
     }
 
     DownloadManager getDownloadManager() {

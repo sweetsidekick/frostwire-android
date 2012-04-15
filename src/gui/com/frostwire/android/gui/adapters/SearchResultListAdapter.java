@@ -163,7 +163,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
                             Looper.prepare();
                             if (!(transfer instanceof InvalidTransfer)) {
                                 UIUtils.showShortMessage(getContext(), R.string.download_added_to_queue);
-                                notifyDataSetChanged();
 
                                 if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
                                     Intent i = new Intent(getContext(), MainActivity.class);
