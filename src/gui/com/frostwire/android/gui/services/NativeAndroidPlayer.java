@@ -179,9 +179,10 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             try {
                 mp.start();
 
+                notifyMediaPlay(launchActivity);
+
                 if (launchActivity) {
                     launchActivity = false;
-                    notifyMediaPlay();
                 }
 
                 service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
@@ -242,7 +243,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         }
     }
 
-    private void notifyMediaPlay() {
+    private void notifyMediaPlay(boolean launchActivity) {
         try {
             Context context = service.getApplicationContext();
 
@@ -257,9 +258,10 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             notification.setLatestEventInfo(context, service.getString(R.string.application_label), service.getString(R.string.playing_song_name, currentFD.title), pi);
             service.startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
 
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
-
+            if (launchActivity) {
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+            }
         } catch (Throwable e) {
             Log.e(TAG, "Error creating player notification", e);
         }
