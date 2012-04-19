@@ -283,7 +283,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
             boolean openMenu = false;
             openMenu |= download.isComplete() && tag instanceof HttpDownload;
-            openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 1;
+            openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 0;
 
             if (openMenu) {
                 items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
