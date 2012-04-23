@@ -1,3 +1,7 @@
+FrostWire 0.9.9
+ - Fixes NPEs on Media Player.
+ - Fixes important bug on transfer from search result.
+
 FrostWire 0.9.8
  - Accepts uploads from FrostWire for Desktop.
  - 24 Force close errors and freezes fixed.
