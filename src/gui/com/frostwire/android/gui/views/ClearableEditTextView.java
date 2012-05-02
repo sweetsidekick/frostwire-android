@@ -24,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ReplacementTransformationMethod;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -124,6 +125,17 @@ public class ClearableEditTextView extends RelativeLayout {
             }
 
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // workaround for android issue: http://code.google.com/p/android/issues/detail?id=2516
+        // the comment http://code.google.com/p/android/issues/detail?id=2516#c9
+        // seems a little overkill for this situation, but it could work for a general situation.
+        input.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                input.requestFocusFromTouch();
+                return false;
             }
         });
 
