@@ -91,7 +91,7 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_USE_MININOVA = "frostwire.prefs.search.use_mininova";
     //public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
     public static final String PREF_KEY_SEARCH_USE_VERTOR = "frostwire.prefs.search.use_vertor";
-    public static final String PREF_KEY_SEARCH_USE_KAT = "frostwire.prefs.search.use_kat";
+    //public static final String PREF_KEY_SEARCH_USE_KAT = "frostwire.prefs.search.use_kat";
 
     public static final String PREF_KEY_SEARCH_PREFERENCE_CATEGORY = "frostwire.prefs.search.preference_category";
 
