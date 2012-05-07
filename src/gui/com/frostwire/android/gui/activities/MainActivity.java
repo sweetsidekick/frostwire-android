@@ -35,11 +35,9 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabWidget;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -57,6 +55,8 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
+import com.frostwire.android.gui.views.SwipeyTabs;
+import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
 
 /**
  * @author gubatron
@@ -74,7 +74,8 @@ public class MainActivity extends AbstractActivity {
     private static final String CURRENT_TAB_SAVE_INSTANCE_KEY = "current_tab";
     private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
 
-    private TabHost tabHost;
+    //private TabHost tabHost;
+    private SwipeyTabs swipeyTabs;
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
 
@@ -94,7 +95,8 @@ public class MainActivity extends AbstractActivity {
                 }
             }));
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-            tabHost.setCurrentTabByTag(TAB_SEARCH_KEY);
+            //TODO
+            //tabHost.setCurrentTabByTag(TAB_SEARCH_KEY);
         } else {
             return false;
         }
@@ -106,23 +108,23 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tabHost = findView(android.R.id.tabhost);
-        tabHost.setup();
-
+        swipeyTabs = findView(R.id.swipeytabs);
         viewPager = findView(R.id.pager);
 
-        tabsAdapter = new TabsAdapter(this, tabHost, viewPager);
-
-        View searchIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_search, null);
-        View transfersIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_transfers, null);
-        View peersIndicator = getLayoutInflater().inflate(R.layout.view_tab_indicator_peers, null);
-
-        tabsAdapter.addTab(tabHost.newTabSpec(TAB_SEARCH_KEY).setIndicator(searchIndicator), SearchFragment.class, null);
-        tabsAdapter.addTab(tabHost.newTabSpec(TAB_TRANSFERS_KEY).setIndicator(transfersIndicator), TransfersFragment.class, null);
-        tabsAdapter.addTab(tabHost.newTabSpec(TAB_PEERS_KEY).setIndicator(peersIndicator), BrowsePeersFragment.class, null);
-
+        tabsAdapter = new TabsAdapter(this, viewPager);
+        
+        tabsAdapter.addTab(R.layout.view_tab_indicator_search,SearchFragment.class,null);//setIndicator(searchIndicator), SearchFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_transfers,TransfersFragment.class, null);//setIndicator(transfersIndicator), TransfersFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_peers,BrowsePeersFragment.class, null);//(peersIndicator), BrowsePeersFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_search,SearchFragment.class, null);//setIndicator(testIndicator), SearchFragment.class, null);
+        
+        viewPager.setAdapter(tabsAdapter);
+        swipeyTabs.setAdapter(tabsAdapter);
+        viewPager.setOnPageChangeListener(swipeyTabs);
+        viewPager.setCurrentItem(0);        
+        
         if (savedInstanceState != null) {
-            tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_SAVE_INSTANCE_KEY));
+//            tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_SAVE_INSTANCE_KEY));
             durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
         }
 
@@ -134,7 +136,7 @@ public class MainActivity extends AbstractActivity {
         String action = intent.getAction();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
+            //tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -169,7 +171,7 @@ public class MainActivity extends AbstractActivity {
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
+            //tabHost.setCurrentTabByTag(TAB_TRANSFERS_KEY);
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
@@ -198,7 +200,7 @@ public class MainActivity extends AbstractActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(CURRENT_TAB_SAVE_INSTANCE_KEY, tabHost.getCurrentTabTag());
+        //outState.putString(CURRENT_TAB_SAVE_INSTANCE_KEY, tabHost.getCurrentTabTag());
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
     }
 
@@ -246,29 +248,23 @@ public class MainActivity extends AbstractActivity {
 
     // from an android example:
     // http://developer.android.com/resources/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabsPager.html
-    private class TabsAdapter extends FragmentPagerAdapter implements OnTabChangeListener, OnPageChangeListener {
+    private class TabsAdapter extends FragmentPagerAdapter implements OnTabChangeListener, OnPageChangeListener, SwipeyTabsAdapter {
 
         private final Context context;
-        private final TabHost tabHost;
         private final ViewPager viewPager;
         private final ArrayList<TabInfo> tabs = new ArrayList<TabInfo>();
 
-        public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
+        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
             super(activity.getSupportFragmentManager());
             this.context = activity;
-            this.tabHost = tabHost;
             this.viewPager = pager;
-            this.tabHost.setOnTabChangedListener(this);
             this.viewPager.setAdapter(this);
             this.viewPager.setOnPageChangeListener(this);
         }
 
-        public void addTab(TabHost.TabSpec tabSpec, Class<?> clazz, Bundle args) {
-            tabSpec.setContent(new DummyTabFactory(context));
-
-            TabInfo info = new TabInfo(clazz, args);
+        public void addTab(int indicatorId, Class<?> clazz, Bundle args) {
+            TabInfo info = new TabInfo(indicatorId,clazz, args);
             tabs.add(info);
-            tabHost.addTab(tabSpec);
             notifyDataSetChanged();
         }
 
@@ -285,11 +281,12 @@ public class MainActivity extends AbstractActivity {
 
         @Override
         public void onTabChanged(String tabId) {
-            int position = tabHost.getCurrentTab();
-            viewPager.setCurrentItem(position);
+//            int position = tabHost.getCurrentTab();
+//            viewPager.setCurrentItem(position);
 
             InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(tabHost.getApplicationWindowToken(), 0);
+   //         manager.hideSoftInputFromWindow(tabHost.getApplicationWindowToken(), 0);
+
         }
 
         @Override
@@ -303,11 +300,13 @@ public class MainActivity extends AbstractActivity {
             // The jerk.
             // This hack tries to prevent this from pulling focus out of our
             // ViewPager.
+/**
             TabWidget widget = tabHost.getTabWidget();
             int oldFocusability = widget.getDescendantFocusability();
             widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
             tabHost.setCurrentTab(position);
             widget.setDescendantFocusability(oldFocusability);
+            */
         }
 
         @Override
@@ -315,10 +314,12 @@ public class MainActivity extends AbstractActivity {
         }
 
         final class TabInfo {
+            private final int indicatorId;
             private final Class<?> clazz;
             private final Bundle args;
 
-            TabInfo(Class<?> clazz, Bundle args) {
+            TabInfo(int indicatorId, Class<?> clazz, Bundle args) {
+                this.indicatorId = indicatorId;
                 this.clazz = clazz;
                 this.args = args;
             }
@@ -339,6 +340,21 @@ public class MainActivity extends AbstractActivity {
                 v.setMinimumHeight(0);
                 return v;
             }
+        }
+
+        @Override
+        public View getTab(final int position, SwipeyTabs root) {
+            View view = getLayoutInflater().inflate(tabs.get(position).indicatorId, null);
+            
+            view.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    viewPager.setCurrentItem(position);
+                }
+            });
+            
+            return view;
         }
     }
 }

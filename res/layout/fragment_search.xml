@@ -27,6 +27,14 @@
         android:id="@+id/fragment_search_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+    
+
+    <LinearLayout android:id="@+id/adview_layout" android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <TextView android:text="Hello Adview" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_search_framelayout"

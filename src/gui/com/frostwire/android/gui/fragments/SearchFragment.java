@@ -26,11 +26,14 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.BittorrentSearchEngine;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
@@ -40,6 +43,9 @@ import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 
 /**
  * @author gubatron
@@ -47,6 +53,8 @@ import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
  *
  */
 public class SearchFragment extends AbstractListFragment implements SearchResultDisplayer {
+
+    private static final String TAG = "FW.SearchFragment";
 
     private SearchInputView searchInput;
 
@@ -173,6 +181,17 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
         searchManager = new BittorrentSearchEngine(getActivity(), this);
 
+        LinearLayout llayout = findView(view, R.id.adview_layout);
+        AdView ad = new AdView(this.getActivity(), AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
+        AdRequest r = new AdRequest();
+        r.setTesting(true);
+        ad.loadAd(r);
+
+        llayout.addView(ad,0);
+        
+        
+        Log.v(TAG, "Added AdView");
+        
         switchView(view, R.id.fragment_search_promos);
     }
 
