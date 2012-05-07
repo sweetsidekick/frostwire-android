@@ -169,4 +169,6 @@ public final class Constants {
     public static final int MAX_INDEXED_TORRENT_SUB_FILES = 4000;
 
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
+    
+    public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
 }
