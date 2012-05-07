@@ -578,44 +578,53 @@ public class SystemTime {
                             stepped_time = newMonotoneTime;
                         }
                         tick_count++;
-                        if (tick_count == STEPS_PER_SECOND) {
-                            if (lastOffset != adjustedTimeOffset) {
-                                final long change = adjustedTimeOffset - lastOffset;
-                                Iterator<?> it = clock_change_list.iterator();
-                                //Debug.outNoStack("Clock change of " + change + "ms detected");
-                                while (it.hasNext()) {
-                                    ((ChangeListener) it.next()).clockChanged(rawTime, change);
+                        
+                        // aldenml: This is a very sensitive change related to the vuze core timing logic.
+                        // since none of the variables systemTimeConsumers, monotoneTimeConsumers, clock_change_list
+                        // are synchronized, there is a minimum chance of a NPE during the ArrayList's operations.
+                        // In fact, there is an error reported in the android developer console that shows this issue.
+                        try {
+                            if (tick_count == STEPS_PER_SECOND) {
+                                if (lastOffset != adjustedTimeOffset) {
+                                    final long change = adjustedTimeOffset - lastOffset;
+                                    Iterator<?> it = clock_change_list.iterator();
+                                    //Debug.outNoStack("Clock change of " + change + "ms detected");
+                                    while (it.hasNext()) {
+                                        ((ChangeListener) it.next()).clockChanged(rawTime, change);
+                                    }
+                                    lastOffset = adjustedTimeOffset;
+                                    // make the internal offset publicly visible after consumers have been notified
+                                    currentTimeOffset = adjustedTimeOffset;
                                 }
-                                lastOffset = adjustedTimeOffset;
-                                // make the internal offset publicly visible after consumers have been notified
-                                currentTimeOffset = adjustedTimeOffset;
+                                tick_count = 0;
                             }
-                            tick_count = 0;
-                        }
-                        // copy reference since we use unsynced COW semantics
-                        List<?> consumersRef = monotoneTimeConsumers;
-                        for (int i = 0; i < consumersRef.size(); i++) {
-                            TickConsumer cons = (TickConsumer) consumersRef.get(i);
-                            try {
-                                cons.consume(stepped_time);
-                            } catch (Throwable e) {
-                                Debug.printStackTrace(e);
+                            // copy reference since we use unsynced COW semantics
+                            List<?> consumersRef = monotoneTimeConsumers;
+                            for (int i = 0; i < consumersRef.size(); i++) {
+                                TickConsumer cons = (TickConsumer) consumersRef.get(i);
+                                try {
+                                    cons.consume(stepped_time);
+                                } catch (Throwable e) {
+                                    Debug.printStackTrace(e);
+                                }
                             }
-                        }
 
-                        /*
-                         * notify consumers with the external offset, internal
-                         * offset is only meant for updates
-                         */
-                        consumersRef = systemTimeConsumers;
-                        long adjustedTime = stepped_time + currentTimeOffset;
-                        for (int i = 0; i < consumersRef.size(); i++) {
-                            TickConsumer cons = (TickConsumer) consumersRef.get(i);
-                            try {
-                                cons.consume(adjustedTime);
-                            } catch (Throwable e) {
-                                Debug.printStackTrace(e);
+                            /*
+                             * notify consumers with the external offset, internal
+                             * offset is only meant for updates
+                             */
+                            consumersRef = systemTimeConsumers;
+                            long adjustedTime = stepped_time + currentTimeOffset;
+                            for (int i = 0; i < consumersRef.size(); i++) {
+                                TickConsumer cons = (TickConsumer) consumersRef.get(i);
+                                try {
+                                    cons.consume(adjustedTime);
+                                } catch (Throwable e) {
+                                    Debug.printStackTrace(e);
+                                }
                             }
+                        } catch (Throwable e) {
+                            Debug.printStackTrace(e);
                         }
 
                         try {
