@@ -117,7 +117,6 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         }
     }
 
-    @Override
     public void stop() {
         if (mp != null) {
             service.stopForeground(true);
@@ -126,6 +125,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         releaseMediaPlayer();
         ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_MEDIA_PLAYING_ID);
         service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
+
     }
 
     @Override
@@ -170,7 +170,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             Log.e(TAG, String.format("Error playing media, what=%d, file=%s", what, currentFD.filePath));
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -226,7 +226,6 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             try {
                 if (failedFDs.contains(fd)) {
                     Log.w(TAG, String.format("File play just failed: %s", fd.filePath));
-                    stop();
                     return;
                 }
 

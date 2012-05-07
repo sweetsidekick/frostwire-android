@@ -19,7 +19,7 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Tab" >
+    style="@style/Tab" android:layout_width="fill_parent" android:layout_height="wrap_content">
 
     <TextView
         style="@style/Tab.Text"

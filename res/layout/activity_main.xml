@@ -28,10 +28,11 @@
                 android:id="@+id/swipeytabs"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                frostwire:bottomBarColor="#ff96aa39"
-                frostwire:bottomBarHeight="2dip"
-                frostwire:tabIndicatorHeight="3dip"
-                android:background="#ff3b3b3b"/>
+                frostwire:bottomBarColor="#ffb1d7f2"
+                frostwire:bottomBarHeight="0dip"
+                frostwire:tabIndicatorHeight="0dip"
+                android:background="#ff254a68"/>
+	
                     
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
