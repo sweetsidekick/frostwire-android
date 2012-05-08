@@ -28,6 +28,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * changes.
  */
 public class SystemTime {
+    
+    // move to here to avoid initialization problem. Read:
+    // https://github.com/frostwire/frostwire-android/commit/b47e994b34696e51d15757394282f78d23f0383a#commitcomment-1305793
+    // https://github.com/frostwire/frostwire-android/commit/b47e994b34696e51d15757394282f78d23f0383a#commitcomment-1305845
+    private static volatile List        systemTimeConsumers     = new ArrayList();
+    private static volatile List        monotoneTimeConsumers   = new ArrayList();
+    private static volatile List        clock_change_list       = new ArrayList();
+    private static long                 hpc_base_time;
+    private static long                 hpc_last_time;
+    private static boolean              no_hcp_logged;
+    
 	public static final long			TIME_GRANULARITY_MILLIS	= 25;	//internal update time ms
 	private static SystemTimeProvider	instance;
 	
@@ -63,13 +74,6 @@ public class SystemTime {
 			instance = new RawProvider();
 		}
 	}
-
-	private static volatile List		systemTimeConsumers		= new ArrayList();
-	private static volatile List		monotoneTimeConsumers	= new ArrayList();
-	private static volatile List		clock_change_list		= new ArrayList();
-	private static long					hpc_base_time;
-	private static long					hpc_last_time;
-	private static boolean				no_hcp_logged;
 
 	protected interface SystemTimeProvider {
 		public long getTime();
