@@ -81,6 +81,10 @@ public class SearchInputView extends LinearLayout {
             quickAction.dismiss();
         }
     }
+    
+    public String getText() {
+        return textInput.getText();
+    }
 
     @Override
     protected void onFinishInflate() {

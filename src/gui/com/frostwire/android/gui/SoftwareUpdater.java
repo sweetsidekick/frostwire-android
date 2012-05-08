@@ -34,6 +34,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.core.SearchEngine;
@@ -267,6 +268,8 @@ public final class SoftwareUpdater {
         if (update.config == null) {
             return;
         }
+        
+        ConfigurationManager.instance().setInt(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, update.config.adsThreshold);
 
         for (String name : update.config.activeSearchEngines.keySet()) {
             SearchEngine engine = SearchEngine.getSearchEngine(name);
@@ -285,6 +288,7 @@ public final class SoftwareUpdater {
     }
 
     private static class Config {
+        public int adsThreshold = 100;
         public Map<String, Boolean> activeSearchEngines;
     }
 }

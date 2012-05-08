@@ -19,8 +19,10 @@
 package com.frostwire.android.gui.fragments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -28,6 +30,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -43,6 +46,7 @@ import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
+import com.frostwire.android.util.ByteUtils;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -65,6 +69,8 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
     private int mediaTypeId;
     private ProgressDialog progressDlg;
+
+    private AdView adView;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
@@ -122,10 +128,27 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                     if (adapter != null) {
                         if (adapter.getCount() > 0) {
                             hideProgressDialog();
+                            supportFrostWire();                            
                         }
                     }
                 }
             });
+        }
+    }
+
+    private void supportFrostWire() {
+        int threshold = ConfigurationManager.instance().getInt(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD);
+
+        //remote kill switch
+        if (ByteUtils.randomInt(0,100) > threshold) {
+            adView.setVisibility(View.GONE);
+        } else if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE)) {
+            AdRequest request = new AdRequest();
+            HashSet<String> keywords = new HashSet<String>(Arrays.asList(searchInput.getText().split(" ")));
+            keywords.add("download");
+            request.setKeywords(keywords);
+            adView.loadAd(request);
+            adView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -176,19 +199,22 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                 searchManager.cancelSearch();
                 adapter = null;
                 setListAdapter(null);
+                adView.setVisibility(View.GONE);
             }
         });
 
         searchManager = new BittorrentSearchEngine(getActivity(), this);
 
         LinearLayout llayout = findView(view, R.id.adview_layout);
-        AdView ad = new AdView(this.getActivity(), AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
-        AdRequest r = new AdRequest();
-        r.setTesting(true);
-        ad.loadAd(r);
-
-        llayout.addView(ad,0);
+        adView = new AdView(this.getActivity(), AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
+        adView.setVisibility(View.GONE);
+        llayout.addView(adView,0);
         
+        if (adView.getLayoutParams() != null) {
+            adView.getLayoutParams().width = LayoutParams.FILL_PARENT;
+        } else {
+            Log.v(TAG, "Not changing anything, deleteme");
+        }
         
         Log.v(TAG, "Added AdView");
         

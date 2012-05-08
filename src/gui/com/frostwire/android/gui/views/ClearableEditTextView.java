@@ -81,8 +81,8 @@ public class ClearableEditTextView extends RelativeLayout {
         input.setAdapter(adapter);
     }
 
-    public Editable getText() {
-        return input.getText();
+    public String getText() {
+        return input.getText().toString();
     }
 
     public void setText(String text) {

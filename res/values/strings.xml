@@ -381,5 +381,6 @@
     <string name="desktop_transfer_status_complete">Complete</string>
     <string name="desktop_transfer_status_cancelled">Cancelled</string>
     <string name="desktop_transfer_status_unknown">Unknown</string>
-
+    <string name="support_frostwire">Support FrostWire</string>
+    <string name="support_frostwire_summary">Show ads to support the development of this app.</string>
 </resources>

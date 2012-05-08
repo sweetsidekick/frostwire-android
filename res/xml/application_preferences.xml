@@ -100,7 +100,13 @@
         <CheckBoxPreference
             android:key="frostwire.prefs.gui.show_new_transfer_dialog"
             android:title="@string/show_new_transfer_dialog" />
+        
+        <CheckBoxPreference
+            android:key="frostwire.prefs.gui.support_frostwire"
+            android:title="@string/support_frostwire"
+            android:summary="@string/support_frostwire_summary" />
     </PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/torrent_settings" >
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_download_speed"
