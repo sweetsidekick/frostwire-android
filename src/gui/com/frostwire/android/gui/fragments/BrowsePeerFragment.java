@@ -88,11 +88,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         if (peer == null) {
             loadPeerFromBundleData();
         }
-        
+
         if (peer == null) {
             loadPeerFromIntentData();
         }
-        
+
         return peer;
     }
 
@@ -163,6 +163,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             adapter.notifyDataSetChanged();
         }
 
+        getLoaderManager().destroyLoader(LOADER_FINGER_ID);
         getLoaderManager().restartLoader(LOADER_FINGER_ID, null, this);
     }
 
@@ -230,14 +231,14 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         }
     }
-    
+
     private void loadPeerFromBundleData() {
         if (peer != null) { // why?
             return;
         }
 
         Bundle bundle = getArguments();
-        
+
         if (bundle != null && bundle.containsKey(Constants.EXTRA_PEER_UUID)) {
             byte[] uuid = bundle.getByteArray(Constants.EXTRA_PEER_UUID);
 
@@ -249,7 +250,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                     peer = null; // weird situation reported by a strange bug.
                 }
             }
-        }     
+        }
     }
 
     private RadioButton initRadioButton(View v, int viewId, final byte fileType) {
