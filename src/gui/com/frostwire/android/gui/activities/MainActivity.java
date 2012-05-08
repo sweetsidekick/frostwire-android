@@ -84,7 +84,7 @@ public class MainActivity extends AbstractActivity {
     private String durToken;
 
     public MainActivity() {
-        super(R.layout.activity_main, false, 1);
+        super(R.layout.activity_main, false, 2);
     }
 
     @Override
