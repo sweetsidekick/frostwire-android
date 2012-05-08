@@ -33,9 +33,10 @@
             android:contentDescription="@string/activity_media_player_image_description"
             android:src="@drawable/frostwire_350x350" />
 
+        <LinearLayout android:id="@+id/adview_layout" android:layout_width="fill_parent" android:layout_height="wrap_content"></LinearLayout>
+        
         <com.frostwire.android.gui.views.MediaControllerView
             android:id="@+id/activity_media_player_media_controller"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
-
 </LinearLayout>

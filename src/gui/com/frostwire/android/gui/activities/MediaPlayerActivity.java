@@ -47,10 +47,13 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.MusicUtils;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.MediaControllerView;
 import com.frostwire.android.util.StringUtils;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 
 /**
  * 
@@ -69,6 +72,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
     private FileDescriptor mediaFD;
 
     private BroadcastReceiver broadcastReceiver;
+
+    private AdView adView;
 
     public MediaPlayerActivity() {
         super(R.layout.activity_media_player);
@@ -217,6 +222,14 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
+        
+        LinearLayout llayout = findView(R.id.adview_layout);
+        adView = new AdView(this, AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
+        adView.setVisibility(View.GONE);
+        llayout.addView(adView,0);
+        
+        UIUtils.supportFrostWire(adView, mediaFD.artist + " " +mediaFD.title  + " " + mediaFD.album + " " +mediaFD.year);
+        
     }
 
     private void initGestures() {

@@ -43,10 +43,10 @@ import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.SearchResultDisplayer;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
-import com.frostwire.android.util.ByteUtils;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -128,27 +128,11 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                     if (adapter != null) {
                         if (adapter.getCount() > 0) {
                             hideProgressDialog();
-                            supportFrostWire();                            
+                            UIUtils.supportFrostWire(adView, searchInput.getText());                            
                         }
                     }
                 }
             });
-        }
-    }
-
-    private void supportFrostWire() {
-        int threshold = ConfigurationManager.instance().getInt(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD);
-
-        //remote kill switch
-        if (ByteUtils.randomInt(0,100) > threshold) {
-            adView.setVisibility(View.GONE);
-        } else if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE)) {
-            AdRequest request = new AdRequest();
-            HashSet<String> keywords = new HashSet<String>(Arrays.asList(searchInput.getText().split(" ")));
-            keywords.add("download");
-            request.setKeywords(keywords);
-            adView.loadAd(request);
-            adView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -209,14 +193,6 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         adView = new AdView(this.getActivity(), AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
         llayout.addView(adView,0);
-        
-        if (adView.getLayoutParams() != null) {
-            adView.getLayoutParams().width = LayoutParams.FILL_PARENT;
-        } else {
-            Log.v(TAG, "Not changing anything, deleteme");
-        }
-        
-        Log.v(TAG, "Added AdView");
         
         switchView(view, R.id.fragment_search_promos);
     }

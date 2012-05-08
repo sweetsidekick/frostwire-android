@@ -23,7 +23,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,15 +43,19 @@ import android.text.method.KeyListener;
 import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 
 /**
  * @author gubatron
@@ -377,6 +383,25 @@ public final class UIUtils {
             }
         } catch (Throwable e) {
             return false;
+        }
+    }
+    
+    public static void supportFrostWire(AdView adView, String keywordsStr) {
+        //remote kill switch
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD)) {
+            adView.setVisibility(View.GONE);
+            Log.v(TAG,"Hiding support, above threshold.");
+        } else if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE)) {
+            AdRequest request = new AdRequest();
+            HashSet<String> keywords = new HashSet<String>(Arrays.asList(keywordsStr.split(" ")));
+            keywords.add("download");
+            request.setKeywords(keywords);
+            adView.loadAd(request);
+            adView.setVisibility(View.VISIBLE);
+            
+            if (adView.getLayoutParams() != null) {
+                adView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
+            }
         }
     }
 }
