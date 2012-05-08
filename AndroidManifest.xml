@@ -20,11 +20,13 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.frostwire.android"
+    android:installLocation="preferExternal"
     android:versionCode="71"
-    android:versionName="0.9.9" 
-    android:installLocation="preferExternal">
+    android:versionName="0.9.9" >
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="13" />
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="13" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -38,8 +40,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".gui.MainApplication"
@@ -62,6 +64,7 @@
             <!-- handle .torrent urls -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <!-- with mime and classic url pattern -->
@@ -74,12 +77,13 @@
             <!-- handle .torrent files -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- with mime and classic url pattern -->
                 <data android:scheme="file" />
-                
+
                 <!-- maybe it has to be one or the other, I'll comment files for a sec. -->
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
@@ -101,18 +105,16 @@
         <activity
             android:name=".gui.activities.AboutActivity"
             android:label="@string/activity_about" />
-        
-        
-         <activity android:name="com.google.ads.AdActivity"
-              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
-       
-          
-        <!-- 
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <!--
 		<activity android:name="com.google.ads.AdActivity"
 			android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|fontScale"/>
-			 -->
+        -->
 
-	   <provider
+        <provider
             android:name=".core.providers.DocumentsProvider"
             android:authorities="com.frostwire.android.core.providers.Documents" />
         <provider
