@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
-
 import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.clearbits.ClearBitsWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.extratorrent.ExtratorrentWebSearchPerformer;
@@ -136,7 +134,6 @@ public final class SearchEngine {
         return null;
     }
 
-    @SuppressLint("UseSparseArrays")
     public static Map<Integer, SearchEngine> getSearchEngineMap() {
         HashMap<Integer, SearchEngine> map = new HashMap<Integer, SearchEngine>();
 

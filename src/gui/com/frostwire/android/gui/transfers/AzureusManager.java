@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
@@ -45,6 +46,7 @@ import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
 /**
  * Class to initialize the azureus core.
@@ -67,6 +69,12 @@ public final class AzureusManager {
     private AzureusCore azureusCore;
 
     private OnSharedPreferenceChangeListener preferenceListener;
+
+    private static final ExecutorService SAFE_CONFIG_EXECUTOR;
+
+    static {
+        SAFE_CONFIG_EXECUTOR = ExecutorsHelper.newFixedSizeThreadPool(1, "Vuze-Save-Config");
+    }
 
     private static AzureusManager instance;
 
@@ -313,14 +321,11 @@ public final class AzureusManager {
     }
 
     private void asyncSaveConfiguration() {
-        Thread t = new Thread(new Runnable() {
+        SAFE_CONFIG_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 COConfigurationManager.save();
             }
-        }, "Azureus-SaveConfiguration");
-
-        t.setDaemon(true);
-        t.start();
+        });
     }
 }

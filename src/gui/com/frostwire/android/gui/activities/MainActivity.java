@@ -29,7 +29,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -66,15 +66,16 @@ public class MainActivity extends AbstractActivity {
 
     private static final String TAG = "FW.MainActivity";
 
+    @SuppressWarnings("unused")
     private static final int TAB_LIBRARY_INDEX = 0;
     private static final int TAB_SEARCH_INDEX = 1;
     private static final int TAB_TRANSFERS_INDEX = 2;
+    @SuppressWarnings("unused")
     private static final int TAB_PEERS_INDEX = 3;
 
     private static final String CURRENT_TAB_SAVE_INSTANCE_KEY = "current_tab";
     private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
 
-    //private TabHost tabHost;
     private SwipeyTabs swipeyTabs;
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
@@ -83,7 +84,7 @@ public class MainActivity extends AbstractActivity {
     private String durToken;
 
     public MainActivity() {
-        super(R.layout.activity_main, false, 1);
+        super(R.layout.activity_main, false, 2);
     }
 
     @Override
@@ -114,18 +115,17 @@ public class MainActivity extends AbstractActivity {
 
         Bundle browseBundle = new Bundle();
         browseBundle.putByteArray(Constants.EXTRA_PEER_UUID, PeerManager.instance().getLocalPeer().getUUID());
-        tabsAdapter.addTab(R.layout.view_tab_indicator_library,BrowsePeerFragment.class, browseBundle);
-        
-        tabsAdapter.addTab(R.layout.view_tab_indicator_search,SearchFragment.class,null);
-        tabsAdapter.addTab(R.layout.view_tab_indicator_transfers,TransfersFragment.class, null);
-        tabsAdapter.addTab(R.layout.view_tab_indicator_peers,BrowsePeersFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_library, BrowsePeerFragment.class, browseBundle);
 
-        
+        tabsAdapter.addTab(R.layout.view_tab_indicator_search, SearchFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_transfers, TransfersFragment.class, null);
+        tabsAdapter.addTab(R.layout.view_tab_indicator_peers, BrowsePeersFragment.class, null);
+
         viewPager.setAdapter(tabsAdapter);
         swipeyTabs.setAdapter(tabsAdapter);
         viewPager.setOnPageChangeListener(swipeyTabs);
-        viewPager.setCurrentItem(1);        
-        
+        viewPager.setCurrentItem(TAB_SEARCH_INDEX);
+
         if (savedInstanceState != null) {
             viewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_SAVE_INSTANCE_KEY));
             durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
@@ -202,6 +202,7 @@ public class MainActivity extends AbstractActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putInt(CURRENT_TAB_SAVE_INSTANCE_KEY, viewPager.getCurrentItem());
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
     }
@@ -218,7 +219,7 @@ public class MainActivity extends AbstractActivity {
         if (dum == null) {
             return;
         }
-        
+
         DesktopUploadRequest dur = dum.getRequest(durToken);
 
         if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
@@ -248,9 +249,7 @@ public class MainActivity extends AbstractActivity {
         }
     }
 
-    // from an android example:
-    // http://developer.android.com/resources/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabsPager.html
-    private class TabsAdapter extends FragmentPagerAdapter implements SwipeyTabsAdapter {
+    private class TabsAdapter extends FragmentStatePagerAdapter implements SwipeyTabsAdapter {
 
         private final Context context;
         private final ViewPager viewPager;
@@ -265,7 +264,7 @@ public class MainActivity extends AbstractActivity {
         }
 
         public void addTab(int indicatorId, Class<?> clazz, Bundle args) {
-            TabInfo info = new TabInfo(indicatorId,clazz, args);
+            TabInfo info = new TabInfo(indicatorId, clazz, args);
             tabs.add(info);
             notifyDataSetChanged();
         }
@@ -286,15 +285,8 @@ public class MainActivity extends AbstractActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            return f;
-            
-            //return Fragment.instantiate(context, info.clazz.getName(), info.args);
-        }
 
-        private void hideSoftKeys() {
-            InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(viewPager.getApplicationWindowToken(), 0);
+            return f;
         }
 
         @Override
@@ -308,6 +300,11 @@ public class MainActivity extends AbstractActivity {
 
         @Override
         public void onPageScrollStateChanged(int state) {
+        }
+
+        private void hideSoftKeys() {
+            InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(viewPager.getApplicationWindowToken(), 0);
         }
 
         final class TabInfo {
@@ -325,15 +322,15 @@ public class MainActivity extends AbstractActivity {
         @Override
         public View getTab(final int position, SwipeyTabs root) {
             View view = getLayoutInflater().inflate(tabs.get(position).indicatorId, null);
-            
+
             view.setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
                     viewPager.setCurrentItem(position);
                 }
             });
-            
+
             return view;
         }
     }
