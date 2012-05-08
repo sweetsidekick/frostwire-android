@@ -19,7 +19,6 @@ package com.frostwire.android.gui.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
@@ -32,6 +31,17 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 
+/**
+ * FrostWire Team notes:
+ * 
+ * Online resources for this class
+ * - SwipeyTabs.java: http://code.google.com/p/android-playground/source/browse/trunk/SwipeyTabsSample/src/net/peterkuterna/android/apps/swipeytabs/SwipeyTabs.java
+ * - android-playground project: http://code.google.com/p/android-playground/
+ * - Android Swipey Tabs theory (by Kirill Grouchnikov): http://www.pushing-pixels.org/2011/08/11/android-tips-and-tricks-swipey-tabs.html
+ *
+ * This code was modified to support our custom tab indicators. In the future we will refactor it
+ * for better reuse as a general component.
+ */
 public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
 
     protected final String TAG = "FW.SwipeyTabs";
@@ -42,12 +52,8 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
 
     // height of the bar at the bottom of the tabs
     private int mBottomBarHeight = 0;
-    // height of the indicator for the fronted tab
-    private int mTabIndicatorHeight = 3;
     // color for the bottom bar, fronted tab
     private int mBottomBarColor = 0xff96aa39;
-    // text color for all other tabs
-    private int mTextColor = 0xff949494;
 
     // holds the positions of the fronted tabs
     private int[] mFrontedTabPos;
@@ -71,15 +77,10 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
     public SwipeyTabs(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        final TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.SwipeyTabs, defStyle, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeyTabs, defStyle, 0);
 
-        mBottomBarColor = a.getColor(R.styleable.SwipeyTabs_bottomBarColor,
-                mBottomBarColor);
-        mBottomBarHeight = a.getDimensionPixelSize(
-                R.styleable.SwipeyTabs_bottomBarHeight, 2);
-        mTabIndicatorHeight = a.getDimensionPixelSize(
-                R.styleable.SwipeyTabs_tabIndicatorHeight, 3);
+        mBottomBarColor = a.getColor(R.styleable.SwipeyTabs_bottomBarColor, mBottomBarColor);
+        mBottomBarHeight = a.getDimensionPixelSize(R.styleable.SwipeyTabs_bottomBarHeight, 2);
 
         a.recycle();
 
@@ -182,8 +183,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
             final int width = getMeasuredWidth();
 
             final View centerTab = getChildAt(position);
-            tabPositions[position] = width / 2 - centerTab.getMeasuredWidth()
-                    / 2;
+            tabPositions[position] = width / 2 - centerTab.getMeasuredWidth() / 2;
             for (int i = position - 1; i >= 0; i--) {
                 final View tab = (View) getChildAt(i);
                 if (i == position - 1) {
@@ -191,20 +191,17 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
                 } else {
                     tabPositions[i] = 0 - tab.getMeasuredWidth() - width;
                 }
-                tabPositions[i] = Math.min(tabPositions[i], tabPositions[i + 1]
-                        - tab.getMeasuredWidth());
+                tabPositions[i] = Math.min(tabPositions[i], tabPositions[i + 1] - tab.getMeasuredWidth());
             }
             for (int i = position + 1; i < count; i++) {
                 final View tab = (View) getChildAt(i);
                 if (i == position + 1) {
-                    tabPositions[i] = width - tab.getMeasuredWidth()
-                            ;//+ tab.getPaddingRight();
+                    tabPositions[i] = width - tab.getMeasuredWidth();//+ tab.getPaddingRight();
                 } else {
                     tabPositions[i] = width * 2;
                 }
                 final View prevTab = (View) getChildAt(i - 1);
-                tabPositions[i] = Math.max(tabPositions[i], tabPositions[i - 1]
-                        + prevTab.getMeasuredWidth());
+                tabPositions[i] = Math.max(tabPositions[i], tabPositions[i - 1] + prevTab.getMeasuredWidth());
             }
         } else {
             for (int i = 0; i < tabPositions.length; i++) {
@@ -259,7 +256,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
                 //resolveSize(height + mBottomBarHeight + getPaddingTop()
                 //+ getPaddingBottom(), heightMeasureSpec));
                 resolveSize(height + mBottomBarHeight, heightMeasureSpec));
-        
+
         if (mWidth != widthSize) {
             mWidth = widthSize;
             updateTabPositions(true);
@@ -283,12 +280,9 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
         final int count = mAdapter.getCount();
 
         for (int i = 0; i < count; i++) {
-            LayoutParams layoutParams = (LayoutParams) getChildAt(i)
-                    .getLayoutParams();
-            final int widthSpec = MeasureSpec.makeMeasureSpec(maxWidth,
-                    MeasureSpec.EXACTLY);
-            final int heightSpec = MeasureSpec.makeMeasureSpec(
-                    layoutParams.height, MeasureSpec.EXACTLY);
+            LayoutParams layoutParams = (LayoutParams) getChildAt(i).getLayoutParams();
+            final int widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY);
+            final int heightSpec = MeasureSpec.makeMeasureSpec(layoutParams.height, MeasureSpec.EXACTLY);
             getChildAt(i).measure(widthSpec, heightSpec);
         }
     }
@@ -304,35 +298,14 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
         for (int i = 0; i < count; i++) {
             View v = getChildAt(i);
 
-            v.layout(mCurrentTabPos[i], /*this.getPaddingTop()*/ 0, mCurrentTabPos[i]
-                    + v.getMeasuredWidth(),
-                   /* this.getPaddingTop() +*/ v.getMeasuredHeight());
+            v.layout(mCurrentTabPos[i], /*this.getPaddingTop()*/0, mCurrentTabPos[i] + v.getMeasuredWidth(),
+            /* this.getPaddingTop() +*/v.getMeasuredHeight());
         }
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (mCurrentPos != -1) {
-            // calculate the relative position of the fronted tab to set the
-            // alpha channel of the tab indicator
-            final int tabSelectedTop = getHeight() /*- getPaddingBottom()*/
-                    - mBottomBarHeight - mTabIndicatorHeight;
-            final View currentTab = getChildAt(mCurrentPos);
-            final int centerOfTab = (mCurrentTabPos[mCurrentPos] + currentTab
-                    .getMeasuredWidth()) - (currentTab.getMeasuredWidth() / 2);
-            final int center = getWidth() / 2;
-            final int centerDiv3 = center / 3;
-            final float relativePos = 1.0f - Math.min(
-                    Math.abs((float) (centerOfTab - center)
-                            / (float) (centerDiv3)), 1.0f);
-            
-            /*
-            canvas.drawRect(
-                    mCurrentTabPos[mCurrentPos],
-                    tabSelectedTop,
-                    mCurrentTabPos[mCurrentPos] + currentTab.getMeasuredWidth(),
-                    tabSelectedTop + mTabIndicatorHeight, mCachedTabPaint);
-    */
 
             // set the correct text colors on the text views
             final int count = mAdapter.getCount();
@@ -364,8 +337,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
         }
     }
 
-    public void onPageScrolled(int position, float positionOffset,
-            int positionOffsetPixels) {
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (mAdapter == null) {
             return;
         }
@@ -383,7 +355,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
             dir = 1;
             x = 1.0f - positionOffset;
         }
-        
+
         // update the current positions
         for (int i = 0; i < count; i++) {
             final float curX = mFrontedTabPos[i];
@@ -405,50 +377,19 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
 
         requestLayout();
         invalidate();
-        
+
         if (mAdapter != null) {
-            mAdapter.onPageScrolled( position,  positionOffset, positionOffsetPixels);
+            mAdapter.onPageScrolled(position, positionOffset, positionOffsetPixels);
         }
     }
 
     public void onPageSelected(int position) {
         mCurrentPos = position;
         updateTabPositions(false);
-        
+
         if (mAdapter != null) {
             mAdapter.onPageSelected(position);
         }
-    }
-
-    private int interpolateColor(final int color1, final int color2,
-            float fraction) {
-        final float alpha1 = Color.alpha(color1) / 255.0f;
-        final float red1 = Color.red(color1) / 255.0f;
-        final float green1 = Color.green(color1) / 255.0f;
-        final float blue1 = Color.blue(color1) / 255.0f;
-
-        final float alpha2 = Color.alpha(color2) / 255.0f;
-        final float red2 = Color.red(color2) / 255.0f;
-        final float green2 = Color.green(color2) / 255.0f;
-        final float blue2 = Color.blue(color2) / 255.0f;
-
-        final float deltaAlpha = alpha2 - alpha1;
-        final float deltaRed = red2 - red1;
-        final float deltaGreen = green2 - green1;
-        final float deltaBlue = blue2 - blue1;
-
-        float alpha = alpha1 + (deltaAlpha * fraction);
-        float red = red1 + (deltaRed * fraction);
-        float green = green1 + (deltaGreen * fraction);
-        float blue = blue1 + (deltaBlue * fraction);
-
-        alpha = Math.max(Math.min(alpha, 1f), 0f);
-        red = Math.max(Math.min(red, 1f), 0f);
-        green = Math.max(Math.min(green, 1f), 0f);
-        blue = Math.max(Math.min(blue, 1f), 0f);
-
-        return Color.argb((int) (alpha * 255.0f), (int) (red * 255.0f),
-                (int) (green * 255.0f), (int) (blue * 255.0f));
     }
 
     public interface SwipeyTabsAdapter extends OnPageChangeListener {
