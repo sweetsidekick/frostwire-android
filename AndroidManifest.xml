@@ -24,7 +24,7 @@
     android:versionName="0.9.9" 
     android:installLocation="preferExternal">
 
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="13" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -43,7 +43,6 @@
 
     <application
         android:name=".gui.MainApplication"
-        android:debuggable="false"
         android:icon="@drawable/application_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >
