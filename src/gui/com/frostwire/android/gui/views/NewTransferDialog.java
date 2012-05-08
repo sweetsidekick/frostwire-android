@@ -94,7 +94,7 @@ public class NewTransferDialog extends Dialog {
         buttonNo = (Button) findViewById(R.id.dialog_new_transfer_button_no);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                dismiss();
+                UIUtils.safeDismiss(NewTransferDialog.this);
                 if (listener != null) {
                     listener.onNo(NewTransferDialog.this);
                 }
@@ -104,7 +104,7 @@ public class NewTransferDialog extends Dialog {
         buttonYes = (Button) findViewById(R.id.dialog_new_transfer_button_yes);
         buttonYes.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                dismiss();
+                UIUtils.safeDismiss(NewTransferDialog.this);
                 if (listener != null) {
                     listener.onYes(NewTransferDialog.this);
                 }
