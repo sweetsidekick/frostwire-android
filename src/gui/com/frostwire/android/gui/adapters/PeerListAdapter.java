@@ -79,7 +79,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
     @Override
     protected void populateView(View view, Peer peer) {
         TextView title = findView(view, R.id.view_peer_list_item_title);
-        title.setText(peer.getNickname());
+        title.setText(peer.isLocalHost() ? view.getResources().getString(R.string.my_files) : peer.getNickname());
 
         TextView version = findView(view, R.id.view_peer_list_item_version);
         version.setText("v. " + peer.getClientVersion());
