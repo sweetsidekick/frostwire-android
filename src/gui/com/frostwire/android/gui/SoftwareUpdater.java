@@ -60,6 +60,9 @@ public final class SoftwareUpdater {
     private static final long UPDATE_MESSAGE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
     private static final String DEFAULT_UPDATE_MESSAGE = "FrostWire has Downloaded a new update for you, please go ahead and touch the OK button if you want to install it now.";
 
+    private static final String UPDATE_ACTION_OTA = "ota";
+    private static final String UPDATE_ACTION_MARKET = "market";
+    
     private boolean oldVersion;
     private String latestVersion;
     private String updateMessage;
@@ -130,10 +133,10 @@ public final class SoftwareUpdater {
 
                     if (oldVersion) {
                         if (update.a == null) {
-                            update.a = "u"; // make it the old behavior
+                            update.a =UPDATE_ACTION_OTA; // make it the old behavior
                         }
 
-                        if (update.a.equals("u")) {
+                        if (update.a.equals(UPDATE_ACTION_OTA)) {
                             // did we download the newest already?
                             if (downloadedLatestFrostWire(update.md5)) {
                                 return true;
@@ -146,7 +149,7 @@ public final class SoftwareUpdater {
                                     return true;
                                 }
                             }
-                        } else if (update.a.equals("m")) {
+                        } else if (update.a.equals(UPDATE_ACTION_MARKET)) {
                             return update.m != null;
                         }
                     }
@@ -172,7 +175,7 @@ public final class SoftwareUpdater {
     private void notifyUpdate(final Context context) {
         try {
             if (update.a == null) {
-                update.a = "u"; // make it the old behavior
+                update.a = UPDATE_ACTION_OTA; // make it the old behavior
             }
 
             String message = SoftwareUpdater.instance().getUpdateMessage();
@@ -180,7 +183,7 @@ public final class SoftwareUpdater {
                 message = context.getString(R.string.update_message);
             }
 
-            if (update.a.equals("u")) {
+            if (update.a.equals(UPDATE_ACTION_OTA)) {
                 if (!SystemUtils.getUpdateInstallerPath().exists()) {
                     return;
                 }
@@ -191,7 +194,7 @@ public final class SoftwareUpdater {
                         UIUtils.openFile(context, SystemUtils.getUpdateInstallerPath().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
                     }
                 });
-            } else if (update.a.equals("m")) {
+            } else if (update.a.equals(UPDATE_ACTION_MARKET)) {
                 UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -317,8 +320,8 @@ public final class SoftwareUpdater {
 
         /**
          * Action for the update message
-         * - "u" is download from u (a regular http)
-         * - "a" go to market page 
+         * - "ota" is download from 'u' (a regular http)
+         * - "market" go to market page 
          */
         public String a;
 
