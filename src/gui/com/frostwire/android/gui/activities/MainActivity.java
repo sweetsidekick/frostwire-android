@@ -31,9 +31,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 
 import com.frostwire.android.R;
@@ -79,6 +84,7 @@ public class MainActivity extends AbstractActivity {
     private SwipeyTabs swipeyTabs;
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
+    private int selectedPage;
 
     // not sure about this variable, quick solution for now
     private String durToken;
@@ -125,6 +131,7 @@ public class MainActivity extends AbstractActivity {
         swipeyTabs.setAdapter(tabsAdapter);
         viewPager.setOnPageChangeListener(swipeyTabs);
         viewPager.setCurrentItem(TAB_SEARCH_INDEX);
+        //viewPager.setOnTouchListener(new TabsTouchListener(this, viewPager, tabsAdapter.getCount()));
 
         if (savedInstanceState != null) {
             viewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_SAVE_INSTANCE_KEY));
@@ -295,6 +302,7 @@ public class MainActivity extends AbstractActivity {
 
         @Override
         public void onPageSelected(int position) {
+            selectedPage = position;
             hideSoftKeys();
         }
 
@@ -324,7 +332,6 @@ public class MainActivity extends AbstractActivity {
             View view = getLayoutInflater().inflate(tabs.get(position).indicatorId, null);
 
             view.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     viewPager.setCurrentItem(position);
@@ -332,6 +339,68 @@ public class MainActivity extends AbstractActivity {
             });
 
             return view;
+        }
+    }
+
+    // This is for implementing circular tabs scrolling, not using it for now
+    @SuppressWarnings("unused")
+    private final class TabsTouchListener implements OnTouchListener {
+
+        private final GestureDetector gestureDetector;
+
+        public TabsTouchListener(Context context, ViewPager pager, int pageCount) {
+            this.gestureDetector = new GestureDetector(new TabsGestureDetector(context, pager, pageCount));
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+    }
+
+    private final class TabsGestureDetector extends SimpleOnGestureListener {
+
+        private final ViewPager pager;
+        private final int pageCount;
+
+        private int SWIPE_MIN_DISTANCE = 50;
+        private int SWIPE_MAX_OFF_PATH = 250;
+        private int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        public TabsGestureDetector(Context context, ViewPager pager, int pageCount) {
+            this.pager = pager;
+            this.pageCount = pageCount;
+
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+
+            SWIPE_MIN_DISTANCE = convertToPixel(dm, SWIPE_MIN_DISTANCE);
+            SWIPE_MAX_OFF_PATH = convertToPixel(dm, SWIPE_MAX_OFF_PATH);
+            SWIPE_THRESHOLD_VELOCITY = convertToPixel(dm, SWIPE_THRESHOLD_VELOCITY);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
+                    return false;
+                }
+                // right to left swipe
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY && selectedPage == (pageCount - 1)) {
+                    pager.setCurrentItem(0);
+                    return true;
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY && selectedPage == 0) {
+                    pager.setCurrentItem(pageCount - 1);
+                    return true;
+                }
+            } catch (Throwable e) {
+                // nothing
+            }
+
+            return false;
+        }
+
+        private int convertToPixel(DisplayMetrics dm, int d) {
+            return (int) (d * dm.densityDpi / 160.0f);
         }
     }
 }

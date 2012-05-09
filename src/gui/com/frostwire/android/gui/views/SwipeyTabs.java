@@ -187,7 +187,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
             for (int i = position - 1; i >= 0; i--) {
                 final View tab = (View) getChildAt(i);
                 if (i == position - 1) {
-                    tabPositions[i] = 0;// - tab.getPaddingLeft();
+                    tabPositions[i] = 0 - tab.getPaddingLeft();
                 } else {
                     tabPositions[i] = 0 - tab.getMeasuredWidth() - width;
                 }
@@ -196,7 +196,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
             for (int i = position + 1; i < count; i++) {
                 final View tab = (View) getChildAt(i);
                 if (i == position + 1) {
-                    tabPositions[i] = width - tab.getMeasuredWidth();//+ tab.getPaddingRight();
+                    tabPositions[i] = width - tab.getMeasuredWidth() + tab.getPaddingRight();
                 } else {
                     tabPositions[i] = width * 2;
                 }
@@ -249,13 +249,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
             height = v.getMeasuredHeight();
         }
 
-        setMeasuredDimension(
-        // resolveSize(getPaddingLeft() + widthSize + getPaddingRight(),
-        //        widthMeasureSpec),
-                resolveSize(widthSize, widthMeasureSpec),
-                //resolveSize(height + mBottomBarHeight + getPaddingTop()
-                //+ getPaddingBottom(), heightMeasureSpec));
-                resolveSize(height + mBottomBarHeight, heightMeasureSpec));
+        setMeasuredDimension(resolveSize(widthSize, widthMeasureSpec), resolveSize(height + mBottomBarHeight, heightMeasureSpec));
 
         if (mWidth != widthSize) {
             mWidth = widthSize;
@@ -275,7 +269,7 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
         }
 
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int maxWidth = (int) (widthSize * 0.33);
+        final int maxWidth = (int) (widthSize * 0.333);
 
         final int count = mAdapter.getCount();
 
@@ -298,22 +292,18 @@ public class SwipeyTabs extends ViewGroup implements OnPageChangeListener {
         for (int i = 0; i < count; i++) {
             View v = getChildAt(i);
 
-            v.layout(mCurrentTabPos[i], /*this.getPaddingTop()*/0, mCurrentTabPos[i] + v.getMeasuredWidth(),
-            /* this.getPaddingTop() +*/v.getMeasuredHeight());
+            v.layout(mCurrentTabPos[i], this.getPaddingTop(), mCurrentTabPos[i] + v.getMeasuredWidth(), this.getPaddingTop() + v.getMeasuredHeight());
         }
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (mCurrentPos != -1) {
-
-            // set the correct text colors on the text views
-            final int count = mAdapter.getCount();
+            int count = mAdapter.getCount();
             for (int i = 0; i < count; i++) {
                 final LinearLayout layout = (LinearLayout) getChildAt(i);
                 layout.setPressed(mCurrentPos == i);
             }
-
         }
 
         super.dispatchDraw(canvas);

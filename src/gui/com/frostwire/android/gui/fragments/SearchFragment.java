@@ -19,18 +19,14 @@
 package com.frostwire.android.gui.fragments;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -47,7 +43,6 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
-import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 
@@ -58,6 +53,7 @@ import com.google.ads.AdView;
  */
 public class SearchFragment extends AbstractListFragment implements SearchResultDisplayer {
 
+    @SuppressWarnings("unused")
     private static final String TAG = "FW.SearchFragment";
 
     private SearchInputView searchInput;
@@ -128,7 +124,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                     if (adapter != null) {
                         if (adapter.getCount() > 0) {
                             hideProgressDialog();
-                            UIUtils.supportFrostWire(adView, searchInput.getText());                            
+                            UIUtils.supportFrostWire(adView, searchInput.getText());
                         }
                     }
                 }
@@ -190,10 +186,10 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         searchManager = new BittorrentSearchEngine(getActivity(), this);
 
         LinearLayout llayout = findView(view, R.id.adview_layout);
-        adView = new AdView(this.getActivity(), AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
+        adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
-        llayout.addView(adView,0);
-        
+        llayout.addView(adView, 0);
+
         switchView(view, R.id.fragment_search_promos);
     }
 

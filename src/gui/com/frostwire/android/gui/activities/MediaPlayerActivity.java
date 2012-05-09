@@ -224,7 +224,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         }
         
         LinearLayout llayout = findView(R.id.adview_layout);
-        adView = new AdView(this, AdSize.BANNER, Constants.ADMOB_PUBLISHER_ID);
+        adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
         llayout.addView(adView,0);
         
