@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -58,14 +57,12 @@ public final class SoftwareUpdater {
     private static final String TAG = "FW.SoftwareUpdater";
 
     private static final long UPDATE_MESSAGE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-    private static final String DEFAULT_UPDATE_MESSAGE = "FrostWire has Downloaded a new update for you, please go ahead and touch the OK button if you want to install it now.";
 
     private static final String UPDATE_ACTION_OTA = "ota";
     private static final String UPDATE_ACTION_MARKET = "market";
     
     private boolean oldVersion;
     private String latestVersion;
-    private String updateMessage;
     private Update update;
 
     private long updateTimestamp;
@@ -83,7 +80,6 @@ public final class SoftwareUpdater {
     private SoftwareUpdater() {
         this.oldVersion = false;
         this.latestVersion = Constants.FROSTWIRE_VERSION_STRING;
-        this.updateMessage = null;
     }
 
     public boolean isOldVersion() {
@@ -93,11 +89,7 @@ public final class SoftwareUpdater {
     public String getLatestVersion() {
         return latestVersion;
     }
-
-    public String getUpdateMessage() {
-        return updateMessage;
-    }
-
+    
     public void checkForUpdate(final Context context) {
         long now = System.currentTimeMillis();
 
@@ -123,11 +115,6 @@ public final class SoftwareUpdater {
                     byte[] mv = Constants.FROSTWIRE_VERSION;
 
                     oldVersion = isFrostWireOld(mv, lv);
-
-                    updateMessage = update.updateMessages.get(Locale.getDefault().getLanguage());
-                    if (StringUtils.isNullOrEmpty(updateMessage, true)) {
-                        updateMessage = DEFAULT_UPDATE_MESSAGE;
-                    }
 
                     updateConfiguration(update);
 
@@ -178,15 +165,12 @@ public final class SoftwareUpdater {
                 update.a = UPDATE_ACTION_OTA; // make it the old behavior
             }
 
-            String message = SoftwareUpdater.instance().getUpdateMessage();
-            if (StringUtils.isNullOrEmpty(message, true)) {
-                message = context.getString(R.string.update_message);
-            }
-
             if (update.a.equals(UPDATE_ACTION_OTA)) {
                 if (!SystemUtils.getUpdateInstallerPath().exists()) {
                     return;
                 }
+                
+                String message = StringUtils.getLocaleString(update.updateMessages, context.getString(R.string.update_message));
 
                 UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -195,6 +179,9 @@ public final class SoftwareUpdater {
                     }
                 });
             } else if (update.a.equals(UPDATE_ACTION_MARKET)) {
+                
+                String message = StringUtils.getLocaleString(update.marketMessages, context.getString(R.string.update_message));
+
                 UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -326,6 +313,7 @@ public final class SoftwareUpdater {
         public String a;
 
         public Map<String, String> updateMessages;
+        public Map<String, String> marketMessages;
         public Config config;
     }
 

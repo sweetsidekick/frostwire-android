@@ -1,6 +1,15 @@
-FrostWire 0.9.9
- - Fixes NPEs on Media Player.
+FrostWire 0.9.10
+ - Updated Tabbed interface with Swipey Tabs.
+ - UX upgrades to make local file browsing easier to find.
+ - Fixes several crashes.
+ - Fixes NPEs in Media Player.
  - Fixes important bug on transfer from search result.
+ - WebView caching mode fixed for faster startup.
+ - Removed KAT.ph from search engines.
+
+FrostWire 0.9.9
+ - Fixes NPE in Media Player.
+ - Fixed important bug related to new downloads from search results.
 
 FrostWire 0.9.8
  - Accepts uploads from FrostWire for Desktop.

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -453,5 +454,14 @@ public class StringUtils {
         } catch (Throwable e) {
             return null;
         }
+    }
+
+    public static String getLocaleString(Map<String, String> strMap, String defaultStr) {
+        String str = strMap.get(Locale.getDefault().getLanguage());
+        if (StringUtils.isNullOrEmpty(str, true)) {
+            str = defaultStr;
+        }
+
+        return str;
     }
 }
