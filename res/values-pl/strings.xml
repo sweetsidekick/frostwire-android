@@ -370,4 +370,6 @@
     <string name="type_here_to_filter">Wpisz tutaj aby Filtrować</string>
     <string name="type_here_to_search">Wpisz tutaj, aby Wyszukać</string>
     <string name="hints_by_google">Wskazówki Google</string>
+    <string name="support_frostwire">Wsparcie FrostWire</string>
+    <string name="support_frostwire_summary">Pokaż reklam na wspieranie rozwoju tej aplikacji.</string>
 </resources>

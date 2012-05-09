@@ -345,7 +345,7 @@
     <string name="welcome_to_frostwire">Bienvenido a FrostWire</string>
     <string name="let_apos_s_set_you_up_before_we_begin_">Vamos a establecerte antes de comenzar.</string>
     <string name="how_others_see_you_on_the_local_network_wifi_">Cómo te ven los demás en la red local. (WiFi)</string>
-    <string name="seeding_settings">Configuración de compartiendo</string>
+    <string name="seeding_settings">Configuración de Compartido</string>
     <string name="seeding_settings_explanation">Los usuarios de intenet de BitTorrent podrán descargar trozos del archivo de los datos que tus torrentes comparten.</string>
     <string name="seeding_wifi_settings_explanation">Comparte únicamente cuando uses una conexión de WiFi. Así evitarás más cargos de la compañía telefónica. </string>
     <string name="intent_text">FrostWire es un programa de usuario a usuario para compartir archivos autorizados. La instalación y utilización del programa no constituye una licencia para la obtención y distribución del contenido no autorizado.</string>
@@ -369,5 +369,6 @@
     <string name="type_here_to_filter">Escribe aquí para filtrar</string>
     <string name="type_here_to_search">Escribe aquí para Buscar</string>
     <string name="hints_by_google">Consejos de Google</string>
-
+    <string name="support_frostwire">Apoya a FrostWire</string>
+    <string name="support_frostwire_summary">Muestra anuncios para respaldar el desarrollo de esta aplicación.</string>
 </resources>

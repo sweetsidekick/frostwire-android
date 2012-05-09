@@ -371,5 +371,6 @@
     <string name="type_here_to_filter">फिल्टर करने के लिए यहाँ टाइप करें</string>
     <string name="type_here_to_search">खोजने  के लिए यहाँ टाइप करें</string>
     <string name="hints_by_google">गूगल द्वारा संकेत</string>
-
+	<string name="support_frostwire">FrostWire समर्थन</string>
+    <string name="support_frostwire_summary">विज्ञापन दिखाने के लिए इस app के विकास का समर्थन करने के लिए.</string>
 </resources>

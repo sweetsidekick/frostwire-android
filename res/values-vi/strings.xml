@@ -370,4 +370,6 @@
     <string name="type_here_to_filter">Nhập dữ liệu để lọc</string>
     <string name="type_here_to_search">Nhập dữ liệu để tìm kiếm</string>
     <string name="hints_by_google">Gợi ý bởi Google</string>
+    <string name="support_frostwire">Hỗ trợ FrostWire</string>
+    <string name="support_frostwire_summary">Hiển thị quảng cáo để hỗ trợ sự phát triển của ứng dụng này.</string>
 </resources>

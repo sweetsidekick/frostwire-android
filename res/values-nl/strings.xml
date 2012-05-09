@@ -370,4 +370,7 @@
     <string name="type_here_to_filter">Typ hier om te filteren</string>
     <string name="type_here_to_search">Typ hier om te Zoeken</string>
     <string name="hints_by_google">Hints van Google</string>
+    <string name="support_frostwire">Ondersteuning FrostWire</string>
+    <string name="support_frostwire_summary">Toon advertenties aan de ontwikkeling van deze app te ondersteunen.</string>
+    
 </resources>

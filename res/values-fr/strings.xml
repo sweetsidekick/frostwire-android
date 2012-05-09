@@ -369,4 +369,6 @@
     <string name="type_here_to_filter">Tapez ici pour filtrer </string>
     <string name="type_here_to_search">Tapez ici pour faire une recherche </string>
     <string name="hints_by_google">Suggestion de Google</string>
+    <string name="support_frostwire">Soutien FrostWire</string>
+    <string name="support_frostwire_summary">Voir toutes les annonces de soutenir le développement de ce soft.</string>
 </resources>

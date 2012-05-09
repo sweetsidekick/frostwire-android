@@ -368,5 +368,7 @@
     <string name="type_here_to_filter">Ketik di sini untuk menapis</string>
     <string name="type_here_to_search">Ketik di sini untuk mencari</string>
     <string name="hints_by_google">Petunjuk dari Google</string>
-
+    <string name="support_frostwire">Dukungan FrostWire</string>
+    <string name="support_frostwire_summary">Tampilkan iklan untuk mendukung pengembangan aplikasi ini.</string>
+    
 </resources>

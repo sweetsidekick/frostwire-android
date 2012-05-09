@@ -370,4 +370,6 @@
     <string name="type_here_to_filter">Печатайте здесь, чтобы установить фильтр</string>
     <string name="type_here_to_search">Печатайте слова здесь для поиска</string>
     <string name="hints_by_google">Подсказки Google</string>
+    <string name="support_frostwire">Поддержка FrostWire</string>
+    <string name="support_frostwire_summary">Показать объявления на поддержку развития этого приложения.</string>
 </resources>

@@ -370,4 +370,6 @@
     <string name="type_here_to_filter">Filtrelemek için Buraya Yazın</string>
     <string name="type_here_to_search">Aramak için Buraya Yazın</string>
     <string name="hints_by_google">Google\'dan İpuçları</string>
+    <string name="support_frostwire">FrostWire Destek</string>
+    <string name="support_frostwire_summary">Bu uygulama gelişimini desteklemek reklamları göster.</string>
 </resources>
