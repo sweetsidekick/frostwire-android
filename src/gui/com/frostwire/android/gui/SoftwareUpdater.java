@@ -30,6 +30,8 @@ import java.util.Map;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -61,6 +63,7 @@ public final class SoftwareUpdater {
     private boolean oldVersion;
     private String latestVersion;
     private String updateMessage;
+    private Update update;
 
     private long updateTimestamp;
     private AsyncTask<Void, Void, Boolean> updateTask;
@@ -105,7 +108,7 @@ public final class SoftwareUpdater {
             protected Boolean doInBackground(Void... params) {
                 try {
                     byte[] jsonBytes = new HttpFetcher(Constants.SERVER_UPDATE_URL).fetch();
-                    Update update = JsonUtils.toObject(new String(jsonBytes), Update.class);
+                    update = JsonUtils.toObject(new String(jsonBytes), Update.class);
 
                     latestVersion = update.v;
                     String[] latestVersionArr = latestVersion.split("\\.");
@@ -126,17 +129,25 @@ public final class SoftwareUpdater {
                     updateConfiguration(update);
 
                     if (oldVersion) {
-                        // did we download the newest already?
-                        if (downloadedLatestFrostWire(update.md5)) {
-                            return true;
+                        if (update.a == null) {
+                            update.a = "u"; // make it the old behavior
                         }
-                        // didn't download it? go get it now
-                        else {
-                            new HttpFetcher(update.u).save(SystemUtils.getUpdateInstallerPath());
 
+                        if (update.a.equals("u")) {
+                            // did we download the newest already?
                             if (downloadedLatestFrostWire(update.md5)) {
                                 return true;
                             }
+                            // didn't download it? go get it now
+                            else {
+                                new HttpFetcher(update.u).save(SystemUtils.getUpdateInstallerPath());
+
+                                if (downloadedLatestFrostWire(update.md5)) {
+                                    return true;
+                                }
+                            }
+                        } else if (update.a.equals("m")) {
+                            return update.m != null;
                         }
                     }
 
@@ -160,8 +171,8 @@ public final class SoftwareUpdater {
 
     private void notifyUpdate(final Context context) {
         try {
-            if (!SystemUtils.getUpdateInstallerPath().exists()) {
-                return;
+            if (update.a == null) {
+                update.a = "u"; // make it the old behavior
             }
 
             String message = SoftwareUpdater.instance().getUpdateMessage();
@@ -169,12 +180,26 @@ public final class SoftwareUpdater {
                 message = context.getString(R.string.update_message);
             }
 
-            UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Engine.instance().stopServices(false);
-                    UIUtils.openFile(context, SystemUtils.getUpdateInstallerPath().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
+            if (update.a.equals("u")) {
+                if (!SystemUtils.getUpdateInstallerPath().exists()) {
+                    return;
                 }
-            });
+
+                UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Engine.instance().stopServices(false);
+                        UIUtils.openFile(context, SystemUtils.getUpdateInstallerPath().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
+                    }
+                });
+            } else if (update.a.equals("m")) {
+                UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(update.m));
+                        context.startActivity(intent);
+                    }
+                });
+            }
         } catch (Throwable e) {
             Log.e(TAG, "Failed to notify update", e);
         }
@@ -269,8 +294,8 @@ public final class SoftwareUpdater {
         if (update.config == null) {
             return;
         }
-        
-        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, ByteUtils.randomInt(0,100) < update.config.supportThreshold);
+
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, ByteUtils.randomInt(0, 100) < update.config.supportThreshold);
 
         for (String name : update.config.activeSearchEngines.keySet()) {
             SearchEngine engine = SearchEngine.getSearchEngine(name);
@@ -284,6 +309,19 @@ public final class SoftwareUpdater {
         public String v;
         public String u;
         public String md5;
+
+        /**
+         * Address from the market
+         */
+        public String m;
+
+        /**
+         * Action for the update message
+         * - "u" is download from u (a regular http)
+         * - "a" go to market page 
+         */
+        public String a;
+
         public Map<String, String> updateMessages;
         public Config config;
     }
