@@ -1,6 +1,7 @@
 FrostWire 0.9.10
  - Updated Tabbed interface with Swipey Tabs.
  - UX upgrades to make local file browsing easier to find.
+ - Fixes issue with Motorola Droid's physical keyboard.
  - Fixes several crashes.
  - Fixes NPEs in Media Player.
  - Fixes important bug on transfer from search result.
