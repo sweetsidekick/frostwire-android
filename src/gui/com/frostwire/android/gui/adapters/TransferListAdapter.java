@@ -219,16 +219,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
     protected void populateGroupView(View view, Transfer transfer) {
         if (transfer instanceof BittorrentDownload) {
-            /* 
-             * This might seem backwards, but the logic is simple.
-             * If a transfer contains only one file, then we want to handle the click,
-             * otherwise the expandable view will consume the click and expand (showing
-             * only one element, which is silly). Therefore we make it clickable when we
-             * have only one or no elements. 
-             */
-            view.setClickable(transfer.getItems().size() <= 1);
-            view.setLongClickable(transfer.getItems().size() <= 1);
-
             populateBittorrentDownload(view, (BittorrentDownload) transfer);
         } else if (transfer instanceof PeerHttpDownload) {
             populatePeerDownload(view, (PeerHttpDownload) transfer);
@@ -261,8 +251,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             //If it's a torrent download with a single file, we should be able to open it.
-            if (download.isComplete() && download.getItems().size() == 1) {
-                BittorrentDownloadItem transferItem = (BittorrentDownloadItem) download.getItems().get(0);
+            if (download.isComplete() && download.getBittorrentItems().size() == 1) {
+                BittorrentDownloadItem transferItem = (BittorrentDownloadItem) download.getBittorrentItems().get(0);
                 String path = transferItem.getSavePath().getAbsolutePath();
                 String mimeType = UIUtils.getMimeType(path);
                 items.add(new OpenMenuAction(context, path, mimeType));
@@ -328,8 +318,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 String path = null;
 
                 if (item instanceof BittorrentDownload) {
-                    if (item.getItems().size() > 0) {
-                        BittorrentDownloadItem transferItem = (BittorrentDownloadItem) item.getItems().get(0);
+                    BittorrentDownload bItem = (BittorrentDownload) item;
+                    if (bItem.getBittorrentItems().size() > 0) {
+                        BittorrentDownloadItem transferItem = bItem.getBittorrentItems().get(0);
                         path = transferItem.getSavePath().getAbsolutePath();
                         extension = FilenameUtils.getExtension(path);
                     }
@@ -450,7 +441,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(upload.getDisplayName());
         progress.setProgress(upload.getProgress());
-        status.setText(upload.getStatus());
+        status.setText(Integer.valueOf(upload.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(upload.getUploadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(upload.getSize()));
 

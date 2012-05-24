@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">Waiting</string>
     <string name="peer_http_download_status_unknown">Neznámý</string>
     <string name="peer_http_upload_status_uploading">Odesílání</string>
+    <string name="peer_http_upload_status_streaming">Streamování</string>
     <string name="peer_http_upload_status_complete">Kompletní</string>
     <string name="peer_http_upload_status_error">Chyba</string>
     <string name="peer_http_upload_status_cancelled">Zrušen</string>

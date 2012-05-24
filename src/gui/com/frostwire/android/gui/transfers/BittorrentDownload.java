@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.util.List;
+
 /**
  * @author gubatron
  * @author aldenml
@@ -46,4 +48,6 @@ public interface BittorrentDownload extends DownloadTransfer {
     public void resume();
 
     public void cancel(boolean deleteData, boolean async);
+    
+    public List<? extends BittorrentDownloadItem> getBittorrentItems();
 }

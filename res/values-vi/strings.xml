@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">Đang đợi</string>
     <string name="peer_http_download_status_unknown">Không rõ</string>
     <string name="peer_http_upload_status_uploading">Đang tải lên</string>
+    <string name="peer_http_upload_status_streaming">Truyền</string>
     <string name="peer_http_upload_status_complete">Hoàn thành</string>
     <string name="peer_http_upload_status_error">Lỗi</string>
     <string name="peer_http_upload_status_cancelled">Đã hủy</string>

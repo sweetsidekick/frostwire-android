@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">Bekleniyor</string>
     <string name="peer_http_download_status_unknown">Bilinmeyen</string>
     <string name="peer_http_upload_status_uploading">Yükleniyor</string>
+    <string name="peer_http_upload_status_streaming">Akış</string>
     <string name="peer_http_upload_status_complete">Tamamlandı</string>
     <string name="peer_http_upload_status_error">Hata</string>
     <string name="peer_http_upload_status_cancelled">Vazgeçildi</string>

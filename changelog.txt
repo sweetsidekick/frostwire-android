@@ -1,3 +1,8 @@
+FrostWire 0.9.11
+ - Fixed caching policy.
+ - Fixed feedback while streaming or uploading files.
+ - UX upgrade on transfer manager.
+
 FrostWire 0.9.10
  - Updated Tabbed interface with Swipey Tabs.
  - UX upgrades to make local file browsing easier to find.

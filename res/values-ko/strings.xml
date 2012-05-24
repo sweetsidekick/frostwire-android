@@ -285,6 +285,7 @@
     <string name="peer_http_download_status_waiting">대기중</string>
     <string name="peer_http_download_status_unknown">알려지지않음</string>
     <string name="peer_http_upload_status_uploading">업로드중</string>
+    <string name="peer_http_upload_status_streaming">스트리밍</string>
     <string name="peer_http_upload_status_complete">완료됨</string>
     <string name="peer_http_upload_status_error">에러</string>
     <string name="peer_http_upload_status_cancelled">취소됨</string>

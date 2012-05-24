@@ -143,7 +143,7 @@ public class PeerHttpUpload implements UploadTransfer {
         int resId;
         switch (status) {
         case STATUS_UPLOADING:
-            resId = R.string.peer_http_upload_status_uploading;
+            resId = (getUploadSpeed() < 102400) ? R.string.peer_http_upload_status_streaming : R.string.peer_http_upload_status_uploading;
             break;
         case STATUS_COMPLETE:
             resId = R.string.peer_http_upload_status_complete;

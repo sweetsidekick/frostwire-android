@@ -237,4 +237,9 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             }
         }
     }
+
+    @Override
+    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
+        return (delegate != null) ? delegate.getBittorrentItems() : new ArrayList<BittorrentDownloadItem>(0);
+    }
 }

@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">待機中</string>
     <string name="peer_http_download_status_unknown">未知</string>
     <string name="peer_http_upload_status_uploading">アップロード中</string>
+    <string name="peer_http_upload_status_streaming">ストリーミング</string>
     <string name="peer_http_upload_status_complete">完了</string>
     <string name="peer_http_upload_status_error">エラー</string>
     <string name="peer_http_upload_status_cancelled">キャンセルされました</string>

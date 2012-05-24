@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">等待中</string>
     <string name="peer_http_download_status_unknown">未知</string>
     <string name="peer_http_upload_status_uploading">上传中</string>
+    <string name="peer_http_upload_status_streaming">流</string>
     <string name="peer_http_upload_status_complete">完成</string>
     <string name="peer_http_upload_status_error">错误</string>
     <string name="peer_http_upload_status_cancelled">已取消</string>

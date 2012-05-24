@@ -20,6 +20,7 @@ package com.frostwire.android.gui.transfers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +47,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     private final TransferManager manager;
     private DownloadManager downloadManager;
 
-    private List<TransferItem> items;
+    private List<BittorrentDownloadItem> items;
     private String hash;
     private boolean partialDownload;
     private Set<DiskManagerFileInfo> fileInfoSet;
@@ -86,7 +87,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
             displayName = downloadManager.getDisplayName();
         }
 
-        items = new ArrayList<TransferItem>(fileInfoSet.size());
+        items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
         for (DiskManagerFileInfo fileInfo : fileInfoSet) {
             items.add(new AzureusBittorrentDownloadItem(fileInfo));
         }
@@ -140,7 +141,10 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         return downloadManager.getState() == DownloadManager.STATE_SEEDING;
     }
 
-    public List<? extends TransferItem> getItems() {
+    public List<? extends BittorrentDownloadItem> getItems() {
+        if (items.size() == 1) {
+            return Collections.emptyList();
+        }
         return items;
     }
 
@@ -365,5 +369,10 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
     DownloadManager getDownloadManager() {
         return downloadManager;
+    }
+
+    @Override
+    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
+        return items;
     }
 }

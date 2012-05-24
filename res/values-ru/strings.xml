@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting">Ожидайте</string>
     <string name="peer_http_download_status_unknown">Неизвестный</string>
     <string name="peer_http_upload_status_uploading">Идет загрузка</string>
+    <string name="peer_http_upload_status_streaming">Потоковое</string>
     <string name="peer_http_upload_status_complete">Завершить</string>
     <string name="peer_http_upload_status_error">Ошибка</string>
     <string name="peer_http_upload_status_cancelled">Отменено</string>

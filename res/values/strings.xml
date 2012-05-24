@@ -285,6 +285,7 @@
     <string name="peer_http_download_status_waiting">Waiting</string>
     <string name="peer_http_download_status_unknown">Unknown</string>
     <string name="peer_http_upload_status_uploading">Uploading</string>
+    <string name="peer_http_upload_status_streaming">Streaming</string>
     <string name="peer_http_upload_status_complete">Complete</string>
     <string name="peer_http_upload_status_error">Error</string>
     <string name="peer_http_upload_status_cancelled">Cancelled</string>

@@ -286,6 +286,7 @@
     <string name="peer_http_download_status_waiting"> प्रतीक्षा कर रहा है</string>
     <string name="peer_http_download_status_unknown">अज्ञात</string>
     <string name="peer_http_upload_status_uploading">अपलोडिंग</string>
+    <string name="peer_http_upload_status_streaming">स्ट्रीमिंग</string>
     <string name="peer_http_upload_status_complete">सम्पूर्ण</string>
     <string name="peer_http_upload_status_error">त्रुटि</string>
     <string name="peer_http_upload_status_cancelled">रद्द</string>

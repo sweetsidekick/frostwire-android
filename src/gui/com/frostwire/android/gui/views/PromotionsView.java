@@ -59,7 +59,7 @@ public class PromotionsView extends WebView {
 
             WebSettings settings = getSettings();
             settings.setJavaScriptEnabled(true);
-            settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            settings.setCacheMode(WebSettings.LOAD_NORMAL);
 
             addJavascriptInterface(new PromotionsHandler(getContext()), "phi");
 
