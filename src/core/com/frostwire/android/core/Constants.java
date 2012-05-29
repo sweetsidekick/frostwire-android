@@ -172,5 +172,7 @@ public final class Constants {
 
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
     
+    public static final int MIN_TORRENT_SEEDS = 40;
+    
     public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
 }

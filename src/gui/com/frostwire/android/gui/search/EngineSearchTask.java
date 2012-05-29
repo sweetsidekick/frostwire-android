@@ -24,6 +24,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 
 /**
@@ -49,20 +50,32 @@ class EngineSearchTask extends SearchTask {
     public void run() {
         try {
             List<WebSearchResult> webResults = se.getPerformer().search(query);
-            List<SearchResult> results = normalizeWebResults(se, webResults);
-            Log.d(TAG, "SearchEngine " + se.getName() + " with " + results.size() + " results");
-            srd.addResults(results);
+
+            if (!isCancelled()) {
+                List<SearchResult> results = normalizeWebResults(se, webResults);
+                srd.addResults(results);
+            }
         } catch (Throwable e) {
             Log.e(TAG, String.format("Error getting data from search engine %s", se.getName()), e);
         }
     }
 
-    private static List<SearchResult> normalizeWebResults(SearchEngine se, List<WebSearchResult> webResults) {
+    private List<SearchResult> normalizeWebResults(SearchEngine se, List<WebSearchResult> webResults) {
         List<SearchResult> result = new ArrayList<SearchResult>(webResults.size());
         for (WebSearchResult webResult : webResults) {
-            SearchResult sr = new BittorrentWebSearchResult(se, webResult);
-            result.add(sr);
+            if (filter(webResult)) {
+                SearchResult sr = new BittorrentWebSearchResult(se, webResult);
+                result.add(sr);
+            }
         }
         return result;
+    }
+
+    private boolean filter(WebSearchResult sr) {
+        if (sr.getSeeds() < Constants.MIN_TORRENT_SEEDS) {
+            return false;
+        }
+
+        return true;
     }
 }

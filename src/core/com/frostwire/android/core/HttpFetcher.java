@@ -78,6 +78,8 @@ public class HttpFetcher {
 
     private static final String TAG = "FW.HttpFetcher";
 
+    private static final int HTTP_RETRY_COUNT = 4;
+    
     private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
     private static final int DEFAULT_TIMEOUT = 5000;
 
@@ -386,7 +388,7 @@ public class HttpFetcher {
         ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
 
         DefaultHttpClient httpClient = new DefaultHttpClient(cm, new BasicHttpParams());
-        httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(2, true));
+        httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(HTTP_RETRY_COUNT, true));
 
         if (gzip) {
             httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
