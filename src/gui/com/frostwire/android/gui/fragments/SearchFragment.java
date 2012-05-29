@@ -34,8 +34,8 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
-import com.frostwire.android.gui.search.BittorrentSearchEngine;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
+import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.SearchResultDisplayer;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
@@ -61,7 +61,6 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
     private Object lockObj = new Object();
 
     private SearchResultListAdapter adapter;
-    private BittorrentSearchEngine searchManager;
 
     private int mediaTypeId;
     private ProgressDialog progressDlg;
@@ -97,7 +96,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                             adapter = new SearchResultListAdapter(getActivity(), results) {
                                 @Override
                                 protected void onTransferStarted(DownloadTransfer transfer) {
-                                    searchManager.cancelSearch();
+                                    LocalSearchEngine.instance().cancelSearch();
                                 }
                             };
                             adapter.filter(mediaTypeId);
@@ -164,7 +163,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                 SearchFragment.this.mediaTypeId = mediaTypeId;
                 switchView(view, android.R.id.list);
                 showProgressDialog();
-                searchManager.performSearch(query);
+                LocalSearchEngine.instance().performSearch(query);
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
@@ -176,14 +175,12 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
             public void onClear(View v) {
                 switchView(view, R.id.fragment_search_promos);
-                searchManager.cancelSearch();
+                LocalSearchEngine.instance().cancelSearch();
                 adapter = null;
                 setListAdapter(null);
                 adView.setVisibility(View.GONE);
             }
         });
-
-        searchManager = new BittorrentSearchEngine(getActivity(), this);
 
         LinearLayout llayout = findView(view, R.id.adview_layout);
         adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
@@ -216,7 +213,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                searchManager.cancelSearch();
+                LocalSearchEngine.instance().cancelSearch();
                 hideProgressDialog();
             }
         });

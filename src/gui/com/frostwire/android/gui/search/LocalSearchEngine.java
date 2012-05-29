@@ -21,6 +21,7 @@ package com.frostwire.android.gui.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,9 +30,9 @@ import java.util.concurrent.ExecutorService;
 import org.gudy.azureus2.core3.torrent.TOTorrent;
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
 import android.text.Html;
@@ -39,9 +40,11 @@ import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
@@ -51,17 +54,23 @@ import com.frostwire.android.util.concurrent.ExecutorsHelper;
  * @author aldenml
  * 
  */
-final class LocalSearchEngine {
+/*
+ * I (aldenml) changing this class to a singleton. Since at the end
+ * there are a lot of structures that must be shared between different searches,
+ * for example the "know info hashes" map.
+ */
+public final class LocalSearchEngine {
 
     private static final String TAG = "FW.LocalSearchEngine";
 
     private static final int MAX_TORRENT_DOWNLOADS = 2; // we are in a very constrained environment
     private static final ExecutorService downloads_torrents_executor; // enqueue the downloads tasks here
 
-    private final Context context;
-    private final SearchTask task;
-    private final SearchResultDisplayer displayer;
-    private final String query;
+    private final Application context;
+
+    private SearchTask task;
+    private SearchResultDisplayer displayer;
+    private String query;
 
     private final int count;
     private final int rounds;
@@ -69,21 +78,37 @@ final class LocalSearchEngine {
     private final int seeds;
     private final int maxTorrentFiles;
     private final int ftsLimit;
-    
+
     private List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
     private int downloaded;
+    
+    private final List<BittorrentSearchResult> currentResults;
+    private final List<SearchTask> currentTasks;
 
     static {
         downloads_torrents_executor = ExecutorsHelper.newFixedSizeThreadPool(MAX_TORRENT_DOWNLOADS, "DownloadTorrentsExecutor");
     }
 
-    public LocalSearchEngine(Context context, SearchTask task, SearchResultDisplayer displayer, String query) {
+    private static LocalSearchEngine instance;
+
+    public synchronized static void create(Application context) {
+        if (instance != null) {
+            return;
+        }
+        instance = new LocalSearchEngine(context);
+    }
+
+    public static LocalSearchEngine instance() {
+        if (instance == null) {
+            throw new CoreRuntimeException("LocalSearchEngine not created");
+        }
+        return instance;
+    }
+
+    public LocalSearchEngine(Application context) {
         this.context = context;
-        this.task = task;
-        this.displayer = displayer;
-        this.query = sanitize(query);
 
         ConfigurationManager configuration = ConfigurationManager.instance();
 
@@ -96,9 +121,58 @@ final class LocalSearchEngine {
 
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
+        
+        currentResults = new LinkedList<BittorrentSearchResult>();
+        currentTasks = new LinkedList<SearchTask>();
+    }
+    
+    public void performSearch(String query) {
+        cancelTasks();
+        displayer.clear();
+        performTorrentSearch(query);
     }
 
-    public void deepSearch() {
+    public void performTorrentSearch(String query) {
+        //execute(new LocalSearchTask(context, displayer, query));
+
+        for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
+            if (searchEngine.isEnabled()) {
+                execute(new EngineSearchTask(searchEngine, displayer, query));
+            }
+        }
+
+        execute(new DeepSearchTask(displayer, query));
+    }
+
+    public void cancelSearch() {
+        cancelTasks();
+    }
+
+    private void execute(SearchTask task) {
+        currentTasks.add(task);
+        Engine.instance().getThreadPool().execute(task);
+    }
+
+    private void cancelTasks() {
+        for (SearchTask task : currentTasks) {
+            try {
+                task.cancel();
+                Log.d(TAG, "Task canceled ("+task.getName()+")");
+            } catch (Throwable e) {
+                Log.e(TAG, "Failed to cancel search task", e);
+            }
+        }
+
+        currentTasks.clear();
+        
+        cancel();
+    }
+
+    public void deepSearch(SearchTask task, SearchResultDisplayer displayer, String query) {
+        this.task = task;
+        this.displayer = displayer;
+        this.query = sanitize(query);
+
         downloaded = 0;
         SystemClock.sleep(interval);
 
@@ -110,7 +184,7 @@ final class LocalSearchEngine {
         }
     }
 
-    public static int getIndexCount(Context context) {
+    public int getIndexCount() {
         Cursor c = null;
         try {
             ContentResolver cr = context.getContentResolver();
@@ -126,7 +200,7 @@ final class LocalSearchEngine {
         }
     }
 
-    public static int clearIndex(Context context) {
+    public int clearIndex() {
         ContentResolver cr = context.getContentResolver();
         cr.delete(Torrents.Media.CONTENT_URI_SEARCH, null, null);
         return cr.delete(Torrents.Media.CONTENT_URI, null, null);
@@ -302,12 +376,12 @@ final class LocalSearchEngine {
         return fts.trim();
     }
 
-    public void cancel() {
+    private void cancel() {
         for (DownloadTorrentTask task : downloadTasks) {
-            Log.d(TAG,"Cancelled DownloadTorrent Task " + task.getName());
+            Log.d(TAG, "Cancelled DownloadTorrent Task " + task.getName());
             task.cancel();
         }
-        
+
         downloadTasks.clear();
     }
 }

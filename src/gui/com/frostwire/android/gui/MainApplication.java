@@ -21,6 +21,7 @@ package com.frostwire.android.gui;
 import android.app.Application;
 
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.services.Engine;
 
 /**
@@ -39,6 +40,7 @@ public class MainApplication extends Application {
         ConfigurationManager.create(this);
         NetworkManager.create(this);
         Librarian.create(this);
+        LocalSearchEngine.create(this);
         Engine.create(this);
 
         Librarian.instance().syncMediaStore();
