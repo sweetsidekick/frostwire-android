@@ -39,13 +39,13 @@ public final class BittorrentSearchEngine {
     private final Context context;
     private final SearchResultDisplayer displayer;
 
-    private final List<TorrentSearchTask> searchTasks;
+    private final List<SearchTask> searchTasks;
 
     public BittorrentSearchEngine(Context context, SearchResultDisplayer displayer) {
         this.context = context;
         this.displayer = displayer;
 
-        searchTasks = new ArrayList<TorrentSearchTask>();
+        searchTasks = new ArrayList<SearchTask>();
     }
 
     public void performSearch(String query) {
@@ -55,7 +55,7 @@ public final class BittorrentSearchEngine {
     }
 
     public void performTorrentSearch(String query) {
-        execute(new LocalSearchTask(context, displayer, query));
+        //execute(new LocalSearchTask(context, displayer, query));
 
         for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
             if (searchEngine.isEnabled()) {
@@ -63,7 +63,7 @@ public final class BittorrentSearchEngine {
             }
         }
 
-        execute(new DeepSearchTask(context, displayer, query));
+        //execute(new DeepSearchTask(context, displayer, query));
     }
 
     public void cancelSearch() {
@@ -78,13 +78,13 @@ public final class BittorrentSearchEngine {
         return LocalSearchEngine.clearIndex(context);
     }
 
-    private void execute(TorrentSearchTask task) {
+    private void execute(SearchTask task) {
         searchTasks.add(task);
         Engine.instance().getThreadPool().execute(task);
     }
 
     private void cancelTasks() {
-        for (TorrentSearchTask task : searchTasks) {
+        for (SearchTask task : searchTasks) {
             try {
                 task.cancel();
                 Log.d(TAG, "Task canceled ("+task.getName()+")");

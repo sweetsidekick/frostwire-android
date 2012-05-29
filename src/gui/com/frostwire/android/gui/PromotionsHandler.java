@@ -58,8 +58,7 @@ public class PromotionsHandler {
 
     public void handleSelection(String json) {
         try {
-            json = StringUtils.unescape(json);
-            Slide slide = JsonUtils.toObject(json, Slide.class);
+            Slide slide = JsonUtils.toObject(StringUtils.decodeUrl(json), Slide.class);
             startTransfer(slide);
         } catch (Throwable e) {
             Log.e(TAG, "Error processing promotion", e);

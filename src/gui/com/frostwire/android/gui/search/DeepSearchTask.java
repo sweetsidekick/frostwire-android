@@ -26,7 +26,7 @@ import android.util.Log;
  * @author aldenml
  * 
  */
-class DeepSearchTask extends TorrentSearchTask {
+class DeepSearchTask extends SearchTask {
 
     private static final String TAG = "FW.DownloadTorrentsTask";
 

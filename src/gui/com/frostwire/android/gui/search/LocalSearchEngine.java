@@ -59,7 +59,7 @@ final class LocalSearchEngine {
     private static final ExecutorService downloads_torrents_executor; // enqueue the downloads tasks here
 
     private final Context context;
-    private final TorrentSearchTask task;
+    private final SearchTask task;
     private final SearchResultDisplayer displayer;
     private final String query;
 
@@ -79,7 +79,7 @@ final class LocalSearchEngine {
         downloads_torrents_executor = ExecutorsHelper.newFixedSizeThreadPool(MAX_TORRENT_DOWNLOADS, "DownloadTorrentsExecutor");
     }
 
-    public LocalSearchEngine(Context context, TorrentSearchTask task, SearchResultDisplayer displayer, String query) {
+    public LocalSearchEngine(Context context, SearchTask task, SearchResultDisplayer displayer, String query) {
         this.context = context;
         this.task = task;
         this.displayer = displayer;

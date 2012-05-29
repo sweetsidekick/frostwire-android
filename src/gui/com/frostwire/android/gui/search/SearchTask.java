@@ -25,11 +25,11 @@ import com.frostwire.android.util.concurrent.AbstractRunnable;
  * @author aldenml
  * 
  */
-abstract class TorrentSearchTask extends AbstractRunnable {
+abstract class SearchTask extends AbstractRunnable {
 
     private boolean isCancelled;
 
-    public TorrentSearchTask(String name) {
+    public SearchTask(String name) {
         super(name);
     }
 

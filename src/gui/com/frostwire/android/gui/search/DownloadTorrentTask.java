@@ -33,18 +33,18 @@ import com.frostwire.android.gui.util.SystemUtils;
  * @author aldenml
  * 
  */
-class DownloadTorrentTask extends TorrentSearchTask {
+class DownloadTorrentTask extends SearchTask {
 
     private static final String TAG = "FW.DownloadTorrentTask";
 
     private final String query;
     private final BittorrentWebSearchResult result;
-    private final TorrentSearchTask searchTask;
+    private final SearchTask searchTask;
     private final LocalSearchEngine localSearchEngine;
 
     private TorrentDownloader torrentDownloader;
 
-    public DownloadTorrentTask(String query, BittorrentWebSearchResult result, TorrentSearchTask searchTask, LocalSearchEngine localSearchEngine) {
+    public DownloadTorrentTask(String query, BittorrentWebSearchResult result, SearchTask searchTask, LocalSearchEngine localSearchEngine) {
         super("DownloadTorrentTask: " + result.getTorrentURI());
         this.query = query;
         this.result = result;

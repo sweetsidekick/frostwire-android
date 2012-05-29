@@ -46,11 +46,11 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
 
     private final Set<String> tokens;
     private final BittorrentWebSearchResult result;
-    private final TorrentSearchTask searchTask;
+    private final SearchTask searchTask;
     private final LocalSearchEngine localSearchEngine;
     private final CountDownLatch finishSignal;
 
-    public LocalSearchTorrentDownloaderListener(String query, BittorrentWebSearchResult result, TorrentSearchTask searchTask, LocalSearchEngine localSearchEngine, CountDownLatch finishSignal) {
+    public LocalSearchTorrentDownloaderListener(String query, BittorrentWebSearchResult result, SearchTask searchTask, LocalSearchEngine localSearchEngine, CountDownLatch finishSignal) {
         this.tokens = new HashSet<String>(Arrays.asList(query.toLowerCase().split(" ")));
         this.result = result;
         this.searchTask = searchTask;

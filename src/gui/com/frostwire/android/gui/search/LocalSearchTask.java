@@ -28,7 +28,7 @@ import android.util.Log;
  * @author aldenml
  * 
  */
-class LocalSearchTask extends TorrentSearchTask {
+class LocalSearchTask extends SearchTask {
 
     private static final String TAG = "FW.TorrentLocalSearchTask";
 

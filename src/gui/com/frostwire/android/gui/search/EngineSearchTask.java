@@ -31,35 +31,36 @@ import com.frostwire.android.core.SearchEngine;
  * @author aldenml
  * 
  */
-class EngineSearchTask extends TorrentSearchTask {
+class EngineSearchTask extends SearchTask {
 
-    private static final String TAG = "FW.PerformTorrentSearchTask";
+    private static final String TAG = "FW.EngineSearchTask";
 
-    private final SearchEngine searchEngine;
-    private final SearchResultDisplayer displayer;
+    private final SearchEngine se;
+    private final SearchResultDisplayer srd;
     private final String query;
 
-    public EngineSearchTask(SearchEngine searchEngine, SearchResultDisplayer displayer, String query) {
-        super("EngineSearchTask: " + searchEngine.getName() + " -: " + query);
-        this.searchEngine = searchEngine;
-        this.displayer = displayer;
+    public EngineSearchTask(SearchEngine se, SearchResultDisplayer srd, String query) {
+        super("EngineSearchTask - " + se.getName());
+        this.se = se;
+        this.srd = srd;
         this.query = query;
     }
 
     public void run() {
         try {
-            List<WebSearchResult> webResults = searchEngine.getPerformer().search(query);
-            List<SearchResult> results = normalizeWebResults(searchEngine, webResults);
-            displayer.addResults(results);
+            List<WebSearchResult> webResults = se.getPerformer().search(query);
+            List<SearchResult> results = normalizeWebResults(se, webResults);
+            Log.d(TAG, "SearchEngine " + se.getName() + " with " + results.size() + " results");
+            srd.addResults(results);
         } catch (Throwable e) {
-            Log.e(TAG, "Error getting data from " + searchEngine, e);
+            Log.e(TAG, String.format("Error getting data from search engine %s", se.getName()), e);
         }
     }
 
-    private static List<SearchResult> normalizeWebResults(SearchEngine engine, List<WebSearchResult> webResults) {
+    private static List<SearchResult> normalizeWebResults(SearchEngine se, List<WebSearchResult> webResults) {
         List<SearchResult> result = new ArrayList<SearchResult>(webResults.size());
         for (WebSearchResult webResult : webResults) {
-            SearchResult sr = new BittorrentWebSearchResult(engine, webResult);
+            SearchResult sr = new BittorrentWebSearchResult(se, webResult);
             result.add(sr);
         }
         return result;

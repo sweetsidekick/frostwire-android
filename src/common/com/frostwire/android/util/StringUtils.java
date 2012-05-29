@@ -17,6 +17,7 @@ package com.frostwire.android.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -448,14 +449,6 @@ public class StringUtils {
         return sb.toString();
     }
 
-    public static String unescape(String str) {
-        try {
-            return URLDecoder.decode(str, "UTF-8");
-        } catch (Throwable e) {
-            return null;
-        }
-    }
-
     public static String getLocaleString(Map<String, String> strMap, String defaultStr) {
         String str = strMap.get(Locale.getDefault().getLanguage());
         if (StringUtils.isNullOrEmpty(str, true)) {
@@ -463,5 +456,33 @@ public class StringUtils {
         }
 
         return str;
+    }
+
+    /**
+     * Like URLEncoder.encode, except translates spaces into %20 instead of +
+     * 
+     * @param s
+     * @return
+     */
+    public static String encodeUrl(String s) {
+        if (s == null) {
+            return "";
+        }
+        try {
+            return URLEncoder.encode(s, "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            return URLEncoder.encode(s).replaceAll("\\+", "%20");
+        }
+    }
+
+    public static String decodeUrl(String s) {
+        if (s == null) {
+            return "";
+        }
+        try {
+            return URLDecoder.decode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return URLDecoder.decode(s);
+        }
     }
 }
