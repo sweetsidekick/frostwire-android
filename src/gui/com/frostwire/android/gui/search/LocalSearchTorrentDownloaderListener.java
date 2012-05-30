@@ -82,7 +82,9 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         switch (state) {
         case TorrentDownloader.STATE_ERROR:
         case TorrentDownloader.STATE_DUPLICATE:
+            Log.e(TAG, "Error downloading torrent: " + sr.getTorrentURI());
         case TorrentDownloader.STATE_CANCELLED:
+            Log.d(TAG, "Torrent download cancelled: " + sr.getTorrentURI());
             finishSignal.countDown();
             break;
         }
@@ -93,11 +95,14 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         for (int i = 0; i < files.length && !task.isCancelled(); i++) {
             try {
                 String keywords = LocalSearchEngine.sanitize(sr.getFileName() + " " + files[i].getRelativePath()).toLowerCase();
+                //Log.d(TAG, "Keywords for on the fly match: " + keywords);
 
                 boolean foundMatch = true;
 
                 for (String token : tokens) {
+                    //Log.d(TAG, "Token: " + token);
                     if (!keywords.contains(token)) {
+                        //Log.d(TAG, "Not match for token: " + token);
                         foundMatch = false;
                         break;
                     }

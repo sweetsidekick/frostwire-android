@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import android.app.Application;
 
 import com.frostwire.android.core.ConfigurationManager;
@@ -36,14 +39,21 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // important initial setup here
-        ConfigurationManager.create(this);
-        NetworkManager.create(this);
-        Librarian.create(this);
-        LocalSearchEngine.create(this);
-        Engine.create(this);
+        try {
+            // important initial setup here
+            ConfigurationManager.create(this);
+            NetworkManager.create(this);
+            Librarian.create(this);
+            LocalSearchEngine.create(this);
+            Engine.create(this);
 
-        Librarian.instance().syncMediaStore();
-        Librarian.instance().syncApplicationsProvider();
+            Librarian.instance().syncMediaStore();
+            Librarian.instance().syncApplicationsProvider();
+        } catch (Throwable e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String stacktrace = sw.toString();
+            throw new RuntimeException("MainApplication Create exception: " + stacktrace, e);
+        }
     }
 }

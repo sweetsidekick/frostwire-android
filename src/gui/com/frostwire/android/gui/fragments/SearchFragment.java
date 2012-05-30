@@ -26,6 +26,7 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -37,10 +38,11 @@ import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.search.SearchResultDisplayer;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.google.ads.AdSize;
@@ -51,7 +53,7 @@ import com.google.ads.AdView;
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements SearchResultDisplayer {
+public class SearchFragment extends AbstractListFragment implements Refreshable {
 
     @SuppressWarnings("unused")
     private static final String TAG = "FW.SearchFragment";
@@ -77,13 +79,42 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         super.onActivityCreated(savedInstanceState);
 
         setRetainInstance(true);
+
+        if (getActivity() instanceof AbstractActivity) {
+            ((AbstractActivity) getActivity()).addRefreshable(this);
+        }
     }
 
-    public void clear() {
-        synchronized (lockObj) {
-            if (adapter != null) {
-                adapter.clear();
+    @Override
+    public void refresh() {
+        Log.d(TAG, "Current results count: " + LocalSearchEngine.instance().getCurrentResultsCount());
+        if (adapter != null) {
+            Log.d(TAG, "Adapter List count: " + adapter.getList().size());
+        }
+        if (adapter != null) {
+            if (LocalSearchEngine.instance().getCurrentResultsCount() != adapter.getList().size()) {
+                adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
+                adapter.filter(mediaTypeId);
             }
+        } else {
+            setupAdapter();
+        }
+
+        if (adapter != null && adapter.getCount() > 0) {
+            hideProgressDialog();
+        }
+    }
+
+    private void setupAdapter() {
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+                @Override
+                protected void onTransferStarted(DownloadTransfer transfer) {
+                    LocalSearchEngine.instance().cancelSearch();
+                }
+            };
+            adapter.filter(mediaTypeId);
+            setListAdapter(adapter);
         }
     }
 
@@ -142,16 +173,6 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
                     }
                 }
             });
-        }
-    }
-
-    public List<SearchResult> getResults() {
-        synchronized (lockObj) {
-            if (adapter != null) {
-                return new ArrayList<SearchResult>(adapter.getList());
-            } else {
-                return Collections.emptyList();
-            }
         }
     }
 

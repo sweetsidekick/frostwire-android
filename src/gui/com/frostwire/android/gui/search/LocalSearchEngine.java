@@ -20,11 +20,16 @@ package com.frostwire.android.gui.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
@@ -79,7 +84,7 @@ public final class LocalSearchEngine {
     private List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
-    private final List<BittorrentSearchResult> currentResults;
+    private final SortedSet<BittorrentSearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
     static {
@@ -115,8 +120,30 @@ public final class LocalSearchEngine {
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
 
-        currentResults = new LinkedList<BittorrentSearchResult>();
+        currentResults = Collections.synchronizedSortedSet(new TreeSet<BittorrentSearchResult>(new Comparator<BittorrentSearchResult>() {
+            @Override
+            public int compare(BittorrentSearchResult lhs, BittorrentSearchResult rhs) {
+                return Integer.valueOf(rhs.getSeeds()).compareTo(Integer.valueOf(lhs.getSeeds()));
+            }
+        }));
         currentTasks = new LinkedList<SearchTask>();
+    }
+
+    public int getCurrentResultsCount() {
+        return currentResults.size();
+    }
+
+    public List<SearchResult> pollCurrentResults() {
+        synchronized (currentResults) {
+            List<SearchResult> list = new ArrayList<SearchResult>(currentResults.size());
+
+            Iterator<BittorrentSearchResult> it = currentResults.iterator();
+            while (it.hasNext()) {
+                list.add(it.next());
+            }
+
+            return list;
+        }
     }
 
     public void performSearch(String query) {
@@ -130,7 +157,7 @@ public final class LocalSearchEngine {
     }
 
     public void performTorrentSearch(String query) {
-        execute(new LocalSearchTask(query));
+        //execute(new LocalSearchTask(query));
 
         for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
             if (searchEngine.isEnabled()) {
@@ -138,7 +165,7 @@ public final class LocalSearchEngine {
             }
         }
 
-        execute(new DeepSearchTask(query));
+        //execute(new DeepSearchTask(query));
     }
 
     public void cancelSearch() {
@@ -175,8 +202,13 @@ public final class LocalSearchEngine {
 
             // scan results for actual torrents
 
-            // no need to synchronize here since currentResults has an incremental size
-            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>(currentResults);
+            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>(currentResults.size());
+            synchronized (currentResults) {
+                Iterator<BittorrentSearchResult> it = currentResults.iterator();
+                while (it.hasNext()) {
+                    results.add(it.next());
+                }
+            }
 
             for (int j = 0; j < results.size() && downloaded < COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN && !task.isCancelled(); j++) {
                 SearchResult sr = results.get(j);
@@ -316,9 +348,9 @@ public final class LocalSearchEngine {
 
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
-        str = str.replaceAll("\\.torrent|www\\.|\\.com|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ]", " ");
+        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ&~{}*@^]", " ");
         str = StringUtils.removeDoubleSpaces(str);
-        Log.d(TAG, "Sanitize result: " + str);
+        //Log.d(TAG, "Sanitize result: " + str);
         return str;
     }
 
