@@ -68,22 +68,17 @@ public final class LocalSearchEngine {
 
     private final Application context;
 
-    private SearchTask task;
-    private SearchResultDisplayer displayer;
-    private String query;
-
-    private final int count;
-    private final int rounds;
-    private final int interval;
-    private final int seeds;
-    private final int maxTorrentFiles;
-    private final int ftsLimit;
+    // search constants
+    private final int COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN;
+    private final int COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN;
+    private final int INTERVAL_MS_FOR_TORRENT_DEEP_SCAN;
+    private final int MIN_SEEDS_FOR_TORRENT_DEEP_SCAN;
+    private final int MAX_TORRENT_FILES_TO_INDEX;
+    private final int FULLTEXT_SEARCH_RESULTS_LIMIT;
 
     private List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
-    private int downloaded;
-    
     private final List<BittorrentSearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
@@ -110,38 +105,40 @@ public final class LocalSearchEngine {
     public LocalSearchEngine(Application context) {
         this.context = context;
 
-        ConfigurationManager configuration = ConfigurationManager.instance();
-
-        count = configuration.getInt(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN);
-        rounds = configuration.getInt(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN);
-        interval = configuration.getInt(Constants.PREF_KEY_SEARCH_INTERVAL_MS_FOR_TORRENT_DEEP_SCAN);
-        seeds = configuration.getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_DEEP_SCAN);
-        maxTorrentFiles = configuration.getInt(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
-        ftsLimit = configuration.getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
+        COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN);
+        COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN);
+        INTERVAL_MS_FOR_TORRENT_DEEP_SCAN = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_INTERVAL_MS_FOR_TORRENT_DEEP_SCAN);
+        MIN_SEEDS_FOR_TORRENT_DEEP_SCAN = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_DEEP_SCAN);
+        MAX_TORRENT_FILES_TO_INDEX = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
+        FULLTEXT_SEARCH_RESULTS_LIMIT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
 
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
-        
+
         currentResults = new LinkedList<BittorrentSearchResult>();
         currentTasks = new LinkedList<SearchTask>();
     }
-    
+
     public void performSearch(String query) {
         cancelTasks();
-        displayer.clear();
+        currentResults.clear();
         performTorrentSearch(query);
     }
 
+    void addResults(List<BittorrentSearchResult> results) {
+        currentResults.addAll(results);
+    }
+
     public void performTorrentSearch(String query) {
-        //execute(new LocalSearchTask(context, displayer, query));
+        execute(new LocalSearchTask(query));
 
         for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
             if (searchEngine.isEnabled()) {
-                execute(new EngineSearchTask(searchEngine, displayer, query));
+                execute(new EngineSearchTask(searchEngine, query));
             }
         }
 
-        execute(new DeepSearchTask(displayer, query));
+        execute(new DeepSearchTask(query));
     }
 
     public void cancelSearch() {
@@ -157,30 +154,49 @@ public final class LocalSearchEngine {
         for (SearchTask task : currentTasks) {
             try {
                 task.cancel();
-                Log.d(TAG, "Task canceled ("+task.getName()+")");
+                Log.d(TAG, "Task canceled (" + task.getName() + ")");
             } catch (Throwable e) {
                 Log.e(TAG, "Failed to cancel search task", e);
             }
         }
 
         currentTasks.clear();
-        
+
         cancel();
     }
 
-    public void deepSearch(SearchTask task, SearchResultDisplayer displayer, String query) {
-        this.task = task;
-        this.displayer = displayer;
-        this.query = sanitize(query);
+    public void deepSearch(DeepSearchTask task, String query) {
+        query = sanitize(query);
 
-        downloaded = 0;
-        SystemClock.sleep(interval);
+        int downloaded = 0;
+        SystemClock.sleep(INTERVAL_MS_FOR_TORRENT_DEEP_SCAN);
 
-        for (int i = 0; i < rounds && !task.isCancelled(); i++) {
+        for (int i = 0; i < COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN && !task.isCancelled(); i++) {
 
-            scanDisplayer(i);
+            // scan results for actual torrents
 
-            SystemClock.sleep(interval);
+            // no need to synchronize here since currentResults has an incremental size
+            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>(currentResults);
+
+            for (int j = 0; j < results.size() && downloaded < COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN && !task.isCancelled(); j++) {
+                SearchResult sr = results.get(j);
+                if (sr instanceof BittorrentWebSearchResult) {
+                    BittorrentWebSearchResult bsr = (BittorrentWebSearchResult) sr;
+
+                    if (bsr.getHash() != null && (bsr.getSeeds() > MIN_SEEDS_FOR_TORRENT_DEEP_SCAN) && !torrentIndexed(bsr)) {
+                        if (!knownInfoHashes.contains(bsr.getHash())) {
+                            knownInfoHashes.add(bsr.getHash());
+                            downloaded++;
+
+                            DownloadTorrentTask downloadTask = new DownloadTorrentTask(query, bsr, task);
+                            downloadTasks.add(downloadTask);
+                            downloads_torrents_executor.execute(downloadTask);
+                        }
+                    }
+                }
+            }
+
+            SystemClock.sleep(INTERVAL_MS_FOR_TORRENT_DEEP_SCAN);
         }
     }
 
@@ -206,13 +222,13 @@ public final class LocalSearchEngine {
         return cr.delete(Torrents.Media.CONTENT_URI, null, null);
     }
 
-    public List<SearchResult> search(String query) {
+    public List<BittorrentSearchResult> search(String query) {
         List<Integer> ids = new ArrayList<Integer>();
 
         ContentResolver cr = context.getContentResolver();
         Cursor c = null;
         try {
-            c = cr.query(Torrents.Media.CONTENT_URI_SEARCH, new String[] { "rowid" }, null, new String[] { buildFtsQuery(query) }, " torrent_seeds DESC LIMIT " + ftsLimit);
+            c = cr.query(Torrents.Media.CONTENT_URI_SEARCH, new String[] { "rowid" }, null, new String[] { buildFtsQuery(query) }, " torrent_seeds DESC LIMIT " + FULLTEXT_SEARCH_RESULTS_LIMIT);
             while (c.moveToNext()) {
                 ids.add(c.getInt(0));
             }
@@ -224,7 +240,7 @@ public final class LocalSearchEngine {
 
         try {
             long start = System.currentTimeMillis();
-            c = cr.query(Torrents.Media.CONTENT_URI, new String[] { TorrentFilesColumns.JSON }, "_id IN " + StringUtils.buildSet(ids), null, "torrent_seeds DESC LIMIT " + ftsLimit);
+            c = cr.query(Torrents.Media.CONTENT_URI, new String[] { TorrentFilesColumns.JSON }, "_id IN " + StringUtils.buildSet(ids), null, "torrent_seeds DESC LIMIT " + FULLTEXT_SEARCH_RESULTS_LIMIT);
             long delta = System.currentTimeMillis() - start;
             Log.i(TAG, "Found " + c.getCount() + " local results in " + delta + "ms. ");
             //no query should ever take this long.
@@ -232,7 +248,7 @@ public final class LocalSearchEngine {
                 Log.w(TAG, "Warning: Results took too long, there's something wrong with the database, you might want to delete some data.");
             }
 
-            List<SearchResult> results = new ArrayList<SearchResult>();
+            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>();
             Map<Integer, SearchEngine> searchEngines = SearchEngine.getSearchEngineMap();
 
             while (c.moveToNext()) {
@@ -263,31 +279,27 @@ public final class LocalSearchEngine {
         }
     }
 
-    public void addResult(BittorrentDeepSearchResult result) {
-        displayer.addResult(result);
+    void addResult(BittorrentDeepSearchResult result) {
+        currentResults.add(result);
     }
 
-    public boolean isRare(int round, int searchResultsCount) {
-        return round == rounds - 1 && searchResultsCount < 50;
-    }
-
-    void indexTorrent(BittorrentWebSearchResult result, TOTorrent torrent) {
+    void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent) {
         TorrentDB tdb = new TorrentDB();
-        tdb.creationTime = result.getCreationTime();
-        tdb.fileName = result.getFileName();
-        tdb.hash = result.getHash();
-        tdb.searchEngineID = result.getSearchEngineId();
-        tdb.seeds = result.getSeeds();
-        tdb.size = result.getSize();
-        tdb.torrentDetailsURL = result.getTorrentDetailsURL();
-        tdb.torrentURI = result.getTorrentURI();
-        tdb.vendor = result.getVendor();
+        tdb.creationTime = sr.getCreationTime();
+        tdb.fileName = sr.getFileName();
+        tdb.hash = sr.getHash();
+        tdb.searchEngineID = sr.getSearchEngineId();
+        tdb.seeds = sr.getSeeds();
+        tdb.size = sr.getSize();
+        tdb.torrentDetailsURL = sr.getTorrentDetailsURL();
+        tdb.torrentURI = sr.getTorrentURI();
+        tdb.vendor = sr.getVendor();
 
         TOTorrentFile[] files = torrent.getFiles();
 
         long now = System.currentTimeMillis();
 
-        for (int i = 0; i < files.length && i < maxTorrentFiles; i++) {
+        for (int i = 0; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
             TOTorrentFile f = files[i];
             TorrentFileDB tfdb = new TorrentFileDB();
             tfdb.relativePath = f.getRelativePath();
@@ -305,32 +317,9 @@ public final class LocalSearchEngine {
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
         str = str.replaceAll("\\.torrent|www\\.|\\.com|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ]", " ");
-        return StringUtils.removeDoubleSpaces(str);
-    }
-
-    private void scanDisplayer(int round) {
-        List<SearchResult> results = displayer.getResults();
-
-        for (int i = 0; i < results.size() && downloaded < count && !task.isCancelled(); i++) {
-            SearchResult sr = results.get(i);
-            if (sr instanceof BittorrentWebSearchResult) {
-                BittorrentWebSearchResult bsr = (BittorrentWebSearchResult) sr;
-
-                if (bsr.getHash() != null && (bsr.getSeeds() > seeds || isRare(round, results.size())) && !torrentIndexed(bsr)) {
-                    if (!knownInfoHashes.contains(bsr.getHash())) {
-                        knownInfoHashes.add(bsr.getHash());
-                        downloaded++;
-                        downloadAndScan(bsr);
-                    }
-                }
-            }
-        }
-    }
-
-    private void downloadAndScan(BittorrentWebSearchResult result) {
-        DownloadTorrentTask downloadTask = new DownloadTorrentTask(query, result, task, this);
-        downloadTasks.add(downloadTask);
-        downloads_torrents_executor.execute(downloadTask);
+        str = StringUtils.removeDoubleSpaces(str);
+        Log.d(TAG, "Sanitize result: " + str);
+        return str;
     }
 
     private boolean torrentIndexed(BittorrentWebSearchResult result) {

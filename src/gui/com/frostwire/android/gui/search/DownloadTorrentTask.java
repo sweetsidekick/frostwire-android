@@ -37,19 +37,19 @@ class DownloadTorrentTask extends SearchTask {
 
     private static final String TAG = "FW.DownloadTorrentTask";
 
+    private static final int TORRENT_DOWNLOAD_INDEX_TIMEOUT = 20000; // 20 seconds
+
     private final String query;
-    private final BittorrentWebSearchResult result;
-    private final SearchTask searchTask;
-    private final LocalSearchEngine localSearchEngine;
+    private final BittorrentWebSearchResult sr;
+    private final SearchTask task;
 
     private TorrentDownloader torrentDownloader;
 
-    public DownloadTorrentTask(String query, BittorrentWebSearchResult result, SearchTask searchTask, LocalSearchEngine localSearchEngine) {
-        super("DownloadTorrentTask: " + result.getTorrentURI());
+    public DownloadTorrentTask(String query, BittorrentWebSearchResult sr, SearchTask task) {
+        super("DownloadTorrentTask: " + sr.getTorrentURI());
         this.query = query;
-        this.result = result;
-        this.searchTask = searchTask;
-        this.localSearchEngine = localSearchEngine;
+        this.sr = sr;
+        this.task = task;
     }
 
     @Override
@@ -61,13 +61,12 @@ class DownloadTorrentTask extends SearchTask {
                 torrentDownloader.cancel();
             }
         } catch (Throwable e) {
-            Log.e(TAG, "Error canceling TorrentDonloader for: " + result.getTorrentURI(), e);
+            Log.e(TAG, "Error canceling TorrentDonloader for: " + sr.getTorrentURI(), e);
         }
     }
 
     @Override
     public void run() {
-
         if (isCancelled()) {
             return;
         }
@@ -77,14 +76,12 @@ class DownloadTorrentTask extends SearchTask {
 
             CountDownLatch finishSignal = new CountDownLatch(1);
 
-            Log.d(TAG, String.format("About to download: %s, details %s", result.getTorrentURI(), result.getTorrentDetailsURL()));
-            torrentDownloader = TorrentDownloaderFactory.create(new LocalSearchTorrentDownloaderListener(query, result, searchTask, localSearchEngine, finishSignal), result.getTorrentURI(), result.getTorrentDetailsURL(), saveDir);
+            Log.d(TAG, String.format("About to download: %s, details %s", sr.getTorrentURI(), sr.getTorrentDetailsURL()));
+            torrentDownloader = TorrentDownloaderFactory.create(new LocalSearchTorrentDownloaderListener(query, sr, task, finishSignal), sr.getTorrentURI(), sr.getTorrentDetailsURL(), saveDir);
             torrentDownloader.start();
 
-            boolean inTime = finishSignal.await(60, TimeUnit.SECONDS);
-
-            if (!inTime) {
-                Log.w(TAG, "Download didn't finish in time: " + result.getTorrentURI());
+            if (!finishSignal.await(TORRENT_DOWNLOAD_INDEX_TIMEOUT, TimeUnit.MILLISECONDS)) {
+                Log.w(TAG, "Download didn't finish in time: " + sr.getTorrentURI());
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error in DownloadTorrentTask", e);

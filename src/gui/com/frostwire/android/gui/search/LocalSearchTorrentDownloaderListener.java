@@ -42,19 +42,17 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
 
     private static final String TAG = "FW.LocalSearchTorrentDownloaderListener";
 
-    private final AtomicBoolean finished = new AtomicBoolean(false);
-
     private final Set<String> tokens;
-    private final BittorrentWebSearchResult result;
-    private final SearchTask searchTask;
-    private final LocalSearchEngine localSearchEngine;
+    private final BittorrentWebSearchResult sr;
+    private final SearchTask task;
     private final CountDownLatch finishSignal;
 
-    public LocalSearchTorrentDownloaderListener(String query, BittorrentWebSearchResult result, SearchTask searchTask, LocalSearchEngine localSearchEngine, CountDownLatch finishSignal) {
+    private final AtomicBoolean finished = new AtomicBoolean(false);
+
+    public LocalSearchTorrentDownloaderListener(String query, BittorrentWebSearchResult sr, SearchTask task, CountDownLatch finishSignal) {
         this.tokens = new HashSet<String>(Arrays.asList(query.toLowerCase().split(" ")));
-        this.result = result;
-        this.searchTask = searchTask;
-        this.localSearchEngine = localSearchEngine;
+        this.sr = sr;
+        this.task = task;
         this.finishSignal = finishSignal;
     }
 
@@ -63,26 +61,25 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         // index the torrent (insert it's structure in the local DB)
         if (state == TorrentDownloader.STATE_FINISHED && finished.compareAndSet(false, true)) {
             try {
-                File torrentFile = inf.getFile();
-                TOTorrent theTorrent = TorrentUtils.readFromFile(torrentFile, false);
+                File file = inf.getFile();
+                TOTorrent torrent = TorrentUtils.readFromFile(file, false);
 
-                if (!searchTask.isCancelled() && tokens.size() > 0) {
-                    // search right away on this torrent.
-                    matchResults(theTorrent);
+                // search right away on this torrent.
+                if (!task.isCancelled() && tokens.size() > 0) {
+                    matchResults(torrent);
                 }
 
-                localSearchEngine.indexTorrent(result, theTorrent);
+                LocalSearchEngine.instance().indexTorrent(sr, torrent);
 
-                torrentFile.delete();
+                file.delete();
             } catch (Throwable e) {
-                Log.e(TAG, "Error indexing a torrent: " + result.getTorrentURI(), e);
+                Log.e(TAG, "Error indexing a torrent: " + sr.getTorrentURI(), e);
             }
 
             finishSignal.countDown();
         }
 
         switch (state) {
-        case TorrentDownloader.STATE_FINISHED:
         case TorrentDownloader.STATE_ERROR:
         case TorrentDownloader.STATE_DUPLICATE:
         case TorrentDownloader.STATE_CANCELLED:
@@ -91,11 +88,11 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         }
     }
 
-    private void matchResults(TOTorrent theTorrent) {
-        TOTorrentFile[] fs = theTorrent.getFiles();
-        for (int i = 0; i < fs.length && !searchTask.isCancelled(); i++) {
+    private void matchResults(TOTorrent torrent) {
+        TOTorrentFile[] files = torrent.getFiles();
+        for (int i = 0; i < files.length && !task.isCancelled(); i++) {
             try {
-                String keywords = LocalSearchEngine.sanitize(result.getFileName() + " " + fs[i].getRelativePath()).toLowerCase();
+                String keywords = LocalSearchEngine.sanitize(sr.getFileName() + " " + files[i].getRelativePath()).toLowerCase();
 
                 boolean foundMatch = true;
 
@@ -107,7 +104,7 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
                 }
 
                 if (foundMatch) {
-                    localSearchEngine.addResult(new BittorrentDeepSearchResult(result, fs[i]));
+                    LocalSearchEngine.instance().addResult(new BittorrentDeepSearchResult(sr, files[i]));
                 }
             } catch (Throwable e) {
                 Log.e(TAG, "Error testing match for inner file of torrent", e);

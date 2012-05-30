@@ -31,19 +31,24 @@ class LocalSearchTask extends SearchTask {
 
     private static final String TAG = "FW.LocalSearchTask";
 
-    private final SearchResultDisplayer displayer;
     private final String query;
 
-    public LocalSearchTask(SearchResultDisplayer displayer, String query) {
+    public LocalSearchTask(String query) {
         super("LocalSearchTask: " + query);
-        this.displayer = displayer;
         this.query = query;
     }
 
     public void run() {
+        if (isCancelled()) {
+            return;
+        }
+        
         try {
-            List<SearchResult> results = LocalSearchEngine.instance().search(query);
-            displayer.addResults(results);
+            List<BittorrentSearchResult> results = LocalSearchEngine.instance().search(query);
+
+            if (!isCancelled()) {
+                LocalSearchEngine.instance().addResults(results);
+            }
         } catch (Throwable e) {
             Log.e(TAG, "Error getting data from local search manager", e);
         }

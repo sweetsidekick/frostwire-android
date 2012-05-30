@@ -29,21 +29,21 @@ class DeepSearchTask extends SearchTask {
 
     private static final String TAG = "FW.DeepSearchTask";
 
-    private final SearchResultDisplayer displayer;
     private final String query;
-    private LocalSearchEngine localSearchEngine;
 
-    public DeepSearchTask(SearchResultDisplayer displayer, String query) {
+    public DeepSearchTask(String query) {
         super("DeepSearchTask: " + query);
-        this.displayer = displayer;
         this.query = query;
     }
 
     @Override
     public void run() {
+        if (isCancelled()) {
+            return;
+        }
+        
         try {
-            localSearchEngine = LocalSearchEngine.instance();
-            localSearchEngine.deepSearch(this, displayer, query);
+            LocalSearchEngine.instance().deepSearch(this, query);
         } catch (Throwable e) {
             Log.e(TAG, "Error performing the deep search", e);
         }
