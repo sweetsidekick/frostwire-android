@@ -47,7 +47,9 @@ class LocalSearchTask extends SearchTask {
             List<BittorrentSearchResult> results = LocalSearchEngine.instance().search(query);
 
             if (!isCancelled()) {
+                Log.d(TAG, "DB FTS search: " + results.size());
                 LocalSearchEngine.instance().addResults(results);
+                Log.d(TAG, "Result of adding FTS: " + LocalSearchEngine.instance().getCurrentResultsCount());
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error getting data from local search manager", e);

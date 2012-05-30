@@ -123,7 +123,13 @@ public final class LocalSearchEngine {
         currentResults = Collections.synchronizedSortedSet(new TreeSet<BittorrentSearchResult>(new Comparator<BittorrentSearchResult>() {
             @Override
             public int compare(BittorrentSearchResult lhs, BittorrentSearchResult rhs) {
-                return Integer.valueOf(rhs.getSeeds()).compareTo(Integer.valueOf(lhs.getSeeds()));
+                if (lhs.getSeeds() == rhs.getSeeds()) {
+                    return -1;
+                } else if (lhs.getSeeds() < rhs.getSeeds()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         }));
         currentTasks = new LinkedList<SearchTask>();
@@ -157,7 +163,7 @@ public final class LocalSearchEngine {
     }
 
     public void performTorrentSearch(String query) {
-        //execute(new LocalSearchTask(query));
+        execute(new LocalSearchTask(query));
 
         for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
             if (searchEngine.isEnabled()) {
@@ -165,7 +171,7 @@ public final class LocalSearchEngine {
             }
         }
 
-        //execute(new DeepSearchTask(query));
+        execute(new DeepSearchTask(query));
     }
 
     public void cancelSearch() {
