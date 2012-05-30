@@ -18,10 +18,8 @@
 
 package com.frostwire.android.gui;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import android.app.Application;
+import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.search.LocalSearchEngine;
@@ -50,9 +48,7 @@ public class MainApplication extends Application {
             Librarian.instance().syncMediaStore();
             Librarian.instance().syncApplicationsProvider();
         } catch (Throwable e) {
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            String stacktrace = sw.toString();
+            String stacktrace = Log.getStackTraceString(e);
             throw new RuntimeException("MainApplication Create exception: " + stacktrace, e);
         }
     }

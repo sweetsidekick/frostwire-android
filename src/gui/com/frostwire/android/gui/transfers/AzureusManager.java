@@ -108,7 +108,7 @@ public final class AzureusManager {
             SimpleTimer.pause();
             azureusCore.getGlobalManager().pauseDownloads();
         } catch (Throwable e) {
-            Log.d(TAG, "Failed to pause Azureus core", e);
+            Log.e(TAG, "Failed to pause Azureus core", e);
         }
     }
 
@@ -120,7 +120,7 @@ public final class AzureusManager {
             SimpleTimer.resume();
             azureusCore.getGlobalManager().resumeDownloads();
         } catch (Throwable e) {
-            Log.d(TAG, "Failed to resume Azureus core", e);
+            Log.e(TAG, "Failed to resume Azureus core", e);
         }
     }
 
@@ -236,7 +236,7 @@ public final class AzureusManager {
     private void azureusStart() {
         try {
             if (azureusCore.isStarted()) {
-                Log.d(TAG, "Azureus core already started. skipping.");
+                Log.w(TAG, "Azureus core already started. skipping.");
                 return;
             }
 
@@ -262,7 +262,7 @@ public final class AzureusManager {
                 // ignore
             }
         } catch (Throwable e) {
-            Log.d(TAG, "Failed to start Azureus core started", e);
+            Log.e(TAG, "Failed to start Azureus core started", e);
         }
     }
 

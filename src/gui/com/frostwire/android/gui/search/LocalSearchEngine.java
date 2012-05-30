@@ -280,7 +280,7 @@ public final class LocalSearchEngine {
             long start = System.currentTimeMillis();
             c = cr.query(Torrents.Media.CONTENT_URI, new String[] { TorrentFilesColumns.JSON }, "_id IN " + StringUtils.buildSet(ids), null, "torrent_seeds DESC LIMIT " + FULLTEXT_SEARCH_RESULTS_LIMIT);
             long delta = System.currentTimeMillis() - start;
-            Log.i(TAG, "Found " + c.getCount() + " local results in " + delta + "ms. ");
+            Log.d(TAG, "Found " + c.getCount() + " local results in " + delta + "ms. ");
             //no query should ever take this long.
             if (delta > 3000) {
                 Log.w(TAG, "Warning: Results took too long, there's something wrong with the database, you might want to delete some data.");

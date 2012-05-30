@@ -20,8 +20,6 @@ package com.frostwire.android.gui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -238,17 +236,6 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
 
     public List<T> getList() {
         return list;
-    }
-
-    public void sort(Comparator<T> comparator) {
-        if (list != null) {
-            try {
-                Collections.sort(list, comparator);
-            } catch (ConcurrentModificationException e) {
-                Log.e(TAG, "Review logic");
-            }
-        }
-        updateList(list);
     }
 
     /** 

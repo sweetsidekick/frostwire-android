@@ -367,7 +367,7 @@ public class HttpServer {
 
     static synchronized void dprint(Exception e) {
         if (debug) {
-            Log.d(TAG, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 

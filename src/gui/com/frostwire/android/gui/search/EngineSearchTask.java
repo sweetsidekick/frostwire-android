@@ -62,7 +62,6 @@ class EngineSearchTask extends SearchTask {
             if (!isCancelled()) {
                 List<BittorrentSearchResult> results = normalizeWebResults(webResults);
                 LocalSearchEngine.instance().addResults(results);
-                Log.d(TAG, String.format("SearchEngine %s with %d results", engine.getName(), results.size()));
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error getting data from search engine " + engine.getName(), e);

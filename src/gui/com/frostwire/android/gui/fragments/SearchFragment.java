@@ -18,15 +18,9 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -35,11 +29,8 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.LocalSearchEngine;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
@@ -59,8 +50,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
     private static final String TAG = "FW.SearchFragment";
 
     private SearchInputView searchInput;
-
-    private Object lockObj = new Object();
 
     private SearchResultListAdapter adapter;
 
@@ -87,10 +76,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
     @Override
     public void refresh() {
-        Log.d(TAG, "Current results count: " + LocalSearchEngine.instance().getCurrentResultsCount());
-        if (adapter != null) {
-            Log.d(TAG, "Adapter List count: " + adapter.getList().size());
-        }
         if (adapter != null) {
             if (LocalSearchEngine.instance().getCurrentResultsCount() != adapter.getList().size()) {
                 adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
@@ -102,77 +87,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
         if (adapter != null && adapter.getCount() > 0) {
             hideProgressDialog();
-        }
-    }
-
-    private void setupAdapter() {
-        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
-                @Override
-                protected void onTransferStarted(DownloadTransfer transfer) {
-                    LocalSearchEngine.instance().cancelSearch();
-                }
-            };
-            adapter.filter(mediaTypeId);
-            setListAdapter(adapter);
-        }
-    }
-
-    public void addResults(final List<SearchResult> results) {
-        synchronized (lockObj) {
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    if (!searchInput.isEmpty()) {
-                        if (adapter == null) {
-                            adapter = new SearchResultListAdapter(getActivity(), results) {
-                                @Override
-                                protected void onTransferStarted(DownloadTransfer transfer) {
-                                    LocalSearchEngine.instance().cancelSearch();
-                                }
-                            };
-                            adapter.filter(mediaTypeId);
-                            setListAdapter(adapter);
-                        } else {
-                            List<SearchResult> list = adapter.getList();
-                            list.addAll(results); // heavy use of OO references
-                            adapter.sort(new Comparator<SearchResult>() {
-                                public int compare(SearchResult lhs, SearchResult rhs) {
-                                    if (lhs instanceof BittorrentSearchResult) {
-                                        if (rhs instanceof BittorrentSearchResult) {
-                                            return ((BittorrentSearchResult) rhs).getSeeds() - ((BittorrentSearchResult) lhs).getSeeds();
-                                        } else {
-                                            return -1;
-                                        }
-                                    }
-                                    return 0;
-                                }
-                            });
-                            adapter.filter(mediaTypeId);
-                        }
-                    }
-
-                    if (adapter != null) {
-                        if (adapter.getCount() > 0) {
-                            hideProgressDialog();
-                            UIUtils.supportFrostWire(adView, searchInput.getText());
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    public void addResult(final SearchResult sr) {
-        synchronized (lockObj) {
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    hideProgressDialog();
-                    if (!searchInput.isEmpty() && adapter != null && sr instanceof BittorrentSearchResult) {
-                        BittorrentSearchResult bsr = (BittorrentSearchResult) sr;
-                        adapter.addItem(sr, adapter.accept(bsr, mediaTypeId));
-                    }
-                }
-            });
         }
     }
 
@@ -219,6 +133,19 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
         if (adapter != null) {
             adapter.dismissDialogs();
+        }
+    }
+
+    private void setupAdapter() {
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+                @Override
+                protected void onTransferStarted(DownloadTransfer transfer) {
+                    LocalSearchEngine.instance().cancelSearch();
+                }
+            };
+            adapter.filter(mediaTypeId);
+            setListAdapter(adapter);
         }
     }
 
