@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.search;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -255,6 +256,7 @@ public final class LocalSearchEngine {
     }
 
     public int clearIndex() {
+        knownInfoHashes.clear();
         ContentResolver cr = context.getContentResolver();
         cr.delete(Torrents.Media.CONTENT_URI_SEARCH, null, null);
         return cr.delete(Torrents.Media.CONTENT_URI, null, null);
@@ -345,6 +347,8 @@ public final class LocalSearchEngine {
             tfdb.torrent = tdb;
 
             String keywords = sanitize(tdb.fileName + " " + tfdb.relativePath).toLowerCase();
+            keywords = addNormalizedTokens(keywords);
+            Log.d(TAG, "Keywords index: " + keywords);
             String json = JsonUtils.toJson(tfdb);
 
             insert(now, tdb.hash, tdb.fileName, tdb.seeds, tfdb.relativePath, keywords, json);
@@ -354,10 +358,27 @@ public final class LocalSearchEngine {
 
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
-        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\r–&~{}*@^]", " ");
+        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\r–&~{}*@^'=!,°|#]", " ");
         str = StringUtils.removeDoubleSpaces(str);
         //Log.d(TAG, "Sanitize result: " + str);
         return str;
+    }
+
+    final static String addNormalizedTokens(String str) {
+        String[] tokens = str.split(" ");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String token : tokens) {
+            String norm = Normalizer.normalize(token, Normalizer.Form.NFKD);
+            norm = norm.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            if (!norm.equals(token)) {
+                sb.append(" ");
+                sb.append(norm);
+            }
+        }
+
+        return str + sb.toString();
     }
 
     private boolean torrentIndexed(BittorrentWebSearchResult result) {

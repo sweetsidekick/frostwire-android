@@ -95,14 +95,13 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         for (int i = 0; i < files.length && !task.isCancelled(); i++) {
             try {
                 String keywords = LocalSearchEngine.sanitize(sr.getFileName() + " " + files[i].getRelativePath()).toLowerCase();
+                keywords = LocalSearchEngine.addNormalizedTokens(keywords);
                 //Log.d(TAG, "Keywords for on the fly match: " + keywords);
 
                 boolean foundMatch = true;
 
                 for (String token : tokens) {
-                    //Log.d(TAG, "Token: " + token);
                     if (!keywords.contains(token)) {
-                        //Log.d(TAG, "Not match for token: " + token);
                         foundMatch = false;
                         break;
                     }
