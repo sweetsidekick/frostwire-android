@@ -37,7 +37,7 @@ class DownloadTorrentTask extends SearchTask {
 
     private static final String TAG = "FW.DownloadTorrentTask";
 
-    private static final int TORRENT_DOWNLOAD_INDEX_TIMEOUT = 20000; // 20 seconds
+    private static final int TORRENT_DOWNLOAD_INDEX_TIMEOUT = 60000; // 60 seconds
 
     private final String query;
     private final BittorrentWebSearchResult sr;
@@ -80,7 +80,9 @@ class DownloadTorrentTask extends SearchTask {
             torrentDownloader = TorrentDownloaderFactory.create(new LocalSearchTorrentDownloaderListener(query, sr, task, finishSignal), sr.getTorrentURI(), sr.getTorrentDetailsURL(), saveDir);
             torrentDownloader.start();
 
-            if (!finishSignal.await(TORRENT_DOWNLOAD_INDEX_TIMEOUT, TimeUnit.MILLISECONDS)) {
+            if (finishSignal.await(TORRENT_DOWNLOAD_INDEX_TIMEOUT, TimeUnit.MILLISECONDS)) {
+                //Log.d(TAG, "Torrent downloaded finish  and indexed: " + sr.getTorrentURI());
+            } else {
                 Log.w(TAG, "Download didn't finish in time: " + sr.getTorrentURI());
             }
         } catch (Throwable e) {

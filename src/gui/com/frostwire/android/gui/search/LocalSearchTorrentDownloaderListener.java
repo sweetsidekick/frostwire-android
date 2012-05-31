@@ -64,12 +64,14 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
                 File file = inf.getFile();
                 TOTorrent torrent = TorrentUtils.readFromFile(file, false);
 
+                Set<String> force = new HashSet<String>();
+
                 // search right away on this torrent.
                 if (!task.isCancelled() && tokens.size() > 0) {
-                    matchResults(torrent);
+                    matchResults(torrent, force);
                 }
 
-                LocalSearchEngine.instance().indexTorrent(sr, torrent);
+                LocalSearchEngine.instance().indexTorrent(sr, torrent, force);
 
                 file.delete();
             } catch (Throwable e) {
@@ -90,7 +92,7 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
         }
     }
 
-    private void matchResults(TOTorrent torrent) {
+    private void matchResults(TOTorrent torrent, Set<String> force) {
         TOTorrentFile[] files = torrent.getFiles();
         for (int i = 0; i < files.length && !task.isCancelled(); i++) {
             try {
@@ -108,6 +110,7 @@ class LocalSearchTorrentDownloaderListener implements TorrentDownloaderCallBackI
                 }
 
                 if (foundMatch) {
+                    force.add(files[i].getRelativePath());
                     LocalSearchEngine.instance().addResult(new BittorrentDeepSearchResult(sr, files[i]));
                 }
             } catch (Throwable e) {

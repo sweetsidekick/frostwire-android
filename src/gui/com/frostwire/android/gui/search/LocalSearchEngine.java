@@ -88,6 +88,8 @@ public final class LocalSearchEngine {
     private final SortedSet<BittorrentSearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
+    private final Object lockObj = new Object();
+
     static {
         downloads_torrents_executor = ExecutorsHelper.newFixedSizeThreadPool(MAX_TORRENT_DOWNLOADS, "DownloadTorrentsExecutor");
     }
@@ -268,7 +270,8 @@ public final class LocalSearchEngine {
         ContentResolver cr = context.getContentResolver();
         Cursor c = null;
         try {
-            c = cr.query(Torrents.Media.CONTENT_URI_SEARCH, new String[] { "rowid" }, null, new String[] { buildFtsQuery(query) }, " torrent_seeds DESC LIMIT " + FULLTEXT_SEARCH_RESULTS_LIMIT);
+            String fts = buildFtsQuery(query);
+            c = cr.query(Torrents.Media.CONTENT_URI_SEARCH, new String[] { "rowid" }, null, new String[] { fts }, " torrent_seeds DESC LIMIT " + FULLTEXT_SEARCH_RESULTS_LIMIT);
             while (c.moveToNext()) {
                 ids.add(c.getInt(0));
             }
@@ -323,7 +326,17 @@ public final class LocalSearchEngine {
         currentResults.add(result);
     }
 
-    void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent) {
+    /**
+     * The force parameter is very important here. Since we are in a constrained
+     * environment we can't index huge torrents, but at the same time we want to force
+     * the indexing in the already matched torrent's inner files. This is the reasoning
+     * of pass this set with the relative paths.
+     * 
+     * @param sr
+     * @param torrent
+     * @param force
+     */
+    void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent, Set<String> force) {
         TorrentDB tdb = new TorrentDB();
         tdb.creationTime = sr.getCreationTime();
         tdb.fileName = sr.getFileName();
@@ -339,26 +352,39 @@ public final class LocalSearchEngine {
 
         long now = System.currentTimeMillis();
 
-        for (int i = 0; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
-            TOTorrentFile f = files[i];
-            TorrentFileDB tfdb = new TorrentFileDB();
-            tfdb.relativePath = f.getRelativePath();
-            tfdb.size = f.getLength();
-            tfdb.torrent = tdb;
-
-            String keywords = sanitize(tdb.fileName + " " + tfdb.relativePath).toLowerCase();
-            keywords = addNormalizedTokens(keywords);
-            Log.d(TAG, "Keywords index: " + keywords);
-            String json = JsonUtils.toJson(tfdb);
-
-            insert(now, tdb.hash, tdb.fileName, tdb.seeds, tfdb.relativePath, keywords, json);
+        int i = 0;
+        for (; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
+            indexTorrentFile(now, files[i], tdb);
+            force.remove(files[i].getRelativePath());
             Thread.yield(); // try to play nice with others
         }
+        // looking for the rest.
+        for (; i < files.length; i++) {
+            if (force.contains(files[i].getRelativePath())) {
+                force.remove(files[i].getRelativePath());
+                indexTorrentFile(now, files[i], tdb);
+                Thread.yield(); // try to play nice with others
+            }
+        }
+    }
+
+    private void indexTorrentFile(long time, TOTorrentFile file, TorrentDB tdb) {
+        TorrentFileDB tfdb = new TorrentFileDB();
+        tfdb.relativePath = file.getRelativePath();
+        tfdb.size = file.getLength();
+        tfdb.torrent = tdb;
+
+        String keywords = sanitize(tdb.fileName + " " + tfdb.relativePath).toLowerCase();
+        keywords = addNormalizedTokens(keywords);
+        //Log.d(TAG, "Keywords index: " + keywords);
+        String json = JsonUtils.toJson(tfdb);
+
+        insert(time, tdb.hash, tdb.fileName, tdb.seeds, tfdb.relativePath, keywords, json);
     }
 
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
-        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ&~{}*@^'=!,¡|#]", " ");
+        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ&~{}\\*@\\^'=!,¡|#ÀÁ]", " ");
         str = StringUtils.removeDoubleSpaces(str);
         //Log.d(TAG, "Sanitize result: " + str);
         return str;
@@ -381,6 +407,23 @@ public final class LocalSearchEngine {
         return str + sb.toString();
     }
 
+    final static String normalizedTokens(String str) {
+        String[] tokens = str.split(" ");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String token : tokens) {
+            String norm = Normalizer.normalize(token, Normalizer.Form.NFKD);
+            norm = norm.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            if (!norm.equals(token)) {
+                sb.append(norm);
+                sb.append(" ");
+            }
+        }
+
+        return sb.toString().trim();
+    }
+
     private boolean torrentIndexed(BittorrentWebSearchResult result) {
         ContentResolver cr = context.getContentResolver();
         Cursor c = null;
@@ -395,19 +438,21 @@ public final class LocalSearchEngine {
     }
 
     private void insert(long timestamp, String torrentInfoHash, String torrentFileName, int torrentSeeds, String relativePath, String keywords, String json) {
-        ContentResolver cr = context.getContentResolver();
+        synchronized (lockObj) {
+            ContentResolver cr = context.getContentResolver();
 
-        ContentValues cv = new ContentValues();
+            ContentValues cv = new ContentValues();
 
-        cv.put(TorrentFilesColumns.TIMESTAMP, timestamp);
-        cv.put(TorrentFilesColumns.TORRENT_INFO_HASH, torrentInfoHash);
-        cv.put(TorrentFilesColumns.TORRENT_FILE_NAME, torrentFileName);
-        cv.put(TorrentFilesColumns.TORRENT_SEEDS, torrentSeeds);
-        cv.put(TorrentFilesColumns.RELATIVE_PATH, relativePath);
-        cv.put(TorrentFilesColumns.KEYWORDS, keywords);
-        cv.put(TorrentFilesColumns.JSON, json);
+            cv.put(TorrentFilesColumns.TIMESTAMP, timestamp);
+            cv.put(TorrentFilesColumns.TORRENT_INFO_HASH, torrentInfoHash);
+            cv.put(TorrentFilesColumns.TORRENT_FILE_NAME, torrentFileName);
+            cv.put(TorrentFilesColumns.TORRENT_SEEDS, torrentSeeds);
+            cv.put(TorrentFilesColumns.RELATIVE_PATH, relativePath);
+            cv.put(TorrentFilesColumns.KEYWORDS, keywords);
+            cv.put(TorrentFilesColumns.JSON, json);
 
-        cr.insert(Torrents.Media.CONTENT_URI, cv);
+            cr.insert(Torrents.Media.CONTENT_URI, cv);
+        }
     }
 
     private String buildFtsQuery(String query) {
