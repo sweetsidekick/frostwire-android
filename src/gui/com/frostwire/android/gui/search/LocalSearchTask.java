@@ -44,7 +44,8 @@ class LocalSearchTask extends SearchTask {
         }
 
         try {
-            List<BittorrentSearchResult> results = LocalSearchEngine.instance().search(query);
+            // looking with no diacritical symbols
+            List<BittorrentSearchResult> results = LocalSearchEngine.instance().search(LocalSearchEngine.normalizeTokens(query));
 
             if (!isCancelled()) {
                 LocalSearchEngine.instance().addResults(results);

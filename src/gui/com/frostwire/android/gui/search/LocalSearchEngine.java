@@ -265,6 +265,7 @@ public final class LocalSearchEngine {
     }
 
     public List<BittorrentSearchResult> search(String query) {
+        //Log.d(TAG, "Local search query: " + query);
         List<Integer> ids = new ArrayList<Integer>();
 
         ContentResolver cr = context.getContentResolver();
@@ -407,7 +408,7 @@ public final class LocalSearchEngine {
         return str + sb.toString();
     }
 
-    final static String normalizedTokens(String str) {
+    final static String normalizeTokens(String str) {
         String[] tokens = str.split(" ");
 
         StringBuilder sb = new StringBuilder();
@@ -415,10 +416,8 @@ public final class LocalSearchEngine {
         for (String token : tokens) {
             String norm = Normalizer.normalize(token, Normalizer.Form.NFKD);
             norm = norm.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-            if (!norm.equals(token)) {
-                sb.append(norm);
-                sb.append(" ");
-            }
+            sb.append(norm);
+            sb.append(" ");
         }
 
         return sb.toString().trim();
