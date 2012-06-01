@@ -97,6 +97,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             public void onSearch(View v, String query, int mediaTypeId) {
                 SearchFragment.this.mediaTypeId = mediaTypeId;
                 switchView(view, android.R.id.list);
+                clearAdapter();
                 showProgressDialog();
                 LocalSearchEngine.instance().performSearch(query);
             }
@@ -111,9 +112,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             public void onClear(View v) {
                 switchView(view, R.id.fragment_search_promos);
                 LocalSearchEngine.instance().cancelSearch();
-                adapter = null;
-                setListAdapter(null);
-                adView.setVisibility(View.GONE);
+                clearAdapter();
             }
         });
 
@@ -147,6 +146,15 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             adapter.filter(mediaTypeId);
             setListAdapter(adapter);
         }
+    }
+
+    private void clearAdapter() {
+        setListAdapter(null);
+        if (adapter != null) {
+            adapter.clear();
+            adapter = null;
+        }
+        adView.setVisibility(View.GONE);
     }
 
     private void showProgressDialog() {
