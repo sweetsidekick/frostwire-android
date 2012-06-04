@@ -55,6 +55,8 @@ class DownloadTorrentTask extends SearchTask {
     @Override
     public void cancel() {
         super.cancel();
+        
+        LocalSearchEngine.instance().forgetInfoHash(sr.getHash());
 
         try {
             if (torrentDownloader != null) {

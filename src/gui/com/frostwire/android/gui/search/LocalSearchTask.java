@@ -18,8 +18,6 @@
 
 package com.frostwire.android.gui.search;
 
-import java.util.List;
-
 import android.util.Log;
 
 /**
@@ -45,11 +43,7 @@ class LocalSearchTask extends SearchTask {
 
         try {
             // looking with no diacritical symbols
-            List<BittorrentSearchResult> results = LocalSearchEngine.instance().search(LocalSearchEngine.normalizeTokens(query));
-
-            if (!isCancelled()) {
-                LocalSearchEngine.instance().addResults(results);
-            }
+            LocalSearchEngine.instance().search(LocalSearchEngine.normalizeTokens(query));
         } catch (Throwable e) {
             Log.e(TAG, "Error getting data from local search manager", e);
         }

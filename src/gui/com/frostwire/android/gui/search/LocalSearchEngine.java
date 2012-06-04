@@ -266,7 +266,7 @@ public final class LocalSearchEngine {
         return cr.delete(Torrents.Media.CONTENT_URI, null, null);
     }
 
-    public List<BittorrentSearchResult> search(String query) {
+    public void search(String query) {
         //Log.d(TAG, "Local search query: " + query);
         List<Integer> ids = new ArrayList<Integer>();
 
@@ -316,8 +316,7 @@ public final class LocalSearchEngine {
 
             Log.i(TAG, "Ended up with " + results.size() + " results");
 
-            return results;
-
+            addResults(results);
         } finally {
             if (c != null) {
                 c.close();
@@ -423,6 +422,10 @@ public final class LocalSearchEngine {
         }
 
         return sb.toString().trim();
+    }
+    
+    final void forgetInfoHash(String hash) {
+        knownInfoHashes.remove(hash);
     }
 
     private boolean torrentIndexed(BittorrentWebSearchResult result) {
