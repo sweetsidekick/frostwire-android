@@ -221,6 +221,9 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
         if (adapter != null && LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
             progress = (progress + 20) % 100;
+            if (progress == 0) {
+                progress = 10;
+            }
             visibility = View.VISIBLE;
         } else {
             progress = 0;
