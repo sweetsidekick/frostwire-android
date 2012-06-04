@@ -36,7 +36,7 @@ class LocalSearchTask extends SearchTask {
         this.query = query;
     }
 
-    public void run() {
+    public void runTask() {
         if (isCancelled()) {
             return;
         }

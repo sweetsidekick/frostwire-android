@@ -68,7 +68,7 @@ class DownloadTorrentTask extends SearchTask {
     }
 
     @Override
-    public void run() {
+    public void runTask() {
         if (isCancelled()) {
             return;
         }

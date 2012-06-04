@@ -51,7 +51,7 @@ class EngineSearchTask extends SearchTask {
         MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
     }
 
-    public void run() {
+    public void runTask() {
         if (isCancelled()) {
             return;
         }

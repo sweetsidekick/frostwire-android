@@ -87,6 +87,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
         if (adapter != null && adapter.getCount() > 0) {
             hideProgressDialog();
+
+            adjustLoadingViewVisibility(getView());
         }
     }
 
@@ -117,10 +119,12 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             }
         });
 
-        LinearLayout llayout = findView(view, R.id.adview_layout);
+        LinearLayout llayout = findView(view, R.id.fragment_search_adview_layout);
         adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
         llayout.addView(adView, 0);
+        
+        adjustLoadingViewVisibility(view);
 
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
             setupAdapter();
@@ -166,6 +170,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             adapter = null;
         }
         adView.setVisibility(View.GONE);
+        adjustLoadingViewVisibility(getView());
     }
 
     private void showProgressDialog() {
@@ -207,5 +212,15 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             View childAt = frameLayout.getChildAt(i);
             childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
         }
+    }
+
+    private void adjustLoadingViewVisibility(View v) {
+        int visibility = View.GONE;
+
+        if (adapter != null && LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
+            visibility = View.VISIBLE;
+        }
+
+        findView(v, R.id.fragment_search_loading_view).setVisibility(visibility);
     }
 }

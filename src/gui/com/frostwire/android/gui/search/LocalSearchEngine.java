@@ -50,6 +50,7 @@ import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
+import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
@@ -82,7 +83,7 @@ public final class LocalSearchEngine {
     private final int MAX_TORRENT_FILES_TO_INDEX;
     private final int FULLTEXT_SEARCH_RESULTS_LIMIT;
 
-    private List<DownloadTorrentTask> downloadTasks;
+    private final List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
     private final SortedSet<BittorrentSearchResult> currentResults;
@@ -140,6 +141,10 @@ public final class LocalSearchEngine {
 
     public int getCurrentResultsCount() {
         return currentResults.size();
+    }
+
+    public int getDownloadTasksCount() {
+        return downloadTasks.size();
     }
 
     public List<SearchResult> pollCurrentResults() {
@@ -232,6 +237,12 @@ public final class LocalSearchEngine {
                             downloaded++;
 
                             DownloadTorrentTask downloadTask = new DownloadTorrentTask(query, bsr, task);
+                            downloadTask.setListener(new SearchTaskListener() {
+                                @Override
+                                public void onFinish(SearchTask task) {
+                                    downloadTasks.remove(task);
+                                }
+                            });
                             downloadTasks.add(downloadTask);
                             downloads_torrents_executor.execute(downloadTask);
                         }
