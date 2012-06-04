@@ -89,9 +89,9 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
         if (adapter != null && adapter.getCount() > 0) {
             hideProgressDialog();
-
-            adjustDeepSearchProgress(getView());
         }
+
+        adjustDeepSearchProgress(getView());
     }
 
     @Override

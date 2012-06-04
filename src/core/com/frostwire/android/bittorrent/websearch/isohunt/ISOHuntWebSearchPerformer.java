@@ -21,9 +21,8 @@ package com.frostwire.android.bittorrent.websearch.isohunt;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
+import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.WebSearchResult;
-import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
 
@@ -32,7 +31,7 @@ import com.frostwire.android.util.StringUtils;
  * @author aldenml
  *
  */
-public class ISOHuntWebSearchPerformer implements WebSearchPerformer {
+public class ISOHuntWebSearchPerformer extends JsonSearchPerformer {
 
     public List<WebSearchResult> search(String keywords) {
         List<WebSearchResult> result = new ArrayList<WebSearchResult>();
@@ -49,11 +48,9 @@ public class ISOHuntWebSearchPerformer implements WebSearchPerformer {
         return result;
     }
 
-    public static ISOHuntResponse searchISOHunt(String keywords) {
-        HttpFetcher fetcher = new HttpFetcher("http://isohunt.com/js/json.php?ihq=" + StringUtils.encodeUrl(keywords) + "&start=1&rows=100&sort=seeds", HTTP_TIMEOUT);
+    public ISOHuntResponse searchISOHunt(String keywords) {
+        String json = fetchJson("http://isohunt.com/js/json.php?ihq=" + StringUtils.encodeUrl(keywords) + "&start=1&rows=100&sort=seeds");
 
-        byte[] bytes = fetcher.fetch();
-
-        return bytes != null ? JsonUtils.toObject(StringUtils.getUTF8String(bytes), ISOHuntResponse.class) : null;
+        return json != null ? JsonUtils.toObject(json, ISOHuntResponse.class) : null;
     }
 }

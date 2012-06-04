@@ -18,24 +18,20 @@
 
 package com.frostwire.android.bittorrent.websearch.mininova;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
+import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.WebSearchResult;
-import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.util.JsonUtils;
+import com.frostwire.android.util.StringUtils;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class MininovaWebSearchPerformer implements WebSearchPerformer {
+public class MininovaWebSearchPerformer extends JsonSearchPerformer {
 
     public List<WebSearchResult> search(String keywords) {
 
@@ -54,31 +50,16 @@ public class MininovaWebSearchPerformer implements WebSearchPerformer {
         return result;
     }
 
-    public static MininovaVuzeResponse searchMininovaVuze(String keywords) {
-        String iha = null;
-        try {
-            iha = URLEncoder.encode(keywords, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        }
+    public MininovaVuzeResponse searchMininovaVuze(String keywords) {
+        String json = fetchJson("http://www.mininova.org/vuze.php?search=" + StringUtils.encodeUrl(keywords));
 
-        HttpFetcher fetcher = null;
-        try {
-            fetcher = new HttpFetcher(new URI("http://www.mininova.org/vuze.php?search=" + iha), HTTP_TIMEOUT);
-        } catch (URISyntaxException e) {
-        }
-
-        byte[] jsonBytes = fetcher.fetch();
-
-        if (jsonBytes == null) {
+        if (json == null) {
             return null;
         }
 
-        String json = new String(jsonBytes);
         //fix what seems to be an intentional JSON syntax typo put ther by mininova
         json = json.replace("\"hash\":", ", \"hash\":");
 
-        MininovaVuzeResponse response = JsonUtils.toObject(json, MininovaVuzeResponse.class);
-
-        return response;
+        return JsonUtils.toObject(json, MininovaVuzeResponse.class);
     }
 }

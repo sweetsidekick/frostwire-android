@@ -26,8 +26,6 @@ import java.util.List;
  *
  */
 public interface WebSearchPerformer {
-    
-    public static final int HTTP_TIMEOUT = 15000; // 15 seconds
 
     public List<WebSearchResult> search(String keywords);
 }
