@@ -81,6 +81,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
                 adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
                 adapter.filter(mediaTypeId);
             }
+        } else {
+            setupAdapter();
         }
 
         if (adapter != null && adapter.getCount() > 0) {
@@ -120,7 +122,12 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         adView.setVisibility(View.GONE);
         llayout.addView(adView, 0);
 
-        switchView(view, R.id.fragment_search_promos);
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            setupAdapter();
+            switchView(view, android.R.id.list);
+        } else {
+            switchView(view, R.id.fragment_search_promos);
+        }
     }
 
     @Override
@@ -135,19 +142,21 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
     }
 
     private void setupAdapter() {
-        adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
-            @Override
-            protected void onTransferStarted(DownloadTransfer transfer) {
-                LocalSearchEngine.instance().cancelSearch();
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+                @Override
+                protected void onTransferStarted(DownloadTransfer transfer) {
+                    LocalSearchEngine.instance().cancelSearch();
+                }
+            };
+            adapter.filter(mediaTypeId);
+
+            if (adapter.getCount() > 0) {
+                hideProgressDialog();
             }
-        };
-        adapter.filter(mediaTypeId);
 
-        if (adapter.getCount() > 0) {
-            hideProgressDialog();
+            setListAdapter(adapter);
         }
-
-        setListAdapter(adapter);
     }
 
     private void clearAdapter() {
@@ -183,6 +192,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         if (progressDlg != null) {
             try {
                 progressDlg.dismiss();
+                progressDlg = null;
             } catch (Throwable e) {
                 // ignore
             }
