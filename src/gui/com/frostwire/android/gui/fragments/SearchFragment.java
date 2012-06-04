@@ -81,8 +81,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
                 adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
                 adapter.filter(mediaTypeId);
             }
-        } else {
-            setupAdapter();
         }
 
         if (adapter != null && adapter.getCount() > 0) {
@@ -100,6 +98,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
                 clearAdapter();
                 showProgressDialog();
                 LocalSearchEngine.instance().performSearch(query);
+                setupAdapter();
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
@@ -136,16 +135,19 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
     }
 
     private void setupAdapter() {
-        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
-                @Override
-                protected void onTransferStarted(DownloadTransfer transfer) {
-                    LocalSearchEngine.instance().cancelSearch();
-                }
-            };
-            adapter.filter(mediaTypeId);
-            setListAdapter(adapter);
+        adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+            @Override
+            protected void onTransferStarted(DownloadTransfer transfer) {
+                LocalSearchEngine.instance().cancelSearch();
+            }
+        };
+        adapter.filter(mediaTypeId);
+
+        if (adapter.getCount() > 0) {
+            hideProgressDialog();
         }
+
+        setListAdapter(adapter);
     }
 
     private void clearAdapter() {

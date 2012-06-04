@@ -166,7 +166,8 @@ public final class LocalSearchEngine {
     }
 
     public void performTorrentSearch(String query) {
-        execute(new LocalSearchTask(query));
+        //execute(new LocalSearchTask(query));
+        new LocalSearchTask(query).run();
 
         for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
             if (searchEngine.isEnabled()) {
@@ -178,6 +179,7 @@ public final class LocalSearchEngine {
     }
 
     public void cancelSearch() {
+        currentResults.clear();
         cancelTasks();
     }
 
