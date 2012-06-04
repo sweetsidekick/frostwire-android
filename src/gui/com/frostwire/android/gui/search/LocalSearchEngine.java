@@ -338,8 +338,29 @@ public final class LocalSearchEngine {
      * @param torrent
      * @param force
      */
-    void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent, Set<String> force) {
+    void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent, Set<String> indexed) {
+        TorrentDB tdb = searchResultToTorrentDB(sr);
+        long now = System.currentTimeMillis();
+
+        TOTorrentFile[] files = torrent.getFiles();
+
+        for (int i = 0; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
+            if (!indexed.contains(files[i].getRelativePath())) {
+                indexTorrentFile(now, files[i], tdb);
+                Thread.yield(); // try to play nice with others
+            }
+        }
+    }
+
+    void indexTorrentFile(BittorrentWebSearchResult sr, TOTorrentFile file) {
+        TorrentDB tdb = searchResultToTorrentDB(sr);
+        long now = System.currentTimeMillis();
+        indexTorrentFile(now, file, tdb);
+    }
+
+    private TorrentDB searchResultToTorrentDB(BittorrentWebSearchResult sr) {
         TorrentDB tdb = new TorrentDB();
+
         tdb.creationTime = sr.getCreationTime();
         tdb.fileName = sr.getFileName();
         tdb.hash = sr.getHash();
@@ -350,24 +371,7 @@ public final class LocalSearchEngine {
         tdb.torrentURI = sr.getTorrentURI();
         tdb.vendor = sr.getVendor();
 
-        TOTorrentFile[] files = torrent.getFiles();
-
-        long now = System.currentTimeMillis();
-
-        int i = 0;
-        for (; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
-            indexTorrentFile(now, files[i], tdb);
-            force.remove(files[i].getRelativePath());
-            Thread.yield(); // try to play nice with others
-        }
-        // looking for the rest.
-        for (; i < files.length; i++) {
-            if (force.contains(files[i].getRelativePath())) {
-                force.remove(files[i].getRelativePath());
-                indexTorrentFile(now, files[i], tdb);
-                Thread.yield(); // try to play nice with others
-            }
-        }
+        return tdb;
     }
 
     private void indexTorrentFile(long time, TOTorrentFile file, TorrentDB tdb) {
@@ -423,7 +427,7 @@ public final class LocalSearchEngine {
 
         return sb.toString().trim();
     }
-    
+
     final void forgetInfoHash(String hash) {
         knownInfoHashes.remove(hash);
     }
