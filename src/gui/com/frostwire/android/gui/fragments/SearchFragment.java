@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -55,6 +56,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
 
     private int mediaTypeId;
     private ProgressDialog progressDlg;
+    private int progress;
 
     private AdView adView;
 
@@ -88,7 +90,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         if (adapter != null && adapter.getCount() > 0) {
             hideProgressDialog();
 
-            adjustLoadingViewVisibility(getView());
+            adjustDeepSearchProgress(getView());
         }
     }
 
@@ -123,8 +125,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
         llayout.addView(adView, 0);
-        
-        adjustLoadingViewVisibility(view);
+
+        adjustDeepSearchProgress(view);
 
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
             setupAdapter();
@@ -170,7 +172,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             adapter = null;
         }
         adView.setVisibility(View.GONE);
-        adjustLoadingViewVisibility(getView());
+        adjustDeepSearchProgress(getView());
     }
 
     private void showProgressDialog() {
@@ -214,13 +216,19 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         }
     }
 
-    private void adjustLoadingViewVisibility(View v) {
-        int visibility = View.GONE;
+    private void adjustDeepSearchProgress(View v) {
+        int visibility;
 
         if (adapter != null && LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
+            progress = (progress + 20) % 100;
             visibility = View.VISIBLE;
+        } else {
+            progress = 0;
+            visibility = View.GONE;
         }
 
-        findView(v, R.id.fragment_search_loading_view).setVisibility(visibility);
+        ProgressBar progressBar = findView(v, R.id.fragment_search_deepsearch_progress);
+        progressBar.setProgress(progress);
+        progressBar.setVisibility(visibility);
     }
 }
