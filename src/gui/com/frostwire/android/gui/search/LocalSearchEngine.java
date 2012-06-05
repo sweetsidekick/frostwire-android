@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.search;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,6 +52,7 @@ import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFiles
 import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.JsonUtils;
+import com.frostwire.android.util.Normalizer;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
 

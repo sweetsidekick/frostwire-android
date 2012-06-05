@@ -198,7 +198,7 @@ public class MediaControllerView extends FrameLayout {
             buttonNext.setOnClickListener(nextListener);
         }
 
-        progress = (ProgressBar) findViewById(R.id.view_media_controller_progress);
+        progress = (SeekBar) findViewById(R.id.view_media_controller_progress);
         if (progress != null) {
             if (progress instanceof SeekBar) {
                 SeekBar seeker = (SeekBar) progress;
