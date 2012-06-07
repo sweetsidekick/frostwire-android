@@ -18,7 +18,6 @@
 
 package com.frostwire.android.core;
 
-
 /**
  * Static class containing all constants in one place.
  * 
@@ -81,6 +80,7 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN = "frostwire.prefs.search.count_rounds_for_torrent_deep_scan";
     public static final String PREF_KEY_SEARCH_INTERVAL_MS_FOR_TORRENT_DEEP_SCAN = "frostwire.prefs.search.interval_ms_for_torrent_deep_scan";
     public static final String PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_DEEP_SCAN = "frostwire.prefs.search.min_seeds_for_torrent_deep_scan";
+    public static final String PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT = "frostwire.prefs.search.min_seeds_for_torrent_result";
     public static final String PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX = "frostwire.prefs.search.max_torrent_files_to_index";
     public static final String PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT = "frostwire.prefs.search.fulltext_search_results_limit";
 
@@ -171,6 +171,6 @@ public final class Constants {
     public static final int MAX_INDEXED_TORRENT_SUB_FILES = 4000;
 
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
-    
+
     public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
 }

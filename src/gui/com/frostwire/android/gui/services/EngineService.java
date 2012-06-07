@@ -264,7 +264,6 @@ public class EngineService extends Service implements IEngineService {
     }
 
     private void resetLocalNetworkProcessors() {
-        Log.d(TAG, "Restarting courier and clerk");
         messageCourier.stopProcessing();
         messageClerk.stopProcessing();
 

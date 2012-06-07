@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.search;
 
-import android.content.Context;
 import android.util.Log;
 
 /**
@@ -26,39 +25,27 @@ import android.util.Log;
  * @author aldenml
  * 
  */
-class DeepSearchTask extends TorrentSearchTask {
+class DeepSearchTask extends SearchTask {
 
-    private static final String TAG = "FW.DownloadTorrentsTask";
+    private static final String TAG = "FW.DeepSearchTask";
 
-    private final Context context;
-    private final SearchResultDisplayer displayer;
     private final String query;
-    private LocalSearchEngine localSearchEngine;
 
-    public DeepSearchTask(Context context, SearchResultDisplayer displayer, String query) {
+    public DeepSearchTask(String query) {
         super("DeepSearchTask: " + query);
-        this.context = context;
-        this.displayer = displayer;
         this.query = query;
     }
 
     @Override
-    public void run() {
+    public void runTask() {
+        if (isCancelled()) {
+            return;
+        }
+        
         try {
-            localSearchEngine = new LocalSearchEngine(context, this, displayer, query);
-            localSearchEngine.deepSearch();
+            LocalSearchEngine.instance().deepSearch(this, query);
         } catch (Throwable e) {
             Log.e(TAG, "Error performing the deep search", e);
         }
-    }
-    
-    @Override
-    public void cancel() {
-        super.cancel();
-        
-        if (localSearchEngine != null) {
-               localSearchEngine.cancel();
-        }
-        
     }
 }

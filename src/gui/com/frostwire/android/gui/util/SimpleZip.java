@@ -38,7 +38,7 @@ public final class SimpleZip {
     private static final String TAG = "FW.SimpleZip";
 
     private static final int BUFFER_SIZE = 2048;
-    
+
     private SimpleZip() {
     }
 
@@ -54,12 +54,12 @@ public final class SimpleZip {
             FileInputStream fin = new FileInputStream(filename);
             ZipInputStream zin = new ZipInputStream(fin);
 
-            Log.i(TAG, "About to extract: " + filename);
+            Log.d(TAG, "About to extract: " + filename);
 
             ZipEntry ze = null;
             while ((ze = zin.getNextEntry()) != null) {
 
-                Log.i(TAG, "Extracting: " + ze.getName());
+                Log.d(TAG, "Extracting: " + ze.getName());
 
                 String innerFileName = location + File.separator + ze.getName();
                 File innerFile = new File(innerFileName);
@@ -89,7 +89,7 @@ public final class SimpleZip {
 
             zin.close();
 
-            Log.i(TAG, "Done uncompressing: " + filename);
+            Log.d(TAG, "Done uncompressing: " + filename);
 
             return true;
 

@@ -93,9 +93,9 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
         if (!peer.isLocalHost()) {
             howtoShareButton.setVisibility(View.INVISIBLE);
-            title.setTextColor(R.color.frostwire_dark_blue);
+            title.setTextColor(getContext().getResources().getColor(R.color.frostwire_dark_blue));
         } else {
-            title.setTextColor(R.color.frostwire_orange);
+            title.setTextColor(getContext().getResources().getColor(R.color.frostwire_orange));
 
             // show my version in red If I'm old to encourage user to update.
             if (SoftwareUpdater.instance().isOldVersion()) {

@@ -18,9 +18,6 @@
 
 package com.frostwire.android.gui.search;
 
-import java.util.List;
-
-import android.content.Context;
 import android.util.Log;
 
 /**
@@ -28,25 +25,25 @@ import android.util.Log;
  * @author aldenml
  * 
  */
-class LocalSearchTask extends TorrentSearchTask {
+class LocalSearchTask extends SearchTask {
 
-    private static final String TAG = "FW.TorrentLocalSearchTask";
+    private static final String TAG = "FW.LocalSearchTask";
 
-    private final Context context;
-    private final SearchResultDisplayer displayer;
     private final String query;
 
-    public LocalSearchTask(Context context, SearchResultDisplayer displayer, String query) {
+    public LocalSearchTask(String query) {
         super("LocalSearchTask: " + query);
-        this.context = context;
-        this.displayer = displayer;
         this.query = query;
     }
 
-    public void run() {
+    public void runTask() {
+        if (isCancelled()) {
+            return;
+        }
+
         try {
-            List<SearchResult> results = new LocalSearchEngine(context, this, displayer, query).search(query);
-            displayer.addResults(results);
+            // looking with no diacritical symbols
+            LocalSearchEngine.instance().search(LocalSearchEngine.normalizeTokens(query));
         } catch (Throwable e) {
             Log.e(TAG, "Error getting data from local search manager", e);
         }

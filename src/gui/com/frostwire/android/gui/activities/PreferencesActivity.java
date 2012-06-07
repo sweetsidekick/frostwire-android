@@ -33,7 +33,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.search.BittorrentSearchEngine;
+import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
@@ -105,7 +105,7 @@ public class PreferencesActivity extends PreferenceActivity {
         updateIndexSummary(preference);
         preference.setOnActionListener(new OnClickListener() {
             public void onClick(View v) {
-                int count = BittorrentSearchEngine.clearLocalIndex(PreferencesActivity.this);
+                int count = LocalSearchEngine.instance().clearIndex();
                 UIUtils.showShortMessage(PreferencesActivity.this, R.string.delete_n_torrents_indexed, count);
                 updateIndexSummary(preference);
             }
@@ -123,7 +123,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void updateIndexSummary(SimpleActionPreference preference) {
-        int count = BittorrentSearchEngine.getLocalIndexCount(this);
+        int count = LocalSearchEngine.instance().getIndexCount();
         preference.setSummary(getResources().getQuantityString(R.plurals.count_torrents_indexed, count, count));
     }
 }

@@ -151,7 +151,7 @@ public abstract class AbstractActivity extends FragmentActivity {
             try {
                 refreshable.refresh();
             } catch (Throwable e) {
-                Log.v(TAG, "Error refreshing component", e);
+                Log.e(TAG, "Error refreshing component", e);
             }
         }
     }

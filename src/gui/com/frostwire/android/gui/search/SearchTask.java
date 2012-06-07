@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.search;
 
+import android.util.Log;
+
 import com.frostwire.android.util.concurrent.AbstractRunnable;
 
 /**
@@ -25,11 +27,14 @@ import com.frostwire.android.util.concurrent.AbstractRunnable;
  * @author aldenml
  * 
  */
-abstract class TorrentSearchTask extends AbstractRunnable {
+abstract class SearchTask extends AbstractRunnable {
+
+    private static final String TAG = "FW.SearchTask";
 
     private boolean isCancelled;
+    private SearchTaskListener listener;
 
-    public TorrentSearchTask(String name) {
+    public SearchTask(String name) {
         super(name);
     }
 
@@ -39,5 +44,44 @@ abstract class TorrentSearchTask extends AbstractRunnable {
 
     public void cancel() {
         isCancelled = true;
+    }
+
+    public SearchTaskListener getListener() {
+        return listener;
+    }
+
+    public void setListener(SearchTaskListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public final void run() {
+        try {
+            runTask();
+        } catch (Throwable e) {
+            Log.e(TAG, "Task " + getName() + " execution failed", e);
+        } finally {
+            finish();
+        }
+    }
+
+    public abstract void runTask();
+
+    private void finish() {
+        if (listener != null) {
+            try {
+                listener.onFinish(this);
+            } catch (Throwable e) {
+                Log.e(TAG, "Error calling listener", e);
+            }
+        }
+    }
+
+    public static interface SearchTaskListener {
+
+        /**
+         * Method called when the task is finished
+         */
+        public void onFinish(SearchTask task);
     }
 }

@@ -111,7 +111,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             try {
                 mediaPlayer.pause();
             } catch (Throwable e) {
-                Log.e(TAG, String.format("Review logic: %s", e.getMessage()));
+                Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
     }
@@ -121,7 +121,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
             try {
                 mediaPlayer.start();
             } catch (Throwable e) {
-                Log.e(TAG, String.format("Review logic: %s", e.getMessage()));
+                Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
     }

@@ -27,11 +27,21 @@
         android:id="@+id/fragment_search_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-    
 
-    <LinearLayout android:id="@+id/adview_layout" android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="@android:color/black">
+    <LinearLayout
+        android:id="@+id/fragment_search_adview_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black" >
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/fragment_search_deepsearch_progress"
+        style="@style/ProgressBarHolo.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="4dip"
+        android:indeterminate="false"
+        android:progress="25" />
 
     <FrameLayout
         android:id="@+id/fragment_search_framelayout"

@@ -18,29 +18,23 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
-import com.frostwire.android.gui.search.BittorrentSearchEngine;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
-import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.search.SearchResultDisplayer;
+import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.google.ads.AdSize;
@@ -51,20 +45,18 @@ import com.google.ads.AdView;
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements SearchResultDisplayer {
+public class SearchFragment extends AbstractListFragment implements Refreshable {
 
     @SuppressWarnings("unused")
     private static final String TAG = "FW.SearchFragment";
 
     private SearchInputView searchInput;
 
-    private Object lockObj = new Object();
-
     private SearchResultListAdapter adapter;
-    private BittorrentSearchEngine searchManager;
 
     private int mediaTypeId;
     private ProgressDialog progressDlg;
+    private int progress;
 
     private AdView adView;
 
@@ -78,82 +70,28 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         super.onActivityCreated(savedInstanceState);
 
         setRetainInstance(true);
+
+        if (getActivity() instanceof AbstractActivity) {
+            ((AbstractActivity) getActivity()).addRefreshable(this);
+        }
     }
 
-    public void clear() {
-        synchronized (lockObj) {
-            if (adapter != null) {
-                adapter.clear();
+    @Override
+    public void refresh() {
+        if (adapter != null) {
+            if (LocalSearchEngine.instance().getCurrentResultsCount() != adapter.getList().size()) {
+                adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
+                adapter.filter(mediaTypeId);
             }
+        } else {
+            setupAdapter();
         }
-    }
 
-    public void addResults(final List<SearchResult> results) {
-        synchronized (lockObj) {
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    if (!searchInput.isEmpty()) {
-                        if (adapter == null) {
-                            adapter = new SearchResultListAdapter(getActivity(), results) {
-                                @Override
-                                protected void onTransferStarted(DownloadTransfer transfer) {
-                                    searchManager.cancelSearch();
-                                }
-                            };
-                            adapter.filter(mediaTypeId);
-                            setListAdapter(adapter);
-                        } else {
-                            List<SearchResult> list = adapter.getList();
-                            list.addAll(results); // heavy use of OO references
-                            adapter.sort(new Comparator<SearchResult>() {
-                                public int compare(SearchResult lhs, SearchResult rhs) {
-                                    if (lhs instanceof BittorrentSearchResult) {
-                                        if (rhs instanceof BittorrentSearchResult) {
-                                            return ((BittorrentSearchResult) rhs).getSeeds() - ((BittorrentSearchResult) lhs).getSeeds();
-                                        } else {
-                                            return -1;
-                                        }
-                                    }
-                                    return 0;
-                                }
-                            });
-                            adapter.filter(mediaTypeId);
-                        }
-                    }
-
-                    if (adapter != null) {
-                        if (adapter.getCount() > 0) {
-                            hideProgressDialog();
-                            UIUtils.supportFrostWire(adView, searchInput.getText());
-                        }
-                    }
-                }
-            });
+        if (adapter != null && adapter.getCount() > 0) {
+            hideProgressDialog();
         }
-    }
 
-    public void addResult(final SearchResult sr) {
-        synchronized (lockObj) {
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    hideProgressDialog();
-                    if (!searchInput.isEmpty() && adapter != null && sr instanceof BittorrentSearchResult) {
-                        BittorrentSearchResult bsr = (BittorrentSearchResult) sr;
-                        adapter.addItem(sr, adapter.accept(bsr, mediaTypeId));
-                    }
-                }
-            });
-        }
-    }
-
-    public List<SearchResult> getResults() {
-        synchronized (lockObj) {
-            if (adapter != null) {
-                return new ArrayList<SearchResult>(adapter.getList());
-            } else {
-                return Collections.emptyList();
-            }
-        }
+        adjustDeepSearchProgress(getView());
     }
 
     @Override
@@ -163,8 +101,10 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
             public void onSearch(View v, String query, int mediaTypeId) {
                 SearchFragment.this.mediaTypeId = mediaTypeId;
                 switchView(view, android.R.id.list);
+                clearAdapter();
                 showProgressDialog();
-                searchManager.performSearch(query);
+                LocalSearchEngine.instance().performSearch(query);
+                setupAdapter();
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
@@ -176,21 +116,24 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
             public void onClear(View v) {
                 switchView(view, R.id.fragment_search_promos);
-                searchManager.cancelSearch();
-                adapter = null;
-                setListAdapter(null);
-                adView.setVisibility(View.GONE);
+                LocalSearchEngine.instance().cancelSearch();
+                clearAdapter();
             }
         });
 
-        searchManager = new BittorrentSearchEngine(getActivity(), this);
-
-        LinearLayout llayout = findView(view, R.id.adview_layout);
+        LinearLayout llayout = findView(view, R.id.fragment_search_adview_layout);
         adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
         llayout.addView(adView, 0);
 
-        switchView(view, R.id.fragment_search_promos);
+        adjustDeepSearchProgress(view);
+
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            setupAdapter();
+            switchView(view, android.R.id.list);
+        } else {
+            switchView(view, R.id.fragment_search_promos);
+        }
     }
 
     @Override
@@ -202,6 +145,34 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         if (adapter != null) {
             adapter.dismissDialogs();
         }
+    }
+
+    private void setupAdapter() {
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+                @Override
+                protected void onTransferStarted(DownloadTransfer transfer) {
+                    LocalSearchEngine.instance().cancelSearch();
+                }
+            };
+            adapter.filter(mediaTypeId);
+
+            if (adapter.getCount() > 0) {
+                hideProgressDialog();
+            }
+
+            setListAdapter(adapter);
+        }
+    }
+
+    private void clearAdapter() {
+        setListAdapter(null);
+        if (adapter != null) {
+            adapter.clear();
+            adapter = null;
+        }
+        adView.setVisibility(View.GONE);
+        adjustDeepSearchProgress(getView());
     }
 
     private void showProgressDialog() {
@@ -216,7 +187,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                searchManager.cancelSearch();
+                LocalSearchEngine.instance().cancelSearch();
                 hideProgressDialog();
             }
         });
@@ -228,6 +199,7 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
         if (progressDlg != null) {
             try {
                 progressDlg.dismiss();
+                progressDlg = null;
             } catch (Throwable e) {
                 // ignore
             }
@@ -242,5 +214,24 @@ public class SearchFragment extends AbstractListFragment implements SearchResult
             View childAt = frameLayout.getChildAt(i);
             childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
         }
+    }
+
+    private void adjustDeepSearchProgress(View v) {
+        int visibility;
+
+        if (adapter != null && LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
+            progress = (progress + 20) % 100;
+            if (progress == 0) {
+                progress = 10;
+            }
+            visibility = View.VISIBLE;
+        } else {
+            progress = 0;
+            visibility = View.GONE;
+        }
+
+        ProgressBar progressBar = findView(v, R.id.fragment_search_deepsearch_progress);
+        progressBar.setProgress(progress);
+        progressBar.setVisibility(visibility);
     }
 }

@@ -23,7 +23,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
@@ -35,6 +34,7 @@ import com.frostwire.android.core.DesktopUploadRequestStatus;
  */
 public final class SessionManager {
 
+    @SuppressWarnings("unused")
     private static final String TAG = "FW.SessionManager";
 
     private static final int MAX_DESKTOP_UPLOAD_REQUESTS = 1;
@@ -113,7 +113,6 @@ public final class SessionManager {
         long now = System.currentTimeMillis();
         for (Entry<String, DesktopUploadRequest> entry : snapshot.entrySet()) {
             if (now - entry.getValue().updateTimestamp > DESKTOP_UPLOAD_REQUEST_UPDATE_TIMEOUT || entry.getValue().status == DesktopUploadRequestStatus.REJECTED) {
-                Log.d(TAG, "token removed");
                 durCache.remove(entry.getKey());
             }
         }

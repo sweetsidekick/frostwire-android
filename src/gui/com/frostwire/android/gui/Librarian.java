@@ -731,7 +731,7 @@ public final class Librarian {
         try {
             ContentResolver cr = context.getContentResolver();
             int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?", new String[] { String.valueOf(fileId), String.valueOf(fileType) });
-            Log.i(TAG, "deleteSharedState " + deleted + " rows  (fileType: " + fileType + ", fileId: " + fileId + " )");
+            Log.d(TAG, "deleteSharedState " + deleted + " rows  (fileType: " + fileType + ", fileId: " + fileId + " )");
         } catch (Throwable e) {
             Log.e(TAG, "Failed to delete shared state for fileType=" + fileType + ", fileId=" + fileId, e);
         }
@@ -741,7 +741,7 @@ public final class Librarian {
         try {
             ContentResolver cr = context.getContentResolver();
             int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns._ID + " IN " + StringUtils.buildSet(sharingIds), null);
-            Log.i(TAG, "Deleted " + deleted + " shared states");
+            Log.d(TAG, "Deleted " + deleted + " shared states");
         } catch (Throwable e) {
             Log.e(TAG, "Failed to delete shared states", e);
         }

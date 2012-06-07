@@ -18,24 +18,20 @@
 
 package com.frostwire.android.bittorrent.websearch.clearbits;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
+import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.WebSearchResult;
-import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.util.JsonUtils;
+import com.frostwire.android.util.StringUtils;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ClearBitsWebSearchPerformer implements WebSearchPerformer {
+public class ClearBitsWebSearchPerformer extends JsonSearchPerformer {
 
     public List<WebSearchResult> search(String keywords) {
         List<WebSearchResult> result = new ArrayList<WebSearchResult>();
@@ -54,31 +50,17 @@ public class ClearBitsWebSearchPerformer implements WebSearchPerformer {
     }
 
     private ClearBitsResponse searchClearBits(String keywords) {
-        String iha = null;
-        try {
-            iha = URLEncoder.encode(keywords, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        }
+        String json = fetchJson("http://www.clearbits.net/home/search/index.json?query=" + StringUtils.encodeUrl(keywords));
 
-        HttpFetcher fetcher = null;
-        try {
-            fetcher = new HttpFetcher(new URI("http://www.clearbits.net/home/search/index.json?query=" + iha), HTTP_TIMEOUT);
-        } catch (URISyntaxException e) {
-        }
-
-        byte[] jsonBytes = fetcher.fetch();
-
-        if (jsonBytes == null) {
+        if (json == null) {
             return null;
         }
-
-        String json = new String(jsonBytes);
 
         ClearBitsResponse response = null;
 
         try {
             response = JsonUtils.toObject(json, ClearBitsResponse.class);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return null;
         }
 

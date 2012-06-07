@@ -283,9 +283,7 @@ public class TorrentsProvider extends ContentProvider {
 
     private int deleteFts(String where, String[] whereArgs) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        int n = db.delete(FTS_VIRTUAL_TABLE, where, whereArgs);
-        Log.d(TAG, String.format("Deleted from FTS_VIRTUAL_TABLE %d elements", n));
-        return n;
+        return db.delete(FTS_VIRTUAL_TABLE, where, whereArgs);
     }
 
     private void purgeOld() {

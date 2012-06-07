@@ -28,42 +28,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HeaderIterator;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.params.ConnManagerPNames;
-import org.apache.http.conn.params.ConnPerRouteBean;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.DateUtils;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 /**
@@ -74,17 +56,14 @@ import android.util.Log;
  * @author aldenml
  *
  */
-public class HttpFetcher {
+public class AndroidHttpFetcher {
 
-    private static final String TAG = "FW.HttpFetcher";
-
-    private static final int HTTP_RETRY_COUNT = 4;
+    private static final String TAG = "FW.AndroidHttpFetcher";
     
     private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
     private static final int DEFAULT_TIMEOUT = 5000;
 
-    private static HttpClient DEFAULT_HTTP_CLIENT;
-    private static HttpClient DEFAULT_HTTP_CLIENT_GZIP;
+    private static AndroidHttpClient DEFAULT_HTTP_CLIENT;
 
     private final URI uri;
     private final String userAgent;
@@ -96,51 +75,41 @@ public class HttpFetcher {
         setupHttpClients();
     }
 
-    public HttpFetcher(URI uri, String userAgent, int timeout) {
+    public AndroidHttpFetcher(URI uri, String userAgent, int timeout) {
         this.uri = uri;
         this.userAgent = userAgent;
         this.timeout = timeout;
     }
 
-    public HttpFetcher(URI uri, String userAgent) {
+    public AndroidHttpFetcher(URI uri, String userAgent) {
         this(uri, userAgent, DEFAULT_TIMEOUT);
     }
 
-    public HttpFetcher(URI uri, int timeout) {
+    public AndroidHttpFetcher(URI uri, int timeout) {
         this(uri, DEFAULT_USER_AGENT, timeout);
     }
 
-    public HttpFetcher(URI uri) {
+    public AndroidHttpFetcher(URI uri) {
         this(uri, DEFAULT_USER_AGENT);
     }
 
-    public HttpFetcher(String uri) {
+    public AndroidHttpFetcher(String uri) {
         this(convert(uri));
     }
 
-    public HttpFetcher(String uri, int timeout) {
+    public AndroidHttpFetcher(String uri, int timeout) {
         this(convert(uri), timeout);
     }
 
     public Object[] fetch(boolean gzip) throws IOException {
         HttpHost httpHost = new HttpHost(uri.getHost(), uri.getPort());
         HttpGet httpGet = new HttpGet(uri);
-        httpGet.addHeader("Connection", "close");
-
-        HttpParams params = httpGet.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, timeout);
-        HttpConnectionParams.setSoTimeout(params, timeout);
-        HttpConnectionParams.setStaleCheckingEnabled(params, true);
-        HttpConnectionParams.setTcpNoDelay(params, true);
-        HttpClientParams.setRedirecting(params, true);
-        HttpProtocolParams.setUseExpectContinue(params, false);
-        HttpProtocolParams.setUserAgent(params, userAgent);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try {
 
-            HttpResponse response = (gzip ? DEFAULT_HTTP_CLIENT_GZIP : DEFAULT_HTTP_CLIENT).execute(httpHost, httpGet);
+            HttpResponse response = DEFAULT_HTTP_CLIENT.execute(httpHost, httpGet);
 
             if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() >= 300) {
                 throw new IOException("bad status code, downloading file " + response.getStatusLine().getStatusCode());
@@ -373,50 +342,7 @@ public class HttpFetcher {
     }
 
     private static void setupHttpClients() {
-        DEFAULT_HTTP_CLIENT = setupHttpClient(false);
-        DEFAULT_HTTP_CLIENT_GZIP = setupHttpClient(true);
-    }
-
-    private static HttpClient setupHttpClient(boolean gzip) {
-        SSLSocketFactory.getSocketFactory().setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-        BasicHttpParams params = new BasicHttpParams();
-        params.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean(20));
-        params.setIntParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 200);
-        ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
-
-        DefaultHttpClient httpClient = new DefaultHttpClient(cm, new BasicHttpParams());
-        httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(HTTP_RETRY_COUNT, true));
-
-        if (gzip) {
-            httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
-                public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                    if (!request.containsHeader("Accept-Encoding")) {
-                        request.addHeader("Accept-Encoding", "gzip");
-                    }
-                }
-            });
-
-            httpClient.addResponseInterceptor(new HttpResponseInterceptor() {
-                public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-                    HttpEntity entity = response.getEntity();
-                    Header ceheader = entity.getContentEncoding();
-                    if (ceheader != null) {
-                        HeaderElement[] codecs = ceheader.getElements();
-                        for (int i = 0; i < codecs.length; i++) {
-                            if (codecs[i].getName().equalsIgnoreCase("gzip")) {
-                                response.setEntity(new GzipDecompressingEntity(response.getEntity()));
-                                return;
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        return httpClient;
+        DEFAULT_HTTP_CLIENT = AndroidHttpClient.newInstance(DEFAULT_USER_AGENT);
     }
 
     private static void writeEntity(final HttpEntity entity, OutputStream out, HttpFetcherListener listener) throws IOException {
@@ -463,22 +389,5 @@ public class HttpFetcher {
         }
 
         return map;
-    }
-
-    private static final class GzipDecompressingEntity extends HttpEntityWrapper {
-
-        public GzipDecompressingEntity(final HttpEntity entity) {
-            super(entity);
-        }
-
-        @Override
-        public InputStream getContent() throws IOException, IllegalStateException {
-            return new GZIPInputStream(wrappedEntity.getContent());
-        }
-
-        @Override
-        public long getContentLength() {
-            return -1;
-        }
     }
 }

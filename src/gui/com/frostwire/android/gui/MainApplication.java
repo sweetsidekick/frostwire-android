@@ -19,8 +19,10 @@
 package com.frostwire.android.gui;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.services.Engine;
 
 /**
@@ -35,13 +37,19 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // important initial setup here
-        ConfigurationManager.create(this);
-        NetworkManager.create(this);
-        Librarian.create(this);
-        Engine.create(this);
+        try {
+            // important initial setup here
+            ConfigurationManager.create(this);
+            NetworkManager.create(this);
+            Librarian.create(this);
+            LocalSearchEngine.create(this);
+            Engine.create(this);
 
-        Librarian.instance().syncMediaStore();
-        Librarian.instance().syncApplicationsProvider();
+            Librarian.instance().syncMediaStore();
+            Librarian.instance().syncApplicationsProvider();
+        } catch (Throwable e) {
+            String stacktrace = Log.getStackTraceString(e);
+            throw new RuntimeException("MainApplication Create exception: " + stacktrace, e);
+        }
     }
 }

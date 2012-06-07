@@ -57,6 +57,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         }
     }
 
+    @Override
     public void refresh() {
         List<Peer> peers = PeerManager.instance().getPeers();
         adapter.updateList(peers);

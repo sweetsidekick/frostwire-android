@@ -76,6 +76,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         }
     }
 
+    @Override
     public void refresh() {
         if (adapter != null) {
             List<Transfer> transfers = TransferManager.instance().getTransfers();

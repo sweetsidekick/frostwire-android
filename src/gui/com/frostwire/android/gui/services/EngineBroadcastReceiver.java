@@ -95,7 +95,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             }
 
             if (!Librarian.instance().isExternalStorageMounted() && AzureusManager.isCreated()) {
-                Log.i(TAG, "Halting process due to lack of external storage");
+                Log.v(TAG, "Halting process due to lack of external storage");
                 Librarian.instance().halt();
             }
         } catch (Throwable e) {

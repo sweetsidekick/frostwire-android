@@ -40,12 +40,9 @@ class FingerHandler implements HttpHandler {
     private static final String TAG = "FW.FingerHandler";
 
     public void handle(HttpExchange exchange) throws IOException {
-
         OutputStream os = null;
 
         try {
-            //Log.i(TAG, "Request from " + exchange.getRemoteAddress().getAddress().getHostAddress());
-
             String response = getResponse(exchange);
 
             exchange.sendResponseHeaders(Code.HTTP_OK, response.length());

@@ -83,7 +83,7 @@
     <string name="search_no_keywords">खोज कीवर्ड दर्ज करें</string>
     <string name="search_select_filetype">कृपया एक फ़ाइल प्रकार का चयन करें</string>
     <string name="searching_for">के लिए खोज</string>
-    <string name="search_for_type_files">% S फ़ाइलों के लिए खोज</string>
+    <string name="search_for_type_files">%s फ़ाइलों के लिए खोज</string>
     <string name="update_title"> अद्यतन समय!</string>
     <string name="update_message">फ्रॉस्टवाइर आप के लिए एक नया कार्य निष्पादन अद्यतन डाउनलोड किया गया है, आगे जाओ और ओके बटन को छुए  यदि आप इसे अब स्थापित करना चाहते हैं.</string>
     <string name="next_time">अगली बार</string>

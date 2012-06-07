@@ -24,6 +24,8 @@ import java.util.List;
 import android.util.Log;
 
 import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 
 /**
@@ -31,37 +33,61 @@ import com.frostwire.android.core.SearchEngine;
  * @author aldenml
  * 
  */
-class EngineSearchTask extends TorrentSearchTask {
+class EngineSearchTask extends SearchTask {
 
-    private static final String TAG = "FW.PerformTorrentSearchTask";
+    private static final String TAG = "FW.EngineSearchTask";
 
-    private final SearchEngine searchEngine;
-    private final SearchResultDisplayer displayer;
+    private final SearchEngine engine;
     private final String query;
 
-    public EngineSearchTask(SearchEngine searchEngine, SearchResultDisplayer displayer, String query) {
-        super("EngineSearchTask: " + searchEngine.getName() + " -: " + query);
-        this.searchEngine = searchEngine;
-        this.displayer = displayer;
+    // filter constants
+    private final int MIN_SEEDS_TORRENT_RESULT;
+
+    public EngineSearchTask(SearchEngine engine, String query) {
+        super("EngineSearchTask - " + engine.getName());
+        this.engine = engine;
         this.query = query;
+
+        MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
     }
 
-    public void run() {
+    public void runTask() {
+        if (isCancelled()) {
+            return;
+        }
+
         try {
-            List<WebSearchResult> webResults = searchEngine.getPerformer().search(query);
-            List<SearchResult> results = normalizeWebResults(searchEngine, webResults);
-            displayer.addResults(results);
+            List<WebSearchResult> webResults = engine.getPerformer().search(query);
+
+            if (!isCancelled()) {
+                List<BittorrentSearchResult> results = normalizeWebResults(webResults);
+                LocalSearchEngine.instance().addResults(results);
+            }
         } catch (Throwable e) {
-            Log.e(TAG, "Error getting data from " + searchEngine, e);
+            Log.e(TAG, "Error getting data from search engine " + engine.getName(), e);
         }
     }
 
-    private static List<SearchResult> normalizeWebResults(SearchEngine engine, List<WebSearchResult> webResults) {
-        List<SearchResult> result = new ArrayList<SearchResult>(webResults.size());
+    private List<BittorrentSearchResult> normalizeWebResults(List<WebSearchResult> webResults) {
+        List<BittorrentSearchResult> result = new ArrayList<BittorrentSearchResult>(webResults.size());
         for (WebSearchResult webResult : webResults) {
-            SearchResult sr = new BittorrentWebSearchResult(engine, webResult);
-            result.add(sr);
+            if (filter(webResult)) {
+                BittorrentSearchResult sr = new BittorrentWebSearchResult(engine, webResult);
+                result.add(sr);
+            }
         }
         return result;
+    }
+
+    // this is a preliminary filter, since we need to provide the best user experience
+    // we will remove "low quality" torrents, for example: low seeds, with bad names, etc.
+    private boolean filter(WebSearchResult sr) {
+        if (sr.getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
+            return false;
+        }
+
+        // more filter conditions here
+
+        return true;
     }
 }
