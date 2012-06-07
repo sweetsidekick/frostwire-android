@@ -19,30 +19,31 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="24dp"
+    android:background="@drawable/shape_untabbed_header_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
 
-    <com.frostwire.android.gui.views.SwipeyTabs
-        android:id="@+id/swipeytabs"
-        android:layout_width="fill_parent"
+    <ImageView
+        android:id="@+id/view_player_notifier_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical|center"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/play"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/view_player_notifier_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ff254a68"
-        frostwire:bottomBarColor="#ffb1d7f2"
-        frostwire:bottomBarHeight="0dip"
-        frostwire:tabIndicatorHeight="0dip" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
-        android:layout_weight="1" />
-
-    <com.frostwire.android.gui.views.PlayerNotifierView
-        android:id="@+id/activity_main_player_notifier"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:layout_gravity="center_vertical|left"
+        android:text="@string/dummy_title"
+        android:textColor="#ffffffff"
+        android:textStyle="bold"
+        android:textSize="12dp"
+        android:singleLine="true" />
 
 </LinearLayout>

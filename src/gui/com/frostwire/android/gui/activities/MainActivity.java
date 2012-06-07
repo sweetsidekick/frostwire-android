@@ -59,6 +59,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
+import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SwipeyTabs;
 import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
 
@@ -138,6 +139,8 @@ public class MainActivity extends AbstractActivity {
             durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
         }
 
+        addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
+        
         onNewIntent(getIntent());
     }
 
@@ -403,4 +406,6 @@ public class MainActivity extends AbstractActivity {
             return (int) (d * dm.densityDpi / 160.0f);
         }
     }
+
+
 }
