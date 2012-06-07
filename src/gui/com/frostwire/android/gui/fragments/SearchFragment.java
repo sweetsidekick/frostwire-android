@@ -152,7 +152,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
                 @Override
                 protected void onTransferStarted(DownloadTransfer transfer) {
-                    LocalSearchEngine.instance().cancelSearch();
+                    //LocalSearchEngine.instance().cancelSearch();
                 }
             };
             adapter.filter(mediaTypeId);
@@ -230,8 +230,10 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             visibility = View.GONE;
         }
 
-        ProgressBar progressBar = findView(v, R.id.fragment_search_deepsearch_progress);
-        progressBar.setProgress(progress);
-        progressBar.setVisibility(visibility);
+        if (v != null) {
+            ProgressBar progressBar = findView(v, R.id.fragment_search_deepsearch_progress);
+            progressBar.setProgress(progress);
+            progressBar.setVisibility(visibility);
+        }
     }
 }

@@ -33,7 +33,7 @@ public final class ThreadPool extends ThreadPoolExecutor {
     private String name;
 
     public ThreadPool(String name) {
-        super(0, Integer.MAX_VALUE, 1, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+        super(3, Integer.MAX_VALUE, 30, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
         this.name = name;
     }
 

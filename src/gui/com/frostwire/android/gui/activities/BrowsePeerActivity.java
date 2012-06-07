@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 
 /**
@@ -65,5 +67,11 @@ public class BrowsePeerActivity extends AbstractActivity {
         if (peer.isLocalHost()) {
             trackDialog(new ShareIndicationDialog(this)).show();
         }
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
     }
 }

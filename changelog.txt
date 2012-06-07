@@ -1,3 +1,11 @@
+FrostWire 0.9.12
+ - Search performance improvements.
+ - Better international search thanks to improved special character support.
+ - Search status UI feedback improvemens.
+ - Search results remain on screen when the device is tilted.
+ - Search results remain after a transfer has been started.
+ - New animated media player status bar for easy access to media player.
+
 FrostWire 0.9.11
  - Fixed caching policy.
  - Fixed feedback while streaming or uploading files.

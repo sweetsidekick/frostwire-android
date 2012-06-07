@@ -53,4 +53,10 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <com.frostwire.android.gui.views.PlayerNotifierView
+        android:id="@+id/activity_browse_peer_player_notifier"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
 </LinearLayout>
