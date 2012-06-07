@@ -32,6 +32,8 @@
         android:dropDownVerticalOffset="11dp"
         android:hint="@null"
         android:lines="1"
+        android:singleLine="true"
+        android:textSize="12dip"
         android:textColor="@android:color/black" />
 
     <Button
