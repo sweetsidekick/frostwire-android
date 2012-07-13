@@ -48,11 +48,11 @@
 
         <com.frostwire.android.gui.views.preference.NumberSpinnerPreference
             android:key="frostwire.prefs.network.max_concurrent_uploads"
+            android:summary="@string/simultaneous_uploads_summary"
+            android:title="@string/simultaneous_uploads"
             frostwire:spinner_defaultValue="3"
             frostwire:spinner_endRange="6"
-            frostwire:spinner_startRange="1"
-            android:summary="@string/simultaneous_uploads_summary"
-            android:title="@string/simultaneous_uploads" />
+            frostwire:spinner_startRange="1" />
 
         <CheckBoxPreference
             android:key="froswire.prefs.network.use_multicast"
@@ -100,62 +100,66 @@
         <CheckBoxPreference
             android:key="frostwire.prefs.gui.show_new_transfer_dialog"
             android:title="@string/show_new_transfer_dialog" />
-        
+
+        <ListPreference
+            android:key="frostwire.prefs.storage.path"
+            android:summary="@string/storage_preference_summary"
+            android:title="@string/storage_preference_title" />
+
         <CheckBoxPreference
             android:key="frostwire.prefs.gui.support_frostwire"
-            android:title="@string/support_frostwire"
-            android:summary="@string/support_frostwire_summary" />
+            android:summary="@string/support_frostwire_summary"
+            android:title="@string/support_frostwire" />
     </PreferenceCategory>
-    
     <PreferenceCategory android:title="@string/torrent_settings" >
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_download_speed"
+            android:summary="@string/torrent_max_download_speed_summary"
+            android:title="@string/torrent_max_download_speed"
             frostwire:picker_defaultValue="0"
             frostwire:picker_endRange="102400"
-            frostwire:picker_startRange="0"
-            android:summary="@string/torrent_max_download_speed_summary"
-            android:title="@string/torrent_max_download_speed" />
+            frostwire:picker_startRange="0" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_upload_speed"
+            android:summary="@string/torrent_max_upload_speed_summary"
+            android:title="@string/torrent_max_upload_speed"
             frostwire:picker_defaultValue="0"
             frostwire:picker_endRange="102400"
-            frostwire:picker_startRange="0"
-            android:summary="@string/torrent_max_upload_speed_summary"
-            android:title="@string/torrent_max_upload_speed" />
+            frostwire:picker_startRange="0" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_downloads"
+            android:summary="@string/torrent_max_downloads_summary"
+            android:title="@string/torrent_max_downloads"
             frostwire:picker_defaultValue="4"
             frostwire:picker_endRange="10"
-            frostwire:picker_startRange="1"
-            android:summary="@string/torrent_max_downloads_summary"
-            android:title="@string/torrent_max_downloads" />
+            frostwire:picker_startRange="1" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_uploads"
+            android:summary="@string/torrent_max_uploads_summary"
+            android:title="@string/torrent_max_uploads"
             frostwire:picker_defaultValue="4"
             frostwire:picker_endRange="10"
-            frostwire:picker_startRange="1"
-            android:summary="@string/torrent_max_uploads_summary"
-            android:title="@string/torrent_max_uploads" />
+            frostwire:picker_startRange="1" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_total_connections"
+            android:summary="@string/torrent_max_total_connections_summary"
+            android:title="@string/torrent_max_total_connections"
             frostwire:picker_defaultValue="250"
             frostwire:picker_endRange="250"
-            frostwire:picker_startRange="10"
-            android:summary="@string/torrent_max_total_connections_summary"
-            android:title="@string/torrent_max_total_connections" />
+            frostwire:picker_startRange="10" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
             android:key="frostwire.prefs.torrent.max_torrent_connections"
+            android:summary="@string/torrent_max_torrent_connection_summary"
+            android:title="@string/torrent_max_torrent_connection"
             frostwire:picker_defaultValue="50"
             frostwire:picker_endRange="100"
-            frostwire:picker_startRange="10"
-            android:summary="@string/torrent_max_torrent_connection_summary"
-            android:title="@string/torrent_max_torrent_connection" />
+            frostwire:picker_startRange="10" />
 
         <com.frostwire.android.gui.views.preference.SimpleActionPreference
-            frostwire:button_text="@string/clear"
             android:key="frostwire.prefs.internal.clear_index"
             android:summary="@string/clear_torrent_index_summary"
-            android:title="@string/clear_torrent_index" />
+            android:title="@string/clear_torrent_index"
+            frostwire:button_text="@string/clear" />
     </PreferenceCategory>
 
 </PreferenceScreen>

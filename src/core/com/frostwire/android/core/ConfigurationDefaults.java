@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import android.os.Environment;
+
 /**
  * 
  * @author gubatron
@@ -91,12 +93,14 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS, false);
         defaultValues.put(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY, true);
 
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED, new Long(0));
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED, new Long(0));
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS, new Long(4));
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_UPLOADS, new Long(4));
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS, new Long(250));
-        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS, new Long(50));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED, Long.valueOf(0));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED, Long.valueOf(0));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS, Long.valueOf(4));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_UPLOADS, Long.valueOf(4));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS, Long.valueOf(250));
+        defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS, Long.valueOf(50));
+        
+        defaultValues.put(Constants.PREF_KEY_STORAGE_PATH, Environment.getExternalStorageDirectory().getAbsolutePath()); // /mnt/sdcard
 
         resetValue(Constants.PREF_KEY_NETWORK_PINGS_INTERVAL);
 

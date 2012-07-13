@@ -20,8 +20,7 @@ package com.frostwire.android.gui.util;
 
 import java.io.File;
 
-import android.os.Environment;
-
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.util.FileUtils;
 
@@ -49,9 +48,10 @@ public final class SystemUtils {
     private static final String APPLICATION_NAME = "frostwire.apk";
 
     public static File getApplicationStorageDirectory() {
-        File externalStorageDirectory = Environment.getExternalStorageDirectory(); // /sdcard
+        String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+        File externalStorageDirectory = new File(path);
 
-        return FileUtils.createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME); // /sdcard/FrostWire/
+        return FileUtils.createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
     }
 
     public static File getAzureusDirectory() {

@@ -384,4 +384,6 @@
     <string name="desktop_transfer_status_unknown">Unknown</string>
     <string name="support_frostwire">Support FrostWire</string>
     <string name="support_frostwire_summary">Show ads to support the development of this app.</string>
+    <string name="storage_preference_title">Select SD storage</string>
+    <string name="storage_preference_summary">Select SD storage to save your download files.</string>
 </resources>

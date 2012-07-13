@@ -56,10 +56,45 @@ public final class StorageUtils {
     private StorageUtils() {
     }
 
+    public static List<StorageMount> getStorageMounts() {
+        List<StorageMount> mounts = new ArrayList<StorageMount>();
+        List<String> paths = getStoragePaths();
+
+        int j = 0;
+        for (int i = 0; i < paths.size(); i++) {
+            // if we have a mount point, we have always /mnt/sdcard as the first one
+            if (i == 0) {
+                String label = null;
+                if (Build.VERSION.SDK_INT < 9) { // Build.VERSION_CODES.GINGERBREAD
+                    label = "Auto";
+                } else if (Build.VERSION.SDK_INT < 11) { // Build.VERSION_CODES.HONEYCOMB
+                    if (isExternalStorageRemovable()) {
+                        label = "External SD Card 1";
+                        j = 1;
+                    } else {
+                        label = "Internal Storage";
+                    }
+                } else {
+                    if (!isExternalStorageRemovable() || isExternalStorageEmulated())
+                        label = "Internal Storage";
+                    else {
+                        label = "External SD Card 1";
+                        j = 1;
+                    }
+                }
+                mounts.add(new StorageMount(label, paths.get(0)));
+            } else {
+                mounts.add(new StorageMount("External SD Card " + (i + j), paths.get(i)));
+            }
+        }
+
+        return mounts;
+    }
+
     /**
      * Read /proc/mounts
      */
-    public static List<String> readMounts() {
+    private static List<String> readMounts() {
         List<String> mounts = new ArrayList<String>();
 
         // ensure that the default path is the first in our list
@@ -90,7 +125,7 @@ public final class StorageUtils {
      * Read /system/etc/vold.fstab
      * @return
      */
-    public static List<String> readVold() {
+    private static List<String> readVold() {
         List<String> vold = new ArrayList<String>();
 
         // ensure that the default path exists and is the first in our list
@@ -120,7 +155,7 @@ public final class StorageUtils {
         return vold;
     }
 
-    public static List<String> getStoragePaths() {
+    private static List<String> getStoragePaths() {
         List<String> mounts = readMounts();
         List<String> vold = readVold();
 
@@ -140,41 +175,6 @@ public final class StorageUtils {
             if (!root.exists() || !root.isDirectory() || !root.canWrite() || root.isHidden()) {
                 mounts.remove(i);
                 i--;
-            }
-        }
-
-        return mounts;
-    }
-
-    public static List<StorageMount> getStorageMounts() {
-        List<StorageMount> mounts = new ArrayList<StorageMount>();
-        List<String> paths = getStoragePaths();
-
-        int j = 0;
-        for (int i = 0; i < paths.size(); i++) {
-            // if we have a mount point, we have always /mnt/sdcard as the first one
-            if (i == 0) {
-                String label = null;
-                if (Build.VERSION.SDK_INT < 9) { // Build.VERSION_CODES.GINGERBREAD
-                    label = "Auto";
-                } else if (Build.VERSION.SDK_INT < 11) { // Build.VERSION_CODES.HONEYCOMB
-                    if (isExternalStorageRemovable()) {
-                        label = "External SD Card 1";
-                        j = 1;
-                    } else {
-                        label = "Internal Storage";
-                    }
-                } else {
-                    if (!isExternalStorageRemovable() || isExternalStorageEmulated())
-                        label = "Internal Storage";
-                    else {
-                        label = "External SD Card 1";
-                        j = 1;
-                    }
-                }
-                mounts.add(new StorageMount(label, paths.get(0)));
-            } else {
-                mounts.add(new StorageMount("External SD Card " + (i + j), paths.get(i)));
             }
         }
 

@@ -18,9 +18,12 @@
 
 package com.frostwire.android.gui.activities;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
@@ -37,6 +40,8 @@ import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
+import com.frostwire.android.util.StorageMount;
+import com.frostwire.android.util.StorageUtils;
 import com.frostwire.android.util.StringUtils;
 
 /**
@@ -58,6 +63,8 @@ public class PreferencesActivity extends PreferenceActivity {
         setupNickname();
         setupClearIndex();
         setupSearchEngines();
+
+        setupStoragePathOption();
     }
 
     private void setupSeedingOptions() {
@@ -125,5 +132,24 @@ public class PreferencesActivity extends PreferenceActivity {
     private void updateIndexSummary(SimpleActionPreference preference) {
         int count = LocalSearchEngine.instance().getIndexCount();
         preference.setSummary(getResources().getQuantityString(R.plurals.count_torrents_indexed, count, count));
+    }
+
+    private void setupStoragePathOption() {
+        ListPreference preferenceStoragePath = (ListPreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
+
+        List<StorageMount> mounts = StorageUtils.getStorageMounts();
+        int count = mounts.size();
+
+        CharSequence[] entries = new CharSequence[count];
+        CharSequence[] values = new CharSequence[count];
+
+        for (int i = 0; i < count; i++) {
+            StorageMount sm = mounts.get(i);
+            entries[i] = sm.getLabel();
+            values[i] = sm.getPath();
+        }
+
+        preferenceStoragePath.setEntries(entries);
+        preferenceStoragePath.setEntryValues(values);
     }
 }
