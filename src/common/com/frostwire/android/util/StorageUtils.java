@@ -97,4 +97,30 @@ public class StorageUtils {
 
         return vold;
     }
+
+    public static List<String> getMountPaths() {
+        List<String> mounts = readMounts();
+        List<String> vold = readVold();
+
+        // intersect both lists in mounts
+        for (int i = 0; i < mounts.size(); i++) {
+            String mount = mounts.get(i);
+            if (!vold.contains(mount)) {
+                mounts.remove(i);
+                i--;
+            }
+        }
+
+        // test if the path is valid and available
+        for (int i = 0; i < mounts.size(); i++) {
+            String mount = mounts.get(i);
+            File root = new File(mount);
+            if (!root.exists() || !root.isDirectory() || !root.canWrite() || root.isHidden()) {
+                mounts.remove(i);
+                i--;
+            }
+        }
+
+        return mounts;
+    }
 }
