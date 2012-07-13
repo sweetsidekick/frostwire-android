@@ -19,10 +19,13 @@
 package com.frostwire.android.util;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -30,9 +33,28 @@ import android.util.Log;
  * @author aldenml
  *
  */
-public class StorageUtils {
+public final class StorageUtils {
 
     private static final String TAG = "FW.StorageUtils";
+
+    private static Method isExternalStorageRemovableM = null;
+    private static Method isExternalStorageEmulatedM = null;
+
+    static {
+        try {
+            isExternalStorageRemovableM = Environment.class.getDeclaredMethod("isExternalStorageRemovable");
+        } catch (Throwable e) {
+            // ignore
+        }
+        try {
+            isExternalStorageEmulatedM = Environment.class.getDeclaredMethod("isExternalStorageEmulated");
+        } catch (Throwable e) {
+            // ignore
+        }
+    }
+
+    private StorageUtils() {
+    }
 
     /**
      * Read /proc/mounts
@@ -98,7 +120,7 @@ public class StorageUtils {
         return vold;
     }
 
-    public static List<String> getMountPaths() {
+    public static List<String> getStoragePaths() {
         List<String> mounts = readMounts();
         List<String> vold = readVold();
 
@@ -122,5 +144,64 @@ public class StorageUtils {
         }
 
         return mounts;
+    }
+
+    public static List<StorageMount> getStorageMounts() {
+        List<StorageMount> mounts = new ArrayList<StorageMount>();
+        List<String> paths = getStoragePaths();
+
+        int j = 0;
+        for (int i = 0; i < paths.size(); i++) {
+            // if we have a mount point, we have always /mnt/sdcard as the first one
+            if (i == 0) {
+                String label = null;
+                if (Build.VERSION.SDK_INT < 9) { // Build.VERSION_CODES.GINGERBREAD
+                    label = "Auto";
+                } else if (Build.VERSION.SDK_INT < 11) { // Build.VERSION_CODES.HONEYCOMB
+                    if (isExternalStorageRemovable()) {
+                        label = "External SD Card 1";
+                        j = 1;
+                    } else {
+                        label = "Internal Storage";
+                    }
+                } else {
+                    if (!isExternalStorageRemovable() || isExternalStorageEmulated())
+                        label = "Internal Storage";
+                    else {
+                        label = "External SD Card 1";
+                        j = 1;
+                    }
+                }
+                mounts.add(new StorageMount(label, paths.get(0)));
+            } else {
+                mounts.add(new StorageMount("External SD Card " + (i + j), paths.get(i)));
+            }
+        }
+
+        return mounts;
+    }
+
+    private static boolean isExternalStorageRemovable() {
+        try {
+            if (isExternalStorageRemovableM != null) {
+                return (Boolean) isExternalStorageRemovableM.invoke(null);
+            }
+        } catch (Throwable e) {
+            // ignore
+        }
+
+        return false;
+    }
+
+    private static boolean isExternalStorageEmulated() {
+        try {
+            if (isExternalStorageEmulatedM != null) {
+                return (Boolean) isExternalStorageEmulatedM.invoke(null);
+            }
+        } catch (Throwable e) {
+            // ignore
+        }
+
+        return false;
     }
 }
