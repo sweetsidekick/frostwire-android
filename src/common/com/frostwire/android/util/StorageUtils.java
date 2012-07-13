@@ -63,4 +63,38 @@ public class StorageUtils {
 
         return mounts;
     }
+
+    /**
+     * Read /system/etc/vold.fstab
+     * @return
+     */
+    public static List<String> readVold() {
+        List<String> vold = new ArrayList<String>();
+
+        // ensure that the default path exists and is the first in our list
+        vold.add("/mnt/sdcard");
+
+        try {
+            Scanner scanner = new Scanner(new File("/system/etc/vold.fstab"));
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("dev_mount")) {
+                    String[] lineElements = line.split(" ");
+                    String element = lineElements[2];
+
+                    if (element.contains(":"))
+                        element = element.substring(0, element.indexOf(":"));
+
+                    // don't add the default vold path
+                    if (!element.equals("/mnt/sdcard")) {
+                        vold.add(element);
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            Log.e(TAG, "Error reading /system/etc/vold.fstab", e);
+        }
+
+        return vold;
+    }
 }
