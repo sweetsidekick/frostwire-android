@@ -55,7 +55,7 @@ public class SuggestionsAdapter extends SimpleCursorAdapter {
             String url = String.format(SUGGESTIONS_URL, URLEncoder.encode(constraint.toString(), "UTF-8"));
 
             HttpFetcher fetcher = new HttpFetcher(new URI(url), HTTP_QUERY_TIMEOUT);
-            String json = new String(fetcher.fetch());
+            String json = StringUtils.getUTF8String(fetcher.fetch());
 
             if (!discardLastResult) {
                 return new SuggestionsCursor(new JSONArray(json).getJSONArray(1));
