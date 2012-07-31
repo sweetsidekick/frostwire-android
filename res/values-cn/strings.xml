@@ -373,5 +373,6 @@
     <string name="hints_by_google">谷歌提示</string>
     <string name="support_frostwire">支持FrostWire</string>
     <string name="support_frostwire_summary">展示廣告，以支持這個應用程序的開發。</string>
-    
+    <string name="storage_preference_title">选择存储位置</string>
+    <string name="storage_preference_summary">将保存文件的默认存储位置。</string>
 </resources>

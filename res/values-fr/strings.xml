@@ -371,4 +371,6 @@
     <string name="hints_by_google">Suggestion de Google</string>
     <string name="support_frostwire">Soutien FrostWire</string>
     <string name="support_frostwire_summary">Voir toutes les annonces de soutenir le développement de ce soft.</string>
+    <string name="storage_preference_title">Sélectionnez l\'emplacement de stockage</string>
+    <string name="storage_preference_summary">L\'emplacement de stockage par défaut où les fichiers seront sauvegardés.</string>
 </resources>

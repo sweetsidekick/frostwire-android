@@ -352,4 +352,6 @@
 	<string name="hints_by_google">Suggeriti da Google</string>
     <string name="support_frostwire">Supporto FrostWire</string>
     <string name="support_frostwire_summary">Mostra gli annunci per sostenere lo sviluppo di questa applicazione.</string>
+    <string name="storage_preference_title">Seleziona posizione di archiviazione</string>
+    <string name="storage_preference_summary">La posizione di memorizzazione di default dove i file verranno salvati.</string>
 </resources>

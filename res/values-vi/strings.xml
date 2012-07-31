@@ -373,4 +373,6 @@
     <string name="hints_by_google">Gợi ý bởi Google</string>
     <string name="support_frostwire">Hỗ trợ FrostWire</string>
     <string name="support_frostwire_summary">Hiển thị quảng cáo để hỗ trợ sự phát triển của ứng dụng này.</string>
+    <string name="storage_preference_title">Chọn vị trí lưu trữ</string>
+    <string name="storage_preference_summary">Các lưu trữ mặc định vị trí nơi các tập tin sẽ được lưu lại.</string>
 </resources>

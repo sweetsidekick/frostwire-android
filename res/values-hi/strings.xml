@@ -374,4 +374,6 @@
     <string name="hints_by_google">गूगल द्वारा संकेत</string>
 	<string name="support_frostwire">FrostWire समर्थन</string>
     <string name="support_frostwire_summary">विज्ञापन दिखाने के लिए इस app के विकास का समर्थन करने के लिए.</string>
+    <string name="storage_preference_title">संग्रहण स्थान का चयन करें</string>
+    <string name="storage_preference_summary">डिफ़ॉल्ट भंडारण स्थान जहां फ़ाइलों को सहेज लिया जाएगा.</string>
 </resources>

@@ -372,4 +372,6 @@
     <string name="hints_by_google">구글 힌트</string>
     <string name="support_frostwire">FrostWire 지원</string>
     <string name="support_frostwire_summary">이 응용 프로그램의 개발을 지원하기 위해 광고를 게재합니다.</string>
+    <string name="storage_preference_title">저장 위치를 선택</string>
+    <string name="storage_preference_summary">파일이 저장됩니다 기본 저장 위치.</string>
 </resources>

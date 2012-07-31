@@ -373,4 +373,6 @@
     <string name="hints_by_google">Rady od Google</string>
     <string name="support_frostwire">Podpora FrostWire</string>
     <string name="support_frostwire_summary">Zobrazit reklamy na podporu rozvoje tuto aplikaci.</string>
+    <string name="storage_preference_title">Vyberte umístění úložiště</string>
+    <string name="storage_preference_summary">Výchozí úložiště, kde jsou soubory uloženy.</string>    
 </resources>

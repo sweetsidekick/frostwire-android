@@ -161,5 +161,4 @@
             android:title="@string/clear_torrent_index"
             frostwire:button_text="@string/clear" />
     </PreferenceCategory>
-
 </PreferenceScreen>

@@ -1,3 +1,7 @@
+FrostWire 0.9.14
+ - Search suggestions in Unicode.
+ - Now users can choose the default storage device.
+
 FrostWire 0.9.12
  - Search performance improvements.
  - Better international search thanks to improved special character support.

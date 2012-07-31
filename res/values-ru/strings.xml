@@ -373,4 +373,6 @@
     <string name="hints_by_google">Подсказки Google</string>
     <string name="support_frostwire">Поддержка FrostWire</string>
     <string name="support_frostwire_summary">Показать объявления на поддержку развития этого приложения.</string>
+    <string name="storage_preference_title">Выбор места хранения</string>
+    <string name="storage_preference_summary">Место хранения по умолчанию, где будут сохранены файлы.</string>
 </resources>

@@ -370,4 +370,6 @@
     <string name="hints_by_google">Dicas pelo Google</string>
     <string name="support_frostwire">Apoio FrostWire</string>
     <string name="support_frostwire_summary">Mostrar anúncios para apoiar o desenvolvimento deste aplicativo.</string>
+    <string name="storage_preference_title">Selecione um local de armazenamento</string>
+    <string name="storage_preference_summary">O local de armazenamento padrão onde os arquivos serão salvos.</string>
 </resources>

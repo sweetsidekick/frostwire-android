@@ -373,4 +373,6 @@
     <string name="hints_by_google">Googleによるヒント</string>
     <string name="support_frostwire">フロストワイヤーをサポート</string>
     <string name="support_frostwire_summary">このアプリの開発をサポートするために広告を表示します。</string>
+    <string name="storage_preference_title">ストレージの場所を選択します。</string>
+    <string name="storage_preference_summary">ファイルが保存されるデフォルトの格納場所。</string>
 </resources>

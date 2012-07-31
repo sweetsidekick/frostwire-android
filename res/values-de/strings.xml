@@ -372,4 +372,6 @@
     <string name="hints_by_google">Tipps von Google</string>
     <string name="support_frostwire">unterstützen Sie FrostWire</string>
     <string name="support_frostwire_summary">Anzeigen ansehen, um die Entwicklung dieser App zu unterstützen.</string>
+    <string name="storage_preference_title">Speicherort wählen</string>
+    <string name="storage_preference_summary">Der Standard-Speicherort, wo Dateien gespeichert werden sollen.</string>
 </resources>

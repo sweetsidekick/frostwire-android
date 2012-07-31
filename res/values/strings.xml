@@ -200,7 +200,7 @@
     <string name="files_shared">files shared</string>
     <string name="share_finished_downloads">Share finished downloads on WiFi</string>
     <string name="share_finished_downloads_summary">Finished downloads will be available to other FrostWire users on your WiFi network.</string>
-    <string name="are_you_sure_delete_files">Are you sure you want to delete the selected files?</string>
+    <string name="are_you_sure_delete_files">Are you sure you want to PERMANENTLY DELETE the selected files?</string>
     <string name="searchable_activity_label">Searchable Activity</string>
     <string name="search_hint">Search Content</string>
     <string name="search_settings_description">Search for Torrents</string>
@@ -384,6 +384,6 @@
     <string name="desktop_transfer_status_unknown">Unknown</string>
     <string name="support_frostwire">Support FrostWire</string>
     <string name="support_frostwire_summary">Show ads to support the development of this app.</string>
-    <string name="storage_preference_title">Select SD storage</string>
-    <string name="storage_preference_summary">Select SD storage to save your download files.</string>
+    <string name="storage_preference_title">Select Storage Location</string>
+    <string name="storage_preference_summary">The default storage location where files will be saved.</string>
 </resources>
