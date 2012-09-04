@@ -46,6 +46,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -123,6 +125,8 @@ public class SlideMenu extends LinearLayout {
     private ArrayList<SlideMenuItem> menuItemList;
     private SlideMenuInterface.OnSlideMenuItemClickListener callback;
 
+    private Interpolator smoothInterpolator;
+
     /**
      * Constructor used by the inflation apparatus.
      * To be able to use the SlideMenu, call the {@link #init init()} method.
@@ -178,16 +182,29 @@ public class SlideMenu extends LinearLayout {
         // set size
         menuSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, act.getResources().getDisplayMetrics());
 
+        /*
+         * idea from http://android.cyrilmottier.com/?p=658
+         * The making of Prixing #1: Fly-in app menu
+         * Cyril Mottier
+         * 
+         * aldenml: I tried the formula interpolator(t) = (t-1)^5 + 1 without good results
+         * thinking in implementing Hermite interpolation in the future.
+         */
+        smoothInterpolator = new DecelerateInterpolator(1.02f);
+
         // create animations accordingly
         slideRightAnim = new TranslateAnimation(-menuSize, 0, 0, 0);
         slideRightAnim.setDuration(slideDuration);
         slideRightAnim.setFillAfter(true);
+        slideRightAnim.setInterpolator(smoothInterpolator);
         slideMenuLeftAnim = new TranslateAnimation(0, -menuSize, 0, 0);
         slideMenuLeftAnim.setDuration(slideDuration);
         slideMenuLeftAnim.setFillAfter(true);
+        slideMenuLeftAnim.setInterpolator(smoothInterpolator);
         slideContentLeftAnim = new TranslateAnimation(menuSize, 0, 0, 0);
         slideContentLeftAnim.setDuration(slideDuration);
         slideContentLeftAnim.setFillAfter(true);
+        slideContentLeftAnim.setInterpolator(smoothInterpolator);
 
         // and get our menu
         parseXml(menuResource);
@@ -449,7 +466,7 @@ public class SlideMenu extends LinearLayout {
     }
 
     /*
-     * Code from http://android.cyrilmottier.com/?p=717
+     * Code and ideas from http://android.cyrilmottier.com/?p=717
      * The making of Prixing #3: Polishing the sliding app menu
      * Cyril Mottier
      */
@@ -458,6 +475,8 @@ public class SlideMenu extends LinearLayout {
         super.dispatchDraw(canvas);
 
         if (menuShown) {
+            // aldenml: This was solved with background shapes
+
             // The menu is not closed. That means we can potentially see the host
             // overlapping it. Let's add a tiny gradient to indicate the host is
             // sliding over the menu.
@@ -468,7 +487,7 @@ public class SlideMenu extends LinearLayout {
 
             final int menuWidth = menu.getWidth();
             if (menuWidth != 0) {
-                //final float opennessRatio = (menuWidth - mHost.getLeft()) / (float) menuWidth;
+                final float opennessRatio = (menuWidth - content.getLeft()) / (float) menuWidth;
 
                 // We also draw an overlay over the menu indicating the menu is
                 // in the process of being visible or invisible.
