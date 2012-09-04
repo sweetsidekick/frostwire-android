@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- List Adapter styles -->
     <style name="list_item_title">
@@ -278,5 +278,35 @@
         <item name="android:minHeight">16dip</item>
         <item name="android:maxHeight">16dip</item>
     </style>
+
+    <!-- SlideMenu begin -->
+
+    <style name="SlideMenu"></style>
+
+    <style name="SlideMenu.List">
+        <item name="android:divider">@android:color/darker_gray</item>
+        <item name="android:dividerHeight">1dip</item>
+        <item name="android:background">@color/slidemenu_list_background</item>
+    </style>
+
+    <style name="SlideMenu.Item"></style>
+
+    <style name="SlideMenu.Item.Image">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_marginBottom">10dip</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">5dip</item>
+        <item name="android:layout_marginTop">10dip</item>
+    </style>
+
+    <style name="SlideMenu.Item.Text">
+        <item name="android:layout_marginBottom">10dip</item>
+        <item name="android:layout_marginTop">10dip</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- SlideMenu end -->
 
 </resources>

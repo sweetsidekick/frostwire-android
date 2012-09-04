@@ -21,26 +21,28 @@
  * limitations under the License.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+/*
+ * Changes by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * Support for styles and visual improvements.
+ */
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
 
     <ImageView
-        android:id="@+id/menu_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="10dip"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="10dip"
+        android:id="@+id/slidemenu_item_icon"
+        style="@style/SlideMenu.Item.Image"
         android:contentDescription="@string/empty_string" />
 
     <TextView
-        android:id="@+id/menu_label"
+        android:id="@+id/slidemenu_item_label"
+        style="@style/SlideMenu.Item.Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="10dip"
-        android:textSize="24dp" />
+        android:layout_toRightOf="@id/slidemenu_item_icon" />
 
-</LinearLayout>
+</RelativeLayout>

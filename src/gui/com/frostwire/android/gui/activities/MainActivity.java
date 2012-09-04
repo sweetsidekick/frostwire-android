@@ -64,6 +64,7 @@ import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SlideMenu;
+import com.frostwire.android.gui.views.SlideMenu.SlideMenuItem;
 import com.frostwire.android.gui.views.SlideMenuInterface;
 import com.frostwire.android.gui.views.SwipeyTabs;
 import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
@@ -165,6 +166,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         item.label = "Dynamically added item";
         slidemenu.addMenuItem(item);
         */
+        for (int i = 0; i < 20; i++) {
+            SlideMenuItem item = new SlideMenuItem();
+            item.id = MYITEMID;
+            item.icon = getResources().getDrawable(R.drawable.application);
+            item.label = "Dynamically added item";
+            slidemenu.addMenuItem(item);
+        }
 
         // connect the fallback button in case there is no ActionBar
         Button b = (Button) findViewById(R.id.buttonMenu);

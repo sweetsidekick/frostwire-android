@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="FrostWireTheme" parent="android:Theme.Light">
         <item name="android:windowBackground">@drawable/application_background</item>
         <item name="android:listViewStyle">@style/TransparentListView</item>
         <item name="android:expandableListViewStyle">@style/TransparentExpandableListView</item>
     </style>
+
 </resources>

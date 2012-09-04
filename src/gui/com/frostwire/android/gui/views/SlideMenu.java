@@ -75,7 +75,7 @@ public class SlideMenu extends LinearLayout {
         }
 
         public SlideMenuAdapter(Activity act, SlideMenuItem[] items) {
-            super(act, R.id.menu_label, items);
+            super(act, R.id.slidemenu_item_label, items);
             this.act = act;
             this.items = items;
         }
@@ -87,8 +87,8 @@ public class SlideMenu extends LinearLayout {
                 LayoutInflater inflater = act.getLayoutInflater();
                 rowView = inflater.inflate(R.layout.slidemenu_listitem, null);
                 MenuItemHolder viewHolder = new MenuItemHolder();
-                viewHolder.label = (TextView) rowView.findViewById(R.id.menu_label);
-                viewHolder.icon = (ImageView) rowView.findViewById(R.id.menu_icon);
+                viewHolder.label = (TextView) rowView.findViewById(R.id.slidemenu_item_label);
+                viewHolder.icon = (ImageView) rowView.findViewById(R.id.slidemenu_item_icon);
                 rowView.setTag(viewHolder);
             }
 
@@ -269,14 +269,14 @@ public class SlideMenu extends LinearLayout {
 
         // set header
         try {
-            ImageView header = (ImageView) act.findViewById(R.id.menu_header);
+            ImageView header = (ImageView) act.findViewById(R.id.slidemenu_header);
             header.setImageDrawable(act.getResources().getDrawable(headerImageRes));
         } catch (Exception e) {
             // not found
         }
 
         // connect the menu's listview
-        ListView list = (ListView) act.findViewById(R.id.menu_listview);
+        ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
         SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
         SlideMenuAdapter adap = new SlideMenuAdapter(act, items);
         list.setAdapter(adap);
@@ -295,7 +295,7 @@ public class SlideMenu extends LinearLayout {
         if (animate)
             menu.startAnimation(slideRightAnim);
 
-        menu.findViewById(R.id.overlay).setOnClickListener(new OnClickListener() {
+        menu.findViewById(R.id.slidemenu_overlay).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 SlideMenu.this.hide();

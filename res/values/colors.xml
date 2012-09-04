@@ -36,4 +36,7 @@
     <color name="tab_background_on">#ffd3e5ed</color>
     <color name="tab_background_off">#ff264c6b</color>
 
+    <!-- SlideMenu -->
+    <color name="slidemenu_list_background">#ff143344</color>
+
 </resources>
