@@ -36,10 +36,13 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -60,6 +63,8 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.SlideMenu;
+import com.frostwire.android.gui.views.SlideMenuInterface;
 import com.frostwire.android.gui.views.SwipeyTabs;
 import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
 
@@ -68,7 +73,7 @@ import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity {
+public class MainActivity extends AbstractActivity implements SlideMenuInterface.OnSlideMenuItemClickListener {
 
     private static final String TAG = "FW.MainActivity";
 
@@ -86,6 +91,9 @@ public class MainActivity extends AbstractActivity {
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
     private int selectedPage;
+
+    private SlideMenu slidemenu;
+    private final static int MYITEMID = 42;
 
     // not sure about this variable, quick solution for now
     private String durToken;
@@ -112,8 +120,60 @@ public class MainActivity extends AbstractActivity {
     }
 
     @Override
+    public void onSlideMenuItemClick(int itemId) {
+        switch (itemId) {
+        case R.id.item_one:
+            Toast.makeText(this, "Item one selected", Toast.LENGTH_SHORT).show();
+            break;
+        case R.id.item_two:
+            Toast.makeText(this, "Item two selected", Toast.LENGTH_SHORT).show();
+            break;
+        case R.id.item_three:
+            Toast.makeText(this, "Item three selected", Toast.LENGTH_SHORT).show();
+            break;
+        case MYITEMID:
+            Toast.makeText(this, "Dynamically added item selected", Toast.LENGTH_SHORT).show();
+            break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home: // this is the app icon of the actionbar
+            slidemenu.show();
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        slidemenu = (SlideMenu) findViewById(R.id.slideMenu);
+        slidemenu.init(this, R.menu.slide, this, 333);
+
+        /*
+        // set optional header image
+        slidemenu.setHeaderImage(R.drawable.ic_launcher);
+
+        // this demonstrates how to dynamically add menu items
+        SlideMenuItem item = new SlideMenuItem();
+        item.id = MYITEMID;
+        item.icon = getResources().getDrawable(R.drawable.ic_launcher);
+        item.label = "Dynamically added item";
+        slidemenu.addMenuItem(item);
+        */
+
+        // connect the fallback button in case there is no ActionBar
+        Button b = (Button) findViewById(R.id.buttonMenu);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidemenu.show();
+            }
+        });
 
         swipeyTabs = findView(R.id.swipeytabs);
         viewPager = findView(R.id.pager);
@@ -140,7 +200,7 @@ public class MainActivity extends AbstractActivity {
         }
 
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
-        
+
         onNewIntent(getIntent());
     }
 
@@ -406,6 +466,5 @@ public class MainActivity extends AbstractActivity {
             return (int) (d * dm.densityDpi / 160.0f);
         }
     }
-
 
 }
