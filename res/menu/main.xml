@@ -22,18 +22,23 @@
 
     <item
         android:id="@+id/menu_main_search"
-        android:icon="@drawable/icon_search"
+        android:icon="@drawable/menu_icon_search"
         android:title="@string/search">
     </item>
     <item
         android:id="@+id/menu_main_library"
-        android:icon="@drawable/icon_library"
+        android:icon="@drawable/menu_icon_library"
         android:title="@string/my_files">
     </item>
     <item
-        android:id="@+id/item_three"
-        android:icon="@drawable/document"
-        android:title="@string/documents">
+        android:id="@+id/menu_main_transfers"
+        android:icon="@drawable/menu_icon_transfers"
+        android:title="@string/transfers">
+    </item>
+    <item
+        android:id="@+id/menu_main_peers"
+        android:icon="@drawable/menu_icon_peers"
+        android:title="@string/browse">
     </item>
 
 </menu>

@@ -23,7 +23,7 @@
 
     <TextView
         style="@style/Tab.Text"
-        android:drawableLeft="@drawable/icon_library"
+        android:drawableLeft="@drawable/menu_icon_library"
         android:text="@string/my_files" />
 
 </LinearLayout>

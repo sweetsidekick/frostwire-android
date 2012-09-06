@@ -19,30 +19,19 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -68,8 +57,6 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SlideMenu;
 import com.frostwire.android.gui.views.SlideMenu.SlideMenuItem;
 import com.frostwire.android.gui.views.SlideMenuInterface;
-import com.frostwire.android.gui.views.SwipeyTabs;
-import com.frostwire.android.gui.views.SwipeyTabs.SwipeyTabsAdapter;
 
 /**
  * @author gubatron
@@ -80,22 +67,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     private static final String TAG = "FW.MainActivity";
 
-    @SuppressWarnings("unused")
-    private static final int TAB_LIBRARY_INDEX = 0;
-    private static final int TAB_SEARCH_INDEX = 1;
-    private static final int TAB_TRANSFERS_INDEX = 2;
-    @SuppressWarnings("unused")
-    private static final int TAB_PEERS_INDEX = 3;
-
-    private static final String CURRENT_TAB_SAVE_INSTANCE_KEY = "current_tab";
+    private static final String CURRENT_FRAGMENT_SAVE_INSTANCE_KEY = "current_fragment";
     private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
 
-    private SwipeyTabs swipeyTabs;
-    private ViewPager viewPager;
-    private TabsAdapter tabsAdapter;
-    private int selectedPage;
-
-    private SlideMenu slidemenu;
+    private SlideMenu menu;
+    private int menuSelectedItemId;
     private final static int MYITEMID = 42;
 
     // not sure about this variable, quick solution for now
@@ -103,6 +79,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     private SearchFragment search;
     private BrowsePeerFragment library;
+    private TransfersFragment transers;
+    private BrowsePeersFragment peers;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -111,8 +89,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (slidemenu.isMenuShown()) {
-                slidemenu.hide();
+            if (menu.isMenuShown()) {
+                menu.hide();
             } else {
                 trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -121,7 +99,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
                 }));
             }
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-            viewPager.setCurrentItem(TAB_SEARCH_INDEX);
+            showFragment(search, R.id.menu_main_search);
         } else {
             return false;
         }
@@ -133,13 +111,16 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     public void onSlideMenuItemClick(int itemId) {
         switch (itemId) {
         case R.id.menu_main_search:
-            showFragment(search);
+            showFragment(search, itemId);
             break;
         case R.id.menu_main_library:
-            showFragment(library);
+            showFragment(library, itemId);
             break;
-        case R.id.item_three:
-            Toast.makeText(this, "Item three selected", Toast.LENGTH_SHORT).show();
+        case R.id.menu_main_transfers:
+            showFragment(transers, itemId);
+            break;
+        case R.id.menu_main_peers:
+            showFragment(peers, itemId);
             break;
         case MYITEMID:
             Toast.makeText(this, "Dynamically added item selected", Toast.LENGTH_SHORT).show();
@@ -151,7 +132,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home: // this is the app icon of the actionbar
-            slidemenu.show();
+            menu.show();
             break;
         }
         return super.onOptionsItemSelected(item);
@@ -161,8 +142,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        slidemenu = (SlideMenu) findViewById(R.id.slideMenu);
-        slidemenu.init(this, R.menu.main, this, 400);
+        menu = (SlideMenu) findViewById(R.id.slideMenu);
+        menu.init(this, R.menu.main, this, 400);
 
         /*
         // set optional header image
@@ -180,7 +161,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             item.id = MYITEMID;
             item.icon = getResources().getDrawable(R.drawable.application);
             item.label = "Dynamically added item";
-            slidemenu.addMenuItem(item);
+            menu.addMenuItem(item);
         }
 
         // connect the fallback button in case there is no ActionBar
@@ -188,37 +169,23 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidemenu.show();
+                menu.show();
             }
         });
 
-        swipeyTabs = findView(R.id.swipeytabs);
-        viewPager = findView(R.id.pager);
-
-        tabsAdapter = new TabsAdapter(this, viewPager);
-
         Bundle browseBundle = new Bundle();
         browseBundle.putByteArray(Constants.EXTRA_PEER_UUID, PeerManager.instance().getLocalPeer().getUUID());
-        tabsAdapter.addTab(R.layout.view_tab_indicator_library, BrowsePeerFragment.class, browseBundle);
-
-        tabsAdapter.addTab(R.layout.view_tab_indicator_search, SearchFragment.class, null);
-        tabsAdapter.addTab(R.layout.view_tab_indicator_transfers, TransfersFragment.class, null);
-        tabsAdapter.addTab(R.layout.view_tab_indicator_peers, BrowsePeersFragment.class, null);
-
-        viewPager.setAdapter(tabsAdapter);
-        swipeyTabs.setAdapter(tabsAdapter);
-        viewPager.setOnPageChangeListener(swipeyTabs);
-        viewPager.setCurrentItem(TAB_SEARCH_INDEX);
-        //viewPager.setOnTouchListener(new TabsTouchListener(this, viewPager, tabsAdapter.getCount()));
 
         search = new SearchFragment();
         library = new BrowsePeerFragment();
         library.setArguments(browseBundle);
+        transers = new TransfersFragment();
+        peers = new BrowsePeersFragment();
 
-        showFragment(search);
+        showFragment(search, R.id.menu_main_search);
 
         if (savedInstanceState != null) {
-            viewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_SAVE_INSTANCE_KEY));
+            onSlideMenuItemClick(savedInstanceState.getInt(CURRENT_FRAGMENT_SAVE_INSTANCE_KEY));
             durToken = savedInstanceState.getString(DUR_TOKEN_SAVE_INSTANCE_KEY);
         }
 
@@ -232,7 +199,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         String action = intent.getAction();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            viewPager.setCurrentItem(TAB_TRANSFERS_INDEX);
+            showFragment(transers, R.id.menu_main_transfers);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -267,7 +234,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            viewPager.setCurrentItem(TAB_TRANSFERS_INDEX);
+            showFragment(transers, R.id.menu_main_transfers);
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
@@ -296,11 +263,12 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt(CURRENT_TAB_SAVE_INSTANCE_KEY, viewPager.getCurrentItem());
+        outState.putInt(CURRENT_FRAGMENT_SAVE_INSTANCE_KEY, menuSelectedItemId);
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
     }
 
-    private void showFragment(Fragment fragment) {
+    private void showFragment(Fragment fragment, int menuId) {
+        menuSelectedItemId = menuId;
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.activity_main_fragment_container, fragment);
@@ -346,154 +314,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             });
 
             trackDialog(dlg).show();
-        }
-    }
-
-    private class TabsAdapter extends FragmentStatePagerAdapter implements SwipeyTabsAdapter {
-
-        private final Context context;
-        private final ViewPager viewPager;
-        private final ArrayList<TabInfo> tabs = new ArrayList<TabInfo>();
-
-        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
-            super(activity.getSupportFragmentManager());
-            this.context = activity;
-            this.viewPager = pager;
-            this.viewPager.setAdapter(this);
-            this.viewPager.setOnPageChangeListener(this);
-        }
-
-        public void addTab(int indicatorId, Class<?> clazz, Bundle args) {
-            TabInfo info = new TabInfo(indicatorId, clazz, args);
-            tabs.add(info);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return tabs.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            TabInfo info = tabs.get(position);
-
-            Fragment f = null;
-            try {
-                f = (Fragment) info.clazz.newInstance();
-                f.setArguments(info.args);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return f;
-        }
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            selectedPage = position;
-            hideSoftKeys();
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-
-        private void hideSoftKeys() {
-            InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(viewPager.getApplicationWindowToken(), 0);
-        }
-
-        final class TabInfo {
-            private final int indicatorId;
-            private final Class<?> clazz;
-            private final Bundle args;
-
-            TabInfo(int indicatorId, Class<?> clazz, Bundle args) {
-                this.indicatorId = indicatorId;
-                this.clazz = clazz;
-                this.args = args;
-            }
-        }
-
-        @Override
-        public View getTab(final int position, SwipeyTabs root) {
-            View view = getLayoutInflater().inflate(tabs.get(position).indicatorId, null);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    viewPager.setCurrentItem(position);
-                }
-            });
-
-            return view;
-        }
-    }
-
-    // This is for implementing circular tabs scrolling, not using it for now
-    @SuppressWarnings("unused")
-    private final class TabsTouchListener implements OnTouchListener {
-
-        private final GestureDetector gestureDetector;
-
-        public TabsTouchListener(Context context, ViewPager pager, int pageCount) {
-            this.gestureDetector = new GestureDetector(new TabsGestureDetector(context, pager, pageCount));
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-    }
-
-    private final class TabsGestureDetector extends SimpleOnGestureListener {
-
-        private final ViewPager pager;
-        private final int pageCount;
-
-        private int SWIPE_MIN_DISTANCE = 50;
-        private int SWIPE_MAX_OFF_PATH = 250;
-        private int SWIPE_THRESHOLD_VELOCITY = 200;
-
-        public TabsGestureDetector(Context context, ViewPager pager, int pageCount) {
-            this.pager = pager;
-            this.pageCount = pageCount;
-
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
-
-            SWIPE_MIN_DISTANCE = convertToPixel(dm, SWIPE_MIN_DISTANCE);
-            SWIPE_MAX_OFF_PATH = convertToPixel(dm, SWIPE_MAX_OFF_PATH);
-            SWIPE_THRESHOLD_VELOCITY = convertToPixel(dm, SWIPE_THRESHOLD_VELOCITY);
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
-                    return false;
-                }
-                // right to left swipe
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY && selectedPage == (pageCount - 1)) {
-                    pager.setCurrentItem(0);
-                    return true;
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY && selectedPage == 0) {
-                    pager.setCurrentItem(pageCount - 1);
-                    return true;
-                }
-            } catch (Throwable e) {
-                // nothing
-            }
-
-            return false;
-        }
-
-        private int convertToPixel(DisplayMetrics dm, int d) {
-            return (int) (d * dm.densityDpi / 160.0f);
         }
     }
 

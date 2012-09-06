@@ -23,7 +23,7 @@
 
     <TextView
         style="@style/Tab.Text"
-        android:drawableLeft="@drawable/icon_search"
+        android:drawableLeft="@drawable/menu_icon_search"
         android:text="@string/search" />
 
 </LinearLayout>

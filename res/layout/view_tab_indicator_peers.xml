@@ -23,7 +23,7 @@
 
     <TextView
         style="@style/Tab.Text"
-        android:drawableLeft="@drawable/tab_icon_browse"
+        android:drawableLeft="@drawable/menu_icon_peers"
         android:text="@string/browse" />
 
 </LinearLayout>

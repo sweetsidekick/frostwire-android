@@ -23,7 +23,7 @@
 
     <TextView
         style="@style/Tab.Text"
-        android:drawableLeft="@drawable/tab_icon_transfers"
+        android:drawableLeft="@drawable/menu_icon_transfers"
         android:text="@string/transfers" />
 
 </LinearLayout>
