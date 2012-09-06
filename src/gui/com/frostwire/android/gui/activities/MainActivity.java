@@ -79,7 +79,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     private SearchFragment search;
     private BrowsePeerFragment library;
-    private TransfersFragment transers;
+    private TransfersFragment transfers;
     private BrowsePeersFragment peers;
 
     public MainActivity() {
@@ -123,7 +123,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             showFragment(library, itemId);
             break;
         case R.id.menu_main_transfers:
-            showFragment(transers, itemId);
+            showFragment(transfers, itemId);
             break;
         case R.id.menu_main_peers:
             showFragment(peers, itemId);
@@ -181,7 +181,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         search = new SearchFragment();
         library = new BrowsePeerFragment();
         library.setArguments(browseBundle);
-        transers = new TransfersFragment();
+        transfers = new TransfersFragment();
         peers = new BrowsePeersFragment();
 
         showFragment(search, R.id.menu_main_search);
@@ -201,7 +201,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         String action = intent.getAction();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            showFragment(transers, R.id.menu_main_transfers);
+            showFragment(transfers, R.id.menu_main_transfers);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -236,7 +236,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            showFragment(transers, R.id.menu_main_transfers);
+            showFragment(transfers, R.id.menu_main_transfers);
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
@@ -271,6 +271,14 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
         outState.putInt(CURRENT_FRAGMENT_SAVE_INSTANCE_KEY, menuSelectedItemId);
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        search.dismissDialogs();
+        library.dismissDialogs();
+        peers.dismissDialogs();
     }
 
     private void showFragment(Fragment fragment, int menuId) {

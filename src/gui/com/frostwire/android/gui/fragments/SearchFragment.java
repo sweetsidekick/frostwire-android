@@ -95,6 +95,17 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
     }
 
     @Override
+    public void dismissDialogs() {
+        super.dismissDialogs();
+
+        searchInput.hideQuickAction();
+
+        if (adapter != null) {
+            adapter.dismissDialogs();
+        }
+    }
+
+    @Override
     protected void initComponents(final View view) {
         searchInput = findView(view, R.id.fragment_search_input);
         searchInput.setOnSearchListener(new OnSearchListener() {
@@ -133,17 +144,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
             switchView(view, android.R.id.list);
         } else {
             switchView(view, R.id.fragment_search_promos);
-        }
-    }
-
-    @Override
-    protected void dismissDialogs() {
-        super.dismissDialogs();
-
-        searchInput.hideQuickAction();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
         }
     }
 

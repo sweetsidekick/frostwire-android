@@ -20,7 +20,6 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -76,8 +75,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private boolean local;
     private Finger finger;
 
-    private ProgressDialog progressDlg;
-
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
 
@@ -114,7 +111,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     public Loader<Object> onCreateLoader(int id, Bundle args) {
-        showProgressDialog();
+        setListShown(false);
 
         if (id == LOADER_FINGER_ID) {
             return createLoaderFinger();
@@ -126,8 +123,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Object> loader, Object data) {
-        hideProgressDialog();
-
         if (data == null) {
             Log.w(TAG, "Something wrong, data is null");
             UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
@@ -144,6 +139,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         } else if (loader.getId() == LOADER_FILES_ID) {
             updateFiles((Object[]) data);
+            setListShown(true);
         }
     }
 
@@ -175,7 +171,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     @Override
-    protected void dismissDialogs() {
+    public void dismissDialogs() {
         super.dismissDialogs();
 
         if (adapter != null) {
@@ -357,7 +353,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
-            adapter = new FileListAdapter(getActivity(), items, peer, local, fileType) {
+            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
                 protected void onItemChecked(View v, boolean isChecked) {
                     if (!isChecked) {
                         filesBar.clearCheckAll();
@@ -368,26 +364,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             setListAdapter(adapter);
         } catch (Throwable e) {
             Log.e(TAG, "Error updating files in list", e);
-        }
-    }
-
-    private void showProgressDialog() {
-        hideProgressDialog();
-
-        progressDlg = new ProgressDialog(getActivity());
-        progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDlg.setMessage(getString(R.string.loading_indeterminate));
-        progressDlg.setCancelable(false);
-        trackDialog(progressDlg).show();
-    }
-
-    private void hideProgressDialog() {
-        if (progressDlg != null) {
-            try {
-                progressDlg.dismiss();
-            } catch (Throwable e) {
-                // ignore
-            }
         }
     }
 

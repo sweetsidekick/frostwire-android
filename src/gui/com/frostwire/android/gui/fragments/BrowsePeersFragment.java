@@ -64,7 +64,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
     }
 
     @Override
-    protected void dismissDialogs() {
+    public void dismissDialogs() {
         super.dismissDialogs();
 
         if (adapter != null) {

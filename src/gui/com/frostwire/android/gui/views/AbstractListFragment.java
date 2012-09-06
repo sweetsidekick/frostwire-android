@@ -21,6 +21,8 @@ package com.frostwire.android.gui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.frostwire.android.R;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,8 +38,11 @@ import android.view.ViewGroup;
  *
  */
 public class AbstractListFragment extends ListFragment {
-    
+
     private static final String TAG = "FW.AbstractListFragment";
+
+    static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
+    static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
 
     private final int resource;
     private final List<Dialog> dialogs;
@@ -50,6 +55,16 @@ public class AbstractListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(resource, container, false);
+
+        View progressContainer = v.findViewById(R.id.progressContainer);
+        if (progressContainer != null) {
+            progressContainer.setId(INTERNAL_PROGRESS_CONTAINER_ID);
+        }
+        View listContainer = v.findViewById(R.id.listContainer);
+        if (listContainer != null) {
+            listContainer.setId(INTERNAL_LIST_CONTAINER_ID);
+        }
+
         initComponents(v);
         return v;
     }
@@ -60,25 +75,7 @@ public class AbstractListFragment extends ListFragment {
         dismissDialogs();
     }
 
-    protected void initComponents(View v) {
-    }
-
-    @SuppressWarnings("unchecked")
-    protected final <T extends View> T findView(View v, int id) {
-        return (T) v.findViewById(id);
-    }
-    
-    @SuppressWarnings("unchecked")
-    protected final <T extends Fragment> T findFragment(int id) {
-        return (T) getFragmentManager().findFragmentById(id);
-    }
-    
-    protected Dialog trackDialog(Dialog dialog) {
-        dialogs.add(dialog);
-        return dialog;
-    }
-
-    protected void dismissDialogs() {
+    public void dismissDialogs() {
         for (Dialog dialog : dialogs) {
             try {
                 dialog.dismiss();
@@ -86,5 +83,23 @@ public class AbstractListFragment extends ListFragment {
                 Log.w(TAG, "Error dismissing dialog", e);
             }
         }
+    }
+
+    protected void initComponents(View v) {
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final <T extends View> T findView(View v, int id) {
+        return (T) v.findViewById(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final <T extends Fragment> T findFragment(int id) {
+        return (T) getFragmentManager().findFragmentById(id);
+    }
+
+    protected Dialog trackDialog(Dialog dialog) {
+        dialogs.add(dialog);
+        return dialog;
     }
 }
