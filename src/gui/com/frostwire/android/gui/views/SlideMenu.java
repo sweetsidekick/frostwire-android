@@ -35,7 +35,6 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -491,41 +490,6 @@ public class SlideMenu extends LinearLayout {
         return bundle;
     }
 
-    /*
-     * Code and ideas from http://android.cyrilmottier.com/?p=717
-     * The making of Prixing #3: Polishing the sliding app menu
-     * Cyril Mottier
-     */
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-
-        if (menuShown) {
-            // aldenml: This was solved with background shapes
-
-            // The menu is not closed. That means we can potentially see the host
-            // overlapping it. Let's add a tiny gradient to indicate the host is
-            // sliding over the menu.
-            //canvas.save();
-            //canvas.translate(mHost.getLeft(), 0);
-            //mShadowDrawable.draw(canvas);
-            //canvas.restore();
-
-            final int menuWidth = menu.getWidth();
-            if (menuWidth != 0) {
-                final float opennessRatio = (menuWidth - content.getLeft()) / (float) menuWidth;
-
-                // We also draw an overlay over the menu indicating the menu is
-                // in the process of being visible or invisible.
-                //onDrawMenuOverlay(canvas, opennessRatio);
-
-                // Finally we draw an arrow indicating the feature we are
-                // currently in
-                //onDrawMenuArrow(canvas, opennessRatio);
-            }
-        }
-    }
-
     private boolean dragOverlay(MotionEvent event) {
         FrameLayout.LayoutParams parm = null;
         int x = (int) event.getRawX();
@@ -566,7 +530,7 @@ public class SlideMenu extends LinearLayout {
             if (dragging) {
                 dragging = false;
 
-                if (delta >= 0) {
+                if (delta > 0) {
                     // move content
                     parm = (FrameLayout.LayoutParams) content.getLayoutParams();
 
@@ -584,7 +548,7 @@ public class SlideMenu extends LinearLayout {
 
                     moveMenu(delta);
                     hide(false);
-                } else {
+                } else if (delta <= 0) {
                     // move content
                     parm = (FrameLayout.LayoutParams) content.getLayoutParams();
 
