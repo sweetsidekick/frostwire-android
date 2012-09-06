@@ -41,8 +41,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -126,7 +128,8 @@ public class SlideMenu extends LinearLayout {
     private SlideMenuInterface.OnSlideMenuItemClickListener callback;
 
     private Interpolator smoothInterpolator;
-
+    private int deltaX;
+    
     /**
      * Constructor used by the inflation apparatus.
      * To be able to use the SlideMenu, call the {@link #init init()} method.
@@ -325,6 +328,17 @@ public class SlideMenu extends LinearLayout {
                 SlideMenu.this.hide();
             }
         });
+        /*
+         * idea from http://android.cyrilmottier.com/?p=701
+         * The making of Prixing #2: Swiping the fly-in app menu
+         * Cyril Mottier 
+         */
+        menu.findViewById(R.id.slidemenu_overlay).setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return dragOverlay(event);
+            }
+        });
         enableDisableViewGroup(content, false);
 
         menuShown = true;
@@ -498,5 +512,81 @@ public class SlideMenu extends LinearLayout {
                 //onDrawMenuArrow(canvas, opennessRatio);
             }
         }
+    }
+
+    private boolean dragOverlay(MotionEvent event) {
+        FrameLayout.LayoutParams parm = null;
+        int x = (int) event.getRawX();
+        switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            parm = (FrameLayout.LayoutParams) content.getLayoutParams();
+            deltaX = x - parm.leftMargin;
+            break;
+        case MotionEvent.ACTION_MOVE:
+            int lm = x - deltaX;
+            // move content
+            parm = (FrameLayout.LayoutParams) content.getLayoutParams();
+
+            int delta1 = parm.leftMargin - lm;
+
+            parm.leftMargin = lm;
+            parm.rightMargin = -lm;
+            content.setLayoutParams(parm);
+
+            // move menu
+            parm = (FrameLayout.LayoutParams) menu.getLayoutParams();
+            parm.leftMargin = lm - menuSize;
+            parm.width = menuSize;
+            menu.setLayoutParams(parm);
+            if (Math.abs(delta1) <= 5) {
+                parent.invalidate();
+            } else {
+                TranslateAnimation anim = new TranslateAnimation(delta1, 0, 0, 0);
+                anim.setDuration(800);
+                anim.setFillAfter(true);
+                anim.setInterpolator(smoothInterpolator);
+                content.startAnimation(anim);
+                menu.startAnimation(anim);
+            }
+            break;
+        }
+
+        return false;
+    }
+
+    void offsetMenu(int delta) {
+        FrameLayout.LayoutParams parm = null;
+
+        parm = (FrameLayout.LayoutParams) content.getLayoutParams();
+        parm.setMargins(parm.leftMargin + delta, 0, parm.rightMargin - delta, 0);
+        content.setLayoutParams(parm);
+
+        parm = (FrameLayout.LayoutParams) menu.getLayoutParams();
+        parm.setMargins(parm.leftMargin + delta, 0, parm.rightMargin - delta, 0);
+        menu.setLayoutParams(parm);
+
+        TranslateAnimation anim = new TranslateAnimation(0, delta, 0, 0);
+        anim.setDuration(0);
+        anim.setFillAfter(true);
+        //anim.setInterpolator(smoothInterpolator);
+
+        content.startAnimation(anim);
+        menu.startAnimation(anim);
+        /*
+        FrameLayout.LayoutParams parm = null;
+        
+        int delta = newX
+
+        parm = (FrameLayout.LayoutParams) content.getLayoutParams();
+        parm.setMargins((int) (parm.leftMargin + distance), 0, (int) (parm.rightMargin - distance), 0);
+        content.setLayoutParams(parm);
+
+        parm = (FrameLayout.LayoutParams) menu.getLayoutParams();
+        parm.setMargins((int) (parm.leftMargin + distance), 0, (int) (parm.rightMargin - distance), 0);
+        menu.setLayoutParams(parm);
+
+        Log.d("SLIDEMENU", "" + distance);
+        */
+        Log.d("SLIDEMENU", "" + delta);
     }
 }

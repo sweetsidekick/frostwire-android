@@ -153,7 +153,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         super.onCreate(savedInstanceState);
 
         slidemenu = (SlideMenu) findViewById(R.id.slideMenu);
-        slidemenu.init(this, R.menu.slide, this, 333);
+        slidemenu.init(this, R.menu.slide, this, 400);
 
         /*
         // set optional header image
