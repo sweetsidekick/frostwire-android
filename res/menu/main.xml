@@ -21,14 +21,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/item_one"
-        android:icon="@drawable/application"
-        android:title="@string/application_label">
+        android:id="@+id/menu_main_search"
+        android:icon="@drawable/icon_search"
+        android:title="@string/search">
     </item>
     <item
-        android:id="@+id/item_two"
-        android:icon="@drawable/audio"
-        android:title="@string/audio">
+        android:id="@+id/menu_main_library"
+        android:icon="@drawable/icon_library"
+        android:title="@string/my_files">
     </item>
     <item
         android:id="@+id/item_three"

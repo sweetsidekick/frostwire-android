@@ -354,7 +354,7 @@ public class SlideMenu extends LinearLayout {
     /**
      * Slide the menu out.
      */
-    public void hide(boolean animate) {
+    private void hide(boolean animate) {
         if (animate) {
             menu.startAnimation(slideMenuLeftAnim);
             parent.removeView(menu);
@@ -579,5 +579,9 @@ public class SlideMenu extends LinearLayout {
         anim.setInterpolator(smoothInterpolator);
         content.startAnimation(anim);
         menu.startAnimation(anim);
+    }
+
+    public boolean isMenuShown() {
+        return menuShown;
     }
 }

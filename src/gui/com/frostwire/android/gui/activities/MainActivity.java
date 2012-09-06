@@ -29,7 +29,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -99,6 +101,9 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     // not sure about this variable, quick solution for now
     private String durToken;
 
+    private SearchFragment search;
+    private BrowsePeerFragment library;
+
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
     }
@@ -106,11 +111,15 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    moveTaskToBack(true);
-                }
-            }));
+            if (slidemenu.isMenuShown()) {
+                slidemenu.hide();
+            } else {
+                trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveTaskToBack(true);
+                    }
+                }));
+            }
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             viewPager.setCurrentItem(TAB_SEARCH_INDEX);
         } else {
@@ -123,11 +132,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     @Override
     public void onSlideMenuItemClick(int itemId) {
         switch (itemId) {
-        case R.id.item_one:
-            Toast.makeText(this, "Item one selected", Toast.LENGTH_SHORT).show();
+        case R.id.menu_main_search:
+            showFragment(search);
             break;
-        case R.id.item_two:
-            Toast.makeText(this, "Item two selected", Toast.LENGTH_SHORT).show();
+        case R.id.menu_main_library:
+            showFragment(library);
             break;
         case R.id.item_three:
             Toast.makeText(this, "Item three selected", Toast.LENGTH_SHORT).show();
@@ -153,7 +162,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         super.onCreate(savedInstanceState);
 
         slidemenu = (SlideMenu) findViewById(R.id.slideMenu);
-        slidemenu.init(this, R.menu.slide, this, 400);
+        slidemenu.init(this, R.menu.main, this, 400);
 
         /*
         // set optional header image
@@ -201,6 +210,12 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         viewPager.setOnPageChangeListener(swipeyTabs);
         viewPager.setCurrentItem(TAB_SEARCH_INDEX);
         //viewPager.setOnTouchListener(new TabsTouchListener(this, viewPager, tabsAdapter.getCount()));
+
+        search = new SearchFragment();
+        library = new BrowsePeerFragment();
+        library.setArguments(browseBundle);
+
+        showFragment(search);
 
         if (savedInstanceState != null) {
             viewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_TAB_SAVE_INSTANCE_KEY));
@@ -283,6 +298,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
         outState.putInt(CURRENT_TAB_SAVE_INSTANCE_KEY, viewPager.getCurrentItem());
         outState.putString(DUR_TOKEN_SAVE_INSTANCE_KEY, durToken);
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.activity_main_fragment_container, fragment);
+        transaction.commit();
     }
 
     private void handleDesktopUploadRequest(Intent intent) {
