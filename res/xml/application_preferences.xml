@@ -27,6 +27,12 @@
             android:summary="@string/how_other_users_will_see_you"
             android:title="@string/nickname" />
 
+        <com.frostwire.android.gui.views.preference.SimpleActionPreference
+            android:key="frostwire.prefs.internal.connect_disconnect"
+            android:summary="@string/empty_string"
+            android:title="@string/conectivity"
+            frostwire:button_text="@string/empty_string" />
+
         <CheckBoxPreference
             android:key="frostwire.prefs.torrent.seed_finished_torrents"
             android:summary="@string/seed_finished_torrents_summary"
@@ -161,4 +167,5 @@
             android:title="@string/clear_torrent_index"
             frostwire:button_text="@string/clear" />
     </PreferenceCategory>
+
 </PreferenceScreen>

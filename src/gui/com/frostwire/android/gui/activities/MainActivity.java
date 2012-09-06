@@ -21,6 +21,7 @@ package com.frostwire.android.gui.activities;
 import java.io.File;
 
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -33,7 +34,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -55,7 +55,6 @@ import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SlideMenu;
-import com.frostwire.android.gui.views.SlideMenu.SlideMenuItem;
 import com.frostwire.android.gui.views.SlideMenuInterface;
 
 /**
@@ -70,9 +69,10 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private static final String CURRENT_FRAGMENT_SAVE_INSTANCE_KEY = "current_fragment";
     private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
 
+    private static boolean firstTime = true;
+
     private SlideMenu menu;
     private int menuSelectedItemId;
-    private final static int MYITEMID = 42;
 
     // not sure about this variable, quick solution for now
     private String durToken;
@@ -100,6 +100,12 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             }
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             showFragment(search, R.id.menu_main_search);
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            if (menu.isMenuShown()) {
+                menu.hide();
+            } else {
+                menu.show();
+            }
         } else {
             return false;
         }
@@ -122,8 +128,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         case R.id.menu_main_peers:
             showFragment(peers, itemId);
             break;
-        case MYITEMID:
-            Toast.makeText(this, "Dynamically added item selected", Toast.LENGTH_SHORT).show();
+        case R.id.menu_main_preferences:
+            showPreferences();
+            break;
+        case R.id.menu_main_about:
+            showAbout();
             break;
         }
     }
@@ -156,13 +165,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         item.label = "Dynamically added item";
         slidemenu.addMenuItem(item);
         */
-        for (int i = 0; i < 20; i++) {
-            SlideMenuItem item = new SlideMenuItem();
-            item.id = MYITEMID;
-            item.icon = getResources().getDrawable(R.drawable.application);
-            item.label = "Dynamically added item";
-            menu.addMenuItem(item);
-        }
 
         // connect the fallback button in case there is no ActionBar
         Button b = (Button) findViewById(R.id.buttonMenu);
@@ -255,7 +257,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     protected void onResume() {
         super.onResume();
 
-        Engine.instance().startServices(); // it's necessary for the first time after wizard
+        if (firstTime) {
+            firstTime = false;
+            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        }
+
         SoftwareUpdater.instance().checkForUpdate(this);
     }
 
@@ -273,6 +279,18 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.activity_main_fragment_container, fragment);
         transaction.commit();
+    }
+
+    private void showPreferences() {
+        Context context = this;
+        Intent i = new Intent(context, PreferencesActivity.class);
+        context.startActivity(i);
+    }
+
+    private void showAbout() {
+        Context context = this;
+        Intent i = new Intent(context, AboutActivity.class);
+        context.startActivity(i);
     }
 
     private void handleDesktopUploadRequest(Intent intent) {

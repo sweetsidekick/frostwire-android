@@ -20,6 +20,9 @@ package com.frostwire.android.gui.activities;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -37,6 +40,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.search.LocalSearchEngine;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
@@ -59,6 +63,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
         addPreferencesFromResource(R.xml.application_preferences);
 
+        setupConnectButton();
         setupSeedingOptions();
         setupNickname();
         setupClearIndex();
@@ -151,5 +156,83 @@ public class PreferencesActivity extends PreferenceActivity {
 
         preferenceStoragePath.setEntries(entries);
         preferenceStoragePath.setEntryValues(values);
+    }
+
+    private void updateConnectButton() {
+        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+
+        if (Engine.instance().isStarted()) {
+            preference.setButtonText(R.string.disconnect);
+            preference.setButtonEnabled(true);
+        } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
+            preference.setButtonText(R.string.im_on_it);
+            preference.setButtonEnabled(false);
+        } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
+            preference.setButtonText(R.string.connect);
+            preference.setButtonEnabled(true);
+        }
+    }
+
+    private void setupConnectButton() {
+        updateConnectButton();
+        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+
+        preference.setOnActionListener(new OnClickListener() {
+            public void onClick(View v) {
+                if (Engine.instance().isStarted()) {
+                    disconnect();
+                } else if (Engine.instance().isStopped()) {
+                    connect();
+                }
+            }
+        });
+    }
+
+    private void connect() {
+        final Context context = this;
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                Engine.instance().startServices();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                UIUtils.showShortMessage(context, R.string.toast_on_connect);
+                updateConnectButton();
+                if (!(context instanceof MainActivity)) {
+                    Intent i = new Intent(context, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                }
+            }
+        };
+
+        task.execute();
+    }
+
+    private void disconnect() {
+        final Context context = this;
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                Engine.instance().stopServices(false);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                UIUtils.showShortMessage(context, R.string.toast_on_disconnect);
+                updateConnectButton();
+                if (!(context instanceof MainActivity)) {
+                    Intent i = new Intent(context, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                }
+            }
+        };
+
+        task.execute();
     }
 }

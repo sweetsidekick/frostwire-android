@@ -78,6 +78,19 @@ public class SimpleActionPreference extends Preference {
         }
     }
 
+    public void setButtonText(int resId) {
+        this.buttonText = getContext().getString(resId);
+        if (button != null) {
+            button.setText(resId);
+        }
+    }
+
+    public void setButtonEnabled(boolean enabled) {
+        if (button != null) {
+            button.setEnabled(enabled);
+        }
+    }
+
     public void setOnActionListener(OnClickListener listener) {
         this.listener = listener;
         if (button != null) {

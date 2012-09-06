@@ -38,12 +38,5 @@
     <declare-styleable name="ClearableEditTextView">
         <attr name="clearable_hint" format="string" />
     </declare-styleable>
-    
-    <declare-styleable name="SwipeyTabs">
-        <attr name="bottomBarColor" format="color" />
-        <attr name="bottomBarHeight" format="dimension" />
-        <attr name="tabIndicatorHeight" format="dimension" />
-    </declare-styleable>
-    
 
 </resources>

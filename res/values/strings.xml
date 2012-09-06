@@ -386,4 +386,5 @@
     <string name="support_frostwire_summary">Show ads to support the development of this app.</string>
     <string name="storage_preference_title">Select Storage Location</string>
     <string name="storage_preference_summary">The default storage location where files will be saved.</string>
+    <string name="conectivity">Conectivity</string>
 </resources>

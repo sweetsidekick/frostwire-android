@@ -26,8 +26,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
@@ -44,7 +42,6 @@ public abstract class AbstractActivity extends FragmentActivity {
 
     private final int layoutResId;
     private final boolean title;
-    private final OptionsMenuBuilder optionsMenuBuilder;
 
     private final List<Dialog> dialogs;
 
@@ -57,7 +54,6 @@ public abstract class AbstractActivity extends FragmentActivity {
     public AbstractActivity(int layoutResId, boolean title, int refreshIntervalSec) {
         this.layoutResId = layoutResId;
         this.title = title;
-        this.optionsMenuBuilder = getOptionsMenuBuilder();
 
         this.dialogs = new ArrayList<Dialog>();
 
@@ -77,33 +73,6 @@ public abstract class AbstractActivity extends FragmentActivity {
 
     public AbstractActivity(int layoutResID) {
         this(layoutResID, true, 0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (optionsMenuBuilder != null) {
-            return optionsMenuBuilder.onCreate(menu);
-        } else {
-            return super.onCreateOptionsMenu(menu);
-        }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (optionsMenuBuilder != null) {
-            return optionsMenuBuilder.onPrepare(menu);
-        } else {
-            return super.onPrepareOptionsMenu(menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (optionsMenuBuilder != null) {
-            return optionsMenuBuilder.onItemSelected(item);
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     public void addRefreshable(Refreshable refreshable) {
@@ -162,10 +131,6 @@ public abstract class AbstractActivity extends FragmentActivity {
     }
 
     protected void initComponents() {
-    }
-
-    protected OptionsMenuBuilder getOptionsMenuBuilder() {
-        return new CommonMenuBuilder(this);
     }
 
     protected Dialog trackDialog(Dialog dialog) {
