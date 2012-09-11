@@ -71,6 +71,7 @@ public class SlideMenu extends LinearLayout {
         public int id;
         public Drawable icon;
         public String label;
+        public boolean selected;
     }
 
     // a simple adapter
@@ -106,7 +107,18 @@ public class SlideMenu extends LinearLayout {
             holder.label.setText(s);
             holder.icon.setImageDrawable(items[position].icon);
 
+            rowView.setSelected(items[position].selected);
+            
+            rowView.setBackgroundResource((rowView.isSelected()) ? R.drawable.slidemenu_item_background_selected : R.drawable.slidemenu_item_background);
+            
             return rowView;
+        }
+
+        public void setSelectedItem(int id) {
+            for (SlideMenuItem menuItem : items) {
+                menuItem.selected = menuItem.id == id;
+            }
+            notifyDataSetChanged();
         }
     }
 
@@ -306,13 +318,16 @@ public class SlideMenu extends LinearLayout {
         }
 
         // connect the menu's listview
-        ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
+        final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
         SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
         SlideMenuAdapter adap = new SlideMenuAdapter(act, items);
         list.setAdapter(adap);
+        
+        
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                setSelectedItem(menuItemList.get(position).id);
                 hide();
                 if (callback != null) {
                     callback.onSlideMenuItemClick(menuItemList.get(position).id);
@@ -344,6 +359,18 @@ public class SlideMenu extends LinearLayout {
         enableDisableViewGroup(content, false);
 
         menuShown = true;
+    }
+    
+    public void setSelectedItem(int id) {
+        final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
+        if (list == null) {
+            return;
+        }
+        
+        SlideMenuAdapter adapter = (SlideMenuAdapter) list.getAdapter();
+        if (adapter != null) {
+            adapter.setSelectedItem(id);
+        }
     }
 
     public void hide() {
