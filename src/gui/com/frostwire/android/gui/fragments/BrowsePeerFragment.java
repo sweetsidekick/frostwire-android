@@ -111,8 +111,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     public Loader<Object> onCreateLoader(int id, Bundle args) {
-        setListShown(false);
-
         if (id == LOADER_FINGER_ID) {
             return createLoaderFinger();
         } else if (id == LOADER_FILES_ID) {
@@ -139,7 +137,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         } else if (loader.getId() == LOADER_FILES_ID) {
             updateFiles((Object[]) data);
-            setListShown(true);
         }
     }
 

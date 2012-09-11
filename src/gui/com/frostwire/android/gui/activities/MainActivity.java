@@ -84,6 +84,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
+
+        search = new SearchFragment();
+        library = new BrowsePeerFragment();
+        transfers = new TransfersFragment();
+        peers = new BrowsePeersFragment();
     }
 
     @Override
@@ -178,11 +183,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         Bundle browseBundle = new Bundle();
         browseBundle.putByteArray(Constants.EXTRA_PEER_UUID, PeerManager.instance().getLocalPeer().getUUID());
 
-        search = new SearchFragment();
-        library = new BrowsePeerFragment();
         library.setArguments(browseBundle);
-        transfers = new TransfersFragment();
-        peers = new BrowsePeersFragment();
 
         showFragment(search, R.id.menu_main_search);
 
@@ -201,6 +202,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         String action = intent.getAction();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
+            onResumeFragments();
             showFragment(transfers, R.id.menu_main_transfers);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
@@ -236,6 +238,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
+            onResumeFragments();
             showFragment(transfers, R.id.menu_main_transfers);
             TransferManager.instance().clearDownloadsToReview();
             try {
