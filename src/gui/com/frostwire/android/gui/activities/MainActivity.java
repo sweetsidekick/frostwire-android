@@ -160,7 +160,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        menu = (SlideMenu) findViewById(R.id.slideMenu);
+        menu = (SlideMenu) findViewById(R.id.activity_main_menu);
         menu.init(this, R.menu.main, this, 400);
 
         /*
@@ -176,7 +176,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         */
 
         // connect the fallback button in case there is no ActionBar
-        Button b = (Button) findViewById(R.id.buttonMenu);
+        Button b = (Button) findViewById(R.id.activity_main_button_menu);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

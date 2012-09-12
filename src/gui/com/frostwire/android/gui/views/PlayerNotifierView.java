@@ -53,8 +53,6 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
 
         View.inflate(getContext(), R.layout.view_player_notifier, this);
         statusText = (TextView) findViewById(R.id.view_player_notifier_status);
-
-        setVisibility(View.GONE);
     }
 
     @Override
@@ -82,7 +80,6 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
             lastStatusShown = status;
             statusText.startAnimation(bounceFromRightAnimation);
         }
-
     }
 
     @Override
