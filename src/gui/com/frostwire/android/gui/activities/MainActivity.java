@@ -34,6 +34,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -44,6 +45,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
+import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
@@ -160,7 +162,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        menu = (SlideMenu) findViewById(R.id.activity_main_menu);
+        menu = findView(R.id.activity_main_menu);
         menu.init(this, R.menu.main, this, 400);
 
         /*
@@ -176,7 +178,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         */
 
         // connect the fallback button in case there is no ActionBar
-        Button b = (Button) findViewById(R.id.activity_main_button_menu);
+        Button b = findView(R.id.activity_main_button_menu);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -296,6 +298,16 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.activity_main_fragment_container, fragment);
         transaction.commit();
+
+        RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+        if (placeholder.getChildCount() > 0) {
+            placeholder.removeAllViews();
+        }
+
+        if (fragment instanceof MainFragment) {
+            View header = ((MainFragment) fragment).getHeader(this);
+            placeholder.addView(header);
+        }
     }
 
     private void showPreferences() {

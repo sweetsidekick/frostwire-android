@@ -310,4 +310,13 @@
 
     <!-- SlideMenu end -->
 
+
+    <!-- Main Fragment Simple Header begin -->
+
+    <style name="MainFragmentSimpleHeader">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Main Fragment Simple Header end -->
+
 </resources>

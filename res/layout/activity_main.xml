@@ -40,6 +40,13 @@
             android:layout_alignParentLeft="true"
             android:text="@string/application_label" />
 
+        <RelativeLayout
+            android:id="@+id/activity_main_layout_header_placeholder"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/activity_main_button_menu"
+            android:orientation="horizontal" />
+
         <FrameLayout
             android:id="@+id/activity_main_fragment_container"
             android:layout_width="fill_parent"

@@ -20,6 +20,7 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,10 +30,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -51,7 +54,7 @@ import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
  * @author aldenml
  * 
  */
-public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object> {
+public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object>, MainFragment {
 
     private static final String TAG = "FW.BrowsePeerFragment";
 
@@ -74,6 +77,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private Peer peer;
     private boolean local;
     private Finger finger;
+
+    private TextView header;
 
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
@@ -174,6 +179,17 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         if (adapter != null) {
             adapter.dismissDialogs();
         }
+    }
+
+    @Override
+    public View getHeader(Activity activity) {
+        if (header == null) {
+            LayoutInflater inflater = LayoutInflater.from(activity);
+            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+        }
+
+        header.setText("test");
+        return header;
     }
 
     @Override

@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
  * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
@@ -17,13 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Tab" android:layout_width="fill_parent" android:layout_height="wrap_content">
 
-    <TextView
-        style="@style/Tab.Text"
-        android:drawableLeft="@drawable/menu_icon_library"
-        android:text="@string/my_files" />
+package com.frostwire.android.gui.fragments;
 
-</LinearLayout>
+import android.app.Activity;
+import android.view.View;
+
+/**
+ * @author gubatron
+ * @author aldenml
+ *
+ */
+public interface MainFragment {
+
+    public View getHeader(Activity activity);
+}
