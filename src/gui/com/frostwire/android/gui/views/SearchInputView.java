@@ -27,6 +27,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -112,6 +114,12 @@ public class SearchInputView extends LinearLayout {
                     SearchInputView.this.onClear();
                 }
             });
+            textInput.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    startSearch(view);
+                }
+            });
             textInput.setAdapter(adapter);
         } catch (Throwable e) {
             Log.e(TAG, "Error creating view", e);
@@ -161,14 +169,6 @@ public class SearchInputView extends LinearLayout {
                 return true;
             }
         });
-        /*
-        buttonOptions.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                quickAction.show(v);
-            }
-        });
-        */
     }
 
     private int getDrawableId(int mediaTypeId) {

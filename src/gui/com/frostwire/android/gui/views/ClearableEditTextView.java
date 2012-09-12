@@ -26,6 +26,7 @@ import android.text.method.ReplacementTransformationMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filterable;
@@ -77,6 +78,14 @@ public class ClearableEditTextView extends RelativeLayout {
     @Override
     public void setOnKeyListener(OnKeyListener l) {
         input.setOnKeyListener(l);
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return input.getOnItemClickListener();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener l) {
+        input.setOnItemClickListener(l);
     }
 
     public <T extends ListAdapter & Filterable> void setAdapter(T adapter) {
