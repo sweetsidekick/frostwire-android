@@ -50,7 +50,6 @@ public class SearchInputView extends LinearLayout {
 
     private Button buttonOptions;
     private ClearableEditTextView textInput;
-    private Button buttonSearch;
 
     private QuickAction quickAction;
 
@@ -81,7 +80,7 @@ public class SearchInputView extends LinearLayout {
             quickAction.dismiss();
         }
     }
-    
+
     public String getText() {
         return textInput.getText();
     }
@@ -114,13 +113,6 @@ public class SearchInputView extends LinearLayout {
                 }
             });
             textInput.setAdapter(adapter);
-
-            buttonSearch = (Button) findViewById(R.id.view_search_button_search);
-            buttonSearch.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    startSearch(v);
-                }
-            });
         } catch (Throwable e) {
             Log.e(TAG, "Error creating view", e);
         }

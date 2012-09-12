@@ -74,15 +74,4 @@
         android:nextFocusUp="@id/view_search_text_input"
         android:padding="3sp" />
 
-    <Button
-        android:id="@+id/view_search_button_search"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="8sp"
-        android:layout_marginLeft="8sp"
-        android:background="@drawable/search_button"
-        android:padding="2sp"
-        android:textColor="#FFFFFFFF" />
-
 </LinearLayout>

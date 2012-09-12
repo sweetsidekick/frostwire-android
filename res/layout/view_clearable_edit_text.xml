@@ -31,10 +31,21 @@
         android:background="@android:color/transparent"
         android:dropDownVerticalOffset="11dp"
         android:hint="@null"
+        android:imeOptions="actionSearch"
         android:lines="1"
         android:singleLine="true"
-        android:textSize="12dip"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="12dip" />
+
+    <ImageView
+        android:id="@+id/view_clearable_edit_text_image_search"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dip"
+        android:contentDescription="@null"
+        android:src="@drawable/clearable_edit_text_search_icon" />
 
     <Button
         android:id="@+id/view_clearable_edit_text_button_clear"

@@ -105,6 +105,9 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             }
         } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             showFragment(search, R.id.menu_main_search);
+            if (menu.isMenuShown()) {
+                menu.hide();
+            }
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
             if (menu.isMenuShown()) {
                 menu.hide();
@@ -140,8 +143,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             showAbout();
             break;
         }
-        
-        
+
     }
 
     @Override
@@ -289,7 +291,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private void showFragment(Fragment fragment, int menuId) {
         menuSelectedItemId = menuId;
         menu.setSelectedItem(menuSelectedItemId);
-        
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.activity_main_fragment_container, fragment);

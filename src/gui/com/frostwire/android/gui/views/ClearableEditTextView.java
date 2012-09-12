@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 
@@ -42,6 +43,7 @@ import com.frostwire.android.R;
 public class ClearableEditTextView extends RelativeLayout {
 
     private AutoCompleteTextView input;
+    private ImageView imageSearch;
     private Button buttonClear;
 
     private OnActionListener listener;
@@ -113,9 +115,11 @@ public class ClearableEditTextView extends RelativeLayout {
         input.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    buttonClear.setVisibility(RelativeLayout.VISIBLE);
+                    imageSearch.setVisibility(View.GONE);
+                    buttonClear.setVisibility(View.VISIBLE);
                 } else {
-                    buttonClear.setVisibility(RelativeLayout.INVISIBLE);
+                    imageSearch.setVisibility(View.VISIBLE);
+                    buttonClear.setVisibility(View.GONE);
                 }
                 ClearableEditTextView.this.onTextChanged(s.toString());
                 input.setListSelection(-1);
@@ -139,8 +143,11 @@ public class ClearableEditTextView extends RelativeLayout {
             }
         });
 
+        imageSearch = (ImageView) findViewById(R.id.view_clearable_edit_text_image_search);
+        imageSearch.setVisibility(RelativeLayout.VISIBLE);
+
         buttonClear = (Button) findViewById(R.id.view_clearable_edit_text_button_clear);
-        buttonClear.setVisibility(RelativeLayout.INVISIBLE);
+        buttonClear.setVisibility(RelativeLayout.GONE);
         buttonClear.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 input.setText("");
