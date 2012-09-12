@@ -31,19 +31,18 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    style="@style/SlideMenu.Item.Layout">
+    android:layout_height="wrap_content" >
 
     <ImageView
-        android:id="@+id/slidemenu_item_icon"
+        android:id="@+id/slidemenu_listitem_icon"
         style="@style/SlideMenu.Item.Image"
         android:contentDescription="@string/empty_string" />
 
     <TextView
-        android:id="@+id/slidemenu_item_label"
+        android:id="@+id/slidemenu_listitem_label"
         style="@style/SlideMenu.Item.Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/slidemenu_item_icon" />
+        android:layout_toRightOf="@id/slidemenu_listitem_icon" />
 
 </RelativeLayout>

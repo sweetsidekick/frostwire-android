@@ -75,7 +75,7 @@ public class SlideMenu extends LinearLayout {
     }
 
     // a simple adapter
-    private static class SlideMenuAdapter extends ArrayAdapter<SlideMenuItem> {
+    private class SlideMenuAdapter extends ArrayAdapter<SlideMenuItem> {
         Activity act;
         SlideMenuItem[] items;
 
@@ -85,7 +85,7 @@ public class SlideMenu extends LinearLayout {
         }
 
         public SlideMenuAdapter(Activity act, SlideMenuItem[] items) {
-            super(act, R.id.slidemenu_item_label, items);
+            super(act, R.id.slidemenu_listitem_label, items);
             this.act = act;
             this.items = items;
         }
@@ -97,28 +97,20 @@ public class SlideMenu extends LinearLayout {
                 LayoutInflater inflater = act.getLayoutInflater();
                 rowView = inflater.inflate(R.layout.slidemenu_listitem, null);
                 MenuItemHolder viewHolder = new MenuItemHolder();
-                viewHolder.label = (TextView) rowView.findViewById(R.id.slidemenu_item_label);
-                viewHolder.icon = (ImageView) rowView.findViewById(R.id.slidemenu_item_icon);
+                viewHolder.label = (TextView) rowView.findViewById(R.id.slidemenu_listitem_label);
+                viewHolder.icon = (ImageView) rowView.findViewById(R.id.slidemenu_listitem_icon);
                 rowView.setTag(viewHolder);
             }
 
             MenuItemHolder holder = (MenuItemHolder) rowView.getTag();
-            String s = items[position].label;
-            holder.label.setText(s);
-            holder.icon.setImageDrawable(items[position].icon);
+            SlideMenuItem item = items[position];
 
-            rowView.setSelected(items[position].selected);
-            
-            rowView.setBackgroundResource((rowView.isSelected()) ? R.drawable.slidemenu_item_background_selected : R.drawable.slidemenu_item_background);
-            
+            holder.label.setText(item.label);
+            holder.icon.setImageDrawable(item.icon);
+
+            rowView.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : R.drawable.slidemenu_listitem_background);
+
             return rowView;
-        }
-
-        public void setSelectedItem(int id) {
-            for (SlideMenuItem menuItem : items) {
-                menuItem.selected = menuItem.id == id;
-            }
-            notifyDataSetChanged();
         }
     }
 
@@ -322,12 +314,10 @@ public class SlideMenu extends LinearLayout {
         SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
         SlideMenuAdapter adap = new SlideMenuAdapter(act, items);
         list.setAdapter(adap);
-        
-        
+
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setSelectedItem(menuItemList.get(position).id);
                 hide();
                 if (callback != null) {
                     callback.onSlideMenuItemClick(menuItemList.get(position).id);
@@ -336,8 +326,9 @@ public class SlideMenu extends LinearLayout {
         });
 
         // slide menu in
-        if (animate)
+        if (animate) {
             menu.startAnimation(slideRightAnim);
+        }
 
         menu.findViewById(R.id.slidemenu_overlay).setOnClickListener(new OnClickListener() {
             @Override
@@ -360,16 +351,10 @@ public class SlideMenu extends LinearLayout {
 
         menuShown = true;
     }
-    
+
     public void setSelectedItem(int id) {
-        final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
-        if (list == null) {
-            return;
-        }
-        
-        SlideMenuAdapter adapter = (SlideMenuAdapter) list.getAdapter();
-        if (adapter != null) {
-            adapter.setSelectedItem(id);
+        for (SlideMenuItem item : menuItemList) {
+            item.selected = item.id == id;
         }
     }
 

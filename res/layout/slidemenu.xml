@@ -50,7 +50,8 @@
             style="@style/SlideMenu.List"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:choiceMode="singleChoice" />
     </LinearLayout>
 
     <FrameLayout

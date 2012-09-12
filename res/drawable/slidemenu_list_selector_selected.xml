@@ -18,11 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:drawable="@drawable/slidemenu_item_background_selected" android:state_focused="true"/>
-    <item android:drawable="@drawable/slidemenu_item_background_selected" android:state_selected="true"/>
-    <item android:drawable="@drawable/slidemenu_item_background_selected" android:state_pressed="true"/>
-    <item android:drawable="@drawable/slidemenu_item_background"/>
+    <item>
+        <shape>
+            <gradient
+                android:angle="90"
+                android:endColor="#ff1d364b"
+                android:startColor="#ff386386" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:angle="180"
+                android:centerColor="#00000000"
+                android:centerY="0.03"
+                android:endColor="#00000000"
+                android:startColor="#55000000" />
+        </shape>
+    </item>
 
-</selector>
+</layer-list>

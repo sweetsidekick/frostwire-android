@@ -284,18 +284,13 @@
     <style name="SlideMenu"></style>
 
     <style name="SlideMenu.List">
-        <item name="android:divider">@android:color/darker_gray</item>
+        <item name="android:divider">@android:color/transparent</item>
         <item name="android:dividerHeight">0dip</item>
         <item name="android:background">@drawable/slidemenu_background</item>
+        <item name="android:listSelector">@drawable/slidemenu_list_selector</item>
     </style>
 
     <style name="SlideMenu.Item"></style>
-    
-    <style name="SlideMenu.Item.Layout">
-       <!--  the slide menu item background is actually transparent, we'll just name this
-       divider background image properly to stick to naming conventions -->
-       <item name="android:background">@drawable/selector_slidemenu_item_background</item>
-    </style>
 
     <style name="SlideMenu.Item.Image">
         <item name="android:layout_width">30dp</item>
