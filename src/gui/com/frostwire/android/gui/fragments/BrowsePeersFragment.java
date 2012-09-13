@@ -21,7 +21,11 @@ package com.frostwire.android.gui.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.Peer;
@@ -37,9 +41,11 @@ import com.frostwire.android.gui.views.Refreshable;
  * @author aldenml
  * 
  */
-public class BrowsePeersFragment extends AbstractListFragment implements Refreshable {
+public class BrowsePeersFragment extends AbstractListFragment implements Refreshable, MainFragment {
 
     private PeerListAdapter adapter;
+
+    private TextView header;
 
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
@@ -70,6 +76,19 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         if (adapter != null) {
             adapter.dismissDialogs();
         }
+    }
+
+    @Override
+    public View getHeader(Activity activity) {
+        if (header == null) {
+            LayoutInflater inflater = LayoutInflater.from(activity);
+            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+
+            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_icon_peers, 0, 0, 0);
+            header.setText(R.string.browse);
+        }
+
+        return header;
     }
 
     private void setupAdapter() {

@@ -22,8 +22,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
@@ -40,7 +43,7 @@ import com.frostwire.android.gui.views.TransfersBarView;
  * @author aldenml
  * 
  */
-public class TransfersFragment extends AbstractExpandableListFragment implements Refreshable {
+public class TransfersFragment extends AbstractExpandableListFragment implements Refreshable, MainFragment {
 
     @SuppressWarnings("unused")
     private static final String TAG = "FW.TransfersFragment";
@@ -49,6 +52,8 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
     private TransfersBarView bar;
     private TransferListAdapter adapter;
+    
+    private TextView header;
 
     public TransfersFragment() {
         super(R.layout.fragment_transfers);
@@ -87,6 +92,19 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         }
 
         bar.refresh();
+    }
+    
+    @Override
+    public View getHeader(Activity activity) {
+        if (header == null) {
+            LayoutInflater inflater = LayoutInflater.from(activity);
+            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+
+            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_icon_transfers, 0, 0, 0);
+            header.setText(R.string.transfers);
+        }
+
+        return header;
     }
 
     @Override

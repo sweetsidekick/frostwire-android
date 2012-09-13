@@ -116,7 +116,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             LayoutInflater inflater = LayoutInflater.from(activity);
             header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
 
-            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.search_fragment_header_icon, 0, 0, 0);
+            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_icon_search, 0, 0, 0);
             header.setText(R.string.search);
         }
 
