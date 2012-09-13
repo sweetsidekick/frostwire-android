@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -306,7 +307,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
         if (fragment instanceof MainFragment) {
             View header = ((MainFragment) fragment).getHeader(this);
-            placeholder.addView(header);
+            if (header != null) {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                placeholder.addView(header, params);
+            }
         }
     }
 

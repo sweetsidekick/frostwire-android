@@ -315,6 +315,7 @@
 
     <style name="MainFragmentSimpleHeader">
         <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <!-- Main Fragment Simple Header end -->

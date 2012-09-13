@@ -289,7 +289,7 @@ public final class UIUtils {
         case Constants.FILE_TYPE_VIDEOS:
             return resources.getString(R.string.video);
         default:
-            return "Unkown file type";
+            return resources.getString(R.string.unknown);
         }
     }
 

@@ -64,11 +64,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private final BroadcastReceiver broadcastReceiver;
 
     private RadioButton buttonAudio;
-    private RadioButton buttonPictures;
-    private RadioButton buttonVideos;
-    private RadioButton buttonRingtones;
-    private RadioButton buttonApplications;
-    private RadioButton buttonDocuments;
 
     private BrowsePeerSearchBarView filesBar;
 
@@ -136,7 +131,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         if (loader.getId() == LOADER_FINGER_ID) {
             boolean checkAudio = finger == null;
             finger = (Finger) data;
-            updateHeader();
+
             if (checkAudio) {
                 buttonAudio.setChecked(true);
             }
@@ -188,17 +183,16 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
         }
 
-        header.setText("test");
         return header;
     }
 
     @Override
     protected void initComponents(View v) {
-        buttonApplications = initRadioButton(v, R.id.fragment_browse_peer_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
-        buttonDocuments = initRadioButton(v, R.id.fragment_browse_peer_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
-        buttonPictures = initRadioButton(v, R.id.fragment_browse_peer_radio_pictures, Constants.FILE_TYPE_PICTURES);
-        buttonVideos = initRadioButton(v, R.id.fragment_browse_peer_radio_videos, Constants.FILE_TYPE_VIDEOS);
-        buttonRingtones = initRadioButton(v, R.id.fragment_browse_peer_radio_ringtones, Constants.FILE_TYPE_RINGTONES);
+        initRadioButton(v, R.id.fragment_browse_peer_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
+        initRadioButton(v, R.id.fragment_browse_peer_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
+        initRadioButton(v, R.id.fragment_browse_peer_radio_pictures, Constants.FILE_TYPE_PICTURES);
+        initRadioButton(v, R.id.fragment_browse_peer_radio_videos, Constants.FILE_TYPE_VIDEOS);
+        initRadioButton(v, R.id.fragment_browse_peer_radio_ringtones, Constants.FILE_TYPE_RINGTONES);
         buttonAudio = initRadioButton(v, R.id.fragment_browse_peer_radio_audio, Constants.FILE_TYPE_AUDIO);
 
         filesBar = findView(v, R.id.fragment_browse_peer_files_bar);
@@ -322,7 +316,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         return loader;
     }
 
-    private void updateHeader() {
+    private void updateHeader(byte fileType) {
         if (finger == null) {
             Log.w(TAG, "Something wrong, finger is null");
             UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
@@ -330,27 +324,49 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             return;
         }
 
-        updateFileCounts(finger);
-    }
+        if (header != null) {
 
-    private void updateFileCounts(Finger finger) {
-        if (finger == null) {
-            return;
+            int numShared = 0;
+            int numTotal = 0;
+
+            switch (fileType) {
+            case Constants.FILE_TYPE_APPLICATIONS:
+                numShared = finger.numSharedApplicationFiles;
+                numTotal = finger.numTotalApplicationFiles;
+                break;
+            case Constants.FILE_TYPE_AUDIO:
+                numShared = finger.numSharedAudioFiles;
+                numTotal = finger.numTotalAudioFiles;
+                break;
+            case Constants.FILE_TYPE_DOCUMENTS:
+                numShared = finger.numSharedDocumentFiles;
+                numTotal = finger.numTotalDocumentFiles;
+                break;
+            case Constants.FILE_TYPE_PICTURES:
+                numShared = finger.numSharedPictureFiles;
+                numTotal = finger.numTotalPictureFiles;
+                break;
+            case Constants.FILE_TYPE_RINGTONES:
+                numShared = finger.numSharedRingtoneFiles;
+                numTotal = finger.numTotalRingtoneFiles;
+                break;
+            case Constants.FILE_TYPE_VIDEOS:
+                numShared = finger.numSharedVideoFiles;
+                numTotal = finger.numTotalVideoFiles;
+                break;
+            }
+
+            int iconId = UIUtils.getFileTypeIconId(fileType);
+            String fileTypeStr = UIUtils.getFileTypeAsString(getResources(), fileType);
+
+            header.setCompoundDrawablesWithIntrinsicBounds(iconId, 0, 0, 0);
+
+            if (local) {
+                header.setText(fileTypeStr + " (" + String.valueOf(numShared) + "/" + String.valueOf(numTotal) + ")");
+            } else {
+                header.setText(fileTypeStr + " (" + String.valueOf(numShared) + ")");
+            }
         }
-
-        int video = finger.numSharedVideoFiles;
-        int pictures = finger.numSharedPictureFiles;
-        int ringtones = finger.numSharedRingtoneFiles;
-        int audio = finger.numSharedAudioFiles;
-        int applications = finger.numSharedApplicationFiles;
-        int documents = finger.numSharedDocumentFiles;
-
-        setFilesCount(buttonVideos, video, finger.numTotalVideoFiles);
-        setFilesCount(buttonPictures, pictures, finger.numTotalPictureFiles);
-        setFilesCount(buttonRingtones, ringtones, finger.numTotalRingtoneFiles);
-        setFilesCount(buttonAudio, audio, finger.numTotalAudioFiles);
-        setFilesCount(buttonApplications, applications, finger.numTotalApplicationFiles);
-        setFilesCount(buttonDocuments, documents, finger.numTotalDocumentFiles);
     }
 
     private void updateFiles(Object[] data) {
@@ -363,6 +379,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         try {
             byte fileType = (Byte) data[0];
+
+            updateHeader(fileType);
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
@@ -377,14 +395,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             setListAdapter(adapter);
         } catch (Throwable e) {
             Log.e(TAG, "Error updating files in list", e);
-        }
-    }
-
-    private void setFilesCount(RadioButton button, int numShared, int numTotal) {
-        if (local) {
-            button.setText(String.valueOf(numShared) + "/" + String.valueOf(numTotal));
-        } else {
-            button.setText(String.valueOf(numShared));
         }
     }
 

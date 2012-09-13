@@ -57,6 +57,6 @@
         android:id="@+id/activity_browse_peer_player_notifier"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </LinearLayout>
