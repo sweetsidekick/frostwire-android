@@ -18,13 +18,16 @@
 
 package com.frostwire.android.gui.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -45,7 +48,7 @@ import com.google.ads.AdView;
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements Refreshable {
+public class SearchFragment extends AbstractListFragment implements Refreshable, MainFragment {
 
     @SuppressWarnings("unused")
     private static final String TAG = "FW.SearchFragment";
@@ -59,6 +62,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
     private int progress;
 
     private AdView adView;
+
+    private TextView header;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
@@ -103,6 +108,19 @@ public class SearchFragment extends AbstractListFragment implements Refreshable 
         if (adapter != null) {
             adapter.dismissDialogs();
         }
+    }
+
+    @Override
+    public View getHeader(Activity activity) {
+        if (header == null) {
+            LayoutInflater inflater = LayoutInflater.from(activity);
+            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+
+            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.search_fragment_header_icon, 0, 0, 0);
+            header.setText(R.string.search);
+        }
+
+        return header;
     }
 
     @Override
