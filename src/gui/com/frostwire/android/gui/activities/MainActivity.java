@@ -34,7 +34,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
@@ -179,8 +179,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         */
 
         // connect the fallback button in case there is no ActionBar
-        Button b = findView(R.id.activity_main_button_menu);
-        b.setOnClickListener(new View.OnClickListener() {
+        ImageButton buttonMainMenu = findView(R.id.activity_main_button_menu);
+        buttonMainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menu.show();
