@@ -48,10 +48,10 @@
         android:layout_marginLeft="3sp"
         android:layout_marginRight="3sp"
         android:layout_weight="1.0"
-        android:background="@drawable/shape_search_box"
-        frostwire:clearable_hint="@string/type_here_to_filter"
+        android:background="@drawable/search_box_background"
         android:nextFocusLeft="@id/view_files_bar_input_search"
         android:nextFocusUp="@id/view_files_bar_input_search"
-        android:padding="3sp" />
+        android:padding="3sp"
+        frostwire:clearable_hint="@string/type_here_to_filter" />
 
 </LinearLayout>
