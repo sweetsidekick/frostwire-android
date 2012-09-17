@@ -268,7 +268,7 @@ public final class UIUtils {
         case Constants.FILE_TYPE_RINGTONES:
             return R.drawable.ringtone_selector_off;
         case Constants.FILE_TYPE_VIDEOS:
-            return R.drawable.video_selector_off;
+            return R.drawable.video_icon_selector_off;
         default:
             return R.drawable.question_mark;
         }
