@@ -27,14 +27,18 @@
         android:id="@+id/fragment_browse_peer_radiogroup_browse_type"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|center_vertical"
-        android:background="@drawable/browse_peer_buttons_header_background_layers"
+        android:background="@drawable/browse_peer_file_type_buttons_background"
         android:orientation="horizontal" >
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_audio"
             style="@style/BrowseFileTypeButton"
             android:drawableTop="@drawable/audio_icon_selector" />
+
+        <RadioButton
+            android:id="@+id/fragment_browse_peer_radio_ringtones"
+            style="@style/BrowseFileTypeButton"
+            android:drawableTop="@drawable/ringtone_icon_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_videos"
@@ -44,22 +48,17 @@
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_pictures"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/picture_selector" />
-
-        <RadioButton
-            android:id="@+id/fragment_browse_peer_radio_ringtones"
-            style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/ringtone_selector" />
+            android:drawableTop="@drawable/picture_icon_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_applications"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/application_selector" />
+            android:drawableTop="@drawable/application_icon_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_documents"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/document_selector" />
+            android:drawableTop="@drawable/document_icon_selector" />
     </RadioGroup>
 
     <!-- Checkbox and Search Box for Browse Peer, see view_browse_peer_search_bar.xml -->

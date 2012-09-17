@@ -258,15 +258,15 @@ public final class UIUtils {
     public static int getFileTypeIconId(byte fileType) {
         switch (fileType) {
         case Constants.FILE_TYPE_APPLICATIONS:
-            return R.drawable.application_selector_off;
+            return R.drawable.application_icon_selector_off;
         case Constants.FILE_TYPE_AUDIO:
             return R.drawable.audio_icon_selector_off;
         case Constants.FILE_TYPE_DOCUMENTS:
-            return R.drawable.document_selector_off;
+            return R.drawable.document_icon_selector_off;
         case Constants.FILE_TYPE_PICTURES:
-            return R.drawable.picture_selector_off;
+            return R.drawable.picture_icon_selector_off;
         case Constants.FILE_TYPE_RINGTONES:
-            return R.drawable.ringtone_selector_off;
+            return R.drawable.ringtone_icon_selector_off;
         case Constants.FILE_TYPE_VIDEOS:
             return R.drawable.video_icon_selector_off;
         default:

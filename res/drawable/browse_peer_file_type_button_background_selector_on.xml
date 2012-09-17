@@ -28,6 +28,5 @@
                 android:startColor="#ffffffff" />
         </shape>
     </item>
-    <item android:drawable="@drawable/video_icon_selector_on"/>
 
 </layer-list>

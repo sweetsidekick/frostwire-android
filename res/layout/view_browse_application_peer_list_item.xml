@@ -30,7 +30,7 @@
         android:layout_height="42sp"
         android:layout_gravity="left|center_vertical"
         android:layout_margin="3sp"
-        android:background="@drawable/application_selector_off"
+        android:background="@drawable/application_icon_selector_off"
         android:contentDescription="@null" />
 
     <TextView

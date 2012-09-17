@@ -87,25 +87,12 @@
         <item name="android:visibility">visible</item>
     </style>
 
-    <style name="BrowseFileTypeButtonCommon" parent="android:Widget.CompoundButton.RadioButton">
-        <item name="android:textColor">#ff4e6172</item>
+    <style name="BrowseFileTypeButton" parent="android:Widget.CompoundButton.RadioButton">
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@null</item>
+        <item name="android:background">@drawable/browse_peer_file_type_button_background_selector</item>
         <item name="android:button">@null</item>
-        <item name="android:gravity">center|center_vertical</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingTop">5dp</item>
+        <item name="android:gravity">center|center_vertical|center_horizontal</item>
     </style>
-
-    <style name="BrowseFileTypeButtonCommon.Normal" parent="BrowseFileTypeButtonCommon">
-        <item name="android:textSize">8dp</item>
-    </style>
-
-    <style name="BrowseFileTypeButtonCommon.Big" parent="BrowseFileTypeButtonCommon">
-        <item name="android:textSize">16dp</item>
-    </style>
-
-    <style name="BrowseFileTypeButton" parent="BrowseFileTypeButtonCommon.Normal"></style>
 
     <style name="BrowsePeerHeaderIconCommon" parent="android:Widget.ImageButton">
         <item name="android:layout_gravity">center_vertical</item>
