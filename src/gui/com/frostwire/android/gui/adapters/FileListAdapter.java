@@ -295,27 +295,29 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     private void populateViewPlain(View view, FileDescriptor fd) {
         ImageView fileTypeIcon = findView(view, R.id.view_browse_peer_list_item_filetype_icon);
 
-        if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-            InputStream is = null;
+        if (fileTypeIcon != null) {
+            if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
+                InputStream is = null;
 
-            try {
-                ContentResolver cr = getContext().getContentResolver();
-                is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
-                Drawable icon = Drawable.createFromStream(is, "");
-                fileTypeIcon.setBackgroundDrawable(icon);
-            } catch (Throwable e) {
-                fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (Throwable e) {
-                        // ignore
+                try {
+                    ContentResolver cr = getContext().getContentResolver();
+                    is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
+                    Drawable icon = Drawable.createFromStream(is, "");
+                    fileTypeIcon.setBackgroundDrawable(icon);
+                } catch (Throwable e) {
+                    fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
+                } finally {
+                    if (is != null) {
+                        try {
+                            is.close();
+                        } catch (Throwable e) {
+                            // ignore
+                        }
                     }
                 }
+            } else {
+                fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
             }
-        } else {
-            fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
@@ -329,6 +331,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         if (fd.fileType == Constants.FILE_TYPE_AUDIO || fd.fileType == Constants.FILE_TYPE_APPLICATIONS) {
             TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
             fileExtra.setText(fd.artist);
+        } else {
+            TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
+            fileExtra.setText(R.string.empty_string);
         }
 
         TextView fileSize = findView(view, R.id.view_browse_peer_list_item_file_size);
