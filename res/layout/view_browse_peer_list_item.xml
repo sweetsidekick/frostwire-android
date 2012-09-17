@@ -63,7 +63,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="3dp"
-                android:background="@drawable/audio_selector_off"
+                android:background="@drawable/audio_icon_selector_off"
                 android:contentDescription="@null" />
 
             <TextView

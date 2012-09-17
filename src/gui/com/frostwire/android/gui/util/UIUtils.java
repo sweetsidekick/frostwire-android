@@ -260,7 +260,7 @@ public final class UIUtils {
         case Constants.FILE_TYPE_APPLICATIONS:
             return R.drawable.application_selector_off;
         case Constants.FILE_TYPE_AUDIO:
-            return R.drawable.audio_selector_off;
+            return R.drawable.audio_icon_selector_off;
         case Constants.FILE_TYPE_DOCUMENTS:
             return R.drawable.document_selector_off;
         case Constants.FILE_TYPE_PICTURES:

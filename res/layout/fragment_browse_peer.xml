@@ -28,7 +28,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center|center_vertical"
-        android:background="@drawable/shape_browse_file_button_background"
+        android:background="@drawable/browse_peer_buttons_header_background_layers"
         android:orientation="horizontal" >
 
         <RadioButton
@@ -59,7 +59,7 @@
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_audio"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/audio_selector" />
+            android:drawableTop="@drawable/audio_icon_selector" />
     </RadioGroup>
 
     <!-- Checkbox and Search Box for Browse Peer, see view_browse_peer_search_bar.xml -->
