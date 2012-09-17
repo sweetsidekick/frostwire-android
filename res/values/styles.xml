@@ -20,6 +20,16 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="Widget" parent="android:Widget"></style>
+
+    <style name="Widget.CompoundButton" parent="android:Widget.CompoundButton"></style>
+
+    <style name="Widget.CompoundButton.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_button_selector</item>
+    </style>
+
+    <style name="Widget.CompoundButton.RadioButton" parent="android:Widget.CompoundButton.RadioButton"></style>
+
     <!-- List Adapter styles -->
     <style name="list_item_title">
         <item name="android:textColor">#ff2a3d50</item>
@@ -136,10 +146,6 @@
     </style>
 
     <style name="BrowsePeerHeaderText" parent="BrowsePeerHeaderTextCommon.Normal"></style>
-
-    <style name="Widget" parent="android:Widget"></style>
-
-    <style name="Widget.CompoundButton" parent="android:Widget.CompoundButton"></style>
 
     <style name="Animations" />
 
