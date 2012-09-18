@@ -31,10 +31,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.MediaType;
+import com.frostwire.android.gui.adapters.SearchInputFileTypesAdapter;
 import com.frostwire.android.gui.search.SuggestionsAdapter;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 import com.frostwire.android.gui.views.QuickAction.OnActionItemClickListener;
@@ -50,6 +52,7 @@ public class SearchInputView extends LinearLayout {
 
     private final SuggestionsAdapter adapter;
 
+    private Spinner spinnerFileType;
     private Button buttonOptions;
     private ClearableEditTextView textInput;
 
@@ -94,7 +97,9 @@ public class SearchInputView extends LinearLayout {
         View.inflate(getContext(), R.layout.view_search_input, this);
 
         try {
+            spinnerFileType = (Spinner) findViewById(R.id.view_search_input_spinner_file_types);
             setupQuickAction();
+            setupSpinnerFileTypes();
 
             textInput = (ClearableEditTextView) findViewById(R.id.view_search_text_input);
             textInput.setOnKeyListener(new OnKeyListener() {
@@ -124,6 +129,12 @@ public class SearchInputView extends LinearLayout {
         } catch (Throwable e) {
             Log.e(TAG, "Error creating view", e);
         }
+    }
+
+    private void setupSpinnerFileTypes() {
+        SearchInputFileTypesAdapter adapter = new SearchInputFileTypesAdapter(getContext());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFileType.setAdapter(adapter);
     }
 
     private void setupQuickAction() {

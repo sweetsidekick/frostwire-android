@@ -50,8 +50,6 @@ import com.frostwire.android.R;
  */
 public class QuickAction extends QuickActionPopupWindows implements OnDismissListener {
 	private View mRootView;
-	private ImageView mArrowUp;
-	private ImageView mArrowDown;
 	private LayoutInflater mInflater;
 	private ViewGroup mTrack;
 	private ScrollView mScroller;
@@ -131,8 +129,8 @@ public class QuickAction extends QuickActionPopupWindows implements OnDismissLis
 		mRootView	= (ViewGroup) mInflater.inflate(id, null);
 		mTrack 		= (ViewGroup) mRootView.findViewById(R.id.tracks);
 
-		mArrowDown 	= (ImageView) mRootView.findViewById(R.id.arrow_down);
-		mArrowUp 	= (ImageView) mRootView.findViewById(R.id.arrow_up);
+//		mArrowDown 	= (ImageView) mRootView.findViewById(R.id.arrow_down);
+//		mArrowUp 	= (ImageView) mRootView.findViewById(R.id.arrow_up);
 
 		mScroller	= (ScrollView) mRootView.findViewById(R.id.quickaction_popup_scroller);
 		
@@ -306,7 +304,7 @@ public class QuickAction extends QuickActionPopupWindows implements OnDismissLis
 			}
 		}
 		
-		showArrow(((onTop) ? R.id.arrow_down : R.id.arrow_up), arrowPos);
+		//showArrow(((onTop) ? R.id.arrow_down : R.id.arrow_up), arrowPos);
 		
 		setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
 		
@@ -325,7 +323,7 @@ public class QuickAction extends QuickActionPopupWindows implements OnDismissLis
 	 * 		  and vice versa
 	 */
 	private void setAnimationStyle(int screenWidth, int requestedX, boolean onTop) {
-		int arrowPos = requestedX - mArrowUp.getMeasuredWidth()/2;
+		int arrowPos = 0;//requestedX - mArrowUp.getMeasuredWidth()/2;
 
 		switch (mAnimStyle) {
 		case ANIM_GROW_FROM_LEFT:
@@ -364,10 +362,10 @@ public class QuickAction extends QuickActionPopupWindows implements OnDismissLis
 	 * @param requestedX distance from left screen
 	 */
 	private void showArrow(int whichArrow, int requestedX) {
-        final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp : mArrowDown;
-        final View hideArrow = (whichArrow == R.id.arrow_up) ? mArrowDown : mArrowUp;
+        final View showArrow = null;//(whichArrow == R.id.arrow_up) ? mArrowUp : mArrowDown;
+        final View hideArrow = null;//(whichArrow == R.id.arrow_up) ? mArrowDown : mArrowUp;
 
-        final int arrowWidth = mArrowUp.getMeasuredWidth();
+        final int arrowWidth = 0;//mArrowUp.getMeasuredWidth();
 
         showArrow.setVisibility(View.VISIBLE);
         

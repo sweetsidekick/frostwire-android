@@ -34,6 +34,12 @@
         android:focusable="true"
         android:focusableInTouchMode="true" />
 
+    <Spinner
+        android:id="@+id/view_search_input_spinner_file_types"
+        style="@style/Widget.Holo.Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
