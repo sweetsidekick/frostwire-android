@@ -66,7 +66,7 @@ public class ChangeNicknameMenuAction extends MenuAction {
         String oldNickname = ConfigurationManager.instance().getNickname();
         nickEdit.setText(oldNickname);
 
-        builder.setIcon(R.drawable.application_icon);
+        builder.setIcon(R.drawable.app_icon);
         builder.setCancelable(true);
         builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

@@ -41,6 +41,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,6 +65,8 @@ import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.services.Engine;
 
 public class SlideMenu extends LinearLayout {
+
+    private static final String TAG = "FW.SlideMenu";
 
     // keys for saving/restoring instance state
     private final static String KEY_MENUSHOWN = "menuWasShown";
@@ -463,10 +466,9 @@ public class SlideMenu extends LinearLayout {
 
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            Log.e(TAG, "Error loading menu items from resource", e);
         }
-
     }
 
     private String resourceIdToString(String text) {

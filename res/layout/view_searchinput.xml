@@ -23,6 +23,7 @@
     android:layout_width="fill_parent"
     android:layout_height="48dp"
     android:background="@drawable/shape_untabbed_header_background"
+    android:gravity="center_vertical"
     android:orientation="horizontal" >
 
     <!-- Dummy item to prevent EditText from receiving focus at startup -->
@@ -34,40 +35,16 @@
         android:focusable="true"
         android:focusableInTouchMode="true" />
 
-    <Spinner
-        android:id="@+id/view_search_input_spinner_file_types"
-        style="@style/Widget.Holo.Spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
+    <ImageButton
+        android:id="@+id/view_search_input_button_mediatype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="3sp"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/view_search_button_options"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginBottom="2sp"
-            android:layout_marginLeft="8sp"
-            android:layout_marginRight="8sp"
-            android:background="@drawable/search_button"
-            android:padding="2sp"
-            android:textColor="#FFFFFFFF" />
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="7dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/dummy_content_description"
-            android:src="@drawable/downward_white_triangle" />
-    </LinearLayout>
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/audio_icon" />
 
     <com.frostwire.android.gui.views.ClearableEditTextView
-        android:id="@+id/view_search_text_input"
+        android:id="@+id/view_search_input_text_input"
         android:layout_width="0dip"
         android:layout_height="38sp"
         android:layout_gravity="left|center_vertical"
@@ -75,8 +52,8 @@
         android:layout_marginRight="3sp"
         android:layout_weight="1.0"
         android:background="@drawable/search_box_background"
-        android:nextFocusLeft="@id/view_search_text_input"
-        android:nextFocusUp="@id/view_search_text_input"
+        android:nextFocusLeft="@id/view_search_input_button_mediatype"
+        android:nextFocusUp="@id/view_search_input_button_mediatype"
         android:padding="3sp"
         frostwire:clearable_hint="@string/hints_by_google" />
 

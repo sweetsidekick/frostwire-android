@@ -20,31 +20,8 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Widget" parent="android:Widget"></style>
-
-    <style name="Widget.CompoundButton" parent="android:Widget.CompoundButton"></style>
-
     <style name="Widget.CompoundButton.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_button_selector</item>
-    </style>
-
-    <style name="Widget.CompoundButton.RadioButton" parent="android:Widget.CompoundButton.RadioButton"></style>
-
-    <style name="Widget.Holo.Spinner" parent="android:Widget.Spinner.DropDown">
-        <item name="android:background">@drawable/spinner_background_holo_dark</item>
-        <item name="android:dropDownSelector">@drawable/list_selector_holo_dark</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_holo_dark</item>
-        <item name="android:dropDownVerticalOffset">0dip</item>
-        <item name="android:dropDownHorizontalOffset">0dip</item>
-        <item name="android:dropDownWidth">wrap_content</item>
-        <item name="android:gravity">left|center_vertical</item>
-    </style>
-
-    <style name="Widget.Holo.Light.Spinner" parent="Widget.Holo.Spinner">
-        <item name="android:background">@drawable/spinner_background_holo_light</item>
-        <item name="android:dropDownVerticalOffset">0dip</item>
-        <item name="android:dropDownHorizontalOffset">0dip</item>
-        <item name="android:dropDownWidth">wrap_content</item>
     </style>
 
     <!-- List Adapter styles -->
@@ -164,53 +141,15 @@
 
     <style name="BrowsePeerHeaderText" parent="BrowsePeerHeaderTextCommon.Normal"></style>
 
+    <!-- Animations begin -->
     <style name="Animations" />
 
-    <!-- PopDownMenu -->
-    <style name="Animations.PopDownMenu" />
-
-    <style name="Animations.PopDownMenu.Center">
-        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
-    </style>
-
-    <style name="Animations.PopDownMenu.Left">
+    <style name="Animations_GrowFromLeft">
         <item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
         <item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
     </style>
 
-    <style name="Animations.PopDownMenu.Right">
-        <item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
-    </style>
-
-    <style name="Animations.PopDownMenu.Reflect">
-        <item name="@android:windowEnterAnimation">@anim/pump_top</item>
-        <item name="@android:windowExitAnimation">@anim/quickaction_disappear</item>
-    </style>
-
-    <!-- PopUpMenu -->
-    <style name="Animations.PopUpMenu" />
-
-    <style name="Animations.PopUpMenu.Center">
-        <item name="@android:windowEnterAnimation">@anim/quickaction_grow_from_bottom</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
-    </style>
-
-    <style name="Animations.PopUpMenu.Left">
-        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
-    </style>
-
-    <style name="Animations.PopUpMenu.Right">
-        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
-    </style>
-
-    <style name="Animations.PopUpMenu.Reflect">
-        <item name="@android:windowEnterAnimation">@anim/pump_bottom</item>
-        <item name="@android:windowExitAnimation">@anim/quickaction_disappear</item>
-    </style>
+    <!-- Animations end -->
 
     <style name="TransparentListView" parent="@android:style/Widget.ListView">
         <item name="android:cacheColorHint">@android:color/transparent</item>
@@ -227,58 +166,6 @@
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:headerDividersEnabled">false</item>
     </style>
-
-    <style name="QuickAction"></style>
-
-    <style name="QuickAction.Item"></style>
-
-    <style name="QuickAction.Item.Horizontal"></style>
-
-    <style name="QuickAction.Item.Horizontal.Image">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_margin">2sp</item>
-    </style>
-
-    <style name="QuickAction.Item.Horizontal.TextCommon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="QuickAction.Item.Horizontal.TextCommon.Visible">
-        <item name="android:visibility">visible</item>
-    </style>
-
-    <style name="QuickAction.Item.Horizontal.TextCommon.Gone">
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="QuickAction.Item.Horizontal.Text" parent="QuickAction.Item.Horizontal.TextCommon.Gone"></style>
-
-    <style name="QuickAction.Item.Vertical"></style>
-
-    <style name="QuickAction.Item.Vertical.ImageCommon">
-        <item name="android:layout_margin">2sp</item>
-    </style>
-
-    <style name="QuickAction.Item.Vertical.ImageCommon.Normal">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-    </style>
-
-    <style name="QuickAction.Item.Vertical.ImageCommon.Big">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-    </style>
-
-    <style name="QuickAction.Item.Vertical.Image" parent="QuickAction.Item.Vertical.ImageCommon.Normal"></style>
 
     <style name="Preferences"></style>
 
@@ -329,5 +216,22 @@
     </style>
 
     <!-- Main Fragment Simple Header end -->
+
+
+    <!-- Menu Media Type begin -->
+
+    <style name="MenuMediaType"></style>
+
+    <style name="MenuMediaType.Item"></style>
+
+    <style name="MenuMediaType.Item.Text">
+        <item name="android:layout_marginBottom">10dip</item>
+        <item name="android:layout_marginTop">10dip</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Menu Media Type end -->
 
 </resources>

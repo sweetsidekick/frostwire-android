@@ -103,8 +103,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     public void dismissDialogs() {
         super.dismissDialogs();
 
-        searchInput.hideQuickAction();
-
         if (adapter != null) {
             adapter.dismissDialogs();
         }

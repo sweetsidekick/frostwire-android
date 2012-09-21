@@ -36,7 +36,7 @@
     <ImageView
         android:id="@+id/slidemenu_listitem_icon"
         style="@style/SlideMenu.Item.Image"
-        android:contentDescription="@string/empty_string" />
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/slidemenu_listitem_label"

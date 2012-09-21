@@ -37,7 +37,7 @@ public class SetAsRingtoneMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public SetAsRingtoneMenuAction(Context context, FileDescriptor fd) {
-        super(context, R.drawable.ringtone, R.string.set_as_ringtone);
+        super(context, R.drawable.ringtone_icon, R.string.set_as_ringtone);
 
         this.fd = fd;
     }

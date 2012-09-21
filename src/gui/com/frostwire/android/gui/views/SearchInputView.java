@@ -19,27 +19,26 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.PopupWindow;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.adapters.SearchInputFileTypesAdapter;
 import com.frostwire.android.gui.search.SuggestionsAdapter;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
-import com.frostwire.android.gui.views.QuickAction.OnActionItemClickListener;
 
 /**
  * @author gubatron
@@ -52,15 +51,13 @@ public class SearchInputView extends LinearLayout {
 
     private final SuggestionsAdapter adapter;
 
-    private Spinner spinnerFileType;
-    private Button buttonOptions;
+    private ImageButton buttonMediaType;
     private ClearableEditTextView textInput;
-
-    private QuickAction quickAction;
 
     private OnSearchListener onSearchListener;
 
     private int mediaTypeId;
+    private PopupWindow popup;
 
     public SearchInputView(Context context, AttributeSet set) {
         super(context, set);
@@ -80,12 +77,6 @@ public class SearchInputView extends LinearLayout {
         return textInput.getText().length() == 0;
     }
 
-    public void hideQuickAction() {
-        if (quickAction != null) {
-            quickAction.dismiss();
-        }
-    }
-
     public String getText() {
         return textInput.getText();
     }
@@ -94,14 +85,21 @@ public class SearchInputView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        View.inflate(getContext(), R.layout.view_search_input, this);
+        View.inflate(getContext(), R.layout.view_searchinput, this);
 
         try {
-            spinnerFileType = (Spinner) findViewById(R.id.view_search_input_spinner_file_types);
-            setupQuickAction();
-            setupSpinnerFileTypes();
+            mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
 
-            textInput = (ClearableEditTextView) findViewById(R.id.view_search_text_input);
+            buttonMediaType = (ImageButton) findViewById(R.id.view_search_input_button_mediatype);
+            buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
+            buttonMediaType.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    buttonMediaType_onClick(v);
+                }
+            });
+
+            textInput = (ClearableEditTextView) findViewById(R.id.view_search_input_text_input);
             textInput.setOnKeyListener(new OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
@@ -131,71 +129,98 @@ public class SearchInputView extends LinearLayout {
         }
     }
 
-    private void setupSpinnerFileTypes() {
-        SearchInputFileTypesAdapter adapter = new SearchInputFileTypesAdapter(getContext());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerFileType.setAdapter(adapter);
+    @Override
+    protected void onDetachedFromWindow() {
+        hidePopup();
+        super.onDetachedFromWindow();
     }
 
-    private void setupQuickAction() {
-        Resources rs = getResources();
-        QuickActionItem audio = new QuickActionItem(MediaType.getAudioMediaType().getId(), rs.getString(R.string.media_type_audio), rs.getDrawable(R.drawable.audio));
-        QuickActionItem image = new QuickActionItem(MediaType.getImageMediaType().getId(), rs.getString(R.string.media_type_images), rs.getDrawable(R.drawable.picture));
-        QuickActionItem video = new QuickActionItem(MediaType.getVideoMediaType().getId(), rs.getString(R.string.media_type_video), rs.getDrawable(R.drawable.video));
-        QuickActionItem document = new QuickActionItem(MediaType.getDocumentMediaType().getId(), rs.getString(R.string.media_type_documents), rs.getDrawable(R.drawable.document));
-        QuickActionItem application = new QuickActionItem(MediaType.getApplicationsMediaType().getId(), rs.getString(R.string.media_type_applications), rs.getDrawable(R.drawable.application));
-        QuickActionItem torrent = new QuickActionItem(MediaType.getTorrentMediaType().getId(), rs.getString(R.string.media_type_torrents), rs.getDrawable(R.drawable.torrent));
+    protected void buttonMediaType_onClick(View v) {
+        showPopup(v);
+    }
 
-        quickAction = new QuickAction(getContext(), isLandscape() ? QuickAction.HORIZONTAL : QuickAction.VERTICAL);
+    private void showPopup(View v) {
+        hideSoftInput(v);
+        popup = newPopup();
+        popup.showAsDropDown(this, 20, 0);
+    }
 
-        // add action items into QuickAction
-        quickAction.addActionItem(audio);
-        quickAction.addActionItem(image);
-        quickAction.addActionItem(video);
-        quickAction.addActionItem(document);
-        quickAction.addActionItem(application);
-        quickAction.addActionItem(torrent);
+    private void hidePopup() {
+        if (popup != null) {
+            popup.dismiss();
+            popup = null;
+        }
+    }
 
-        quickAction.setOnActionItemClickListener(new OnActionItemClickListener() {
-            public void onItemClick(QuickAction source, int pos, int actionId) {
-                onMediaTypeSelected(actionId);
+    private PopupWindow newPopup() {
+        final PopupWindow popup = new PopupWindow(getContext());
 
-                QuickActionItem item = source.getActionItem(pos);
-                buttonOptions.setBackgroundDrawable(item.getIcon());
-                mediaTypeId = actionId;
-                ConfigurationManager.instance().setLastMediaTypeFilter(mediaTypeId);
-            }
-        });
-        quickAction.setBackgroundAlpha(235);
-
-        mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
-
-        buttonOptions = (Button) findViewById(R.id.view_search_button_options);
-        buttonOptions.setBackgroundResource(getDrawableId(mediaTypeId));
-        buttonOptions.setOnTouchListener(new OnTouchListener() {
-
+        popup.setTouchInterceptor(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                quickAction.show(v);
-                return true;
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    hidePopup();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        popup.setTouchable(true);
+        popup.setFocusable(true);
+        popup.setOutsideTouchable(true);
+        popup.setAnimationStyle(R.style.Animations_GrowFromLeft);
+
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.view_searchinput_menu_mediatype, null);
+        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        view.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT));
+
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_audio, MediaType.getAudioMediaType().getId());
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_video, MediaType.getVideoMediaType().getId());
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_images, MediaType.getImageMediaType().getId());
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_applications, MediaType.getApplicationsMediaType().getId());
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_documents, MediaType.getDocumentMediaType().getId());
+        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_torrents, MediaType.getTorrentMediaType().getId());
+
+        popup.setContentView(view);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+        return popup;
+    }
+
+    private void setupMenuItem(View view, int id, final int mediaTypeId) {
+        final Button b = (Button) view.findViewById(id);
+        b.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMediaTypeSelected(mediaTypeId);
+
+                buttonMediaType.setImageDrawable(b.getCompoundDrawables()[0]);
+                SearchInputView.this.mediaTypeId = mediaTypeId;
+                ConfigurationManager.instance().setLastMediaTypeFilter(mediaTypeId);
+
+                hidePopup();
             }
         });
     }
 
     private int getDrawableId(int mediaTypeId) {
-
         if (MediaType.getApplicationsMediaType().getId() == mediaTypeId) {
-            return R.drawable.application;
+            return R.drawable.application_icon;
         } else if (MediaType.getAudioMediaType().getId() == mediaTypeId) {
-            return R.drawable.audio;
+            return R.drawable.audio_icon;
         } else if (MediaType.getDocumentMediaType().getId() == mediaTypeId) {
-            return R.drawable.document;
+            return R.drawable.document_icon;
         } else if (MediaType.getImageMediaType().getId() == mediaTypeId) {
-            return R.drawable.picture;
+            return R.drawable.picture_icon;
         } else if (MediaType.getVideoMediaType().getId() == mediaTypeId) {
-            return R.drawable.video;
+            return R.drawable.video_icon;
         } else if (MediaType.getTorrentMediaType().getId() == mediaTypeId) {
-            return R.drawable.torrent;
+            return R.drawable.torrent_icon;
         } else {
             return R.drawable.question_mark;
         }
@@ -236,10 +261,6 @@ public class SearchInputView extends LinearLayout {
         if (manager != null) {
             manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
-    }
-
-    private boolean isLandscape() {
-        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     public static interface OnSearchListener {

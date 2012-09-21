@@ -45,7 +45,7 @@
 
     <application
         android:name=".gui.MainApplication"
-        android:icon="@drawable/application_icon"
+        android:icon="@drawable/app_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >
 
@@ -108,9 +108,11 @@
         <activity
             android:name=".gui.activities.AboutActivity"
             android:label="@string/activity_about" />
+        <!--
         <activity
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+         -->
 
         <!-- providers -->
 

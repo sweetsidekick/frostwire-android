@@ -258,17 +258,17 @@ public final class UIUtils {
     public static int getFileTypeIconId(byte fileType) {
         switch (fileType) {
         case Constants.FILE_TYPE_APPLICATIONS:
-            return R.drawable.application_icon_selector_off;
+            return R.drawable.application_icon;
         case Constants.FILE_TYPE_AUDIO:
-            return R.drawable.audio_icon_selector_off;
+            return R.drawable.audio_icon;
         case Constants.FILE_TYPE_DOCUMENTS:
-            return R.drawable.document_icon_selector_off;
+            return R.drawable.document_icon;
         case Constants.FILE_TYPE_PICTURES:
-            return R.drawable.picture_icon_selector_off;
+            return R.drawable.picture_icon;
         case Constants.FILE_TYPE_RINGTONES:
-            return R.drawable.ringtone_icon_selector_off;
+            return R.drawable.ringtone_icon;
         case Constants.FILE_TYPE_VIDEOS:
-            return R.drawable.video_icon_selector_off;
+            return R.drawable.video_icon;
         default:
             return R.drawable.question_mark;
         }
@@ -324,17 +324,17 @@ public final class UIUtils {
             return R.drawable.question_mark;
         }
         if (mt.equals(MediaType.getApplicationsMediaType())) {
-            return R.drawable.application;
+            return R.drawable.application_icon;
         } else if (mt.equals(MediaType.getAudioMediaType())) {
-            return R.drawable.audio;
+            return R.drawable.audio_icon;
         } else if (mt.equals(MediaType.getDocumentMediaType())) {
-            return R.drawable.document;
+            return R.drawable.document_icon;
         } else if (mt.equals(MediaType.getImageMediaType())) {
-            return R.drawable.picture;
+            return R.drawable.picture_icon;
         } else if (mt.equals(MediaType.getVideoMediaType())) {
-            return R.drawable.video;
+            return R.drawable.video_icon;
         } else if (mt.equals(MediaType.getTorrentMediaType())) {
-            return R.drawable.torrent;
+            return R.drawable.torrent_icon;
         } else {
             return R.drawable.question_mark;
         }

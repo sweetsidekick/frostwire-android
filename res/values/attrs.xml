@@ -39,4 +39,10 @@
         <attr name="clearable_hint" format="string" />
     </declare-styleable>
 
+    <!-- Default ListView style for drop downs. -->
+    <attr name="dropDownListViewStyle" format="reference" />
+
+    <!-- Default ListPopupWindow style. -->
+    <attr name="listPopupWindowStyle" format="reference" />
+
 </resources>

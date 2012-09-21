@@ -172,7 +172,7 @@ public final class SoftwareUpdater {
                 
                 String message = StringUtils.getLocaleString(update.updateMessages, context.getString(R.string.update_message));
 
-                UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
+                UIUtils.showYesNoDialog(context, R.drawable.app_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Engine.instance().stopServices(false);
                         UIUtils.openFile(context, SystemUtils.getUpdateInstallerPath().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
@@ -182,7 +182,7 @@ public final class SoftwareUpdater {
                 
                 String message = StringUtils.getLocaleString(update.marketMessages, context.getString(R.string.update_message));
 
-                UIUtils.showYesNoDialog(context, R.drawable.application_icon, message, R.string.update_title, new OnClickListener() {
+                UIUtils.showYesNoDialog(context, R.drawable.app_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(update.m));

@@ -31,7 +31,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -147,16 +146,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             break;
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home: // this is the app icon of the actionbar
-            menu.show();
-            break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
