@@ -24,17 +24,19 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.frostwire.android.core.Constants;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
+
+import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
 
 /**
  * @author gubatron
@@ -89,12 +91,26 @@ public final class ThumbnailLoader {
                 bmp = Images.Thumbnails.getThumbnail(cr, key, Images.Thumbnails.MICRO_KIND, null);
             } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
                 bmp = Video.Thumbnails.getThumbnail(cr, key, Video.Thumbnails.MICRO_KIND, null);
+                bmp = overlayVideoIcon(context, bmp);
             }
         } catch (Throwable e) {
             // ignore
         }
 
         return bmp;
+    }
+
+    private Bitmap overlayVideoIcon(Context context, Bitmap bmp) {
+        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+        Canvas canvas = new Canvas(bitmap);
+
+        canvas.drawBitmap(bmp, 0, 0, null);
+
+        Drawable playIcon = context.getResources().getDrawable(R.drawable.play_icon_transparent);
+        playIcon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        playIcon.draw(canvas);
+
+        return bitmap;
     }
 
     private boolean imageViewReused(ThumbnailToLoad thumbnailToLoad) {
