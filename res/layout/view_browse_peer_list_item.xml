@@ -21,9 +21,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="right"
     android:baselineAligned="false"
-    android:gravity="center_vertical"
     android:orientation="horizontal" >
 
     <LinearLayout
@@ -40,15 +38,13 @@
             android:background="@null"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
-            android:src="@drawable/play" />
+            android:src="@drawable/download_icon" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1.0"
         android:background="@drawable/selector_list_view_right_side"
-        android:orientation="vertical"
         android:paddingLeft="6dp" >
 
         <TextView
@@ -64,6 +60,7 @@
             android:id="@+id/view_browse_peer_list_item_extra_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/view_browse_peer_list_item_file_title"
             android:text="@string/dummy_extra"
             android:textSize="10dp" />
 
@@ -71,28 +68,21 @@
             android:id="@+id/view_browse_peer_list_item_file_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/view_browse_peer_list_item_extra_text"
             android:text="@string/dummy_size"
             android:textColor="#ffe9a54c"
             android:textSize="10dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="36dp"
-        android:layout_height="fill_parent"
-        android:background="@drawable/selector_list_view_right_side"
-        android:gravity="center_vertical|center"
-        android:orientation="vertical" >
 
         <ImageButton
             android:id="@+id/view_browse_peer_list_item_lock_toggle"
             android:layout_width="32dp"
-            android:layout_height="0dip"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:background="@null"
             android:contentDescription="@null"
             android:gravity="center_vertical|center"
             android:scaleType="fitCenter"
             android:src="@drawable/unlocked" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

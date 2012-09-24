@@ -43,7 +43,7 @@ public class DownloadCheckedMenuAction extends MenuAction {
     private final Peer peer;
 
     public DownloadCheckedMenuAction(Context context, AbstractListAdapter<?> adapter, List<FileDescriptor> fds, Peer peer) {
-        super(context, R.drawable.download_round_button, context.getResources().getString(R.string.download_selected_files) + " (" + fds.size() + ")");
+        super(context, R.drawable.download_icon, context.getResources().getString(R.string.download_selected_files) + " (" + fds.size() + ")");
 
         this.adapter = adapter;
         this.fds = fds;

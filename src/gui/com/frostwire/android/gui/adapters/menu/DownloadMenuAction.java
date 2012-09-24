@@ -40,7 +40,7 @@ public class DownloadMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public DownloadMenuAction(Context context, AbstractListAdapter<?> adapter, Peer peer, FileDescriptor fd) {
-        super(context, R.drawable.download_round_button, fd.title);
+        super(context, R.drawable.download_icon, fd.title);
 
         this.adapter = adapter;
         this.peer = peer;

@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
@@ -135,7 +136,12 @@ public final class Peer implements Cloneable {
         } else {
             String uri = getBrowseUri(fileType);
             byte[] data = new HttpFetcher(uri, BROWSE_HTTP_TIMEOUT).fetchGzip();
-            String json = new String(data);
+            String json;
+            try {
+                json = new String(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                json = new String(data);
+            }
             return JsonUtils.toObject(json, FileDescriptorList.class).files;
         }
     }
