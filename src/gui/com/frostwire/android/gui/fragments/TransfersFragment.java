@@ -52,7 +52,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
     private TransfersBarView bar;
     private TransferListAdapter adapter;
-    
+
     private TextView header;
 
     public TransfersFragment() {
@@ -93,14 +93,12 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
         bar.refresh();
     }
-    
+
     @Override
     public View getHeader(Activity activity) {
         if (header == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
             header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-
-            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_icon_transfers, 0, 0, 0);
             header.setText(R.string.transfers);
         }
 

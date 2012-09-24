@@ -83,8 +83,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         if (header == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
             header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-
-            header.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_icon_peers, 0, 0, 0);
             header.setText(R.string.browse);
         }
 
