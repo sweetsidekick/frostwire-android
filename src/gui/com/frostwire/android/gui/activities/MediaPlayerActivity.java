@@ -222,14 +222,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaContro
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
-        
+
         LinearLayout llayout = findView(R.id.adview_layout);
         adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
-        llayout.addView(adView,0);
-        
-        UIUtils.supportFrostWire(adView, mediaFD.artist + " " +mediaFD.title  + " " + mediaFD.album + " " +mediaFD.year);
-        
+        llayout.addView(adView, 0);
+
+        if (mediaFD != null) {
+            UIUtils.supportFrostWire(adView, mediaFD.artist + " " + mediaFD.title + " " + mediaFD.album + " " + mediaFD.year);
+        }
     }
 
     private void initGestures() {
