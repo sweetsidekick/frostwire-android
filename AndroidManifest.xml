@@ -44,7 +44,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".gui.MainApplication"
+        android:name="com.frostwire.android.gui.MainApplication"
         android:icon="@drawable/app_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >
@@ -52,7 +52,7 @@
         <!-- activities -->
 
         <activity
-            android:name=".gui.activities.LaunchActivity"
+            android:name="com.frostwire.android.gui.activities.LaunchActivity"
             android:label="@string/application_label" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,7 +61,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.activities.MainActivity"
+            android:name="com.frostwire.android.gui.activities.MainActivity"
             android:label="@string/application_label" >
 
             <!-- handle .torrent urls -->
@@ -92,21 +92,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.activities.WizardActivity"
+            android:name="com.frostwire.android.gui.activities.WizardActivity"
             android:label="@string/application_label"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".gui.activities.PreferencesActivity"
+            android:name="com.frostwire.android.gui.activities.PreferencesActivity"
             android:label="@string/activity_preferences_name"
             android:theme="@style/Preferences" />
         <activity
-            android:name=".gui.activities.BrowsePeerActivity"
+            android:name="com.frostwire.android.gui.activities.BrowsePeerActivity"
             android:label="@string/activity_browse_peer_name" />
         <activity
-            android:name=".gui.activities.MediaPlayerActivity"
+            android:name="com.frostwire.android.gui.activities.MediaPlayerActivity"
             android:label="@string/activity_media_player_name" />
         <activity
-            android:name=".gui.activities.AboutActivity"
+            android:name="com.frostwire.android.gui.activities.AboutActivity"
             android:label="@string/activity_about" />
         <!--
         <activity
@@ -117,25 +117,25 @@
         <!-- providers -->
 
         <provider
-            android:name=".core.providers.DocumentsProvider"
+            android:name="com.frostwire.android.core.providers.DocumentsProvider"
             android:authorities="com.frostwire.android.core.providers.Documents" />
         <provider
-            android:name=".core.providers.SharingProvider"
+            android:name="com.frostwire.android.core.providers.SharingProvider"
             android:authorities="com.frostwire.android.core.providers.Sharing" />
         <provider
-            android:name=".core.providers.ApplicationsProvider"
+            android:name="com.frostwire.android.core.providers.ApplicationsProvider"
             android:authorities="com.frostwire.android.core.providers.Applications" />
         <provider
-            android:name=".core.providers.TorrentsProvider"
+            android:name="com.frostwire.android.core.providers.TorrentsProvider"
             android:authorities="com.frostwire.android.core.providers.Torrents" />
 
         <!-- services -->
 
         <service
-            android:name=".gui.services.EngineService"
+            android:name="com.frostwire.android.gui.services.EngineService"
             android:exported="false" />
 
-        <receiver android:name=".gui.services.EngineBroadcastReceiver" >
+        <receiver android:name="com.frostwire.android.gui.services.EngineBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
