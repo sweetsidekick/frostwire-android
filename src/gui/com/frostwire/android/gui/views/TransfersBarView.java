@@ -20,7 +20,6 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -28,10 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.Peer;
-import com.frostwire.android.gui.PeerManager;
-import com.frostwire.android.gui.activities.BrowsePeerActivity;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 
@@ -44,7 +39,6 @@ public class TransfersBarView extends RelativeLayout implements Refreshable {
 
     private Button buttonPauseAll;
     private Button buttonClearComplete;
-    private Button buttonMyFiles;
     private TextView textDownloads;
     private TextView textUploads;
 
@@ -75,7 +69,7 @@ public class TransfersBarView extends RelativeLayout implements Refreshable {
         buttonPauseAll = (Button) findViewById(R.id.view_transfers_bar_pause_all_button);
         buttonPauseAll.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                UIUtils.showYesNoDialog(getContext(), R.string.stop_all_transfers , R.string.are_you_sure, new DialogInterface.OnClickListener() {
+                UIUtils.showYesNoDialog(getContext(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         TransferManager.instance().pauseTorrents();
                     }
@@ -85,20 +79,11 @@ public class TransfersBarView extends RelativeLayout implements Refreshable {
         buttonClearComplete = (Button) findViewById(R.id.view_transfers_bar_clear_complete_button);
         buttonClearComplete.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                UIUtils.showYesNoDialog(getContext(), R.string.clear_complete_transfers , R.string.are_you_sure, new DialogInterface.OnClickListener() {
+                UIUtils.showYesNoDialog(getContext(), R.string.clear_complete_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         TransferManager.instance().clearComplete();
                     }
                 });
-            }
-        });
-        buttonMyFiles = (Button) findViewById(R.id.view_transfers_bar_my_files_button);
-        buttonMyFiles.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Peer peer = PeerManager.instance().getLocalPeer();
-                Intent i = new Intent(getContext(), BrowsePeerActivity.class);
-                i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
-                getContext().startActivity(i);
             }
         });
 
