@@ -73,7 +73,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private boolean local;
     private Finger finger;
 
-    private TextView header;
+    private View header;
 
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
@@ -180,7 +180,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     public View getHeader(Activity activity) {
         if (header == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
-            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+            header = inflater.inflate(R.layout.view_browse_peer_header, null);
         }
 
         return header;
@@ -356,16 +356,17 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 break;
             }
 
-            int iconId = UIUtils.getFileTypeIconId(fileType);
             String fileTypeStr = UIUtils.getFileTypeAsString(getResources(), fileType);
 
-            header.setCompoundDrawablesWithIntrinsicBounds(iconId, 0, 0, 0);
+            TextView title = (TextView) header.findViewById(R.id.view_browse_peer_header_text_title);
+            TextView total = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total);
+            TextView shared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_shared);
+            TextView unshared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_unshared);
 
-            if (local) {
-                header.setText(fileTypeStr + " (" + String.valueOf(numShared) + "/" + String.valueOf(numTotal) + ")");
-            } else {
-                header.setText(fileTypeStr + " (" + String.valueOf(numShared) + ")");
-            }
+            title.setText(fileTypeStr);
+            total.setText(String.valueOf(numTotal));
+            shared.setText(String.valueOf(numShared));
+            unshared.setText(String.valueOf(numTotal - numShared));
         }
     }
 
