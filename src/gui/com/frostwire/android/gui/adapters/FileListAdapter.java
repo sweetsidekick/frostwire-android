@@ -207,16 +207,28 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        /*
-        Drawable d = getDrawable(fd);
+        if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
+            InputStream is = null;
 
-        if (d != null) {
-            fileThumbnail.setImageDrawable(d);
+            try {
+                ContentResolver cr = getContext().getContentResolver();
+                is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
+                Drawable icon = Drawable.createFromStream(is, "");
+                fileThumbnail.setBackgroundDrawable(icon);
+            } catch (Throwable e) {
+                fileThumbnail.setBackgroundDrawable(fileTypeDrawable);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (Throwable e) {
+                        // ignore
+                    }
+                }
+            }
         } else {
-            fileThumbnail.setImageDrawable(fileTypeDrawable);
+            thumbnailLoader.displayImage(fd.id, fileThumbnail);
         }
-        */
-        thumbnailLoader.displayImage(fd.id, fileThumbnail);
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
 
@@ -229,6 +241,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         if (fd.fileType == Constants.FILE_TYPE_AUDIO || fd.fileType == Constants.FILE_TYPE_APPLICATIONS) {
             TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
             fileExtra.setText(fd.artist);
+        } else {
+            TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
+            fileExtra.setText(R.string.empty_string);
         }
 
         TextView fileSize = findView(view, R.id.view_browse_peer_list_item_file_size);
@@ -293,33 +308,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private void populateViewPlain(View view, FileDescriptor fd) {
-        ImageView fileTypeIcon = findView(view, R.id.view_browse_peer_list_item_filetype_icon);
-
-        if (fileTypeIcon != null) {
-            if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-                InputStream is = null;
-
-                try {
-                    ContentResolver cr = getContext().getContentResolver();
-                    is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
-                    Drawable icon = Drawable.createFromStream(is, "");
-                    fileTypeIcon.setBackgroundDrawable(icon);
-                } catch (Throwable e) {
-                    fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
-                } finally {
-                    if (is != null) {
-                        try {
-                            is.close();
-                        } catch (Throwable e) {
-                            // ignore
-                        }
-                    }
-                }
-            } else {
-                fileTypeIcon.setBackgroundDrawable(fileTypeDrawable);
-            }
-        }
-
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
 
         TextView title = findView(view, R.id.view_browse_peer_list_item_file_title);
@@ -364,10 +352,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private static int getViewItemId(boolean local, byte fileType) {
-        if (local && (fileType == Constants.FILE_TYPE_PICTURES || fileType == Constants.FILE_TYPE_VIDEOS)) {
+        if (local && (fileType == Constants.FILE_TYPE_PICTURES || fileType == Constants.FILE_TYPE_VIDEOS || fileType == Constants.FILE_TYPE_APPLICATIONS)) {
             return R.layout.view_browse_thumbnail_peer_list_item;
-        } else if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-            return R.layout.view_browse_application_peer_list_item;
         } else {
             return R.layout.view_browse_peer_list_item;
         }
