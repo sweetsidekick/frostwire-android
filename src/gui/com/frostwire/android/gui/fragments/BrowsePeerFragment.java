@@ -95,6 +95,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         return peer;
     }
 
+    public void setPeer(Peer peer) {
+        this.peer = peer;
+        this.local = peer.isLocalHost();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,10 +191,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     public View getHeader(Activity activity) {
-        if (header == null) {
+        //if (header == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
             header = inflater.inflate(R.layout.view_browse_peer_header, null);
-        }
+        //}
 
         return header;
     }

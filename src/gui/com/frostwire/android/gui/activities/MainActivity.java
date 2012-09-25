@@ -86,11 +86,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
-
-        search = new SearchFragment();
-        library = new BrowsePeerFragment();
-        transfers = new TransfersFragment();
-        peers = new BrowsePeersFragment();
     }
 
     @Override
@@ -176,10 +171,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             }
         });
 
-        Bundle browseBundle = new Bundle();
-        browseBundle.putByteArray(Constants.EXTRA_PEER_UUID, PeerManager.instance().getLocalPeer().getUUID());
+        FragmentManager manager = getSupportFragmentManager();
+        search = (SearchFragment) manager.findFragmentById(R.id.activity_main_fragment_search);
+        library = (BrowsePeerFragment) manager.findFragmentById(R.id.activity_main_fragment_library);
+        transfers = (TransfersFragment) manager.findFragmentById(R.id.activity_main_fragment_transfers);
+        peers = (BrowsePeersFragment) manager.findFragmentById(R.id.activity_main_fragment_peers);
 
-        library.setArguments(browseBundle);
+        library.setPeer(PeerManager.instance().getLocalPeer());
 
         showFragment(search, R.id.menu_main_search);
 
@@ -285,8 +283,15 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         menu.setSelectedItem(menuSelectedItemId);
 
         FragmentManager manager = getSupportFragmentManager();
+
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.activity_main_fragment_container, fragment);
+
+        transaction.hide(search);
+        transaction.hide(library);
+        transaction.hide(transfers);
+        transaction.hide(peers);
+
+        transaction.show(fragment);
         transaction.commit();
 
         RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);

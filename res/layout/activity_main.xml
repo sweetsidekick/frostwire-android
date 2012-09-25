@@ -59,7 +59,32 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_above="@+id/activity_main_player_notifier"
-            android:layout_below="@+id/activity_main_button_menu" />
+            android:layout_below="@+id/activity_main_button_menu" >
+
+            <fragment
+                android:id="@+id/activity_main_fragment_search"
+                android:name="com.frostwire.android.gui.fragments.SearchFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <fragment
+                android:id="@+id/activity_main_fragment_library"
+                android:name="com.frostwire.android.gui.fragments.BrowsePeerFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <fragment
+                android:id="@+id/activity_main_fragment_transfers"
+                android:name="com.frostwire.android.gui.fragments.TransfersFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <fragment
+                android:id="@+id/activity_main_fragment_peers"
+                android:name="com.frostwire.android.gui.fragments.BrowsePeersFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </FrameLayout>
 
         <com.frostwire.android.gui.views.PlayerNotifierView
             android:id="@+id/activity_main_player_notifier"

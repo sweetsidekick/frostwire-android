@@ -110,11 +110,11 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     @Override
     public View getHeader(Activity activity) {
-        if (header == null) {
+        //if (header == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
             header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
             header.setText(R.string.search);
-        }
+        //}
 
         return header;
     }
