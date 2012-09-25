@@ -24,9 +24,14 @@
         <shape>
             <gradient
                 android:angle="270"
-                android:endColor="#ffffffff"
-                android:startColor="#ffffffff" />
+                android:endColor="#ff315878"
+                android:startColor="#ff40719b" />
         </shape>
+    </item>
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/browse_peer_audio_icon_selector_on" />
     </item>
 
 </layer-list>

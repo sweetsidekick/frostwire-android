@@ -25,6 +25,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/activity_main_layout_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_header_background" >
@@ -49,7 +50,8 @@
     <FrameLayout
         android:id="@+id/activity_main_fragment_container"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="0dip"
+        android:layout_weight="1" >
 
         <fragment
             android:id="@+id/activity_main_fragment_search"
@@ -86,7 +88,7 @@
 
     <com.frostwire.android.gui.views.SlideMenu
         android:id="@+id/activity_main_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

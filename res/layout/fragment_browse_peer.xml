@@ -33,32 +33,32 @@
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_audio"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/audio_icon_selector" />
+            android:background="@drawable/browse_peer_audio_button_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_ringtones"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/ringtone_icon_selector" />
+            android:background="@drawable/browse_peer_audio_button_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_videos"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/video_icon_selector" />
+            android:background="@drawable/browse_peer_audio_button_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_pictures"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/picture_icon_selector" />
+            android:background="@drawable/browse_peer_audio_button_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_applications"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/application_icon_selector" />
+            android:background="@drawable/browse_peer_application_button_selector" />
 
         <RadioButton
             android:id="@+id/fragment_browse_peer_radio_documents"
             style="@style/BrowseFileTypeButton"
-            android:drawableTop="@drawable/document_icon_selector" />
+            android:background="@drawable/browse_peer_document_button_selector" />
     </RadioGroup>
 
     <!-- Checkbox and Search Box for Browse Peer, see view_browse_peer_search_bar.xml -->
