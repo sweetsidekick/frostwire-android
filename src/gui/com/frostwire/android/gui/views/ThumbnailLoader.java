@@ -18,18 +18,13 @@
 
 package com.frostwire.android.gui.views;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.util.LruCache;
@@ -46,29 +41,42 @@ import com.frostwire.android.core.Constants;
 public final class ThumbnailLoader {
 
     private final LruCache<Integer, Bitmap> cache;
-    private final Map<ImageView, Integer> imageViews;
-    private final ExecutorService executorService;
 
+    private final Context context;
     private final int fileType;
     private final Drawable defaultDrawable;
 
-    public ThumbnailLoader(int fileType, Drawable defaultDrawable) {
-        this.cache = new LruCache<Integer, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 8));
-        this.imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, Integer>());
-        this.executorService = Executors.newFixedThreadPool(5);
+    public ThumbnailLoader(Context context, int fileType, Drawable defaultDrawable) {
+        this.context = context;
+
+        // code taken from http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+        // Get memory class of this device, exceeding this amount will throw an
+        // OutOfMemory exception.
+        final int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = 1024 * 1024 * memClass / 8;
+
+        this.cache = new LruCache<Integer, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(Integer key, Bitmap bitmap) {
+                // The cache size will be measured in bytes rather than number of items.
+                //return bitmap.getByteCount();
+                return bitmap.getRowBytes() * bitmap.getHeight();
+            }
+        };
 
         this.fileType = fileType;
         this.defaultDrawable = defaultDrawable;
     }
 
     public void displayImage(Integer key, ImageView imageView) {
-        imageViews.put(imageView, key);
         Bitmap bitmap = cache.get(key);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         } else {
-            queueThumbnail(key, imageView);
             imageView.setImageDrawable(defaultDrawable);
+            queueThumbnail(key, imageView);
         }
     }
 
@@ -78,7 +86,8 @@ public final class ThumbnailLoader {
 
     private void queueThumbnail(Integer key, ImageView imageView) {
         ThumbnailToLoad p = new ThumbnailToLoad(key, imageView);
-        executorService.submit(new ThumbnailLoaderTask(p));
+        BitmapWorkerTask task = new BitmapWorkerTask(p);
+        task.execute();
     }
 
     private Bitmap getBitmap(Context context, Integer key) {
@@ -113,14 +122,6 @@ public final class ThumbnailLoader {
         return bitmap;
     }
 
-    private boolean imageViewReused(ThumbnailToLoad thumbnailToLoad) {
-        Integer key = imageViews.get(thumbnailToLoad.imageView);
-        if (key == null || !key.equals(thumbnailToLoad.key)) {
-            return true;
-        }
-        return false;
-    }
-
     private static final class ThumbnailToLoad {
 
         public final Integer key;
@@ -132,51 +133,26 @@ public final class ThumbnailLoader {
         }
     }
 
-    private final class ThumbnailLoaderTask implements Runnable {
+    private class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
 
         private final ThumbnailToLoad thumbnailToLoad;
 
-        public ThumbnailLoaderTask(ThumbnailToLoad thumbnailToLoad) {
+        public BitmapWorkerTask(ThumbnailToLoad thumbnailToLoad) {
             this.thumbnailToLoad = thumbnailToLoad;
         }
 
         @Override
-        public void run() {
-            Activity a = (Activity) thumbnailToLoad.imageView.getContext();
-
-            if (imageViewReused(thumbnailToLoad)) {
-                return;
+        protected Bitmap doInBackground(Integer... params) {
+            Bitmap bmp = getBitmap(context, thumbnailToLoad.key);
+            if (bmp != null) {
+                cache.put(thumbnailToLoad.key, bmp);
             }
 
-            Bitmap bmp = getBitmap(a, thumbnailToLoad.key);
-            cache.put(thumbnailToLoad.key, bmp);
-
-            if (imageViewReused(thumbnailToLoad)) {
-                return;
-            }
-
-            BitmapDisplayer bd = new BitmapDisplayer(bmp, thumbnailToLoad);
-
-            a.runOnUiThread(bd);
-        }
-    }
-
-    private final class BitmapDisplayer implements Runnable {
-
-        private final Bitmap bitmap;
-        private final ThumbnailToLoad thumbnailToLoad;
-
-        public BitmapDisplayer(Bitmap b, ThumbnailToLoad p) {
-            bitmap = b;
-            thumbnailToLoad = p;
+            return bmp;
         }
 
         @Override
-        public void run() {
-            if (imageViewReused(thumbnailToLoad)) {
-                return;
-            }
-
+        protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 thumbnailToLoad.imageView.setImageBitmap(bitmap);
             } else {
