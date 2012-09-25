@@ -151,6 +151,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         } else if (loader.getId() == LOADER_FILES_ID) {
             updateFiles((Object[]) data);
         }
+
+        updateHeader();
     }
 
     @Override
@@ -192,8 +194,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     @Override
     public View getHeader(Activity activity) {
         //if (header == null) {
-            LayoutInflater inflater = LayoutInflater.from(activity);
-            header = inflater.inflate(R.layout.view_browse_peer_header, null);
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        header = inflater.inflate(R.layout.view_browse_peer_header, null);
         //}
 
         return header;
@@ -329,7 +331,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         return loader;
     }
 
-    private void updateHeader(byte fileType) {
+    private void updateHeader() {
         if (finger == null) {
             Log.w(TAG, "Something wrong, finger is null");
             UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
@@ -337,7 +339,9 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             return;
         }
 
-        if (header != null) {
+        if (header != null && adapter != null) {
+
+            byte fileType = adapter.getFileType();
 
             int numShared = 0;
             int numTotal = 0;
@@ -393,8 +397,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         try {
             byte fileType = (Byte) data[0];
-
-            updateHeader(fileType);
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
