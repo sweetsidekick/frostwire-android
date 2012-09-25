@@ -210,12 +210,22 @@
 
     <!-- Main Fragment Simple Header begin -->
 
-    <style name="MainFragmentSimpleHeader">
+    <style name="MainFragmentSimpleHeader" parent="@android:style/TextAppearance.Large">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
     <!-- Main Fragment Simple Header end -->
+
+
+    <!-- Browse Peer fragment file counter header begin -->
+
+    <style name="BrowsePeerFragmentFileCounterHeader" parent="@android:style/TextAppearance.Small">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- Browse Peer fragment file counter header end -->
 
 
     <!-- Menu Media Type begin -->

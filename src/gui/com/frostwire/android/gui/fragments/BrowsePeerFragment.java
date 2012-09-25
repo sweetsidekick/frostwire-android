@@ -193,10 +193,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     public View getHeader(Activity activity) {
-        //if (header == null) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         header = inflater.inflate(R.layout.view_browse_peer_header, null);
-        //}
+
+        updateHeader();
 
         return header;
     }
@@ -381,7 +381,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             TextView unshared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_unshared);
 
             title.setText(fileTypeStr);
-            total.setText(String.valueOf(numTotal));
+            total.setText("(" + String.valueOf(numTotal) + ")");
             shared.setText(String.valueOf(numShared));
             unshared.setText(String.valueOf(numTotal - numShared));
         }
