@@ -32,6 +32,7 @@ import android.widget.ImageView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.FileDescriptor;
 
 /**
  * @author gubatron
@@ -43,10 +44,8 @@ public final class ThumbnailLoader {
     private final LruCache<Integer, Bitmap> cache;
 
     private final Context context;
-    private final int fileType;
-    private final Drawable defaultDrawable;
 
-    public ThumbnailLoader(Context context, int fileType, Drawable defaultDrawable) {
+    public ThumbnailLoader(Context context) {
         this.context = context;
 
         // code taken from http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
@@ -65,18 +64,15 @@ public final class ThumbnailLoader {
                 return bitmap.getRowBytes() * bitmap.getHeight();
             }
         };
-
-        this.fileType = fileType;
-        this.defaultDrawable = defaultDrawable;
     }
 
-    public void displayImage(Integer key, ImageView imageView) {
-        Bitmap bitmap = cache.get(key);
+    public void displayImage(FileDescriptor fd, ImageView imageView, Drawable defaultDrawable) {
+        Bitmap bitmap = cache.get(fd.hashCode());
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageDrawable(defaultDrawable);
-            queueThumbnail(key, imageView);
+            queueThumbnail(fd, imageView);
         }
     }
 
@@ -84,22 +80,22 @@ public final class ThumbnailLoader {
         cache.evictAll();
     }
 
-    private void queueThumbnail(Integer key, ImageView imageView) {
-        ThumbnailToLoad p = new ThumbnailToLoad(key, imageView);
+    private void queueThumbnail(FileDescriptor fd, ImageView imageView) {
+        ThumbnailToLoad p = new ThumbnailToLoad(fd, imageView);
         BitmapWorkerTask task = new BitmapWorkerTask(p);
         task.execute();
     }
 
-    private Bitmap getBitmap(Context context, Integer key) {
+    private Bitmap getBitmap(Context context, FileDescriptor fd) {
         Bitmap bmp = null;
 
         try {
             ContentResolver cr = context.getContentResolver();
 
-            if (fileType == Constants.FILE_TYPE_PICTURES) {
-                bmp = Images.Thumbnails.getThumbnail(cr, key, Images.Thumbnails.MICRO_KIND, null);
-            } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
-                bmp = Video.Thumbnails.getThumbnail(cr, key, Video.Thumbnails.MICRO_KIND, null);
+            if (fd.fileType == Constants.FILE_TYPE_PICTURES) {
+                bmp = Images.Thumbnails.getThumbnail(cr, fd.id, Images.Thumbnails.MICRO_KIND, null);
+            } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
+                bmp = Video.Thumbnails.getThumbnail(cr, fd.id, Video.Thumbnails.MICRO_KIND, null);
                 bmp = overlayVideoIcon(context, bmp);
             }
         } catch (Throwable e) {
@@ -124,11 +120,11 @@ public final class ThumbnailLoader {
 
     private static final class ThumbnailToLoad {
 
-        public final Integer key;
+        public final FileDescriptor fd;
         public final ImageView imageView;
 
-        public ThumbnailToLoad(Integer key, ImageView imageView) {
-            this.key = key;
+        public ThumbnailToLoad(FileDescriptor fd, ImageView imageView) {
+            this.fd = fd;
             this.imageView = imageView;
         }
     }
@@ -143,9 +139,9 @@ public final class ThumbnailLoader {
 
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            Bitmap bmp = getBitmap(context, thumbnailToLoad.key);
+            Bitmap bmp = getBitmap(context, thumbnailToLoad.fd);
             if (bmp != null) {
-                cache.put(thumbnailToLoad.key, bmp);
+                cache.put(thumbnailToLoad.fd.hashCode(), bmp);
             }
 
             return bmp;
@@ -155,8 +151,6 @@ public final class ThumbnailLoader {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 thumbnailToLoad.imageView.setImageBitmap(bitmap);
-            } else {
-                thumbnailToLoad.imageView.setImageDrawable(defaultDrawable);
             }
         }
     }

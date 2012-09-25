@@ -76,14 +76,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     private final Peer peer;
     private final boolean local;
     private final byte fileType;
-    private final Drawable fileTypeDrawable;
-
     private final ThumbnailLoader thumbnailLoader;
+    private final Drawable fileTypeDrawable;
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
 
-    public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType) {
+    public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType, ThumbnailLoader thumbnailLoader) {
         super(context, getViewItemId(local, fileType), files);
 
         setShowMenuOnClick(true);
@@ -92,10 +91,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.peer = peer;
         this.local = local;
         this.fileType = fileType;
+        this.thumbnailLoader = thumbnailLoader;
         this.fileTypeDrawable = context.getResources().getDrawable(UIUtils.getFileTypeIconId(fileType)).mutate();
         this.fileTypeDrawable.setAlpha(255);
-
-        this.thumbnailLoader = new ThumbnailLoader(context, this.fileType, this.fileTypeDrawable);
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -227,7 +225,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 }
             }
         } else {
-            thumbnailLoader.displayImage(fd.id, fileThumbnail);
+            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
