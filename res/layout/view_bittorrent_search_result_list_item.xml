@@ -46,7 +46,7 @@
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-        android:background="@drawable/selector_list_view_right_side"
+        android:background="@drawable/listview_item_background_selector"
         android:orientation="vertical" >
 
         <LinearLayout

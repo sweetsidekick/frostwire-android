@@ -21,7 +21,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:background="@drawable/view_clearable_edittext_background" >
 
     <AutoCompleteTextView
         android:id="@+id/view_clearable_edit_text_input"
@@ -33,27 +33,27 @@
         android:hint="@null"
         android:imeOptions="actionSearch"
         android:lines="1"
+        android:paddingLeft="4dp"
         android:singleLine="true"
-        android:textColor="@android:color/black"
-        android:textSize="12dip" />
+        android:textColor="@android:color/black" />
 
     <ImageView
         android:id="@+id/view_clearable_edit_text_image_search"
-        android:layout_width="30dip"
-        android:layout_height="30dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="5dip"
+        android:layout_margin="5dip"
         android:contentDescription="@null"
-        android:src="@drawable/clearable_edit_text_search_icon" />
+        android:src="@drawable/clearable_edittext_search_icon" />
 
     <Button
         android:id="@+id/view_clearable_edit_text_button_clear"
-        android:layout_width="30dip"
-        android:layout_height="30dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="5dip"
-        android:background="@drawable/text_view_clear" />
+        android:layout_margin="5dip"
+        android:background="@drawable/clearable_edittext_clear_icon" />
 
 </RelativeLayout>

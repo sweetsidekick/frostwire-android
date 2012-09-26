@@ -21,7 +21,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_list_view_right_side" >
+    android:background="@drawable/listview_item_background_selector" >
 
     <ImageView
         android:id="@+id/view_browse_peer_list_item_file_thumbnail"

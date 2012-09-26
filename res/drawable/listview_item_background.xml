@@ -22,10 +22,12 @@
 
     <item>
         <shape>
-            <gradient
-                android:angle="270"
-                android:endColor="#ff123048"
-                android:startColor="#ff264b68" />
+            <solid android:color="#ffdae2e9" />
+        </shape>
+    </item>
+    <item android:top="1dip">
+        <shape>
+            <solid android:color="#fff4f4f7" />
         </shape>
     </item>
 

@@ -21,22 +21,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/view_selectable_list_item_background"
+    android:background="@drawable/listview_item_background_selector"
     android:orientation="horizontal" >
 
     <CheckBox
-        android:layout_width="40dp"
-        android:layout_height="fill_parent"
         android:id="@+id/view_selectable_list_item_checkbox"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:background="@drawable/list_view_right_background"
+        android:layout_width="32dip"
+        android:layout_height="fill_parent"
+        android:layout_margin="4dip"
+        android:background="@null"
         android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/view_selectable_list_item_container"
         android:layout_width="0dip"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_weight="1.0" />
 
 </LinearLayout>

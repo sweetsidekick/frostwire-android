@@ -21,8 +21,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
-    android:layout_height="48sp"
-    android:background="@drawable/shape_untabbed_header_background"
+    android:layout_height="wrap_content"
+    android:background="@drawable/searchbox_background"
     android:orientation="horizontal" >
 
     <!-- Dummy item to prevent EditText from receiving focus at startup -->
@@ -38,20 +38,21 @@
         android:id="@+id/view_files_bar_check_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp" />
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="6dp" />
 
     <com.frostwire.android.gui.views.ClearableEditTextView
         android:id="@+id/view_files_bar_input_search"
         android:layout_width="0dip"
-        android:layout_height="38sp"
-        android:layout_gravity="left|center_vertical"
-        android:layout_marginLeft="3sp"
-        android:layout_marginRight="3sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="1.0"
-        android:background="@drawable/search_box_background"
         android:nextFocusLeft="@id/view_files_bar_input_search"
         android:nextFocusUp="@id/view_files_bar_input_search"
-        android:padding="3sp"
         frostwire:clearable_hint="@string/type_here_to_filter" />
 
 </LinearLayout>

@@ -44,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-        android:background="@drawable/selector_list_view_right_side"
+        android:background="@drawable/listview_item_background_selector"
         android:gravity="left|center_vertical"
         android:orientation="vertical" >
 
@@ -83,7 +83,7 @@
 
     <LinearLayout android:layout_width="48dp"
         android:layout_height="fill_parent"
-        android:background="@drawable/selector_list_view_right_side"
+        android:background="@drawable/listview_item_background_selector"
         android:gravity="center|center_vertical">
     	<ImageButton
     		android:id="@+id/view_peer_list_item_button_how_to_share"

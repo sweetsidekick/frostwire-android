@@ -116,7 +116,7 @@ public class ClearableEditTextView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        View.inflate(getContext(), R.layout.view_clearable_edit_text, this);
+        View.inflate(getContext(), R.layout.view_clearable_edittext, this);
 
         input = (AutoCompleteTextView) findViewById(R.id.view_clearable_edit_text_input);
         input.setHint(hint);
