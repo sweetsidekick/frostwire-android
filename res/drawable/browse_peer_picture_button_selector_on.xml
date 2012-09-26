@@ -20,11 +20,18 @@
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:drawable="@drawable/browse_peer_button_gradient_on"/>
+    <item>
+        <shape>
+            <gradient
+                android:angle="270"
+                android:endColor="#ff315878"
+                android:startColor="#ff40719b" />
+        </shape>
+    </item>
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/browse_peer_audio_icon_selector_on" />
+            android:src="@drawable/browse_peer_picture_icon_selector_on" />
     </item>
 
 </layer-list>
