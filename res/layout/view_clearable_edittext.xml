@@ -43,17 +43,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_margin="5dip"
+        android:layout_marginBottom="6dip"
+        android:layout_marginRight="6dip"
+        android:layout_marginTop="6dip"
         android:contentDescription="@null"
         android:src="@drawable/clearable_edittext_search_icon" />
 
-    <Button
+    <ImageButton
         android:id="@+id/view_clearable_edit_text_button_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_margin="5dip"
-        android:background="@drawable/clearable_edittext_clear_icon" />
+        android:layout_marginBottom="6dip"
+        android:layout_marginRight="6dip"
+        android:layout_marginTop="6dip"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/clearable_edittext_clear_icon" />
 
 </RelativeLayout>

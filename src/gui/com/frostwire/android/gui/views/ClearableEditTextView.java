@@ -28,8 +28,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -45,7 +45,7 @@ public class ClearableEditTextView extends RelativeLayout {
 
     private AutoCompleteTextView input;
     private ImageView imageSearch;
-    private Button buttonClear;
+    private ImageButton buttonClear;
 
     private OnActionListener listener;
     private String hint;
@@ -155,7 +155,7 @@ public class ClearableEditTextView extends RelativeLayout {
         imageSearch = (ImageView) findViewById(R.id.view_clearable_edit_text_image_search);
         imageSearch.setVisibility(RelativeLayout.VISIBLE);
 
-        buttonClear = (Button) findViewById(R.id.view_clearable_edit_text_button_clear);
+        buttonClear = (ImageButton) findViewById(R.id.view_clearable_edit_text_button_clear);
         buttonClear.setVisibility(RelativeLayout.GONE);
         buttonClear.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

@@ -232,9 +232,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
         TextView title = findView(view, R.id.view_browse_peer_list_item_file_title);
         title.setText(fd.title);
-        title.setTextColor(Color.BLACK);
 
-        populateTextColorAndPadlockAppearance(fd, padlock, title);
+        populatePadlockAppearance(fd, padlock, title);
 
         if (fd.fileType == Constants.FILE_TYPE_AUDIO || fd.fileType == Constants.FILE_TYPE_APPLICATIONS) {
             TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
@@ -272,9 +271,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     */
 
     /**
-     * Makes sure the color of the title appears black or gray depending on
-     * wether the file type as a whole is being shared, and if it is, if the file is being shared.
-     * 
      * Same factors are considered to show the padlock icon state and color.
      * 
      * When the file is not local and it's been marked for download the text color appears as blue.
@@ -283,25 +279,19 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
      * @param padlock
      * @param title
      */
-    private void populateTextColorAndPadlockAppearance(FileDescriptor fd, ImageButton padlock, TextView title) {
+    private void populatePadlockAppearance(FileDescriptor fd, ImageButton padlock, TextView title) {
         if (local) {
             padlock.setVisibility(View.VISIBLE);
             padlock.setTag(fd);
             padlock.setOnClickListener(padLockClickListener);
 
             if (fd.shared) {
-                title.setTextColor(Color.BLACK);
-                padlock.setImageResource(R.drawable.unlocked);
+                padlock.setImageResource(R.drawable.browse_peer_padlock_unlocked_icon);
             } else {
-                title.setTextColor(Color.GRAY);
-                padlock.setImageResource(R.drawable.locked);
+                padlock.setImageResource(R.drawable.browse_peer_padlock_locked_icon);
             }
         } else {
             padlock.setVisibility(View.GONE);
-
-            //            if (Engine.instance().getTransferManager().isMarkedDownload(fd)) {
-            //                title.setTextColor(R.color.frostwire_dark_blue);
-            //            }
         }
     }
 
@@ -310,9 +300,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
         TextView title = findView(view, R.id.view_browse_peer_list_item_file_title);
         title.setText(fd.title);
-        title.setTextColor(Color.BLACK);
 
-        populateTextColorAndPadlockAppearance(fd, padlock, title);
+        populatePadlockAppearance(fd, padlock, title);
 
         if (fd.fileType == Constants.FILE_TYPE_AUDIO || fd.fileType == Constants.FILE_TYPE_APPLICATIONS) {
             TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
@@ -329,9 +318,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
         if (local) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-                downloadButton.setImageResource(R.drawable.stop);
+                downloadButton.setImageResource(R.drawable.browse_peer_stop_icon);
             } else {
-                downloadButton.setImageResource(R.drawable.play);
+                downloadButton.setImageResource(R.drawable.browse_peer_play_icon);
             }
         }
 

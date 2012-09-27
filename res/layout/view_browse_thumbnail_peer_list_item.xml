@@ -35,6 +35,17 @@
         android:contentDescription="@null"
         android:padding="8dp" />
 
+    <ImageButton
+        android:id="@+id/view_browse_peer_list_item_lock_toggle"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="3dp"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/unlocked" />
+
     <TextView
         android:id="@+id/view_browse_peer_list_item_file_title"
         android:layout_width="wrap_content"
@@ -68,16 +79,5 @@
         android:text="@string/dummy_size"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ffe9a54c" />
-
-    <ImageButton
-        android:id="@+id/view_browse_peer_list_item_lock_toggle"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
-        android:layout_alignParentRight="true"
-        android:layout_margin="3dp"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/unlocked" />
 
 </RelativeLayout>

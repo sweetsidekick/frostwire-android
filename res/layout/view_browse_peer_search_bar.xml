@@ -39,17 +39,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dip" />
 
     <com.frostwire.android.gui.views.ClearableEditTextView
         android:id="@+id/view_files_bar_input_search"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="1.0"
         android:nextFocusLeft="@id/view_files_bar_input_search"
         android:nextFocusUp="@id/view_files_bar_input_search"

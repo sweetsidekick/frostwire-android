@@ -20,8 +20,6 @@
 -->
 <resources>
 
-    <style name="Tab.Text" parent="Tab.TextCommon.Big"></style>
-
     <style name="BrowsePeerHeaderIcon" parent="BrowsePeerHeaderIconCommon.Big"></style>
 
     <style name="BrowsePeerHeaderText" parent="BrowsePeerHeaderTextCommon.Big"></style>
