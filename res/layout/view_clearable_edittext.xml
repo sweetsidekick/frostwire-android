@@ -33,9 +33,10 @@
         android:hint="@null"
         android:imeOptions="actionSearch"
         android:lines="1"
-        android:paddingLeft="4dp"
+        android:paddingLeft="8dp"
         android:singleLine="true"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textColorHint="#ffbfcfdc" />
 
     <ImageView
         android:id="@+id/view_clearable_edit_text_image_search"

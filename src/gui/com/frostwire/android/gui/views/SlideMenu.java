@@ -34,7 +34,6 @@ import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -61,8 +60,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.activities.MediaPlayerActivity;
-import com.frostwire.android.gui.services.Engine;
 
 public class SlideMenu extends LinearLayout {
 
@@ -114,7 +111,7 @@ public class SlideMenu extends LinearLayout {
             holder.label.setText(item.label);
             holder.icon.setImageDrawable(item.icon);
 
-            rowView.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : R.drawable.slidemenu_listitem_background);
+            rowView.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
 
             return rowView;
         }
@@ -314,15 +311,6 @@ public class SlideMenu extends LinearLayout {
         } catch (Exception e) {
             // not found
         }
-
-        View playerItem = (View) act.findViewById(R.id.slidemenu_player_menu_item);
-        playerItem.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-                launchPlayerActivity();
-            }
-        });
 
         // connect the menu's listview
         final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
@@ -608,14 +596,5 @@ public class SlideMenu extends LinearLayout {
 
     public boolean isMenuShown() {
         return menuShown;
-    }
-
-    private void launchPlayerActivity() {
-        if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
-            Intent i = new Intent(getContext(), MediaPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(i);
-        }
     }
 }
