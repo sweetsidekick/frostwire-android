@@ -23,19 +23,22 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
 import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.android.gui.views.TransfersBarView;
 
 /**
  * 
@@ -50,7 +53,11 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
     private final Comparator<Transfer> transferComparator;
 
-    private TransfersBarView bar;
+    private ImageButton buttonPauseAll;
+    private ImageButton buttonClearComplete;
+    private TextView textDownloads;
+    private TextView textUploads;
+
     private TransferListAdapter adapter;
 
     private TextView header;
@@ -91,23 +98,52 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
             setupAdapter();
         }
 
-        bar.refresh();
+        //  format strings
+        String sDown = UIUtils.rate2speed(TransferManager.instance().getDownloadsBandwidth());
+        String sUp = UIUtils.rate2speed(TransferManager.instance().getUploadsBandwidth());
+
+        // number of uploads (seeding) and downloads
+        int downloads = TransferManager.instance().getActiveDownloads();
+        int uploads = TransferManager.instance().getActiveUploads();
+
+        textDownloads.setText(downloads + " @ " + sDown);
+        textUploads.setText(uploads + " @ " + sUp);
     }
 
     @Override
     public View getHeader(Activity activity) {
-        //if (header == null) {
-            LayoutInflater inflater = LayoutInflater.from(activity);
-            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-            header.setText(R.string.transfers);
-        //}
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+        header.setText(R.string.transfers);
 
         return header;
     }
 
     @Override
     protected void initComponents(View v) {
-        bar = findView(v, R.id.fragment_transfers_bar);
+        buttonPauseAll = findView(v, R.id.fragment_transfers_button_pauseall);
+        buttonPauseAll.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                UIUtils.showYesNoDialog(getActivity(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        TransferManager.instance().pauseTorrents();
+                    }
+                });
+            }
+        });
+        buttonClearComplete = findView(v, R.id.fragment_transfers_button_clearcomplete);
+        buttonClearComplete.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                UIUtils.showYesNoDialog(getActivity(), R.string.clear_complete_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        TransferManager.instance().clearComplete();
+                    }
+                });
+            }
+        });
+
+        textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
+        textUploads = findView(v, R.id.fragment_transfers_text_uploads);
     }
 
     private void setupAdapter() {

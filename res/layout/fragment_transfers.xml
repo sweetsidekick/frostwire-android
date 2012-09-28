@@ -18,21 +18,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    
-    <com.frostwire.android.gui.views.TransfersBarView
-        android:id="@+id/fragment_transfers_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/fragment_transfers_button_pauseall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/stop_transfer" />
+
+    <ImageButton
+        android:id="@+id/fragment_transfers_button_clearcomplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fragment_transfers_button_pauseall"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/remove_transfer" />
+
+    <TextView
+        android:id="@+id/fragment_transfers_text_uploads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@drawable/uploading_large"
+        android:text="@string/dummy_uploads_indicator" />
+
+    <TextView
+        android:id="@+id/fragment_transfers_text_downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/fragment_transfers_text_uploads"
+        android:drawableLeft="@drawable/downloading_large"
+        android:text="@string/dummy_downloads_indicator" />
 
     <ExpandableListView
         android:id="@id/android:list"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment_transfers_text_uploads"
+        android:layout_below="@id/fragment_transfers_button_pauseall"
+        android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
-</LinearLayout>
+</RelativeLayout>
