@@ -37,7 +37,7 @@
             android:layout_width="48sp"
             android:layout_height="48sp"
             android:layout_gravity="center|center_vertical"
-            android:background="@drawable/audio_icon_selector_off"
+            android:background="@drawable/audio_transfer"
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
     </LinearLayout>

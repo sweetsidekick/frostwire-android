@@ -21,7 +21,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/view_clearable_edittext_background" >
+    android:background="@drawable/clearable_edittext_background" >
 
     <AutoCompleteTextView
         android:id="@+id/view_clearable_edit_text_input"

@@ -18,17 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item>
-        <shape>
-            <solid android:color="#ffdae2e9" />
-        </shape>
-    </item>
-    <item android:top="1dp">
-        <shape>
-            <solid android:color="#fff4f4f7" />
-        </shape>
-    </item>
+    <item android:drawable="@drawable/searchinput_menu_mediatype_button_background_selector_on" android:state_focused="true"/>
+    <item android:drawable="@drawable/searchinput_menu_mediatype_button_background_selector_on" android:state_selected="true"/>
+    <item android:drawable="@drawable/searchinput_menu_mediatype_button_background_selector_on" android:state_pressed="true"/>
+    <item android:drawable="@drawable/searchinput_menu_mediatype_button_background_selector_off"/>
 
-</layer-list>
+</selector>

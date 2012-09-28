@@ -38,8 +38,10 @@
         android:id="@+id/view_search_input_button_mediatype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/searchinput_menu_mediatype_button_background_selector"
         android:contentDescription="@null"
+        android:paddingRight="14dp"
         android:src="@drawable/audio_icon" />
 
     <com.frostwire.android.gui.views.ClearableEditTextView

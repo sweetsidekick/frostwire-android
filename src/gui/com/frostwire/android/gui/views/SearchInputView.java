@@ -186,6 +186,7 @@ public class SearchInputView extends LinearLayout {
         setupMenuItem(view, R.id.view_searchinput_menu_mediatype_torrents, MediaType.getTorrentMediaType().getId());
 
         popup.setContentView(view);
+        popup.setBackgroundDrawable(null);
         popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 

@@ -22,12 +22,27 @@
 
     <item>
         <shape>
-            <solid android:color="#ffdae2e9" />
+            <solid android:color="#fff0f0f0" />
+
+            <corners
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="8dp" />
+
+            <stroke
+                android:width="2dp"
+                android:color="#ffdbdee2" />
         </shape>
     </item>
-    <item android:top="1dp">
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp">
         <shape>
-            <solid android:color="#fff4f4f7" />
+            <solid android:color="#fff0f0f0" />
+
+            <corners
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="8dp" />
         </shape>
     </item>
 
