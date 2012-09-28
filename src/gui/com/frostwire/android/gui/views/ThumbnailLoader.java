@@ -22,13 +22,16 @@ import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -69,8 +72,10 @@ public final class ThumbnailLoader {
     public void displayImage(FileDescriptor fd, ImageView imageView, Drawable defaultDrawable) {
         Bitmap bitmap = cache.get(fd.hashCode());
         if (bitmap != null) {
+            imageView.setScaleType(ScaleType.FIT_CENTER);
             imageView.setImageBitmap(bitmap);
         } else {
+            imageView.setScaleType(ScaleType.CENTER);
             imageView.setImageDrawable(defaultDrawable);
             queueThumbnail(fd, imageView);
         }
@@ -111,9 +116,12 @@ public final class ThumbnailLoader {
 
         canvas.drawBitmap(bmp, 0, 0, null);
 
-        Drawable playIcon = context.getResources().getDrawable(R.drawable.play_icon_transparent);
-        playIcon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        playIcon.draw(canvas);
+        Bitmap playIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_icon_transparent);
+        Rect src = new Rect(0, 0, playIcon.getWidth(), playIcon.getHeight());
+        int dx = (bmp.getWidth() - src.width()) / 2;
+        int dy = (bmp.getHeight() - src.height()) / 2;
+        Rect dst = new Rect(dx, dy, src.width() + dx, src.height() + dy);
+        canvas.drawBitmap(playIcon, src, dst, null);
 
         return bitmap;
     }
@@ -150,6 +158,7 @@ public final class ThumbnailLoader {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
+                thumbnailToLoad.imageView.setScaleType(ScaleType.FIT_CENTER);
                 thumbnailToLoad.imageView.setImageBitmap(bitmap);
             }
         }

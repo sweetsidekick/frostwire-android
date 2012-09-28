@@ -91,8 +91,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.local = local;
         this.fileType = fileType;
         this.thumbnailLoader = thumbnailLoader;
-        this.fileTypeDrawable = context.getResources().getDrawable(UIUtils.getFileTypeIconId(fileType)).mutate();
-        this.fileTypeDrawable.setAlpha(255);
+        this.fileTypeDrawable = context.getResources().getDrawable(getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -202,7 +201,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
         ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
-        fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
             InputStream is = null;
@@ -342,6 +341,25 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             return R.layout.view_browse_thumbnail_peer_list_item;
         } else {
             return R.layout.view_browse_peer_list_item;
+        }
+    }
+
+    private static int getFileTypeIconId(byte fileType) {
+        switch (fileType) {
+        case Constants.FILE_TYPE_APPLICATIONS:
+            return R.drawable.browse_peer_application_icon_selector_off;
+        case Constants.FILE_TYPE_AUDIO:
+            return R.drawable.browse_peer_audio_icon_selector_off;
+        case Constants.FILE_TYPE_DOCUMENTS:
+            return R.drawable.browse_peer_document_icon_selector_off;
+        case Constants.FILE_TYPE_PICTURES:
+            return R.drawable.browse_peer_picture_icon_selector_off;
+        case Constants.FILE_TYPE_RINGTONES:
+            return R.drawable.browse_peer_ringtone_icon_selector_off;
+        case Constants.FILE_TYPE_VIDEOS:
+            return R.drawable.browse_peer_video_icon_selector_off;
+        default:
+            return R.drawable.question_mark;
         }
     }
 
