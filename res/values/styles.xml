@@ -193,11 +193,14 @@
     <style name="MenuMediaType.Item"></style>
 
     <style name="MenuMediaType.Item.Text">
-        <item name="android:layout_marginBottom">10dip</item>
-        <item name="android:layout_marginTop">10dip</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textColor">#ff143149</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">18dp</item>
     </style>
 
     <!-- Menu Media Type end -->

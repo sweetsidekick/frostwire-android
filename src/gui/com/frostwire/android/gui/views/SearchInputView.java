@@ -186,7 +186,7 @@ public class SearchInputView extends LinearLayout {
         setupMenuItem(view, R.id.view_searchinput_menu_mediatype_torrents, MediaType.getTorrentMediaType().getId());
 
         popup.setContentView(view);
-        popup.setBackgroundDrawable(null);
+        popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchinput_menu_mediatype_background));
         popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
@@ -200,7 +200,7 @@ public class SearchInputView extends LinearLayout {
             public void onClick(View v) {
                 onMediaTypeSelected(mediaTypeId);
 
-                buttonMediaType.setImageDrawable(b.getCompoundDrawables()[0]);
+                buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
                 SearchInputView.this.mediaTypeId = mediaTypeId;
                 ConfigurationManager.instance().setLastMediaTypeFilter(mediaTypeId);
 
@@ -211,17 +211,17 @@ public class SearchInputView extends LinearLayout {
 
     private int getDrawableId(int mediaTypeId) {
         if (MediaType.getApplicationsMediaType().getId() == mediaTypeId) {
-            return R.drawable.application_icon;
+            return R.drawable.browse_peer_application_icon_selector_on;
         } else if (MediaType.getAudioMediaType().getId() == mediaTypeId) {
-            return R.drawable.audio_icon;
+            return R.drawable.browse_peer_audio_icon_selector_on;
         } else if (MediaType.getDocumentMediaType().getId() == mediaTypeId) {
-            return R.drawable.document_icon;
+            return R.drawable.browse_peer_document_icon_selector_on;
         } else if (MediaType.getImageMediaType().getId() == mediaTypeId) {
-            return R.drawable.picture_icon;
+            return R.drawable.browse_peer_picture_icon_selector_on;
         } else if (MediaType.getVideoMediaType().getId() == mediaTypeId) {
-            return R.drawable.video_icon;
+            return R.drawable.browse_peer_video_icon_selector_on;
         } else if (MediaType.getTorrentMediaType().getId() == mediaTypeId) {
-            return R.drawable.torrent_icon;
+            return R.drawable.browse_peer_torrent_icon_selector_on;
         } else {
             return R.drawable.question_mark;
         }
