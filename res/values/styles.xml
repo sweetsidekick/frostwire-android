@@ -47,15 +47,6 @@
     </style>
 
     <!-- styles for elements -->
-    <style name="TransferIndicator">
-        <item name="android:layout_width">32sp</item>
-        <item name="android:layout_height">32sp</item>
-        <item name="android:layout_gravity">left|bottom</item>
-        <item name="android:layout_marginBottom">2sp</item>
-        <item name="android:layout_marginRight">10px</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:visibility">visible</item>
-    </style>
 
     <style name="BrowseFileTypeButton" parent="android:Widget.CompoundButton.RadioButton">
         <item name="android:layout_weight">1</item>
@@ -232,5 +223,51 @@
     </style>
 
     <!-- Browse Peer list end -->
+
+
+    <!-- Transfers list begin -->
+
+    <style name="TransfersList"></style>
+
+    <style name="TransfersList.Item"></style>
+
+    <style name="TransfersList.Item.Title">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff3b3b3b</item>
+    </style>
+
+    <style name="TransfersList.Item.Status">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#ff3b3b3b</item>
+    </style>
+
+    <style name="TransfersList.Item.Size">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#ff54afe4</item>
+    </style>
+
+    <style name="TransfersList.SubItem"></style>
+
+    <style name="TransfersList.SubItem.Title">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#ff3b3b3b</item>
+    </style>
+
+    <!-- Transfers list end -->
+
+
+    <!-- Transfers indicator begin -->
+
+    <style name="TransfersIndicator">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#ffbfcfdc</item>
+    </style>
+
+    <!-- Transfers indicator end -->
 
 </resources>

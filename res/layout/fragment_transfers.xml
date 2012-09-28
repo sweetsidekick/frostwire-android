@@ -18,53 +18,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/fragment_transfers_button_pauseall"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:src="@drawable/stop_transfer" />
+        android:background="@drawable/browse_peer_filetype_buttons_background"
+        android:gravity="right" >
 
-    <ImageButton
-        android:id="@+id/fragment_transfers_button_clearcomplete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/fragment_transfers_button_pauseall"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:src="@drawable/remove_transfer" />
+        <ImageButton
+            android:id="@+id/fragment_transfers_button_pauseall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/stop_transfer" />
 
-    <TextView
-        android:id="@+id/fragment_transfers_text_uploads"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:drawableLeft="@drawable/uploading_large"
-        android:text="@string/dummy_uploads_indicator" />
-
-    <TextView
-        android:id="@+id/fragment_transfers_text_downloads"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/fragment_transfers_text_uploads"
-        android:drawableLeft="@drawable/downloading_large"
-        android:text="@string/dummy_downloads_indicator" />
+        <ImageButton
+            android:id="@+id/fragment_transfers_button_clearcomplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/remove_transfer" />
+    </LinearLayout>
 
     <ExpandableListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/fragment_transfers_text_uploads"
-        android:layout_below="@id/fragment_transfers_button_pauseall"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transfers_indicators_background"
+        android:gravity="right" >
+
+        <TextView
+            android:id="@+id/fragment_transfers_text_downloads"
+            style="@style/TransfersIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/transfers_triangle_downward"
+            android:paddingRight="8dp"
+            android:text="@string/dummy_downloads_indicator" />
+
+        <TextView
+            android:id="@+id/fragment_transfers_text_uploads"
+            style="@style/TransfersIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/transfers_triangle_upward"
+            android:paddingRight="8dp"
+            android:text="@string/dummy_uploads_indicator" />
+    </LinearLayout>
+
+</LinearLayout>

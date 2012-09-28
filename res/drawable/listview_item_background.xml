@@ -27,7 +27,7 @@
     </item>
     <item android:top="1dp">
         <shape>
-            <solid android:color="#fff4f4f7" />
+            <solid android:color="#fff6f6f6" />
         </shape>
     </item>
 

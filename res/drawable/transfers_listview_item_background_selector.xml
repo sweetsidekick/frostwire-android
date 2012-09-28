@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <dimen name="view_transfer_item_list_item_layout_height">50dp</dimen>
-    <dimen name="view_transfer_item_list_item_text_title_text_size">14sp</dimen>
-    <dimen name="view_transfer_item_list_item_progress_height">12dp</dimen>
-    <dimen name="view_transfer_item_list_item_text_size_text_size">12sp</dimen>
+    <item android:drawable="@drawable/listview_item_press_background_selector_on" android:state_focused="true"/>
+    <item android:drawable="@drawable/listview_item_press_background_selector_on" android:state_selected="true"/>
+    <item android:drawable="@drawable/listview_item_press_background_selector_on" android:state_pressed="true"/>
+    <item android:drawable="@drawable/transfers_listview_item_background_selector_off"/>
 
-</resources>
+</selector>

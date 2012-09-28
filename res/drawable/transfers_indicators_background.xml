@@ -18,10 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <style name="BrowsePeerHeaderIcon" parent="BrowsePeerHeaderIconCommon.Big"></style>
+    <item>
+        <shape>
+            <gradient
+                android:angle="270"
+                android:endColor="#ff1d364b"
+                android:startColor="#ff315776" />
+        </shape>
+    </item>
 
-    <style name="BrowsePeerHeaderText" parent="BrowsePeerHeaderTextCommon.Big"></style>
-
-</resources>
+</layer-list>

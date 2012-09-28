@@ -18,11 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <dimen name="view_transfer_item_list_item_layout_height">48dp</dimen>
-    <dimen name="view_transfer_item_list_item_text_title_text_size">12sp</dimen>
-    <dimen name="view_transfer_item_list_item_progress_height">10dp</dimen>
-    <dimen name="view_transfer_item_list_item_text_size_text_size">10sp</dimen>
+    <item>
+        <shape>
+            <solid android:color="#ffdae2e9" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape>
+            <solid android:color="#ffe9eef3" />
+        </shape>
+    </item>
 
-</resources>
+</layer-list>

@@ -40,6 +40,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.adapters.menu.BrowsePeerMenuAction;
 import com.frostwire.android.gui.adapters.menu.CancelMenuAction;
 import com.frostwire.android.gui.adapters.menu.OpenMenuAction;
@@ -309,7 +310,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     }
 
     private void setupGroupIndicator(View view, boolean expanded, Transfer item) {
-        View groupIndicator = findView(view, R.id.view_transfer_list_item_group_indicator);
+        ImageView groupIndicator = findView(view, R.id.view_transfer_list_item_group_indicator);
 
         if (groupIndicator != null) {
             if (item.getItems().size() <= 1) {
@@ -343,15 +344,15 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                         //apk.getDrawable(id);
 
                         //in the meantime, just hardcode it
-                        groupIndicator.setBackgroundResource(R.drawable.application_icon);
+                        groupIndicator.setImageResource(R.drawable.application_icon);
                     } catch (Throwable e) {
-                        groupIndicator.setBackgroundResource(R.drawable.application_icon);
+                        groupIndicator.setImageResource(R.drawable.application_icon);
                     }
                 } else {
-                    groupIndicator.setBackgroundResource(UIUtils.getFileTypeIconId(extension));
+                    groupIndicator.setImageResource(getFileTypeIconId(extension));
                 }
             } else {
-                groupIndicator.setBackgroundResource(expanded ? R.drawable.minus : R.drawable.plus);
+                groupIndicator.setImageResource(expanded ? R.drawable.transfer_menuitem_minus : R.drawable.transfer_menuitem_plus);
             }
         }
     }
@@ -500,7 +501,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TextView size = findView(view, R.id.view_transfer_item_list_item_size);
         ImageButton buttonPlay = findView(view, R.id.view_transfer_item_list_item_button_play);
 
-        icon.setBackgroundResource(UIUtils.getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
+        icon.setImageResource(getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
         title.setText(item.getDisplayName());
         progress.setProgress(item.getProgress());
         size.setText(UIUtils.getBytesInHuman(item.getSize()));
@@ -517,7 +518,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TextView size = findView(view, R.id.view_transfer_item_list_item_size);
         ImageButton buttonPlay = findView(view, R.id.view_transfer_item_list_item_button_play);
 
-        icon.setBackgroundResource(UIUtils.getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
+        icon.setImageResource(getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
         title.setText(item.getDisplayName());
         progress.setProgress(item.getProgress());
         size.setText(UIUtils.getBytesInHuman(item.getSize()));
@@ -525,6 +526,28 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonPlay.setTag(item);
         buttonPlay.setVisibility(item.isComplete() ? View.VISIBLE : View.GONE);
         buttonPlay.setOnClickListener(playOnClickListener);
+    }
+
+    private static int getFileTypeIconId(String ext) {
+        MediaType mt = MediaType.getMediaTypeForExtension(ext);
+        if (mt == null) {
+            return R.drawable.question_mark;
+        }
+        if (mt.equals(MediaType.getApplicationsMediaType())) {
+            return R.drawable.browse_peer_application_icon_selector_off;
+        } else if (mt.equals(MediaType.getAudioMediaType())) {
+            return R.drawable.browse_peer_audio_icon_selector_off;
+        } else if (mt.equals(MediaType.getDocumentMediaType())) {
+            return R.drawable.browse_peer_document_icon_selector_off;
+        } else if (mt.equals(MediaType.getImageMediaType())) {
+            return R.drawable.browse_peer_picture_icon_selector_off;
+        } else if (mt.equals(MediaType.getVideoMediaType())) {
+            return R.drawable.browse_peer_video_icon_selector_off;
+        } else if (mt.equals(MediaType.getTorrentMediaType())) {
+            return R.drawable.browse_peer_torrent_icon_selector_off;
+        } else {
+            return R.drawable.question_mark;
+        }
     }
 
     private final class ViewOnClickListener implements OnClickListener {
