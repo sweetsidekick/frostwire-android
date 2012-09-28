@@ -25,7 +25,6 @@ import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
@@ -212,9 +211,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 ContentResolver cr = getContext().getContentResolver();
                 is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
                 Drawable icon = Drawable.createFromStream(is, "");
-                fileThumbnail.setBackgroundDrawable(icon);
+                fileThumbnail.setImageDrawable(icon);
             } catch (Throwable e) {
-                fileThumbnail.setBackgroundDrawable(fileTypeDrawable);
+                fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
                 if (is != null) {
                     try {

@@ -22,7 +22,7 @@
 
     <item android:bottom="2dp">
         <shape>
-            <solid android:color="#ff80c6ec" />
+            <solid android:color="#ffd5dfe8" />
 
             <corners
                 android:bottomLeftRadius="8dp"
