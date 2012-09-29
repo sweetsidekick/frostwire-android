@@ -80,11 +80,9 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
     @Override
     public View getHeader(Activity activity) {
-        //if (header == null) {
-            LayoutInflater inflater = LayoutInflater.from(activity);
-            header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-            header.setText(R.string.browse);
-        //}
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+        header.setText(R.string.wifi_sharing);
 
         return header;
     }

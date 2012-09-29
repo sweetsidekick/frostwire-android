@@ -28,7 +28,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,8 +63,8 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         super(context, R.layout.view_peer_list_item, peers);
 
         Resources r = getContext().getResources();
-        
-        libraryDrawable = r.getDrawable(R.drawable.library);
+
+        libraryDrawable = r.getDrawable(R.drawable.my_files_device);
         peerDrawable = r.getDrawable(R.drawable.silhouette_dark);
         howtoShareDrawable = r.getDrawable(R.drawable.share_howto);
 
@@ -86,16 +85,16 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         version.setTextColor(0xffcccccc);
 
         ImageView peerIcon = findView(view, R.id.view_peer_list_item_icon);
-        peerIcon.setBackgroundDrawable(peer.isLocalHost() ? libraryDrawable : peerDrawable);
+        peerIcon.setImageDrawable(peer.isLocalHost() ? libraryDrawable : peerDrawable);
 
-        ImageButton howtoShareButton = findView(view, R.id.view_peer_list_item_button_how_to_share);
+        ImageView howtoShareButton = findView(view, R.id.view_peer_list_item_button_how_to_share);
         howtoShareButton.setOnClickListener(howtoShareClickListener);
 
         if (!peer.isLocalHost()) {
             howtoShareButton.setVisibility(View.INVISIBLE);
-            title.setTextColor(getContext().getResources().getColor(R.color.frostwire_dark_blue));
+            title.setTextColor(0xff3b3b3b);
         } else {
-            title.setTextColor(getContext().getResources().getColor(R.color.frostwire_orange));
+            title.setTextColor(0xff54afe4);
 
             // show my version in red If I'm old to encourage user to update.
             if (SoftwareUpdater.instance().isOldVersion()) {
@@ -105,7 +104,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
             howtoShareButton.setVisibility(View.VISIBLE);
             howtoShareButton.setImageDrawable(howtoShareDrawable);
-            
+
         }
 
         TextView summary = findView(view, R.id.view_peer_list_item_summary);
