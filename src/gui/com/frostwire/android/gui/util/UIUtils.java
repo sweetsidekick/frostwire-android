@@ -318,28 +318,6 @@ public final class UIUtils {
         openFile(context, file.getAbsolutePath(), getMimeType(file.getAbsolutePath()));
     }
 
-    public static int getFileTypeIconId(String ext) {
-        MediaType mt = MediaType.getMediaTypeForExtension(ext);
-        if (mt == null) {
-            return R.drawable.question_mark;
-        }
-        if (mt.equals(MediaType.getApplicationsMediaType())) {
-            return R.drawable.application_icon;
-        } else if (mt.equals(MediaType.getAudioMediaType())) {
-            return R.drawable.audio_icon;
-        } else if (mt.equals(MediaType.getDocumentMediaType())) {
-            return R.drawable.document_icon;
-        } else if (mt.equals(MediaType.getImageMediaType())) {
-            return R.drawable.picture_icon;
-        } else if (mt.equals(MediaType.getVideoMediaType())) {
-            return R.drawable.video_icon;
-        } else if (mt.equals(MediaType.getTorrentMediaType())) {
-            return R.drawable.torrent_icon;
-        } else {
-            return R.drawable.question_mark;
-        }
-    }
-
     public static String getMimeType(String filePath) {
         try {
             URL u = new URL("file://" + filePath);

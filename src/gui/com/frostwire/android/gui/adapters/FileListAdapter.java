@@ -91,7 +91,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.local = local;
         this.fileType = fileType;
         this.thumbnailLoader = thumbnailLoader;
-        this.fileTypeDrawable = context.getResources().getDrawable(getFileTypeIconId(fileType));
+        this.fileTypeDrawable = getContext().getResources().getDrawable(getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();

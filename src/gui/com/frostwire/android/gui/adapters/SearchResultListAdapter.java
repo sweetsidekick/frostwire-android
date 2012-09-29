@@ -102,11 +102,10 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     protected void populateBittorrentView(View view, BittorrentSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setBackgroundDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
+        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
         title.setText(sr.getTitle());
-        title.setTextColor(Color.BLACK);
         // if marked as downloading
         // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
 
@@ -143,12 +142,33 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         if (drawableCache.containsKey(ext)) {
             d = drawableCache.get(ext);
         } else {
-            d = getContext().getResources().getDrawable(UIUtils.getFileTypeIconId(ext));
+            d = getContext().getResources().getDrawable(getFileTypeIconId(ext));
             drawableCache.put(ext, d);
-            d.mutate().setAlpha(255);
         }
 
         return d;
+    }
+
+    private static int getFileTypeIconId(String ext) {
+        MediaType mt = MediaType.getMediaTypeForExtension(ext);
+        if (mt == null) {
+            return R.drawable.question_mark;
+        }
+        if (mt.equals(MediaType.getApplicationsMediaType())) {
+            return R.drawable.browse_peer_application_icon_selector_off;
+        } else if (mt.equals(MediaType.getAudioMediaType())) {
+            return R.drawable.browse_peer_audio_icon_selector_off;
+        } else if (mt.equals(MediaType.getDocumentMediaType())) {
+            return R.drawable.browse_peer_document_icon_selector_off;
+        } else if (mt.equals(MediaType.getImageMediaType())) {
+            return R.drawable.browse_peer_picture_icon_selector_off;
+        } else if (mt.equals(MediaType.getVideoMediaType())) {
+            return R.drawable.browse_peer_video_icon_selector_off;
+        } else if (mt.equals(MediaType.getTorrentMediaType())) {
+            return R.drawable.browse_peer_torrent_icon_selector_off;
+        } else {
+            return R.drawable.question_mark;
+        }
     }
 
     private void startTransfer(final BittorrentSearchResult sr) {
