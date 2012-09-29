@@ -233,6 +233,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
             Engine.instance().getMediaPlayer().stop();
         }
 
+        /*
         LinearLayout llayout = findView(R.id.activity_mediaplayer_adview_placeholder);
         adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
@@ -241,6 +242,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
         if (mediaFD != null) {
             UIUtils.supportFrostWire(adView, mediaFD.artist + " " + mediaFD.title + " " + mediaFD.album + " " + mediaFD.year);
         }
+        */
     }
 
     private void initGestures() {
@@ -321,10 +323,10 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
 
         //Create a Bitmap with the flip matix applied to it.
         //We only want the bottom half of the image
-        Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 2, width, height / 2, matrix, false);
+        Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 3, width, height / 3, matrix, false);
 
         //Create a new bitmap with same width but taller to fit reflection
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height / 2), Config.ARGB_8888);
+        Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height / 3), Config.ARGB_8888);
 
         //Create a new Canvas with the bitmap that's big enough for
         //the image plus gap plus reflection

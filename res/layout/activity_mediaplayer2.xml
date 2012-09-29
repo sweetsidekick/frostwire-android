@@ -22,13 +22,14 @@
     android:id="@+id/activity_mediaplayer_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#fff6f6f6"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/mediaplayer_header_background"
-        android:padding="5dp" >
+        android:padding="4dp" >
 
         <TextView
             android:id="@+id/activity_mediaplayer_artist"
@@ -57,19 +58,88 @@
             android:text="@string/dummy_title" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/activity_mediaplayer_artwork"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
-        android:contentDescription="@null"
-        android:src="@drawable/artwork_default" />
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/activity_mediaplayer_artwork"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@null"
+            android:src="@drawable/artwork_default" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/mediaplayer_extracontrols_background" >
+
+            <TextView
+                android:id="@+id/view_media_controller_time_current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dummy_media_controller_time"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/view_media_controller_time_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/view_media_controller_time_current"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:text="@string/dummy_media_controller_time"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/view_media_controller_progress"
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:layout_below="@id/view_media_controller_time_current"
+                android:progressDrawable="@drawable/progress_horizontal" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/activity_mediaplayer_adview_placeholder"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/activity_mediaplayer_adview_placeholder"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@drawable/mediaplayer_bottom_background"
+        android:gravity="center" >
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_previous_icon"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_play_icon"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_next_icon"
+            android:contentDescription="@null" />
     </LinearLayout>
 
 </LinearLayout>
