@@ -49,7 +49,6 @@ public class MediaControllerView extends FrameLayout {
     private MediaPlayerControl player;
     private ImageButton buttonPrevious;
     private ImageButton buttonPause;
-    private ImageButton buttonStop;
     private ImageButton buttonNext;
     private ProgressBar progress;
     private TextView endTime;
@@ -80,16 +79,6 @@ public class MediaControllerView extends FrameLayout {
         public void onClick(View v) {
             doPauseResume();
             sync();
-        }
-    };
-
-    private View.OnClickListener stopListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (player != null) {
-                player.stop();
-                setProgress();
-                sync();
-            }
         }
     };
 
@@ -188,11 +177,6 @@ public class MediaControllerView extends FrameLayout {
             buttonPause.setOnClickListener(pauseListener);
         }
 
-        buttonStop = (ImageButton) findViewById(R.id.view_media_controller_stop);
-        if (buttonStop != null) {
-            buttonStop.setOnClickListener(stopListener);
-        }
-
         buttonNext = (ImageButton) findViewById(R.id.view_media_controller_next);
         if (buttonNext != null) {
             buttonNext.setOnClickListener(nextListener);
@@ -266,9 +250,6 @@ public class MediaControllerView extends FrameLayout {
     public void setEnabled(boolean enabled) {
         if (buttonPause != null) {
             buttonPause.setEnabled(enabled);
-        }
-        if (buttonStop != null) {
-            buttonStop.setEnabled(enabled);
         }
         if (progress != null) {
             progress.setEnabled(enabled);
