@@ -69,7 +69,7 @@
 
     <TextView
         android:id="@+id/view_browse_peer_list_item_file_size"
-        style="@style/BrowsePeerList.Item.Size"
+        style="@style/ListItemSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/view_browse_peer_list_item_file_thumbnail"

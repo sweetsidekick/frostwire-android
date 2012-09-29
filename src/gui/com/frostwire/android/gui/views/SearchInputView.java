@@ -120,7 +120,7 @@ public class SearchInputView extends LinearLayout {
             textInput.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startSearch(view);
+                    startSearch(textInput);
                 }
             });
             textInput.setAdapter(adapter);
