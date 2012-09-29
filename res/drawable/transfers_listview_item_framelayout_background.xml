@@ -25,7 +25,10 @@
             <solid android:color="#ffdae2e9" />
         </shape>
     </item>
-    <item android:top="1dp">
+    <item
+        android:bottom="1dp"
+        android:top="1dp">
+
         <shape>
             <solid android:color="#ffe9eef3" />
         </shape>
