@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_mediaplayer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mediaplayer_header_background"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_artist"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_title"
+            style="@style/MediaPlayerHeaderTitleBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_mediaplayer_artist"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_album"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_mediaplayer_title"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/activity_mediaplayer_artwork"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:contentDescription="@null"
+        android:src="@drawable/artwork_default" />
+
+    <LinearLayout
+        android:id="@+id/activity_mediaplayer_adview_placeholder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </LinearLayout>
+
+</LinearLayout>
