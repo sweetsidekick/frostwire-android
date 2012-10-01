@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_mediaplayer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fff6f6f6"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mediaplayer_header_background"
+        android:padding="4dp" >
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_artist"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_title"
+            style="@style/MediaPlayerHeaderTitleBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_mediaplayer_artist"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_album"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_mediaplayer_title"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_title" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/activity_mediaplayer_artwork"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@null"
+            android:src="@drawable/artwork_default" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/mediaplayer_extracontrols_background" >
+
+            <TextView
+                android:id="@+id/view_media_controller_time_current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dummy_media_controller_time"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/view_media_controller_time_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/view_media_controller_time_current"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:text="@string/dummy_media_controller_time"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/view_media_controller_progress"
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:layout_below="@id/view_media_controller_time_current"
+                android:progressDrawable="@drawable/progress_horizontal" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/activity_mediaplayer_adview_placeholder"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mediaplayer_bottom_background"
+        android:gravity="center" >
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_previous_icon"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_play_icon"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_next_icon"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -39,7 +39,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
-import com.frostwire.android.gui.activities.MediaPlayerActivity;
+import com.frostwire.android.gui.activities.MediaPlayer2Activity;
 
 /**
  * @author gubatron
@@ -246,7 +246,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         try {
             Context context = service.getApplicationContext();
 
-            Intent i = new Intent(context, MediaPlayerActivity.class);
+            Intent i = new Intent(context, MediaPlayer2Activity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);

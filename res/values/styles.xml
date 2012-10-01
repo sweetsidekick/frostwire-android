@@ -273,4 +273,15 @@
         <item name="android:textColor">#ffb3c12e</item>
     </style>
 
+    <style name="MediaPlayerHeaderTitle">
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="MediaPlayerHeaderTitleBold">
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>
