@@ -371,8 +371,8 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         //Draw in the original image
         canvas.drawBitmap(bitmap, 0, 0, null);
         //Draw in the gap
-        Paint deafaultPaint = new Paint();
-        canvas.drawRect(0, height, width, height + reflectionGap, deafaultPaint);
+        Paint defaultPaint = new Paint();
+        canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
         //Draw in the reflection
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 
