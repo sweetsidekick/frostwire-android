@@ -45,6 +45,12 @@
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/empty_string" />
 
+        <com.frostwire.android.gui.views.PlayerMenuItemView
+            android:id="@+id/slidemenu_player_menuitem"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <ListView
             android:id="@+id/slidemenu_listview"
             style="@style/SlideMenu.List"

@@ -28,7 +28,7 @@ public class PlayerMenuItemView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        View.inflate(getContext(), R.layout.view_player_menu_item, this);
+        View.inflate(getContext(), R.layout.view_player_menuitem, this);
 
         imageThumbnail = (ImageView) findViewById(R.id.view_player_menu_item_thumbnail);
         textTitle = (TextView) findViewById(R.id.view_player_menu_item_title);
