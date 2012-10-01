@@ -103,9 +103,6 @@
             android:name="com.frostwire.android.gui.activities.BrowsePeerActivity"
             android:label="@string/activity_browse_peer_name" />
         <activity
-            android:name="com.frostwire.android.gui.activities.MediaPlayerActivity"
-            android:label="@string/activity_media_player_name" />
-        <activity
             android:name="com.frostwire.android.gui.activities.MediaPlayer2Activity"
             android:label="@string/activity_mediaplayer_name" />
         <activity

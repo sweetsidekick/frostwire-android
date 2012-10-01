@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.activities;
 
+import java.util.Formatter;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
@@ -35,12 +38,19 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -51,7 +61,7 @@ import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
-import com.frostwire.android.gui.views.MediaControllerView;
+import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -62,11 +72,10 @@ import com.google.ads.AdView;
  * @author aldenml
  * 
  */
-public class MediaPlayer2Activity extends AbstractActivity implements MediaControllerView.MediaPlayerControl {
+public class MediaPlayer2Activity extends AbstractActivity implements MediaPlayerControl {
 
     private static final String TAG = "FW.MediaPlayerActivity";
 
-    private MediaControllerView mediaController;
     private MediaPlayer mediaPlayer;
     private FileDescriptor mediaFD;
 
@@ -100,9 +109,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (mediaController != null) {
-            mediaController.sync();
-        }
+        sync();
     }
 
     public void pause() {
@@ -206,8 +213,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
         mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
 
         if (mediaPlayer != null) {
-            //mediaController = findView(R.id.activity_media_player_media_controller);
-            //mediaController.setMediaPlayer(this);
+            setMediaPlayer(this);
         }
 
         if (mediaFD != null) {
@@ -232,6 +238,37 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
+
+        // media player controls
+        buttonPrevious = (ImageButton) findViewById(R.id.activity_mediaplayer_button_previous);
+        if (buttonPrevious != null) {
+            buttonPrevious.setOnClickListener(previousListener);
+        }
+
+        buttonPause = (ImageButton) findViewById(R.id.activity_mediaplayer_button_play);
+        if (buttonPause != null) {
+            buttonPause.requestFocus();
+            buttonPause.setOnClickListener(pauseListener);
+        }
+
+        buttonNext = (ImageButton) findViewById(R.id.activity_mediaplayer_button_next);
+        if (buttonNext != null) {
+            buttonNext.setOnClickListener(nextListener);
+        }
+
+        progress = (SeekBar) findViewById(R.id.view_media_controller_progress);
+        if (progress != null) {
+            if (progress instanceof SeekBar) {
+                SeekBar seeker = (SeekBar) progress;
+                seeker.setOnSeekBarChangeListener(seekListener);
+            }
+            progress.setMax(1000);
+        }
+
+        endTime = (TextView) findViewById(R.id.view_media_controller_time_end);
+        currentTime = (TextView) findViewById(R.id.view_media_controller_time_current);
+        formatBuilder = new StringBuilder();
+        formatter = new Formatter(formatBuilder, Locale.getDefault());
 
         /*
         LinearLayout llayout = findView(R.id.activity_mediaplayer_adview_placeholder);
@@ -350,5 +387,258 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaContr
         canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);
 
         return bitmapWithReflection;
+    }
+
+    // media player controls
+
+    private static final int SHOW_PROGRESS = 1;
+
+    private MediaPlayerControl player;
+    private ImageButton buttonPrevious;
+    private ImageButton buttonPause;
+    private ImageButton buttonNext;
+    private ProgressBar progress;
+    private TextView endTime;
+    private TextView currentTime;
+
+    private boolean dragging;
+
+    private StringBuilder formatBuilder;
+    private Formatter formatter;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int pos;
+            switch (msg.what) {
+            case SHOW_PROGRESS:
+                pos = setProgress();
+                if (!dragging && player != null && player.isPlaying()) {
+                    msg = obtainMessage(SHOW_PROGRESS);
+                    sendMessageDelayed(msg, 1000 - (pos % 1000));
+                }
+                break;
+            }
+        }
+    };
+
+    private View.OnClickListener pauseListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            doPauseResume();
+            sync();
+        }
+    };
+
+    private View.OnClickListener previousListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (player != null) {
+                if (player.getCurrentPosition() < 5000) {
+                    Engine.instance().getMediaPlayer().playPrevious();
+                } else {
+                    player.seekTo(0);
+                }
+            }
+        }
+    };
+
+    private View.OnClickListener nextListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (player != null) {
+                Engine.instance().getMediaPlayer().playNext();
+            }
+        }
+    };
+
+    // There are two scenarios that can trigger the seekbar listener to trigger:
+    //
+    // The first is the user using the touchpad to adjust the posititon of the
+    // seekbar's thumb. In this case onStartTrackingTouch is called followed by
+    // a number of onProgressChanged notifications, concluded by onStopTrackingTouch.
+    // We're setting the field "mDragging" to true for the duration of the dragging
+    // session to avoid jumps in the position in case of ongoing playback.
+    //
+    // The second scenario involves the user operating the scroll ball, in this
+    // case there WON'T BE onStartTrackingTouch/onStopTrackingTouch notifications,
+    // we will simply apply the updated position without suspending regular updates.
+    private OnSeekBarChangeListener seekListener = new OnSeekBarChangeListener() {
+        public void onStartTrackingTouch(SeekBar bar) {
+            sync();
+
+            dragging = true;
+
+            // By removing these pending progress messages we make sure
+            // that a) we won't update the progress while the user adjusts
+            // the seekbar and b) once the user is done dragging the thumb
+            // we will post one of these messages to the queue again and
+            // this ensures that there will be exactly one message queued up.
+            handler.removeMessages(SHOW_PROGRESS);
+        }
+
+        public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
+            if (!fromuser) {
+                // We're not interested in programmatically generated changes to
+                // the progress bar's position.
+                return;
+            }
+
+            if (player != null) {
+                long duration = player.getDuration();
+                long newposition = (duration * progress) / 1000L;
+                player.seekTo((int) newposition);
+                if (currentTime != null)
+                    currentTime.setText(stringForTime((int) newposition));
+            }
+        }
+
+        public void onStopTrackingTouch(SeekBar bar) {
+            dragging = false;
+            setProgress();
+            updatePausePlay();
+            sync();
+
+            // Ensure that progress is properly updated in the future,
+            // the call to show() does not guarantee this because it is a
+            // no-op if we are already showing.
+            handler.sendEmptyMessage(SHOW_PROGRESS);
+        }
+    };
+
+    public void setMediaPlayer(MediaPlayerControl player) {
+        this.player = player;
+        updatePausePlay();
+    }
+
+    public void sync() {
+        setProgress();
+        if (buttonPause != null) {
+            buttonPause.requestFocus();
+        }
+        disableUnsupportedButtons();
+        updatePausePlay();
+
+        // cause the progress bar to be updated This happens, for example, if we're
+        // paused with the progress bar showing the user hits play.
+        handler.sendEmptyMessage(SHOW_PROGRESS);
+
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        final boolean uniqueDown = event.getRepeatCount() == 0 && event.getAction() == KeyEvent.ACTION_DOWN;
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || keyCode == KeyEvent.KEYCODE_SPACE) {
+            if (uniqueDown) {
+                doPauseResume();
+                sync();
+                if (buttonPause != null) {
+                    buttonPause.requestFocus();
+                }
+            }
+            return true;
+
+        } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP) {
+            if (uniqueDown && player.isPlaying()) {
+                updatePausePlay();
+                sync();
+                player.stop();
+            }
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            // don't show the controls for volume adjustment
+            return super.dispatchKeyEvent(event);
+        }
+
+        sync();
+        return super.dispatchKeyEvent(event);
+    }
+
+    /*
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (buttonPause != null) {
+            buttonPause.setEnabled(enabled);
+        }
+        if (progress != null) {
+            progress.setEnabled(enabled);
+        }
+        disableUnsupportedButtons();
+        super.setEnabled(enabled);
+    }
+    */
+
+    private void disableUnsupportedButtons() {
+        try {
+            if (buttonPause != null && !player.canPause()) {
+                buttonPause.setEnabled(false);
+            }
+        } catch (Throwable e) {
+        }
+    }
+
+    private String stringForTime(int timeMs) {
+        int totalSeconds = timeMs / 1000;
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        formatBuilder.setLength(0);
+        if (hours > 0) {
+            return formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return formatter.format("%02d:%02d", minutes, seconds).toString();
+        }
+    }
+
+    private int setProgress() {
+        if (player == null || dragging) {
+            return 0;
+        }
+        int position = player.getCurrentPosition();
+        int duration = player.getDuration();
+        if (progress != null) {
+            if (duration > 0) {
+                // use long to avoid overflow
+                long pos = 1000L * position / duration;
+                progress.setProgress((int) pos);
+            }
+            int percent = player.getBufferPercentage();
+            progress.setSecondaryProgress(percent * 10);
+        }
+
+        if (endTime != null) {
+            endTime.setText(stringForTime(duration));
+        }
+        if (currentTime != null) {
+            currentTime.setText(stringForTime(position));
+        }
+
+        return position;
+    }
+
+    private void updatePausePlay() {
+        if (buttonPause == null || player == null) {
+            return;
+        }
+
+        if (player.isPlaying()) {
+            buttonPause.setImageResource(R.drawable.pause);
+        } else {
+            buttonPause.setImageResource(R.drawable.play);
+        }
+    }
+
+    private void doPauseResume() {
+        if (player == null) {
+            return;
+        }
+
+        if (player.isPlaying()) {
+            player.pause();
+        } else {
+            player.resume();
+        }
+
+        updatePausePlay();
     }
 }
