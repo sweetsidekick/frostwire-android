@@ -30,11 +30,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BlurMaskFilter;
+import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
@@ -363,7 +367,46 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         mat.preTranslate(-cX, -cY);
         mat.postTranslate(cX, cY);
 
-        return Bitmap.createBitmap(bmp, 0, 0, width, height, mat, false);
+        Bitmap reflection = Bitmap.createBitmap(bmp, 0, height / 2, width, height / 2, mat, true);
+
+        int h1 = reflection.getHeight();
+        int w1 = reflection.getWidth();
+        double d1 = (2f * h1) / Math.sqrt(3);
+
+        double s1 = (w1 - d1) / w1;
+
+        mat.reset();
+        mat.postScale((float) s1, (float) s1);
+
+        Bitmap scaled = Bitmap.createBitmap(bmp, 0, 0, width, height, mat, true);
+        reflection = Bitmap.createBitmap(reflection, 0, 0, w1, h1, mat, true);
+
+        int gap = 4;
+        int padding = 8;
+        int glowSize = 8;
+
+        Bitmap result = Bitmap.createBitmap(width - padding, height - padding, Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(result);
+        Paint blur = new Paint();
+        blur.setColor(0x33505050);
+        blur.setMaskFilter(new BlurMaskFilter(10, Blur.OUTER));
+        int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
+        int by1 = glowSize;
+        int bx2 = bx1 + scaled.getWidth();
+        int by2 = by1 + scaled.getHeight();
+        canvas.drawRect(bx1, by1, bx2, by2, blur);
+
+        canvas.drawBitmap(scaled, (result.getWidth() - scaled.getWidth()) / 2, glowSize, null);
+
+        canvas.drawBitmap(reflection, (result.getWidth() - reflection.getWidth()) / 2, scaled.getHeight() + gap + glowSize, null);
+
+        Paint paint = new Paint();
+        LinearGradient shader = new LinearGradient(0, scaled.getHeight(), 0, result.getHeight() + gap + glowSize, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
+        paint.setShader(shader);
+        paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+        canvas.drawRect(0, scaled.getHeight() + glowSize, width, result.getHeight() + gap + glowSize, paint);
+        return result;
     }
 
     private Bitmap applyReflection(Bitmap bitmap) {

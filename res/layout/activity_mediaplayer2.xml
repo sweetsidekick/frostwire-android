@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:background="@android:color/black"
+            android:background="@null"
             android:contentDescription="@null"
             android:src="@drawable/artwork_default" />
 
@@ -106,13 +106,6 @@
                 android:layout_below="@id/view_media_controller_time_current"
                 android:progressDrawable="@drawable/progress_horizontal" />
         </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/activity_mediaplayer_adview_placeholder"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
-        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -141,6 +134,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/player_next_icon"
             android:contentDescription="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mediaplayer_adview_placeholder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
     </LinearLayout>
 
 </LinearLayout>
