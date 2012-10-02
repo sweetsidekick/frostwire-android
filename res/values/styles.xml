@@ -284,4 +284,10 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="MediaPlayerNumber">
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
 </resources>

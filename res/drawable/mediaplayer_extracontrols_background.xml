@@ -22,12 +22,12 @@
 
     <item>
         <shape>
-            <solid android:color="#80f8fefe" />
+            <solid android:color="@android:color/transparent" />
         </shape>
     </item>
     <item android:top="2dp">
         <shape>
-            <solid android:color="#80546574" />
+            <solid android:color="#70546574" />
         </shape>
     </item>
 

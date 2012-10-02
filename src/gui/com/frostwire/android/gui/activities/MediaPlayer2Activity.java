@@ -275,7 +275,6 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
 
-        /*
         LinearLayout llayout = findView(R.id.activity_mediaplayer_adview_placeholder);
         adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
@@ -284,7 +283,6 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         if (mediaFD != null) {
             UIUtils.supportFrostWire(adView, mediaFD.artist + " " + mediaFD.title + " " + mediaFD.album + " " + mediaFD.year);
         }
-        */
     }
 
     private void initGestures() {
@@ -332,7 +330,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
 
         try {
             artwork = MusicUtils.getArtwork(this, mediaFD.id, -1);
-            artwork = applyEffect1(artwork);
+            artwork = applyEffect(artwork);
         } catch (Throwable e) {
             Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
         }
@@ -351,7 +349,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         }
     }
 
-    private Bitmap applyEffect1(Bitmap bmp) {
+    private Bitmap applyEffect(Bitmap bmp) {
         int width = bmp.getWidth();
         int height = bmp.getHeight();
 
@@ -382,20 +380,21 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         reflection = Bitmap.createBitmap(reflection, 0, 0, w1, h1, mat, true);
 
         int gap = 4;
-        int padding = 8;
-        int glowSize = 8;
+        int padding = 16;
+        int glowSize = 16;
 
         Bitmap result = Bitmap.createBitmap(width - padding, height - padding, Config.ARGB_8888);
 
         Canvas canvas = new Canvas(result);
         Paint blur = new Paint();
-        blur.setColor(0x33505050);
-        blur.setMaskFilter(new BlurMaskFilter(10, Blur.OUTER));
+        //blur.setColor(0x33505050);
+        //blur.setMaskFilter(new BlurMaskFilter(glowSize, Blur.OUTER));
+        blur.setShadowLayer(5, 0, 0, 0x33505050);
         int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
         int by1 = glowSize;
         int bx2 = bx1 + scaled.getWidth();
         int by2 = by1 + scaled.getHeight();
-        canvas.drawRect(bx1, by1, bx2, by2, blur);
+        canvas.drawRect(bx1 - 1, by1 - 1, bx2 + 1, by2 + 1, blur);
 
         canvas.drawBitmap(scaled, (result.getWidth() - scaled.getWidth()) / 2, glowSize, null);
 
@@ -409,48 +408,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         return result;
     }
 
-    private Bitmap applyReflection(Bitmap bitmap) {
-
-        //The gap we want between the reflection and the original image
-        final int reflectionGap = 4;
-
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        //This will not scale but will flip on the Y axis
-        Matrix matrix = new Matrix();
-        matrix.preScale(1, -1);
-
-        //Create a Bitmap with the flip matix applied to it.
-        //We only want the bottom half of the image
-        Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 3, width, height / 3, matrix, false);
-
-        //Create a new bitmap with same width but taller to fit reflection
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height / 3), Config.ARGB_8888);
-
-        //Create a new Canvas with the bitmap that's big enough for
-        //the image plus gap plus reflection
-        Canvas canvas = new Canvas(bitmapWithReflection);
-        //Draw in the original image
-        canvas.drawBitmap(bitmap, 0, 0, null);
-        //Draw in the gap
-        Paint defaultPaint = new Paint();
-        canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
-        //Draw in the reflection
-        canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
-
-        //Create a shader that is a linear gradient that covers the reflection
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
-        //Set the paint to use this shader (linear gradient)
-        paint.setShader(shader);
-        //Set the Transfer mode to be porter duff and destination in
-        paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
-        //Draw a rectangle using the paint with our linear gradient
-        canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);
-
-        return bitmapWithReflection;
-    }
+    
 
     // media player controls
 
