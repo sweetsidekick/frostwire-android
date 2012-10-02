@@ -36,19 +36,35 @@
         android:scaleType="fitCenter"
         android:src="@drawable/browse_peer_play_icon" />
 
-    <ImageButton
-        android:id="@+id/view_browse_peer_list_item_lock_toggle"
+    <FrameLayout
+        android:id="@+id/view_browse_peer_list_item_container_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:paddingBottom="6dip"
-        android:paddingRight="6dip"
-        android:paddingTop="6dip"
-        android:scaleType="fitCenter"
-        android:src="@drawable/browse_peer_padlock_locked_icon" />
+        android:layout_centerVertical="true" >
+
+        <ImageButton
+            android:id="@+id/view_browse_peer_list_item_button_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:paddingRight="6dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/browse_peer_play_icon" />
+
+        <ImageButton
+            android:id="@+id/view_browse_peer_list_item_lock_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:paddingBottom="6dip"
+            android:paddingRight="6dip"
+            android:paddingTop="6dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/browse_peer_padlock_locked_icon" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/view_browse_peer_list_item_file_title"
@@ -57,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dip"
         android:layout_marginTop="4dip"
-        android:layout_toLeftOf="@id/view_browse_peer_list_item_lock_toggle"
+        android:layout_toLeftOf="@id/view_browse_peer_list_item_container_action"
         android:layout_toRightOf="@id/view_browse_peer_list_item_download"
         android:text="@string/dummy_title" />
 

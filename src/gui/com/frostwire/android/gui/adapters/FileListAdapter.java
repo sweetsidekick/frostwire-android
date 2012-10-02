@@ -300,6 +300,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         title.setText(fd.title);
 
         populatePadlockAppearance(fd, padlock, title);
+        populateContainerAction(view);
 
         if (fd.fileType == Constants.FILE_TYPE_AUDIO || fd.fileType == Constants.FILE_TYPE_APPLICATIONS) {
             TextView fileExtra = findView(view, R.id.view_browse_peer_list_item_extra_text);
@@ -320,10 +321,23 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             } else {
                 downloadButton.setImageResource(R.drawable.browse_peer_play_icon);
             }
+        } else {
+            downloadButton.setImageResource(R.drawable.download_icon);
         }
 
         downloadButton.setTag(fd);
         downloadButton.setOnClickListener(downloadButtonClickListener);
+    }
+
+    private void populateContainerAction(View view) {
+        ImageButton preview = findView(view, R.id.view_browse_peer_list_item_button_preview);
+
+        if (local) {
+            preview.setVisibility(View.GONE);
+        } else {
+            // just for now
+            preview.setVisibility(View.GONE);
+        }
     }
 
     private boolean showSingleOptions(List<FileDescriptor> checked, FileDescriptor fd) {

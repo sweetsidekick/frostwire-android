@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
@@ -327,7 +328,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
 
         try {
             artwork = MusicUtils.getArtwork(this, mediaFD.id, -1);
-            artwork = applyReflection(artwork);
+            artwork = applyEffect1(artwork);
         } catch (Throwable e) {
             Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
         }
@@ -344,6 +345,25 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         } else {
             lock.disableKeyguard();
         }
+    }
+
+    private Bitmap applyEffect1(Bitmap bmp) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
+        Camera cam = new Camera();
+        cam.rotateX(-120);
+
+        Matrix mat = new Matrix();
+        cam.getMatrix(mat);
+
+        int cX = width / 2;
+        int cY = height / 2;
+
+        mat.preTranslate(-cX, -cY);
+        mat.postTranslate(cX, cY);
+
+        return Bitmap.createBitmap(bmp, 0, 0, width, height, mat, false);
     }
 
     private Bitmap applyReflection(Bitmap bitmap) {
@@ -622,9 +642,9 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         }
 
         if (player.isPlaying()) {
-            buttonPause.setImageResource(R.drawable.pause);
+            buttonPause.setImageResource(R.drawable.player_pause_icon);
         } else {
-            buttonPause.setImageResource(R.drawable.play);
+            buttonPause.setImageResource(R.drawable.player_play_icon);
         }
     }
 
