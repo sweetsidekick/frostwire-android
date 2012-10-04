@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:background="#ffe9eef3"
         android:contentDescription="@null"
-        android:paddingBottom="21dip"
-        android:paddingLeft="9dip"
-        android:paddingRight="9dip"
-        android:paddingTop="21dip"
+        android:paddingBottom="21dp"
+        android:paddingLeft="9dp"
+        android:paddingRight="9dp"
+        android:paddingTop="21dp"
         android:scaleType="fitCenter"
         android:src="@drawable/download_icon" />
 

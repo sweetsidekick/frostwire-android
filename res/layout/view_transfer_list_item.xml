@@ -23,14 +23,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/transfers_listview_item_background_selector"
     android:baselineAligned="false"
-    android:orientation="horizontal" >
-
-    <!-- Expand Button holder -->
+    android:orientation="horizontal"
+    android:paddingBottom="1px"
+    android:paddingTop="1px" >
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/transfers_listview_item_framelayout_background"
+        android:background="#ffe9eef3"
         android:gravity="center|center_vertical"
         android:paddingBottom="20dp"
         android:paddingLeft="5dp"
