@@ -389,7 +389,7 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         Paint blur = new Paint();
         //blur.setColor(0x33505050);
         //blur.setMaskFilter(new BlurMaskFilter(glowSize, Blur.OUTER));
-        blur.setShadowLayer(5, 0, 0, 0x33505050);
+        blur.setShadowLayer(1, 0, 0, 0x33505050);
         int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
         int by1 = glowSize;
         int bx2 = bx1 + scaled.getWidth();

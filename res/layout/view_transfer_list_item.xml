@@ -126,8 +126,8 @@
 
     <ImageView
         android:id="@+id/view_transfer_list_item_button_action"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="2dp"
         android:background="@null"
