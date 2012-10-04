@@ -29,9 +29,9 @@
         android:layout_width="68dp"
         android:layout_height="68dp"
         android:layout_margin="6dp"
-        android:background="@drawable/slidemenu_player_menuitem_artwork_background"
+        android:background="#ff172c40"
         android:contentDescription="@null"
-        android:padding="1dp"
+        android:padding="1px"
         android:scaleType="fitCenter"
         android:src="@drawable/artwork_default" />
 
@@ -60,9 +60,9 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:layout_alignParentRight="true"
         android:layout_below="@id/view_player_menu_item_thumbnail"
-        android:background="@drawable/slidemenu_listitem_horizontal_line" />
+        android:background="#ff172c40" />
 
 </RelativeLayout>
