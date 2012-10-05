@@ -61,7 +61,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.activities.MediaPlayer2Activity;
+import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.services.Engine;
 
 public class SlideMenu extends LinearLayout {
@@ -612,7 +612,7 @@ public class SlideMenu extends LinearLayout {
 
     private void launchPlayerActivity() {
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
-            Intent i = new Intent(getContext(), MediaPlayer2Activity.class);
+            Intent i = new Intent(getContext(), MediaPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(i);

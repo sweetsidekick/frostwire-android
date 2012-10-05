@@ -103,7 +103,7 @@
             android:name="com.frostwire.android.gui.activities.BrowsePeerActivity"
             android:label="@string/activity_browse_peer_name" />
         <activity
-            android:name="com.frostwire.android.gui.activities.MediaPlayer2Activity"
+            android:name=".gui.activities.MediaPlayerActivity"
             android:label="@string/activity_mediaplayer_name"
             android:screenOrientation="portrait" />
         <activity

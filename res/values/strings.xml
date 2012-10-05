@@ -390,5 +390,6 @@
     <string name="loading">Loading</string>
     <string name="wifi_sharing">Wi-Fi Sharing</string>
     <string name="activity_mediaplayer_name">Media Player</string>
+    <string name="stop">Stop</string>
 
 </resources>

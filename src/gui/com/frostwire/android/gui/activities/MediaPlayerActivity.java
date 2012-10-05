@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.activities;
 
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -30,15 +31,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BlurMaskFilter;
-import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Camera;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.RadialGradient;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
@@ -46,20 +43,25 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.MusicUtils;
@@ -77,19 +79,25 @@ import com.google.ads.AdView;
  * @author aldenml
  * 
  */
-public class MediaPlayer2Activity extends AbstractActivity implements MediaPlayerControl {
+public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl {
 
     private static final String TAG = "FW.MediaPlayerActivity";
+
+    private static final int MENU_ITEM_ID_SHARE = 0;
+    private static final int MENU_ITEM_ID_UNSHARE = 1;
+    private static final int MENU_ITEM_ID_STOP = 2;
 
     private MediaPlayer mediaPlayer;
     private FileDescriptor mediaFD;
 
     private BroadcastReceiver broadcastReceiver;
 
+    private ImageButton buttonMenu;
+
     private AdView adView;
 
-    public MediaPlayer2Activity() {
-        super(R.layout.activity_mediaplayer2, false, 0);
+    public MediaPlayerActivity() {
+        super(R.layout.activity_mediaplayer, false, 0);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -243,6 +251,15 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
+
+        buttonMenu = findView(R.id.activity_mediaplayer_button_menu);
+        buttonMenu.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openContextMenu(buttonMenu);
+            }
+        });
+        registerForContextMenu(buttonMenu);
 
         // media player controls
         buttonPrevious = (ImageButton) findViewById(R.id.activity_mediaplayer_button_previous);
@@ -407,8 +424,6 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         canvas.drawRect(0, scaled.getHeight() + glowSize, width, result.getHeight() + gap + glowSize, paint);
         return result;
     }
-
-    
 
     // media player controls
 
@@ -661,5 +676,44 @@ public class MediaPlayer2Activity extends AbstractActivity implements MediaPlaye
         }
 
         updatePausePlay();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (mediaFD == null) {
+            return;
+        }
+        int order = 0;
+        if (mediaFD.shared) {
+            menu.add(0, MENU_ITEM_ID_UNSHARE, order++, R.string.unshare).setIcon(R.drawable.menu_item_unshare);
+        } else {
+            menu.add(0, MENU_ITEM_ID_SHARE, order++, R.string.share).setIcon(R.drawable.menu_item_share);
+        }
+        menu.add(0, MENU_ITEM_ID_STOP, order++, R.string.stop).setIcon(R.drawable.menu_icon_stop);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (mediaFD == null) {
+            return super.onContextItemSelected(item);
+        }
+
+        switch (item.getItemId()) {
+        case MENU_ITEM_ID_SHARE:
+            mediaFD.shared = true;
+            Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
+            return true;
+        case MENU_ITEM_ID_UNSHARE:
+            mediaFD.shared = false;
+            Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
+            return true;
+        case MENU_ITEM_ID_STOP:
+            stop();
+            return true;
+        default:
+            return super.onContextItemSelected(item);
+        }
     }
 }
