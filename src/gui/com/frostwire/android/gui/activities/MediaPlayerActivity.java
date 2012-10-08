@@ -43,10 +43,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +65,8 @@ import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.android.gui.views.ContextMenuDialog;
+import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
 import com.google.ads.AdSize;
@@ -82,10 +81,6 @@ import com.google.ads.AdView;
 public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl {
 
     private static final String TAG = "FW.MediaPlayerActivity";
-
-    private static final int MENU_ITEM_ID_SHARE = 0;
-    private static final int MENU_ITEM_ID_UNSHARE = 1;
-    private static final int MENU_ITEM_ID_STOP = 2;
 
     private MediaPlayer mediaPlayer;
     private FileDescriptor mediaFD;
@@ -256,10 +251,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         buttonMenu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                openContextMenu(buttonMenu);
+                showPlayerContextMenu();
             }
         });
-        registerForContextMenu(buttonMenu);
 
         // media player controls
         buttonPrevious = (ImageButton) findViewById(R.id.activity_mediaplayer_button_previous);
@@ -678,42 +672,50 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         updatePausePlay();
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
+    private void showPlayerContextMenu() {
         if (mediaFD == null) {
             return;
         }
-        int order = 0;
-        if (mediaFD.shared) {
-            menu.add(0, MENU_ITEM_ID_UNSHARE, order++, R.string.unshare).setIcon(R.drawable.menu_item_unshare);
-        } else {
-            menu.add(0, MENU_ITEM_ID_SHARE, order++, R.string.share).setIcon(R.drawable.menu_item_share);
-        }
-        menu.add(0, MENU_ITEM_ID_STOP, order++, R.string.stop).setIcon(R.drawable.menu_icon_stop);
-    }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (mediaFD == null) {
-            return super.onContextItemSelected(item);
-        }
+        ContextMenuItem share = new ContextMenuItem() {
 
-        switch (item.getItemId()) {
-        case MENU_ITEM_ID_SHARE:
-            mediaFD.shared = true;
-            Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
-            return true;
-        case MENU_ITEM_ID_UNSHARE:
-            mediaFD.shared = false;
-            Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
-            return true;
-        case MENU_ITEM_ID_STOP:
-            stop();
-            return true;
-        default:
-            return super.onContextItemSelected(item);
-        }
+            @Override
+            public void onClick() {
+                mediaFD.shared = !mediaFD.shared;
+                Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
+            }
+
+            @Override
+            public int getTextResId() {
+                return mediaFD.shared ? R.string.unshare : R.string.share;
+            }
+
+            @Override
+            public int getDrawableResId() {
+                return mediaFD.shared ? R.drawable.menu_item_unshare : R.drawable.menu_item_share;
+            }
+        };
+
+        ContextMenuItem stop = new ContextMenuItem() {
+
+            @Override
+            public void onClick() {
+                stop();
+            }
+
+            @Override
+            public int getTextResId() {
+                return R.string.stop;
+            }
+
+            @Override
+            public int getDrawableResId() {
+                return R.drawable.menu_icon_stop;
+            }
+        };
+
+        ContextMenuDialog menu = new ContextMenuDialog();
+        menu.setItems(Arrays.asList(share, stop));
+        menu.show(getSupportFragmentManager(), "playerContextMenu");
     }
 }
