@@ -79,6 +79,13 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             tools:layout="@layout/fragment_browse_peers" />
+
+        <fragment
+            android:id="@+id/activity_main_fragment_about"
+            android:name="com.frostwire.android.gui.fragments.AboutFragment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            tools:layout="@layout/fragment_about" />
     </FrameLayout>
 
     <com.frostwire.android.gui.views.PlayerNotifierView

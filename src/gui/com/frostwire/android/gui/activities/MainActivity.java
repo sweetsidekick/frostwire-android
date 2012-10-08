@@ -43,6 +43,7 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
+import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
@@ -83,6 +84,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
     private BrowsePeersFragment peers;
+    private AboutFragment about;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -137,7 +139,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             showPreferences();
             break;
         case R.id.menu_main_about:
-            showAbout();
+            showFragment(about, itemId);
             break;
         }
 
@@ -176,6 +178,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         library = (BrowsePeerFragment) manager.findFragmentById(R.id.activity_main_fragment_library);
         transfers = (TransfersFragment) manager.findFragmentById(R.id.activity_main_fragment_transfers);
         peers = (BrowsePeersFragment) manager.findFragmentById(R.id.activity_main_fragment_peers);
+        about = (AboutFragment) manager.findFragmentById(R.id.activity_main_fragment_about);
 
         library.setPeer(PeerManager.instance().getLocalPeer());
 
@@ -290,6 +293,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         transaction.hide(library);
         transaction.hide(transfers);
         transaction.hide(peers);
+        transaction.hide(about);
 
         transaction.show(fragment);
         transaction.commit();
@@ -312,12 +316,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private void showPreferences() {
         Context context = this;
         Intent i = new Intent(context, PreferencesActivity.class);
-        context.startActivity(i);
-    }
-
-    private void showAbout() {
-        Context context = this;
-        Intent i = new Intent(context, AboutActivity.class);
         context.startActivity(i);
     }
 

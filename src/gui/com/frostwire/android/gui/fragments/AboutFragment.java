@@ -16,35 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.activities;
+package com.frostwire.android.gui.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.views.AbstractActivity;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class AboutActivity extends AbstractActivity {
+public class AboutFragment extends Fragment implements MainFragment {
 
     private WebView webView;
-    private Button buttonDone;
 
-    public AboutActivity() {
-        super(R.layout.activity_about);
+    public AboutFragment() {
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
-    protected void initComponents() {
-        webView = findView(R.id.activity_about_webview);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_about, container, false);
+
+        webView = (WebView) view.findViewById(R.id.fragment_about_webview);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
@@ -54,11 +59,15 @@ public class AboutActivity extends AbstractActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(Constants.SERVER_ABOUT_URL);
 
-        buttonDone = findView(R.id.activity_about_done_button);
-        buttonDone.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        return view;
+    }
+
+    @Override
+    public View getHeader(Activity activity) {
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        TextView header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+        header.setText(R.string.about);
+
+        return header;
     }
 }
