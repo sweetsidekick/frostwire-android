@@ -149,8 +149,6 @@ public final class Constants {
 
     public static final String SERVER_PROMOTIONS_URL = "http://update.frostwire.com/android.promos.php";
 
-    public static final String SERVER_ABOUT_URL = "http://update.frostwire.com/android.about.php";
-
     /**
      * Maximum number of peers the PeerManager should hold
      */

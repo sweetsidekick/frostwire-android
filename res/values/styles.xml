@@ -290,4 +290,11 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
     </style>
 
+    <style name="DonationButton">
+        <item name="android:background">@drawable/donation_button_background</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
 </resources>

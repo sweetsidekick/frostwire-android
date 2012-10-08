@@ -18,19 +18,27 @@
 
 package com.frostwire.android.gui.fragments;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.Constants;
+import com.frostwire.android.util.IOUtils;
 
 /**
  * @author gubatron
@@ -38,8 +46,6 @@ import com.frostwire.android.core.Constants;
  * 
  */
 public class AboutFragment extends Fragment implements MainFragment {
-
-    private WebView webView;
 
     public AboutFragment() {
     }
@@ -49,15 +55,17 @@ public class AboutFragment extends Fragment implements MainFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        webView = (WebView) view.findViewById(R.id.fragment_about_webview);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webView.loadData("<html/>", "text/html", "utf-8");
-            }
-        });
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(Constants.SERVER_ABOUT_URL);
+        TextView title = (TextView) view.findViewById(R.id.fragment_about_title);
+        title.setText("FrostWire for Android");
+
+        TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
+        content.setText(Html.fromHtml(getAboutText()));
+        content.setMovementMethod(LinkMovementMethod.getInstance());
+
+        setupDonateButton(view, R.id.fragment_about_button_donate1, "https://gumroad.com/l/pH");
+        setupDonateButton(view, R.id.fragment_about_button_donate2, "https://gumroad.com/l/oox");
+        setupDonateButton(view, R.id.fragment_about_button_donate3, "https://gumroad.com/l/rPl");
+        setupDonateButton(view, R.id.fragment_about_button_donate4, "https://gumroad.com/l/XQW");
 
         return view;
     }
@@ -69,5 +77,34 @@ public class AboutFragment extends Fragment implements MainFragment {
         header.setText(R.string.about);
 
         return header;
+    }
+
+    private String getAboutText() {
+        try {
+            InputStream raw = getResources().openRawResource(R.raw.about);
+            return IOUtils.toString(raw, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+    private void setupDonateButton(View view, int id, String url) {
+        Button donate = (Button) view.findViewById(id);
+        donate.setOnClickListener(new DonateButtonListener(url));
+    }
+
+    private final class DonateButtonListener implements OnClickListener {
+
+        private final String url;
+
+        public DonateButtonListener(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent("android.intent.action.VIEW", Uri.parse(url));
+            startActivity(i);
+        }
     }
 }
