@@ -22,6 +22,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Looper;
 import android.util.Log;
 
@@ -70,6 +71,13 @@ public class PromotionsHandler {
     public void startTransfer(final Slide slide) {
         final SearchResult sr = buildSearchResult(slide);
         if (sr == null) {
+
+            //check if there is a URL available to open a web browser.
+            if (slide.url != null) {
+                Intent i = new Intent("android.intent.action.VIEW", Uri.parse(slide.url));
+                context.startActivity(i);
+            }
+            
             return;
         }
 
@@ -124,9 +132,12 @@ public class PromotionsHandler {
 
     public static class Slide {
 
+        /** Download the torrent file */
         public static final int DOWNLOAD_METHOD_TORRENT = 0;
+        
+        /** Download the file via HTTP */
         public static final int DOWNLOAD_METHOD_HTTP = 1;
-
+        
         /**
          * http address where to go if user clicks on this slide
          */
