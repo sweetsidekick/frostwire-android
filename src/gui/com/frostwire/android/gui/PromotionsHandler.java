@@ -67,7 +67,7 @@ public class PromotionsHandler {
         }
     }
 
-    private void startTransfer(final Slide slide) {
+    public void startTransfer(final Slide slide) {
         final SearchResult sr = buildSearchResult(slide);
         if (sr == null) {
             return;

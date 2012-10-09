@@ -18,25 +18,37 @@
 
 package com.frostwire.android.gui.views;
 
+import java.util.List;
+
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 
+import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.PromotionsHandler;
+import com.frostwire.android.gui.PromotionsHandler.Slide;
+import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.android.util.JsonUtils;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class PromotionsView extends WebView {
+public class PromotionsView extends LinearLayout {
 
     private static final String TAG = "FW.PromotionsView";
+
+    private GridView gridview;
 
     public PromotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -46,26 +58,53 @@ public class PromotionsView extends WebView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
+        View.inflate(getContext(), R.layout.view_promotions, this);
+
+        if (isInEditMode()) {
+            return;
+        }
+
         try {
-            setWebViewClient(new WebViewClient() {
-                @Override
-                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                    Log.e(TAG, "Failed to load web page: " + failingUrl);
-                    loadData("<html/>", "text/html", "utf-8");
+            gridview = (GridView) findViewById(R.id.view_promotions_gridview);
+            gridview.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Slide slide = (Slide) gridview.getAdapter().getItem(position);
+                    new PromotionsHandler(getContext()).startTransfer(slide);
                 }
             });
 
-            setBackgroundColor(0);
-
-            WebSettings settings = getSettings();
-            settings.setJavaScriptEnabled(true);
-            settings.setCacheMode(WebSettings.LOAD_NORMAL);
-
-            addJavascriptInterface(new PromotionsHandler(getContext()), "phi");
-
-            loadUrl(String.format("%s?v=%s", Constants.SERVER_PROMOTIONS_URL, Build.VERSION.SDK_INT));
+            loadSlidesAsync();
         } catch (Throwable e) {
-            Log.e(TAG, "Error creating view", e);
+            Log.e(TAG, "Error loading slides", e);
         }
+    }
+
+    private void loadSlidesAsync() {
+        AsyncTask<Void, Void, List<PromotionsHandler.Slide>> task = new AsyncTask<Void, Void, List<PromotionsHandler.Slide>>() {
+
+            @Override
+            protected List<Slide> doInBackground(Void... params) {
+                return loadSlides();
+            }
+
+            @Override
+            protected void onPostExecute(List<Slide> result) {
+                if (gridview != null) {
+                    gridview.setAdapter(new PromotionsAdapter(getContext(), result));
+                }
+            }
+        };
+
+        task.execute();
+    }
+
+    private List<PromotionsHandler.Slide> loadSlides() {
+        byte[] jsonBytes = new HttpFetcher(buildUrl()).fetch();
+        PromotionsHandler.SlideList slides = JsonUtils.toObject(new String(jsonBytes), PromotionsHandler.SlideList.class);
+        return slides.slides;
+    }
+
+    private String buildUrl() {
+        return String.format("%s?from=android&fw=%s&sdk=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING, Build.VERSION.SDK_INT);
     }
 }
