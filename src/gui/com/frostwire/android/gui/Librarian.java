@@ -175,7 +175,11 @@ public final class Librarian {
     }
 
     public FileDescriptor getFileDescriptor(byte fileType, int fileId) {
-        List<FileDescriptor> fds = getFiles(0, 1, TableFetchers.getFetcher(fileType), BaseColumns._ID + "=?", new String[] { String.valueOf(fileId) }, true);
+        return getFileDescriptor(fileType, fileId, true);
+    }
+
+    public FileDescriptor getFileDescriptor(byte fileType, int fileId, boolean sharedOnly) {
+        List<FileDescriptor> fds = getFiles(0, 1, TableFetchers.getFetcher(fileType), BaseColumns._ID + "=?", new String[] { String.valueOf(fileId) }, sharedOnly);
         if (fds.size() > 0) {
             return fds.get(0);
         } else {

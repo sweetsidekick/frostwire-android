@@ -325,6 +325,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
 
+        refreshFD();
+
         enableLock(false);
     }
 
@@ -334,6 +336,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         unregisterReceiver(broadcastReceiver);
         enableLock(true);
+    }
+
+    private void refreshFD() {
+        if (mediaFD != null) {
+            mediaFD = Librarian.instance().getFileDescriptor(mediaFD.fileType, mediaFD.id, false);
+        }
     }
 
     private Bitmap readArtWork() {

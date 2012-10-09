@@ -163,12 +163,13 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED));
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_REFRESH_FINGER));
 
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-
         getLoaderManager().destroyLoader(LOADER_FINGER_ID);
         getLoaderManager().restartLoader(LOADER_FINGER_ID, null, this);
+        
+        if (adapter != null) {
+            //adapter.notifyDataSetChanged();
+            browseFilesButtonClick(adapter.getFileType());
+        }
     }
 
     @Override
