@@ -48,7 +48,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <com.frostwire.android.gui.views.PromotionsView
+        <com.frostwire.android.gui.views.Promotions2View
             android:id="@+id/fragment_search_promos"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />

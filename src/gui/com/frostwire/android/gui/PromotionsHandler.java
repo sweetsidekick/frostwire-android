@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
@@ -114,6 +116,10 @@ public class PromotionsHandler {
         default:
             return null;
         }
+    }
+
+    public static class SlideList {
+        public List<Slide> slides;
     }
 
     public static class Slide {
