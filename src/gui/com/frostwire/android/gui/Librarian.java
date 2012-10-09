@@ -886,4 +886,14 @@ public final class Librarian {
             return delta < Constants.LIBRARIAN_FILE_COUNT_CACHE_TIMEOUT;
         }
     }
+
+    public FileDescriptor getFileDescriptor(Uri uri) {
+        TableFetcher fetcher = TableFetchers.getFetcher(uri);
+        
+        FileDescriptor fd = new FileDescriptor();
+        fd.fileType = fetcher.getFileType();
+        fd.id = Integer.valueOf(uri.getLastPathSegment());
+        
+        return fd;
+    }
 }

@@ -373,4 +373,15 @@
     <string name="support_frostwire_summary">Muestra anuncios para respaldar el desarrollo de esta aplicación.</string>
     <string name="storage_preference_title">Seleccionar ubicación de almacenamiento</string>
     <string name="storage_preference_summary">La ubicación de almacenamiento por defecto donde se guardarán los archivos.</string>
+    <string name="conectivity">Conectividad</string>
+    <string name="loading">Cargando</string>
+    <string name="wifi_sharing">Red WiFi</string>
+    <string name="activity_mediaplayer_name">Reproductor</string>
+    <string name="stop">Detener</string>
+    <string name="donate_1">Donar $1</string>
+    <string name="donate_5">Donar $5</string>
+    <string name="donate_10">Donar $10</string>
+    <string name="donate_25">Donar $25</string>
+    <string name="one_file_shared" >Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
+	<string name="n_files_shared" >%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
 </resources>

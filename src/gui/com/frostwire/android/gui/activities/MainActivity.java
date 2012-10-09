@@ -19,12 +19,15 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +44,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
+import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
@@ -232,6 +237,11 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             TransferManager.instance().download(intent);
         } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
             handleDesktopUploadRequest(intent);
+        } 
+        // When another application wants to "Share" a file and has chosen FrostWire to do so.
+        // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
+        else if (action != null && (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_SEND_MULTIPLE))) {
+            handleSendAction(intent);
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
@@ -250,6 +260,45 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             } catch (Throwable e) {
                 Log.e(TAG, "Error handling download complete notification", e);
             }
+        }
+    }
+
+    private void handleSendAction(Intent intent) {
+        String action = intent.getAction();
+        if (action.equals(Intent.ACTION_SEND)) {
+            handleSendSingleFile(intent);
+        } else if (action.equals(Intent.ACTION_SEND_MULTIPLE)) {
+            handleSendMultipleFiles(intent);
+        }
+    }
+
+    private void handleSendSingleFile(Intent intent) {
+        Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (uri == null) {
+            return;
+        }
+        shareFileByUri(uri);
+        UIUtils.showLongMessage(this, R.string.one_file_shared);
+    }
+    
+    private void shareFileByUri(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        
+        FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
+        fileDescriptor.shared = true;
+        
+        Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
+    }
+
+    private void handleSendMultipleFiles(Intent intent) {
+        ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (fileUris != null) {
+            for (Uri uri : fileUris) {
+                shareFileByUri(uri);
+            }
+            UIUtils.showLongMessage(this, getString(R.string.n_files_shared, fileUris.size()));
         }
     }
 

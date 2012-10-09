@@ -34,8 +34,6 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.core.providers.TableFetcher;
-import com.frostwire.android.core.providers.TableFetchers;
 import com.frostwire.android.core.providers.UniversalStore;
 import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
@@ -151,14 +149,7 @@ final class UniversalScanner {
 
             if (uri != null) {
                 //Log.d(TAG, "Scanned new file: " + uri);
-
-                TableFetcher fetcher = TableFetchers.getFetcher(uri);
-
-                FileDescriptor fd = new FileDescriptor();
-                fd.fileType = fetcher.getFileType();
-                fd.id = Integer.valueOf(uri.getLastPathSegment());
-
-                shareFinishedDownload(fd);
+                shareFinishedDownload(Librarian.instance().getFileDescriptor(uri));
             } else {
                 if (path.endsWith(".apk")) {
                     //Log.d(TAG, "Can't scan apk for security concerns: " + path);
