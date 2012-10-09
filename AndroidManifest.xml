@@ -90,6 +90,22 @@
                 <!-- maybe it has to be one or the other, I'll comment files for a sec. -->
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
+            
+            <!-- share a file sent by another app -->
+            <intent-filter>
+            	<action android:name="android.intent.action.SEND"/>
+            	<category android:name="android.intent.category.DEFAULT" />
+            	<data android:mimeType="*/*" />
+            </intent-filter>
+            
+            <!-- share multiple files sent by another app -->
+            <intent-filter>
+            	<action android:name="android.intent.action.SEND_MULTIPLE"/>
+            	<category android:name="android.intent.category.DEFAULT" />
+            	<data android:mimeType="*/*" />
+            </intent-filter>
+
+
         </activity>
         <activity
             android:name="com.frostwire.android.gui.activities.WizardActivity"

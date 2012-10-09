@@ -1,3 +1,17 @@
+FrostWire 1.0.0
+ - New FrostWire 1.0 skin by designer Marcelina Knitter.
+ - New vertical navigation menu, solves fragmentation issues
+   on devices that had no way of bringing the preferences menu.
+ - Multiple optimizations for speed and battery life savings.
+ - New music player, still supports gestures to switch, pause,
+   resume songs. Stop button gone.
+ - Share files from the music player. No need to navigate
+   back to 'My Files' to share the song you are enjoying.
+ - Share files on the WiFi network from other applications.
+   FrostWire now will appear as a 'Send' or 'Share' option
+   on third party apps.
+ - Simplified Transfers screen (awesome updates coming)
+
 FrostWire 0.9.14
  - Search suggestions in Unicode.
  - Now users can choose the default storage device.
