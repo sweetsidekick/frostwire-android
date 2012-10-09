@@ -67,7 +67,11 @@ public class PromotionsAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable);
+        try {
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable);
+        } catch (Throwable e) {
+            // ignore
+        }
 
         return imageView;
     }

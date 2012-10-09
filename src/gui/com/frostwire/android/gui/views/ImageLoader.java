@@ -28,6 +28,7 @@ import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -42,6 +43,8 @@ import android.widget.ImageView.ScaleType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.util.DiskLruImageCache;
+import com.frostwire.android.gui.util.SystemUtils;
 
 /**
  * @author gubatron
@@ -52,6 +55,9 @@ public final class ImageLoader {
 
     private final LruCache<Integer, Bitmap> cache;
     private final Map<ImageView, Object> imageViews;
+
+    private final DiskLruImageCache diskCache;
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
 
     private final Context context;
 
@@ -86,6 +92,8 @@ public final class ImageLoader {
                 return bitmap.getRowBytes() * bitmap.getHeight();
             }
         };
+
+        this.diskCache = new DiskLruImageCache(SystemUtils.getImageCacheDirectory(), DISK_CACHE_SIZE, CompressFormat.JPEG, 80);
 
         this.imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, Object>());
     }
@@ -122,7 +130,7 @@ public final class ImageLoader {
     }
 
     private Bitmap getBitmap(Context context, Object key) {
-        if (key instanceof String) {
+        if (isKeyRemote(key)) {
             return getBitmap((String) key);
         } else if (key instanceof FileDescriptor) {
             return getBitmap(context, (FileDescriptor) key);
@@ -184,6 +192,10 @@ public final class ImageLoader {
         return bitmap;
     }
 
+    private boolean isKeyRemote(Object key) {
+        return key instanceof String && ((String) key).startsWith("http://");
+    }
+
     private static final class ImageToLoad {
 
         public final Object key;
@@ -208,9 +220,24 @@ public final class ImageLoader {
             if (imageViewReused(imageToLoad)) {
                 return null;
             }
-            Bitmap bmp = getBitmap(context, imageToLoad.key);
+            Bitmap bmp = null;
+
+            if (isKeyRemote(imageToLoad.key)) {
+                bmp = diskCache.getBitmap(imageToLoad.key);
+            }
+
+            if (bmp == null) {
+                bmp = getBitmap(context, imageToLoad.key);
+            }
+
             if (bmp != null) {
                 cache.put(imageToLoad.key.hashCode(), bmp);
+
+                if (isKeyRemote(imageToLoad.key)) {
+                    if (!diskCache.containsKey(imageToLoad.key)) {
+                        diskCache.put(imageToLoad.key, bmp);
+                    }
+                }
             }
 
             if (imageViewReused(imageToLoad)) {

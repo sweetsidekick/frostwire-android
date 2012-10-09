@@ -44,6 +44,7 @@ public final class SystemUtils {
     private static final String TEMP_FOLDER_NAME = "Temp";
     private static final String AZUREUS_FOLDER_NAME = ".azureus";
     private static final String DEEPSCAN_FOLDER_NAME = ".deepscan";
+    private static final String IMAGE_CACHE_FOLDER_NAME = ".image_cache";
 
     private static final String APPLICATION_NAME = "frostwire.apk";
 
@@ -111,5 +112,9 @@ public final class SystemUtils {
 
     public static File getUpdateInstallerPath() {
         return new File(SystemUtils.getSaveDirectory(Constants.FILE_TYPE_APPLICATIONS), APPLICATION_NAME);
+    }
+
+    public static File getImageCacheDirectory() {
+        return FileUtils.createFolder(getApplicationStorageDirectory(), IMAGE_CACHE_FOLDER_NAME);
     }
 }
