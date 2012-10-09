@@ -42,7 +42,6 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
-import com.frostwire.android.util.StringUtils;
 
 /**
  * We extend from ListAdapter to populate our ListViews.
@@ -495,7 +494,7 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
             List<T> list = adapter.getList();
 
             FilterResults result = new FilterResults();
-            if (filter == null || StringUtils.isNullOrEmpty(constraint.toString(), true)) {
+            if (filter == null) { /** || StringUtils.isNullOrEmpty(constraint.toString(), true)) { */
                 result.values = list;
                 result.count = list.size();
             } else {
@@ -520,5 +519,6 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
             adapter.visualList = (List<T>) results.values;
             notifyDataSetInvalidated();
         }
+        
     }
 }

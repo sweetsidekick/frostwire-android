@@ -36,6 +36,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore.MediaColumns;
 import android.text.InputType;
@@ -45,6 +46,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frostwire.android.R;
@@ -380,5 +382,26 @@ public final class UIUtils {
                 adView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
             }
         }
+    }
+    
+    /**
+     * Android devices with SDK below target=11 do not support textView.setAlpha().
+     * This is a work around. 
+     * @param v - the text view
+     * @param alpha - a value from 0 to 255. (0=transparent, 255=fully visible)
+     */
+    public static void setTextViewAlpha(TextView v, int alpha) {
+        v.setTextColor(v.getTextColors().withAlpha(alpha));
+        v.setHintTextColor(v.getHintTextColors().withAlpha(alpha));
+        v.setLinkTextColor(v.getLinkTextColors().withAlpha(alpha));
+        
+        Drawable[] compoundDrawables = v.getCompoundDrawables();
+        for (int i=0 ; i < compoundDrawables.length; i++) {
+            Drawable d = compoundDrawables[i];
+            if (d != null) {
+                d.setAlpha(alpha);
+            }
+        }
+        
     }
 }

@@ -84,6 +84,10 @@ public class BrowsePeerSearchBarView extends RelativeLayout {
         inputSearch.setText("");
         inputSearch.setOnActionListener(inputSearchListener);
     }
+    
+    public String getText() {
+        return inputSearch.getText();
+    }
 
     @Override
     protected void onFinishInflate() {

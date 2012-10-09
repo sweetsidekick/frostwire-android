@@ -52,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:clickable="true"
         android:drawableRight="@drawable/padlock_locked_header_icon"
         android:text="@null" />
 
@@ -62,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/view_browse_peer_header_text_total_unshared"
+        android:clickable="true"
         android:drawableRight="@drawable/padlock_unlocked_header_icon"
         android:text="@null" />
 

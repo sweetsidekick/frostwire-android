@@ -32,6 +32,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
@@ -377,10 +378,16 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             TextView shared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_shared);
             TextView unshared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_unshared);
 
+            FileVisibilityFilterListener visibilityFilterListener = new FileVisibilityFilterListener();
+            shared.setOnClickListener(visibilityFilterListener);
+            unshared.setOnClickListener(visibilityFilterListener);
+            
             title.setText(fileTypeStr);
             total.setText("(" + String.valueOf(numTotal) + ")");
             shared.setText(String.valueOf(numShared));
             unshared.setText(String.valueOf(numTotal - numShared));
+            
+            updateFileVisiblityIndicatorsAlpha();
         }
     }
 
@@ -423,4 +430,45 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         }
     }
+    
+    private class FileVisibilityFilterListener  implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Log.v(TAG, "clicked filter");
+
+            adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
+            adapter.getFilter().filter(filesBar.getText());
+            
+            updateFileVisiblityIndicatorsAlpha();
+        }
+    }
+
+    public void updateFileVisiblityIndicatorsAlpha() {
+        
+        if (adapter == null) {
+            return;
+        }
+        
+        TextView shared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_shared);
+        TextView unshared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_unshared);
+
+        int transparentValue = 128;
+        
+        switch (adapter.getFileVisibilityBySharedState()) {
+            case FileListAdapter.FILE_LIST_FILTER_SHOW_ALL:
+                UIUtils.setTextViewAlpha(shared,255);
+                UIUtils.setTextViewAlpha(unshared,255);
+                break;
+            case FileListAdapter.FILE_LIST_FILTER_SHOW_SHARED:
+                UIUtils.setTextViewAlpha(shared,255);
+                UIUtils.setTextViewAlpha(unshared,transparentValue);
+                break;
+            case FileListAdapter.FILE_LIST_FILTER_SHOW_UNSHARED:
+                UIUtils.setTextViewAlpha(shared,transparentValue);
+                UIUtils.setTextViewAlpha(unshared,255);
+                break;
+        }
+
+    }
+
 }

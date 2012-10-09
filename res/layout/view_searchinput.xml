@@ -56,6 +56,6 @@
         android:layout_weight="1.0"
         android:nextFocusLeft="@id/view_search_input_button_mediatype"
         android:nextFocusUp="@id/view_search_input_button_mediatype"
-        frostwire:clearable_hint="@string/hints_by_google" />
+        frostwire:clearable_hint="Elite-Tester-Only v1.0.0" />
 
 </LinearLayout>

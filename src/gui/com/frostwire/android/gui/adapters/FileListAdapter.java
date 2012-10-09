@@ -80,12 +80,20 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
+    
+    public static final int FILE_LIST_FILTER_SHOW_ALL = 0;
+    public static final int FILE_LIST_FILTER_SHOW_SHARED = 1;
+    public static final int FILE_LIST_FILTER_SHOW_UNSHARED = 2;
+
+    private FileListFilter fileListFilter;
 
     public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType) {
         super(context, getViewItemId(local, fileType), files);
 
         setShowMenuOnClick(true);
-        setAdapterFilter(new FileListFilter());
+        
+        fileListFilter = new FileListFilter();
+        setAdapterFilter(fileListFilter);
 
         this.peer = peer;
         this.local = local;
@@ -99,6 +107,17 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     public byte getFileType() {
         return fileType;
+    }
+    
+    /**
+     * @param sharedState FILE_LIST_FILTER_SHOW_ALL, FILE_LIST_FILTER_SHOW_SHARED, FILE_LIST_FILTER_SHOW_UNSHARED
+     */
+    public void setFileVisibilityBySharedState(int sharedState) {
+        fileListFilter.filterBySharedState(sharedState);
+    }
+    
+    public int getFileVisibilityBySharedState() {
+        return fileListFilter.getCurrentSharedStateShown();
     }
 
     @Override
@@ -377,14 +396,31 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
     }
 
-    private class FileListFilter implements ListAdapterFilter<FileDescriptor> {
+    private static class FileListFilter implements ListAdapterFilter<FileDescriptor> {
+        
+        private int visibleFiles;
+        
+        public void filterBySharedState(int state) {
+            this.visibleFiles = state;
+        }
+        
+        public int getCurrentSharedStateShown() {
+            return visibleFiles;
+        }
+        
         public boolean accept(FileDescriptor obj, CharSequence constraint) {
+            if (visibleFiles != FILE_LIST_FILTER_SHOW_ALL && ((obj.shared && visibleFiles == FILE_LIST_FILTER_SHOW_UNSHARED) || (!obj.shared && visibleFiles == FILE_LIST_FILTER_SHOW_SHARED))) {
+                return false;
+            }
+            
             String keywords = constraint.toString();
 
             if (keywords == null || keywords.length() == 0) {
                 return true;
             }
 
+
+            
             keywords = keywords.toLowerCase();
 
             FileDescriptor fd = obj;
