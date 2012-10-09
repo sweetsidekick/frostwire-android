@@ -24,14 +24,8 @@
     android:background="#fff6f6f6" >
 
     <GridView
-        android:id="@+id/view_promotions_grid"
+        android:id="@+id/view_promotions_gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="200dp"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

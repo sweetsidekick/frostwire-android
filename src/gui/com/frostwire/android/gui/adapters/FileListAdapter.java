@@ -53,11 +53,11 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
-import com.frostwire.android.gui.views.ThumbnailLoader;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -75,13 +75,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     private final Peer peer;
     private final boolean local;
     private final byte fileType;
-    private final ThumbnailLoader thumbnailLoader;
+    private final ImageLoader thumbnailLoader;
     private final Drawable fileTypeDrawable;
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
 
-    public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType, ThumbnailLoader thumbnailLoader) {
+    public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType) {
         super(context, getViewItemId(local, fileType), files);
 
         setShowMenuOnClick(true);
@@ -90,7 +90,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.peer = peer;
         this.local = local;
         this.fileType = fileType;
-        this.thumbnailLoader = thumbnailLoader;
+        this.thumbnailLoader = ImageLoader.getDefault();
         this.fileTypeDrawable = getContext().getResources().getDrawable(getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();

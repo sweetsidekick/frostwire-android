@@ -43,6 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="12dp" >
 
             <Button
@@ -50,7 +52,7 @@
                 style="@style/DonationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="6dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="0.5"
                 android:text="@string/donate_1" />
 
@@ -59,7 +61,7 @@
                 style="@style/DonationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="0.5"
                 android:text="@string/donate_5" />
         </LinearLayout>
@@ -67,14 +69,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp" >
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp" >
 
             <Button
                 android:id="@+id/fragment_about_button_donate3"
                 style="@style/DonationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="6dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="0.5"
                 android:text="@string/donate_10" />
 
@@ -83,7 +87,7 @@
                 style="@style/DonationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="0.5"
                 android:text="@string/donate_25" />
         </LinearLayout>

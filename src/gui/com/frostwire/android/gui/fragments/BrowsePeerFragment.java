@@ -47,7 +47,6 @@ import com.frostwire.android.gui.adapters.FileListAdapter;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
-import com.frostwire.android.gui.views.ThumbnailLoader;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
 
 /**
@@ -70,7 +69,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private FileListAdapter adapter;
 
-    private ThumbnailLoader thumbnailLoader;
     private Peer peer;
     private boolean local;
     private Finger finger;
@@ -109,8 +107,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        thumbnailLoader = new ThumbnailLoader(getActivity());
 
         if (peer == null) {
             getPeer();
@@ -400,7 +396,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
-            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType, thumbnailLoader) {
+            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
                 protected void onItemChecked(View v, boolean isChecked) {
                     if (!isChecked) {
                         filesBar.clearCheckAll();

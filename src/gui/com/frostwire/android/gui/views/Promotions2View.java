@@ -21,6 +21,7 @@ package com.frostwire.android.gui.views;
 import java.util.List;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.PromotionsHandler;
+import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
 import com.frostwire.android.util.JsonUtils;
 
@@ -45,6 +47,8 @@ import com.frostwire.android.util.JsonUtils;
 public class Promotions2View extends LinearLayout {
 
     private static final String TAG = "FW.PromotionsView";
+
+    private GridView gridview;
 
     public Promotions2View(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,17 +65,36 @@ public class Promotions2View extends LinearLayout {
         }
 
         try {
-            GridView gridview = (GridView) findViewById(R.id.view_promotions_grid);
-            gridview.setAdapter(new PromotionsAdapter(getContext(), loadSlides()));
-
+            gridview = (GridView) findViewById(R.id.view_promotions_gridview);
             gridview.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    
+
                 }
             });
+
+            loadSlidesAsync();
         } catch (Throwable e) {
             Log.e(TAG, "Error loading slides", e);
         }
+    }
+
+    private void loadSlidesAsync() {
+        AsyncTask<Void, Void, List<PromotionsHandler.Slide>> task = new AsyncTask<Void, Void, List<PromotionsHandler.Slide>>() {
+
+            @Override
+            protected List<Slide> doInBackground(Void... params) {
+                return loadSlides();
+            }
+
+            @Override
+            protected void onPostExecute(List<Slide> result) {
+                if (gridview != null) {
+                    gridview.setAdapter(new PromotionsAdapter(getContext(), result));
+                }
+            }
+        };
+
+        task.execute();
     }
 
     private List<PromotionsHandler.Slide> loadSlides() {
