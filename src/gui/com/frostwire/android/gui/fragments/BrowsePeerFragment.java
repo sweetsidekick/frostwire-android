@@ -430,8 +430,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             unshared.setText(String.valueOf(numTotal - numShared));
 
             updateFileVisiblityIndicatorsAlpha();
+        }
 
-            onRefreshShared(fileType);
+        if (adapter != null) {
+            onRefreshShared(adapter.getFileType());
         }
     }
 

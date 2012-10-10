@@ -39,6 +39,7 @@
 
         <TextView
             android:id="@+id/activity_browse_peer_text_nickname"
+            style="@style/BrowsePeerActivityHeaderNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -46,6 +47,7 @@
 
         <TextView
             android:id="@+id/activity_browse_peer_text_title"
+            style="@style/BrowsePeerActivityHeaderTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/activity_browse_peer_text_nickname"
