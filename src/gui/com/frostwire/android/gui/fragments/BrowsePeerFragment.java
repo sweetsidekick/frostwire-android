@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -75,6 +76,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private Finger finger;
 
     private View header;
+
+    private OnRefreshSharedListener onRefreshSharedListener;
 
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
@@ -166,7 +169,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         getLoaderManager().destroyLoader(LOADER_FINGER_ID);
         getLoaderManager().restartLoader(LOADER_FINGER_ID, null, this);
-        
+
         if (adapter != null) {
             //adapter.notifyDataSetChanged();
             browseFilesButtonClick(adapter.getFileType());
@@ -199,6 +202,14 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         return header;
     }
 
+    public OnRefreshSharedListener getOnRefreshSharedListener() {
+        return onRefreshSharedListener;
+    }
+
+    public void setOnRefreshSharedListener(OnRefreshSharedListener l) {
+        this.onRefreshSharedListener = l;
+    }
+
     @Override
     protected void initComponents(View v) {
         initRadioButton(v, R.id.fragment_browse_peer_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
@@ -226,6 +237,35 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 }
             }
         });
+    }
+
+    protected void onRefreshShared(byte fileType) {
+        if (onRefreshSharedListener != null) {
+            int numShared = 0;
+
+            switch (fileType) {
+            case Constants.FILE_TYPE_APPLICATIONS:
+                numShared = finger.numSharedApplicationFiles;
+                break;
+            case Constants.FILE_TYPE_AUDIO:
+                numShared = finger.numSharedAudioFiles;
+                break;
+            case Constants.FILE_TYPE_DOCUMENTS:
+                numShared = finger.numSharedDocumentFiles;
+                break;
+            case Constants.FILE_TYPE_PICTURES:
+                numShared = finger.numSharedPictureFiles;
+                break;
+            case Constants.FILE_TYPE_RINGTONES:
+                numShared = finger.numSharedRingtoneFiles;
+                break;
+            case Constants.FILE_TYPE_VIDEOS:
+                numShared = finger.numSharedVideoFiles;
+                break;
+            }
+
+            onRefreshSharedListener.onRefresh(this, fileType, numShared);
+        }
     }
 
     private void loadPeerFromIntentData() {
@@ -295,6 +335,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         Bundle bundle = new Bundle();
         bundle.putByte("fileType", fileType);
         getLoaderManager().restartLoader(LOADER_FILES_ID, bundle, this);
+
+        onRefreshShared(fileType);
     }
 
     private Loader<Object> createLoaderFinger() {
@@ -381,13 +423,15 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             FileVisibilityFilterListener visibilityFilterListener = new FileVisibilityFilterListener();
             shared.setOnClickListener(visibilityFilterListener);
             unshared.setOnClickListener(visibilityFilterListener);
-            
+
             title.setText(fileTypeStr);
             total.setText("(" + String.valueOf(numTotal) + ")");
             shared.setText(String.valueOf(numShared));
             unshared.setText(String.valueOf(numTotal - numShared));
-            
+
             updateFileVisiblityIndicatorsAlpha();
+
+            onRefreshShared(fileType);
         }
     }
 
@@ -430,45 +474,47 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         }
     }
-    
-    private class FileVisibilityFilterListener  implements OnClickListener {
+
+    private class FileVisibilityFilterListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             Log.v(TAG, "clicked filter");
 
             adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
             adapter.getFilter().filter(filesBar.getText());
-            
+
             updateFileVisiblityIndicatorsAlpha();
         }
     }
 
     public void updateFileVisiblityIndicatorsAlpha() {
-        
+
         if (adapter == null) {
             return;
         }
-        
+
         TextView shared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_shared);
         TextView unshared = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total_unshared);
 
         int transparentValue = 128;
-        
-        switch (adapter.getFileVisibilityBySharedState()) {
-            case FileListAdapter.FILE_LIST_FILTER_SHOW_ALL:
-                UIUtils.setTextViewAlpha(shared,255);
-                UIUtils.setTextViewAlpha(unshared,255);
-                break;
-            case FileListAdapter.FILE_LIST_FILTER_SHOW_SHARED:
-                UIUtils.setTextViewAlpha(shared,255);
-                UIUtils.setTextViewAlpha(unshared,transparentValue);
-                break;
-            case FileListAdapter.FILE_LIST_FILTER_SHOW_UNSHARED:
-                UIUtils.setTextViewAlpha(shared,transparentValue);
-                UIUtils.setTextViewAlpha(unshared,255);
-                break;
-        }
 
+        switch (adapter.getFileVisibilityBySharedState()) {
+        case FileListAdapter.FILE_LIST_FILTER_SHOW_ALL:
+            UIUtils.setTextViewAlpha(shared, 255);
+            UIUtils.setTextViewAlpha(unshared, 255);
+            break;
+        case FileListAdapter.FILE_LIST_FILTER_SHOW_SHARED:
+            UIUtils.setTextViewAlpha(shared, 255);
+            UIUtils.setTextViewAlpha(unshared, transparentValue);
+            break;
+        case FileListAdapter.FILE_LIST_FILTER_SHOW_UNSHARED:
+            UIUtils.setTextViewAlpha(shared, transparentValue);
+            UIUtils.setTextViewAlpha(unshared, 255);
+            break;
+        }
     }
 
+    public static interface OnRefreshSharedListener {
+        public void onRefresh(Fragment f, byte fileType, int numShared);
+    }
 }

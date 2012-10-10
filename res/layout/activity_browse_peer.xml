@@ -39,9 +39,17 @@
 
         <TextView
             android:id="@+id/activity_browse_peer_text_nickname"
-            style="@style/BrowsePeerHeaderText"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/activity_browse_peer_button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dummy_nickname" />
+
+        <TextView
+            android:id="@+id/activity_browse_peer_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_browse_peer_text_nickname"
+            android:layout_centerHorizontal="true"
             android:text="@string/dummy_nickname" />
     </RelativeLayout>
 
