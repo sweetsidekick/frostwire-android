@@ -19,31 +19,29 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#fff6f6f6"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_untabbed_header_background"
-        android:gravity="left|center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="7dp"
-        android:paddingTop="7dp" >
+        android:background="@drawable/main_header_background" >
 
         <ImageButton
-            android:id="@+id/activity_browse_peer_icon"
-            style="@style/BrowsePeerHeaderIcon"
+            android:id="@+id/activity_browse_peer_button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
             android:contentDescription="@null"
-            android:src="@drawable/wifi_dark" />
+            android:src="@drawable/browse_peer_button_back_icon" />
 
         <TextView
             android:id="@+id/activity_browse_peer_text_nickname"
             style="@style/BrowsePeerHeaderText"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/activity_browse_peer_icon"
+            android:layout_toRightOf="@id/activity_browse_peer_button_back"
             android:text="@string/dummy_nickname" />
     </RelativeLayout>
 
@@ -52,11 +50,12 @@
         android:name="com.frostwire.android.gui.fragments.BrowsePeerFragment"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_browse_peer" />
 
     <com.frostwire.android.gui.views.PlayerNotifierView
         android:id="@+id/activity_browse_peer_player_notifier"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
 

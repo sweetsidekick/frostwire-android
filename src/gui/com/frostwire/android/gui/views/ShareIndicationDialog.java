@@ -19,9 +19,8 @@
 package com.frostwire.android.gui.views;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -29,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 
 /**
@@ -36,47 +36,30 @@ import com.frostwire.android.core.Constants;
  * @author aldenml
  *
  */
-public class ShareIndicationDialog extends Dialog {
+public class ShareIndicationDialog extends DialogFragment {
 
-    private Button buttonDone;
-    private CheckBox checkShow;
-
-    public ShareIndicationDialog(Context context) {
-        super(context);
-        initComponents();
+    public ShareIndicationDialog() {
     }
 
     @Override
-    public void show() {
-        show(false);
-    }
-
-    public Dialog show(boolean force) {
-        if (force || getPreferences().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, true)) {
-            super.show();
-        }
-        return this;
-    }
-
-    private void initComponents() {
-        getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_share_indication);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dlg = new Dialog(getActivity());
+        dlg.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlg.setContentView(R.layout.dialog_share_indication);
         setCancelable(true);
 
-        buttonDone = (Button) findViewById(R.id.dialog_share_indicator_button_done);
+        final CheckBox checkShow = (CheckBox) dlg.findViewById(R.id.dialog_share_indicator_check_show);
+        checkShow.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION));
+
+        Button buttonDone = (Button) dlg.findViewById(R.id.dialog_share_indicator_button_done);
         buttonDone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dismiss();
-                getPreferences().edit().putBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, checkShow.isChecked()).commit();
+                ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, checkShow.isChecked());
             }
         });
 
-        checkShow = (CheckBox) findViewById(R.id.dialog_share_indicator_check_show);
-        checkShow.setChecked(getPreferences().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, true));
-    }
-
-    private SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(getContext());
+        return dlg;
     }
 }

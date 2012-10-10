@@ -84,12 +84,17 @@ public class PromotionsView extends LinearLayout {
 
             @Override
             protected List<Slide> doInBackground(Void... params) {
-                return loadSlides();
+                try {
+                    return loadSlides();
+                } catch (Throwable e) {
+                    Log.e(TAG, "Error loading slides from server");
+                }
+                return null;
             }
 
             @Override
             protected void onPostExecute(List<Slide> result) {
-                if (gridview != null) {
+                if (gridview != null && result != null) {
                     gridview.setAdapter(new PromotionsAdapter(getContext(), result));
                 }
             }

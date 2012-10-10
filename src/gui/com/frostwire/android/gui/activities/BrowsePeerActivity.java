@@ -19,10 +19,11 @@
 package com.frostwire.android.gui.activities;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.views.AbstractActivity;
@@ -58,20 +59,31 @@ public class BrowsePeerActivity extends AbstractActivity {
 
         if (peer.isLocalHost()) {
             textNickname.setText(R.string.me);
-            ImageView icon = findView(R.id.activity_browse_peer_icon);
-            icon.setImageDrawable(getResources().getDrawable(R.drawable.library_light));
         } else {
             textNickname.setText(peer.getNickname());
         }
-
-        if (peer.isLocalHost()) {
-            trackDialog(new ShareIndicationDialog(this)).show();
-        }
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (peer.isLocalHost() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
+            showShareIndication();
+        }
+    }
+
+    private void showShareIndication() {
+        String tag = "share_indication";
+        if (getSupportFragmentManager().findFragmentByTag(tag) == null) {
+            ShareIndicationDialog dlg = new ShareIndicationDialog();
+            dlg.show(getSupportFragmentManager(), "share_indication");
+        }
     }
 }

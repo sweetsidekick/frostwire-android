@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -59,8 +60,8 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
     private final OnClickListener howtoShareClickListener;
 
-    public PeerListAdapter(Context context, List<Peer> peers) {
-        super(context, R.layout.view_peer_list_item, peers);
+    public PeerListAdapter(final FragmentActivity activity, List<Peer> peers) {
+        super(activity, R.layout.view_peer_list_item, peers);
 
         Resources r = getContext().getResources();
 
@@ -70,7 +71,8 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
         howtoShareClickListener = new OnClickListener() {
             public void onClick(View v) {
-                trackDialog(new ShareIndicationDialog(getContext()).show(true));
+                ShareIndicationDialog dlg = new ShareIndicationDialog();
+                dlg.show(activity.getSupportFragmentManager(), "share_indication");
             }
         };
     }

@@ -50,13 +50,6 @@ public class ContextMenuDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context context = getActivity();
 
@@ -73,14 +66,5 @@ public class ContextMenuDialog extends DialogFragment {
         });
 
         return builder.create();
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance()) {
-            getDialog().setOnDismissListener(null);
-        }
-
-        super.onDestroyView();
     }
 }
