@@ -46,7 +46,7 @@ public class WizardActivity extends AbstractActivity {
     private View currentPageView;
 
     public WizardActivity() {
-        super(R.layout.activity_wizard);
+        super(R.layout.activity_wizard, false, 0);
 
         completeListener = new OnCompleteListener() {
             public void onComplete(WizardPageView pageView, boolean complete) {

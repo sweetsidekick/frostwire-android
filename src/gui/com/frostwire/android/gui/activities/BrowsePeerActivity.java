@@ -56,7 +56,9 @@ public class BrowsePeerActivity extends AbstractActivity {
     @Override
     protected void initComponents() {
         textNickname = findView(R.id.activity_browse_peer_text_nickname);
+        textNickname.setText("");
         textTitle = findView(R.id.activity_browse_peer_text_title);
+        textTitle.setText("");
         browsePeerFragment = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_browse_peer_fragment);
 
         peer = browsePeerFragment.getPeer();

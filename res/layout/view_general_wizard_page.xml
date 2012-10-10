@@ -19,56 +19,60 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/shape_untabbed_header_background"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/welcome_to_frostwire"
-        android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/let_apos_s_set_you_up_before_we_begin_"
-        android:textColor="@color/frostwire_gray_explanation_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/frostwire_gray_explanation_text" />
 
     <TextView
         android:id="@+id/view_general_wizard_page_text_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/try_changing_your_nickname"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:layout_marginLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginLeft="16dp"
         android:text="@string/how_others_see_you_on_the_local_network_wifi_"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/frostwire_gray_explanation_text" />
 
     <EditText
         android:id="@+id/view_general_wizard_page_input_nickname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/nickname_edittext_background"
         android:hint="@null"
-        android:layout_marginBottom="5dp"
+        android:padding="6dp"
         android:singleLine="true" >
 
         <requestFocus />
@@ -77,28 +81,31 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_background_hint"
-        android:paddingLeft="5dp"
         android:layout_marginBottom="5dp"
+        android:background="@drawable/main_header_background"
+        android:paddingBottom="6dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="6dp"
         android:text="@string/seeding_settings"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
     <CheckBox
         android:id="@+id/view_general_wizard_page_check_seed_finished_torrents"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/seed_finished_torrents"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/seeding_settings_explanation"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/frostwire_gray_explanation_text" />
@@ -107,18 +114,18 @@
         android:id="@+id/view_general_wizard_page_check_seed_finished_torrents_wifi_only"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/seed_finished_torrents_wifi_only"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginLeft="16dp"
         android:text="@string/seeding_wifi_settings_explanation"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/frostwire_gray_explanation_text" />
 
 </LinearLayout>

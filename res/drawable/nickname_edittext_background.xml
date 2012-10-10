@@ -19,12 +19,15 @@
  */
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
+    padding="3dp"
     android:shape="rectangle" >
 
-    <gradient
-        android:angle="-90"
-        android:endColor="#ff3f88c7"
-        android:startColor="#ff75c3ee"
-        android:type="linear" />
+    <solid android:color="@android:color/white" />
+
+    <stroke
+        android:width="2px"
+        android:color="#ff4cace2" />
+
+    <corners android:radius="8dp" />
 
 </shape>
