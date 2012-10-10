@@ -1,4 +1,4 @@
-FrostWire 1.0.0
+FrostWire 1.0.2
  - New FrostWire 1.0 skin by designer Marcelina Knitter.
  - New vertical navigation menu, solves fragmentation issues
    on devices that had no way of bringing the preferences menu.
@@ -11,6 +11,7 @@ FrostWire 1.0.0
    FrostWire now will appear as a 'Send' or 'Share' option
    on third party apps.
  - Simplified Transfers screen (awesome updates coming)
+ - New design for Setup Wizard.
 
 FrostWire 0.9.14
  - Search suggestions in Unicode.
