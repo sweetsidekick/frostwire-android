@@ -231,6 +231,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 Drawable icon = Drawable.createFromStream(is, "");
                 fileThumbnail.setImageDrawable(icon);
             } catch (Throwable e) {
+                fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
                 fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
                 if (is != null) {
