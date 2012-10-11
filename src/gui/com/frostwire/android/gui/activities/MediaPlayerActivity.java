@@ -87,6 +87,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private BroadcastReceiver broadcastReceiver;
 
+    private ImageButton buttonBack;
     private ImageButton buttonMenu;
 
     private AdView adView;
@@ -246,6 +247,14 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
+
+        buttonBack = findView(R.id.activity_mediaplayer_button_back);
+        buttonBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         buttonMenu = findView(R.id.activity_mediaplayer_button_menu);
         buttonMenu.setOnClickListener(new OnClickListener() {

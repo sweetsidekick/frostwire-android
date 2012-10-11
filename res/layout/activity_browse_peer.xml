@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:contentDescription="@null"
-            android:src="@drawable/browse_peer_button_back_icon" />
+            android:src="@drawable/back_icon_activity" />
 
         <TextView
             android:id="@+id/activity_browse_peer_text_nickname"

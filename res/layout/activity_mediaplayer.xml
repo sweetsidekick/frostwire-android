@@ -32,31 +32,15 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp" >
 
-        <TextView
-            android:id="@+id/activity_mediaplayer_artist"
-            style="@style/MediaPlayerHeaderTitle"
+        <ImageButton
+            android:id="@+id/activity_mediaplayer_button_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/dummy_title" />
-
-        <TextView
-            android:id="@+id/activity_mediaplayer_title"
-            style="@style/MediaPlayerHeaderTitleBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/activity_mediaplayer_artist"
-            android:layout_centerHorizontal="true"
-            android:text="@string/dummy_title" />
-
-        <TextView
-            android:id="@+id/activity_mediaplayer_album"
-            style="@style/MediaPlayerHeaderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/activity_mediaplayer_title"
-            android:layout_centerHorizontal="true"
-            android:text="@string/dummy_title" />
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/back_icon_activity" />
 
         <ImageButton
             android:id="@+id/activity_mediaplayer_button_menu"
@@ -67,6 +51,38 @@
             android:background="@null"
             android:contentDescription="@null"
             android:src="@drawable/mediaplayer_menu_icon" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_artist"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/activity_mediaplayer_button_menu"
+            android:layout_toRightOf="@id/activity_mediaplayer_button_back"
+            android:gravity="center_horizontal"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_title"
+            style="@style/MediaPlayerHeaderTitleBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/activity_mediaplayer_artist"
+            android:layout_alignRight="@id/activity_mediaplayer_artist"
+            android:layout_below="@id/activity_mediaplayer_artist"
+            android:gravity="center_horizontal"
+            android:text="@string/dummy_title" />
+
+        <TextView
+            android:id="@+id/activity_mediaplayer_album"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/activity_mediaplayer_title"
+            android:layout_alignRight="@id/activity_mediaplayer_title"
+            android:layout_below="@id/activity_mediaplayer_title"
+            android:gravity="center_horizontal"
+            android:text="@string/dummy_title" />
     </RelativeLayout>
 
     <RelativeLayout
