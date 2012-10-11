@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +20,9 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
 
     private String lastStatusShown;
     private TextView statusText;
+    private LinearLayout statusContainer;
 
-    private TranslateAnimation bounceFromRightAnimation;
+    private TranslateAnimation fromRightAnimation;
 
     private TranslateAnimation showNotifierAnimation;
     private TranslateAnimation hideNotifierAnimation;
@@ -34,9 +34,9 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
     }
 
     private void initAnimations() {
-        bounceFromRightAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        bounceFromRightAnimation.setDuration(1000);
-        bounceFromRightAnimation.setInterpolator(new BounceInterpolator());
+        fromRightAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        fromRightAnimation.setDuration(500);
+        fromRightAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 
         showNotifierAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         showNotifierAnimation.setDuration(300);
@@ -53,6 +53,7 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
 
         View.inflate(getContext(), R.layout.view_player_notifier, this);
         statusText = (TextView) findViewById(R.id.view_player_notifier_status);
+        statusContainer = (LinearLayout) findViewById(R.id.view_player_notifier_status_container);
     }
 
     @Override
@@ -61,12 +62,11 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
         String status = "";
 
         if (fd != null) {
-            status = getContext().getString(R.string.playing_song_name, fd.artist + " - " + fd.title);
+            status = fd.artist + " - " + fd.title;
 
             if (getVisibility() == View.GONE) {
                 setVisibility(View.VISIBLE);
                 startAnimation(showNotifierAnimation);
-
             }
         } else {
             if (getVisibility() == View.VISIBLE) {
@@ -78,7 +78,7 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
         if (!status.equals(lastStatusShown)) {
             statusText.setText(status);
             lastStatusShown = status;
-            statusText.startAnimation(bounceFromRightAnimation);
+            statusContainer.startAnimation(fromRightAnimation);
         }
     }
 

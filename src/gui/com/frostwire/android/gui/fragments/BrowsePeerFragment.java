@@ -413,7 +413,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 break;
             }
 
-            String fileTypeStr = UIUtils.getFileTypeAsString(getResources(), fileType);
+            String fileTypeStr = getString(R.string.my_filetype, UIUtils.getFileTypeAsString(getResources(), fileType));
 
             TextView title = (TextView) header.findViewById(R.id.view_browse_peer_header_text_title);
             TextView total = (TextView) header.findViewById(R.id.view_browse_peer_header_text_total);

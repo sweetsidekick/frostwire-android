@@ -397,4 +397,6 @@
     <string name="donate_25">Donate $25</string>
 	<string name="one_file_shared" >One file has been shared to FrostWire devices on the same WiFi network.</string>
 	<string name="n_files_shared" >%d files has been shared to FrostWire devices on the same WiFi network.</string>
+	<string name="playing_now_colon">Playing now:</string>
+	<string name="my_filetype">My %s</string>
 </resources>

@@ -42,10 +42,19 @@
         android:layout_toRightOf="@+id/view_player_menu_item_thumbnail" >
 
         <TextView
+            android:id="@+id/view_player_menu_item_playingnow"
+            style="@style/MediaPlayerHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/playing_now_colon" />
+        
+        <TextView
             android:id="@+id/view_player_menu_item_artist"
             style="@style/MediaPlayerHeaderTitleBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/view_player_menu_item_playingnow"
+            android:layout_below="@id/view_player_menu_item_playingnow"
             android:text="@string/dummy_title" />
 
         <TextView
