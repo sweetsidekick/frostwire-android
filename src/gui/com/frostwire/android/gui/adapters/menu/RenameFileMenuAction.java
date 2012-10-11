@@ -42,7 +42,7 @@ public class RenameFileMenuAction extends MenuAction {
     private final FileListAdapter adapter;
 
     public RenameFileMenuAction(Context context, FileListAdapter adapter, FileDescriptor fd) {
-        super(context, UIUtils.getFileTypeIconId(fd.fileType), R.string.rename);
+        super(context, R.drawable.contextmenu_icon_rename, R.string.rename);
 
         this.adapter = adapter;
         this.fd = fd;

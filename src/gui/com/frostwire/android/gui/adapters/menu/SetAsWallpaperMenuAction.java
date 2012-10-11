@@ -39,7 +39,7 @@ public class SetAsWallpaperMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public SetAsWallpaperMenuAction(Context context, FileDescriptor fd) {
-        super(context, R.drawable.picture_icon, R.string.set_as_wallpaper);
+        super(context, R.drawable.contextmenu_icon_ringtone, R.string.set_as_wallpaper);
 
         this.fd = fd;
     }

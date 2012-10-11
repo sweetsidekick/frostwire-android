@@ -220,7 +220,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
         ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
-        fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
+        fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
             InputStream is = null;

@@ -250,31 +250,6 @@ public final class UIUtils {
         return NUMBER_FORMAT0.format(rate) + " " + GENERAL_UNIT_KBPSEC;
     }
 
-    /**
-     * Retrieve the resource id for the file type icon.
-     * 
-     * @param fileType The desired file type from GlobalConstants.
-     * @return The icon resource id.
-     */
-    public static int getFileTypeIconId(byte fileType) {
-        switch (fileType) {
-        case Constants.FILE_TYPE_APPLICATIONS:
-            return R.drawable.application_icon;
-        case Constants.FILE_TYPE_AUDIO:
-            return R.drawable.audio_icon;
-        case Constants.FILE_TYPE_DOCUMENTS:
-            return R.drawable.document_icon;
-        case Constants.FILE_TYPE_PICTURES:
-            return R.drawable.picture_icon;
-        case Constants.FILE_TYPE_RINGTONES:
-            return R.drawable.ringtone_icon;
-        case Constants.FILE_TYPE_VIDEOS:
-            return R.drawable.video_icon;
-        default:
-            return R.drawable.question_mark;
-        }
-    }
-
     public static String getFileTypeAsString(Resources resources, byte fileType) {
         switch (fileType) {
         case Constants.FILE_TYPE_APPLICATIONS:
