@@ -41,7 +41,7 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/searchinput_menu_mediatype_button_background_selector"
         android:contentDescription="@null"
-        android:paddingRight="14dp"
+        android:paddingRight="18dp"
         android:src="@drawable/browse_peer_audio_icon_selector_off" />
 
     <com.frostwire.android.gui.views.ClearableEditTextView

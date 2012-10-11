@@ -29,21 +29,35 @@
         android:background="@drawable/browse_peer_filetype_buttons_background"
         android:gravity="right" >
 
-        <ImageButton
-            android:id="@+id/fragment_transfers_button_pauseall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:contentDescription="@null"
-            android:src="@drawable/stop_transfer" />
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@drawable/transfers_button_vertical_line_background" />
 
-        <ImageButton
-            android:id="@+id/fragment_transfers_button_clearcomplete"
+        <Button
+            android:id="@+id/fragment_transfers_button_pauseall"
+            style="@style/TransfersButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:contentDescription="@null"
-            android:src="@drawable/remove_transfer" />
+            android:drawableLeft="@drawable/stop_transfer"
+            android:paddingRight="10dp"
+            android:text="@string/stop" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@drawable/transfers_button_vertical_line_background" />
+
+        <Button
+            android:id="@+id/fragment_transfers_button_clearcomplete"
+            style="@style/TransfersButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableLeft="@drawable/remove_transfer"
+            android:paddingRight="10dp"
+            android:text="@string/clear" />
     </LinearLayout>
 
     <ExpandableListView

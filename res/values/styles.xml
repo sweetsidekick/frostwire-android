@@ -183,6 +183,9 @@
 
     <!-- Transfers list end -->
 
+    <style name="TransfersButton">
+        <item name="android:textColor">#ffbfcfdc</item>
+    </style>
 
     <!-- Transfers indicator begin -->
 

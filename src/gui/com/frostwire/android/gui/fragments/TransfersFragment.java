@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -53,8 +53,8 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
     private final Comparator<Transfer> transferComparator;
 
-    private ImageButton buttonPauseAll;
-    private ImageButton buttonClearComplete;
+    private Button buttonPauseAll;
+    private Button buttonClearComplete;
     private TextView textDownloads;
     private TextView textUploads;
 
