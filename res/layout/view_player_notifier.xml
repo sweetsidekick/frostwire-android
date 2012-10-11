@@ -32,7 +32,7 @@
         android:layout_gravity="center_vertical|center"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:background="@drawable/play"
+        android:background="@drawable/playernotifier_icon_play"
         android:contentDescription="@null" />
 
     <TextView

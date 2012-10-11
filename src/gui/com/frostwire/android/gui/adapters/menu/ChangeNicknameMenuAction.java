@@ -44,7 +44,7 @@ public class ChangeNicknameMenuAction extends MenuAction {
     private AbstractListAdapter<Peer> adapter;
 
     public ChangeNicknameMenuAction(Context context, AbstractListAdapter<Peer> adapter) {
-        super(context, R.drawable.user_icon, R.string.change_my_nickname);
+        super(context, R.drawable.contextmenu_icon_user, R.string.change_my_nickname);
 
         this.adapter = adapter;
     }

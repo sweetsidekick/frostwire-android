@@ -35,13 +35,13 @@ public class OpenMenuAction extends MenuAction {
     private final String mime;
 
     public OpenMenuAction(Context context, String title, String path, String mime) {
-        super(context, R.drawable.play, R.string.open_menu_action, title);
+        super(context, R.drawable.contextmenu_icon_play, R.string.open_menu_action, title);
         this.path = path;
         this.mime = mime;
     }
 
     public OpenMenuAction(Context context, String path, String mime) {
-        super(context, R.drawable.play, R.string.open);
+        super(context, R.drawable.contextmenu_icon_play, R.string.open);
         this.path = path;
         this.mime = mime;
     }

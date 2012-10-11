@@ -38,7 +38,7 @@ public class CancelMenuAction extends MenuAction {
     private final boolean deleteData;
 
     public CancelMenuAction(Context context, Transfer transfer, boolean deleteData) {
-        super(context, R.drawable.stop_transfer_menu, (deleteData) ? R.string.cancel_delete_menu_action : R.string.cancel_menu_action);
+        super(context, R.drawable.contextmenu_icon_stop_transfer, (deleteData) ? R.string.cancel_delete_menu_action : R.string.cancel_menu_action);
         this.transfer = transfer;
         this.deleteData = deleteData;
     }

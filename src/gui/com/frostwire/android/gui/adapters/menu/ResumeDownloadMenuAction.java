@@ -34,7 +34,7 @@ public final class ResumeDownloadMenuAction extends MenuAction {
     private final BittorrentDownload download;
 
     public ResumeDownloadMenuAction(Context context, BittorrentDownload download) {
-        super(context, R.drawable.play_transfer_menu, R.string.resume_torrent_menu_action);
+        super(context, R.drawable.contextmenu_icon_play_transfer, R.string.resume_torrent_menu_action);
         this.download = download;
     }
 

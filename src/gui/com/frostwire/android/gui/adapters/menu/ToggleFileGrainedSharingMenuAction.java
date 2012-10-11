@@ -42,7 +42,7 @@ public class ToggleFileGrainedSharingMenuAction extends MenuAction {
     private final List<FileDescriptor> fds;
 
     public ToggleFileGrainedSharingMenuAction(Context context, FileListAdapter adapter, List<FileDescriptor> fds) {
-        super(context, R.drawable.unlocked, context.getResources().getString(R.string.toggle_sharing_selected_files) + (fds.size() > 1 ? " (" + fds.size() + ")" : ""));
+        super(context, R.drawable.contextmenu_icon_share, context.getResources().getString(R.string.toggle_sharing_selected_files) + (fds.size() > 1 ? " (" + fds.size() + ")" : ""));
         this.adapter = adapter;
         this.fds = fds;
     }

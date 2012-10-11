@@ -37,7 +37,7 @@ public class BrowsePeerMenuAction extends MenuAction {
     private final Peer peer;
 
     public BrowsePeerMenuAction(Context context, int textId, Peer peer) {
-        super(context, R.drawable.user_icon, textId);
+        super(context, R.drawable.contextmenu_icon_user, textId);
         this.peer = peer;
     }
 

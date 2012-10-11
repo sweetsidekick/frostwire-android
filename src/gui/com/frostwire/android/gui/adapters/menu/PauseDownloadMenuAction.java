@@ -34,7 +34,7 @@ public final class PauseDownloadMenuAction extends MenuAction {
     private final BittorrentDownload download;
 
     public PauseDownloadMenuAction(Context context, BittorrentDownload download) {
-        super(context, R.drawable.pause_transfer_menu, R.string.pause_torrent_menu_action);
+        super(context, R.drawable.contextmenu_icon_pause_transfer, R.string.pause_torrent_menu_action);
         this.download = download;
     }
 

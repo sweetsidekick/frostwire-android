@@ -700,7 +700,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
             @Override
             public int getDrawableResId() {
-                return mediaFD.shared ? R.drawable.menu_item_unshare : R.drawable.menu_item_share;
+                return mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share;
             }
         };
 
@@ -718,7 +718,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
             @Override
             public int getDrawableResId() {
-                return R.drawable.menu_icon_stop;
+                return R.drawable.contextmenu_icon_stop;
             }
         };
 

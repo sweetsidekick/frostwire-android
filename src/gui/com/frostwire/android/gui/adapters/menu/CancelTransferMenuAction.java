@@ -34,7 +34,7 @@ public class CancelTransferMenuAction extends MenuAction {
     private Transfer transfer;
 
     public CancelTransferMenuAction(Context context, Transfer transfer) {
-        super(context, R.drawable.remove_transfer_menu, R.string.delete);
+        super(context, R.drawable.contextmenu_icon_remove_transfer, R.string.delete);
 
         this.transfer = transfer;
     }

@@ -45,7 +45,7 @@ public class SetSharedStateFileGrainedMenuAction extends MenuAction {
     private final boolean shared;
 
     public SetSharedStateFileGrainedMenuAction(Context context, FileListAdapter adapter, List<FileDescriptor> fds, boolean shared) {
-        super(context, (shared) ? R.drawable.unlocked : R.drawable.locked, context.getResources().getString((shared) ? R.string.share_selected_files : R.string.unshare_selected_files) + (fds.size() > 1 ? " (" + fds.size() + ")" : ""));
+        super(context, (shared) ? R.drawable.contextmenu_icon_share : R.drawable.contextmenu_icon_unshare, context.getResources().getString((shared) ? R.string.share_selected_files : R.string.unshare_selected_files) + (fds.size() > 1 ? " (" + fds.size() + ")" : ""));
         this.fds = fds;
         this.adapter = adapter;
         this.shared = shared;
