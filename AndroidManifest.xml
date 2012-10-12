@@ -90,22 +90,24 @@
                 <!-- maybe it has to be one or the other, I'll comment files for a sec. -->
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
-            
+
             <!-- share a file sent by another app -->
             <intent-filter>
-            	<action android:name="android.intent.action.SEND"/>
-            	<category android:name="android.intent.category.DEFAULT" />
-            	<data android:mimeType="*/*" />
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
             </intent-filter>
-            
+
             <!-- share multiple files sent by another app -->
             <intent-filter>
-            	<action android:name="android.intent.action.SEND_MULTIPLE"/>
-            	<category android:name="android.intent.category.DEFAULT" />
-            	<data android:mimeType="*/*" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name="com.frostwire.android.gui.activities.WizardActivity"
@@ -121,18 +123,13 @@
         <activity
             android:name=".gui.activities.MediaPlayerActivity"
             android:label="@string/activity_mediaplayer_name"
-            android:screenOrientation="portrait"
-             />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.frostwire.android.gui.activities.AboutActivity"
             android:label="@string/activity_about" />
-
-        <!-- 
         <activity
-	        android:name="com.google.ads.AdActivity"
-    	    android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
-    	     -->
-
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <!-- providers -->
 
