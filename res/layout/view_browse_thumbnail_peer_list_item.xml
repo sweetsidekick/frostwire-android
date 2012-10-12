@@ -23,21 +23,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/listview_item_press_background_selector" >
 
-    <LinearLayout
-        android:id="@+id/view_browse_peer_list_item_file_thumbnail_placeholder"
+    <ImageView
+        android:id="@+id/view_browse_peer_list_item_file_thumbnail"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:background="#ffe9eef3"
-        android:padding="2dp" >
-
-        <ImageView
-            android:id="@+id/view_browse_peer_list_item_file_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:contentDescription="@null"
-            android:padding="2dp" />
-    </LinearLayout>
+        android:background="@drawable/listview_item_thumbnail_background"
+        android:contentDescription="@null"
+        android:padding="4px" />
 
     <ImageButton
         android:id="@+id/view_browse_peer_list_item_lock_toggle"
@@ -62,7 +54,7 @@
         android:layout_marginLeft="6dip"
         android:layout_marginTop="4dip"
         android:layout_toLeftOf="@id/view_browse_peer_list_item_lock_toggle"
-        android:layout_toRightOf="@id/view_browse_peer_list_item_file_thumbnail_placeholder"
+        android:layout_toRightOf="@id/view_browse_peer_list_item_file_thumbnail"
         android:text="@string/dummy_title" />
 
     <TextView
@@ -80,7 +72,7 @@
         style="@style/ListItemSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/view_browse_peer_list_item_file_thumbnail_placeholder"
+        android:layout_alignBottom="@id/view_browse_peer_list_item_file_thumbnail"
         android:layout_alignLeft="@id/view_browse_peer_list_item_file_title"
         android:layout_marginBottom="2dip"
         android:text="@string/dummy_size" />
