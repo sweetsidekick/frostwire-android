@@ -106,7 +106,7 @@ public class BrowsePeerActivity extends AbstractActivity {
 
     private void updateTitle(byte fileType, int numShared) {
         String title = UIUtils.getFileTypeAsString(getResources(), fileType);
-        title += "(" + numShared + ")";
+        title += " (" + numShared + ")";
         textTitle.setText(title);
     }
 
