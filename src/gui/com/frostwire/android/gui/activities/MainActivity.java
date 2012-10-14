@@ -410,4 +410,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         }
     }
 
+    public void showMyFiles() {
+        showFragment(library,R.id.menu_main_library);  
+    }
 }

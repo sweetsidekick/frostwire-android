@@ -37,6 +37,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.activities.BrowsePeerActivity;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.menu.BrowsePeerMenuAction;
 import com.frostwire.android.gui.adapters.menu.ChangeNicknameMenuAction;
 import com.frostwire.android.gui.views.AbstractListAdapter;
@@ -121,9 +122,19 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
             return;
         }
 
-        Intent i = new Intent(getContext(), BrowsePeerActivity.class);
-        i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
-        getContext().startActivity(i);
+        if (peer.isLocalHost()) {
+           if (getContext() instanceof MainActivity) {
+               ((MainActivity) getContext()).showMyFiles();
+           }
+        } else {
+            Intent i = null;
+            i = new Intent(getContext(), BrowsePeerActivity.class);
+           i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
+           getContext().startActivity(i);
+
+        }
+        
+
     }
 
     @Override

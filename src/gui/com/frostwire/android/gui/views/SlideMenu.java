@@ -68,7 +68,7 @@ public class SlideMenu extends LinearLayout {
 
     private static final String TAG = "FW.SlideMenu";
 
-    // keys for saving/restoring instance state
+    // keys for saving/restoring instance states
     private final static String KEY_MENUSHOWN = "menuWasShown";
     private final static String KEY_STATUSBARHEIGHT = "statusBarHeight";
     private final static String KEY_SUPERSTATE = "superState";
