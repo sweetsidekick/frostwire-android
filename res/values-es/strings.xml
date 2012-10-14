@@ -384,4 +384,7 @@
     <string name="donate_25">Donar $25</string>
     <string name="one_file_shared" >Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
 	<string name="n_files_shared" >%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
+	<string name="playing_now_colon">Tocando ahora:</string>
+	<string name="my_filetype">Mis %s</string>
+	<string name="paused">Pausado</string>
 </resources>
