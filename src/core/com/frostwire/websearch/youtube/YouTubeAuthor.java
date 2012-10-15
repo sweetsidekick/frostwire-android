@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch;
+package com.frostwire.websearch.youtube;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchResult {
+public class YouTubeAuthor {
 
-    public String getFileName();
-
-    public long getSize();
-
-    public long getCreationTime();
-
-    public String getVendor();
-
-    public String getHash();
-
-    public String getTorrentURI();
-
-    public int getSeeds();
-
-    public String getTorrentDetailsURL();
+    public YouTubeAuthorName name;
 }

@@ -54,7 +54,7 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public int getSeeds() {
+    public int getRank() {
         return 0;
     }
 
@@ -74,7 +74,7 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getTorrentDetailsURL() {
+    public String getDetailsUrl() {
         return slide.url;
     }
 
@@ -84,7 +84,7 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getVendor() {
+    public String getSource() {
         return FROSTCLICK_VENDOR;
     }
 }

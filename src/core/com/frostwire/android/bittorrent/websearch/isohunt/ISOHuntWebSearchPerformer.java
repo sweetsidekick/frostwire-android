@@ -21,10 +21,11 @@ package com.frostwire.android.bittorrent.websearch.isohunt;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.websearch.JsonSearchPerformer;
+import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -40,7 +41,7 @@ public class ISOHuntWebSearchPerformer extends JsonSearchPerformer {
 
         if (response != null && response.items != null && response.items.list != null) {
             for (ISOHuntItem item : response.items.list) {
-                WebSearchResult sr = new ISOHuntWebSearchResult(item);
+                TorrentWebSearchResult sr = new ISOHuntWebSearchResult(item);
                 result.add(sr);
             }
         }

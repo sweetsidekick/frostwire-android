@@ -78,8 +78,8 @@ class DownloadTorrentTask extends SearchTask {
 
             CountDownLatch finishSignal = new CountDownLatch(1);
 
-            Log.d(TAG, String.format("About to download: %s, details %s", sr.getTorrentURI(), sr.getTorrentDetailsURL()));
-            torrentDownloader = TorrentDownloaderFactory.create(new LocalSearchTorrentDownloaderListener(query, sr, task, finishSignal), sr.getTorrentURI(), sr.getTorrentDetailsURL(), saveDir);
+            Log.d(TAG, String.format("About to download: %s, details %s", sr.getTorrentURI(), sr.getDetailsUrl()));
+            torrentDownloader = TorrentDownloaderFactory.create(new LocalSearchTorrentDownloaderListener(query, sr, task, finishSignal), sr.getTorrentURI(), sr.getDetailsUrl(), saveDir);
             torrentDownloader.start();
 
             if (finishSignal.await(TORRENT_DOWNLOAD_INDEX_TIMEOUT, TimeUnit.MILLISECONDS)) {

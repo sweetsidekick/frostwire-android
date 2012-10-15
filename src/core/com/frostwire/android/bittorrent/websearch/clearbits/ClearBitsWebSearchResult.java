@@ -21,14 +21,14 @@ package com.frostwire.android.bittorrent.websearch.clearbits;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ClearBitsWebSearchResult implements WebSearchResult {
+public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
 
     private final ClearBitsItem item;
 
@@ -64,15 +64,28 @@ public class ClearBitsWebSearchResult implements WebSearchResult {
         return Long.valueOf(item.mb_size * 1024 * 1024);
     }
 
-    public String getVendor() {
-        return "ClearBits";
-    }
-
-    public int getSeeds() {
+    public int getRank() {
         return item.seeds;
     }
 
     public String getTorrentDetailsURL() {
         return item.location;
+    }
+
+    @Override
+    public String getDisplayName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getSource() {
+        return "ClearBits";
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

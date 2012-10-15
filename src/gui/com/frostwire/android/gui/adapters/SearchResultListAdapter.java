@@ -42,6 +42,7 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.gui.search.WebEngineSearchResult;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -74,17 +75,14 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     public void filter(int mediaTypeId) {
         visualList = new ArrayList<SearchResult>();
         for (SearchResult sr : new ArrayList<SearchResult>(list)) {
-            if (sr instanceof BittorrentSearchResult) {
-                BittorrentSearchResult bsr = (BittorrentSearchResult) sr;
-                if (accept(bsr, mediaTypeId)) {
-                    visualList.add(bsr);
-                }
+            if (accept(sr, mediaTypeId)) {
+                visualList.add(sr);
             }
         }
         notifyDataSetInvalidated();
     }
 
-    public boolean accept(BittorrentSearchResult sr, int mediaTypeId) {
+    public boolean accept(SearchResult sr, int mediaTypeId) {
         MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(sr.getFileName()));
         if (mt == null) {
             return false;
@@ -96,6 +94,8 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     protected void populateView(View view, SearchResult sr) {
         if (sr instanceof BittorrentSearchResult) {
             populateBittorrentView(view, (BittorrentSearchResult) sr);
+        } else if (sr instanceof WebEngineSearchResult) {
+            populateWebEngineView(view, (WebEngineSearchResult) sr);
         }
     }
 
@@ -115,17 +115,40 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         extra.setText(FilenameUtils.getExtension(sr.getFileName()));
 
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getSeeds(), sr.getSeeds()));
+        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getTorrentDetailsURL() + "\">" + sr.getVendor() + "</a>"), TextView.BufferType.SPANNABLE);
-        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getTorrentDetailsURL()));
+        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
+        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getDetailsUrl()));
 
         /**
         ImageButton downloadButton = findView(view, R.id.view_bittorrent_search_result_list_item_button_download);
         downloadButton.setTag(sr);
         downloadButton.setOnClickListener(downloadClickListener);
         */
+    }
+
+    protected void populateWebEngineView(View view, WebEngineSearchResult sr) {
+        ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
+        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
+
+        TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
+        title.setText(sr.getTitle());
+        // if marked as downloading
+        // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
+
+        TextView fileSize = findView(view, R.id.view_bittorrent_search_result_list_item_file_size);
+        fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
+
+        TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
+        extra.setText(FilenameUtils.getExtension(sr.getFileName()));
+
+        TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
+        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
+
+        TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
+        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
+        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getDetailsUrl()));
     }
 
     @Override

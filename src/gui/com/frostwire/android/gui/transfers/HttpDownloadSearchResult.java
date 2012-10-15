@@ -43,6 +43,11 @@ public class HttpDownloadSearchResult implements SearchResult {
     public long getSize() {
         return slide.size;
     }
+    
+    @Override
+    public int getRank() {
+        return 0;
+    }
 
     public String getHttpUrl() {
         return slide.httpUrl;
@@ -50,5 +55,23 @@ public class HttpDownloadSearchResult implements SearchResult {
     
     public boolean isCompressed() {
         return slide.uncompress;
+    }
+
+    @Override
+    public String getFileName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getSource() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

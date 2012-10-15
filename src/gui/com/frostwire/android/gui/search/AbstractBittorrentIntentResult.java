@@ -23,7 +23,7 @@ public abstract class AbstractBittorrentIntentResult implements BittorrentSearch
     }
     
     @Override
-    public int getSeeds() {
+    public int getRank() {
         return 0;
     }
 
@@ -43,12 +43,12 @@ public abstract class AbstractBittorrentIntentResult implements BittorrentSearch
     }
 
     @Override
-    public String getTorrentDetailsURL() {
+    public String getDetailsUrl() {
         return null;
     }
 
     @Override
-    public String getVendor() {
+    public String getSource() {
         return null;
     }
 }

@@ -27,6 +27,14 @@ package com.frostwire.android.gui.search;
 public interface SearchResult {
 
     public String getTitle();
+    
+    public String getFileName();
 
     public long getSize();
+
+    public int getRank();
+    
+    public String getSource();
+
+    public String getDetailsUrl();
 }

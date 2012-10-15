@@ -21,10 +21,11 @@ package com.frostwire.android.bittorrent.websearch.mininova;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.websearch.JsonSearchPerformer;
+import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -42,7 +43,7 @@ public class MininovaWebSearchPerformer extends JsonSearchPerformer {
         if (response != null && response.results != null)
             for (MininovaVuzeItem item : response.results) {
 
-                WebSearchResult sr = new MininovaVuzeWebSearchResult(item);
+                TorrentWebSearchResult sr = new MininovaVuzeWebSearchResult(item);
 
                 result.add(sr);
             }

@@ -92,6 +92,10 @@
             android:key="frostwire.prefs.search.use_vertor"
             android:summary="@string/use_vertor"
             android:title="@string/use_vertor" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_youtube"
+            android:summary="@string/use_youtube"
+            android:title="@string/use_youtube" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference

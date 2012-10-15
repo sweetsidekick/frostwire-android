@@ -45,8 +45,8 @@ class BittorrentDeepSearchResult implements BittorrentSearchResult {
         return torrentFile.getRelativePath();
     }
 
-    public int getSeeds() {
-        return bittorrentResult.getSeeds();
+    public int getRank() {
+        return bittorrentResult.getRank();
     }
 
     public long getSize() {
@@ -68,8 +68,8 @@ class BittorrentDeepSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getTorrentDetailsURL() {
-        return bittorrentResult.getTorrentDetailsURL();
+    public String getDetailsUrl() {
+        return bittorrentResult.getDetailsUrl();
     }
 
     @Override
@@ -78,7 +78,7 @@ class BittorrentDeepSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getVendor() {
-        return bittorrentResult.getVendor();
+    public String getSource() {
+        return bittorrentResult.getSource();
     }
 }

@@ -24,12 +24,14 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
-import com.frostwire.android.bittorrent.websearch.WebSearchPerformer;
+
 import com.frostwire.android.bittorrent.websearch.clearbits.ClearBitsWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.extratorrent.ExtratorrentWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.mininova.MininovaWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.vertor.VertorWebSearchPerformer;
+import com.frostwire.websearch.WebSearchPerformer;
+import com.frostwire.websearch.youtube.YouTubeSearchPerformer;
 
 /**
  * 
@@ -48,6 +50,7 @@ public final class SearchEngine {
     //public static final int TPB_ID = 6;
     public static final int MONOVA_ID = 7;
     //public static final int KAT_ID = 8;
+    public static final int YOUTUBE_ID = 9;
 
     private final int id;
     private final String name;
@@ -64,6 +67,7 @@ public final class SearchEngine {
     //public static final SearchEngine TPB = new SearchEngine(TPB_ID, "TPB", new TPBWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_TPB);
     public static final SearchEngine VERTOR = new SearchEngine(VERTOR_ID, "Vertor", new VertorWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_VERTOR);
     //public static final SearchEngine KAT = new SearchEngine(KAT_ID, "KAT", new KATWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_KAT);
+    public static final SearchEngine YOUTUBE = new SearchEngine(YOUTUBE_ID, "YouTube", new YouTubeSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_YOUTUBE);
 
     private SearchEngine(int id, String name, WebSearchPerformer performer, String preferenceKey) {
         this.id = id;
@@ -112,7 +116,7 @@ public final class SearchEngine {
     }
 
     public static List<SearchEngine> getSearchEngines() {
-        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/);
+        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE);
     }
 
     public static SearchEngine getSearchEngine(int id) {

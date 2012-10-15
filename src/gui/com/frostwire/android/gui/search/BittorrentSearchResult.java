@@ -25,19 +25,11 @@ package com.frostwire.android.gui.search;
  */
 public interface BittorrentSearchResult extends SearchResult {
 
-    public String getFileName();
-
-    public int getSeeds();
-
     public long getCreationTime();
 
     public String getHash();
 
     public int getSearchEngineId();
 
-    public String getTorrentDetailsURL();
-
     public String getTorrentURI();
-
-    public String getVendor();
 }

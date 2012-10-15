@@ -41,7 +41,7 @@ class BittorrentLocalSearchResult implements BittorrentSearchResult {
         return tfdb.relativePath;
     }
 
-    public int getSeeds() {
+    public int getRank() {
         return tfdb.torrent.seeds;
     }
 
@@ -64,7 +64,7 @@ class BittorrentLocalSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getTorrentDetailsURL() {
+    public String getDetailsUrl() {
         return tfdb.torrent.torrentDetailsURL;
     }
 
@@ -74,7 +74,7 @@ class BittorrentLocalSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getVendor() {
+    public String getSource() {
         return tfdb.torrent.vendor;
     }
 }

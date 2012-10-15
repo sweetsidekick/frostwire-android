@@ -23,10 +23,11 @@ import java.util.List;
 
 import android.util.Log;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
+import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -60,7 +61,7 @@ class EngineSearchTask extends SearchTask {
             List<WebSearchResult> webResults = engine.getPerformer().search(query);
 
             if (!isCancelled()) {
-                List<BittorrentSearchResult> results = normalizeWebResults(webResults);
+                List<SearchResult> results = normalizeWebResults(webResults);
                 LocalSearchEngine.instance().addResults(results);
             }
         } catch (Throwable e) {
@@ -68,12 +69,17 @@ class EngineSearchTask extends SearchTask {
         }
     }
 
-    private List<BittorrentSearchResult> normalizeWebResults(List<WebSearchResult> webResults) {
-        List<BittorrentSearchResult> result = new ArrayList<BittorrentSearchResult>(webResults.size());
+    private List<SearchResult> normalizeWebResults(List<WebSearchResult> webResults) {
+        List<SearchResult> result = new ArrayList<SearchResult>(webResults.size());
         for (WebSearchResult webResult : webResults) {
-            if (filter(webResult)) {
-                BittorrentSearchResult sr = new BittorrentWebSearchResult(engine, webResult);
-                result.add(sr);
+            if (webResult instanceof TorrentWebSearchResult) {
+                TorrentWebSearchResult tsr = (TorrentWebSearchResult) webResult;
+                if (filter(tsr)) {
+                    BittorrentSearchResult sr = new BittorrentWebSearchResult(engine, tsr);
+                    result.add(sr);
+                }
+            } else {
+                result.add(new WebEngineSearchResult(webResult));
             }
         }
         return result;
@@ -81,8 +87,8 @@ class EngineSearchTask extends SearchTask {
 
     // this is a preliminary filter, since we need to provide the best user experience
     // we will remove "low quality" torrents, for example: low seeds, with bad names, etc.
-    private boolean filter(WebSearchResult sr) {
-        if (sr.getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
+    private boolean filter(TorrentWebSearchResult sr) {
+        if (sr.getRank() < MIN_SEEDS_TORRENT_RESULT) {
             return false;
         }
 

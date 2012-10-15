@@ -21,10 +21,11 @@ package com.frostwire.android.bittorrent.websearch.clearbits;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.JsonSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.websearch.JsonSearchPerformer;
+import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -41,7 +42,7 @@ public class ClearBitsWebSearchPerformer extends JsonSearchPerformer {
         if (response != null && response.results != null)
             for (ClearBitsItem bucket : response.results) {
 
-                WebSearchResult sr = new ClearBitsWebSearchResult(bucket);
+                TorrentWebSearchResult sr = new ClearBitsWebSearchResult(bucket);
 
                 result.add(sr);
             }

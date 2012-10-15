@@ -21,14 +21,14 @@ package com.frostwire.android.bittorrent.websearch.extratorrent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ExtratorrentResponseWebSearchResult implements WebSearchResult {
+public class ExtratorrentResponseWebSearchResult implements TorrentWebSearchResult {
 
     private final ExtratorrentItem item;
 
@@ -56,7 +56,8 @@ public class ExtratorrentResponseWebSearchResult implements WebSearchResult {
         return result;
     }
 
-    public String getVendor() {
+    @Override
+    public String getSource() {
         return "Extratorrent";
     }
 
@@ -68,11 +69,23 @@ public class ExtratorrentResponseWebSearchResult implements WebSearchResult {
         return item.torrentLink;
     }
 
-    public int getSeeds() {
+    public int getRank() {
         return item.seeds;
     }
 
     public String getTorrentDetailsURL() {
         return item.link;
+    }
+
+    @Override
+    public String getDisplayName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

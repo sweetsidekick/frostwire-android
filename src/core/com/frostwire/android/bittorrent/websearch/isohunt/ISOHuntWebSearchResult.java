@@ -21,14 +21,14 @@ package com.frostwire.android.bittorrent.websearch.isohunt;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ISOHuntWebSearchResult implements WebSearchResult {
+public class ISOHuntWebSearchResult implements TorrentWebSearchResult {
 
     private ISOHuntItem item;
 
@@ -64,11 +64,12 @@ public class ISOHuntWebSearchResult implements WebSearchResult {
         return Long.valueOf(item.length);
     }
 
-    public String getVendor() {
+    @Override
+    public String getSource() {
         return "ISOHunt";
     }
 
-    public int getSeeds() {
+    public int getRank() {
         try {
             return Integer.valueOf(item.Seeds);
         } catch (Exception e) {
@@ -79,5 +80,17 @@ public class ISOHuntWebSearchResult implements WebSearchResult {
 
     public String getTorrentDetailsURL() {
         return item.link;
+    }
+
+    @Override
+    public String getDisplayName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

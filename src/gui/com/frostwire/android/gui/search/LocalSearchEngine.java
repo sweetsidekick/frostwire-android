@@ -86,7 +86,7 @@ public final class LocalSearchEngine {
     private final List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
-    private final SortedSet<BittorrentSearchResult> currentResults;
+    private final SortedSet<SearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
     private final Object lockObj = new Object();
@@ -124,12 +124,12 @@ public final class LocalSearchEngine {
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
 
-        currentResults = Collections.synchronizedSortedSet(new TreeSet<BittorrentSearchResult>(new Comparator<BittorrentSearchResult>() {
+        currentResults = Collections.synchronizedSortedSet(new TreeSet<SearchResult>(new Comparator<SearchResult>() {
             @Override
-            public int compare(BittorrentSearchResult lhs, BittorrentSearchResult rhs) {
-                if (lhs.getSeeds() == rhs.getSeeds()) {
+            public int compare(SearchResult lhs, SearchResult rhs) {
+                if (lhs.getRank() == rhs.getRank()) {
                     return -1;
-                } else if (lhs.getSeeds() < rhs.getSeeds()) {
+                } else if (lhs.getRank() < rhs.getRank()) {
                     return 1;
                 } else {
                     return -1;
@@ -151,7 +151,7 @@ public final class LocalSearchEngine {
         synchronized (currentResults) {
             List<SearchResult> list = new ArrayList<SearchResult>(currentResults.size());
 
-            Iterator<BittorrentSearchResult> it = currentResults.iterator();
+            Iterator<SearchResult> it = currentResults.iterator();
             while (it.hasNext()) {
                 list.add(it.next());
             }
@@ -166,7 +166,7 @@ public final class LocalSearchEngine {
         performTorrentSearch(query);
     }
 
-    void addResults(List<BittorrentSearchResult> results) {
+    void addResults(List<SearchResult> results) {
         currentResults.addAll(results);
     }
 
@@ -218,9 +218,9 @@ public final class LocalSearchEngine {
 
             // scan results for actual torrents
 
-            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>(currentResults.size());
+            List<SearchResult> results = new ArrayList<SearchResult>(currentResults.size());
             synchronized (currentResults) {
-                Iterator<BittorrentSearchResult> it = currentResults.iterator();
+                Iterator<SearchResult> it = currentResults.iterator();
                 while (it.hasNext()) {
                     results.add(it.next());
                 }
@@ -231,7 +231,7 @@ public final class LocalSearchEngine {
                 if (sr instanceof BittorrentWebSearchResult) {
                     BittorrentWebSearchResult bsr = (BittorrentWebSearchResult) sr;
 
-                    if (bsr.getHash() != null && (bsr.getSeeds() > MIN_SEEDS_FOR_TORRENT_DEEP_SCAN) && !torrentIndexed(bsr)) {
+                    if (bsr.getHash() != null && (bsr.getRank() > MIN_SEEDS_FOR_TORRENT_DEEP_SCAN) && !torrentIndexed(bsr)) {
                         if (!knownInfoHashes.contains(bsr.getHash())) {
                             knownInfoHashes.add(bsr.getHash());
                             downloaded++;
@@ -305,7 +305,7 @@ public final class LocalSearchEngine {
                 Log.w(TAG, "Warning: Results took too long, there's something wrong with the database, you might want to delete some data.");
             }
 
-            List<BittorrentSearchResult> results = new ArrayList<BittorrentSearchResult>();
+            List<SearchResult> results = new ArrayList<SearchResult>();
             Map<Integer, SearchEngine> searchEngines = SearchEngine.getSearchEngineMap();
 
             while (c.moveToNext()) {
@@ -376,11 +376,11 @@ public final class LocalSearchEngine {
         tdb.fileName = sr.getFileName();
         tdb.hash = sr.getHash();
         tdb.searchEngineID = sr.getSearchEngineId();
-        tdb.seeds = sr.getSeeds();
+        tdb.seeds = sr.getRank();
         tdb.size = sr.getSize();
-        tdb.torrentDetailsURL = sr.getTorrentDetailsURL();
+        tdb.torrentDetailsURL = sr.getDetailsUrl();
         tdb.torrentURI = sr.getTorrentURI();
-        tdb.vendor = sr.getVendor();
+        tdb.vendor = sr.getSource();
 
         return tdb;
     }
@@ -401,7 +401,7 @@ public final class LocalSearchEngine {
 
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
-        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rÐ&~{}\\*@\\^'=!,¡|#ÀÁ]", " ");
+        str = str.replaceAll("\\.torrent|www\\.|\\.com|\\.net|[\\\\\\/%_;\\-\\.\\(\\)\\[\\]\\n\\rï¿½&~{}\\*@\\^'=!,ï¿½|#ï¿½ï¿½]", " ");
         str = StringUtils.removeDoubleSpaces(str);
         //Log.d(TAG, "Sanitize result: " + str);
         return str;

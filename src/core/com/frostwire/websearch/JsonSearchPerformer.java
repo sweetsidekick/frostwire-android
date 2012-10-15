@@ -1,4 +1,4 @@
-package com.frostwire.android.bittorrent.websearch;
+package com.frostwire.websearch;
 
 import com.frostwire.android.core.AndroidHttpFetcher;
 import com.frostwire.android.util.StringUtils;

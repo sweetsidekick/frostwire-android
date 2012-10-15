@@ -18,9 +18,9 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -30,9 +30,9 @@ import com.frostwire.android.util.FilenameUtils;
 public class BittorrentWebSearchResult implements BittorrentSearchResult {
 
     private final SearchEngine searchEngine;
-    private final WebSearchResult webResult;
+    private final TorrentWebSearchResult webResult;
 
-    public BittorrentWebSearchResult(SearchEngine searchEngine, WebSearchResult webResult) {
+    public BittorrentWebSearchResult(SearchEngine searchEngine, TorrentWebSearchResult webResult) {
         this.searchEngine = searchEngine;
         this.webResult = webResult;
     }
@@ -45,8 +45,8 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
         return webResult.getFileName();
     }
 
-    public int getSeeds() {
-        return webResult.getSeeds();
+    public int getRank() {
+        return webResult.getRank();
     }
 
     public long getSize() {
@@ -65,7 +65,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
         return searchEngine.getId();
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsUrl() {
         return webResult.getTorrentDetailsURL();
     }
 
@@ -73,8 +73,8 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
         return webResult.getTorrentURI();
     }
 
-    public String getVendor() {
-        return webResult.getVendor();
+    public String getSource() {
+        return webResult.getSource();
     }
 
     @Override

@@ -21,14 +21,14 @@ package com.frostwire.android.bittorrent.websearch.mininova;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.android.bittorrent.websearch.WebSearchResult;
+import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class MininovaVuzeWebSearchResult implements WebSearchResult {
+public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
 
     private MininovaVuzeItem item;
 
@@ -63,15 +63,28 @@ public class MininovaVuzeWebSearchResult implements WebSearchResult {
         return Long.valueOf(item.size);
     }
 
-    public String getVendor() {
+    @Override
+    public String getSource() {
         return "Mininova";
     }
 
-    public int getSeeds() {
+    public int getRank() {
         return item.seeds + item.superseeds;
     }
 
     public String getTorrentDetailsURL() {
         return item.cdp;
+    }
+
+    @Override
+    public String getDisplayName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
