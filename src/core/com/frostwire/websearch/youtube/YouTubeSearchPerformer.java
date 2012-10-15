@@ -8,6 +8,7 @@ import com.frostwire.android.util.UrlUtils;
 import com.frostwire.websearch.WebSearchPerformer;
 import com.frostwire.websearch.WebSearchResult;
 import com.frostwire.websearch.cookie.HttpClient;
+import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
 
 public class YouTubeSearchPerformer implements WebSearchPerformer {
 
@@ -22,9 +23,10 @@ public class YouTubeSearchPerformer implements WebSearchPerformer {
         if (response != null && response.feed != null && response.feed.entry != null)
             for (YouTubeEntry entry : response.feed.entry) {
 
-                WebSearchResult sr = new YouTubeSearchResult(entry);
-
-                result.add(sr);
+                WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
+                result.add(vsr);
+                WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
+                result.add(asr);
             }
 
         return result;

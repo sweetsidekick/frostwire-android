@@ -39,6 +39,7 @@ import com.frostwire.android.gui.search.BittorrentIntentFileResult;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.util.ByteUtils;
 
 /**
@@ -88,6 +89,8 @@ public final class TransferManager {
             return newBittorrentDownload((BittorrentSearchResult) sr);
         } else if (sr instanceof HttpDownloadSearchResult) {
             return newHttpDownload((HttpDownloadSearchResult) sr);
+        } else if (sr instanceof YouTubeEngineSearchResult) {
+            return newYouTubeDownload((YouTubeEngineSearchResult) sr);
         } else {
             return new InvalidDownload();
         }
@@ -322,5 +325,15 @@ public final class TransferManager {
         download.start();
 
         return download;
+    }
+
+    private DownloadTransfer newYouTubeDownload(YouTubeEngineSearchResult sr) {
+        try {
+            sr.decrypt();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 }

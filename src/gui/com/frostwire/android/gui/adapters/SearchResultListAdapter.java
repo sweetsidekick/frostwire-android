@@ -94,8 +94,8 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     protected void populateView(View view, SearchResult sr) {
         if (sr instanceof BittorrentSearchResult) {
             populateBittorrentView(view, (BittorrentSearchResult) sr);
-        } else if (sr instanceof WebEngineSearchResult) {
-            populateWebEngineView(view, (WebEngineSearchResult) sr);
+        } else {
+            populateWebEngineView(view, sr);
         }
     }
 
@@ -128,7 +128,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         */
     }
 
-    protected void populateWebEngineView(View view, WebEngineSearchResult sr) {
+    protected void populateWebEngineView(View view, SearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
         fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
 
@@ -138,13 +138,15 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
 
         TextView fileSize = findView(view, R.id.view_bittorrent_search_result_list_item_file_size);
-        fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
+        //fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
+        fileSize.setText("");
 
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(FilenameUtils.getExtension(sr.getFileName()));
 
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
+        //seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
+        seeds.setText("");
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
         sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
@@ -193,7 +195,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         }
     }
 
-    private void startTransfer(final BittorrentSearchResult sr) {
+    private void startTransfer(final SearchResult sr) {
         NewTransferDialog dlg = new NewTransferDialog(getContext(), sr, false, new OnYesNoListener() {
             public void onYes(NewTransferDialog dialog) {
                 // putting this logic in a thread to avoid ANR errors. Needs refactor to avoid context leaks
@@ -249,7 +251,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     private final class DownloadClickListener implements OnClickListener {
         public void onClick(View v) {
-            BittorrentSearchResult sr = (BittorrentSearchResult) v.getTag();
+            SearchResult sr = (SearchResult) v.getTag();
             startTransfer(sr);
         }
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/azureus"/>
+	<classpathentry kind="src" path="src/jdownloader"/>
 	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>

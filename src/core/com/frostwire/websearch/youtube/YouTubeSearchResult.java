@@ -34,12 +34,14 @@ public class YouTubeSearchResult implements WebSearchResult {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     private final YouTubeEntry entry;
+    private final ResultType rt;
 
     private final long creationTime;
     private final String videoUrl;
 
-    public YouTubeSearchResult(YouTubeEntry entry) {
+    public YouTubeSearchResult(YouTubeEntry entry, ResultType rt) {
         this.entry = entry;
+        this.rt = rt;
 
         this.creationTime = readCreationTime(entry);
         this.videoUrl = readVideoUrl(entry);
@@ -56,7 +58,7 @@ public class YouTubeSearchResult implements WebSearchResult {
 
     @Override
     public String getFileName() {
-        return getDisplayName() + ".mp4";
+        return getDisplayName() + (rt.equals(ResultType.VIDEO) ? ".mp4" : ".mp3");
     }
 
     @Override
@@ -103,5 +105,9 @@ public class YouTubeSearchResult implements WebSearchResult {
         url = url.replace("https://", "http://").replace("&feature=youtube_gdata", "");
 
         return url;
+    }
+
+    public static enum ResultType {
+        VIDEO, AUDIO
     }
 }

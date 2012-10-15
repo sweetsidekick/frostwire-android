@@ -28,6 +28,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.websearch.TorrentWebSearchResult;
 import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.websearch.youtube.YouTubeSearchResult;
 
 /**
  * @author gubatron
@@ -78,8 +79,11 @@ class EngineSearchTask extends SearchTask {
                     BittorrentSearchResult sr = new BittorrentWebSearchResult(engine, tsr);
                     result.add(sr);
                 }
+            } else if (webResult instanceof YouTubeSearchResult) {
+                YouTubeEngineSearchResult sr = new YouTubeEngineSearchResult((YouTubeSearchResult) webResult);
+                result.add(sr);
             } else {
-                result.add(new WebEngineSearchResult(webResult));
+                //result.add(new WebEngineSearchResult(webResult));
             }
         }
         return result;
