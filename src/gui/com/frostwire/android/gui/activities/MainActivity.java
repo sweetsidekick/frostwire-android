@@ -92,7 +92,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private BrowsePeersFragment peers;
     private AboutFragment about;
 
-    private Stack<Integer> lastMenuIdStack  = new Stack<Integer>();
+    private Stack<Integer> lastMenuIdStack = new Stack<Integer>();
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -104,7 +104,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             if (menu.isMenuShown()) {
                 menu.hide();
             } else if (!lastMenuIdStack.isEmpty()) {
-                onSlideMenuItemClick(lastMenuIdStack.pop());
+                onSlideMenuItemClick(lastMenuIdStack.pop(), false);
             } else {
                 trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -132,27 +132,30 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     @Override
     public void onSlideMenuItemClick(int itemId) {
+        onSlideMenuItemClick(itemId, true);
+    }
+    
+    public void onSlideMenuItemClick(int itemId, boolean push) {
         switch (itemId) {
         case R.id.menu_main_search:
-            showFragment(search, itemId);
+            showFragment(search, itemId, push);
             break;
         case R.id.menu_main_library:
-            showFragment(library, itemId);
+            showFragment(library, itemId, push);
             break;
         case R.id.menu_main_transfers:
-            showFragment(transfers, itemId);
+            showFragment(transfers, itemId, push);
             break;
         case R.id.menu_main_peers:
-            showFragment(peers, itemId);
+            showFragment(peers, itemId, push);
             break;
         case R.id.menu_main_preferences:
             showPreferences();
             break;
         case R.id.menu_main_about:
-            showFragment(about, itemId);
+            showFragment(about, itemId, push);
             break;
         }
-
     }
 
     @Override
@@ -336,7 +339,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     }
 
     private void showFragment(Fragment fragment, int menuId) {
-        lastMenuIdStack.push(menuSelectedItemId);
+        showFragment(fragment, menuId, true);
+    }
+
+    private void showFragment(Fragment fragment, int menuId, boolean push) {
+        if (push) {
+            lastMenuIdStack.push(menuSelectedItemId);
+        }
         menuSelectedItemId = menuId;
         menu.setSelectedItem(menuSelectedItemId);
 
