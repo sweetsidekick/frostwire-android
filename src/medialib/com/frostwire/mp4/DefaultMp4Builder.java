@@ -435,26 +435,26 @@ public class DefaultMp4Builder implements Mp4Builder {
             }
             bb.rewind();
             writableByteChannel.write(bb);
-            if (writableByteChannel instanceof GatheringByteChannel) {
-                List<ByteBuffer> nuSamples = unifyAdjacentBuffers(samples);
-
-                int STEPSIZE = 1024;
-                for (int i = 0; i < Math.ceil((double) nuSamples.size() / STEPSIZE); i++) {
-                    List<ByteBuffer> sublist = nuSamples.subList(
-                            i * STEPSIZE, // start
-                            (i + 1) * STEPSIZE < nuSamples.size() ? (i + 1) * STEPSIZE : nuSamples.size()); // end
-                    ByteBuffer sampleArray[] = sublist.toArray(new ByteBuffer[sublist.size()]);
-                    do {
-                        ((GatheringByteChannel) writableByteChannel).write(sampleArray);
-                    } while (sampleArray[sampleArray.length - 1].remaining() > 0);
-                }
-                //System.err.println(bytesWritten);
-            } else {
+//            if (writableByteChannel instanceof GatheringByteChannel) {
+//                List<ByteBuffer> nuSamples = unifyAdjacentBuffers(samples);
+//
+//                int STEPSIZE = 1024;
+//                for (int i = 0; i < Math.ceil((double) nuSamples.size() / STEPSIZE); i++) {
+//                    List<ByteBuffer> sublist = nuSamples.subList(
+//                            i * STEPSIZE, // start
+//                            (i + 1) * STEPSIZE < nuSamples.size() ? (i + 1) * STEPSIZE : nuSamples.size()); // end
+//                    ByteBuffer sampleArray[] = sublist.toArray(new ByteBuffer[sublist.size()]);
+//                    do {
+//                        ((GatheringByteChannel) writableByteChannel).write(sampleArray);
+//                    } while (sampleArray[sampleArray.length - 1].remaining() > 0);
+//                }
+//                //System.err.println(bytesWritten);
+//            } else {
                 for (ByteBuffer sample : samples) {
                     sample.rewind();
                     writableByteChannel.write(sample);
                 }
-            }
+//            }
         }
 
     }

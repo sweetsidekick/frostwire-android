@@ -71,14 +71,18 @@ public final class HttpDownload implements DownloadTransfer {
 
     private HttpDownloadListener listener;
 
-    HttpDownload(TransferManager manager, HttpDownloadLink link) {
+    HttpDownload(TransferManager manager, File savePath, HttpDownloadLink link) {
         this.manager = manager;
         this.link = link;
         this.dateCreated = new Date();
 
-        this.savePath = new File(SystemUtils.getTorrentDataDirectory(), link.getFileName());
+        this.savePath = new File(savePath, link.getFileName());
 
         this.status = STATUS_DOWNLOADING;
+    }
+    
+    HttpDownload(TransferManager manager, HttpDownloadLink link) {
+        this(manager, SystemUtils.getTorrentDataDirectory(), link);
     }
 
     public HttpDownloadListener getListener() {
@@ -247,11 +251,11 @@ public final class HttpDownload implements DownloadTransfer {
         }
 
         if (success) {
-            status = STATUS_COMPLETE;
-
             if (listener != null) {
                 listener.onComplete(this);
             }
+            
+            status = STATUS_COMPLETE;            
 
             manager.incrementDownloadsToReview();
             Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());

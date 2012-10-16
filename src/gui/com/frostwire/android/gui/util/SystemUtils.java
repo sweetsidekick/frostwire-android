@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.util;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -72,7 +73,18 @@ public final class SystemUtils {
     }
 
     public static File getTempDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
+        File f = FileUtils.createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
+
+        File nomedia = new File(f, ".nomedia");
+        if (!nomedia.exists()) {
+            try {
+                nomedia.createNewFile();
+            } catch (IOException e) {
+                // unable to create nomedia file, ignore it for now
+            }
+        }
+
+        return f;
     }
 
     public static File getDeepScanTorrentsDirectory() {

@@ -29,7 +29,10 @@ import jd.parser.html.Form.MethodType;
 
 import android.util.Log;
 
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
+import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.mp4.DefaultMp4Builder;
 import com.frostwire.mp4.IsoFile;
 import com.frostwire.mp4.IsoTypeReader;
@@ -154,13 +157,17 @@ public class YouTubeDownload implements DownloadTransfer {
                 link.setFileName(link.getFileName().replace(".mp4", ".m4a"));
             }
             if (link != null) {
-                delegate = new HttpDownload(manager, link);
+                delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {
                         if (sr.getResultType().equals(ResultType.AUDIO)) {
-                            demuxMP4Audio(link, download, sr.getDetailsUrl());
+                            if (!demuxMP4Audio(link, download, sr.getDetailsUrl())) {
+                                // handle demux error here. Why? java.lang.RuntimeException: too many PopLocalFrame calls
+                            }
                         }
+
+                        moveFile(download.getSavePath(), sr.getResultType().equals(ResultType.VIDEO));
                     }
                 });
                 delegate.start();
@@ -168,6 +175,13 @@ public class YouTubeDownload implements DownloadTransfer {
         } catch (Exception e) {
             Log.e(TAG, "Error starting youtube download", e);
         }
+    }
+
+    private void moveFile(File savePath, boolean video) {
+        File path = SystemUtils.getSaveDirectory(video ? Constants.FILE_TYPE_VIDEOS : Constants.FILE_TYPE_AUDIO);
+        File finalFile = new File(path, savePath.getName());
+        savePath.renameTo(finalFile);
+        Librarian.instance().scan(finalFile);
     }
 
     private HttpDownloadLink decrypt() throws Exception {
@@ -316,6 +330,7 @@ public class YouTubeDownload implements DownloadTransfer {
                     String name = null;
                     if (convertTo != DestinationFormat.AUDIOMP3) {
                         name = YT_FILENAME + info.desc + convertTo.getExtFirst();
+                        name = getValidFileName(name);
                         thislink.setFileName(name);
                     } else {
                         /*
@@ -682,7 +697,7 @@ public class YouTubeDownload implements DownloadTransfer {
 
             return true;
         } catch (Throwable e) {
-            Log.e(TAG, "Error demuxing MP4 audio - " + filename);
+            Log.e(TAG, "Error demuxing MP4 audio - " + filename, e);
             return false;
         }
     }
@@ -775,5 +790,13 @@ public class YouTubeDownload implements DownloadTransfer {
         }
 
         return null;
+    }
+
+    public static String getValidFileName(String fileName) {
+        String newFileName = fileName.replaceAll("[\\\\/:*?\"<>|\\[\\]]+", "_");
+        if (newFileName.length() == 0) {
+            throw new IllegalStateException("File Name " + fileName + " results in a empty fileName!");
+        }
+        return newFileName;
     }
 }
