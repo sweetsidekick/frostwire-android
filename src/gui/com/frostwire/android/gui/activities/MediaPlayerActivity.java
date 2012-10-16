@@ -414,15 +414,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         Bitmap result = Bitmap.createBitmap(width - padding, height - padding, Config.ARGB_8888);
 
         Canvas canvas = new Canvas(result);
-        Paint blur = new Paint();
+        //Paint blur = new Paint();
         //blur.setColor(0x33505050);
         //blur.setMaskFilter(new BlurMaskFilter(glowSize, Blur.OUTER));
-        blur.setShadowLayer(1, 0, 0, 0x33505050);
-        int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
-        int by1 = glowSize;
-        int bx2 = bx1 + scaled.getWidth();
-        int by2 = by1 + scaled.getHeight();
-        canvas.drawRect(bx1 - 1, by1 - 1, bx2 + 1, by2 + 1, blur);
+        //blur.setShadowLayer(1, 0, 0, 0x33505050);
+        //int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
+        //int by1 = glowSize;
+        //int bx2 = bx1 + scaled.getWidth();
+        //int by2 = by1 + scaled.getHeight();
+        //canvas.drawRect(bx1 - 1, by1 - 1, bx2 + 1, by2 + 1, blur);
 
         canvas.drawBitmap(scaled, (result.getWidth() - scaled.getWidth()) / 2, glowSize, null);
 
