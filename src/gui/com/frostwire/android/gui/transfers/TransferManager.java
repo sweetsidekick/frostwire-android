@@ -39,6 +39,7 @@ import com.frostwire.android.gui.search.BittorrentIntentFileResult;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.util.ByteUtils;
 
@@ -91,6 +92,8 @@ public final class TransferManager {
             return newHttpDownload((HttpSlideSearchResult) sr);
         } else if (sr instanceof YouTubeEngineSearchResult) {
             return newYouTubeDownload((YouTubeEngineSearchResult) sr);
+        } else if (sr instanceof SoundcloudEngineSearchResult) {
+            return newSoundcloudDownload((SoundcloudEngineSearchResult) sr);
         } else {
             return new InvalidDownload();
         }
@@ -329,6 +332,15 @@ public final class TransferManager {
 
     private DownloadTransfer newYouTubeDownload(YouTubeEngineSearchResult sr) {
         YouTubeDownload download = new YouTubeDownload(this, sr);
+
+        downloads.add(download);
+        download.start();
+
+        return download;
+    }
+
+    private DownloadTransfer newSoundcloudDownload(SoundcloudEngineSearchResult sr) {
+        SoundcloudDownload download = new SoundcloudDownload(this, sr);
 
         downloads.add(download);
         download.start();

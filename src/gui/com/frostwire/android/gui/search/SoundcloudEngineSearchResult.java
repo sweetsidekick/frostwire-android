@@ -1,12 +1,12 @@
 package com.frostwire.android.gui.search;
 
-import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.websearch.soundcloud.SoundcloudTrackSearchResult;
 
-public class WebEngineSearchResult implements SearchResult {
+public class SoundcloudEngineSearchResult implements SearchResult {
 
-    private final WebSearchResult sr;
+    private final SoundcloudTrackSearchResult sr;
 
-    public WebEngineSearchResult(WebSearchResult sr) {
+    public SoundcloudEngineSearchResult(SoundcloudTrackSearchResult sr) {
         this.sr = sr;
     }
 
@@ -22,7 +22,7 @@ public class WebEngineSearchResult implements SearchResult {
 
     @Override
     public long getSize() {
-        return 0;
+        return sr.getSize();
     }
 
     @Override
@@ -38,5 +38,9 @@ public class WebEngineSearchResult implements SearchResult {
     @Override
     public String getDetailsUrl() {
         return sr.getDetailsUrl();
+    }
+
+    public String getStreamUrl() {
+        return sr.getStreamUrl();
     }
 }

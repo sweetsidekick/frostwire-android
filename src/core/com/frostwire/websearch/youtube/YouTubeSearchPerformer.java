@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;
 import com.frostwire.websearch.WebSearchResult;
-import com.frostwire.websearch.cookie.HttpClient;
 import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
 
 public class YouTubeSearchPerformer implements WebSearchPerformer {

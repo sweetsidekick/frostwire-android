@@ -401,4 +401,5 @@
 	<string name="my_filetype">My %s</string>
 	<string name="paused">Paused</string>
 	<string name="use_youtube">Use YouTube.com</string>
+	<string name="use_soundcloud">Use Soundcloud.com</string>
 </resources>

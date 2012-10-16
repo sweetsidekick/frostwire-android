@@ -54,6 +54,7 @@ import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
+import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
@@ -232,6 +233,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populateDesktopTransfer(view, (DesktopTransfer) transfer);
         } else if (transfer instanceof YouTubeDownload) {
             populateYouTubeDownload(view, (YouTubeDownload) transfer);
+        } else if (transfer instanceof SoundcloudDownload) {
+            populateSoundcloudDownload(view, (SoundcloudDownload) transfer);
         }
     }
 
@@ -532,6 +535,28 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     }
 
     private void populateYouTubeDownload(View view, YouTubeDownload download) {
+        TextView title = findView(view, R.id.view_transfer_list_item_title);
+        ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
+        TextView status = findView(view, R.id.view_transfer_list_item_status);
+        TextView speed = findView(view, R.id.view_transfer_list_item_speed);
+        TextView size = findView(view, R.id.view_transfer_list_item_size);
+        TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
+        TextView peers = findView(view, R.id.view_transfer_list_item_peers);
+        ImageView buttonAction = findView(view, R.id.view_transfer_list_item_button_action);
+
+        seeds.setText("");
+        peers.setText("");
+        title.setText(download.getDisplayName());
+        progress.setProgress(download.getProgress());
+        status.setText(Integer.valueOf(download.getStatus()));
+        speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
+        size.setText(UIUtils.getBytesInHuman(download.getSize()));
+
+        buttonAction.setTag(download);
+        buttonAction.setOnClickListener(actionOnClickListener);
+    }
+
+    private void populateSoundcloudDownload(View view, SoundcloudDownload download) {
         TextView title = findView(view, R.id.view_transfer_list_item_title);
         ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
         TextView status = findView(view, R.id.view_transfer_list_item_status);

@@ -137,8 +137,11 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
 
         TextView fileSize = findView(view, R.id.view_bittorrent_search_result_list_item_file_size);
-        //fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
-        fileSize.setText("");
+        if (sr.getSize() > 0) {
+            fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
+        } else {
+            fileSize.setText("");
+        }
 
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(FilenameUtils.getExtension(sr.getFileName()));

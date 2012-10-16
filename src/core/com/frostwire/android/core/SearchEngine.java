@@ -31,6 +31,7 @@ import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntWebSearchPerfor
 import com.frostwire.android.bittorrent.websearch.mininova.MininovaWebSearchPerformer;
 import com.frostwire.android.bittorrent.websearch.vertor.VertorWebSearchPerformer;
 import com.frostwire.websearch.WebSearchPerformer;
+import com.frostwire.websearch.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.websearch.youtube.YouTubeSearchPerformer;
 
 /**
@@ -51,6 +52,7 @@ public final class SearchEngine {
     public static final int MONOVA_ID = 7;
     //public static final int KAT_ID = 8;
     public static final int YOUTUBE_ID = 9;
+    public static final int SOUNDCLOUD_ID = 10;
 
     private final int id;
     private final String name;
@@ -68,6 +70,7 @@ public final class SearchEngine {
     public static final SearchEngine VERTOR = new SearchEngine(VERTOR_ID, "Vertor", new VertorWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_VERTOR);
     //public static final SearchEngine KAT = new SearchEngine(KAT_ID, "KAT", new KATWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_KAT);
     public static final SearchEngine YOUTUBE = new SearchEngine(YOUTUBE_ID, "YouTube", new YouTubeSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_YOUTUBE);
+    public static final SearchEngine SOUNCLOUD = new SearchEngine(SOUNDCLOUD_ID, "Soundcloud", new SoundcloudSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD);
 
     private SearchEngine(int id, String name, WebSearchPerformer performer, String preferenceKey) {
         this.id = id;
@@ -116,7 +119,7 @@ public final class SearchEngine {
     }
 
     public static List<SearchEngine> getSearchEngines() {
-        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE);
+        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE, SOUNCLOUD);
     }
 
     public static SearchEngine getSearchEngine(int id) {

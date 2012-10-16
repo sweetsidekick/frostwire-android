@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,16 +25,15 @@ import jd.nutils.encoding.Encoding;
 import jd.parser.Regex;
 import jd.parser.html.Form;
 import jd.parser.html.Form.MethodType;
-
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.FileUtils;
 import com.frostwire.mp4.DefaultMp4Builder;
 import com.frostwire.mp4.IsoFile;
-import com.frostwire.mp4.IsoTypeReader;
 import com.frostwire.mp4.Movie;
 import com.frostwire.mp4.MovieCreator;
 import com.frostwire.mp4.Track;
@@ -330,7 +328,7 @@ public class YouTubeDownload implements DownloadTransfer {
                     String name = null;
                     if (convertTo != DestinationFormat.AUDIOMP3) {
                         name = YT_FILENAME + info.desc + convertTo.getExtFirst();
-                        name = getValidFileName(name);
+                        name = FileUtils.getValidFileName(name);
                         thislink.setFileName(name);
                     } else {
                         /*
@@ -790,13 +788,5 @@ public class YouTubeDownload implements DownloadTransfer {
         }
 
         return null;
-    }
-
-    public static String getValidFileName(String fileName) {
-        String newFileName = fileName.replaceAll("[\\\\/:*?\"<>|\\[\\]]+", "_");
-        if (newFileName.length() == 0) {
-            throw new IllegalStateException("File Name " + fileName + " results in a empty fileName!");
-        }
-        return newFileName;
     }
 }

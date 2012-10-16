@@ -92,4 +92,9 @@ public final class FileUtils {
 
         return canDelete ? directory.delete() : false;
     }
+
+    public static String getValidFileName(String fileName) {
+        String newFileName = fileName.replaceAll("[\\\\/:*?\"<>|\\[\\]]+", "_");
+        return newFileName;
+    }
 }

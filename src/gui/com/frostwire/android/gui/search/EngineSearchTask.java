@@ -28,6 +28,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
 import com.frostwire.websearch.TorrentWebSearchResult;
 import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.websearch.soundcloud.SoundcloudTrackSearchResult;
 import com.frostwire.websearch.youtube.YouTubeSearchResult;
 
 /**
@@ -81,6 +82,9 @@ class EngineSearchTask extends SearchTask {
                 }
             } else if (webResult instanceof YouTubeSearchResult) {
                 YouTubeEngineSearchResult sr = new YouTubeEngineSearchResult((YouTubeSearchResult) webResult);
+                result.add(sr);
+            } else if (webResult instanceof SoundcloudTrackSearchResult) {
+                SoundcloudEngineSearchResult sr = new SoundcloudEngineSearchResult((SoundcloudTrackSearchResult) webResult);
                 result.add(sr);
             } else {
                 //result.add(new WebEngineSearchResult(webResult));
