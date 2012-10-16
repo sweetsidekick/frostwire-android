@@ -91,6 +91,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private BrowsePeersFragment peers;
     private AboutFragment about;
 
+    private int lastMenuId = -1;
+
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
     }
@@ -100,6 +102,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (menu.isMenuShown()) {
                 menu.hide();
+            } else if (lastMenuId != -1) {
+                onSlideMenuItemClick(lastMenuId);
             } else {
                 trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -237,7 +241,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             TransferManager.instance().download(intent);
         } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
             handleDesktopUploadRequest(intent);
-        } 
+        }
         // When another application wants to "Share" a file and has chosen FrostWire to do so.
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
         else if (action != null && (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_SEND_MULTIPLE))) {
@@ -280,15 +284,15 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         shareFileByUri(uri);
         UIUtils.showLongMessage(this, R.string.one_file_shared);
     }
-    
+
     private void shareFileByUri(Uri uri) {
         if (uri == null) {
             return;
         }
-        
+
         FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
         fileDescriptor.shared = true;
-        
+
         Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
     }
 
@@ -331,6 +335,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     }
 
     private void showFragment(Fragment fragment, int menuId) {
+        lastMenuId = menuSelectedItemId;
         menuSelectedItemId = menuId;
         menu.setSelectedItem(menuSelectedItemId);
 
@@ -411,6 +416,6 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     }
 
     public void showMyFiles() {
-        showFragment(library,R.id.menu_main_library);  
+        showFragment(library, R.id.menu_main_library);
     }
 }
