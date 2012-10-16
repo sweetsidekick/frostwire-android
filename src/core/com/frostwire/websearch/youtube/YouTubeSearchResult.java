@@ -85,6 +85,10 @@ public class YouTubeSearchResult implements WebSearchResult {
         return videoUrl;
     }
 
+    public ResultType getResultType() {
+        return rt;
+    }
+
     private long readCreationTime(YouTubeEntry entry) {
         try {
             return DATE_FORMAT.parse(entry.published.title.replace("000Z", "")).getTime();

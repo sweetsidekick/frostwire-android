@@ -1,6 +1,7 @@
 package com.frostwire.android.gui.search;
 
 import com.frostwire.websearch.youtube.YouTubeSearchResult;
+import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
 
 public class YouTubeEngineSearchResult implements SearchResult {
 
@@ -38,5 +39,9 @@ public class YouTubeEngineSearchResult implements SearchResult {
     @Override
     public String getDetailsUrl() {
         return sr.getDetailsUrl();
+    }
+
+    public ResultType getResultType() {
+        return sr.getResultType();
     }
 }
