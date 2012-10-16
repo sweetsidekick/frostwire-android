@@ -1,5 +1,6 @@
 FrostWire 1.0.2
  - New FrostWire 1.0 skin by designer Marcelina Knitter.
+   Complete graphics and experience overhaul.
  - New vertical navigation menu, solves fragmentation issues
    on devices that had no way of bringing the preferences menu.
  - Multiple optimizations for speed and battery life savings.

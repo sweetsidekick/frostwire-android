@@ -21,6 +21,7 @@ package com.frostwire.android.gui.activities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -91,7 +92,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private BrowsePeersFragment peers;
     private AboutFragment about;
 
-    private int lastMenuId = -1;
+    private Stack<Integer> lastMenuIdStack  = new Stack<Integer>();
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -102,8 +103,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (menu.isMenuShown()) {
                 menu.hide();
-            } else if (lastMenuId != -1) {
-                onSlideMenuItemClick(lastMenuId);
+            } else if (!lastMenuIdStack.isEmpty()) {
+                onSlideMenuItemClick(lastMenuIdStack.pop());
             } else {
                 trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -335,7 +336,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     }
 
     private void showFragment(Fragment fragment, int menuId) {
-        lastMenuId = menuSelectedItemId;
+        lastMenuIdStack.push(menuSelectedItemId);
         menuSelectedItemId = menuId;
         menu.setSelectedItem(menuSelectedItemId);
 
