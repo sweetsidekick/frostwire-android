@@ -28,6 +28,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +37,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -134,7 +137,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     public void onSlideMenuItemClick(int itemId) {
         onSlideMenuItemClick(itemId, true);
     }
-    
+
     public void onSlideMenuItemClick(int itemId, boolean push) {
         switch (itemId) {
         case R.id.menu_main_search:
@@ -161,6 +164,9 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GestureOverlayView gestureOverlay = findView(R.id.activity_main_fragment_container);
+        setupGestureOverlay(gestureOverlay);
 
         menu = findView(R.id.activity_main_menu);
         menu.init(this, R.menu.main, this, 400);
@@ -423,6 +429,38 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
             trackDialog(dlg).show();
         }
+    }
+
+    private void setupGestureOverlay(GestureOverlayView view) {
+        view.setGestureVisible(false);
+        view.addOnGestureListener(new OnGestureListener() {
+
+            private float X0;
+            private float X1;
+
+            @Override
+            public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
+                X0 = event.getX();
+            }
+
+            @Override
+            public void onGestureEnded(GestureOverlayView overlay, MotionEvent event) {
+                X1 = event.getX();
+                if (X1 - X0 > 80) {
+                    if (!menu.isMenuShown()) {
+                        menu.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
+            }
+
+            @Override
+            public void onGesture(GestureOverlayView overlay, MotionEvent event) {
+            }
+        });
     }
 
     public void showMyFiles() {
