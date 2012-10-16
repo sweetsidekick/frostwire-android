@@ -37,7 +37,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
         this.webResult = webResult;
     }
 
-    public String getTitle() {
+    public String getDisplayName() {
         return FilenameUtils.getName(webResult.getFileName());
     }
 

@@ -37,7 +37,7 @@ class BittorrentDeepSearchResult implements BittorrentSearchResult {
         this.torrentFile = torrentFile;
     }
 
-    public String getTitle() {
+    public String getDisplayName() {
         return FilenameUtils.getName(torrentFile.getRelativePath());
     }
 

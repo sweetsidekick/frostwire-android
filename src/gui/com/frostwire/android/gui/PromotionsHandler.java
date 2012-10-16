@@ -34,7 +34,7 @@ import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.BittorrentPromotionSearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.transfers.HttpDownloadSearchResult;
+import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
@@ -120,7 +120,7 @@ public class PromotionsHandler {
         case Slide.DOWNLOAD_METHOD_TORRENT:
             return new BittorrentPromotionSearchResult(slide);
         case Slide.DOWNLOAD_METHOD_HTTP:
-            return new HttpDownloadSearchResult(slide);
+            return new HttpSlideSearchResult(slide);
         default:
             return null;
         }

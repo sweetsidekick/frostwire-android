@@ -72,7 +72,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     }
 
     public String getDisplayName() {
-        return delegate != null ? delegate.getDisplayName() : sr.getTitle();
+        return delegate != null ? delegate.getDisplayName() : sr.getDisplayName();
     }
 
     public String getStatus() {

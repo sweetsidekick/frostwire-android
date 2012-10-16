@@ -20,22 +20,23 @@ package com.frostwire.android.gui.transfers;
 
 import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.search.SearchResult;
+import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class HttpDownloadSearchResult implements SearchResult {
+public class HttpSlideSearchResult implements SearchResult {
 
     private final Slide slide;
 
-    public HttpDownloadSearchResult(Slide slide) {
+    public HttpSlideSearchResult(Slide slide) {
         this.slide = slide;
     }
 
     @Override
-    public String getTitle() {
+    public String getDisplayName() {
         return slide.title;
     }
 
@@ -43,7 +44,7 @@ public class HttpDownloadSearchResult implements SearchResult {
     public long getSize() {
         return slide.size;
     }
-    
+
     @Override
     public int getRank() {
         return 0;
@@ -52,7 +53,7 @@ public class HttpDownloadSearchResult implements SearchResult {
     public String getHttpUrl() {
         return slide.httpUrl;
     }
-    
+
     public boolean isCompressed() {
         return slide.uncompress;
     }
@@ -73,5 +74,14 @@ public class HttpDownloadSearchResult implements SearchResult {
     public String getDetailsUrl() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public HttpDownloadLink getDownloadLink() {
+        HttpDownloadLink link = new HttpDownloadLink(slide.httpUrl);
+        link.setDisplayName(slide.title);
+        link.setSize(slide.size);
+        link.setCompressed(slide.uncompress);
+        link.setFileName(FilenameUtils.getName(slide.httpUrl));
+        return link;
     }
 }

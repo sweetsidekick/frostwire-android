@@ -26,7 +26,7 @@ package com.frostwire.android.gui.search;
  */
 public interface SearchResult {
 
-    public String getTitle();
+    public String getDisplayName();
     
     public String getFileName();
 

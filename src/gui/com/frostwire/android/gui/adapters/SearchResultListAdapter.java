@@ -42,7 +42,6 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.search.WebEngineSearchResult;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -104,7 +103,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
-        title.setText(sr.getTitle());
+        title.setText(sr.getDisplayName());
         // if marked as downloading
         // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
 
@@ -133,7 +132,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
-        title.setText(sr.getTitle());
+        title.setText(sr.getDisplayName());
         // if marked as downloading
         // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
 

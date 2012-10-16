@@ -13,7 +13,7 @@ public abstract class AbstractBittorrentIntentResult implements BittorrentSearch
     }
 
     @Override
-    public String getTitle() {
+    public String getDisplayName() {
         return null;
     }
 

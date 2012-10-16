@@ -57,6 +57,7 @@ import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
+import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
@@ -229,6 +230,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populateHttpDownload(view, (HttpDownload) transfer);
         } else if (transfer instanceof DesktopTransfer) {
             populateDesktopTransfer(view, (DesktopTransfer) transfer);
+        } else if (transfer instanceof YouTubeDownload) {
+            populateYouTubeDownload(view, (YouTubeDownload) transfer);
         }
     }
 
@@ -526,6 +529,28 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonPlay.setTag(item);
         buttonPlay.setVisibility(item.isComplete() ? View.VISIBLE : View.GONE);
         buttonPlay.setOnClickListener(playOnClickListener);
+    }
+
+    private void populateYouTubeDownload(View view, YouTubeDownload download) {
+        TextView title = findView(view, R.id.view_transfer_list_item_title);
+        ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
+        TextView status = findView(view, R.id.view_transfer_list_item_status);
+        TextView speed = findView(view, R.id.view_transfer_list_item_speed);
+        TextView size = findView(view, R.id.view_transfer_list_item_size);
+        TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
+        TextView peers = findView(view, R.id.view_transfer_list_item_peers);
+        ImageView buttonAction = findView(view, R.id.view_transfer_list_item_button_action);
+
+        seeds.setText("");
+        peers.setText("");
+        title.setText(download.getDisplayName());
+        progress.setProgress(download.getProgress());
+        status.setText(Integer.valueOf(download.getStatus()));
+        speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
+        size.setText(UIUtils.getBytesInHuman(download.getSize()));
+
+        buttonAction.setTag(download);
+        buttonAction.setOnClickListener(actionOnClickListener);
     }
 
     private static int getFileTypeIconId(String ext) {

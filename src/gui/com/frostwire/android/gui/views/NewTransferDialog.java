@@ -48,14 +48,14 @@ public class NewTransferDialog extends Dialog {
 
     private final OnYesNoListener listener;
     private final SearchResult searchResult;
-    
+
     /** When opening .torrent files from outside you don't want to
      * give the user the option of not showing this dialog again,
      * and the question should be asked everytime to avoid starting
      * big transfers by mistake. */
     private boolean hideShowNextTimeOption;
 
-    public NewTransferDialog(Context context, SearchResult searchResult, boolean hideShowNextTimeOption,  OnYesNoListener listener) {
+    public NewTransferDialog(Context context, SearchResult searchResult, boolean hideShowNextTimeOption, OnYesNoListener listener) {
         super(context);
         this.listener = listener;
         this.searchResult = searchResult;
@@ -79,16 +79,16 @@ public class NewTransferDialog extends Dialog {
 
         setTitle(R.string.dialog_new_transfer_title);
         setContentView(R.layout.dialog_new_transfer);
-        
+
         TextView textQuestion = (TextView) findViewById(R.id.dialog_new_transfer_text);
 
         String sizeString = getContext().getString(R.string.size_unknown);
         if (searchResult.getSize() > 0) {
             sizeString = UIUtils.getBytesInHuman(searchResult.getSize());
         }
-        
-        textQuestion.setText(getContext().getString(R.string.dialog_new_transfer_text_text,searchResult.getTitle(),sizeString));
-        
+
+        textQuestion.setText(getContext().getString(R.string.dialog_new_transfer_text_text, searchResult.getDisplayName(), sizeString));
+
         setCancelable(true);
 
         buttonNo = (Button) findViewById(R.id.dialog_new_transfer_button_no);
@@ -118,7 +118,7 @@ public class NewTransferDialog extends Dialog {
                 getPreferences().edit().putBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, checkShow.isChecked()).commit();
             }
         });
-        
+
         if (hideShowNextTimeOption) {
             checkShow.setVisibility(View.GONE);
         }

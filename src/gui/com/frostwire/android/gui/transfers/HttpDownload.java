@@ -57,7 +57,7 @@ public final class HttpDownload implements DownloadTransfer {
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
     private final TransferManager manager;
-    private final HttpDownloadSearchResult sr;
+    private final HttpDownloadLink link;
     private final Date dateCreated;
     private final File savePath;
 
@@ -69,20 +69,18 @@ public final class HttpDownload implements DownloadTransfer {
     private long speedMarkTimestamp;
     private long totalReceivedSinceLastSpeedStamp;
 
-    HttpDownload(TransferManager manager, HttpDownloadSearchResult sr) {
+    HttpDownload(TransferManager manager, HttpDownloadLink link) {
         this.manager = manager;
-        this.sr = sr;
+        this.link = link;
         this.dateCreated = new Date();
 
-        // discuss with @gubatron where is the best place to save the download
-        String httpUrl = normalize(sr.getHttpUrl());
-        this.savePath = new File(SystemUtils.getTorrentDataDirectory(), FilenameUtils.getName(httpUrl));
+        this.savePath = new File(SystemUtils.getTorrentDataDirectory(), link.getFileName());
 
         this.status = STATUS_DOWNLOADING;
     }
 
     public String getDisplayName() {
-        return sr.getTitle();
+        return link.getDisplayName();
     }
 
     public String getStatus() {
@@ -90,11 +88,15 @@ public final class HttpDownload implements DownloadTransfer {
     }
 
     public int getProgress() {
-        return isComplete() ? 100 : (int) ((bytesReceived * 100) / sr.getSize());
+        if (link.getSize() > 0) {
+            return isComplete() ? 100 : (int) ((bytesReceived * 100) / link.getSize());
+        } else {
+            return 0;
+        }
     }
 
     public long getSize() {
-        return sr.getSize();
+        return link.getSize();
     }
 
     public Date getDateCreated() {
@@ -118,12 +120,20 @@ public final class HttpDownload implements DownloadTransfer {
     }
 
     public long getETA() {
-        long speed = getDownloadSpeed();
-        return speed > 0 ? (sr.getSize() - getBytesReceived()) / speed : Long.MAX_VALUE;
+        if (link.getSize() > 0) {
+            long speed = getDownloadSpeed();
+            return speed > 0 ? (link.getSize() - getBytesReceived()) / speed : Long.MAX_VALUE;
+        } else {
+            return 0;
+        }
     }
 
     public boolean isComplete() {
-        return bytesReceived == sr.getSize();
+        if (bytesReceived > 0) {
+            return bytesReceived == link.getSize();
+        } else {
+            return false;
+        }
     }
 
     public boolean isDownloading() {
@@ -169,7 +179,7 @@ public final class HttpDownload implements DownloadTransfer {
                     SystemClock.sleep(delay * 1000);
 
                     status = STATUS_DOWNLOADING;
-                    String uri = sr.getHttpUrl();
+                    String uri = link.getUrl();
                     new HttpFetcher(uri).save(savePath, new DownloadListener(retry));
                     Librarian.instance().scan(savePath);
                 } catch (Throwable e) {
@@ -220,7 +230,7 @@ public final class HttpDownload implements DownloadTransfer {
     private void complete() {
         boolean success = true;
         String location = null;
-        if (sr.isCompressed()) {
+        if (link.isCompressed()) {
             status = STATUS_UNCOMPRESSING;
             location = FilenameUtils.removeExtension(savePath.getAbsolutePath());
             success = SimpleZip.uncompress(savePath.getAbsolutePath(), location);
@@ -231,7 +241,7 @@ public final class HttpDownload implements DownloadTransfer {
 
             manager.incrementDownloadsToReview();
             Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
-            Librarian.instance().scan(sr.isCompressed() ? new File(location) : savePath.getAbsoluteFile());
+            Librarian.instance().scan(link.isCompressed() ? new File(location) : savePath.getAbsoluteFile());
         } else {
             error(new Exception("Error"));
         }
@@ -239,7 +249,7 @@ public final class HttpDownload implements DownloadTransfer {
 
     private void error(Throwable e) {
         if (status != STATUS_CANCELLED) {
-            Log.e(TAG, String.format("Error downloading url: %s", sr.getHttpUrl()), e);
+            Log.e(TAG, String.format("Error downloading url: %s", link.getUrl()), e);
             status = STATUS_ERROR;
             cleanup();
         }

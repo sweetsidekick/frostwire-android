@@ -87,8 +87,8 @@ public final class TransferManager {
     public DownloadTransfer download(SearchResult sr) throws Exception {
         if (sr instanceof BittorrentSearchResult) {
             return newBittorrentDownload((BittorrentSearchResult) sr);
-        } else if (sr instanceof HttpDownloadSearchResult) {
-            return newHttpDownload((HttpDownloadSearchResult) sr);
+        } else if (sr instanceof HttpSlideSearchResult) {
+            return newHttpDownload((HttpSlideSearchResult) sr);
         } else if (sr instanceof YouTubeEngineSearchResult) {
             return newYouTubeDownload((YouTubeEngineSearchResult) sr);
         } else {
@@ -318,8 +318,8 @@ public final class TransferManager {
         return download;
     }
 
-    private HttpDownload newHttpDownload(HttpDownloadSearchResult sr) throws Exception {
-        HttpDownload download = new HttpDownload(this, sr);
+    private HttpDownload newHttpDownload(HttpSlideSearchResult sr) throws Exception {
+        HttpDownload download = new HttpDownload(this, sr.getDownloadLink());
 
         downloads.add(download);
         download.start();
@@ -328,12 +328,11 @@ public final class TransferManager {
     }
 
     private DownloadTransfer newYouTubeDownload(YouTubeEngineSearchResult sr) {
-        try {
-            sr.decrypt();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+        YouTubeDownload download = new YouTubeDownload(this, sr);
+
+        downloads.add(download);
+        download.start();
+
+        return download;
     }
 }

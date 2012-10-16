@@ -11,7 +11,7 @@ public class WebEngineSearchResult implements SearchResult {
     }
 
     @Override
-    public String getTitle() {
+    public String getDisplayName() {
         return sr.getDisplayName();
     }
 

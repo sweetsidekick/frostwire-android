@@ -39,7 +39,7 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
         this.creationTime = System.currentTimeMillis();
     }
 
-    public String getTitle() {
+    public String getDisplayName() {
         return slide.title;
     }
 

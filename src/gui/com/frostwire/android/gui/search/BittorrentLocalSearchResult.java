@@ -33,7 +33,7 @@ class BittorrentLocalSearchResult implements BittorrentSearchResult {
         this.tfdb = tfdb;
     }
 
-    public String getTitle() {
+    public String getDisplayName() {
         return FilenameUtils.getName(tfdb.relativePath);
     }
 
