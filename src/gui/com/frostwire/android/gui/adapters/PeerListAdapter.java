@@ -73,7 +73,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         howtoShareClickListener = new OnClickListener() {
             public void onClick(View v) {
                 ShareIndicationDialog dlg = new ShareIndicationDialog();
-                dlg.show(activity.getSupportFragmentManager(), "share_indication");
+                dlg.show(activity.getSupportFragmentManager());
             }
         };
     }
@@ -123,17 +123,16 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         }
 
         if (peer.isLocalHost()) {
-           if (getContext() instanceof MainActivity) {
-               ((MainActivity) getContext()).showMyFiles();
-           }
+            if (getContext() instanceof MainActivity) {
+                ((MainActivity) getContext()).showMyFiles();
+            }
         } else {
             Intent i = null;
             i = new Intent(getContext(), BrowsePeerActivity.class);
-           i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
-           getContext().startActivity(i);
+            i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
+            getContext().startActivity(i);
 
         }
-        
 
     }
 

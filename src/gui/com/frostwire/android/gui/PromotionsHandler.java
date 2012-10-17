@@ -20,28 +20,9 @@ package com.frostwire.android.gui;
 
 import java.util.List;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Looper;
-import android.util.Log;
-
-import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.BittorrentPromotionSearchResult;
-import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownloadSearchResult;
-import com.frostwire.android.gui.transfers.InvalidTransfer;
-import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.NewTransferDialog;
-import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
-import com.frostwire.android.util.JsonUtils;
-import com.frostwire.android.util.StringUtils;
 
 /**
  * 
@@ -51,71 +32,14 @@ import com.frostwire.android.util.StringUtils;
  */
 public class PromotionsHandler {
 
-    private static final String TAG = "FW.PromotionHandler";
-
-    private final Context context;
-
-    public PromotionsHandler(Context context) {
-        this.context = context;
-    }
-
-    public void handleSelection(String json) {
-        try {
-            Slide slide = JsonUtils.toObject(StringUtils.decodeUrl(json), Slide.class);
-            startTransfer(slide);
-        } catch (Throwable e) {
-            Log.e(TAG, "Error processing promotion", e);
-        }
-    }
-
-    public void startTransfer(final Slide slide) {
-        final SearchResult sr = buildSearchResult(slide);
-        if (sr == null) {
-
-            //check if there is a URL available to open a web browser.
-            if (slide.url != null) {
-                Intent i = new Intent("android.intent.action.VIEW", Uri.parse(slide.url));
-                context.startActivity(i);
-            }
-            
-            return;
-        }
-
-        NewTransferDialog dlg = new NewTransferDialog(context, sr, false, new OnYesNoListener() {
-            public void onYes(NewTransferDialog dialog) {
-                // putting this logic in a thread to avoid ANR errors. Needs refactor to avoid context leaks
-                Engine.instance().getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            DownloadTransfer download = TransferManager.instance().download(sr);
-                            if (!(download instanceof InvalidTransfer)) {
-                                Looper.prepare();
-                                UIUtils.showShortMessage(context, R.string.downloading_promotion, download.getDisplayName());
-                                if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                                    Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
-                                    context.startActivity(i.setClass(context, MainActivity.class));
-                                }
-                            }
-                        } catch (Throwable e) {
-                            Log.e(TAG, "Error processing promotion", e);
-                        }
-                    }
-                });
-            }
-
-            public void onNo(NewTransferDialog dialog) {
-            }
-        });
-
-        dlg.show(); // this dialog will leak if the context is destroyed. Find a solution.
+    public PromotionsHandler() {
     }
 
     /**
      * This is to create a sort of "non real" search result.
      * @return
      */
-    private SearchResult buildSearchResult(Slide slide) {
+    public SearchResult buildSearchResult(Slide slide) {
         switch (slide.method) {
         case Slide.DOWNLOAD_METHOD_TORRENT:
             return new BittorrentPromotionSearchResult(slide);
@@ -134,10 +58,10 @@ public class PromotionsHandler {
 
         /** Download the torrent file */
         public static final int DOWNLOAD_METHOD_TORRENT = 0;
-        
+
         /** Download the file via HTTP */
         public static final int DOWNLOAD_METHOD_HTTP = 1;
-        
+
         /**
          * http address where to go if user clicks on this slide
          */

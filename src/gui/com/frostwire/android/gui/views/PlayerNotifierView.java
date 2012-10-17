@@ -51,8 +51,13 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
+        
         View.inflate(getContext(), R.layout.view_player_notifier, this);
+        
+        if (isInEditMode()) {
+            return;
+        }
+
         statusText = (TextView) findViewById(R.id.view_player_notifier_status);
         statusContainer = (LinearLayout) findViewById(R.id.view_player_notifier_status_container);
         

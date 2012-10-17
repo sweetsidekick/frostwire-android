@@ -111,10 +111,7 @@ public class BrowsePeerActivity extends AbstractActivity {
     }
 
     private void showShareIndication() {
-        String tag = "share_indication";
-        if (getSupportFragmentManager().findFragmentByTag(tag) == null) {
-            ShareIndicationDialog dlg = new ShareIndicationDialog();
-            dlg.show(getSupportFragmentManager(), "share_indication");
-        }
+        ShareIndicationDialog dlg = new ShareIndicationDialog();
+        dlg.show(getSupportFragmentManager());
     }
 }

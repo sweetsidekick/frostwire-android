@@ -21,7 +21,11 @@ package com.frostwire.android.gui.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -32,11 +36,23 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.PromotionsHandler;
+import com.frostwire.android.gui.PromotionsHandler.Slide;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
+import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.LocalSearchEngine;
+import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
+import com.frostwire.android.gui.transfers.InvalidTransfer;
+import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.NewTransferDialog;
+import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
+import com.frostwire.android.gui.views.PromotionsView;
+import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
@@ -50,7 +66,6 @@ import com.google.ads.AdView;
  */
 public class SearchFragment extends AbstractListFragment implements Refreshable, MainFragment {
 
-    @SuppressWarnings("unused")
     private static final String TAG = "FW.SearchFragment";
 
     private SearchInputView searchInput;
@@ -64,6 +79,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     private AdView adView;
 
     private TextView header;
+    private PromotionsView promotions;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
@@ -157,14 +173,22 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         } else {
             switchView(view, R.id.fragment_search_promos);
         }
+
+        promotions = findView(view, R.id.fragment_search_promos);
+        promotions.setOnPromotionClickListener(new OnPromotionClickListener() {
+            @Override
+            public void onPromotionClick(PromotionsView v, Slide slide) {
+                startPromotionDownload(slide);
+            }
+        });
     }
 
     private void setupAdapter() {
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
             adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
                 @Override
-                protected void onTransferStarted(DownloadTransfer transfer) {
-                    //LocalSearchEngine.instance().cancelSearch();
+                protected void onStartTransfer(BittorrentSearchResult sr) {
+                    startTransfer(sr, getString(R.string.download_added_to_queue));
                 }
             };
             adapter.filter(mediaTypeId);
@@ -175,6 +199,77 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
             setListAdapter(adapter);
         }
+    }
+
+    private void startTransfer(final SearchResult sr, final String toastMessage) {
+        OnYesNoListener listener = new OnYesNoListener() {
+            public void onYes(NewTransferDialog dialog) {
+                startDownload(sr, toastMessage);
+            }
+
+            public void onNo(NewTransferDialog dialog) {
+            }
+        };
+
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG)) {
+            NewTransferDialog dlg = new NewTransferDialog();
+            dlg.setSearchResult(sr);
+            dlg.setListener(listener);
+            dlg.show(getFragmentManager());
+        } else {
+            listener.onYes(null);
+        }
+    }
+
+    private void startDownload(final SearchResult sr, final String toastMessage) {
+        AsyncTask<Void, Void, DownloadTransfer> task = new AsyncTask<Void, Void, DownloadTransfer>() {
+
+            @Override
+            protected DownloadTransfer doInBackground(Void... params) {
+                DownloadTransfer transfer = null;
+                try {
+                    transfer = TransferManager.instance().download(sr);
+                } catch (Throwable e) {
+                    Log.e(TAG, "Error adding new download from result: " + sr, e);
+                }
+
+                return transfer;
+            }
+
+            @Override
+            protected void onPostExecute(DownloadTransfer transfer) {
+                if (!(transfer instanceof InvalidTransfer)) {
+                    UIUtils.showShortMessage(getActivity(), toastMessage);
+
+                    if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        i.setAction(Constants.ACTION_SHOW_TRANSFERS);
+                        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        getActivity().startActivity(i);
+                    }
+
+                } else {
+                    UIUtils.showShortMessage(getActivity(), ((InvalidTransfer) transfer).getReasonResId());
+                }
+            }
+        };
+
+        task.execute();
+    }
+
+    private void startPromotionDownload(Slide slide) {
+        SearchResult sr = new PromotionsHandler().buildSearchResult(slide);
+        if (sr == null) {
+
+            //check if there is a URL available to open a web browser.
+            if (slide.url != null) {
+                Intent i = new Intent("android.intent.action.VIEW", Uri.parse(slide.url));
+                getActivity().startActivity(i);
+            }
+
+            return;
+        }
+        startTransfer(sr, getString(R.string.downloading_promotion, sr.getTitle()));
     }
 
     private void clearAdapter() {

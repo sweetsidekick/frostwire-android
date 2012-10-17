@@ -27,29 +27,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Looper;
+import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.transfers.InvalidTransfer;
-import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.android.gui.views.NewTransferDialog;
-import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
 import com.frostwire.android.util.FilenameUtils;
 
 /**
@@ -58,8 +48,6 @@ import com.frostwire.android.util.FilenameUtils;
  *
  */
 public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
-
-    private static final String TAG = "FW.SearchResultListAdapter";
 
     private final Map<String, Drawable> drawableCache;
     private final DownloadClickListener downloadClickListener;
@@ -133,7 +121,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         downloadClickListener.onClick(v);
     }
 
-    protected void onTransferStarted(DownloadTransfer transfer) {
+    protected void onStartTransfer(BittorrentSearchResult sr) {
     }
 
     private Drawable getDrawable(String ext) {
@@ -171,41 +159,19 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     private void startTransfer(final BittorrentSearchResult sr) {
-        NewTransferDialog dlg = new NewTransferDialog(getContext(), sr, false, new OnYesNoListener() {
-            public void onYes(NewTransferDialog dialog) {
-                // putting this logic in a thread to avoid ANR errors. Needs refactor to avoid context leaks
-                Engine.instance().getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            DownloadTransfer transfer = TransferManager.instance().download(sr);
-                            Looper.prepare();
-                            if (!(transfer instanceof InvalidTransfer)) {
-                                UIUtils.showShortMessage(getContext(), R.string.download_added_to_queue);
-
-                                if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                                    Intent i = new Intent(getContext(), MainActivity.class);
-                                    i.setAction(Constants.ACTION_SHOW_TRANSFERS);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                    getContext().startActivity(i);
-                                }
-
-                                onTransferStarted(transfer);
-                            } else {
-                                UIUtils.showShortMessage(getContext(), ((InvalidTransfer) transfer).getReasonResId());
-                            }
-                        } catch (Throwable e) {
-                            Log.e(TAG, "Error adding new download from result: " + sr, e);
-                        }
-                    }
-                });
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                return null;
             }
 
-            public void onNo(NewTransferDialog dialog) {
+            @Override
+            protected void onPostExecute(Void result) {
+                onStartTransfer(sr);
             }
-        });
+        };
 
-        dlg.show(); // this dialog will leak if the context is destroyed. Find a solution.
+        task.execute();
     }
 
     private class OnLinkClickListener implements OnClickListener {

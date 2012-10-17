@@ -50,8 +50,18 @@ public class PromotionsView extends LinearLayout {
 
     private GridView gridview;
 
+    private OnPromotionClickListener onPromotionClickListener;
+
     public PromotionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public OnPromotionClickListener getOnPromotionClickListener() {
+        return onPromotionClickListener;
+    }
+
+    public void setOnPromotionClickListener(OnPromotionClickListener listener) {
+        this.onPromotionClickListener = listener;
     }
 
     @Override
@@ -69,7 +79,9 @@ public class PromotionsView extends LinearLayout {
             gridview.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Slide slide = (Slide) gridview.getAdapter().getItem(position);
-                    new PromotionsHandler(getContext()).startTransfer(slide);
+                    if (onPromotionClickListener != null) {
+                        onPromotionClickListener.onPromotionClick(PromotionsView.this, slide);
+                    }
                 }
             });
 
@@ -111,5 +123,9 @@ public class PromotionsView extends LinearLayout {
 
     private String buildUrl() {
         return String.format("%s?from=android&fw=%s&sdk=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING, Build.VERSION.SDK_INT);
+    }
+
+    public static interface OnPromotionClickListener {
+        public void onPromotionClick(PromotionsView v, Slide slide);
     }
 }
