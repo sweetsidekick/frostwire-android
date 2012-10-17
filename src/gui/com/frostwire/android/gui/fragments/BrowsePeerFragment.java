@@ -103,14 +103,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        setRetainInstance(true);
 
         if (peer == null) {
             getPeer();
@@ -173,6 +169,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         if (adapter != null) {
             //adapter.notifyDataSetChanged();
             browseFilesButtonClick(adapter.getFileType());
+        } else {
+            //browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
         }
     }
 
@@ -325,7 +323,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private void browseFilesButtonClick(byte fileType) {
         if (adapter != null) {
             adapter.clear();
-            adapter = null;
+            //adapter = null;
         }
 
         filesBar.clearCheckAll();
