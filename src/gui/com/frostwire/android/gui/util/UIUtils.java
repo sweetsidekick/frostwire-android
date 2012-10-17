@@ -313,14 +313,6 @@ public final class UIUtils {
     public static void playEphemeralPlaylist(FileDescriptor fd) {
         Engine.instance().getMediaPlayer().play(Librarian.instance().createEphemeralPlaylist(fd));
     }
-    
-    public static void safeDismiss(Dialog dialog) {
-        try {
-            dialog.dismiss();
-        } catch (Throwable e) {
-            Log.w(TAG, "Error performing dialog dismiss, review the logic", e);
-        }
-    }
 
     private static boolean openAudioInternal(String filePath) {
         try {

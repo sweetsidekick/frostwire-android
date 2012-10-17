@@ -48,7 +48,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <android.gesture.GestureOverlayView
         android:id="@+id/activity_main_fragment_container"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -86,7 +86,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             tools:layout="@layout/fragment_about" />
-    </FrameLayout>
+    </android.gesture.GestureOverlayView>
 
     <com.frostwire.android.gui.views.PlayerNotifierView
         android:id="@+id/activity_main_player_notifier"

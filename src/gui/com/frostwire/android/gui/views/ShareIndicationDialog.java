@@ -20,7 +20,6 @@ package com.frostwire.android.gui.views;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -36,23 +35,24 @@ import com.frostwire.android.core.Constants;
  * @author aldenml
  *
  */
-public class ShareIndicationDialog extends DialogFragment {
+public class ShareIndicationDialog extends AbstractDialog {
 
     public ShareIndicationDialog() {
+        super("share_indication");
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dlg = new Dialog(getActivity());
-        dlg.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        dlg.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlg.setContentView(R.layout.dialog_share_indication);
         setCancelable(true);
 
-        final CheckBox checkShow = (CheckBox) dlg.findViewById(R.id.dialog_share_indicator_check_show);
+        final CheckBox checkShow = findView(dlg, R.id.dialog_share_indicator_check_show);
         checkShow.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION));
 
-        Button buttonDone = (Button) dlg.findViewById(R.id.dialog_share_indicator_button_done);
+        Button buttonDone = findView(dlg, R.id.dialog_share_indicator_button_done);
         buttonDone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dismiss();

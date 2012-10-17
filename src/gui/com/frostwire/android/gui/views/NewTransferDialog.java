@@ -19,18 +19,17 @@
 package com.frostwire.android.gui.views;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.util.UIUtils;
@@ -40,14 +39,14 @@ import com.frostwire.android.gui.util.UIUtils;
  * @author aldenml
  *
  */
-public class NewTransferDialog extends Dialog {
+public class NewTransferDialog extends AbstractDialog {
 
     private Button buttonNo;
     private Button buttonYes;
     private CheckBox checkShow;
 
-    private final OnYesNoListener listener;
-    private final SearchResult searchResult;
+    private SearchResult searchResult;
+    private OnYesNoListener listener;
 
     /** When opening .torrent files from outside you don't want to
      * give the user the option of not showing this dialog again,
@@ -55,77 +54,79 @@ public class NewTransferDialog extends Dialog {
      * big transfers by mistake. */
     private boolean hideShowNextTimeOption;
 
-    public NewTransferDialog(Context context, SearchResult searchResult, boolean hideShowNextTimeOption, OnYesNoListener listener) {
-        super(context);
-        this.listener = listener;
+    public NewTransferDialog() {
+        super("new_transfer");
+        this.hideShowNextTimeOption = false; // discuss the use of this variable with @gubatron
+    }
+
+    public SearchResult getSearchResult() {
+        return searchResult;
+    }
+
+    public void setSearchResult(SearchResult searchResult) {
         this.searchResult = searchResult;
-        this.hideShowNextTimeOption = hideShowNextTimeOption;
-        initComponents();
+    }
+
+    public OnYesNoListener getListener() {
+        return listener;
+    }
+
+    public void setListener(OnYesNoListener listener) {
+        this.listener = listener;
     }
 
     @Override
-    public void show() {
-        if (hideShowNextTimeOption || getPreferences().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, true)) {
-            super.show();
-        } else {
-            if (listener != null) {
-                listener.onYes(this);
-            }
-        }
-    }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dlg = new Dialog(getActivity());
+        dlg.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        dlg.setTitle(R.string.dialog_new_transfer_title);
+        dlg.setContentView(R.layout.dialog_new_transfer);
+        setCancelable(true);
 
-    private void initComponents() {
-        getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        TextView textQuestion = findView(dlg, R.id.dialog_new_transfer_text);
 
-        setTitle(R.string.dialog_new_transfer_title);
-        setContentView(R.layout.dialog_new_transfer);
-
-        TextView textQuestion = (TextView) findViewById(R.id.dialog_new_transfer_text);
-
-        String sizeString = getContext().getString(R.string.size_unknown);
+        String sizeString = dlg.getContext().getString(R.string.size_unknown);
         if (searchResult.getSize() > 0) {
             sizeString = UIUtils.getBytesInHuman(searchResult.getSize());
         }
 
-        textQuestion.setText(getContext().getString(R.string.dialog_new_transfer_text_text, searchResult.getDisplayName(), sizeString));
+        textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, searchResult.getDisplayName(), sizeString));
 
         setCancelable(true);
 
-        buttonNo = (Button) findViewById(R.id.dialog_new_transfer_button_no);
+        buttonNo = findView(dlg, R.id.dialog_new_transfer_button_no);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                UIUtils.safeDismiss(NewTransferDialog.this);
+                dismiss();
                 if (listener != null) {
                     listener.onNo(NewTransferDialog.this);
                 }
             }
         });
 
-        buttonYes = (Button) findViewById(R.id.dialog_new_transfer_button_yes);
+        buttonYes = findView(dlg, R.id.dialog_new_transfer_button_yes);
         buttonYes.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                UIUtils.safeDismiss(NewTransferDialog.this);
+                dismiss();
                 if (listener != null) {
                     listener.onYes(NewTransferDialog.this);
                 }
             }
         });
 
-        checkShow = (CheckBox) findViewById(R.id.dialog_new_transfer_check_show);
-        checkShow.setChecked(getPreferences().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, true));
+        checkShow = findView(dlg, R.id.dialog_new_transfer_check_show);
+        checkShow.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG));
         checkShow.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                getPreferences().edit().putBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, checkShow.isChecked()).commit();
+                ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, checkShow.isChecked());
             }
         });
 
         if (hideShowNextTimeOption) {
             checkShow.setVisibility(View.GONE);
         }
-    }
 
-    private SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(getContext());
+        return dlg;
     }
 
     public interface OnYesNoListener {

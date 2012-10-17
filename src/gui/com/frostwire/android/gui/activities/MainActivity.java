@@ -21,12 +21,15 @@ package com.frostwire.android.gui.activities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +37,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -91,7 +95,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     private BrowsePeersFragment peers;
     private AboutFragment about;
 
-    private int lastMenuId = -1;
+    private Stack<Integer> lastMenuIdStack = new Stack<Integer>();
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -102,8 +106,8 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (menu.isMenuShown()) {
                 menu.hide();
-            } else if (lastMenuId != -1) {
-                onSlideMenuItemClick(lastMenuId);
+            } else if (!lastMenuIdStack.isEmpty()) {
+                onSlideMenuItemClick(lastMenuIdStack.pop(), false);
             } else {
                 trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -131,32 +135,38 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     @Override
     public void onSlideMenuItemClick(int itemId) {
+        onSlideMenuItemClick(itemId, true);
+    }
+
+    public void onSlideMenuItemClick(int itemId, boolean push) {
         switch (itemId) {
         case R.id.menu_main_search:
-            showFragment(search, itemId);
+            showFragment(search, itemId, push);
             break;
         case R.id.menu_main_library:
-            showFragment(library, itemId);
+            showFragment(library, itemId, push);
             break;
         case R.id.menu_main_transfers:
-            showFragment(transfers, itemId);
+            showFragment(transfers, itemId, push);
             break;
         case R.id.menu_main_peers:
-            showFragment(peers, itemId);
+            showFragment(peers, itemId, push);
             break;
         case R.id.menu_main_preferences:
             showPreferences();
             break;
         case R.id.menu_main_about:
-            showFragment(about, itemId);
+            showFragment(about, itemId, push);
             break;
         }
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GestureOverlayView gestureOverlay = findView(R.id.activity_main_fragment_container);
+        setupGestureOverlay(gestureOverlay);
 
         menu = findView(R.id.activity_main_menu);
         menu.init(this, R.menu.main, this, 400);
@@ -335,7 +345,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
     }
 
     private void showFragment(Fragment fragment, int menuId) {
-        lastMenuId = menuSelectedItemId;
+        showFragment(fragment, menuId, true);
+    }
+
+    private void showFragment(Fragment fragment, int menuId, boolean push) {
+        if (push) {
+            lastMenuIdStack.push(menuSelectedItemId);
+        }
         menuSelectedItemId = menuId;
         menu.setSelectedItem(menuSelectedItemId);
 
@@ -413,6 +429,38 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
             trackDialog(dlg).show();
         }
+    }
+
+    private void setupGestureOverlay(GestureOverlayView view) {
+        view.setGestureVisible(false);
+        view.addOnGestureListener(new OnGestureListener() {
+
+            private float X0;
+            private float X1;
+
+            @Override
+            public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
+                X0 = event.getX();
+            }
+
+            @Override
+            public void onGestureEnded(GestureOverlayView overlay, MotionEvent event) {
+                X1 = event.getX();
+                if (X1 - X0 > 80) {
+                    if (!menu.isMenuShown()) {
+                        menu.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
+            }
+
+            @Override
+            public void onGesture(GestureOverlayView overlay, MotionEvent event) {
+            }
+        });
     }
 
     public void showMyFiles() {
