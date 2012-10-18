@@ -135,7 +135,11 @@ public class ConfigurationManager {
     public byte[] getUUID() {
         return getByteArray(Constants.PREF_KEY_CORE_UUID);
     }
-    
+
+    public String getUUIDString() {
+        return getString(Constants.PREF_KEY_CORE_UUID);
+    }
+
     public int getLastMediaTypeFilter() {
         return getInt(Constants.PREF_KEY_GUI_LAST_MEDIA_TYPE_FILTER);
     }
