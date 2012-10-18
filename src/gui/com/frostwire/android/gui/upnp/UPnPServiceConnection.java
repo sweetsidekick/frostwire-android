@@ -49,6 +49,7 @@ public class UPnPServiceConnection implements ServiceConnection {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         this.service = (AndroidUpnpService) service;
+        this.registryListener.setService(this.service.get());
 
         if (localDevice == null) {
             try {
@@ -87,9 +88,9 @@ public class UPnPServiceConnection implements ServiceConnection {
 
         //Icon icon = new Icon("image/png", 48, 48, 8, getClass().getResource("icon.png"));
 
-        LocalService<UPnPFWDeviceService> deviceService = new AnnotationLocalServiceBinder().read(UPnPFWDeviceService.class);
+        LocalService<UPnPFWDeviceInfo> deviceService = new AnnotationLocalServiceBinder().read(UPnPFWDeviceInfo.class);
 
-        deviceService.setManager(new DefaultServiceManager<UPnPFWDeviceService>(deviceService, UPnPFWDeviceService.class));
+        deviceService.setManager(new DefaultServiceManager<UPnPFWDeviceInfo>(deviceService, UPnPFWDeviceInfo.class));
 
         return new LocalDevice(identity, type, details, (Icon) null/*icon*/, deviceService);
     }

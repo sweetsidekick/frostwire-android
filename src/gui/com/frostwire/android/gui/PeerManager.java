@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,6 +77,14 @@ public final class PeerManager {
 
     public void onMessageReceived(PingMessage elem) {
         Peer peer = new Peer(elem.getAddress(), elem.getListeningPort(), elem);
+
+        if (!peer.isLocalHost()) {
+            updatePeerCache(peer, elem.getBye());
+        }
+    }
+    
+    public void onMessageReceived(InetAddress address, PingMessage elem) {
+        Peer peer = new Peer(address, elem.getListeningPort(), elem);
 
         if (!peer.isLocalHost()) {
             updatePeerCache(peer, elem.getBye());

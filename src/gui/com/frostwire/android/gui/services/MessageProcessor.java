@@ -54,6 +54,6 @@ public final class MessageProcessor extends QueueProcessor<FrostWireMessage> {
     }
 
     private void processPingMessage(PingMessage elem) {
-        PeerManager.instance().onMessageReceived(elem);
+        //PeerManager.instance().onMessageReceived(elem);
     }
 }

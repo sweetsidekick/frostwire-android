@@ -64,7 +64,7 @@ public final class Peer implements Cloneable {
 
         this.nickname = ping.getNickname();
         this.numSharedFiles = ping.getNumSharedFiles();
-        this.clientVersion = clientVersionToString(ping.getHeader().getClientVersion());
+        this.clientVersion = "-.-.-";//clientVersionToString(ping.getHeader().getClientVersion());
     }
 
     public InetAddress getAddress() {
