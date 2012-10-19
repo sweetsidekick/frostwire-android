@@ -41,7 +41,7 @@ public class Form {
     /**
      * 
      */
-    private static final long serialVersionUID = 5837247484638868257L;
+    //private static final long serialVersionUID = 5837247484638868257L;
 
     /**
      * Ein Array mit allen Forms dessen Inhalt dem matcher entspricht. Achtung

@@ -20,8 +20,10 @@
 -->
 <lint>
 
-    <issue
-        id="MissingTranslation"
-        severity="warning" />
+	<issue id="MissingTranslation" severity="warning" />
+
+	<issue id="UseSparseArrays">
+		<ignore path="src/gui/com/frostwire/android/gui/transfers/YouTubeDownload.java" />
+	</issue>
 
 </lint>

@@ -439,6 +439,8 @@ public class HTMLParser {
         data = data.replaceAll("(?s)\\[(url|link)\\](.*?)\\[/(url|link)\\]", "<$2>");
         final HashSet<String> results = new HashSet<String>() {
 
+            private static final long serialVersionUID = 4064238036798404115L;
+
             @Override
             public boolean add(String e) {
                 if (e != null) {

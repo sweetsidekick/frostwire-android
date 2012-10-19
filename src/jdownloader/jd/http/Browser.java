@@ -611,8 +611,10 @@ public class Browser {
                 }
                 return request;
             }
+        default:
+            return null;
         }
-        return null;
+        //return null;
 
     }
 
