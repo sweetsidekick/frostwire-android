@@ -102,7 +102,11 @@ class DownloadHandler implements HttpHandler {
                 upload.addBytesSent(n);
 
                 if (upload.isCanceled()) {
-                    throw new IOException("Upload cancelled");
+                    try {
+                        throw new IOException("Upload cancelled");
+                    } finally {
+                        os.close();
+                    }
                 }
             }
 
