@@ -115,6 +115,7 @@ public class PostRequest extends Request {
         }
     }
 
+    @SuppressWarnings("resource")
     private long postContent(final URLConnectionAdapter httpConnection) throws IOException {
         if (this.sendWHAT == null) { throw new IOException("preRequest needs to be called first!"); }
         String postString = null;

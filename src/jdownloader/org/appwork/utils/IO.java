@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+//import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -215,6 +215,7 @@ public class IO {
         return IO.readStream(maxSize, input, new ByteArrayOutputStream());
     }
 
+    @SuppressWarnings("resource")
     public static byte[] readStream(final int maxSize, final InputStream input, final ByteArrayOutputStream baos) throws IOException {
         ReusableByteArrayOutputStream os = null;
         try {
@@ -316,7 +317,7 @@ public class IO {
             file.createNewFile();
             if (!file.isFile()) { throw new IllegalArgumentException("Is not a file: " + file); }
             if (!file.canWrite()) { throw new IllegalArgumentException("Cannot write to file: " + file); }
-            FileWriter fw = null;
+            //FileWriter fw = null;
             if (Log.L.isLoggable(Level.FINEST)) {
                 Log.L.finest("Write " + file);
             }
@@ -330,18 +331,18 @@ public class IO {
                     output.flush();
                 } catch (final Throwable e) {
                 }
-                try {
-                    fw.flush();
-                } catch (final Throwable e) {
-                }
+//                try {
+//                    fw.flush();
+//                } catch (final Throwable e) {
+//                }
                 try {
                     output.close();
                 } catch (final Throwable e) {
                 }
-                try {
-                    fw.close();
-                } catch (final Throwable e) {
-                }
+//                try {
+//                    fw.close();
+//                } catch (final Throwable e) {
+//                }
             }
         } catch (IOException e) {
             if (ERROR_HANDLER != null) ERROR_HANDLER.onWriteException(e, file, string.getBytes());

@@ -281,16 +281,6 @@ public final class HttpDownload implements DownloadTransfer {
         }
     }
 
-    /**
-     * Normalize the url to a valid OS name postfixed url.
-     * 
-     * @param url
-     * @return
-     */
-    private String normalize(String url) {
-        return url; // nothing for now since we are dealing with controlled http downloads
-    }
-
     private final class DownloadListener implements HttpFetcherListener {
 
         private final int retry;

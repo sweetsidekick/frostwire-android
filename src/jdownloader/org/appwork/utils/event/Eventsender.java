@@ -12,8 +12,8 @@ package org.appwork.utils.event;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.URISyntaxException;
-import java.net.URL;
+//import java.net.URISyntaxException;
+//import java.net.URL;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -49,6 +49,7 @@ public abstract class Eventsender<ListenerType extends EventListener, EventType 
      * @param file
      * @throws IOException
      */
+    @SuppressWarnings("unused")
     private static void create(final String name, final File file) throws IOException {
         String pkg = "";
         System.out.println("");

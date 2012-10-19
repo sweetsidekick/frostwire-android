@@ -9,8 +9,8 @@
  */
 package org.appwork.utils.net.httpconnection;
 
-import java.util.LinkedList;
-import java.util.List;
+//import java.util.LinkedList;
+//import java.util.List;
 
 import org.appwork.storage.Storable;
 

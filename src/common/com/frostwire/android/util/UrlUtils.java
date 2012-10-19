@@ -21,6 +21,11 @@ package com.frostwire.android.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * @author gubatron
+ * @author aldenml
+ *
+ */
 public final class UrlUtils {
 
     private UrlUtils() {

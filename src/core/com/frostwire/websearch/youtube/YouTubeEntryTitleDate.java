@@ -18,6 +18,12 @@
 
 package com.frostwire.websearch.youtube;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ *
+ */
 public class YouTubeEntryTitleDate {
 
     public String title;

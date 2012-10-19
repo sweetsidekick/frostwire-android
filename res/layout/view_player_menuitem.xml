@@ -19,10 +19,12 @@
  */
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/player_menu_item_background_selector"
-    android:clickable="true" >
+    android:clickable="true"
+    tools:ignore="PxUsage" >
 
     <ImageView
         android:id="@+id/view_player_menu_item_thumbnail"
@@ -47,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/playing_now_colon" />
-        
+
         <TextView
             android:id="@+id/view_player_menu_item_artist"
             style="@style/MediaPlayerHeaderTitleBold"

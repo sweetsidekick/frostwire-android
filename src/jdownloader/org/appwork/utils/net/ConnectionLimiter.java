@@ -20,6 +20,7 @@ import org.appwork.utils.logging.Log;
  * @author daniel
  * 
  */
+@SuppressWarnings("deprecation")
 public class ConnectionLimiter {
 
     private static final Object LOCK = new Object();
