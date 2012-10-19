@@ -40,12 +40,6 @@ public class UPnPServiceConnection implements ServiceConnection {
         return service;
     }
 
-    public void unregister() {
-        if (service != null && registryListener != null) {
-            service.getRegistry().removeListener(registryListener);
-        }
-    }
-
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         this.service = (AndroidUpnpService) service;

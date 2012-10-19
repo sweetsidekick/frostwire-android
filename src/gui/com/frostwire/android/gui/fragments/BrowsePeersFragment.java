@@ -24,6 +24,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +34,8 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
-import com.frostwire.android.gui.upnp.UPnPRegistryListener;
+import com.frostwire.android.gui.upnp.UPnPManager;
 import com.frostwire.android.gui.upnp.UPnPService;
-import com.frostwire.android.gui.upnp.UPnPServiceConnection;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
@@ -52,8 +52,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
     private TextView header;
 
-    private UPnPRegistryListener registryListener;
-    private UPnPServiceConnection serviceConnection;
+    private ServiceConnection serviceConnection;
 
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
@@ -65,8 +64,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         setRetainInstance(true);
 
-        registryListener = new UPnPRegistryListener();
-        serviceConnection = new UPnPServiceConnection(registryListener);
+        serviceConnection = UPnPManager.instance().getServiceConnection();
         getActivity().getApplicationContext().bindService(new Intent(getActivity(), UPnPService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 
         setupAdapter();
@@ -79,7 +77,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
     @Override
     public void onDestroy() {
         super.onDestroy();
-        serviceConnection.unregister();
         getActivity().getApplicationContext().unbindService(serviceConnection);
     }
 
