@@ -159,6 +159,7 @@ final class DesktopUploadHandler implements HttpHandler {
                 if (transfer.isCanceled()) {
                     sessionManager.updateDURStatus(token, DesktopUploadRequestStatus.REJECTED);
                     file.delete();
+                    fos.close();
                     return false;
                 } else {
                     transferItem.addBytesTransferred(n);
