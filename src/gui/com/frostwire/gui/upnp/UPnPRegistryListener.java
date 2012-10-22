@@ -1,4 +1,4 @@
-package com.frostwire.android.gui.upnp;
+package com.frostwire.gui.upnp;
 
 import java.net.InetAddress;
 

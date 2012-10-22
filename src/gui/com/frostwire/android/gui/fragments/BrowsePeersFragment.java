@@ -34,11 +34,11 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
-import com.frostwire.android.gui.upnp.UPnPManager;
-import com.frostwire.android.gui.upnp.UPnPService;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.gui.upnp.UPnPService;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.frostwire.android.gui.upnp;
+package com.frostwire.gui.upnp;
 
 import org.teleal.cling.android.AndroidUpnpService;
 import org.teleal.cling.binding.annotations.AnnotationLocalServiceBinder;
@@ -68,6 +68,9 @@ public class UPnPServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        if (service != null) {
+            service.getRegistry().removeListener(registryListener);
+        }
         service = null;
     }
 
@@ -76,9 +79,11 @@ public class UPnPServiceConnection implements ServiceConnection {
 
         UPnPFWDevice device = new UPnPFWDevice();
 
-        DeviceType type = new UDADeviceType(device.getDeviceType(), device.getVersion());
+        UPnPFWDeviceDesc d = device.getDeviceDesc();
 
-        DeviceDetails details = new DeviceDetails(device.getFriendlyName(), new ManufacturerDetails(device.getManufacturer()), new ModelDetails(device.getModelName(), device.getModelDescription(), device.getModelNumber()));
+        DeviceType type = new UDADeviceType(d.getDeviceType(), d.getVersion());
+
+        DeviceDetails details = new DeviceDetails(d.getFriendlyName(), new ManufacturerDetails(d.getManufacturer()), new ModelDetails(d.getModelName(), d.getModelDescription(), d.getModelNumber()));
 
         //Icon icon = new Icon("image/png", 48, 48, 8, getClass().getResource("icon.png"));
 

@@ -1,6 +1,6 @@
-package com.frostwire.android.gui.upnp;
+package com.frostwire.gui.upnp;
 
-public class UPnPFWDevice {
+public class UPnPFWDeviceDesc {
 
     private final String deviceType;
     private final int version;
@@ -10,7 +10,7 @@ public class UPnPFWDevice {
     private final String modelDescription;
     private final String modelNumber;
 
-    public UPnPFWDevice() {
+    public UPnPFWDeviceDesc() {
         this.deviceType = "UPnPFWDevice";
         this.version = 1;
         this.friendlyName = "FrostWire Android";
