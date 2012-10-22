@@ -32,7 +32,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.httpserver.Code;
 import com.frostwire.android.httpserver.HttpExchange;
 import com.frostwire.android.httpserver.HttpHandler;
-import com.frostwire.android.util.JsonUtils;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron

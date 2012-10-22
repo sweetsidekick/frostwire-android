@@ -27,7 +27,7 @@ import org.teleal.cling.binding.annotations.UpnpServiceId;
 import org.teleal.cling.binding.annotations.UpnpServiceType;
 import org.teleal.cling.binding.annotations.UpnpStateVariable;
 
-import com.frostwire.android.util.JsonUtils;
+import com.frostwire.util.JsonUtils;
 
 /**
  * 

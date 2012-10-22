@@ -37,7 +37,7 @@ import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.PromotionsHandler;
 import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
-import com.frostwire.android.util.JsonUtils;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron

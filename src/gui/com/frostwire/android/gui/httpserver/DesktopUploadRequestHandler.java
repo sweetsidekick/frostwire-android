@@ -34,8 +34,8 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.httpserver.Code;
 import com.frostwire.android.httpserver.HttpExchange;
 import com.frostwire.android.httpserver.HttpHandler;
-import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron

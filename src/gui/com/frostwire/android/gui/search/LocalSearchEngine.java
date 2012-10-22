@@ -51,10 +51,10 @@ import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
 import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.Normalizer;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron

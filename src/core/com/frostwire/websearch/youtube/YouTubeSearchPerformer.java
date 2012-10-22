@@ -21,8 +21,8 @@ package com.frostwire.websearch.youtube;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;
 import com.frostwire.websearch.WebSearchResult;

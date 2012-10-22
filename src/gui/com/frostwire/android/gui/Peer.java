@@ -27,7 +27,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.core.messages.PingMessage;
-import com.frostwire.android.util.JsonUtils;
+import com.frostwire.util.JsonUtils;
 
 /**
  * 

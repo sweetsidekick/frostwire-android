@@ -32,8 +32,8 @@ import org.teleal.cling.model.meta.Service;
 import org.teleal.cling.model.types.ServiceId;
 import org.teleal.cling.model.types.UDAServiceId;
 
-import com.frostwire.android.util.JsonUtils;
 import com.frostwire.gui.upnp.android.AndroidUPnPManager;
+import com.frostwire.util.JsonUtils;
 
 /**
  * 

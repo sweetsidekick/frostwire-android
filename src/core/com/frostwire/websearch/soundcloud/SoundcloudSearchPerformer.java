@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.frostwire.android.util.JsonUtils;
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;
 import com.frostwire.websearch.WebSearchResult;
