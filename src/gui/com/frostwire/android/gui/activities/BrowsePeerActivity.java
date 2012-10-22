@@ -26,15 +26,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment.OnRefreshSharedListener;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.android.gui.views.ShareIndicationDialog;
 
 /**
  * @author gubatron
@@ -95,23 +92,9 @@ public class BrowsePeerActivity extends AbstractActivity {
         addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (peer.isLocalHost() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
-            showShareIndication();
-        }
-    }
-
     private void updateTitle(byte fileType, int numShared) {
         String title = UIUtils.getFileTypeAsString(getResources(), fileType);
         title += " (" + numShared + ")";
         textTitle.setText(title);
-    }
-
-    private void showShareIndication() {
-        ShareIndicationDialog dlg = new ShareIndicationDialog();
-        dlg.show(getSupportFragmentManager());
     }
 }

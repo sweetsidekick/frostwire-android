@@ -131,9 +131,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
             i = new Intent(getContext(), BrowsePeerActivity.class);
             i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
             getContext().startActivity(i);
-
         }
-
     }
 
     @Override
