@@ -1,28 +1,44 @@
-package com.frostwire.gui.upnp;
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
+package com.frostwire.gui.upnp.android;
+
+import org.teleal.cling.UpnpService;
 import org.teleal.cling.android.AndroidUpnpService;
-import org.teleal.cling.binding.annotations.AnnotationLocalServiceBinder;
-import org.teleal.cling.model.DefaultServiceManager;
 import org.teleal.cling.model.ValidationException;
 import org.teleal.cling.model.meta.Device;
-import org.teleal.cling.model.meta.DeviceDetails;
-import org.teleal.cling.model.meta.DeviceIdentity;
-import org.teleal.cling.model.meta.Icon;
 import org.teleal.cling.model.meta.LocalDevice;
-import org.teleal.cling.model.meta.LocalService;
-import org.teleal.cling.model.meta.ManufacturerDetails;
-import org.teleal.cling.model.meta.ModelDetails;
-import org.teleal.cling.model.types.DeviceType;
-import org.teleal.cling.model.types.UDADeviceType;
-import org.teleal.cling.model.types.UDN;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.gui.upnp.UPnPFWDevice;
+import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.gui.upnp.UPnPRegistryListener;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ * 
+ */
 public class UPnPServiceConnection implements ServiceConnection {
 
     private static final String TAG = "FW.UPnPServiceConnection";
@@ -36,14 +52,13 @@ public class UPnPServiceConnection implements ServiceConnection {
         this.registryListener = registryListener;
     }
 
-    public AndroidUpnpService getService() {
-        return service;
+    public UpnpService getService() {
+        return service.get();
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         this.service = (AndroidUpnpService) service;
-        this.registryListener.setService(this.service.get());
 
         if (localDevice == null) {
             try {
@@ -75,22 +90,8 @@ public class UPnPServiceConnection implements ServiceConnection {
     }
 
     private LocalDevice createLocalDevice() throws ValidationException {
-        DeviceIdentity identity = new DeviceIdentity(UDN.uniqueSystemIdentifier(ConfigurationManager.instance().getUUIDString()));
+        UPnPFWDevice device = UPnPManager.instance().getUPnPLocalDevice();
 
-        UPnPFWDevice device = new UPnPFWDevice();
-
-        UPnPFWDeviceDesc d = device.getDeviceDesc();
-
-        DeviceType type = new UDADeviceType(d.getDeviceType(), d.getVersion());
-
-        DeviceDetails details = new DeviceDetails(d.getFriendlyName(), new ManufacturerDetails(d.getManufacturer()), new ModelDetails(d.getModelName(), d.getModelDescription(), d.getModelNumber()));
-
-        //Icon icon = new Icon("image/png", 48, 48, 8, getClass().getResource("icon.png"));
-
-        LocalService<UPnPFWDeviceInfo> deviceService = new AnnotationLocalServiceBinder().read(UPnPFWDeviceInfo.class);
-
-        deviceService.setManager(new DefaultServiceManager<UPnPFWDeviceInfo>(deviceService, UPnPFWDeviceInfo.class));
-
-        return new LocalDevice(identity, type, details, (Icon) null/*icon*/, deviceService);
+        return new LocalDevice(device.getIdentity(), device.getType(), device.getDetails(), device.getIcon(), device.getServices());
     }
 }

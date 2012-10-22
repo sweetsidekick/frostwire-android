@@ -24,21 +24,9 @@ package com.frostwire.gui.upnp;
  * @author aldenml
  * 
  */
-public interface UPnPFWDeviceDesc {
+public class PingInfo {
 
-    public String getIdentitySalt();
-
-    public String getType();
-
-    public int getVersion();
-
-    public String getFriendlyName();
-
-    public String getManufacturer();
-
-    public String getModelName();
-
-    public String getModelDescription();
-
-    public String getModelNumber();
+    public int listeningPort;
+    public int numSharedFiles;
+    public String nickname;
 }

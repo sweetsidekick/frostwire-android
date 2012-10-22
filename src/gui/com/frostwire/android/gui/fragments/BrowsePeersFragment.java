@@ -38,7 +38,8 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.gui.upnp.UPnPManager;
-import com.frostwire.gui.upnp.UPnPService;
+import com.frostwire.gui.upnp.android.AndroidUPnPManager;
+import com.frostwire.gui.upnp.android.UPnPService;
 
 /**
  * 
@@ -64,7 +65,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         setRetainInstance(true);
 
-        serviceConnection = UPnPManager.instance().getServiceConnection();
+        serviceConnection = ((AndroidUPnPManager)UPnPManager.instance()).getServiceConnection();
         getActivity().getApplicationContext().bindService(new Intent(getActivity(), UPnPService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 
         setupAdapter();

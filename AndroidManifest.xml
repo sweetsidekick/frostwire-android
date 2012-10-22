@@ -155,7 +155,7 @@
             android:name="com.frostwire.android.gui.services.EngineService"
             android:exported="false" />
         <service
-            android:name="com.frostwire.gui.upnp.UPnPService"
+            android:name="com.frostwire.gui.upnp.android.UPnPService"
             android:exported="false" />
 
         <receiver android:name="com.frostwire.android.gui.services.EngineBroadcastReceiver" >
