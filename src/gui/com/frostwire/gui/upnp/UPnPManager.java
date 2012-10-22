@@ -26,7 +26,9 @@ import org.teleal.cling.UpnpService;
 import org.teleal.cling.controlpoint.ActionCallback;
 import org.teleal.cling.model.action.ActionInvocation;
 import org.teleal.cling.model.message.UpnpResponse;
+import org.teleal.cling.model.meta.Action;
 import org.teleal.cling.model.meta.Device;
+import org.teleal.cling.model.meta.RemoteDevice;
 import org.teleal.cling.model.meta.RemoteDeviceIdentity;
 import org.teleal.cling.model.meta.Service;
 import org.teleal.cling.model.types.ServiceId;
@@ -102,7 +104,11 @@ public abstract class UPnPManager {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void invokeGetPingInfo(UpnpService service, final Service<?, ?> deviceInfo, final boolean added) {
-        ActionInvocation<?> actionInvocation = new ActionInvocation(deviceInfo.getAction("GetPingInfo"));
+        Action<?> action = deviceInfo.getAction("GetPingInfo");
+        if (action == null) {
+            return;
+        }
+        ActionInvocation<?> actionInvocation = new ActionInvocation(action);
 
         service.getControlPoint().execute(new ActionCallback(actionInvocation) {
             @Override
@@ -111,8 +117,8 @@ public abstract class UPnPManager {
                     String json = invocation.getOutput()[0].toString();
                     PingInfo p = JsonUtils.toObject(json, PingInfo.class);
                     InetAddress address = null;
-                    if (deviceInfo.getDevice().getIdentity() instanceof RemoteDeviceIdentity) {
-                        address = ((RemoteDeviceIdentity) deviceInfo.getDevice().getIdentity()).getDiscoveredOnLocalAddress();
+                    if (deviceInfo.getDevice() instanceof RemoteDevice) {
+                        address = InetAddress.getByName(((RemoteDeviceIdentity) deviceInfo.getDevice().getIdentity()).getDescriptorURL().getHost());
                     } else {
                         address = InetAddress.getByName("127.0.0.1");
                     }
