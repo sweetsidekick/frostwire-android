@@ -66,6 +66,7 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.SlideMenu;
 import com.frostwire.android.gui.views.SlideMenuInterface;
 
@@ -465,5 +466,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
 
     public void showMyFiles() {
         showFragment(library, R.id.menu_main_library);
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
+            showShareIndication();
+        }
+    }
+    
+    private void showShareIndication() {
+        ShareIndicationDialog dlg = new ShareIndicationDialog();
+        dlg.show(getSupportFragmentManager());
     }
 }
