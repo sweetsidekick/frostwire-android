@@ -53,7 +53,11 @@ public class UPnPServiceConnection implements ServiceConnection {
     }
 
     public UpnpService getService() {
-        return service.get();
+        return service != null ? service.get() : null;
+    }
+
+    public static LocalDevice getLocalDevice() {
+        return localDevice;
     }
 
     @Override

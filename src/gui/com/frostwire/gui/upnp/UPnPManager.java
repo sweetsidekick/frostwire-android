@@ -71,20 +71,40 @@ public abstract class UPnPManager {
 
     public abstract PingInfo getLocalPingInfo();
 
+    public abstract void refreshPing();
+
     protected abstract void handlePeerDevice(PingInfo p, InetAddress address, boolean added);
 
-    private void handleDevice(final Device<?, ?, ?> device, boolean added) {
+    private void handleDevice(Device<?, ?, ?> device, boolean added) {
         Service<?, ?> deviceInfo;
         if ((deviceInfo = device.findService(deviceInfoId)) != null) {
-            invokePingInfo(getService(), deviceInfo, added);
+            invokeGetPingInfo(getService(), deviceInfo, added);
         }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void invokePingInfo(UpnpService service, final Service<?, ?> deviceInfo, final boolean added) {
-        ActionInvocation<?> pingDataInvocation = new ActionInvocation(deviceInfo.getAction("GetPingInfo"));
+    protected void invokeSetPingInfo(UpnpService service, final Device<?, ?, ?> device) {
+        Service<?, ?> deviceInfo = device.findService(deviceInfoId);
 
-        service.getControlPoint().execute(new ActionCallback(pingDataInvocation) {
+        ActionInvocation<?> actionInvocation = new ActionInvocation(deviceInfo.getAction("SetPingInfo"));
+
+        service.getControlPoint().execute(new ActionCallback(actionInvocation) {
+            @Override
+            public void success(ActionInvocation invocation) {
+            }
+
+            @Override
+            public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
+                LOG.info(defaultMsg);
+            }
+        });
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void invokeGetPingInfo(UpnpService service, final Service<?, ?> deviceInfo, final boolean added) {
+        ActionInvocation<?> actionInvocation = new ActionInvocation(deviceInfo.getAction("GetPingInfo"));
+
+        service.getControlPoint().execute(new ActionCallback(actionInvocation) {
             @Override
             public void success(ActionInvocation invocation) {
                 try {

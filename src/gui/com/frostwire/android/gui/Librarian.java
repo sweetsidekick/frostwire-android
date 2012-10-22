@@ -68,6 +68,7 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * The Librarian is in charge of:
@@ -395,7 +396,7 @@ public final class Librarian {
                 c.lastTimeCachedOnDisk = 0;
             }
         }
-        context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
+        broadcastRefreshFinger();
     }
 
     /**
@@ -404,7 +405,12 @@ public final class Librarian {
     void invalidateCountCache(byte fileType) {
         cache[fileType].lastTimeCachedShared = 0;
         cache[fileType].lastTimeCachedOnDisk = 0;
+        broadcastRefreshFinger();
+    }
+
+    private void broadcastRefreshFinger() {
         context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
+        UPnPManager.instance().refreshPing();
     }
 
     private void syncApplicationsProviderSupport() {
@@ -889,11 +895,11 @@ public final class Librarian {
 
     public FileDescriptor getFileDescriptor(Uri uri) {
         TableFetcher fetcher = TableFetchers.getFetcher(uri);
-        
+
         FileDescriptor fd = new FileDescriptor();
         fd.fileType = fetcher.getFileType();
         fd.id = Integer.valueOf(uri.getLastPathSegment());
-        
+
         return fd;
     }
 }

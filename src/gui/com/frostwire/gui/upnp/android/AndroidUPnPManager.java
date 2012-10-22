@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.binding.annotations.AnnotationLocalServiceBinder;
 import org.teleal.cling.model.DefaultServiceManager;
+import org.teleal.cling.model.meta.LocalDevice;
 import org.teleal.cling.model.meta.LocalService;
 
 import android.content.ServiceConnection;
@@ -77,6 +78,16 @@ public class AndroidUPnPManager extends UPnPManager {
         p.nickname = ConfigurationManager.instance().getNickname();
 
         return p;
+    }
+
+    @Override
+    public void refreshPing() {
+        UpnpService service = getService();
+        LocalDevice device = UPnPServiceConnection.getLocalDevice();
+
+        if (service != null && device != null) {
+            invokeSetPingInfo(service, device);
+        }
     }
 
     @Override

@@ -18,6 +18,8 @@
 
 package com.frostwire.gui.upnp;
 
+import java.beans.PropertyChangeSupport;
+
 import org.teleal.cling.binding.annotations.UpnpAction;
 import org.teleal.cling.binding.annotations.UpnpOutputArgument;
 import org.teleal.cling.binding.annotations.UpnpService;
@@ -36,10 +38,17 @@ import com.frostwire.android.util.JsonUtils;
 @UpnpService(serviceId = @UpnpServiceId("UPnPFWDeviceInfo"), serviceType = @UpnpServiceType(value = "UPnPFWDeviceInfo", version = 1))
 public class UPnPFWDeviceInfo {
 
+    private final PropertyChangeSupport propertyChangeSupport;
+
     @UpnpStateVariable(defaultValue = "")
     private String pingInfo;
 
     public UPnPFWDeviceInfo() {
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    public PropertyChangeSupport getPropertyChangeSupport() {
+        return propertyChangeSupport;
     }
 
     @UpnpAction(out = @UpnpOutputArgument(name = "RetPingInfo"))
@@ -49,5 +58,14 @@ public class UPnPFWDeviceInfo {
         pingInfo = JsonUtils.toJson(p);
 
         return pingInfo;
+    }
+
+    @UpnpAction
+    public void setPingInfo() {
+
+        String pingInfoOldValue = pingInfo;
+        pingInfo = getPingInfo();
+
+        getPropertyChangeSupport().firePropertyChange("PingInfo", pingInfoOldValue, pingInfo);
     }
 }
