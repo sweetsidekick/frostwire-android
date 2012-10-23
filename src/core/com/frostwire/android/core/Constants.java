@@ -142,7 +142,7 @@ public final class Constants {
     public static final byte FILE_TYPE_RINGTONES = CommonConstants.FILE_TYPE_RINGTONES;
     public static final byte FILE_TYPE_TORRENTS = CommonConstants.FILE_TYPE_TORRENTS;
 
-    public static final String MIME_TYPE_ANDROID_PACKAGE_ARCHIVE = "application/vnd.android.package-archive";
+    public static final String MIME_TYPE_ANDROID_PACKAGE_ARCHIVE = CommonConstants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE;
 
     /**
      * URL where FrostWIre checks for software updates
