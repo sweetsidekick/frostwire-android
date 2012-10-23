@@ -33,6 +33,7 @@ import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
+import com.frostwire.android.util.ByteUtils;
 import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPFWDeviceInfo;
@@ -73,6 +74,7 @@ public class AndroidUPnPManager extends UPnPManager {
     @Override
     public PingInfo getLocalPingInfo() {
         PingInfo p = new PingInfo();
+        p.uuid = ConfigurationManager.instance().getUUIDString();
         p.listeningPort = NetworkManager.instance().getListeningPort();
         p.numSharedFiles = Librarian.instance().getNumFiles();
         p.nickname = ConfigurationManager.instance().getNickname();
@@ -93,6 +95,7 @@ public class AndroidUPnPManager extends UPnPManager {
     @Override
     protected void handlePeerDevice(PingInfo p, InetAddress address, boolean added) {
         PingMessage ping = new PingMessage(p.listeningPort, p.numSharedFiles, p.nickname, !added);
+        ping.setUUID(ByteUtils.decodeHex(p.uuid));
         PeerManager.instance().onMessageReceived(address, ping);
     }
 

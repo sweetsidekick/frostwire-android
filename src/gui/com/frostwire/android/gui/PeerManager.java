@@ -167,6 +167,9 @@ public final class PeerManager {
     }
 
     private void purgeOld() {
+        if (true) {
+            return; // TODO: implemented this based in finger 
+        }
         Map<Peer, CacheEntry> snapshot = peerCache.snapshot();
         // per docs snapshot is a copy of the current contents of the cache,
         // ordered from least recently accessed to most recently accessed.

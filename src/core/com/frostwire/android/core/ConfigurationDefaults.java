@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.frostwire.android.util.ByteUtils;
+
 import android.os.Environment;
 
 /**
@@ -51,7 +53,7 @@ final class ConfigurationDefaults {
     }
 
     private void load() {
-        defaultValues.put(Constants.PREF_KEY_CORE_UUID, convert(UUID.randomUUID()));
+        defaultValues.put(Constants.PREF_KEY_CORE_UUID, ByteUtils.uuidToByteArray(UUID.randomUUID()));
 
         defaultValues.put(Constants.PREF_KEY_GUI_NICKNAME, "FrostNewbie");
         defaultValues.put(Constants.PREF_KEY_GUI_VIBRATE_ON_FINISHED_DOWNLOAD, true);
@@ -113,21 +115,6 @@ final class ConfigurationDefaults {
         resetValue(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
         resetValue(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
         resetValue(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
-    }
-
-    private byte[] convert(UUID uuid) {
-        long msb = uuid.getMostSignificantBits();
-        long lsb = uuid.getLeastSignificantBits();
-        byte[] buffer = new byte[16];
-
-        for (int i = 0; i < 8; i++) {
-            buffer[i] = (byte) (msb >>> 8 * (7 - i));
-        }
-        for (int i = 8; i < 16; i++) {
-            buffer[i] = (byte) (lsb >>> 8 * (7 - i));
-        }
-
-        return buffer;
     }
 
     private void resetValue(String key) {
