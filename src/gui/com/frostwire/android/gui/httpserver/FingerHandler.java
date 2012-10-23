@@ -20,8 +20,7 @@ package com.frostwire.android.gui.httpserver;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
-import android.util.Log;
+import java.util.logging.Logger;
 
 import com.frostwire.android.gui.Finger;
 import com.frostwire.android.gui.Librarian;
@@ -37,7 +36,7 @@ import com.frostwire.util.JsonUtils;
  */
 class FingerHandler implements HttpHandler {
 
-    private static final String TAG = "FW.FingerHandler";
+    private static final Logger LOG = Logger.getLogger(FingerHandler.class.getName());
 
     public void handle(HttpExchange exchange) throws IOException {
         OutputStream os = null;
@@ -52,7 +51,7 @@ class FingerHandler implements HttpHandler {
             os.write(response.getBytes());
 
         } catch (IOException e) {
-            Log.e(TAG, "Error serving finger");
+            LOG.warning("Error serving finger");
             throw e;
         } finally {
             if (os != null) {

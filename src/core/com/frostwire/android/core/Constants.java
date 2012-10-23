@@ -134,13 +134,13 @@ public final class Constants {
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;
 
     // generic file types
-    public static final byte FILE_TYPE_AUDIO = 0x00;
-    public static final byte FILE_TYPE_PICTURES = 0x01;
-    public static final byte FILE_TYPE_VIDEOS = 0x02;
-    public static final byte FILE_TYPE_DOCUMENTS = 0x03;
-    public static final byte FILE_TYPE_APPLICATIONS = 0x04;
-    public static final byte FILE_TYPE_RINGTONES = 0x05;
-    public static final byte FILE_TYPE_TORRENTS = 0x06;
+    public static final byte FILE_TYPE_AUDIO = CommonConstants.FILE_TYPE_AUDIO;
+    public static final byte FILE_TYPE_PICTURES = CommonConstants.FILE_TYPE_PICTURES;
+    public static final byte FILE_TYPE_VIDEOS = CommonConstants.FILE_TYPE_VIDEOS;
+    public static final byte FILE_TYPE_DOCUMENTS = CommonConstants.FILE_TYPE_DOCUMENTS;
+    public static final byte FILE_TYPE_APPLICATIONS = CommonConstants.FILE_TYPE_APPLICATIONS;
+    public static final byte FILE_TYPE_RINGTONES = CommonConstants.FILE_TYPE_RINGTONES;
+    public static final byte FILE_TYPE_TORRENTS = CommonConstants.FILE_TYPE_TORRENTS;
 
     public static final String MIME_TYPE_ANDROID_PACKAGE_ARCHIVE = "application/vnd.android.package-archive";
 

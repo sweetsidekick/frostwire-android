@@ -20,12 +20,11 @@ package com.frostwire.android.gui.httpserver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-
-import android.util.Log;
 
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
@@ -41,7 +40,7 @@ import com.frostwire.util.JsonUtils;
  */
 class BrowseHandler implements HttpHandler {
 
-    private static final String TAG = "FW.BrowseHandler";
+    private static final Logger LOG = Logger.getLogger(BrowseHandler.class.getName());
 
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -75,7 +74,7 @@ class BrowseHandler implements HttpHandler {
             os.finish();
 
         } catch (IOException e) {
-            Log.e(TAG, "Error browsing files type=" + type);
+            LOG.warning("Error browsing files type=" + type);
             throw e;
         } finally {
             if (os != null) {

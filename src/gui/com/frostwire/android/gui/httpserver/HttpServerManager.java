@@ -19,8 +19,8 @@
 package com.frostwire.android.gui.httpserver;
 
 import java.net.InetSocketAddress;
-
-import android.util.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.util.concurrent.ThreadPool;
@@ -33,7 +33,7 @@ import com.frostwire.httpserver.HttpServer;
  */
 public class HttpServerManager {
 
-    private static final String TAG = "FW.HttpServerManager";
+    private static final Logger LOG = Logger.getLogger(HttpServerManager.class.getName());
 
     private final ThreadPool threadPool;
     private final SessionManager sessionManager;
@@ -72,7 +72,7 @@ public class HttpServerManager {
             httpServer.start();
 
         } catch (Throwable e) {
-            Log.e(TAG, "Failed to start http server", e);
+            LOG.log(Level.WARNING, "Failed to start http server", e);
         }
     }
 
@@ -84,7 +84,7 @@ public class HttpServerManager {
         try {
             httpServer.stop(0);
         } catch (Throwable e) {
-            Log.e(TAG, "Something wrong stopping the HTTP server", e);
+            LOG.log(Level.WARNING, "Something wrong stopping the HTTP server", e);
         } finally {
             httpServer = null;
         }

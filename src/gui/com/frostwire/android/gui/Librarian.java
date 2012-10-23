@@ -39,7 +39,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.BaseColumns;
@@ -65,7 +64,6 @@ import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumn
 import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.gui.upnp.UPnPManager;
@@ -289,18 +287,19 @@ public final class Librarian {
     public Finger finger(boolean local) {
         Finger finger = new Finger();
 
-        finger.uuid = ByteUtils.encodeHex(ConfigurationManager.instance().getUUID());
+        finger.uuid = ConfigurationManager.instance().getUUIDString();
         finger.nickname = ConfigurationManager.instance().getNickname();
         finger.frostwireVersion = Constants.FROSTWIRE_VERSION_STRING;
         finger.totalShared = getNumFiles();
 
-        finger.deviceVersion = Build.VERSION.RELEASE;
-        finger.deviceModel = Build.MODEL;
-        finger.deviceProduct = Build.PRODUCT;
-        finger.deviceName = Build.DEVICE;
-        finger.deviceManufacturer = Build.MANUFACTURER;
-        finger.deviceBrand = Build.BRAND;
-        finger.deviceScreen = readScreenMetrics();
+        DeviceInfo di = new DeviceInfo();
+        finger.deviceVersion = di.getVersion();
+        finger.deviceModel = di.getModel();
+        finger.deviceProduct = di.getProduct();
+        finger.deviceName = di.getName();
+        finger.deviceManufacturer = di.getManufacturer();
+        finger.deviceBrand = di.getBrand();
+        finger.deviceScreen = di.getScreenMetrics();
 
         finger.numSharedAudioFiles = getNumFiles(Constants.FILE_TYPE_AUDIO, true);
         finger.numSharedVideoFiles = getNumFiles(Constants.FILE_TYPE_VIDEOS, true);
@@ -838,7 +837,7 @@ public final class Librarian {
         }
     }
 
-    private ScreenMetrics readScreenMetrics() {
+    public ScreenMetrics readScreenMetrics() {
         ScreenMetrics sm = new ScreenMetrics();
 
         try {
