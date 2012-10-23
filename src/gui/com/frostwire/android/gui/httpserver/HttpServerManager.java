@@ -23,8 +23,8 @@ import java.net.InetSocketAddress;
 import android.util.Log;
 
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.httpserver.HttpServer;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.httpserver.HttpServer;
 
 /**
  * @author gubatron

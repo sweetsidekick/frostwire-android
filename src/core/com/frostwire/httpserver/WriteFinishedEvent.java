@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.frostwire.android.httpserver;
+package com.frostwire.httpserver;
 
 public class WriteFinishedEvent extends Event {
     public WriteFinishedEvent(HttpExchange t) {

@@ -25,9 +25,9 @@ import android.util.Log;
 
 import com.frostwire.android.gui.Finger;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.httpserver.Code;
-import com.frostwire.android.httpserver.HttpExchange;
-import com.frostwire.android.httpserver.HttpHandler;
+import com.frostwire.httpserver.Code;
+import com.frostwire.httpserver.HttpExchange;
+import com.frostwire.httpserver.HttpHandler;
 import com.frostwire.util.JsonUtils;
 
 /**

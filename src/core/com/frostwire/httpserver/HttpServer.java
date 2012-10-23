@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.frostwire.android.httpserver;
+package com.frostwire.httpserver;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

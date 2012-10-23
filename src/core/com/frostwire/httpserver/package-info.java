@@ -123,5 +123,5 @@
    <p>
    @since 1.6
  */
-package com.frostwire.android.httpserver;
+package com.frostwire.httpserver;
 

@@ -23,13 +23,19 @@
  * questions.
  */
 
-package com.frostwire.android.httpserver;
+package com.frostwire.httpserver;
 
-public class Event {
+/**
+ * A Http error
+ */
+public class HttpError extends RuntimeException {
 
-    HttpExchange exchange;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4558818251185135818L;
 
-    protected Event(HttpExchange t) {
-        this.exchange = t;
+    public HttpError(String msg) {
+        super(msg);
     }
 }

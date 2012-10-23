@@ -31,10 +31,10 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.httpserver.Code;
-import com.frostwire.android.httpserver.HttpExchange;
-import com.frostwire.android.httpserver.HttpHandler;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.httpserver.Code;
+import com.frostwire.httpserver.HttpExchange;
+import com.frostwire.httpserver.HttpHandler;
 import com.frostwire.util.JsonUtils;
 
 /**
