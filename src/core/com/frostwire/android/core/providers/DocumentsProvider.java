@@ -19,6 +19,7 @@
 package com.frostwire.android.core.providers;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -34,7 +35,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
@@ -47,7 +47,7 @@ import com.frostwire.android.core.providers.UniversalStore.Documents.Media;
  */
 public class DocumentsProvider extends ContentProvider {
 
-    private static final String TAG = "FW.DocumentsProvider";
+    private static final Logger LOG = Logger.getLogger(DocumentsProvider.class.getName());
 
     private static final String DATABASE_NAME = "documents.db";
     private static final int DATABASE_VERSION = 1;
@@ -288,7 +288,7 @@ public class DocumentsProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading documents database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+            LOG.warning("Upgrading documents database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + DOCUMENTS_TABLE_NAME);
             onCreate(db);
         }

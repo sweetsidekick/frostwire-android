@@ -183,10 +183,6 @@ public final class Peer implements Cloneable {
         return peer;
     }
 
-    private static String clientVersionToString(byte[] clientVersion) {
-        return clientVersion[0] + "." + clientVersion[1] + "." + clientVersion[2];
-    }
-
     /**
      * This method is a weak method to calculate a hash code from a given UUID.
      * @param uuid

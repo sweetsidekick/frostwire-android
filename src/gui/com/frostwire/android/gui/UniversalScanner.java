@@ -20,6 +20,8 @@ package com.frostwire.android.gui;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -29,7 +31,6 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -48,9 +49,9 @@ import com.frostwire.android.util.FilenameUtils;
  */
 final class UniversalScanner {
 
-    private static final String TAG = "FW.UniversalScanner";
+    private static final Logger LOG = Logger.getLogger(UniversalScanner.class.getName());
 
-    private Context context;
+    private final Context context;
 
     public UniversalScanner(Context context) {
         this.context = context;
@@ -108,7 +109,7 @@ final class UniversalScanner {
             c = cr.query(UniversalStore.Documents.Media.CONTENT_URI, new String[] { DocumentsColumns._ID }, DocumentsColumns.DATA + "=?" + " AND " + DocumentsColumns.SIZE + "=?", new String[] { filePath, String.valueOf(size) }, null);
             result = c != null && c.getCount() != 0;
         } catch (Throwable e) {
-            Log.e(TAG, "Error detecting if file exists: " + filePath, e);
+            LOG.log(Level.WARNING, "Error detecting if file exists: " + filePath, e);
         } finally {
             if (c != null) {
                 c.close();
@@ -133,7 +134,7 @@ final class UniversalScanner {
                 connection = new MediaScannerConnection(context, this);
                 connection.connect();
             } catch (Throwable e) {
-                Log.e(TAG, "Error scanning file with android internal scanner, one retry", e);
+                LOG.log(Level.WARNING, "Error scanning file with android internal scanner, one retry", e);
                 SystemClock.sleep(1000);
                 connection = new MediaScannerConnection(context, this);
                 connection.connect();
