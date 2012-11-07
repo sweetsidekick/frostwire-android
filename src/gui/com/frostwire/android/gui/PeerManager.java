@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,7 @@ public final class PeerManager {
     private final int maxPeers;
     private final long cacheTimeout;
     private final LruCache<Peer, CacheEntry> peerCache;
+    private final Map<InetAddress, Peer> addressMap;
 
     private final PeerComparator peerComparator;
 
@@ -65,6 +67,7 @@ public final class PeerManager {
         this.maxPeers = Constants.PEER_MANAGER_MAX_PEERS;
         this.cacheTimeout = Constants.PEER_MANAGER_CACHE_TIMEOUT;
         this.peerCache = new LruCache<Peer, CacheEntry>(maxPeers);
+        this.addressMap = new HashMap<InetAddress, Peer>();
 
         this.peerComparator = new PeerComparator();
 
@@ -75,19 +78,11 @@ public final class PeerManager {
         return localPeer;
     }
 
-    public void onMessageReceived(PingMessage elem) {
-        Peer peer = new Peer(elem.getAddress(), elem.getListeningPort(), elem);
-
-        if (!peer.isLocalHost()) {
-            updatePeerCache(peer, elem.getBye());
-        }
-    }
-    
     public void onMessageReceived(InetAddress address, PingMessage elem) {
         Peer peer = new Peer(address, elem.getListeningPort(), elem);
 
         if (!peer.isLocalHost()) {
-            updatePeerCache(peer, elem.getBye());
+            updatePeerCache2(address, peer, elem.getBye());
         }
     }
 
@@ -132,6 +127,16 @@ public final class PeerManager {
     public void clear() {
         refreshLocalPeer();
         peerCache.evictAll();
+    }
+
+    private void updatePeerCache2(InetAddress address, Peer peer, boolean disconnected) {
+        if (disconnected) {
+            Peer p = addressMap.remove(address);
+            peerCache.remove(p);
+        } else {
+            addressMap.put(address, peer);
+            updatePeerCache(peer, disconnected);
+        }
     }
 
     /**

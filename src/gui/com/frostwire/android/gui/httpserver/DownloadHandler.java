@@ -23,11 +23,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-
-import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
@@ -45,7 +45,7 @@ import com.frostwire.httpserver.HttpHandler;
  */
 class DownloadHandler implements HttpHandler {
 
-    private static final String TAG = "FW.DownloadHandler";
+    private static final Logger LOG = Logger.getLogger(DownloadHandler.class.getName());
 
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -111,7 +111,7 @@ class DownloadHandler implements HttpHandler {
             }
 
         } catch (IOException e) {
-            Log.e(TAG, "Error uploading file type=" + type + ", id=" + id);
+            LOG.log(Level.INFO, "Error uploading file type=" + type + ", id=" + id);
             throw e;
         } finally {
             close(os);
