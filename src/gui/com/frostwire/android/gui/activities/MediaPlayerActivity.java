@@ -321,6 +321,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
                 Engine.instance().getMediaPlayer().togglePause();
+                sync();
                 return true;
             }
         });
