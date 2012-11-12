@@ -263,7 +263,10 @@ public final class HttpDownload implements DownloadTransfer {
 
             manager.incrementDownloadsToReview();
             Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
-            Librarian.instance().scan(link.isCompressed() ? new File(location) : savePath.getAbsoluteFile());
+            
+            if (savePath.getAbsoluteFile().exists()) {
+                Librarian.instance().scan(link.isCompressed() ? new File(location) : getSavePath().getAbsoluteFile());
+            }
         } else {
             error(new Exception("Error"));
         }

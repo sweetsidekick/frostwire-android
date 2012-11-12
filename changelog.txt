@@ -50,7 +50,7 @@ FrostWire 0.9.8
  - 24 Force close errors and freezes fixed.
 
 Frostwire 0.9.7
- - Media player is now car driver safe. Skip songs with swipe gestures,
+ - Media Player is now car driver safe. Skip songs with swipe gestures,
    pause and play songs by tapping the screen with two or more fingers.
  - When a user makes or receives a call, if the Media player was active it
    will pause and rewind two seconds so the user won't miss a beat.

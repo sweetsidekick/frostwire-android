@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.transfers;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.List;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
@@ -36,14 +34,12 @@ import com.frostwire.android.util.FileUtils;
  * @author aldenml
  * 
  */
-public class SoundcloudDownload implements DownloadTransfer {
+public class SoundcloudDownload extends TemporaryDownloadTransfer {
 
     private static final String TAG = "FW.SoundcloudDownload";
 
     private final TransferManager manager;
     private SoundcloudEngineSearchResult sr;
-    private HttpDownload delegate;
-    private File savePath;
 
     public SoundcloudDownload(TransferManager manager, SoundcloudEngineSearchResult sr) {
         this.manager = manager;
@@ -119,17 +115,6 @@ public class SoundcloudDownload implements DownloadTransfer {
     }
 
     @Override
-    public File getSavePath() {
-        File path = savePath;
-
-        if (savePath == null && delegate != null) {
-            path = delegate.getSavePath();
-        }
-
-        return path;
-    }
-
-    @Override
     public boolean isDownloading() {
         return delegate != null ? delegate.isDownloading() : false;
     }
@@ -150,7 +135,8 @@ public class SoundcloudDownload implements DownloadTransfer {
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {
-                        moveFile(download.getSavePath());
+                        moveFile(download.getSavePath(), Constants.FILE_TYPE_AUDIO);
+                        scanFinalFile();
                     }
                 });
                 delegate.start();
@@ -160,16 +146,6 @@ public class SoundcloudDownload implements DownloadTransfer {
         }
     }
 
-    private void moveFile(File savePath) {
-        File path = SystemUtils.getSaveDirectory(Constants.FILE_TYPE_AUDIO);
-        File finalFile = new File(path, savePath.getName());
-        if (savePath.renameTo(finalFile)) {
-            Librarian.instance().scan(finalFile);
-            this.savePath = finalFile;
-        } else {
-            this.savePath = savePath;
-        }
-    }
 
     private HttpDownloadLink buildDownloadLink() throws Exception {
         HttpDownloadLink link = new HttpDownloadLink(sr.getStreamUrl());
