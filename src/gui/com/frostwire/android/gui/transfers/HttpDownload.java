@@ -126,7 +126,7 @@ public final class HttpDownload implements DownloadTransfer {
     }
 
     public long getDownloadSpeed() {
-        return averageSpeed;
+        return (isComplete()) ? 0 : averageSpeed;
     }
 
     public long getUploadSpeed() {
@@ -144,7 +144,7 @@ public final class HttpDownload implements DownloadTransfer {
 
     public boolean isComplete() {
         if (bytesReceived > 0) {
-            return bytesReceived == link.getSize();
+            return bytesReceived == link.getSize() || status == STATUS_COMPLETE;
         } else {
             return false;
         }
@@ -233,8 +233,12 @@ public final class HttpDownload implements DownloadTransfer {
 
     private void updateAverageDownloadSpeed() {
         long now = System.currentTimeMillis();
-
-        if (now - speedMarkTimestamp > SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS) {
+        
+        if (isComplete()) {
+            averageSpeed = 0;
+            speedMarkTimestamp = now;
+            totalReceivedSinceLastSpeedStamp = 0;
+        } else if (now - speedMarkTimestamp > SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS) {
             averageSpeed = ((bytesReceived - totalReceivedSinceLastSpeedStamp) * 1000) / (now - speedMarkTimestamp);
             speedMarkTimestamp = now;
             totalReceivedSinceLastSpeedStamp = bytesReceived;

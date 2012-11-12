@@ -43,6 +43,7 @@ public class SoundcloudDownload implements DownloadTransfer {
     private final TransferManager manager;
     private SoundcloudEngineSearchResult sr;
     private HttpDownload delegate;
+    private File savePath;
 
     public SoundcloudDownload(TransferManager manager, SoundcloudEngineSearchResult sr) {
         this.manager = manager;
@@ -119,7 +120,13 @@ public class SoundcloudDownload implements DownloadTransfer {
 
     @Override
     public File getSavePath() {
-        return delegate != null ? delegate.getSavePath() : null;
+        File path = savePath;
+
+        if (savePath == null && delegate != null) {
+            path = delegate.getSavePath();
+        }
+
+        return path;
     }
 
     @Override
@@ -156,8 +163,12 @@ public class SoundcloudDownload implements DownloadTransfer {
     private void moveFile(File savePath) {
         File path = SystemUtils.getSaveDirectory(Constants.FILE_TYPE_AUDIO);
         File finalFile = new File(path, savePath.getName());
-        savePath.renameTo(finalFile);
-        Librarian.instance().scan(finalFile);
+        if (savePath.renameTo(finalFile)) {
+            Librarian.instance().scan(finalFile);
+            this.savePath = finalFile;
+        } else {
+            this.savePath = savePath;
+        }
     }
 
     private HttpDownloadLink buildDownloadLink() throws Exception {
