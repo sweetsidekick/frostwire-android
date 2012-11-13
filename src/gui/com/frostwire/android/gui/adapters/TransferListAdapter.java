@@ -279,7 +279,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             boolean openMenu = false;
-            openMenu |= download.isComplete() && tag instanceof HttpDownload;
+            openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
             openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 0;
 
             if (openMenu) {
@@ -333,8 +333,10 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                     }
                 } else if (item instanceof DownloadTransfer) {
                     DownloadTransfer transferItem = (DownloadTransfer) item;
-                    path = transferItem.getSavePath().getAbsolutePath();
-                    extension = FilenameUtils.getExtension(path);
+                    if (transferItem.getSavePath() != null) {
+                        path = transferItem.getSavePath().getAbsolutePath();
+                        extension = FilenameUtils.getExtension(path);
+                    }
                 } else if (item instanceof PeerHttpUpload) {
                     PeerHttpUpload transferItem = (PeerHttpUpload) item;
                     path = transferItem.getFD().filePath;

@@ -46,7 +46,7 @@ import jd.parser.html.Form.MethodType;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
@@ -68,7 +68,7 @@ import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
  * @author aldenml
  * 
  */
-public class YouTubeDownload implements DownloadTransfer {
+public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSearchResult> {
 
     private static final String TAG = "FW.YouTubeDownload";
 
@@ -77,8 +77,6 @@ public class YouTubeDownload implements DownloadTransfer {
     HashMap<DestinationFormat, ArrayList<Info>> possibleconverts = null;
 
     private final TransferManager manager;
-    private YouTubeEngineSearchResult sr;
-    private HttpDownload delegate;
 
     public YouTubeDownload(TransferManager manager, YouTubeEngineSearchResult sr) {
         this.manager = manager;
@@ -154,11 +152,6 @@ public class YouTubeDownload implements DownloadTransfer {
     }
 
     @Override
-    public File getSavePath() {
-        return delegate != null ? delegate.getSavePath() : null;
-    }
-
-    @Override
     public boolean isDownloading() {
         return delegate != null ? delegate.isDownloading() : false;
     }
@@ -189,6 +182,8 @@ public class YouTubeDownload implements DownloadTransfer {
                         }
 
                         moveFile(download.getSavePath(), sr.getResultType().equals(ResultType.VIDEO));
+                        
+                        scanFinalFile();
                     }
                 });
                 delegate.start();
@@ -198,11 +193,8 @@ public class YouTubeDownload implements DownloadTransfer {
         }
     }
 
-    private void moveFile(File savePath, boolean video) {
-        File path = SystemUtils.getSaveDirectory(video ? Constants.FILE_TYPE_VIDEOS : Constants.FILE_TYPE_AUDIO);
-        File finalFile = new File(path, savePath.getName());
-        savePath.renameTo(finalFile);
-        Librarian.instance().scan(finalFile);
+    protected void moveFile(File savePath, boolean video) {
+        super.moveFile(savePath, video ? Constants.FILE_TYPE_VIDEOS : Constants.FILE_TYPE_AUDIO);
     }
 
     private HttpDownloadLink decrypt() throws Exception {
@@ -813,4 +805,5 @@ public class YouTubeDownload implements DownloadTransfer {
 
         return null;
     }
+
 }

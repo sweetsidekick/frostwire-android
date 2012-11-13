@@ -66,4 +66,19 @@ public class SoundcloudEngineSearchResult implements SearchResult {
     public String getStreamUrl() {
         return sr.getStreamUrl();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o==null || !(o instanceof SoundcloudEngineSearchResult)) {
+            return false;
+        }
+        SoundcloudEngineSearchResult other = (SoundcloudEngineSearchResult) o;
+        
+        return other.sr.getDetailsUrl().equals(sr.getDetailsUrl());
+    }
+    
+    @Override
+    public int hashCode() {
+        return sr.getDetailsUrl().hashCode();
+    }
 }
