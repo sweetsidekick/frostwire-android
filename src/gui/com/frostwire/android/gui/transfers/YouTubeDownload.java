@@ -46,6 +46,7 @@ import jd.parser.html.Form.MethodType;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
@@ -67,7 +68,7 @@ import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
  * @author aldenml
  * 
  */
-public class YouTubeDownload extends TemporaryDownloadTransfer {
+public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSearchResult> {
 
     private static final String TAG = "FW.YouTubeDownload";
 
@@ -76,7 +77,6 @@ public class YouTubeDownload extends TemporaryDownloadTransfer {
     HashMap<DestinationFormat, ArrayList<Info>> possibleconverts = null;
 
     private final TransferManager manager;
-    private YouTubeEngineSearchResult sr;
 
     public YouTubeDownload(TransferManager manager, YouTubeEngineSearchResult sr) {
         this.manager = manager;
@@ -805,4 +805,5 @@ public class YouTubeDownload extends TemporaryDownloadTransfer {
 
         return null;
     }
+
 }

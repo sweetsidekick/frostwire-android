@@ -43,6 +43,7 @@ import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
+import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
@@ -239,21 +240,31 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             protected void onPostExecute(DownloadTransfer transfer) {
                 if (!(transfer instanceof InvalidTransfer)) {
                     UIUtils.showShortMessage(getActivity(), toastMessage);
-
-                    if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                        Intent i = new Intent(getActivity(), MainActivity.class);
-                        i.setAction(Constants.ACTION_SHOW_TRANSFERS);
-                        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        getActivity().startActivity(i);
-                    }
+                    showTransfersOnDownloadStart();
 
                 } else {
-                    UIUtils.showShortMessage(getActivity(), ((InvalidTransfer) transfer).getReasonResId());
+                    if (transfer instanceof ExistingDownload) {
+                        //nothing happens here, the user should just see the transfer
+                        //manager and we avoid adding the same transfer twice.
+                    } else {
+                        UIUtils.showShortMessage(getActivity(), ((InvalidTransfer) transfer).getReasonResId());
+                    }
                 }
             }
+
         };
 
+        showTransfersOnDownloadStart();
         task.execute();
+    }
+    
+    private void showTransfersOnDownloadStart() {
+        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+            Intent i = new Intent(getActivity(), MainActivity.class);
+            i.setAction(Constants.ACTION_SHOW_TRANSFERS);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            getActivity().startActivity(i);
+        }
     }
 
     private void startPromotionDownload(Slide slide) {

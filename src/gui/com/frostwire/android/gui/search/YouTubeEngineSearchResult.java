@@ -67,4 +67,19 @@ public class YouTubeEngineSearchResult implements SearchResult {
     public ResultType getResultType() {
         return sr.getResultType();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o==null || !(o instanceof YouTubeEngineSearchResult)) {
+            return false;
+        }
+        YouTubeEngineSearchResult other = (YouTubeEngineSearchResult) o;
+        
+        return other.sr.getDetailsUrl().equals(sr.getDetailsUrl());
+    }
+    
+    @Override
+    public int hashCode() {
+        return sr.getDetailsUrl().hashCode();
+    }
 }

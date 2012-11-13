@@ -34,12 +34,11 @@ import com.frostwire.android.util.FileUtils;
  * @author aldenml
  * 
  */
-public class SoundcloudDownload extends TemporaryDownloadTransfer {
+public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngineSearchResult> {
 
     private static final String TAG = "FW.SoundcloudDownload";
 
     private final TransferManager manager;
-    private SoundcloudEngineSearchResult sr;
 
     public SoundcloudDownload(TransferManager manager, SoundcloudEngineSearchResult sr) {
         this.manager = manager;
@@ -157,4 +156,5 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer {
 
         return link;
     }
+    
 }

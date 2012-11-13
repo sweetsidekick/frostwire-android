@@ -21,6 +21,7 @@ package com.frostwire.android.gui.transfers;
 import java.io.File;
 
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 
 /**
@@ -28,10 +29,11 @@ import com.frostwire.android.gui.util.SystemUtils;
  * @author aldenml
  * 
  */
-public abstract class TemporaryDownloadTransfer implements DownloadTransfer {
+public abstract class TemporaryDownloadTransfer<T extends SearchResult> implements DownloadTransfer, TaggableTransfer<T> {
 
     private File savePath;
     protected HttpDownload delegate;
+    protected T sr;
 
     @Override
     public File getSavePath() {
@@ -60,6 +62,10 @@ public abstract class TemporaryDownloadTransfer implements DownloadTransfer {
         if (getSavePath() != null &&  getSavePath().exists()) {
             Librarian.instance().scan(getSavePath().getAbsoluteFile());
         }
+    }
+    
+    public T getTag() {
+        return sr;
     }
 
 }

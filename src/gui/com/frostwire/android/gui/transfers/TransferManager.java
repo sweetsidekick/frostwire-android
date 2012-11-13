@@ -85,7 +85,25 @@ public final class TransferManager {
         return transfers;
     }
 
+    private boolean alreadyDownloading(SearchResult sr) {
+        for (DownloadTransfer dt : downloads) {
+            if (dt.isDownloading()) {
+                if (dt instanceof TaggableTransfer<?>) {
+                    if (sr.equals(((TaggableTransfer) dt).getTag())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     public DownloadTransfer download(SearchResult sr) throws Exception {
+
+        if (alreadyDownloading(sr)) {
+            return new ExistingDownload();
+        }
+        
         if (sr instanceof BittorrentSearchResult) {
             return newBittorrentDownload((BittorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
@@ -347,4 +365,6 @@ public final class TransferManager {
 
         return download;
     }
+    
+    
 }
