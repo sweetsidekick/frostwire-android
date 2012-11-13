@@ -30,11 +30,9 @@ import android.content.ServiceConnection;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
-import com.frostwire.android.util.ByteUtils;
 import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPFWDeviceInfo;

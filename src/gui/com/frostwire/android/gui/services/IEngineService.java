@@ -20,7 +20,6 @@ package com.frostwire.android.gui.services;
 
 import java.io.File;
 
-import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
@@ -55,8 +54,6 @@ public interface IEngineService {
     public void startServices();
 
     public void stopServices(boolean disconnected);
-
-    public void sendMessage(FrostWireMessage message);
 
     public ThreadPool getThreadPool();
 

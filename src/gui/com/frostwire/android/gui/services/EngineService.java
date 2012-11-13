@@ -35,8 +35,6 @@ import android.util.Log;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.messages.FrostWireMessage;
-import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
@@ -66,12 +64,6 @@ public class EngineService extends Service implements IEngineService {
     private final HttpServerManager httpServerManager;
     private final DesktopUploadManager desktopUploadManager;
 
-    private final MessageProcessor messageProcessor;
-    private final MessageClerk messageClerk;
-    private final MessageCourier messageCourier;
-
-    private final PeerDiscoveryAnnouncer peerDiscoveryAnnouncer;
-
     private final CoreMediaPlayer mediaPlayer;
 
     private byte state;
@@ -85,12 +77,6 @@ public class EngineService extends Service implements IEngineService {
 
         httpServerManager = new HttpServerManager(threadPool);
         desktopUploadManager = new DesktopUploadManager(this, httpServerManager.getSessionManager());
-
-        messageProcessor = new MessageProcessor(threadPool);
-        messageClerk = new MessageClerk(threadPool, messageProcessor);
-        messageCourier = new MessageCourier(threadPool);
-
-        peerDiscoveryAnnouncer = new PeerDiscoveryAnnouncer(threadPool);
 
         mediaPlayer = new NativeAndroidPlayer(this);
 
@@ -176,12 +162,6 @@ public class EngineService extends Service implements IEngineService {
 
         httpServerManager.start(NetworkManager.instance().getListeningPort());
 
-        messageProcessor.startProcessing();
-        messageClerk.startProcessing();
-        messageCourier.startProcessing();
-
-        peerDiscoveryAnnouncer.start();
-
         PeerManager.instance().clear();
 
         state = STATE_STARTED;
@@ -195,14 +175,6 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        sendGoodByes();
-
-        peerDiscoveryAnnouncer.stop();
-
-        messageCourier.stopProcessing();
-        messageClerk.stopProcessing();
-        messageProcessor.stopProcessing();
-
         httpServerManager.stop();
 
         AzureusManager.instance().pause();
@@ -211,10 +183,6 @@ public class EngineService extends Service implements IEngineService {
 
         state = disconnected ? STATE_DISCONNECTED : STATE_STOPPED;
         Log.v(TAG, "Engine stopped, state: " + state);
-    }
-
-    public void sendMessage(FrostWireMessage message) {
-        messageCourier.addElement(message);
     }
 
     public ThreadPool getThreadPool() {
@@ -256,19 +224,11 @@ public class EngineService extends Service implements IEngineService {
                 if (key.equals(Constants.PREF_KEY_GUI_NICKNAME)) {
                     PeerManager.instance().clear();
                 } else if (key.equals(Constants.PREF_KEY_NETWORK_USE_MULTICAST) || key.equals(Constants.PREF_KEY_NETWORK_USE_BROADCAST)) {
-                    resetLocalNetworkProcessors();
+                    //resetLocalNetworkProcessors();
                 }
             }
         };
         ConfigurationManager.instance().registerOnPreferenceChange(preferenceListener);
-    }
-
-    private void resetLocalNetworkProcessors() {
-        messageCourier.stopProcessing();
-        messageClerk.stopProcessing();
-
-        messageClerk.startProcessing();
-        messageCourier.startProcessing();
     }
 
     private static long[] buildVenezuelanVibe() {
@@ -280,20 +240,6 @@ public class EngineService extends Service implements IEngineService {
         long longPause = 180;
 
         return new long[] { 0, shortVibration, longPause, shortVibration, shortPause, shortVibration, shortPause, shortVibration, mediumPause, mediumVibration };
-    }
-
-    /**
-     * Send Ping-GoodBye messages to Local network (broadcast || multicast)
-     */
-    private void sendGoodByes() {
-        if (messageCourier.isProcessing() && NetworkManager.instance().isDataWIFIUp()) {
-            PingMessage ping = PeerDiscoveryAnnouncer.createPingMessage(NetworkManager.instance().getListeningPort(), true, ConfigurationManager.instance().getUUID());
-            try {
-                messageCourier.processElement(ping);
-            } catch (Throwable e) {
-                Log.e(TAG, "Unable to send good-byes");
-            }
-        }
     }
 
     public class EngineServiceBinder extends Binder {

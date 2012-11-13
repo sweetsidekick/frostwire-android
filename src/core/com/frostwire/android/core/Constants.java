@@ -34,37 +34,12 @@ public final class Constants {
 
     public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 0, (byte) 2 };
 
-    public static final byte[] CLIENT_IDENTIFIER = { (byte) 0x46, (byte) 0x57 };
-
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
-
-    /**
-     * Self announcing message. To be sent via Multicast or Broadcast
-     */
-    public static final byte MESSAGE_TYPE_PING = (byte) 0;
-
-    /**
-     * First 2 bytes of every FrostWire/Android Message header -> "FW"
-     */
-    public static final byte[] MESSAGE_HEADER_FIELD_FW = { (byte) 0x46, (byte) 0x57 };
-
-    public static final byte FROSTWIRE_PROTOCOL_VERSION_3 = (byte) 0x03;
-    public static final byte FROSTWIRE_PROTOCOL_VERSION_4 = (byte) 0x04;
-    public static final byte FROSTWIRE_PROTOCOL_VERSION_5 = (byte) 0x05;
-
-    public static final byte FROSTWIRE_PROTOCOL_VERSION = FROSTWIRE_PROTOCOL_VERSION_5;
-
-    public static final byte[] MULTICAST_GROUP_MUSIC_SERVICE = new byte[] { (byte) 224, 0, 1, 16 };
 
     /**
      * 65280 - Default LAN bound port
      */
     public static final int GENERIC_LISTENING_PORT = 0xff00;
-
-    public static final int PORT_MULTICAST = 0xffa0; // 65440
-    public static final int PORT_BROADCAST = 0xffb0; // 65456
-
-    public static final int FW_HEADER_SIZE = 30;
 
     // preference keys
     public static final String PREF_KEY_CORE_UUID = "frostwire.prefs.core.uuid";
@@ -160,15 +135,7 @@ public final class Constants {
 
     public static final int PEER_MANAGER_CACHE_TIMEOUT = 5000;
 
-    public static final int DATAGRAM_SOCKET_TIMEOUT = 60000; //500;
-
     public static final long LIBRARIAN_FILE_COUNT_CACHE_TIMEOUT = 2 * 60 * 1000; // 2 minutes
-
-    public static final int MESSAGE_PROCESSOR_CAPACITY = 50;
-
-    public static final int MESSAGE_CLERK_CAPACITY = 50;
-
-    public static final int MESSAGE_COURIER_CAPACITY = 50;
 
     public static final int MAX_NUM_DOWNLOAD_CHECKED = 5;
 

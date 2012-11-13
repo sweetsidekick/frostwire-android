@@ -31,7 +31,6 @@ import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.gui.upnp.UPnPManager;
 

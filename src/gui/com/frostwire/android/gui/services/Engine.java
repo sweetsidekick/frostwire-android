@@ -33,7 +33,6 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.messages.FrostWireMessage;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
 import com.frostwire.android.util.concurrent.ThreadPool;
@@ -105,12 +104,6 @@ public final class Engine implements IEngineService {
     public void stopServices(boolean disconnected) {
         if (service != null) {
             service.stopServices(disconnected);
-        }
-    }
-
-    public void sendMessage(FrostWireMessage message) {
-        if (service != null) {
-            service.sendMessage(message);
         }
     }
 
