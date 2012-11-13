@@ -93,7 +93,7 @@ public class AndroidUPnPManager extends UPnPManager {
     }
 
     @Override
-    protected void handlePeerDevice(PingInfo p, InetAddress address, boolean added) {
+    protected void handlePeerDevice(String udn, PingInfo p, InetAddress address, boolean added) {
         PingMessage ping = null;
         if (p != null) {
             ping = new PingMessage(p.listeningPort, p.numSharedFiles, p.nickname, !added);
