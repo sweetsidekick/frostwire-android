@@ -18,6 +18,8 @@
 
 package com.frostwire.android.core;
 
+import com.frostwire.core.CommonConstants;
+
 /**
  * Static class containing all constants in one place.
  * 
@@ -175,4 +177,8 @@ public final class Constants {
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
 
     public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
+
+    public static final int DEVICE_MAJOR_TYPE_DESKTOP = CommonConstants.DEVICE_MAJOR_TYPE_DESKTOP;
+    public static final int DEVICE_MAJOR_TYPE_PHONE = CommonConstants.DEVICE_MAJOR_TYPE_PHONE;
+    public static final int DEVICE_MAJOR_TYPE_TABLET = CommonConstants.DEVICE_MAJOR_TYPE_TABLET;
 }

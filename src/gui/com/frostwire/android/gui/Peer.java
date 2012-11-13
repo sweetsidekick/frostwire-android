@@ -20,13 +20,12 @@ package com.frostwire.android.gui;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.List;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.android.core.messages.PingMessage;
+import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -45,10 +44,11 @@ public final class Peer implements Cloneable {
     /**
      * 16 bytes (128bit - UUID identifier letting us know who is the sender)
      */
-    private byte[] uuid;
+    private String uuid;
     private String nickname;
     private int numSharedFiles;
     private String clientVersion;
+    private int deviceMajorType;
 
     private int hashCode = -1;
     private boolean localhost;
@@ -56,15 +56,16 @@ public final class Peer implements Cloneable {
     public Peer() {
     }
 
-    public Peer(InetAddress address, int listeningPort, PingMessage ping) {
+    public Peer(InetAddress address, PingInfo p) {
         this.address = address;
-        this.listeningPort = listeningPort;
+        this.listeningPort = p.listeningPort;
 
-        setUUID(ping.getUUID());
+        this.setUUID(p.uuid);
 
-        this.nickname = ping.getNickname();
-        this.numSharedFiles = ping.getNumSharedFiles();
-        this.clientVersion = "-.-.-";//clientVersionToString(ping.getHeader().getClientVersion());
+        this.nickname = p.nickname;
+        this.numSharedFiles = p.numSharedFiles;
+        this.deviceMajorType = p.deviceMajorType;
+        this.clientVersion = p.clientVersion;
     }
 
     public InetAddress getAddress() {
@@ -75,16 +76,15 @@ public final class Peer implements Cloneable {
         return listeningPort;
     }
 
-    public byte[] getUUID() {
+    public String getUUID() {
         return uuid;
     }
 
-    void setUUID(byte[] uuid) {
-        this.uuid = new byte[16];
-        System.arraycopy(uuid, 0, this.uuid, 0, 16);
+    void setUUID(String uuid) {
+        this.uuid = uuid;
 
-        this.hashCode = uuidToHashCode(this.uuid);
-        this.localhost = Arrays.equals(this.uuid, ConfigurationManager.instance().getUUID());
+        this.hashCode = this.uuid.hashCode();
+        this.localhost = this.uuid.equals(ConfigurationManager.instance().getUUIDString());
     }
 
     public String getNickname() {
@@ -162,11 +162,7 @@ public final class Peer implements Cloneable {
 
     @Override
     public int hashCode() {
-        if (this.hashCode == -1) {
-            this.hashCode = uuidToHashCode(uuid);
-        }
-
-        return this.hashCode;
+        return this.hashCode != -1 ? this.hashCode : super.hashCode();
     }
 
     @Override
@@ -181,41 +177,6 @@ public final class Peer implements Cloneable {
         peer.clientVersion = this.clientVersion;
 
         return peer;
-    }
-
-    /**
-     * This method is a weak method to calculate a hash code from a given UUID.
-     * @param uuid
-     * @return
-     */
-    private static int uuidToHashCode(byte[] uuid) {
-
-        long msb = (uuid[0] & 0xFFL) << 56;
-        msb |= (uuid[1] & 0xFFL) << 48;
-        msb |= (uuid[2] & 0xFFL) << 40;
-        msb |= (uuid[3] & 0xFFL) << 32;
-        msb |= (uuid[4] & 0xFFL) << 24;
-        msb |= (uuid[5] & 0xFFL) << 16;
-        msb |= (uuid[6] & 0x0FL) << 8;
-        msb |= (0x3L << 12); // set the version to 3
-        msb |= (uuid[7] & 0xFFL);
-
-        long lsb = (uuid[8] & 0x3FL) << 56;
-        lsb |= (0x2L << 62); // set the variant to bits 01
-        lsb |= (uuid[9] & 0xFFL) << 48;
-        lsb |= (uuid[10] & 0xFFL) << 40;
-        lsb |= (uuid[11] & 0xFFL) << 32;
-        lsb |= (uuid[12] & 0xFFL) << 24;
-        lsb |= (uuid[13] & 0xFFL) << 16;
-        lsb |= (uuid[14] & 0xFFL) << 8;
-        lsb |= (uuid[15] & 0xFFL);
-
-        int msbHash = (int) (msb ^ (msb >>> 32));
-        int lsbHash = (int) (lsb ^ (lsb >>> 32));
-
-        int hash = msbHash ^ lsbHash;
-
-        return hash;
     }
 
     private static final class FileDescriptorList {

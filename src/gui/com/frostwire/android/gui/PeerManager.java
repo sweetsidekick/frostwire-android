@@ -20,7 +20,6 @@ package com.frostwire.android.gui;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,6 +32,8 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.messages.PingMessage;
+import com.frostwire.gui.upnp.PingInfo;
+import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * Keeps track of the Peers we know.
@@ -48,7 +49,7 @@ public final class PeerManager {
     private final int maxPeers;
     private final long cacheTimeout;
     private final LruCache<Peer, CacheEntry> peerCache;
-    private final Map<InetAddress, Peer> addressMap;
+    private final Map<String, Peer> addressMap;
 
     private final PeerComparator peerComparator;
 
@@ -67,7 +68,7 @@ public final class PeerManager {
         this.maxPeers = Constants.PEER_MANAGER_MAX_PEERS;
         this.cacheTimeout = Constants.PEER_MANAGER_CACHE_TIMEOUT;
         this.peerCache = new LruCache<Peer, CacheEntry>(maxPeers);
-        this.addressMap = new HashMap<InetAddress, Peer>();
+        this.addressMap = new HashMap<String, Peer>();
 
         this.peerComparator = new PeerComparator();
 
@@ -78,11 +79,16 @@ public final class PeerManager {
         return localPeer;
     }
 
-    public void onMessageReceived(InetAddress address, PingMessage elem) {
-        Peer peer = new Peer(address, elem.getListeningPort(), elem);
+    public void onMessageReceived(String udn, InetAddress address, boolean added, PingInfo p) {
+        if (p != null) {
+            Peer peer = new Peer(address, p);
 
-        if (!peer.isLocalHost()) {
-            updatePeerCache2(address, peer, elem.getBye());
+            if (!peer.isLocalHost()) {
+                updatePeerCache2(udn, address, peer, !added);
+            }
+        } else {
+            Peer peer = addressMap.remove(udn);
+            peerCache.remove(peer);
         }
     }
 
@@ -96,7 +102,10 @@ public final class PeerManager {
         refreshLocalPeer();
         List<Peer> peers = new ArrayList<Peer>(1 + peerCache.size());
 
-        peers.addAll(peerCache.snapshot().keySet());
+        for (CacheEntry e : peerCache.snapshot().values()) {
+            peers.add(e.peer);
+        }
+
         Collections.sort(peers, peerComparator);
         peers.add(0, localPeer);
 
@@ -107,12 +116,12 @@ public final class PeerManager {
      * @param uuid
      * @return
      */
-    public Peer findPeerByUUID(byte[] uuid) {
+    public Peer findPeerByUUID(String uuid) {
         if (uuid == null) {
             return null;
         }
 
-        if (Arrays.equals(uuid, ConfigurationManager.instance().getUUID())) {
+        if (uuid.equals(ConfigurationManager.instance().getUUIDString())) {
             return localPeer;
         }
 
@@ -129,12 +138,12 @@ public final class PeerManager {
         peerCache.evictAll();
     }
 
-    private void updatePeerCache2(InetAddress address, Peer peer, boolean disconnected) {
+    private void updatePeerCache2(String udn, InetAddress address, Peer peer, boolean disconnected) {
         if (disconnected) {
-            Peer p = addressMap.remove(address);
+            Peer p = addressMap.remove(udn);
             peerCache.remove(p);
         } else {
-            addressMap.put(address, peer);
+            addressMap.put(udn, peer);
             updatePeerCache(peer, disconnected);
         }
     }
@@ -190,14 +199,9 @@ public final class PeerManager {
     }
 
     private void refreshLocalPeer() {
-        String nickname = ConfigurationManager.instance().getNickname();
-        int numSharedFiles = Librarian.instance().getNumFiles();
-        int listeningPort = NetworkManager.instance().getListeningPort();
+        PingInfo p = UPnPManager.instance().getLocalPingInfo();
 
-        PingMessage ping = new PingMessage(listeningPort, numSharedFiles, nickname, false);
-        ping.getHeader().setUUID(ConfigurationManager.instance().getUUID());
-
-        localPeer = new Peer(null, listeningPort, ping);
+        localPeer = new Peer(null, p);
     }
 
     private static final class CacheEntry {

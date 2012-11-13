@@ -273,7 +273,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         Intent intent = getActivity().getIntent();
         if (intent.hasExtra(Constants.EXTRA_PEER_UUID)) {
-            byte[] uuid = intent.getByteArrayExtra(Constants.EXTRA_PEER_UUID);
+            String uuid = intent.getStringExtra(Constants.EXTRA_PEER_UUID);
 
             if (uuid != null) {
                 try {
@@ -294,7 +294,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         Bundle bundle = getArguments();
 
         if (bundle != null && bundle.containsKey(Constants.EXTRA_PEER_UUID)) {
-            byte[] uuid = bundle.getByteArray(Constants.EXTRA_PEER_UUID);
+            String uuid = bundle.getString(Constants.EXTRA_PEER_UUID);
 
             if (uuid != null) {
                 try {

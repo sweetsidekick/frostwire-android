@@ -29,6 +29,7 @@ import org.teleal.cling.model.meta.LocalService;
 import android.content.ServiceConnection;
 
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.messages.PingMessage;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
@@ -74,10 +75,13 @@ public class AndroidUPnPManager extends UPnPManager {
     @Override
     public PingInfo getLocalPingInfo() {
         PingInfo p = new PingInfo();
+
         p.uuid = ConfigurationManager.instance().getUUIDString();
         p.listeningPort = NetworkManager.instance().getListeningPort();
         p.numSharedFiles = Librarian.instance().getNumFiles();
         p.nickname = ConfigurationManager.instance().getNickname();
+        p.deviceMajorType = Librarian.instance().getScreenSizeInInches() < 5 ? Constants.DEVICE_MAJOR_TYPE_PHONE : Constants.DEVICE_MAJOR_TYPE_TABLET;
+        p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
 
         return p;
     }
@@ -94,14 +98,7 @@ public class AndroidUPnPManager extends UPnPManager {
 
     @Override
     protected void handlePeerDevice(String udn, PingInfo p, InetAddress address, boolean added) {
-        PingMessage ping = null;
-        if (p != null) {
-            ping = new PingMessage(p.listeningPort, p.numSharedFiles, p.nickname, !added);
-            ping.setUUID(ByteUtils.decodeHex(p.uuid));
-        } else {
-            ping = new PingMessage(0, 0, "", true);
-        }
-        PeerManager.instance().onMessageReceived(address, ping);
+        PeerManager.instance().onMessageReceived(udn, address, added, p);
     }
 
     @SuppressWarnings("unchecked")

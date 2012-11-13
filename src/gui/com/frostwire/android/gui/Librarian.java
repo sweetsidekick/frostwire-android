@@ -858,6 +858,27 @@ public final class Librarian {
         return sm;
     }
 
+    public double getScreenSizeInInches() {
+        double screenInches = 0;
+
+        try {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            context.getResources().getDisplayMetrics();
+            DisplayMetrics dm = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(dm);
+
+            double x = Math.pow(dm.widthPixels / dm.xdpi, 2);
+            double y = Math.pow(dm.heightPixels / dm.ydpi, 2);
+
+            screenInches = Math.sqrt(x + y);
+
+        } catch (Throwable e) {
+            Log.e(TAG, "Unable to get the device display dimensions", e);
+        }
+
+        return screenInches;
+    }
+
     private static class FileCountCache {
 
         public int shared;
