@@ -86,8 +86,7 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
-        defaultValues.put(Constants.PREF_KEY_NETWORK_USE_BROADCAST, true);
-        defaultValues.put(Constants.PREF_KEY_NETWORK_USE_MULTICAST, true);
+        defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_MAX_CONCURRENT_UPLOADS, 3);
         defaultValues.put(Constants.PREF_KEY_NETWORK_PINGS_INTERVAL, 4000);

@@ -40,14 +40,13 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.httpserver.Code;
 import com.frostwire.httpserver.HttpExchange;
-import com.frostwire.httpserver.HttpHandler;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-final class DesktopUploadHandler implements HttpHandler {
+final class DesktopUploadHandler extends AbstractHandler {
 
     private static final String TAG = "FW.DesktopUploadHandler";
 
@@ -59,6 +58,7 @@ final class DesktopUploadHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        assertUPnPActive();
 
         String filePath = null;
         String token = null;

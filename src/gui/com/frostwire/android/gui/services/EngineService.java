@@ -223,8 +223,6 @@ public class EngineService extends Service implements IEngineService {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals(Constants.PREF_KEY_GUI_NICKNAME)) {
                     PeerManager.instance().clear();
-                } else if (key.equals(Constants.PREF_KEY_NETWORK_USE_MULTICAST) || key.equals(Constants.PREF_KEY_NETWORK_USE_BROADCAST)) {
-                    //resetLocalNetworkProcessors();
                 }
             }
         };

@@ -402,4 +402,6 @@
 	<string name="paused">Paused</string>
 	<string name="use_youtube">Use YouTube.com</string>
 	<string name="use_soundcloud">Use Soundcloud.com</string>
+	<string name="upnp_discovery">UPnP Discovery</string>
+    <string name="upnp_discovery_summary">Connect to local Wi-Fi peers via UPnP</string>
 </resources>

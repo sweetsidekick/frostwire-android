@@ -34,7 +34,6 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.httpserver.Code;
 import com.frostwire.httpserver.HttpExchange;
-import com.frostwire.httpserver.HttpHandler;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -42,7 +41,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-final class DesktopUploadRequestHandler implements HttpHandler {
+final class DesktopUploadRequestHandler extends AbstractHandler {
 
     private static final String TAG = "FW.DesktopUploadRequestHandler";
 
@@ -57,6 +56,8 @@ final class DesktopUploadRequestHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        assertUPnPActive();
+
         OutputStream os = null;
 
         try {

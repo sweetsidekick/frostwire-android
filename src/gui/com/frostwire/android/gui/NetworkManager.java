@@ -25,12 +25,9 @@ import java.util.Enumeration;
 
 import android.app.Application;
 import android.net.ConnectivityManager;
-import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
-import android.net.wifi.WifiManager.WifiLock;
 import android.util.Log;
 
 import com.frostwire.android.R;
@@ -84,9 +81,6 @@ public final class NetworkManager {
 
     private final Application context;
 
-    private WifiLock wifiLock;
-    private MulticastLock wifiMulticastLock;
-
     private int listeningPort;
 
     static {
@@ -126,56 +120,6 @@ public final class NetworkManager {
 
     public int getListeningPort() {
         return listeningPort;
-    }
-
-    /**
-     * Create and acquire a lock to the Wi-Fi device.
-     */
-    public void lockWifi() {
-        if (wifiLock == null) {
-            wifiLock = getWifiManager().createWifiLock(WifiManager.WIFI_MODE_FULL, "frostwire-wifi-lock");
-        }
-
-        if (!wifiLock.isHeld()) {
-            wifiLock.acquire();
-        }
-    }
-
-    /**
-     * Release the Wi-Fi lock if it was previously acquired.
-     */
-    public void unlockWifi() {
-        if (wifiLock != null && wifiLock.isHeld()) {
-            wifiLock.release();
-        }
-    }
-
-    public void lockMulticast() {
-        // already got it locked
-        if (wifiMulticastLock != null && wifiMulticastLock.isHeld()) {
-            return;
-        }
-
-        wifiMulticastLock = getWifiManager().createMulticastLock("frostwire-multicast");
-        wifiMulticastLock.acquire();
-    }
-
-    public void unlockMulticast() {
-        if (wifiMulticastLock != null && wifiMulticastLock.isHeld()) {
-            wifiMulticastLock.release();
-        }
-    }
-
-    public byte[] getWifiBroadcastAddress() {
-        DhcpInfo dhcp = getWifiManager().getDhcpInfo();
-
-        int ipAddress = toBigEndian(dhcp.ipAddress);
-        int netmask = toBigEndian(dhcp.netmask);
-        int broadcast = (ipAddress & netmask) | ~netmask;
-
-        int v = broadcast;
-
-        return new byte[] { (byte) ((v >>> 24) & 0xFF), (byte) ((v >>> 16) & 0xFF), (byte) ((v >>> 8) & 0xFF), (byte) (v & 0xFF) };
     }
 
     public boolean isDataUp() {
@@ -279,33 +223,11 @@ public final class NetworkManager {
         Log.i(TAG, str);
     }
 
-    /**
-     * This method dummy resolve the address. Used for avoid inner DNS lookup.
-     * The result hostname will be address.getHostAddress();
-     * 
-     * @param address
-     * @return
-     * @throws FrostwireException 
-     */
-    public static InetAddress fastResolveAddress(InetAddress address) {
-        try {
-            inetAddressHostNameField.set(address, address.getHostAddress());
-            return address;
-        } catch (Throwable e) {
-            Log.e(TAG, "Failed to fast resolve " + (address != null ? address.getHostAddress() : "null"), e);
-            return null;
-        }
-    }
-
     private WifiManager getWifiManager() {
         return (WifiManager) context.getSystemService(Application.WIFI_SERVICE);
     }
 
     private ConnectivityManager getConnectivityManager() {
         return (ConnectivityManager) context.getSystemService(Application.CONNECTIVITY_SERVICE);
-    }
-
-    private int toBigEndian(int i) {
-        return ((i & 0xff) << 24) + ((i & 0xff00) << 8) + ((i & 0xff0000) >> 8) + ((i >> 24) & 0xff);
     }
 }

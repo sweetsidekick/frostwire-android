@@ -36,18 +36,19 @@ import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.httpserver.Code;
 import com.frostwire.httpserver.HttpExchange;
-import com.frostwire.httpserver.HttpHandler;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-class DownloadHandler implements HttpHandler {
+class DownloadHandler extends AbstractHandler {
 
     private static final Logger LOG = Logger.getLogger(DownloadHandler.class.getName());
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
+        assertUPnPActive();
 
         OutputStream os = null;
         FileInputStream fis = null;

@@ -61,13 +61,9 @@
             frostwire:spinner_startRange="1" />
 
         <CheckBoxPreference
-            android:key="froswire.prefs.network.use_multicast"
-            android:summary="@string/multicast_discovery_summary"
-            android:title="@string/multicast_discovery" />
-        <CheckBoxPreference
-            android:key="froswire.prefs.network.use_broadcast"
-            android:summary="@string/broadcast_discovery_summary"
-            android:title="@string/broadcast_discovery" />
+            android:key="froswire.prefs.network.use_upnp"
+            android:summary="@string/upnp_discovery_summary"
+            android:title="@string/upnp_discovery" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="frostwire.prefs.search.preference_category"
