@@ -99,6 +99,10 @@ public final class Peer implements Cloneable {
         return numSharedFiles;
     }
 
+    public int getDeviceMajorType() {
+        return deviceMajorType;
+    }
+
     public String getClientVersion() {
         return clientVersion;
     }

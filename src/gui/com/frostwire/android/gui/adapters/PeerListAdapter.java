@@ -23,9 +23,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,23 +50,10 @@ import com.frostwire.android.gui.views.ShareIndicationDialog;
  */
 public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
-    @SuppressWarnings("unused")
-    private static final String TAG = "FW.PeerListAdapter";
-
-    private final Drawable libraryDrawable;
-    private final Drawable peerDrawable;
-    private final Drawable howtoShareDrawable;
-
     private final OnClickListener howtoShareClickListener;
 
     public PeerListAdapter(final FragmentActivity activity, List<Peer> peers) {
         super(activity, R.layout.view_peer_list_item, peers);
-
-        Resources r = getContext().getResources();
-
-        libraryDrawable = r.getDrawable(R.drawable.my_files_device);
-        peerDrawable = r.getDrawable(R.drawable.silhouette_dark);
-        howtoShareDrawable = r.getDrawable(R.drawable.share_howto);
 
         howtoShareClickListener = new OnClickListener() {
             public void onClick(View v) {
@@ -87,8 +72,8 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         version.setText("v. " + peer.getClientVersion());
         version.setTextColor(0xffcccccc);
 
-        ImageView peerIcon = findView(view, R.id.view_peer_list_item_icon);
-        peerIcon.setImageDrawable(peer.isLocalHost() ? libraryDrawable : peerDrawable);
+        ImageView icon = findView(view, R.id.view_peer_list_item_icon);
+        populateIcon(icon, peer);
 
         ImageView howtoShareButton = findView(view, R.id.view_peer_list_item_button_how_to_share);
         howtoShareButton.setOnClickListener(howtoShareClickListener);
@@ -106,8 +91,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
             }
 
             howtoShareButton.setVisibility(View.VISIBLE);
-            howtoShareButton.setImageDrawable(howtoShareDrawable);
-
+            howtoShareButton.setImageResource(R.drawable.share_howto);
         }
 
         TextView summary = findView(view, R.id.view_peer_list_item_summary);
@@ -143,6 +127,26 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
         }
 
         return buildMenuAdapter(peer);
+    }
+
+    private void populateIcon(ImageView icon, Peer peer) {
+        if (peer.isLocalHost()) {
+            icon.setImageResource(R.drawable.my_files_device);
+        } else {
+            switch (peer.getDeviceMajorType()) {
+            case Constants.DEVICE_MAJOR_TYPE_PHONE:
+                icon.setImageResource(R.drawable.device_type_type_phone);
+                break;
+            case Constants.DEVICE_MAJOR_TYPE_TABLET:
+                icon.setImageResource(R.drawable.device_type_icon_tablet);
+                break;
+            case Constants.DEVICE_MAJOR_TYPE_DESKTOP:
+                icon.setImageResource(R.drawable.device_type_icon_desktop);
+                break;
+            default:
+                icon.setImageResource(R.drawable.device_type_type_generic);
+            }
+        }
     }
 
     private MenuAdapter buildMenuAdapter(Peer peer) {
