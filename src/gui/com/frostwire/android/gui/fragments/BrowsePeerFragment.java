@@ -308,7 +308,15 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     private RadioButton initRadioButton(View v, int viewId, final byte fileType) {
-        RadioButton button = findView(v, viewId);
+        final RadioButton button = findView(v, viewId);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (button.isChecked()) {
+                    browseFilesButtonClick(fileType);
+                }
+            }
+        });
         button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
