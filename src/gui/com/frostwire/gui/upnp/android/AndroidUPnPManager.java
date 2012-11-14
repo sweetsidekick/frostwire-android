@@ -102,9 +102,11 @@ public class AndroidUPnPManager extends UPnPManager {
 
     @Override
     protected void handlePeerDevice(String udn, PingInfo p, InetAddress address, boolean added) {
-        if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
-            PeerManager.instance().onMessageReceived(udn, address, added, p);
+        if (!(Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) && added) {
+            return;
         }
+
+        PeerManager.instance().onMessageReceived(udn, address, added, p);
     }
 
     @SuppressWarnings("unchecked")
