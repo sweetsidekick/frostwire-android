@@ -89,7 +89,7 @@ public final class TransferManager {
         for (DownloadTransfer dt : downloads) {
             if (dt.isDownloading()) {
                 if (dt instanceof TaggableTransfer<?>) {
-                    if (sr.equals(((TaggableTransfer) dt).getTag())) {
+                    if (sr.equals(((TaggableTransfer<?>) dt).getTag())) {
                         return true;
                     }
                 }

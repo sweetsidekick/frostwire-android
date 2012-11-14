@@ -33,6 +33,7 @@ import org.teleal.cling.model.message.UpnpResponse;
 import org.teleal.cling.model.meta.Action;
 import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.DeviceIdentity;
+import org.teleal.cling.model.meta.LocalDevice;
 import org.teleal.cling.model.meta.RemoteDevice;
 import org.teleal.cling.model.meta.RemoteDeviceIdentity;
 import org.teleal.cling.model.meta.Service;
@@ -77,11 +78,25 @@ public abstract class UPnPManager {
 
     public abstract UpnpService getService();
 
+    public abstract LocalDevice getLocalDevice();
+
     public abstract UPnPFWDevice getUPnPLocalDevice();
 
     public abstract PingInfo getLocalPingInfo();
 
     public abstract void refreshPing();
+
+    public void pause() {
+        getService().getRegistry().removeAllLocalDevices();
+        getService().getRegistry().pause();
+        getService().getRegistry().removeAllRemoteDevices();
+    }
+
+    public void resume() {
+        getService().getRegistry().resume();
+        getService().getRegistry().addDevice(getLocalDevice());
+        getService().getControlPoint().search();
+    }
 
     public void removeRemoteDevice(String udn) {
         Registry registry = getService().getRegistry();

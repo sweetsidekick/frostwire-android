@@ -46,7 +46,6 @@ import jd.parser.html.Form.MethodType;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;

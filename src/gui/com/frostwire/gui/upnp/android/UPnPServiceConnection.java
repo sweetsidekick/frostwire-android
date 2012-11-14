@@ -20,15 +20,15 @@ package com.frostwire.gui.upnp.android;
 
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.android.AndroidUpnpService;
-import org.teleal.cling.model.ValidationException;
 import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.LocalDevice;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPManager;
 import com.frostwire.gui.upnp.UPnPRegistryListener;
@@ -40,8 +40,6 @@ import com.frostwire.gui.upnp.UPnPRegistryListener;
  * 
  */
 public class UPnPServiceConnection implements ServiceConnection {
-
-    private static final String TAG = "FW.UPnPServiceConnection";
 
     private AndroidUpnpService service;
     private UPnPRegistryListener registryListener;
@@ -57,6 +55,9 @@ public class UPnPServiceConnection implements ServiceConnection {
     }
 
     public static LocalDevice getLocalDevice() {
+        if (localDevice == null) {
+            localDevice = createLocalDevice();
+        }
         return localDevice;
     }
 
@@ -64,25 +65,20 @@ public class UPnPServiceConnection implements ServiceConnection {
     public void onServiceConnected(ComponentName name, IBinder service) {
         this.service = (AndroidUpnpService) service;
 
-        if (localDevice == null) {
-            try {
-                localDevice = createLocalDevice();
-                this.service.getRegistry().addDevice(localDevice);
-            } catch (ValidationException e) {
-                Log.e(TAG, "Unable to create and register local UPnP frostwire device", e);
-            }
-        }
-
-        // refresh the list with all known devices
-        for (Device<?, ?, ?> device : this.service.getRegistry().getDevices()) {
-            registryListener.deviceAdded(device);
-        }
-
         // getting ready for future device advertisements
         this.service.getRegistry().addListener(registryListener);
 
-        // search asynchronously for all devices
-        this.service.getControlPoint().search();
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+            this.service.getRegistry().addDevice(getLocalDevice());
+
+            // refresh the list with all known devices
+            for (Device<?, ?, ?> device : this.service.getRegistry().getDevices()) {
+                registryListener.deviceAdded(device);
+            }
+
+            // search asynchronously for all devices
+            this.service.getControlPoint().search();
+        }
     }
 
     @Override
@@ -93,9 +89,13 @@ public class UPnPServiceConnection implements ServiceConnection {
         service = null;
     }
 
-    private LocalDevice createLocalDevice() throws ValidationException {
-        UPnPFWDevice device = UPnPManager.instance().getUPnPLocalDevice();
+    private static LocalDevice createLocalDevice() {
+        try {
+            UPnPFWDevice device = UPnPManager.instance().getUPnPLocalDevice();
 
-        return new LocalDevice(device.getIdentity(), device.getType(), device.getDetails(), device.getIcon(), device.getServices());
+            return new LocalDevice(device.getIdentity(), device.getType(), device.getDetails(), device.getIcon(), device.getServices());
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 }

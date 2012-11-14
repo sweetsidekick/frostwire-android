@@ -47,6 +47,7 @@ import com.frostwire.android.gui.views.preference.SimpleActionPreference;
 import com.frostwire.android.util.StorageMount;
 import com.frostwire.android.util.StorageUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * See {@link ConfigurationManager}
@@ -68,7 +69,7 @@ public class PreferencesActivity extends PreferenceActivity {
         setupNickname();
         setupClearIndex();
         setupSearchEngines();
-
+        setupUPnPOption();
         setupStoragePathOption();
     }
 
@@ -173,6 +174,22 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
+    private void setupUPnPOption() {
+        final CheckBoxPreference preferenceUPnP = (CheckBoxPreference) findPreference(Constants.PREF_KEY_NETWORK_USE_UPNP);
+
+        preferenceUPnP.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean newVal = (Boolean) newValue;
+                if (newVal) {
+                    UPnPManager.instance().resume();
+                } else {
+                    UPnPManager.instance().pause();
+                }
+                return true;
+            }
+        });
+    }
+
     private void setupConnectButton() {
         updateConnectButton();
         SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
@@ -194,6 +211,7 @@ public class PreferencesActivity extends PreferenceActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 Engine.instance().startServices();
+                UPnPManager.instance().resume();
                 return null;
             }
 
@@ -217,6 +235,7 @@ public class PreferencesActivity extends PreferenceActivity {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                UPnPManager.instance().pause();
                 Engine.instance().stopServices(false);
                 return null;
             }

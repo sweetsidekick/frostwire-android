@@ -46,8 +46,7 @@ public final class PeerManager {
     private static final String TAG = "FW.PeerManager";
 
     private final int maxPeers;
-    private final long cacheTimeout;
-    private final LruCache<Peer, CacheEntry> peerCache;
+    private final LruCache<Peer, Peer> peerCache;
     private final Map<String, Peer> addressMap;
 
     private final PeerComparator peerComparator;
@@ -65,8 +64,8 @@ public final class PeerManager {
 
     private PeerManager() {
         this.maxPeers = Constants.PEER_MANAGER_MAX_PEERS;
-        this.cacheTimeout = Constants.PEER_MANAGER_CACHE_TIMEOUT;
-        this.peerCache = new LruCache<Peer, CacheEntry>(maxPeers);
+        //this.cacheTimeout = Constants.PEER_MANAGER_CACHE_TIMEOUT;
+        this.peerCache = new LruCache<Peer, Peer>(maxPeers);
         this.addressMap = new HashMap<String, Peer>();
 
         this.peerComparator = new PeerComparator();
@@ -87,7 +86,9 @@ public final class PeerManager {
             }
         } else {
             Peer peer = addressMap.remove(udn);
-            peerCache.remove(peer);
+            if (peer != null) {
+                peerCache.remove(peer);
+            }
         }
     }
 
@@ -97,12 +98,11 @@ public final class PeerManager {
      * @return
      */
     public List<Peer> getPeers() {
-        purgeOld();
         refreshLocalPeer();
         List<Peer> peers = new ArrayList<Peer>(1 + peerCache.size());
 
-        for (CacheEntry e : peerCache.snapshot().values()) {
-            peers.add(e.peer);
+        for (Peer p : peerCache.snapshot().values()) {
+            peers.add(p);
         }
 
         Collections.sort(peers, peerComparator);
@@ -127,9 +127,9 @@ public final class PeerManager {
         Peer k = new Peer();
         k.setUUID(uuid);
 
-        CacheEntry e = peerCache.get(k);
+        Peer p = peerCache.get(k);
 
-        return e != null ? e.peer : null;
+        return p;
     }
 
     public void clear() {
@@ -167,32 +167,14 @@ public final class PeerManager {
 
             // add it to the peer cache
             if (!cacheFull) {
-                peerCache.put(peer, new CacheEntry(peer));
+                peerCache.put(peer, peer);
                 Log.v(TAG, String.format("Adding new peer, total=%s: %s", peerCache.size(), peer));
             }
         } else {
             if (!disconnected) {
-                peerCache.put(peer, new CacheEntry(peer)); // touch the element and updates the properties
+                peerCache.put(peer, peer); // touch the element and updates the properties
             } else {
                 peerCache.remove(peer);
-            }
-        }
-    }
-
-    private void purgeOld() {
-        if (true) {
-            return; // TODO: implemented this based in finger 
-        }
-        Map<Peer, CacheEntry> snapshot = peerCache.snapshot();
-        // per docs snapshot is a copy of the current contents of the cache,
-        // ordered from least recently accessed to most recently accessed.
-
-        long now = System.currentTimeMillis();
-        for (CacheEntry entry : snapshot.values()) {
-            if (now - entry.timestamp > cacheTimeout) {
-                peerCache.remove(entry.peer);
-            } else {
-                break; // all the elements from this point are fresh
             }
         }
     }
@@ -201,17 +183,6 @@ public final class PeerManager {
         PingInfo p = UPnPManager.instance().getLocalPingInfo();
 
         localPeer = new Peer(null, p);
-    }
-
-    private static final class CacheEntry {
-
-        public final Peer peer;
-        public final long timestamp;
-
-        public CacheEntry(Peer peer) {
-            this.peer = peer;
-            this.timestamp = System.currentTimeMillis();
-        }
     }
 
     private static final class PeerComparator implements Comparator<Peer> {
