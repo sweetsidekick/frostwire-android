@@ -93,9 +93,13 @@ public abstract class UPnPManager {
     }
 
     public void resume() {
-        getService().getRegistry().resume();
-        getService().getRegistry().addDevice(getLocalDevice());
-        getService().getControlPoint().search();
+        if (getService() != null) {
+            getService().getRegistry().resume();
+            if (getService().getRegistry().getLocalDevices().size() == 0) {
+                getService().getRegistry().addDevice(getLocalDevice());
+            }
+            getService().getControlPoint().search();
+        }
     }
 
     public void removeRemoteDevice(String udn) {

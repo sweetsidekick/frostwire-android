@@ -28,12 +28,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * 
@@ -56,6 +60,10 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         super.onActivityCreated(savedInstanceState);
 
         setRetainInstance(true);
+
+        if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+            UPnPManager.instance().resume();
+        }
 
         setupAdapter();
 
