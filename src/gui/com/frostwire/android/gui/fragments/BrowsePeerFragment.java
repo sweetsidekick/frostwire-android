@@ -66,6 +66,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private final BroadcastReceiver broadcastReceiver;
 
     private RadioButton buttonAudio;
+    private RadioButton buttonRingtones;
+    private RadioButton buttonVideos;
+    private RadioButton buttonPictures;
+    private RadioButton buttonApplications;
+    private RadioButton buttonDocuments;
 
     private BrowsePeerSearchBarView filesBar;
 
@@ -138,11 +143,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         }
 
         if (loader.getId() == LOADER_FINGER_ID) {
-            boolean checkAudio = finger == null;
+            boolean firstCheck = finger == null;
             finger = (Finger) data;
 
-            if (checkAudio) {
-                buttonAudio.setChecked(true);
+            if (firstCheck) {
+                checkNoEmptyButton(finger);
             }
         } else if (loader.getId() == LOADER_FILES_ID) {
             updateFiles((Object[]) data);
@@ -210,11 +215,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     @Override
     protected void initComponents(View v) {
-        initRadioButton(v, R.id.fragment_browse_peer_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
-        initRadioButton(v, R.id.fragment_browse_peer_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
-        initRadioButton(v, R.id.fragment_browse_peer_radio_pictures, Constants.FILE_TYPE_PICTURES);
-        initRadioButton(v, R.id.fragment_browse_peer_radio_videos, Constants.FILE_TYPE_VIDEOS);
-        initRadioButton(v, R.id.fragment_browse_peer_radio_ringtones, Constants.FILE_TYPE_RINGTONES);
+        buttonApplications = initRadioButton(v, R.id.fragment_browse_peer_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
+        buttonDocuments = initRadioButton(v, R.id.fragment_browse_peer_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
+        buttonPictures = initRadioButton(v, R.id.fragment_browse_peer_radio_pictures, Constants.FILE_TYPE_PICTURES);
+        buttonVideos = initRadioButton(v, R.id.fragment_browse_peer_radio_videos, Constants.FILE_TYPE_VIDEOS);
+        buttonRingtones = initRadioButton(v, R.id.fragment_browse_peer_radio_ringtones, Constants.FILE_TYPE_RINGTONES);
         buttonAudio = initRadioButton(v, R.id.fragment_browse_peer_radio_audio, Constants.FILE_TYPE_AUDIO);
 
         filesBar = findView(v, R.id.fragment_browse_peer_files_bar);
@@ -467,6 +472,24 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             setListAdapter(adapter);
         } catch (Throwable e) {
             Log.e(TAG, "Error updating files in list", e);
+        }
+    }
+
+    private void checkNoEmptyButton(Finger f) {
+        if (f.numSharedAudioFiles > 0) {
+            buttonAudio.setChecked(true);
+        } else if (f.numSharedVideoFiles > 0) {
+            buttonVideos.setChecked(true);
+        } else if (f.numSharedPictureFiles > 0) {
+            buttonPictures.setChecked(true);
+        } else if (f.numSharedDocumentFiles > 0) {
+            buttonDocuments.setChecked(true);
+        } else if (f.numSharedApplicationFiles > 0) {
+            buttonApplications.setChecked(true);
+        } else if (f.numSharedRingtoneFiles > 0) {
+            buttonRingtones.setChecked(true);
+        } else {
+            buttonAudio.setChecked(true);
         }
     }
 
