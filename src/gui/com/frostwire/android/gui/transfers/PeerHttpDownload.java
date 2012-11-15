@@ -116,7 +116,7 @@ public final class PeerHttpDownload implements DownloadTransfer {
     }
 
     public long getDownloadSpeed() {
-        return averageSpeed;
+        return (!isDownloading()) ? 0 : averageSpeed;
     }
 
     public long getUploadSpeed() {

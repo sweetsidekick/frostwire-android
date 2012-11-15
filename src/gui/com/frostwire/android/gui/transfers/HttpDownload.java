@@ -126,7 +126,7 @@ public final class HttpDownload implements DownloadTransfer {
     }
 
     public long getDownloadSpeed() {
-        return (isComplete()) ? 0 : averageSpeed;
+        return (!isDownloading()) ? 0 : averageSpeed;
     }
 
     public long getUploadSpeed() {

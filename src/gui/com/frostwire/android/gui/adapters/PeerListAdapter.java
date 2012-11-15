@@ -38,6 +38,7 @@ import com.frostwire.android.gui.activities.BrowsePeerActivity;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.menu.BrowsePeerMenuAction;
 import com.frostwire.android.gui.adapters.menu.ChangeNicknameMenuAction;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
@@ -111,11 +112,15 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
                 ((MainActivity) getContext()).showMyFiles();
             }
         } else {
-            Intent i = null;
-            i = new Intent(getContext(), BrowsePeerActivity.class);
-            i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
-            getContext().startActivity(i);
-        }
+            if (peer.getNumSharedFiles() > 0) {
+                Intent i = null;
+                i = new Intent(getContext(), BrowsePeerActivity.class);
+                i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
+                getContext().startActivity(i);
+            } else {
+                UIUtils.showShortMessage(getContext(), peer.getNickname() + " " +  getContext().getString(R.string.not_sharing_files));
+            }
+        } 
     }
 
     @Override
