@@ -29,6 +29,7 @@ import android.os.IBinder;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPManager;
 import com.frostwire.gui.upnp.UPnPRegistryListener;
@@ -79,6 +80,29 @@ public class UPnPServiceConnection implements ServiceConnection {
             // search asynchronously for all devices
             this.service.getControlPoint().search();
         }
+
+        startSearchRefresher();
+        
+    }
+
+    private void startSearchRefresher() {
+        Engine.instance().getThreadPool().execute(new Runnable() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(5000);
+                        
+                        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+                            UPnPServiceConnection.this.service.getControlPoint().search();
+                        }
+                    } catch (Throwable t) {
+                        
+                    }
+                }
+            }
+        });
     }
 
     @Override
