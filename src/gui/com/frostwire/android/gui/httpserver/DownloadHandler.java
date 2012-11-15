@@ -97,6 +97,7 @@ class DownloadHandler extends AbstractHandler {
 
             byte[] buffer = new byte[4 * 1024];
             int n;
+            int count = 0;
 
             while ((n = fis.read(buffer, 0, buffer.length)) != -1) {
                 os.write(buffer, 0, n);
@@ -108,6 +109,12 @@ class DownloadHandler extends AbstractHandler {
                     } finally {
                         os.close();
                     }
+                }
+                
+                count += n;
+                if (count > 4096) {
+                    count = 0;
+                    Thread.yield();
                 }
             }
 
