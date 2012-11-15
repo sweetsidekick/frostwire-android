@@ -32,9 +32,6 @@ import com.frostwire.android.core.FileDescriptor;
  */
 public class PeerHttpUpload implements UploadTransfer {
 
-    @SuppressWarnings("unused")
-    private static final String TAG = "FW.PeerHttpUpload";
-
     private static final int STATUS_UPLOADING = 1;
     private static final int STATUS_COMPLETE = 2;
     private static final int STATUS_CANCELLED = 3;
