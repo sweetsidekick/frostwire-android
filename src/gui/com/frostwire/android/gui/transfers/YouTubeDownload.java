@@ -42,6 +42,7 @@ import jd.parser.html.Form;
 import jd.parser.html.Form.MethodType;
 import android.util.Log;
 
+import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
@@ -55,6 +56,7 @@ import com.frostwire.mp4.boxes.Box;
 import com.frostwire.mp4.boxes.FileTypeBox;
 import com.frostwire.mp4.boxes.MetaBox;
 import com.frostwire.mp4.boxes.UserDataBox;
+import com.frostwire.mp4.boxes.apple.AppleAlbumBox;
 import com.frostwire.mp4.boxes.apple.AppleCoverBox;
 import com.frostwire.mp4.boxes.apple.AppleItemListBox;
 import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
@@ -69,6 +71,11 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
     private static final String TAG = "FW.YouTubeDownload";
 
     static public final Pattern YT_FILENAME_PATTERN = Pattern.compile("<meta name=\"title\" content=\"(.*?)\">", Pattern.CASE_INSENSITIVE);
+
+    private static final int STATUS_NONE = 0;
+    private static final int STATUS_VERIFYING = 1;
+    
+    private int status;
 
     HashMap<DestinationFormat, ArrayList<Info>> possibleconverts = null;
 
@@ -86,7 +93,11 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
     @Override
     public String getStatus() {
-        return delegate != null ? delegate.getStatus() : "";
+        if (status == STATUS_VERIFYING) {
+            return String.valueOf(R.string.youtube_download_status_verifying);
+        } else {
+            return delegate != null ? delegate.getStatus() : "";
+        }
     }
 
     @Override
@@ -654,9 +665,10 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         public String desc;
     }
 
-    private static boolean demuxMP4Audio(HttpDownloadLink dl, HttpDownload delegate, String videoLink) {
+    private boolean demuxMP4Audio(HttpDownloadLink dl, HttpDownload delegate, String videoLink) {
         String filename = delegate.getSavePath().getAbsolutePath();
         try {
+            status = STATUS_VERIFYING;
             String mp4Filename = filename.replace(".m4a", ".mp4");
             final String jpgFilename = filename.replace(".m4a", ".jpg");
             downloadThumbnail(dl, jpgFilename, videoLink);
@@ -686,7 +698,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
             IsoFile out = new DefaultMp4Builder() {
                 protected Box createUdta(Movie movie) {
-                    return addThumbnailBox(jpgFilename);
+                    return addThumbnailBoxAndAlbumName(jpgFilename,sr.getDisplayName());
                 };
             }.build(outMovie);
             String audioFilename = filename;
@@ -709,6 +721,8 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         } catch (Throwable e) {
             Log.e(TAG, "Error demuxing MP4 audio - " + filename, e);
             return false;
+        } finally {
+            status = STATUS_NONE;
         }
     }
 
@@ -718,7 +732,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
             //http://i.ytimg.com/vi/[id]/hqdefault.jpg
             String id = videoLink.replace("http://www.youtube.com/watch?v=", "");
             String url = "http://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
-            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename));
+            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename),3000);
 
         } catch (Throwable e) {
             Log.e(TAG, "Unable to get youtube thumbnail - " + dl.getFileName());
@@ -727,7 +741,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
 
 
-    private static UserDataBox addThumbnailBox(String jpgFilename) {
+    private static UserDataBox addThumbnailBoxAndAlbumName(String jpgFilename, String albumName) {
         File jpgFile = new File(jpgFilename);
         if (!jpgFile.exists()) {
             return null;
@@ -750,6 +764,10 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         AppleCoverBox covr = new AppleCoverBox();
         covr.setJpg(jpgData);
         ilst.addBox(covr);
+        
+        AppleAlbumBox album = new AppleAlbumBox();
+        album.setAlbum(albumName);
+        ilst.addBox(album);
 
         return udta;
     }

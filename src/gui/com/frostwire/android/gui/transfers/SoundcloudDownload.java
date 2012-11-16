@@ -204,7 +204,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
             
             ID3Wrapper newId3Wrapper = new ID3Wrapper(new ID3v1Tag(), new ID3v23Tag());
             
-            newId3Wrapper.setAlbum(sr.getTitle() + " via SoundCloud.com");
+            newId3Wrapper.setAlbum(sr.getUsername() + ": " + sr.getTitle() + " via SoundCloud.com");
             newId3Wrapper.setArtist(sr.getUsername());
             newId3Wrapper.setTitle(sr.getTitle());
             newId3Wrapper.setAlbumImage(imageBytes, "image/jpg");

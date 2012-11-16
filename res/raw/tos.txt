@@ -26,6 +26,10 @@ Frostwire recognizes that you may want to use trademark, copyright information a
 
 4. Frostwire will not acquire an ownership interest in the materials you post, input or submit to any web site and web site housed or displayed in the Network, but will acquire a non-exclusive license.
 
+SEARCH RESULTS
+
+Search results on FrostWire are drawn from multiple sites across the web. The content may or may not comply with copyright laws in your territory, and FrostWire, LLC is not responsible for content you may download.
+
 DATA PLAN AND MOBILE WIRELESS NETWORKS
 
 FrostWire can connect to the P2P network using Wi-Fi networking or your Wireless Carrier Mobile Data Network. FrostWire is not liable for any additional charges you may incur by exceeding the data quota set on your Wireless Data plan.

@@ -391,5 +391,5 @@
 	<string name="use_soundcloud">Utilizar Soundcloud.com</string>
 	<string name="upnp_discovery">Comparte en Wi-Fi</string>
     <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
-		
+	<string name="youtube_download_status_verifying">Verificando</string>
 </resources>
