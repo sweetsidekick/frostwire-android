@@ -31,7 +31,7 @@ import com.frostwire.android.gui.util.SystemUtils;
  */
 public abstract class TemporaryDownloadTransfer<T extends SearchResult> implements DownloadTransfer, TaggableTransfer<T> {
 
-    private File savePath;
+    protected File savePath;
     protected HttpDownload delegate;
     protected T sr;
 
@@ -48,10 +48,8 @@ public abstract class TemporaryDownloadTransfer<T extends SearchResult> implemen
     
 
     protected void moveFile(File savePath, byte fileType) {
-        File path = SystemUtils.getSaveDirectory(fileType);
-        File finalFile = new File(path, savePath.getName());
+        File finalFile = getFinalFile(savePath, fileType);
         if (savePath.renameTo(finalFile)) {
-            Librarian.instance().scan(finalFile);
             this.savePath = finalFile;
         } else {
             this.savePath = savePath;
@@ -62,6 +60,12 @@ public abstract class TemporaryDownloadTransfer<T extends SearchResult> implemen
         if (getSavePath() != null &&  getSavePath().exists()) {
             Librarian.instance().scan(getSavePath().getAbsoluteFile());
         }
+    }
+    
+    protected File getFinalFile(File savePath, byte fileType) {
+        File path = SystemUtils.getSaveDirectory(fileType);
+        File finalFile = new File(path, savePath.getName());
+        return finalFile;
     }
     
     public T getTag() {

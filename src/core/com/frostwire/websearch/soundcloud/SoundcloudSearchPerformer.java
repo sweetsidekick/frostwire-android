@@ -73,9 +73,10 @@ public class SoundcloudSearchPerformer implements WebSearchPerformer {
 
         while (matcher.find() && i < max) {
             try {
-                SoundcloudItem item = JsonUtils.toObject(matcher.group(2), SoundcloudItem.class);
+                SoundcloudItem item = JsonUtils.toObject(matcher.group(3), SoundcloudItem.class);
                 try {
-                    item.date = DATE_FORMAT.parse(matcher.group(1)).getTime();
+                    item.thumbnailUrl = buildThumbnailUrl(matcher.group(1));
+                    item.date = DATE_FORMAT.parse(matcher.group(2)).getTime();
                 } catch (Throwable e) {
                     item.date = -1;
                 }
@@ -92,11 +93,17 @@ public class SoundcloudSearchPerformer implements WebSearchPerformer {
         return result;
     }
 
+    private String buildThumbnailUrl(String str) {
+        //http://i1.sndcdn.com/artworks-000019588274-le8r71-crop.jpg?be0edad
+        //https://i1.sndcdn.com/artworks-000019588274-le8r71-t500x500.jpg
+        return "http://i1.sndcdn.com/artworks-"+str.substring(0,str.indexOf("-crop.")) + "-t300x300.jpg";
+    }
+
     public String getUrl(int page, String encodedKeywords) {
         return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + encodedKeywords;
     }
 
     public String getRegex() {
-        return "(?is)<abbr title='(.*?)'.*?window.SC.bufferTracks.push\\((.*?)\\);";
-    }
+        return "(?is)<a href=\"http://i1.sndcdn.com/artworks-(.*?)\" class=\"artwork\".*?<abbr title='(.*?)'.*?window.SC.bufferTracks.push\\((.*?)\\);";
+    }    
 }

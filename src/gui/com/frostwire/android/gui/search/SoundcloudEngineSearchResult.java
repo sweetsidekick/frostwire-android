@@ -66,7 +66,19 @@ public class SoundcloudEngineSearchResult implements SearchResult {
     public String getStreamUrl() {
         return sr.getStreamUrl();
     }
+    
+    public String getThumbnailUrl() {
+        return sr.getThumbnailUrl();
+    }
+    
+    public String getTitle() {
+        return sr.getTitle();
+    }
 
+    public String getUsername() {
+        return sr.getUsername();
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o==null || !(o instanceof SoundcloudEngineSearchResult)) {

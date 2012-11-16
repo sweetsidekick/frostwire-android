@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,10 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
+import com.frostwire.mp3.ID3Wrapper;
+import com.frostwire.mp3.ID3v1Tag;
+import com.frostwire.mp3.ID3v23Tag;
+import com.frostwire.mp3.Mp3File;
 
 /**
  * @author gubatron
@@ -37,6 +43,8 @@ import com.frostwire.android.util.FileUtils;
 public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngineSearchResult> {
 
     private static final String TAG = "FW.SoundcloudDownload";
+
+    private static final long MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH = 10485760; //10MB
 
     private final TransferManager manager;
 
@@ -134,7 +142,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {
-                        moveFile(download.getSavePath(), Constants.FILE_TYPE_AUDIO);
+                        downloadAndUpdateCoverArt(download.getSavePath());
                         scanFinalFile();
                     }
                 });
@@ -145,6 +153,39 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
         }
     }
 
+
+    private void downloadAndUpdateCoverArt(File tempFile) {
+        //abort if file is too large.
+        if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
+
+            byte[] coverArtBytes = downloadCoverArt();
+            Log.v(TAG,"cover art array length (@"+coverArtBytes.hashCode()+"): " + coverArtBytes.length);
+            
+            if (coverArtBytes != null && coverArtBytes.length > 0) {
+                File finalFile = getFinalFile(tempFile, Constants.FILE_TYPE_AUDIO);
+                if (setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), finalFile.getAbsolutePath())) {
+                    tempFile.delete();
+                    this.savePath = finalFile;
+                } else {    
+                    moveFile(tempFile,Constants.FILE_TYPE_AUDIO);
+                }
+            }
+        } else {
+            moveFile(tempFile,Constants.FILE_TYPE_AUDIO);
+        }
+    }
+    
+    private byte[] downloadCoverArt() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Log.v(TAG,"thumbnail url: " + sr.getThumbnailUrl());
+            HttpDownload.simpleHTTP(sr.getThumbnailUrl(), baos, 3000);
+            return baos.toByteArray();
+        } catch (Throwable e) {
+            Log.e(TAG,"Error downloading SoundCloud cover art.",e);
+        }
+        return null;
+    }
 
     private HttpDownloadLink buildDownloadLink() throws Exception {
         HttpDownloadLink link = new HttpDownloadLink(sr.getStreamUrl());
@@ -157,4 +198,27 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
         return link;
     }
     
+    private boolean setAlbumArt(byte[] imageBytes, String mp3Filename, String mp3outputFilename) {
+        try {
+            Mp3File mp3 = new Mp3File(mp3Filename);
+            
+            ID3Wrapper newId3Wrapper = new ID3Wrapper(new ID3v1Tag(), new ID3v23Tag());
+            
+            newId3Wrapper.setAlbum(sr.getTitle() + " via SoundCloud.com");
+            newId3Wrapper.setArtist(sr.getUsername());
+            newId3Wrapper.setTitle(sr.getTitle());
+            newId3Wrapper.setAlbumImage(imageBytes, "image/jpg");
+            newId3Wrapper.setUrl(sr.getDetailsUrl());
+            newId3Wrapper.getId3v2Tag().setPadding(true);
+
+            mp3.setId3v1Tag(newId3Wrapper.getId3v1Tag());
+            mp3.setId3v2Tag(newId3Wrapper.getId3v2Tag());
+            
+            mp3.save(mp3outputFilename);
+            
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }        
 }

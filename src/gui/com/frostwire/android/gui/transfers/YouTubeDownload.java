@@ -23,9 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -721,41 +718,14 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
             //http://i.ytimg.com/vi/[id]/hqdefault.jpg
             String id = videoLink.replace("http://www.youtube.com/watch?v=", "");
             String url = "http://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
-            simpleHTTP(url, jpgFilename);
+            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename));
 
         } catch (Throwable e) {
             Log.e(TAG, "Unable to get youtube thumbnail - " + dl.getFileName());
         }
     }
 
-    private static void simpleHTTP(String url, String jpgFilename) throws Throwable {
-        URL u = new URL(url);
-        URLConnection con = u.openConnection();
-        con.setConnectTimeout(1000);
-        con.setReadTimeout(1000);
-        InputStream in = con.getInputStream();
-        OutputStream out = new FileOutputStream(jpgFilename);
 
-        try {
-
-            byte[] b = new byte[1024];
-            int n = 0;
-            while ((n = in.read(b, 0, b.length)) != -1) {
-                out.write(b, 0, n);
-            }
-        } finally {
-            try {
-                out.close();
-            } catch (Throwable e) {
-                // ignore   
-            }
-            try {
-                in.close();
-            } catch (Throwable e) {
-                // ignore   
-            }
-        }
-    }
 
     private static UserDataBox addThumbnailBox(String jpgFilename) {
         File jpgFile = new File(jpgFilename);

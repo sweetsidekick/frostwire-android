@@ -19,6 +19,10 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -325,6 +329,37 @@ public final class HttpDownload implements DownloadTransfer {
                 }
             } catch (Throwable tr) {
                 error(tr);
+            }
+        }
+    }
+    
+    static void simpleHTTP(String url, OutputStream out) throws Throwable {
+        simpleHTTP(url,out,1000);
+    }
+    
+    static void simpleHTTP(String url, OutputStream out, int timeout) throws Throwable {
+        URL u = new URL(url);
+        URLConnection con = u.openConnection();
+        con.setConnectTimeout(timeout);
+        con.setReadTimeout(timeout);
+        InputStream in = con.getInputStream();
+        try {
+
+            byte[] b = new byte[1024];
+            int n = 0;
+            while ((n = in.read(b, 0, b.length)) != -1) {
+                out.write(b, 0, n);
+            }
+        } finally {
+            try {
+                out.close();
+            } catch (Throwable e) {
+                // ignore   
+            }
+            try {
+                in.close();
+            } catch (Throwable e) {
+                // ignore   
             }
         }
     }
