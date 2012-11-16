@@ -84,7 +84,7 @@ public class AndroidUPnPManager extends UPnPManager {
         p.listeningPort = NetworkManager.instance().getListeningPort();
         p.numSharedFiles = Librarian.instance().getNumFiles();
         p.nickname = ConfigurationManager.instance().getNickname();
-        p.deviceMajorType = Librarian.instance().getScreenSizeInInches() < 5 ? Constants.DEVICE_MAJOR_TYPE_PHONE : Constants.DEVICE_MAJOR_TYPE_TABLET;
+        p.deviceMajorType = Librarian.instance().getScreenSizeInInches() < 6.9 ? Constants.DEVICE_MAJOR_TYPE_PHONE : Constants.DEVICE_MAJOR_TYPE_TABLET;
         p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
 
         return p;
