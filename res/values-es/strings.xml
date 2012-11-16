@@ -37,9 +37,9 @@
     <string name="disconnecting">Desconectando</string>
     <string name="wait">Wait</string>
     <string name="exit">Salir</string>
-    <string name="no_wifi_want_to_fix_it_question">No estás conectado(a) a una red WiFi.\n\n¿Cómo te quieres conectar?</string>
-    <string name="your_connection_has_dropped_stopping_services">Tu conexión WiFi se ha caído. Parando los servicios.</string>
-    <string name="wifi_network_changed_restarting_services">La red WiFi ha cambiado. Reiniciando los Servicios.</string>
+    <string name="no_wifi_want_to_fix_it_question">No estás conectado(a) a una red Wi-Fi.\n\n¿Cómo te quieres conectar?</string>
+    <string name="your_connection_has_dropped_stopping_services">Tu conexión Wi-Fi se ha caído. Parando los servicios.</string>
+    <string name="wifi_network_changed_restarting_services">La red Wi-Fi ha cambiado. Reiniciando los Servicios.</string>
     <string name="no_network_connection">No hay Conexión a la Red</string>
     <string name="leaving_already">¿Ya te vas?</string>
     <string name="search_label">Buscar</string>
@@ -121,7 +121,7 @@
     <string name="failed_to_set_wallpaper">No se pudo poner como Fondo</string>
     <string name="tell_others_chooser">Tweet / SMS / Email</string>
     <string name="tell_others_subject">¿Tienes FrostWire para Android?</string>
-    <string name="and_choose_what_filetypes_to_share">Revisa qué archivos quieres compartir en la Red Móvil de Frostwire y en los Equipos con WiFi cercanos.</string>
+    <string name="and_choose_what_filetypes_to_share">Revisa qué archivos quieres compartir en la Red Móvil de Frostwire y en los Equipos con Wi-Fi cercanos.</string>
     <string name="before_getting_started">Antes de empezar</string>
     <string name="user_connecting">Ususario Conectándose</string>
     <string name="accept_connection_from">Aceptar la conexión de</string>
@@ -160,9 +160,9 @@
     <string name="use_upnp_port_mapping">Usa Puertos Automáticos (UPnP)</string>
     <string name="use_upnp_port_mapping_summary">Presiona aquí un rato para ajustar el número de Puerto manual</string>
     <string name="multicast_discovery">Soporte Multicast</string>
-    <string name="multicast_discovery_summary">Conectar a usuarios locales en la WiFi con multicast (recomendado)</string>
+    <string name="multicast_discovery_summary">Conectar a usuarios locales en la Wi-Fi con multicast (recomendado)</string>
     <string name="broadcast_discovery">Soporte Discovery</string>
-    <string name="broadcast_discovery_summary">Conectar a usuarios  locales en la WiFi con broadcast (más tráfico en el router)</string>
+    <string name="broadcast_discovery_summary">Conectar a usuarios  locales en la Wi-Fi con broadcast (más tráfico en el router)</string>
     <string name="internet_discovery">Comparte en Internet</string>
     <string name="internet_discovery_summary">Conectar a ususarios remotos por Internet.</string>
     <string name="meter">m</string>
@@ -179,7 +179,7 @@
     <string name="send_to_chat">Enviar al Chat</string>
     <string name="sent_file_to_chat">Enviar archivo al Chat</string>
     <string name="sent_files_to_chat">Archivos %d enviados al Chat</string>
-    <string name="choose_wifi_network">Elije una red Wifi</string>
+    <string name="choose_wifi_network">Elije una red Wi-Fi</string>
     <string name="please_update_to_v">Por favor, actualizalo a v. %s</string>
     <string name="cant_open_file">Lo siento, no sé como abrir este archivo.</string>
     <string name="downloading_from_desktop">Descargando archivo(s) del escritorio</string>
@@ -198,8 +198,8 @@
     <string name="unshare_selected_files">Dejar de Compartir los archivos seleccionados</string>
     <string name="long_press_for_batch_actions">Toca cualquier archivo para las operaciones en grupo</string>
     <string name="files_shared">archivos compartidos</string>
-    <string name="share_finished_downloads">Compartir las descargas terminadas en WiFi</string>
-    <string name="share_finished_downloads_summary">Las descargas compartidas estarán disponibles para otros usuarios de FrostWire en tu red de WiFi.</string>
+    <string name="share_finished_downloads">Compartir las descargas terminadas en Wi-Fi</string>
+    <string name="share_finished_downloads_summary">Las descargas compartidas estarán disponibles para otros usuarios de FrostWire en tu red de Wi-Fi.</string>
     <string name="are_you_sure_delete_files">¿Estás seguro de que quieres borrar los archivos seleccionados?</string>
     <string name="searchable_activity_label">Actividad de Búsqueda</string>
     <string name="search_hint">Contenido de Búsqueda</string>
@@ -321,8 +321,8 @@
     <string name="empty_string" />
     <string name="seed_finished_torrents">Compartir los Torrentes Terminados</string>
     <string name="seed_finished_torrents_summary">Compartir partes de los torrentes descargados con cualquier persona en internet a través de BitTorrent</string>
-    <string name="seed_finished_torrents_wifi_only">Compartir solo en WiFi</string>
-    <string name="seed_finished_torrents_wifi_only_summary">Compartir solo cuando se conecte a WiFi y así ahorrar bandwidth en tu plan de datos</string>
+    <string name="seed_finished_torrents_wifi_only">Compartir solo en Wi-Fi</string>
+    <string name="seed_finished_torrents_wifi_only_summary">Compartir solo cuando se conecte a Wi-Fi y así ahorrar bandwidth en tu plan de datos</string>
     <string name="dummy_downloads_indicator">0 @ 0 KB/s</string>
     <string name="dummy_uploads_indicator">0 @ 0 KB/s</string>
     <string name="seeding_has_been_turned_off">Compartiendo está apagado</string>
@@ -344,10 +344,10 @@
     <string name="dummy_content_description" />
     <string name="welcome_to_frostwire">Bienvenido a FrostWire</string>
     <string name="let_apos_s_set_you_up_before_we_begin_">Vamos a establecerte antes de comenzar.</string>
-    <string name="how_others_see_you_on_the_local_network_wifi_">Cómo te ven los demás en la red local. (WiFi)</string>
+    <string name="how_others_see_you_on_the_local_network_wifi_">Cómo te ven los demás en la red local. (Wi-Fi)</string>
     <string name="seeding_settings">Configuración de Compartido</string>
     <string name="seeding_settings_explanation">Los usuarios de intenet de BitTorrent podrán descargar trozos del archivo de los datos que tus torrentes comparten.</string>
-    <string name="seeding_wifi_settings_explanation">Comparte únicamente cuando uses una conexión de WiFi. Así evitarás más cargos de la compañía telefónica. </string>
+    <string name="seeding_wifi_settings_explanation">Comparte únicamente cuando uses una conexión de Wi-Fi. Así evitarás más cargos de la compañía telefónica. </string>
     <string name="intent_text">FrostWire es un programa de usuario a usuario para compartir archivos autorizados. La instalación y utilización del programa no constituye una licencia para la obtención y distribución del contenido no autorizado.</string>
     <string name="accept_intent">No usaré FrostWire de manera que infrinja los derechos del autor.</string>
     <string name="toast_on_disconnect">Desconectado de BitTorrent. Todas las transferencias han parado.</string>
@@ -375,16 +375,21 @@
     <string name="storage_preference_summary">La ubicación de almacenamiento por defecto donde se guardarán los archivos.</string>
     <string name="conectivity">Conectividad</string>
     <string name="loading">Cargando</string>
-    <string name="wifi_sharing">Red WiFi</string>
+    <string name="wifi_sharing">Red Wi-Fi</string>
     <string name="activity_mediaplayer_name">Reproductor</string>
     <string name="stop">Detener</string>
     <string name="donate_1">Donar $1</string>
     <string name="donate_5">Donar $5</string>
     <string name="donate_10">Donar $10</string>
     <string name="donate_25">Donar $25</string>
-    <string name="one_file_shared" >Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
-	<string name="n_files_shared" >%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wifi.</string>
+    <string name="one_file_shared" >Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
+	<string name="n_files_shared" >%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
 	<string name="playing_now_colon">Tocando ahora:</string>
 	<string name="my_filetype">Mis %s</string>
 	<string name="paused">Pausado</string>
+	<string name="use_youtube">Utilizar YouTube.com</string>
+	<string name="use_soundcloud">Utilizar Soundcloud.com</string>
+	<string name="upnp_discovery">Comparte en Wi-Fi</string>
+    <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
+		
 </resources>
