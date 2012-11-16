@@ -548,4 +548,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     public static interface OnRefreshSharedListener {
         public void onRefresh(Fragment f, byte fileType, int numShared);
     }
+
+    public void refreshSelection() {
+        if (adapter != null) {
+            browseFilesButtonClick(adapter.getFileType());
+        }
+    }
 }

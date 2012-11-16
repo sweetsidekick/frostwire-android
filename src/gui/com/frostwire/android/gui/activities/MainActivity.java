@@ -145,6 +145,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             showFragment(search, itemId, push);
             break;
         case R.id.menu_main_library:
+            library.refreshSelection();
             showFragment(library, itemId, push);
             break;
         case R.id.menu_main_transfers:
