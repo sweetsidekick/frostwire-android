@@ -32,6 +32,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.httpserver.Code;
@@ -46,8 +47,22 @@ class DownloadHandler extends AbstractHandler {
 
     private static final Logger LOG = Logger.getLogger(DownloadHandler.class.getName());
 
+    
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(final HttpExchange exchange) throws IOException {
+        Engine.instance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    internalHandler(exchange);
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, "DownloadHandler async handle error", e);
+                }
+            }
+        });
+    }
+    
+    public void internalHandler(HttpExchange exchange) throws IOException {
         assertUPnPActive();
 
         OutputStream os = null;
