@@ -20,6 +20,7 @@ package com.frostwire.websearch.youtube;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import com.frostwire.websearch.WebSearchResult;
 
@@ -31,7 +32,7 @@ import com.frostwire.websearch.WebSearchResult;
 public class YouTubeSearchResult implements WebSearchResult {
 
     //2010-07-15T16:02:42
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
 
     private final YouTubeEntry entry;
     private final ResultType rt;
@@ -58,7 +59,7 @@ public class YouTubeSearchResult implements WebSearchResult {
 
     @Override
     public String getFileName() {
-        return getDisplayName() + (rt.equals(ResultType.VIDEO) ? ".mp4" : ".mp3");
+        return getDisplayName() + (rt.equals(ResultType.VIDEO) ? ".mp4" : ".m4a");
     }
 
     @Override
