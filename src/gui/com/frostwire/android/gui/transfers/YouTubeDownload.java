@@ -765,9 +765,9 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         covr.setJpg(jpgData);
         ilst.addBox(covr);
         
-        AppleAlbumBox album = new AppleAlbumBox();
-        album.setAlbum(albumName);
-        ilst.addBox(album);
+//        AppleAlbumBox album = new AppleAlbumBox();
+//        album.setAlbum(albumName);
+//        ilst.addBox(album);
 
         return udta;
     }
