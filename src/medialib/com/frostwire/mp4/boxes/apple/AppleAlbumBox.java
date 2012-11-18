@@ -1,14 +1,15 @@
 package com.frostwire.mp4.boxes.apple;
 
-public class AppleAlbumBox extends AbstractAppleMetaDataBox {
+/**
+ *
+ */
+public final class AppleAlbumBox extends AbstractAppleMetaDataBox {
+    public static final String TYPE = "\u00a9alb";
+
 
     public AppleAlbumBox() {
-        super("");
-        // TODO Auto-generated constructor stub
+        super(TYPE);
+        appleDataBox = AppleDataBox.getStringAppleDataBox();
     }
 
-    public void setAlbum(String albumName) {
-        // TODO Auto-generated method stub
-        
-    }
 }

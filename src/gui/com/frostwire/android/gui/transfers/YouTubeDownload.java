@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -54,11 +55,16 @@ import com.frostwire.mp4.MovieCreator;
 import com.frostwire.mp4.Track;
 import com.frostwire.mp4.boxes.Box;
 import com.frostwire.mp4.boxes.FileTypeBox;
+import com.frostwire.mp4.boxes.HandlerBox;
 import com.frostwire.mp4.boxes.MetaBox;
 import com.frostwire.mp4.boxes.UserDataBox;
+import com.frostwire.mp4.boxes.apple.AppleAlbumArtistBox;
 import com.frostwire.mp4.boxes.apple.AppleAlbumBox;
+import com.frostwire.mp4.boxes.apple.AppleArtistBox;
 import com.frostwire.mp4.boxes.apple.AppleCoverBox;
 import com.frostwire.mp4.boxes.apple.AppleItemListBox;
+import com.frostwire.mp4.boxes.apple.AppleMediaTypeBox;
+import com.frostwire.mp4.boxes.apple.AppleTrackTitleBox;
 import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
 
 /**
@@ -74,7 +80,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
     private static final int STATUS_NONE = 0;
     private static final int STATUS_VERIFYING = 1;
-    
+
     private int status;
 
     HashMap<DestinationFormat, ArrayList<Info>> possibleconverts = null;
@@ -189,7 +195,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
                         }
 
                         moveFile(download.getSavePath(), sr.getResultType().equals(ResultType.VIDEO));
-                        
+
                         scanFinalFile();
                     }
                 });
@@ -245,7 +251,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
                 return decryptedLink;
             }
             if (LinksFound == null || LinksFound.isEmpty()) {
-                if (br.getURL().toLowerCase().indexOf("youtube.com/get_video_info?") != -1 && !prem) {
+                if (br.getURL().toLowerCase(Locale.getDefault()).indexOf("youtube.com/get_video_info?") != -1 && !prem) {
                     throw new IOException("DecrypterException.ACCOUNT");
                 }
                 throw new IOException("Video no longer available");
@@ -697,13 +703,22 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
             outMovie.addTrack(audioTrack);
 
             IsoFile out = new DefaultMp4Builder() {
+                protected FileTypeBox createFileTypeBox(Movie movie) {
+                    List<String> minorBrands = new LinkedList<String>();
+                    minorBrands.add("M4A ");
+                    minorBrands.add("mp42");
+                    minorBrands.add("isom");
+                    minorBrands.add("\0\0\0\0");
+
+                    return new FileTypeBox("M4A ", 0, minorBrands);
+                };
+
                 protected Box createUdta(Movie movie) {
-                    return addThumbnailBoxAndAlbumName(jpgFilename,sr.getDisplayName());
+                    return addUserDataBox(sr.getDisplayName(), sr.getSource(), jpgFilename);
                 };
             }.build(outMovie);
             String audioFilename = filename;
             FileOutputStream fos = new FileOutputStream(audioFilename);
-            out.getBoxes(FileTypeBox.class).get(0).setMajorBrand("M4A ");
             out.getBox(fos.getChannel());
             fos.close();
 
@@ -732,16 +747,14 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
             //http://i.ytimg.com/vi/[id]/hqdefault.jpg
             String id = videoLink.replace("http://www.youtube.com/watch?v=", "");
             String url = "http://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
-            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename),3000);
+            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename), 3000);
 
         } catch (Throwable e) {
             Log.e(TAG, "Unable to get youtube thumbnail - " + dl.getFileName());
         }
     }
 
-
-
-    private static UserDataBox addThumbnailBoxAndAlbumName(String jpgFilename, String albumName) {
+    private static UserDataBox addUserDataBox(String title, String author, String jpgFilename) {
         File jpgFile = new File(jpgFilename);
         if (!jpgFile.exists()) {
             return null;
@@ -758,16 +771,36 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         MetaBox meta = new MetaBox();
         udta.addBox(meta);
 
+        HandlerBox hdlr = new HandlerBox();
+        hdlr.setHandlerType("mdir");
+        meta.addBox(hdlr);
+
         AppleItemListBox ilst = new AppleItemListBox();
         meta.addBox(ilst);
+
+        AppleTrackTitleBox cnam = new AppleTrackTitleBox();
+        cnam.setValue(title);
+        ilst.addBox(cnam);
+
+        AppleArtistBox cART = new AppleArtistBox();
+        cART.setValue(author);
+        ilst.addBox(cART);
+
+        AppleAlbumArtistBox aART = new AppleAlbumArtistBox();
+        aART.setValue(title + " " + author);
+        ilst.addBox(aART);
+
+        AppleAlbumBox calb = new AppleAlbumBox();
+        calb.setValue(title + " " + author + " via YouTube.com");
+        ilst.addBox(calb);
+
+        AppleMediaTypeBox stik = new AppleMediaTypeBox();
+        stik.setValue("1");
+        ilst.addBox(stik);
 
         AppleCoverBox covr = new AppleCoverBox();
         covr.setJpg(jpgData);
         ilst.addBox(covr);
-        
-//        AppleAlbumBox album = new AppleAlbumBox();
-//        album.setAlbum(albumName);
-//        ilst.addBox(album);
 
         return udta;
     }
