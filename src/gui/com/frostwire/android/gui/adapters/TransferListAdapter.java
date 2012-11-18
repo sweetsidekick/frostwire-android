@@ -401,7 +401,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             if (((TorrentFetcherDownload) download).getDelegate() != null) {
                 status.setText(download.getStatus());
             } else {
-                status.setText(Integer.valueOf(download.getStatus()));
+                status.setText(getStatusFromResId(download.getStatus()));
             }
         } else {
             status.setText(download.getStatus());
@@ -428,7 +428,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(download.getDisplayName());
         progress.setProgress(download.getProgress());
-        status.setText(Integer.valueOf(download.getStatus()));
+        status.setText(getStatusFromResId(download.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
@@ -450,7 +450,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(upload.getDisplayName());
         progress.setProgress(upload.getProgress());
-        status.setText(Integer.valueOf(upload.getStatus()));
+        status.setText(getStatusFromResId(upload.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(upload.getUploadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(upload.getSize()));
 
@@ -472,7 +472,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(download.getDisplayName());
         progress.setProgress(download.getProgress());
-        status.setText(Integer.valueOf(download.getStatus()));
+        status.setText(getStatusFromResId(download.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
@@ -494,7 +494,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(transfer.getDisplayName());
         progress.setProgress(transfer.getProgress());
-        status.setText(Integer.valueOf(transfer.getStatus()));
+        status.setText(getStatusFromResId(transfer.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(transfer.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(transfer.getSize()));
 
@@ -550,7 +550,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(download.getDisplayName());
         progress.setProgress(download.getProgress());
-        status.setText(Integer.valueOf(download.getStatus()));
+        status.setText(getStatusFromResId(download.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
@@ -572,12 +572,22 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         peers.setText("");
         title.setText(download.getDisplayName());
         progress.setProgress(download.getProgress());
-        status.setText(Integer.valueOf(download.getStatus()));
+        status.setText(getStatusFromResId(download.getStatus()));
         speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
         buttonAction.setOnClickListener(actionOnClickListener);
+    }
+
+    private String getStatusFromResId(String str) {
+        String s = "";
+        try {
+            s = context.getString(Integer.parseInt(str));
+        } catch (Throwable e) {
+            // ignore
+        }
+        return s;
     }
 
     private static int getFileTypeIconId(String ext) {
