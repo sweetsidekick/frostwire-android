@@ -42,6 +42,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name="com.frostwire.android.gui.MainApplication"
@@ -157,10 +158,20 @@
         <service
             android:name="com.frostwire.gui.upnp.android.UPnPService"
             android:exported="false" />
+        <service
+            android:name="com.frostwire.android.market.BillingService"
+            android:exported="false" />
 
         <receiver android:name="com.frostwire.android.gui.services.EngineBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.frostwire.android.market.BillingReceiver" >
+            <intent-filter>
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
             </intent-filter>
         </receiver>
     </application>
