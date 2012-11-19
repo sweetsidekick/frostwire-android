@@ -33,7 +33,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
-import com.frostwire.android.gui.services.Engine;
 import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPFWDeviceInfo;
@@ -102,7 +101,7 @@ public class AndroidUPnPManager extends UPnPManager {
 
     @Override
     protected void handlePeerDevice(String udn, PingInfo p, InetAddress address, boolean added) {
-        if (!(Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) && added) {
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP) && added) {
             return;
         }
 

@@ -82,7 +82,7 @@ public class UPnPServiceConnection implements ServiceConnection {
         }
 
         startSearchRefresher();
-        
+
     }
 
     private void startSearchRefresher() {
@@ -93,12 +93,12 @@ public class UPnPServiceConnection implements ServiceConnection {
                 while (true) {
                     try {
                         Thread.sleep(5000);
-                        
+
                         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
                             UPnPServiceConnection.this.service.getControlPoint().search();
                         }
                     } catch (Throwable t) {
-                        
+                        // ignore
                     }
                 }
             }

@@ -38,6 +38,7 @@ public final class Peer implements Cloneable {
 
     private static final int BROWSE_HTTP_TIMEOUT = 10000;
 
+    private String udn;
     private InetAddress address;
     private int listeningPort;
 
@@ -56,7 +57,8 @@ public final class Peer implements Cloneable {
     public Peer() {
     }
 
-    public Peer(InetAddress address, PingInfo p) {
+    public Peer(String udn, InetAddress address, PingInfo p) {
+        this.udn = udn;
         this.address = address;
         this.listeningPort = p.listeningPort;
 
@@ -66,6 +68,10 @@ public final class Peer implements Cloneable {
         this.numSharedFiles = p.numSharedFiles;
         this.deviceMajorType = p.deviceMajorType;
         this.clientVersion = p.clientVersion;
+    }
+
+    public String getUdn() {
+        return udn;
     }
 
     public InetAddress getAddress() {

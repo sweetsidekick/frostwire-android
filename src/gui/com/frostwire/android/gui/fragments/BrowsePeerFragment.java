@@ -137,8 +137,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     public void onLoadFinished(Loader<Object> loader, Object data) {
         if (data == null) {
             Log.w(TAG, "Something wrong, data is null");
-            UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
-            getActivity().finish();
+            removePeerAndFinish();
             return;
         }
 
@@ -385,8 +384,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private void updateHeader() {
         if (finger == null) {
             Log.w(TAG, "Something wrong, finger is null");
-            UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
-            getActivity().finish();
+            removePeerAndFinish();
             return;
         }
 
@@ -451,8 +449,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private void updateFiles(Object[] data) {
         if (data == null) {
             Log.w(TAG, "Something wrong, data is null");
-            UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
-            getActivity().finish();
+            removePeerAndFinish();
             return;
         }
 
@@ -491,6 +488,12 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         } else {
             buttonAudio.setChecked(true);
         }
+    }
+
+    private void removePeerAndFinish() {
+        UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
+        PeerManager.instance().removePeer(peer);
+        getActivity().finish();
     }
 
     private final class LocalBroadcastReceiver extends BroadcastReceiver {

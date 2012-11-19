@@ -51,6 +51,8 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
     private TextView header;
 
+    private int refreshUPnPCount;
+
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
     }
@@ -76,6 +78,14 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
     public void refresh() {
         List<Peer> peers = PeerManager.instance().getPeers();
         adapter.updateList(peers);
+        
+        refreshUPnPCount++;
+
+        if (refreshUPnPCount % 5 == 0) {
+            if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+                UPnPManager.instance().refreshRemoteDevices();
+            }
+        }
     }
 
     @Override

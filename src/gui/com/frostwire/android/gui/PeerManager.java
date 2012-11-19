@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.teleal.cling.model.types.UDN;
+
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
@@ -79,10 +81,10 @@ public final class PeerManager {
 
     public void onMessageReceived(String udn, InetAddress address, boolean added, PingInfo p) {
         if (p != null) {
-            Peer peer = new Peer(address, p);
+            Peer peer = new Peer(udn, address, p);
 
             if (!peer.isLocalHost()) {
-                updatePeerCache2(udn, address, peer, !added);
+                updatePeerCache2(udn, peer, !added);
             }
         } else {
             Peer peer = addressMap.remove(udn);
@@ -137,7 +139,16 @@ public final class PeerManager {
         peerCache.evictAll();
     }
 
-    private void updatePeerCache2(String udn, InetAddress address, Peer peer, boolean disconnected) {
+    public void removePeer(Peer p) {
+        try {
+            updatePeerCache2(p.getUdn(), p, true);
+            UPnPManager.instance().getService().getRegistry().removeDevice(UDN.valueOf(p.getUdn()));
+        } catch (Throwable e) {
+            Log.e(TAG, "Error removing peer from manager", e);
+        }
+    }
+
+    private void updatePeerCache2(String udn, Peer peer, boolean disconnected) {
         if (disconnected) {
             Peer p = addressMap.remove(udn);
             peerCache.remove(p);
@@ -182,7 +193,7 @@ public final class PeerManager {
     private void refreshLocalPeer() {
         PingInfo p = UPnPManager.instance().getLocalPingInfo();
 
-        localPeer = new Peer(null, p);
+        localPeer = new Peer(ConfigurationManager.instance().getUUIDString(), null, p);
     }
 
     private static final class PeerComparator implements Comparator<Peer> {
