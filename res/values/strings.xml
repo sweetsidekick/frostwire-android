@@ -405,4 +405,5 @@
 	<string name="upnp_discovery">Wi-Fi Sharing</string>
     <string name="upnp_discovery_summary">Share files with peers on the local Wi-Fi network.</string>
     <string name="youtube_download_status_verifying">Verifying</string>
+    <string name="donation_thanks">Thank you so much for Supporting FrostWire</string>
 </resources>

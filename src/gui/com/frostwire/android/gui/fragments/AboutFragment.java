@@ -59,10 +59,10 @@ public class AboutFragment extends Fragment implements MainFragment {
 
     private static final Logger LOG = Logger.getLogger(AboutFragment.class.getName());
 
-    private static final String SKU_01_DOLLARS = "";
-    private static final String SKU_05_DOLLARS = "";
-    private static final String SKU_10_DOLLARS = "";
-    private static final String SKU_25_DOLLARS = "";
+    private static final String SKU_01_DOLLARS = "frostwire.donation.one";
+    private static final String SKU_05_DOLLARS = "frostwire.donation.five";
+    private static final String SKU_10_DOLLARS = "frostwire.donation.ten";
+    private static final String SKU_25_DOLLARS = "frostwire.donation.twentyfive";
     
     private Handler handler = new Handler();
     private DonationsPurchaseObserver donationsPurchaseObserver;
@@ -108,10 +108,10 @@ public class AboutFragment extends Fragment implements MainFragment {
         content.setText(Html.fromHtml(getAboutText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
 
-        setupDonateButton(view, R.id.fragment_about_button_donate1, "donation_001", "https://gumroad.com/l/pH");
-        setupDonateButton(view, R.id.fragment_about_button_donate2, "donation_005", "https://gumroad.com/l/oox");
-        setupDonateButton(view, R.id.fragment_about_button_donate3, "donation_010", "https://gumroad.com/l/rPl");
-        setupDonateButton(view, R.id.fragment_about_button_donate4, "donation_025", "https://gumroad.com/l/XQW");
+        setupDonateButton(view, R.id.fragment_about_button_donate1, SKU_01_DOLLARS, "https://gumroad.com/l/pH");
+        setupDonateButton(view, R.id.fragment_about_button_donate2, SKU_05_DOLLARS, "https://gumroad.com/l/oox");
+        setupDonateButton(view, R.id.fragment_about_button_donate3, SKU_10_DOLLARS, "https://gumroad.com/l/rPl");
+        setupDonateButton(view, R.id.fragment_about_button_donate4, SKU_25_DOLLARS, "https://gumroad.com/l/XQW");
 
         return view;
     }
@@ -180,7 +180,7 @@ public class AboutFragment extends Fragment implements MainFragment {
             LOG.info("onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
 
             if (purchaseState == PurchaseState.PURCHASED) {
-                UIUtils.showLongMessage(getActivity(), R.string.application_label);
+                UIUtils.showLongMessage(getActivity(), R.string.donation_thanks);
             }
         }
 
@@ -211,8 +211,8 @@ public class AboutFragment extends Fragment implements MainFragment {
 
         public DonateButtonListener(String sku, String url) {
             // Static test
-            this.sku = "android.test.purchased";
-            //this.sku = sku;
+            //this.sku = "android.test.purchased";
+            this.sku = sku;
             this.url = url;
         }
 
