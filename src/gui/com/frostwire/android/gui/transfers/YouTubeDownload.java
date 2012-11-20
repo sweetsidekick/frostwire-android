@@ -57,6 +57,9 @@ import com.frostwire.mp4.boxes.Box;
 import com.frostwire.mp4.boxes.FileTypeBox;
 import com.frostwire.mp4.boxes.HandlerBox;
 import com.frostwire.mp4.boxes.MetaBox;
+import com.frostwire.mp4.boxes.MovieBox;
+import com.frostwire.mp4.boxes.TrackBox;
+import com.frostwire.mp4.boxes.TrackHeaderBox;
 import com.frostwire.mp4.boxes.UserDataBox;
 import com.frostwire.mp4.boxes.apple.AppleAlbumArtistBox;
 import com.frostwire.mp4.boxes.apple.AppleAlbumBox;
@@ -711,6 +714,22 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
                     minorBrands.add("\0\0\0\0");
 
                     return new FileTypeBox("M4A ", 0, minorBrands);
+                };
+                
+                protected MovieBox createMovieBox(Movie movie) {
+                    MovieBox moov = super.createMovieBox(movie);
+                    moov.getMovieHeaderBox().setVersion(0);
+                    return moov;
+                };
+                
+                protected TrackBox createTrackBox(Track track, Movie movie) {
+                    TrackBox trak = super.createTrackBox(track, movie);
+                    
+                    TrackHeaderBox tkhd = trak.getTrackHeaderBox();
+                    tkhd.setVersion(0);
+                    tkhd.setVolume(1.0f);
+                    
+                    return trak;
                 };
 
                 protected Box createUdta(Movie movie) {
