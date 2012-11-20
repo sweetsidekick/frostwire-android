@@ -59,6 +59,11 @@ public class AboutFragment extends Fragment implements MainFragment {
 
     private static final Logger LOG = Logger.getLogger(AboutFragment.class.getName());
 
+    private static final String SKU_01_DOLLARS = "";
+    private static final String SKU_05_DOLLARS = "";
+    private static final String SKU_10_DOLLARS = "";
+    private static final String SKU_25_DOLLARS = "";
+    
     private Handler handler = new Handler();
     private DonationsPurchaseObserver donationsPurchaseObserver;
 
