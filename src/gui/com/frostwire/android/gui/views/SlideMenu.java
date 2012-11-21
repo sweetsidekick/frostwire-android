@@ -275,96 +275,99 @@ public class SlideMenu extends LinearLayout {
     }
 
     private void show(boolean animate) {
-
-        // modify content layout params
         try {
-            content = ((LinearLayout) act.findViewById(android.R.id.content).getParent());
-        } catch (ClassCastException e) {
-            /*
-             * When there is no title bar (android:theme="@android:style/Theme.NoTitleBar"),
-             * the android.R.id.content FrameLayout is directly attached to the DecorView,
-             * without the intermediate LinearLayout that holds the titlebar plus content.
-             */
-            content = (FrameLayout) act.findViewById(android.R.id.content);
-        }
-        FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(-1, -1, 3);
-        parm.setMargins(menuSize, 0, -menuSize, 0);
-        content.setLayoutParams(parm);
-
-        // animation for smooth slide-out
-        if (animate)
-            content.startAnimation(slideRightAnim);
-
-        // add the slide menu to parent
-        parent = (FrameLayout) content.getParent();
-        LayoutInflater inflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (menu != null) {
-            parent.removeView(menu);
-        }
-        menu = inflater.inflate(R.layout.slidemenu, null);
-        FrameLayout.LayoutParams lays = new FrameLayout.LayoutParams(-1, -1, 3);
-        lays.setMargins(0, statusHeight, 0, 0);
-        menu.setLayoutParams(lays);
-        parent.addView(menu);
-
-        // set header
-        try {
-            ImageView header = (ImageView) act.findViewById(R.id.slidemenu_header);
-            header.setImageDrawable(act.getResources().getDrawable(headerImageRes));
-        } catch (Exception e) {
-            // not found
-        }
-
-        View playerItem = (View) act.findViewById(R.id.slidemenu_player_menuitem);
-        playerItem.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-                launchPlayerActivity();
+            // modify content layout params
+            try {
+                content = ((LinearLayout) act.findViewById(android.R.id.content).getParent());
+            } catch (ClassCastException e) {
+                /*
+                 * When there is no title bar (android:theme="@android:style/Theme.NoTitleBar"),
+                 * the android.R.id.content FrameLayout is directly attached to the DecorView,
+                 * without the intermediate LinearLayout that holds the titlebar plus content.
+                 */
+                content = (FrameLayout) act.findViewById(android.R.id.content);
             }
-        });
-
-        // connect the menu's listview
-        final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
-        SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
-        SlideMenuAdapter adap = new SlideMenuAdapter(act, items);
-        list.setAdapter(adap);
-
-        list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                hide();
-                if (callback != null) {
-                    callback.onSlideMenuItemClick(menuItemList.get(position).id);
+            FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(-1, -1, 3);
+            parm.setMargins(menuSize, 0, -menuSize, 0);
+            content.setLayoutParams(parm);
+    
+            // animation for smooth slide-out
+            if (animate)
+                content.startAnimation(slideRightAnim);
+    
+            // add the slide menu to parent
+            parent = (FrameLayout) content.getParent();
+            LayoutInflater inflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (menu != null) {
+                parent.removeView(menu);
+            }
+            menu = inflater.inflate(R.layout.slidemenu, null);
+            FrameLayout.LayoutParams lays = new FrameLayout.LayoutParams(-1, -1, 3);
+            lays.setMargins(0, statusHeight, 0, 0);
+            menu.setLayoutParams(lays);
+            parent.addView(menu);
+    
+            // set header
+            try {
+                ImageView header = (ImageView) act.findViewById(R.id.slidemenu_header);
+                header.setImageDrawable(act.getResources().getDrawable(headerImageRes));
+            } catch (Exception e) {
+                // not found
+            }
+    
+            View playerItem = (View) act.findViewById(R.id.slidemenu_player_menuitem);
+            playerItem.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hide();
+                    launchPlayerActivity();
                 }
+            });
+    
+            // connect the menu's listview
+            final ListView list = (ListView) act.findViewById(R.id.slidemenu_listview);
+            SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
+            SlideMenuAdapter adap = new SlideMenuAdapter(act, items);
+            list.setAdapter(adap);
+    
+            list.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    hide();
+                    if (callback != null) {
+                        callback.onSlideMenuItemClick(menuItemList.get(position).id);
+                    }
+                }
+            });
+    
+            // slide menu in
+            if (animate) {
+                menu.startAnimation(slideRightAnim);
             }
-        });
+    
+            menu.findViewById(R.id.slidemenu_overlay).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SlideMenu.this.hide();
+                }
+            });
+            /*
+             * idea from http://android.cyrilmottier.com/?p=701
+             * The making of Prixing #2: Swiping the fly-in app menu
+             * Cyril Mottier 
+             */
+            menu.findViewById(R.id.slidemenu_overlay).setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return dragOverlay(event);
+                }
+            });
+            enableDisableViewGroup(content, false);
+    
+            menuShown = true;
+        } catch (Exception catcher) {
 
-        // slide menu in
-        if (animate) {
-            menu.startAnimation(slideRightAnim);
         }
-
-        menu.findViewById(R.id.slidemenu_overlay).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SlideMenu.this.hide();
-            }
-        });
-        /*
-         * idea from http://android.cyrilmottier.com/?p=701
-         * The making of Prixing #2: Swiping the fly-in app menu
-         * Cyril Mottier 
-         */
-        menu.findViewById(R.id.slidemenu_overlay).setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return dragOverlay(event);
-            }
-        });
-        enableDisableViewGroup(content, false);
-
-        menuShown = true;
     }
 
     public void setSelectedItem(int id) {
