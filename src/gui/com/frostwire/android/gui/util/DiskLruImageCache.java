@@ -138,7 +138,7 @@ public class DiskLruImageCache {
                 final BufferedInputStream buffIn = new BufferedInputStream(in, IO_BUFFER_SIZE);
                 bitmap = BitmapFactory.decodeStream(buffIn);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (snapshot != null) {
