@@ -51,12 +51,12 @@ public final class HttpDownload implements DownloadTransfer {
 
     private static final String TAG = "FW.HttpDownload";
 
-    private static final int STATUS_DOWNLOADING = 1;
-    private static final int STATUS_COMPLETE = 2;
-    private static final int STATUS_ERROR = 3;
-    private static final int STATUS_CANCELLED = 4;
-    private static final int STATUS_WAITING = 5;
-    private static final int STATUS_UNCOMPRESSING = 6;
+    static final int STATUS_DOWNLOADING = 1;
+    static final int STATUS_COMPLETE = 2;
+    static final int STATUS_ERROR = 3;
+    static final int STATUS_CANCELLED = 4;
+    static final int STATUS_WAITING = 5;
+    static final int STATUS_UNCOMPRESSING = 6;
 
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
@@ -104,7 +104,7 @@ public final class HttpDownload implements DownloadTransfer {
     public String getStatus() {
         return getStatusString(status);
     }
-
+    
     public int getProgress() {
         if (link.getSize() > 0) {
             return isComplete() ? 100 : (int) ((bytesReceived * 100) / link.getSize());
@@ -183,6 +183,11 @@ public final class HttpDownload implements DownloadTransfer {
     public void start() {
         start(0, 0);
     }
+
+    int getStatusCode() {
+        return status;
+    }
+
 
     /**
      * 

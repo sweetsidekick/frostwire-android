@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.market.BillingService;
 import com.frostwire.android.market.BillingService.RequestPurchase;
@@ -102,7 +103,7 @@ public class AboutFragment extends Fragment implements MainFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView title = (TextView) view.findViewById(R.id.fragment_about_title);
-        title.setText("FrostWire for Android");
+        title.setText("FrostWire v"+Constants.FROSTWIRE_VERSION_STRING);
 
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));

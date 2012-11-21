@@ -36,7 +36,7 @@ import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
  */
 public class YouTubeSearchPerformer implements WebSearchPerformer {
 
-    private static final int YOUTUBE_MAX_RESULTS = 5;
+    private static final int YOUTUBE_MAX_RESULTS = 10;
 
     @Override
     public List<WebSearchResult> search(String keywords) {

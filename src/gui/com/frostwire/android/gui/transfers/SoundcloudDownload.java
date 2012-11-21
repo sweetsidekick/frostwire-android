@@ -105,7 +105,18 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
 
     @Override
     public boolean isComplete() {
-        return delegate != null ? delegate.isComplete() : false;
+        if (delegate != null) {
+            //FIXME: we do this differently here because SoundCloud downloads may not have
+            //the same number of bytes as expected at the end, or maybe we don't
+            //even know exactly how many bytes to expect in the first place.
+            //the fix should probably be calculating this number correctly.
+            //Suggestion: maybe look at the Content-length HTTP header for a size
+            //if sound cloud sends this when the download starts and update the
+            //link.getSize() value with this number as it becomes known.
+            return delegate.getStatusCode() == HttpDownload.STATUS_COMPLETE;
+        } else {
+            return false;
+        }
     }
 
     @Override
