@@ -126,6 +126,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
             public void onClick(View v) {
                 UIUtils.showYesNoDialog(getActivity(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        TransferManager.instance().stopHttpTransfers();
                         TransferManager.instance().pauseTorrents();
                     }
                 });

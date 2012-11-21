@@ -54,7 +54,7 @@ public final class TransferManager {
 
     private final List<DownloadTransfer> downloads;
     private final List<UploadTransfer> uploads;
-    private final List<BittorrentDownload> bittorrenDownloads;
+    private final List<BittorrentDownload> bittorrentDownloads;
 
     private int downloadsToReview;
 
@@ -72,7 +72,7 @@ public final class TransferManager {
     private TransferManager() {
         this.downloads = new LinkedList<DownloadTransfer>();
         this.uploads = new LinkedList<UploadTransfer>();
-        this.bittorrenDownloads = new LinkedList<BittorrentDownload>();
+        this.bittorrentDownloads = new LinkedList<BittorrentDownload>();
 
         this.downloadsToReview = 0;
     }
@@ -82,7 +82,7 @@ public final class TransferManager {
 
         transfers.addAll(downloads);
         transfers.addAll(uploads);
-        transfers.addAll(bittorrenDownloads);
+        transfers.addAll(bittorrentDownloads);
 
         return transfers;
     }
@@ -183,7 +183,7 @@ public final class TransferManager {
     public int getActiveDownloads() {
         int count = 0;
 
-        for (BittorrentDownload d : bittorrenDownloads) {
+        for (BittorrentDownload d : bittorrentDownloads) {
             if (!d.isComplete() && d.isDownloading()) {
                 count++;
             }
@@ -201,7 +201,7 @@ public final class TransferManager {
     public int getActiveUploads() {
         int count = 0;
 
-        for (BittorrentDownload d : bittorrenDownloads) {
+        for (BittorrentDownload d : bittorrentDownloads) {
             if (!d.isComplete() && d.isSeeding()) {
                 count++;
             }
@@ -251,7 +251,7 @@ public final class TransferManager {
     }
 
     public void stopSeedingTorrents() {
-        for (BittorrentDownload d : bittorrenDownloads) {
+        for (BittorrentDownload d : bittorrentDownloads) {
             if (d.isSeeding() || d.isComplete()) {
                 d.pause();
             }
@@ -259,7 +259,7 @@ public final class TransferManager {
     }
 
     public void loadTorrents() {
-        bittorrenDownloads.clear();
+        bittorrentDownloads.clear();
 
         if (!AzureusManager.isCreated()) {
             return;
@@ -297,17 +297,17 @@ public final class TransferManager {
                 TorrentUtil.stop(dm);
             }
 
-            bittorrenDownloads.add(BittorrentDownloadCreator.create(this, dm));
+            bittorrentDownloads.add(BittorrentDownloadCreator.create(this, dm));
         }
     }
 
     List<BittorrentDownload> getBittorrentDownloads() {
-        return new LinkedList<BittorrentDownload>(bittorrenDownloads);
+        return new LinkedList<BittorrentDownload>(bittorrentDownloads);
     }
 
     boolean remove(Transfer transfer) {
         if (transfer instanceof BittorrentDownload) {
-            return bittorrenDownloads.remove(transfer);
+            return bittorrentDownloads.remove(transfer);
         } else if (transfer instanceof DownloadTransfer) {
             return downloads.remove(transfer);
         } else if (transfer instanceof UploadTransfer) {
@@ -318,7 +318,7 @@ public final class TransferManager {
     }
 
     public void pauseTorrents() {
-        for (BittorrentDownload d : bittorrenDownloads) {
+        for (BittorrentDownload d : bittorrentDownloads) {
             d.pause();
         }
     }
@@ -342,7 +342,7 @@ public final class TransferManager {
         BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
 
         if (!(download instanceof InvalidBittorrentDownload)) {
-            bittorrenDownloads.add(download);
+            bittorrentDownloads.add(download);
         }
 
         return download;
@@ -375,5 +375,26 @@ public final class TransferManager {
         return download;
     }
     
+    /** Stops all HttpDownloads (Cloud and Wi-Fi) */
+    public void stopHttpTransfers() {
+        List<Transfer> transfers = new ArrayList<Transfer>();
+        transfers.addAll(downloads);
+        transfers.addAll(uploads);
+        
+        for (Transfer t : transfers) {
+            if (t instanceof DownloadTransfer) {
+                DownloadTransfer d = (DownloadTransfer) t;
+                if (!d.isComplete() && d.isDownloading()) {
+                    d.cancel();
+                }
+            } else if (t instanceof UploadTransfer) {
+                UploadTransfer u = (UploadTransfer) t;
+                
+                if (!u.isComplete() && u.isUploading()) {
+                    u.cancel();
+                }
+            }
+        }
+    }
     
 }
