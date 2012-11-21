@@ -86,7 +86,7 @@ public class NewTransferDialog extends AbstractDialog {
         TextView textQuestion = findView(dlg, R.id.dialog_new_transfer_text);
 
         String sizeString = dlg.getContext().getString(R.string.size_unknown);
-        if (searchResult.getSize() > 0) {
+        if (searchResult != null && searchResult.getSize() > 0) {
             sizeString = UIUtils.getBytesInHuman(searchResult.getSize());
         }
 
