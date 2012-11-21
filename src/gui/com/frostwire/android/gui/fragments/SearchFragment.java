@@ -181,7 +181,9 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         promotions.setOnPromotionClickListener(new OnPromotionClickListener() {
             @Override
             public void onPromotionClick(PromotionsView v, Slide slide) {
-                startPromotionDownload(slide);
+                if (slide != null) {
+                    startPromotionDownload(slide);
+                }
             }
         });
         
