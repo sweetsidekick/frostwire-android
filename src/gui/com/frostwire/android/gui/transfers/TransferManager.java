@@ -58,6 +58,8 @@ public final class TransferManager {
 
     private int downloadsToReview;
 
+    private final Object alreadyDownloadingMonitor = new Object();
+
     private static TransferManager instance;
 
     public static TransferManager instance() {
@@ -85,12 +87,14 @@ public final class TransferManager {
         return transfers;
     }
 
-    private boolean alreadyDownloading(SearchResult sr) {
-        for (DownloadTransfer dt : downloads) {
-            if (dt.isDownloading()) {
-                if (dt instanceof TaggableTransfer<?>) {
-                    if (sr.equals(((TaggableTransfer<?>) dt).getTag())) {
-                        return true;
+    private boolean alreadyDownloading(Object obj) {
+        synchronized (alreadyDownloadingMonitor ) {
+            for (DownloadTransfer dt : downloads) {
+                if (dt.isDownloading()) {
+                    if (dt instanceof TaggableTransfer<?>) {
+                        if (obj.equals(((TaggableTransfer<?>) dt).getTag())) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -117,12 +121,17 @@ public final class TransferManager {
         }
     }
 
-    public void download(Peer peer, FileDescriptor fd) {
+    public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
+        
+        if (alreadyDownloading(download.getTag())) {
+            return new ExistingDownload();
+        }
+        
 
         downloads.add(download);
-
         download.start();
+        return download;
     }
 
     public PeerHttpUpload upload(FileDescriptor fd) {

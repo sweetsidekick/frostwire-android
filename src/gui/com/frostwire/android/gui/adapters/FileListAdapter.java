@@ -50,6 +50,8 @@ import com.frostwire.android.gui.adapters.menu.SetAsWallpaperMenuAction;
 import com.frostwire.android.gui.adapters.menu.SetSharedStateFileGrainedMenuAction;
 import com.frostwire.android.gui.adapters.menu.ToggleFileGrainedSharingMenuAction;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.transfers.DownloadTransfer;
+import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
@@ -213,9 +215,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     /**
      * Start a transfer
      */
-    private void startDownload(FileDescriptor fd) {
-        TransferManager.instance().download(peer, fd);
+    private DownloadTransfer startDownload(FileDescriptor fd) {
+        DownloadTransfer download = TransferManager.instance().download(peer, fd);
         notifyDataSetChanged();
+        return download;
     }
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
@@ -465,9 +468,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
                 if (list == null || list.size() == 0) {
                     // if no files are selected, they want to download this one.
-                    startDownload(fd);
-
-                    UIUtils.showLongMessage(getContext(), R.string.download_added_to_queue);
+                    if (!(startDownload(fd) instanceof ExistingDownload)) {
+                        UIUtils.showLongMessage(getContext(), R.string.download_added_to_queue);
+                    }
                 } else {
 
                     // if many are selected... do they want to download many
