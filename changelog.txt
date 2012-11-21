@@ -1,3 +1,13 @@
+FrostWire 1.0.4
+ - UX Improvement on internet search box, hints the user current
+   search context.
+ - UI fix, search on clearable textboxes no longer goes behind
+   clear icon.
+ - UI fix, avoids duplicated Wi-Fi ongoing downloads.
+ - UI fix, stops Http transfers (Cloud, Peer, Uploads)
+ - Fixes multiple NPEs reported by 1.0.3 users on Google Play.
+ - Updates sharing help imagery.
+
 FrostWire 1.0.3
  - Multiple fixes upon transfer completion.
  - Peer announcement/discovery now done using standard UPnP protocol.
