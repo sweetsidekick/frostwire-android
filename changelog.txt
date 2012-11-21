@@ -1,3 +1,15 @@
+FrostWire 1.0.3
+ - Multiple fixes upon transfer completion.
+ - Peer announcement/discovery now done using standard UPnP protocol.
+ - Fixes aac/mp4 audio demuxing/boxing incompatibilities 
+   with some Samsung devices.
+ - Audio downloads from SoundCloud now include album art.
+ - Browsing a user sharing only one kind of files is
+   now done proactivey by showing that file type to the
+   user automatically.
+ - Lots of user experience upgrades.
+ - NPE fixes.
+
 FrostWire 1.0.2
  - New FrostWire 1.0 skin by designer Marcelina Knitter.
    Complete graphics and experience overhaul.
