@@ -111,6 +111,14 @@ public class ClearableEditTextView extends RelativeLayout {
     public void selectAll() {
         input.selectAll();
     }
+    
+    public String getHint() {
+        return (String) input.getHint();
+    }
+    
+    public void setHint(String hint) {
+        input.setHint(hint);
+    }
 
     @Override
     protected void onFinishInflate() {
@@ -176,7 +184,7 @@ public class ClearableEditTextView extends RelativeLayout {
             listener.onClear(this);
         }
     }
-
+    
     public static interface OnActionListener {
 
         public void onTextChanged(View v, String str);

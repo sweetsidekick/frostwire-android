@@ -80,6 +80,10 @@ public class SearchInputView extends LinearLayout {
     public String getText() {
         return textInput.getText();
     }
+    
+    public void updateHint(String newHint) {
+        textInput.setHint(newHint);
+    }
 
     @Override
     protected void onFinishInflate() {
