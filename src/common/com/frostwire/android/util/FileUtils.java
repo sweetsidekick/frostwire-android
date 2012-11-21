@@ -46,14 +46,17 @@ public final class FileUtils {
         if (folder != null && folder.isDirectory() && folder.canWrite()) {
             //delete your contents and recursively delete sub-folders
             File[] listFiles = folder.listFiles();
-            for (File f : listFiles) {
-                if (f.isFile()) {
-                    f.delete();
-                } else if (f.isDirectory()) {
-                    deleteFolderRecursively(f);
+            
+            if (listFiles != null) {
+                for (File f : listFiles) {
+                    if (f.isFile()) {
+                        f.delete();
+                    } else if (f.isDirectory()) {
+                        deleteFolderRecursively(f);
+                    }
                 }
+                folder.delete();
             }
-            folder.delete();
         }
     }
 
