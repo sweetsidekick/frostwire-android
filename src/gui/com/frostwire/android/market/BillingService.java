@@ -217,19 +217,23 @@ public class BillingService extends Service implements ServiceConnection {
         
         @Override
         protected long run() throws RemoteException {
-            Bundle request = makeRequestBundle("CHECK_BILLING_SUPPORTED");
-            if (mProductType != null) {
-                request.putString(Consts.BILLING_REQUEST_ITEM_TYPE, mProductType);
+            try {
+                Bundle request = makeRequestBundle("CHECK_BILLING_SUPPORTED");
+                if (mProductType != null) {
+                    request.putString(Consts.BILLING_REQUEST_ITEM_TYPE, mProductType);
+                }
+                Bundle response = mService.sendBillingRequest(request);
+                int responseCode = response.getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE);
+                if (Consts.DEBUG) {
+                    Log.i(TAG, "CheckBillingSupported response code: " +
+                            ResponseCode.valueOf(responseCode));
+                }
+                boolean billingSupported = (responseCode == ResponseCode.RESULT_OK.ordinal());
+                ResponseHandler.checkBillingSupportedResponse(billingSupported, mProductType);
+                return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
+            } catch (Exception e) {
+                return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
             }
-            Bundle response = mService.sendBillingRequest(request);
-            int responseCode = response.getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE);
-            if (Consts.DEBUG) {
-                Log.i(TAG, "CheckBillingSupported response code: " +
-                        ResponseCode.valueOf(responseCode));
-            }
-            boolean billingSupported = (responseCode == ResponseCode.RESULT_OK.ordinal());
-            ResponseHandler.checkBillingSupportedResponse(billingSupported, mProductType);
-            return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
         }
     }
 
