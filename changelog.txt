@@ -1,6 +1,7 @@
 FrostWire 1.0.4
  - UX Improvement on internet search box, hints the user current
    search context.
+ - UX Improvement, easier to read help on Wi-Fi sharing.
  - UI fix, search on clearable textboxes no longer goes behind
    clear icon.
  - UI fix, avoids duplicated Wi-Fi ongoing downloads.
