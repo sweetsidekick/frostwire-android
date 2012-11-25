@@ -458,6 +458,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
+
             adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
                 protected void onItemChecked(View v, boolean isChecked) {
                     if (!isChecked) {

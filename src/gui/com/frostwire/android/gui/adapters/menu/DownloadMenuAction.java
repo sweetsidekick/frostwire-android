@@ -52,5 +52,6 @@ public class DownloadMenuAction extends MenuAction {
         TransferManager.instance().download(peer, fd);
         adapter.notifyDataSetChanged();
         UIUtils.showLongMessage(getContext(), R.string.download_added_to_queue);
+        UIUtils.showTransfersOnDownloadStart(getContext());
     }
 }

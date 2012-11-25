@@ -38,7 +38,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.PromotionsHandler;
 import com.frostwire.android.gui.PromotionsHandler.Slide;
-import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.search.SearchResult;
@@ -247,7 +246,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             protected void onPostExecute(DownloadTransfer transfer) {
                 if (!(transfer instanceof InvalidTransfer)) {
                     UIUtils.showShortMessage(getActivity(), toastMessage);
-                    showTransfersOnDownloadStart();
+                    UIUtils.showTransfersOnDownloadStart(getActivity());
 
                 } else {
                     if (transfer instanceof ExistingDownload) {
@@ -261,19 +260,10 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
         };
 
-        showTransfersOnDownloadStart();
+        UIUtils.showTransfersOnDownloadStart(getActivity());
         task.execute();
     }
     
-    private void showTransfersOnDownloadStart() {
-        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            i.setAction(Constants.ACTION_SHOW_TRANSFERS);
-            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            getActivity().startActivity(i);
-        }
-    }
-
     private void startPromotionDownload(Slide slide) {
         SearchResult sr = new PromotionsHandler().buildSearchResult(slide);
         if (sr == null) {

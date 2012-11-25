@@ -42,6 +42,7 @@ public class DownloadCheckedMenuAction extends MenuAction {
     private final List<FileDescriptor> fds;
     private final Peer peer;
 
+
     public DownloadCheckedMenuAction(Context context, AbstractListAdapter<?> adapter, List<FileDescriptor> fds, Peer peer) {
         super(context, R.drawable.download_icon, context.getResources().getString(R.string.download_selected_files) + " (" + fds.size() + ")");
 
@@ -85,5 +86,6 @@ public class DownloadCheckedMenuAction extends MenuAction {
 
         String message = (fds.size() > 1) ? String.format(getContext().getString(R.string.downloads_added_to_queue), String.valueOf(fds.size())) : getContext().getString(R.string.download_added_to_queue);
         UIUtils.showLongMessage(getContext(), message);
+        UIUtils.showTransfersOnDownloadStart(getContext());
     }
 }

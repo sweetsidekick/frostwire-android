@@ -399,6 +399,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             return R.drawable.question_mark;
         }
     }
+    
 
     private static class FileListFilter implements ListAdapterFilter<FileDescriptor> {
         
@@ -470,6 +471,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                     // if no files are selected, they want to download this one.
                     if (!(startDownload(fd) instanceof ExistingDownload)) {
                         UIUtils.showLongMessage(getContext(), R.string.download_added_to_queue);
+                        UIUtils.showTransfersOnDownloadStart(getContext());
                     }
                 } else {
 

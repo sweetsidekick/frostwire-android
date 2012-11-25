@@ -55,6 +55,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
@@ -392,5 +393,19 @@ public final class UIUtils {
             }
         }
         
+    }
+    
+    /**
+     * Checks setting to show or not the transfers window right after a download has started.
+     * This should probably be moved elsewhere (similar to GUIMediator on the desktop)
+     * @param activity
+     */
+    public static void showTransfersOnDownloadStart(Context context) {
+        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+            Intent i = new Intent(context, MainActivity.class);
+            i.setAction(Constants.ACTION_SHOW_TRANSFERS);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            context.startActivity(i);
+        }
     }
 }
