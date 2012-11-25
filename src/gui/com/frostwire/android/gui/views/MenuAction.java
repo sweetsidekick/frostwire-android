@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -32,25 +31,23 @@ public abstract class MenuAction {
     private final Context context;
     private final Drawable image;
     private final String text;
-    private final Activity activity;
 
-    public MenuAction(Activity activity, Context context, Drawable image, String text) {
-        this.activity = activity;
+    public MenuAction(Context context, Drawable image, String text) {
         this.context = context;
         this.image = image;
         this.text = text;
     }
 
-    public MenuAction(Activity activity, Context context, int imageId, String text) {
-        this(activity, context, context.getResources().getDrawable(imageId), text);
+    public MenuAction(Context context, int imageId, String text) {
+        this(context, context.getResources().getDrawable(imageId), text);
     }
 
-    public MenuAction(Activity activity, Context context, int imageId, int textId) {
-        this(activity, context, context.getResources().getDrawable(imageId), context.getResources().getString(textId));
+    public MenuAction(Context context, int imageId, int textId) {
+        this(context, context.getResources().getDrawable(imageId), context.getResources().getString(textId));
     }
-    
-    public MenuAction(Activity activity, Context context, int imageId, int textId, Object... formatArgs) {
-        this(activity, context, imageId, context.getResources().getString(textId, formatArgs));
+
+    public MenuAction(Context context, int imageId, int textId, Object... formatArgs) {
+        this(context, imageId, context.getResources().getString(textId, formatArgs));
     }
 
     public Context getContext() {
@@ -66,8 +63,4 @@ public abstract class MenuAction {
     }
 
     public abstract void onClick();
-
-    public Activity getActivity() {
-        return activity;
-    }
 }
