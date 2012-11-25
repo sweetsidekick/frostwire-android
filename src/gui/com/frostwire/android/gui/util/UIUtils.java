@@ -94,7 +94,9 @@ public final class UIUtils {
     }
 
     public static void showToastMessage(Context context, String message, int duration) {
-        Toast.makeText(context, message, duration).show();
+        if (context != null && message != null) {
+            Toast.makeText(context, message, duration).show();
+        }
     }
 
     public static void showShortMessage(Context context, String message) {

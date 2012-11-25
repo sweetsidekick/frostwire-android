@@ -246,8 +246,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             protected void onPostExecute(DownloadTransfer transfer) {
                 if (!(transfer instanceof InvalidTransfer)) {
                     UIUtils.showShortMessage(getActivity(), toastMessage);
-                    UIUtils.showTransfersOnDownloadStart(getActivity());
-
                 } else {
                     if (transfer instanceof ExistingDownload) {
                         //nothing happens here, the user should just see the transfer
