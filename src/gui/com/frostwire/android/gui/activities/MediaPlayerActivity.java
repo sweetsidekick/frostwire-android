@@ -67,6 +67,7 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.ContextMenuDialog;
 import com.frostwire.android.gui.views.ContextMenuItem;
+import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
 import com.google.ads.AdSize;
@@ -239,11 +240,16 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 album.setText(mediaFD.album);
             }
 
-            ImageView image = findView(R.id.activity_mediaplayer_artwork);
-            Bitmap coverArt = readArtWork();
-            if (coverArt != null) {
-                image.setImageBitmap(coverArt);
+            ImageView artworkImageView = findView(R.id.activity_mediaplayer_artwork);
+            ImageLoader imageLoader = ImageLoader.getDefault();
+            String artworkKey = "player.artwork:"+mediaFD.id;
+            
+            if (!imageLoader.hasBitmap(artworkKey)) {
+                imageLoader.cacheBitmap(artworkKey, readArtWork());
             }
+            
+            imageLoader.displayImage(artworkKey, artworkImageView, null);
+            
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
@@ -356,14 +362,13 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private Bitmap readArtWork() {
         Bitmap artwork = null;
-
         try {
             artwork = MusicUtils.getArtwork(this, mediaFD.id, -1);
             artwork = applyEffect(artwork);
         } catch (Throwable e) {
             Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
         }
-
+        
         return artwork;
     }
 
@@ -550,6 +555,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             handler.sendEmptyMessage(SHOW_PROGRESS);
         }
     };
+
 
     public void setMediaPlayer(MediaPlayerControl player) {
         this.player = player;

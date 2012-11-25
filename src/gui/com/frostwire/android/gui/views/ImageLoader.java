@@ -104,13 +104,21 @@ public final class ImageLoader {
         if (bitmap != null) {
             imageView.setScaleType(ScaleType.FIT_CENTER);
             imageView.setImageBitmap(bitmap);
-        } else {
+        } else if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.CENTER);
             imageView.setImageDrawable(defaultDrawable);
             queueImage(key, imageView);
         }
     }
-
+    
+    public void cacheBitmap(Object key, Bitmap bitmap) {
+        cache.put(key.hashCode(), bitmap);
+    }
+    
+    public boolean hasBitmap(Object key) {
+        return cache.get(key.hashCode()) != null;
+    }
+    
     public void clearCache() {
         cache.evictAll();
     }
