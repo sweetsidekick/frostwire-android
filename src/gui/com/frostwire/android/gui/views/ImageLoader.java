@@ -233,7 +233,7 @@ public final class ImageLoader {
             if (bmp != null) {
                 cache.put(imageToLoad.key.hashCode(), bmp);
 
-                if (isKeyRemote(imageToLoad.key)) {
+                if (imageToLoad!=null && imageToLoad.key != null && isKeyRemote(imageToLoad.key)) {
                     if (!diskCache.containsKey(imageToLoad.key)) {
                         diskCache.put(imageToLoad.key, bmp);
                     }

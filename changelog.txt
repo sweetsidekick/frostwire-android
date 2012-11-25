@@ -1,3 +1,8 @@
+FrostWire 1.0.5
+ - UX fix, transfers window is shown after starting a peer download,
+   respecting the user setting for this behavior.
+ - Fixes reported crashes on 1.0.4.
+
 FrostWire 1.0.4
  - UX Improvement on internet search box, hints the user current
    search context.
