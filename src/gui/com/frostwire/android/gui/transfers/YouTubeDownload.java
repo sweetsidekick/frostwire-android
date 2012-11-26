@@ -48,6 +48,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
+import com.frostwire.android.util.IOUtils;
 import com.frostwire.mp4.DefaultMp4Builder;
 import com.frostwire.mp4.IsoFile;
 import com.frostwire.mp4.Movie;
@@ -749,7 +750,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
                 jpgFile.deleteOnExit();
             }
 
-            fis.close();
+            IOUtils.closeQuietly(fis);
 
             return true;
         } catch (Throwable e) {

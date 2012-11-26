@@ -64,6 +64,8 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.frostwire.android.util.IOUtils;
+
 import android.util.Log;
 
 /**
@@ -256,7 +258,7 @@ public class HttpFetcher {
             }
             Log.e(TAG, "Error downloading from: " + uri + ", e: " + e.getMessage());
         } finally {
-            out.close();
+            IOUtils.closeQuietly(out);
         }
     }
 
