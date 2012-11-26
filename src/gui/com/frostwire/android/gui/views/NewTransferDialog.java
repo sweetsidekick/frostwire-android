@@ -90,6 +90,7 @@ public class NewTransferDialog extends AbstractDialog {
             sizeString = UIUtils.getBytesInHuman(searchResult.getSize());
         }
 
+        //TODO: 7 NPEs reported on this line.
         textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, searchResult.getDisplayName(), sizeString));
 
         setCancelable(true);
