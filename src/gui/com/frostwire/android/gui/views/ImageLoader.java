@@ -225,7 +225,9 @@ public final class ImageLoader {
 
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            if (imageViewReused(imageToLoad)) {
+            if (imageToLoad==null || 
+                imageToLoad.key == null || 
+                imageViewReused(imageToLoad)) {
                 return null;
             }
             Bitmap bmp = null;
@@ -241,7 +243,7 @@ public final class ImageLoader {
             if (bmp != null) {
                 cache.put(imageToLoad.key.hashCode(), bmp);
 
-                if (imageToLoad!=null && imageToLoad.key != null && isKeyRemote(imageToLoad.key)) {
+                if (isKeyRemote(imageToLoad.key)) {
                     if (!diskCache.containsKey(imageToLoad.key)) {
                         diskCache.put(imageToLoad.key, bmp);
                     }
