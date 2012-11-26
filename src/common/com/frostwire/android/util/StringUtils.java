@@ -450,7 +450,13 @@ public class StringUtils {
     }
 
     public static String getLocaleString(Map<String, String> strMap, String defaultStr) {
-        String str = strMap.get(Locale.getDefault().getLanguage());
+        String localeLanguageCode = Locale.getDefault().getLanguage();
+        if (StringUtils.isNullOrEmpty(localeLanguageCode, true)) {
+            localeLanguageCode = "en";
+        }
+        
+        
+        String str = strMap.get(localeLanguageCode);
         if (StringUtils.isNullOrEmpty(str, true)) {
             str = defaultStr;
         }
