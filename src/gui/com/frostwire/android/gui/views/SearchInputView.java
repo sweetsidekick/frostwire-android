@@ -38,6 +38,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.search.SuggestionsAdapter;
+import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 
 /**
@@ -193,6 +194,10 @@ public class SearchInputView extends LinearLayout {
         popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchinput_menu_mediatype_background));
         popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+        if (OSUtils.isKindleFire()) {
+            popup.setHeight(450);
+        }
 
         return popup;
     }
