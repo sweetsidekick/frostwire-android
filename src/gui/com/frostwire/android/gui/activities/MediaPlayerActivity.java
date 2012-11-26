@@ -372,14 +372,19 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         return artwork;
     }
 
+    
     private void enableLock(boolean enable) {
-        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-        KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-
-        if (enable) {
-            lock.reenableKeyguard();
-        } else {
-            lock.disableKeyguard();
+        try {
+            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+            KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+    
+            if (enable) {
+                lock.reenableKeyguard();
+            } else {
+                lock.disableKeyguard();
+            }
+        } catch (Exception e) {
+            //the kindle fire HD doesn't care about DISABLE_KEYGUARD being on the manifest.
         }
     }
 
