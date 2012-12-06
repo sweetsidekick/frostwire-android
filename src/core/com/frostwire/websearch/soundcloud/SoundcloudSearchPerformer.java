@@ -100,7 +100,7 @@ public class SoundcloudSearchPerformer implements WebSearchPerformer {
     }
 
     public String getUrl(int page, String encodedKeywords) {
-        return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + encodedKeywords;
+        return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + encodedKeywords + "&q[downloadable]=true&advanced=1";
     }
 
     public String getRegex() {
