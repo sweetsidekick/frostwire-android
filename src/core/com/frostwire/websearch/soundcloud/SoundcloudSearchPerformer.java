@@ -21,6 +21,7 @@ package com.frostwire.websearch.soundcloud;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,16 +40,16 @@ public class SoundcloudSearchPerformer implements WebSearchPerformer {
 
     private static final int SOUNDCLOUD_MAX_RESULTS = 8;
 
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM, dd yyyy HH:mm:ss Z");
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM, dd yyyy HH:mm:ss Z", Locale.US);
 
     public List<WebSearchResult> search(String keywords) {
         List<WebSearchResult> result = new ArrayList<WebSearchResult>();
 
         keywords = UrlUtils.encode(keywords);
 
-        int pages = SOUNDCLOUD_MAX_RESULTS / 10;
+        int pages = SOUNDCLOUD_MAX_RESULTS / 4;
 
-        for (int i = 0; i <= pages; i++) {
+        for (int i = 0; i < pages; i++) {
             result.addAll(searchPage(i + 1, keywords));
         }
 
