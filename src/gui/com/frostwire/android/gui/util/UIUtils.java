@@ -321,10 +321,8 @@ public final class UIUtils {
 
     public static String getMimeType(String filePath) {
         try {
-            URL u = new URL("file://" + filePath);
-            URLConnection uc = null;
-            uc = u.openConnection();
-            return uc.getContentType();
+            FileNameMap fnameMap = URLConnection.getFileNameMap();
+            return fnameMap.getContentTypeFor(filePath);
         } catch (Throwable e) {
             Log.e(TAG, "Failed to read mime type for: " + filePath);
             return "";
