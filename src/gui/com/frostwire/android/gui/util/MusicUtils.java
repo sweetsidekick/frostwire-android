@@ -873,9 +873,11 @@ public class MusicUtils {
         // and we don't want to dither here because the image will be scaled down later
         sBitmapOptionsCache.inPreferredConfig = Bitmap.Config.RGB_565;
         sBitmapOptionsCache.inDither = false;
+        sBitmapOptionsCache.inPurgeable = true;
 
         sBitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
         sBitmapOptions.inDither = false;
+        sBitmapOptions.inPurgeable = true;
     }
 
     /*public static void initAlbumArtCache() {
@@ -1057,21 +1059,28 @@ public class MusicUtils {
         }
 
         try {
+            /**
+             * This option should (according to Facebook) load the bitmap on the native heap
+             * thus helping us with the annoying out of memory errors we've come across.
+             */
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPurgeable = true;
+
+            Uri uri = null;
+            
             if (albumid < 0) {
-                Uri uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
-                ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-                if (pfd != null) {
-                    FileDescriptor fd = pfd.getFileDescriptor();
-                    bm = BitmapFactory.decodeFileDescriptor(fd);
-                }
+                uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
             } else {
-                Uri uri = ContentUris.withAppendedId(sArtworkUri, albumid);
-                ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-                if (pfd != null) {
-                    FileDescriptor fd = pfd.getFileDescriptor();
-                    bm = BitmapFactory.decodeFileDescriptor(fd);
-                }
+                uri = ContentUris.withAppendedId(sArtworkUri, albumid);
             }
+
+            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
+            
+            if (pfd != null) {
+                FileDescriptor fd = pfd.getFileDescriptor();
+                bm = BitmapFactory.decodeFileDescriptor(fd,null,options);
+            }
+            
         } catch (IllegalStateException ex) {
         } catch (FileNotFoundException ex) {
         }
@@ -1084,6 +1093,8 @@ public class MusicUtils {
     private static Bitmap getDefaultArtwork(Context context) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opts.inPurgeable = true;
+        
         return BitmapFactory.decodeStream(
                 context.getResources().openRawResource(R.drawable.artwork_default), null, opts);
     }
