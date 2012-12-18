@@ -19,8 +19,6 @@
 package com.frostwire.android.gui.util;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -57,6 +55,8 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.util.MimeDetector;
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
@@ -321,11 +321,10 @@ public final class UIUtils {
 
     public static String getMimeType(String filePath) {
         try {
-            FileNameMap fnameMap = URLConnection.getFileNameMap();
-            return fnameMap.getContentTypeFor(filePath);
+            return MimeDetector.getMimeType(FilenameUtils.getExtension(filePath));
         } catch (Throwable e) {
             Log.e(TAG, "Failed to read mime type for: " + filePath);
-            return "";
+            return MimeDetector.UNKNOWN;
         }
     }
 
