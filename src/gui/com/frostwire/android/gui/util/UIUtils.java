@@ -69,7 +69,7 @@ public final class UIUtils {
 
     private static final String TAG = "FW.UIUtils";
 
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm:ss aa");
+    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm:ss aa", Locale.US);
 
     /**
      * Localizable Number Format constant for the current default locale.
@@ -236,7 +236,7 @@ public final class UIUtils {
         for (i = 0; size > 1024; i++) {
             size /= 1024f;
         }
-        return String.format("%.2f %s", size, BYTE_UNITS[i]);
+        return String.format(Locale.US, "%.2f %s", size, BYTE_UNITS[i]);
     }
 
     public static String getBytesInHuman(double size) {
@@ -244,7 +244,7 @@ public final class UIUtils {
         for (i = 0; size > 1024; i++) {
             size /= 1024f;
         }
-        return String.format("%.2f %s", size, BYTE_UNITS[i]);
+        return String.format(Locale.US, "%.2f %s", size, BYTE_UNITS[i]);
     }
 
     /**

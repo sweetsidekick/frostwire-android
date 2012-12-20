@@ -1,3 +1,6 @@
+FrostWire 1.0.6
+ - Improved mime type detection.
+ 
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
  - UX fix, transfers window is shown after starting a peer download,
