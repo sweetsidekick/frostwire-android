@@ -21,6 +21,8 @@ package com.frostwire.mp4;
 //import com.coremedia.iso.Hex;
 //import com.coremedia.iso.IsoFile;
 //import com.coremedia.iso.IsoTypeWriter;
+import android.util.Log;
+
 import com.frostwire.mp4.boxes.Box;
 import com.frostwire.mp4.boxes.ContainerBox;
 import com.frostwire.mp4.boxes.UserBox;
@@ -111,7 +113,9 @@ public abstract class AbstractBox implements Box {
     }
 
     public void getBox(WritableByteChannel os) throws IOException {
-        ByteBuffer bb = ByteBuffer.allocate(l2i(getSize()));
+        int intSize = l2i(getSize());
+        Log.i("FW.AbstractBox boxSize to allocate:",String.valueOf(intSize));
+        ByteBuffer bb = ByteBuffer.allocate(intSize);
         getHeader(bb);
         if (content == null) {
             getContent(bb);
