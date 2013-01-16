@@ -151,7 +151,9 @@ public final class PeerManager {
     private void updatePeerCache2(String udn, Peer peer, boolean disconnected) {
         if (disconnected) {
             Peer p = addressMap.remove(udn);
-            peerCache.remove(p);
+            if (p != null) {
+                peerCache.remove(p);
+            }
         } else {
             addressMap.put(udn, peer);
             updatePeerCache(peer, disconnected);

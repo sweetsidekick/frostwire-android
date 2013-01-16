@@ -184,10 +184,12 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
     public void start() {
         try {
             final HttpDownloadLink link = decrypt();
-            if (sr.getResultType().equals(ResultType.AUDIO)) {
-                link.setFileName(link.getFileName().replace(".mp4", ".m4a"));
-            }
             if (link != null) {
+
+                if (sr.getResultType().equals(ResultType.AUDIO)) {
+                    link.setFileName(link.getFileName().replace(".mp4", ".m4a"));
+                }
+
                 delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
