@@ -56,11 +56,17 @@ public class PromotionsHandler {
 
     public static class Slide {
 
+        /** Open the URL if available, don't download */
+        public static final int DOWNLOAD_METHOD_OPEN_URL = -1;
+        
         /** Download the torrent file */
         public static final int DOWNLOAD_METHOD_TORRENT = 0;
 
         /** Download the file via HTTP */
         public static final int DOWNLOAD_METHOD_HTTP = 1;
+        
+        /** Download and install Pokki (unused on android for now) */
+        public static final int DOWNLOAD_METHOD_INSTALL_POKKI = 2;
 
         /**
          * http address where to go if user clicks on this slide

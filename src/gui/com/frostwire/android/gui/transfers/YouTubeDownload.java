@@ -677,7 +677,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
         public String desc;
     }
 
-    private boolean demuxMP4Audio(HttpDownloadLink dl, HttpDownload delegate, String videoLink) {
+    private static boolean demuxMP4Audio(HttpDownloadLink dl, HttpDownload delegate, String videoLink) {
         String filename = delegate.getSavePath().getAbsolutePath();
         try {
             status = STATUS_VERIFYING;
