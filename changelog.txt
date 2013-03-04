@@ -1,3 +1,8 @@
+FrostWire 1.0.7
+ - FrostWire won't disable screen locking during audio playback.
+   It's now up to the user to set longer auto-locking timeouts if
+   they want to use FrostWire as an audio player in their vehicles.
+
 FrostWire 1.0.6
  - Improved mime type detection.
  
