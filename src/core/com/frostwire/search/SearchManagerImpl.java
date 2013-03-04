@@ -1,5 +1,6 @@
 package com.frostwire.search;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,7 +21,7 @@ public class SearchManagerImpl implements SearchManager {
 
     public SearchManagerImpl() {
         this.executor = Executors.newSingleThreadExecutor();
-        this.tasks = new LinkedList<SearchTask>();
+        this.tasks = Collections.synchronizedList(new LinkedList<SearchTask>());
     }
 
     @Override
@@ -44,8 +45,10 @@ public class SearchManagerImpl implements SearchManager {
 
     @Override
     public void stop() {
-        for (SearchTask task : new LinkedList<SearchTask>(tasks)) {
-            task.stop();
+        synchronized (tasks) {
+            for (SearchTask task : tasks) {
+                task.stop();
+            }
         }
     }
 
