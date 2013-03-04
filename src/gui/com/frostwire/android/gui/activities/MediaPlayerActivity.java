@@ -224,29 +224,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
 
         if (mediaFD != null) {
-            TextView artist = findView(R.id.activity_mediaplayer_artist);
-            if (!StringUtils.isNullOrEmpty(mediaFD.artist, true)) {
-                artist.setText(mediaFD.artist);
-            }
-            TextView title = findView(R.id.activity_mediaplayer_title);
-            if (!StringUtils.isNullOrEmpty(mediaFD.title, true)) {
-                title.setText(mediaFD.title);
-            }
-            TextView album = findView(R.id.activity_mediaplayer_album);
-            if (!StringUtils.isNullOrEmpty(mediaFD.album, true)) {
-                album.setText(mediaFD.album);
-            }
-
-            ImageView artworkImageView = findView(R.id.activity_mediaplayer_artwork);
-            ImageLoader imageLoader = ImageLoader.getDefault();
-            String artworkKey = "player.artwork:"+mediaFD.id;
-            
-            if (!imageLoader.hasBitmap(artworkKey)) {
-                imageLoader.cacheBitmap(artworkKey, readArtWork());
-            }
-            
-            imageLoader.displayImage(artworkKey, artworkImageView, null);
-            
+            refreshUIData();
         } else {
             Engine.instance().getMediaPlayer().stop();
         }
@@ -308,6 +286,31 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
     }
 
+    private void refreshUIData() {
+        TextView artist = findView(R.id.activity_mediaplayer_artist);
+        if (!StringUtils.isNullOrEmpty(mediaFD.artist, true)) {
+            artist.setText(mediaFD.artist);
+        }
+        TextView title = findView(R.id.activity_mediaplayer_title);
+        if (!StringUtils.isNullOrEmpty(mediaFD.title, true)) {
+            title.setText(mediaFD.title);
+        }
+        TextView album = findView(R.id.activity_mediaplayer_album);
+        if (!StringUtils.isNullOrEmpty(mediaFD.album, true)) {
+            album.setText(mediaFD.album);
+        }
+
+        ImageView artworkImageView = findView(R.id.activity_mediaplayer_artwork);
+        ImageLoader imageLoader = ImageLoader.getDefault();
+        String artworkKey = "player.artwork:"+mediaFD.id;
+        
+        if (!imageLoader.hasBitmap(artworkKey)) {
+            imageLoader.cacheBitmap(artworkKey, readArtWork());
+        }
+        
+        imageLoader.displayImage(artworkKey, artworkImageView, null);
+    }
+
     private void initGestures() {
         LinearLayout lowestLayout = findView(R.id.activity_mediaplayer_layout);
         lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
@@ -333,7 +336,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     @Override
     protected void onResume() {
         super.onResume();
-
+        
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
@@ -349,8 +352,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void refreshFD() {
+        if (Engine.instance().getMediaPlayer() != null) {
+            mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
+        }
+                
         if (mediaFD != null) {
-            mediaFD = Librarian.instance().getFileDescriptor(mediaFD.fileType, mediaFD.id, false);
+            refreshUIData();
         }
     }
 
