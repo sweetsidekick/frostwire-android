@@ -64,9 +64,10 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.frostwire.android.util.IOUtils;
-
 import android.util.Log;
+
+import com.frostwire.android.util.IOUtils;
+import com.frostwire.util.UserAgentGenerator;
 
 /**
  * A Blocking HttpClient.

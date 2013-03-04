@@ -48,6 +48,8 @@ import org.apache.http.util.EntityUtils;
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
+import com.frostwire.util.UserAgentGenerator;
+
 /**
  * A Blocking HttpClient.
  * Use fetch() to retrieve the byte[]

@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
-
-import java.util.concurrent.TimeUnit;
+package com.frostwire.util;
 
 /**
  * 
@@ -25,13 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author aldenml
  *
  */
-public interface SearchManager {
-
-    public void registerListener(SearchResultListener listener);
-
-    public void perform(SearchPerformer performer);
-    
-    public void stop();
-
-    public boolean shutdown(long timeout, TimeUnit unit);
+public enum HttpClientType {
+    PureJava,
+    Apache
 }

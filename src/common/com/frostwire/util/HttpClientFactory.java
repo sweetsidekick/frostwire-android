@@ -1,7 +1,7 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
  * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
- 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
-
-import java.util.concurrent.TimeUnit;
+package com.frostwire.util;
 
 /**
  * 
@@ -25,13 +23,23 @@ import java.util.concurrent.TimeUnit;
  * @author aldenml
  *
  */
-public interface SearchManager {
+public class HttpClientFactory {
 
-    public void registerListener(SearchResultListener listener);
+    private HttpClientFactory() {
+    }
 
-    public void perform(SearchPerformer performer);
-    
-    public void stop();
+    public static HttpClient newInstance(HttpClientType type) {
+        switch (type) {
+        case Apache:
+            throw new UnsupportedOperationException();
+        case PureJava:
+            return new FWHttpClient();
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
 
-    public boolean shutdown(long timeout, TimeUnit unit);
+    public static HttpClient newDefaultInstance() {
+        return newInstance(HttpClientType.PureJava);
+    }
 }
