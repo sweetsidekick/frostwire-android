@@ -1,14 +1,14 @@
 package com.frostwire.search;
 
-public class SearchResult {
+public class SearchResult<T> {
 
-    private final Object value;
+    private final T value;
 
-    public SearchResult(Object value) {
+    public SearchResult(T value) {
         this.value = value;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 }
