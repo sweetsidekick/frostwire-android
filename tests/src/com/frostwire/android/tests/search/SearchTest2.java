@@ -1,6 +1,7 @@
 package com.frostwire.android.tests.search;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +46,10 @@ public class SearchTest2 extends TestCase {
             public void perform() {
                 listener.onResults(this, results);
             }
+
+            @Override
+            public void stop() {
+            }
         });
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
@@ -66,10 +71,75 @@ public class SearchTest2 extends TestCase {
             public void perform() {
                 // not calling finished here
             }
+
+            @Override
+            public void stop() {
+            }
         });
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
 
         assertTrue(l.isFinished());
+    }
+
+    public void testStopWithFastPerformers() {
+        runStopWithPerformers(10, 0);
+    }
+
+    public void testStopWithMediumFastPerformers() {
+        runStopWithPerformers(10, 2000);
+    }
+
+    public void testStopWithSlowPerformers() {
+        runStopWithPerformers(10, 20000);
+    }
+
+    public void runStopWithPerformers(int n, long timeMillis) {
+        List<SearchPerformer> performers = createTimedPerformers(10, 2000);
+
+        MockSearchResultListener l = new MockSearchResultListener();
+
+        manager.registerListener(l);
+
+        for (SearchPerformer performer : performers) {
+            manager.perform(performer);
+        }
+
+        assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
+
+        assertTrue(l.isFinished());
+    }
+
+    private List<SearchPerformer> createTimedPerformers(int n, final long timeMillis) {
+        List<SearchPerformer> performers = new LinkedList<SearchPerformer>();
+
+        for (int i = 0; i < n; i++) {
+            performers.add(new SearchPerformer() {
+
+                private Object sync = new Object();
+
+                @Override
+                public void registerListener(SearchResultListener listener) {
+                }
+
+                @Override
+                public void perform() {
+                    try {
+                        sync.wait(timeMillis);
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
+                }
+
+                @Override
+                public void stop() {
+                    synchronized (sync) {
+                        sync.notifyAll();
+                    }
+                }
+            });
+        }
+
+        return performers;
     }
 }

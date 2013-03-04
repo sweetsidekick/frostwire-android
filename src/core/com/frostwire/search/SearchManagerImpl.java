@@ -1,5 +1,6 @@
 package com.frostwire.search;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,12 +13,14 @@ public class SearchManagerImpl implements SearchManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchManagerImpl.class);
 
-    private ExecutorService executor;
+    private final ExecutorService executor;
+    private final List<SearchTask> tasks;
 
     private SearchResultListener listener;
 
     public SearchManagerImpl() {
-        executor = Executors.newSingleThreadExecutor();
+        this.executor = Executors.newSingleThreadExecutor();
+        this.tasks = new LinkedList<SearchTask>();
     }
 
     @Override
@@ -29,14 +32,26 @@ public class SearchManagerImpl implements SearchManager {
     public void perform(SearchPerformer performer) {
         if (performer != null) {
             performer.registerListener(new PerformerResultListener(this));
-            executor.execute(new SearchTask(this, performer));
+
+            SearchTask task = new SearchTask(this, performer);
+
+            tasks.add(task);
+            executor.execute(task);
         } else {
             LOG.warn("Search performer is null, review your logic");
         }
     }
 
     @Override
+    public void stop() {
+        for (SearchTask task : new LinkedList<SearchTask>(tasks)) {
+            task.stop();
+        }
+    }
+
+    @Override
     public boolean shutdown(long timeout, TimeUnit unit) {
+        stop();
         executor.shutdown();
         try {
             if (!executor.awaitTermination(timeout, unit)) {
@@ -106,6 +121,10 @@ public class SearchManagerImpl implements SearchManager {
             this.performer = performer;
         }
 
+        public void stop() {
+            performer.stop();
+        }
+
         @Override
         public void run() {
             try {
@@ -113,6 +132,7 @@ public class SearchManagerImpl implements SearchManager {
             } catch (Throwable e) {
                 LOG.warn("Error performing search: " + performer);
             } finally {
+                manager.tasks.remove(this);
                 manager.onFinished(performer);
             }
         }
