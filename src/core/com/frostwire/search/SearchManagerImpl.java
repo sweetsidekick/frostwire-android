@@ -69,7 +69,7 @@ public class SearchManagerImpl implements SearchManager {
             Thread.currentThread().interrupt();
         }
 
-        return true;
+        return tasks.isEmpty();
     }
 
     protected void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
