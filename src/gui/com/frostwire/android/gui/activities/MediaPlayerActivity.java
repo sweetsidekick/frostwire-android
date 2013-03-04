@@ -22,9 +22,6 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -342,8 +339,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         registerReceiver(broadcastReceiver, filter);
 
         refreshFD();
-
-        enableLock(false);
     }
 
     @Override
@@ -351,7 +346,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         super.onPause();
 
         unregisterReceiver(broadcastReceiver);
-        enableLock(true);
     }
 
     private void refreshFD() {
@@ -370,22 +364,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
         
         return artwork;
-    }
-
-    
-    private void enableLock(boolean enable) {
-        try {
-            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-            KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-    
-            if (enable) {
-                lock.reenableKeyguard();
-            } else {
-                lock.disableKeyguard();
-            }
-        } catch (Exception e) {
-            //the kindle fire HD doesn't care about DISABLE_KEYGUARD being on the manifest.
-        }
     }
 
     private Bitmap applyEffect(Bitmap bmp) {
