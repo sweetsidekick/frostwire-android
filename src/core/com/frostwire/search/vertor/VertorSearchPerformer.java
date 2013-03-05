@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.isohunt;
+package com.frostwire.search.vertor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,26 +32,26 @@ import com.frostwire.websearch.WebSearchResult;
  * @author aldenml
  *
  */
-public class ISOHuntSearchPerformer extends PagedWebSearchPerformer {
+public class VertorSearchPerformer extends PagedWebSearchPerformer {
 
-    public ISOHuntSearchPerformer(String keywords, int timeout) {
+    public VertorSearchPerformer(String keywords, int timeout) {
         super(keywords, timeout, 1);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://isohunt.com/js/json.php?ihq=" + encodedKeywords + "&start=1&rows=100&sort=seeds";
+        return "http://www.vertor.com/index.php?mod=json&search=&words=" + encodedKeywords;
     }
 
     @Override
     protected List<? extends SearchResult<?>> searchPage(String page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        ISOHuntResponse response = JsonUtils.toObject(page, ISOHuntResponse.class);
+        VertorResponse response = JsonUtils.toObject(page, VertorResponse.class);
 
-        for (ISOHuntItem item : response.items.list) {
+        for (VertorItem item : response.results) {
             if (!isStopped()) {
-                TorrentWebSearchResult sr = new ISOHuntWebSearchResult(item);
+                TorrentWebSearchResult sr = new VertorResponseWebSearchResult(item);
                 result.add(new SearchResult<WebSearchResult>(sr));
             }
         }

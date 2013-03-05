@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.vertor;
+package com.frostwire.search.vertor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

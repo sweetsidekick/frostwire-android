@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.search.vertor.VertorItem;
+import com.frostwire.search.vertor.VertorResponse;
+import com.frostwire.search.vertor.VertorResponseWebSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.JsonSearchPerformer;
 import com.frostwire.websearch.TorrentWebSearchResult;

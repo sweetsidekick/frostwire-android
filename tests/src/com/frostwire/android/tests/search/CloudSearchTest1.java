@@ -26,6 +26,7 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.WebSearchPerformer;
 import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
+import com.frostwire.search.vertor.VertorSearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
@@ -49,6 +50,11 @@ public class CloudSearchTest1 extends TestCase {
     @MediumTest
     public void testISOHunt() {
         testPerformer(new ISOHuntSearchPerformer("frostclick", 5000));
+    }
+    
+    @MediumTest
+    public void testVertor() {
+        testPerformer(new VertorSearchPerformer("frostclick", 5000));
     }
 
     private void testPerformer(WebSearchPerformer performer) {
