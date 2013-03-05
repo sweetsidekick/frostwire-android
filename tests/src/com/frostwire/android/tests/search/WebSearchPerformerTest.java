@@ -47,7 +47,7 @@ public class WebSearchPerformerTest extends TestCase {
     private String encodeKeywords(String keywords) {
         final StringBuilder sb = new StringBuilder();
 
-        WebSearchPerformer p = new WebSearchPerformer(keywords, 0) {
+        WebSearchPerformer p = new WebSearchPerformer(0, keywords, 0) {
             @Override
             public void perform() {
                 sb.append(encodeKeywords());

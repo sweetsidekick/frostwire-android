@@ -39,7 +39,8 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
     private final int timeout;
     private final HttpClient client;
 
-    public WebSearchPerformer(String keywords, int timeout) {
+    public WebSearchPerformer(int token, String keywords, int timeout) {
+        super(token);
         this.keywords = keywords;
         this.timeout = timeout;
         this.client = HttpClientFactory.newDefaultInstance();

@@ -61,6 +61,11 @@ public class SearchTest2 extends TestCase {
             private SearchResultListener listener;
 
             @Override
+            public int getToken() {
+                return 0;
+            }
+
+            @Override
             public void registerListener(SearchResultListener listener) {
                 this.listener = listener;
             }
@@ -90,6 +95,11 @@ public class SearchTest2 extends TestCase {
         SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
         manager.perform(new SearchPerformer() {
+
+            @Override
+            public int getToken() {
+                return 0;
+            }
 
             @Override
             public void registerListener(SearchResultListener listener) {
@@ -149,6 +159,11 @@ public class SearchTest2 extends TestCase {
             performers.add(new SearchPerformer() {
 
                 private Object sync = new Object();
+
+                @Override
+                public int getToken() {
+                    return 0;
+                }
 
                 @Override
                 public void registerListener(SearchResultListener listener) {

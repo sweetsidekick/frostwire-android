@@ -33,8 +33,8 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  */
 public class VertorSearchPerformer extends PagedWebSearchPerformer {
 
-    public VertorSearchPerformer(String keywords, int timeout) {
-        super(keywords, timeout, 1);
+    public VertorSearchPerformer(int token, String keywords, int timeout) {
+        super(token, keywords, timeout, 1);
     }
 
     @Override

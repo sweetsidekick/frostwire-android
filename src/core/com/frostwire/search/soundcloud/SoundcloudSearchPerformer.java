@@ -44,8 +44,8 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     private static final String REGEX = "(?is)<a href=\"http://i1.sndcdn.com/artworks-(.*?)\" class=\"artwork\".*?<abbr title='(.*?)'.*?window.SC.bufferTracks.push\\((.*?)\\);";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-    public SoundcloudSearchPerformer(String keywords, int timeout) {
-        super(keywords, timeout, MAX_RESULTS / 4);
+    public SoundcloudSearchPerformer(int token, String keywords, int timeout) {
+        super(token, keywords, timeout, MAX_RESULTS / 4);
     }
 
     @Override

@@ -32,8 +32,8 @@ import com.frostwire.util.JsonUtils;
  */
 public class ArchiveSearchPerformer extends PagedWebSearchPerformer {
 
-    public ArchiveSearchPerformer(String keywords, int timeout) {
-        super(keywords, timeout, 1);
+    public ArchiveSearchPerformer(int token, String keywords, int timeout) {
+        super(token, keywords, timeout, 1);
     }
 
     @Override

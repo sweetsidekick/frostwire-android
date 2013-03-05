@@ -17,6 +17,7 @@
 
 package com.frostwire.android.tests.search;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -42,37 +43,37 @@ public class CloudSearchTest1 extends TestCase {
 
     @MediumTest
     public void testSoundcloud() {
-        testPerformer(new SoundcloudSearchPerformer("frostclick", 5000));
+        testPerformer(new SoundcloudSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testYoutube() {
-        testPerformer(new YouTubeSearchPerformer("frostclick", 5000));
+        testPerformer(new YouTubeSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testISOHunt() {
-        testPerformer(new ISOHuntSearchPerformer("frostclick", 5000));
+        testPerformer(new ISOHuntSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testVertor() {
-        testPerformer(new VertorSearchPerformer("frostclick", 5000));
+        testPerformer(new VertorSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testMininova() {
-        testPerformer(new MininovaSearchPerformer("frostclick", 5000));
+        testPerformer(new MininovaSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testClearBits() {
-        testPerformer(new ClearBitsSearchPerformer("Big Buck Bunny", 5000));
+        testPerformer(new ClearBitsSearchPerformer(0, "Big Buck Bunny", 5000));
     }
 
     @MediumTest
     public void testExtratorrent() {
-        testPerformer(new ExtratorrentSearchPerformer("frostclick", 5000));
+        testPerformer(new ExtratorrentSearchPerformer(0, "frostclick", 5000));
     }
 
     private void testPerformer(WebSearchPerformer performer) {

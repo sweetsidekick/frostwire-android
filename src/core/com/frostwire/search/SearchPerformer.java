@@ -17,6 +17,7 @@
 
 package com.frostwire.search;
 
+
 /**
  * 
  * @author gubatron
@@ -24,6 +25,8 @@ package com.frostwire.search;
  *
  */
 public interface SearchPerformer {
+
+    public int getToken();
 
     public void registerListener(SearchResultListener listener);
 
