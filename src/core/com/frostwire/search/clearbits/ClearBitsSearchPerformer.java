@@ -25,7 +25,6 @@ import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -44,8 +43,8 @@ public class ClearBitsSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         ClearBitsResponse response = JsonUtils.toObject(page, ClearBitsResponse.class);
         response.fixItems();
@@ -53,7 +52,7 @@ public class ClearBitsSearchPerformer extends PagedWebSearchPerformer {
         for (ClearBitsItem bucket : response.results) {
             if (!isStopped()) {
                 TorrentWebSearchResult sr = new ClearBitsWebSearchResult(bucket);
-                result.add(new SearchResult<WebSearchResult>(sr));
+                result.add(sr);
             }
         }
 

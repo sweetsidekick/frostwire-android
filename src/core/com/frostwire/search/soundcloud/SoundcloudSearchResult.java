@@ -18,6 +18,7 @@
 
 package com.frostwire.search.soundcloud;
 
+import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.websearch.WebSearchResult;
 
 /**
@@ -25,12 +26,12 @@ import com.frostwire.websearch.WebSearchResult;
  * @author aldenml
  *
  */
-public class SoundcloudTrackSearchResult implements WebSearchResult {
+public class SoundcloudSearchResult implements WebSearchResult, CompleteSearchResult {
 
     private final SoundcloudItem item;
     private final String trackUrl;
 
-    public SoundcloudTrackSearchResult(SoundcloudItem item) {
+    public SoundcloudSearchResult(SoundcloudItem item) {
         this.item = item;
         trackUrl = "http://soundcloud.com" + item.uri;
     }

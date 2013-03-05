@@ -18,12 +18,14 @@
 
 package com.frostwire.websearch;
 
+import com.frostwire.search.CompleteSearchResult;
+
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface TorrentWebSearchResult extends WebSearchResult {
+public interface TorrentWebSearchResult extends WebSearchResult, CompleteSearchResult {
 
     public long getSize();
 

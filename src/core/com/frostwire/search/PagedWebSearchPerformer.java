@@ -39,11 +39,9 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
         for (int i = 1; !isStopped() && i <= pages; i++) {
             onResults(this, searchPage(i));
         }
-
-        onFinished(this);
     }
 
-    protected List<? extends SearchResult<?>> searchPage(int page) {
+    protected List<? extends SearchResult> searchPage(int page) {
         String url = getUrl(page, encodeKeywords());
         String text = fetch(url);
         return searchPage(text);
@@ -51,5 +49,5 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
 
     protected abstract String getUrl(int page, String encodedKeywords);
 
-    protected abstract List<? extends SearchResult<?>> searchPage(String page);
+    protected abstract List<? extends SearchResult> searchPage(String page);
 }

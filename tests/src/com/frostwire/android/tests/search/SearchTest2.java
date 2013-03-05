@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
-
 import android.test.suitebuilder.annotation.MediumTest;
 
+import com.frostwire.search.CrawlableSearchResult;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -39,16 +39,16 @@ import com.frostwire.search.SearchResultListener;
  */
 public class SearchTest2 extends TestCase {
 
-    private List<SearchResult<Integer>> results;
+    private List<SearchResult> results;
 
     @Override
     protected void setUp() throws Exception {
-        results = new ArrayList<SearchResult<Integer>>();
-        results.add(new SearchResult<Integer>(1));
-        results.add(new SearchResult<Integer>(2));
-        results.add(new SearchResult<Integer>(3));
-        results.add(new SearchResult<Integer>(4));
-        results.add(new SearchResult<Integer>(5));
+        results = new ArrayList<SearchResult>();
+        results.add(newIntegerSearchResult(1));
+        results.add(newIntegerSearchResult(2));
+        results.add(newIntegerSearchResult(3));
+        results.add(newIntegerSearchResult(4));
+        results.add(newIntegerSearchResult(5));
     }
 
     public void testFixedNumberResults() {
@@ -68,6 +68,10 @@ public class SearchTest2 extends TestCase {
             @Override
             public void perform() {
                 listener.onResults(this, results);
+            }
+
+            @Override
+            public void crawl(CrawlableSearchResult sr) {
             }
 
             @Override
@@ -97,13 +101,15 @@ public class SearchTest2 extends TestCase {
             }
 
             @Override
+            public void crawl(CrawlableSearchResult sr) {
+            }
+
+            @Override
             public void stop() {
             }
         });
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
-
-        assertTrue(l.isFinished());
     }
 
     @MediumTest
@@ -134,8 +140,6 @@ public class SearchTest2 extends TestCase {
         }
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
-
-        assertTrue(l.isFinished());
     }
 
     private List<SearchPerformer> createTimedPerformers(int n, final long timeMillis) {
@@ -160,6 +164,10 @@ public class SearchTest2 extends TestCase {
                 }
 
                 @Override
+                public void crawl(CrawlableSearchResult sr) {
+                }
+
+                @Override
                 public void stop() {
                     synchronized (sync) {
                         sync.notifyAll();
@@ -169,5 +177,14 @@ public class SearchTest2 extends TestCase {
         }
 
         return performers;
+    }
+
+    private SearchResult newIntegerSearchResult(final int n) {
+        return new MockSearchResult() {
+            @Override
+            public String toString() {
+                return String.valueOf(n);
+            }
+        };
     }
 }

@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.search.soundcloud.SoundcloudTrackSearchResult;
+import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 
 /**
  * @author gubatron
@@ -27,9 +27,9 @@ import com.frostwire.search.soundcloud.SoundcloudTrackSearchResult;
  */
 public class SoundcloudEngineSearchResult implements SearchResult {
 
-    private final SoundcloudTrackSearchResult sr;
+    private final SoundcloudSearchResult sr;
 
-    public SoundcloudEngineSearchResult(SoundcloudTrackSearchResult sr) {
+    public SoundcloudEngineSearchResult(SoundcloudSearchResult sr) {
         this.sr = sr;
     }
 

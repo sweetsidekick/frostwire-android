@@ -25,7 +25,6 @@ import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -44,15 +43,15 @@ public class ExtratorrentSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         ExtratorrentResponse response = JsonUtils.toObject(page, ExtratorrentResponse.class);
 
         for (ExtratorrentItem item : response.list) {
             if (!isStopped()) {
                 TorrentWebSearchResult sr = new ExtratorrentResponseWebSearchResult(item);
-                result.add(new SearchResult<WebSearchResult>(sr));
+                result.add(sr);
             }
         }
 

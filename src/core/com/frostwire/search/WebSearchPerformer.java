@@ -46,7 +46,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
     }
 
     @Override
-    public void perform(SearchResult<?> sr) {
+    public void crawl(CrawlableSearchResult sr) {
         LOG.warn("Review your logic, calling deep search without implementation for: " + sr);
     }
 

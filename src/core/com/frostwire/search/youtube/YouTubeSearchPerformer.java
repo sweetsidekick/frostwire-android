@@ -48,8 +48,8 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         String json = fixJson(page);
 
@@ -58,9 +58,9 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
         for (YouTubeEntry entry : response.feed.entry) {
             if (!isStopped()) {
                 WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
-                result.add(new SearchResult<WebSearchResult>(vsr));
+                result.add(vsr);
                 WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
-                result.add(new SearchResult<WebSearchResult>(asr));
+                result.add(asr);
             }
         }
 

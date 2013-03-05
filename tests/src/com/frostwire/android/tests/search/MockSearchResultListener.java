@@ -38,38 +38,28 @@ public class MockSearchResultListener implements SearchResultListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockSearchResultListener.class);
 
-    private final List<SearchResult<?>> results;
+    private final List<SearchResult> results;
 
     private int numResults;
-    private boolean finished;
 
     public MockSearchResultListener() {
-        this.results = Collections.synchronizedList(new LinkedList<SearchResult<?>>());
+        this.results = Collections.synchronizedList(new LinkedList<SearchResult>());
     }
 
     public int getNumResults() {
         return numResults;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
     @Override
-    public void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
+    public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
         this.results.addAll(results);
         this.numResults += results.size();
     }
 
-    @Override
-    public void onFinished(SearchPerformer performer) {
-        this.finished = true;
-    }
-
     public void logResults() {
         synchronized (results) {
-            for (SearchResult<?> sr : results) {
-                LOG.info(sr.getValue().toString());
+            for (SearchResult sr : results) {
+                LOG.info(sr.toString());
             }
         }
     }

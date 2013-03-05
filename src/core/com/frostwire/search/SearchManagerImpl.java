@@ -117,23 +117,13 @@ public class SearchManagerImpl implements SearchManager {
         return tasks.isEmpty();
     }
 
-    protected void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
+    protected void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
         try {
             if (listener != null) {
                 listener.onResults(performer, results);
             }
         } catch (Throwable e) {
             LOG.warn("Error sending results back to receiver: " + e.getMessage());
-        }
-    }
-
-    protected void onFinished(SearchPerformer performer) {
-        try {
-            if (listener != null) {
-                listener.onFinished(performer);
-            }
-        } catch (Throwable e) {
-            LOG.warn("Error sending finished signal to receiver: " + e.getMessage());
         }
     }
 
@@ -146,13 +136,18 @@ public class SearchManagerImpl implements SearchManager {
         }
 
         @Override
-        public void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
-            manager.onResults(performer, results);
-        }
+        public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
+            List<SearchResult> list = new LinkedList<SearchResult>();
 
-        @Override
-        public void onFinished(SearchPerformer performer) {
-            // no need to call here, since it will be managed in the async task
+            for (SearchResult sr : results) {
+                if (sr instanceof CompleteSearchResult) {
+                    list.add(sr);
+                }
+            }
+
+            if (!list.isEmpty()) {
+                manager.onResults(performer, list);
+            }
         }
     }
 
@@ -178,7 +173,6 @@ public class SearchManagerImpl implements SearchManager {
                 LOG.warn("Error performing search: " + performer);
             } finally {
                 manager.tasks.remove(this);
-                manager.onFinished(performer);
             }
         }
     }

@@ -49,23 +49,13 @@ public abstract class AbstractSearchPerformer implements SearchPerformer {
         return stopped;
     }
 
-    protected void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
+    protected void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
         try {
             if (listener != null) {
                 listener.onResults(performer, results);
             }
         } catch (Throwable e) {
             LOG.warn("Error sending results back to receiver: " + e.getMessage());
-        }
-    }
-
-    protected void onFinished(SearchPerformer performer) {
-        try {
-            if (listener != null) {
-                listener.onFinished(performer);
-            }
-        } catch (Throwable e) {
-            LOG.warn("Error sending finished signal to receiver: " + e.getMessage());
         }
     }
 }

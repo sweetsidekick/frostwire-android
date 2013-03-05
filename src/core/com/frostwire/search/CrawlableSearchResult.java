@@ -23,13 +23,6 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface SearchPerformer {
+public interface CrawlableSearchResult extends SearchResult {
 
-    public void registerListener(SearchResultListener listener);
-
-    public void perform();
-
-    public void crawl(CrawlableSearchResult sr);
-
-    public void stop();
 }

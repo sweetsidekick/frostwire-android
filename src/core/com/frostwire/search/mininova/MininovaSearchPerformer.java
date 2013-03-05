@@ -25,7 +25,6 @@ import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -44,8 +43,8 @@ public class MininovaSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         //fix what seems to be an intentional JSON syntax typo put ther by mininova
         String json = page.replace("\"hash\":", ", \"hash\":");
@@ -54,7 +53,7 @@ public class MininovaSearchPerformer extends PagedWebSearchPerformer {
         for (MininovaVuzeItem item : response.results) {
             if (!isStopped()) {
                 TorrentWebSearchResult sr = new MininovaVuzeWebSearchResult(item);
-                result.add(new SearchResult<WebSearchResult>(sr));
+                result.add(sr);
             }
         }
 

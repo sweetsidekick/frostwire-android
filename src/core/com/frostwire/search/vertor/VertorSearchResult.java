@@ -20,6 +20,7 @@ package com.frostwire.search.vertor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import com.frostwire.websearch.TorrentWebSearchResult;
 
@@ -28,11 +29,11 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  * @author aldenml
  *
  */
-public class VertorResponseWebSearchResult implements TorrentWebSearchResult {
+public class VertorSearchResult implements TorrentWebSearchResult {
 
     private final VertorItem item;
 
-    public VertorResponseWebSearchResult(VertorItem item) {
+    public VertorSearchResult(VertorItem item) {
         this.item = item;
     }
 
@@ -47,7 +48,7 @@ public class VertorResponseWebSearchResult implements TorrentWebSearchResult {
 
     public long getCreationTime() {
         //8 Jun 11
-        SimpleDateFormat date = new SimpleDateFormat("dd MMM yy");
+        SimpleDateFormat date = new SimpleDateFormat("dd MMM yy", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.cdate).getTime();

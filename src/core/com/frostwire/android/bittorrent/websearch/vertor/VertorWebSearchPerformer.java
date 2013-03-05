@@ -24,7 +24,7 @@ import java.util.List;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.search.vertor.VertorItem;
 import com.frostwire.search.vertor.VertorResponse;
-import com.frostwire.search.vertor.VertorResponseWebSearchResult;
+import com.frostwire.search.vertor.VertorSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.JsonSearchPerformer;
 import com.frostwire.websearch.TorrentWebSearchResult;
@@ -46,7 +46,7 @@ public class VertorWebSearchPerformer extends JsonSearchPerformer {
         if (response != null && response.results != null)
             for (VertorItem item : response.results) {
 
-                TorrentWebSearchResult sr = new VertorResponseWebSearchResult(item);
+                TorrentWebSearchResult sr = new VertorSearchResult(item);
 
                 result.add(sr);
             }

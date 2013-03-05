@@ -54,8 +54,8 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         Matcher matcher = PATTERN.matcher(page);
 
@@ -72,9 +72,9 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
                 } catch (Throwable e) {
                     item.date = -1;
                 }
-                WebSearchResult sr = new SoundcloudTrackSearchResult(item);
+                WebSearchResult sr = new SoundcloudSearchResult(item);
                 if (sr != null) {
-                    result.add(new SearchResult<WebSearchResult>(sr));
+                    result.add(sr);
                     i++;
                 }
             } catch (Throwable e) {

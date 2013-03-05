@@ -18,14 +18,14 @@
 
 package com.frostwire.search.archive;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ArchiveSearchResult implements TorrentWebSearchResult {
+public class ArchiveSearchResult implements WebSearchResult {
 
     private final ArchiveItem item;
 

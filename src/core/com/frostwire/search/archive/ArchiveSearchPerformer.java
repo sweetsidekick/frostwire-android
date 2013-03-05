@@ -24,7 +24,6 @@ import java.util.List;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -45,15 +44,15 @@ public class ArchiveSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(String page) {
-        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+    protected List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
 
         ArchiveResponse response = JsonUtils.toObject(page, ArchiveResponse.class);
 
         for (ArchiveItem item : response.response.docs) {
             if (!isStopped()) {
                 ArchiveSearchResult sr = new ArchiveSearchResult(item);
-                result.add(new SearchResult<WebSearchResult>(sr));
+                result.add(sr);
             }
         }
 

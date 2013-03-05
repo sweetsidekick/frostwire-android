@@ -23,25 +23,6 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public class SearchResult<T> {
+public interface SearchResult {
 
-    private final T value;
-    private final boolean deeper;
-
-    public SearchResult(T value, boolean deeper) {
-        this.value = value;
-        this.deeper = deeper;
-    }
-
-    public SearchResult(T value) {
-        this(value, false);
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public boolean isDeeper() {
-        return deeper;
-    }
 }

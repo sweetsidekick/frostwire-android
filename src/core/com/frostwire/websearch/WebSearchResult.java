@@ -18,12 +18,14 @@
 
 package com.frostwire.websearch;
 
+import com.frostwire.search.SearchResult;
+
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchResult {
+public interface WebSearchResult extends SearchResult {
 
     public String getDisplayName();
     
