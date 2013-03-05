@@ -82,6 +82,17 @@ public class SearchManagerImpl implements SearchManager {
     }
 
     @Override
+    public void stop(int token) {
+        synchronized (tasks) {
+            for (SearchTask task : tasks) {
+                if (task.performer.getToken() == token) {
+                    task.stop();
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean shutdown(long timeout, TimeUnit unit) {
         stop();
         executor.shutdown();

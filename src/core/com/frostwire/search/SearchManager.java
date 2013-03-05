@@ -30,8 +30,10 @@ public interface SearchManager {
     public void registerListener(SearchResultListener listener);
 
     public void perform(SearchPerformer performer);
-    
+
     public void stop();
+
+    public void stop(int token);
 
     public boolean shutdown(long timeout, TimeUnit unit);
 }
