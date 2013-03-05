@@ -25,8 +25,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.WebSearchPerformer;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.WebSearchResult;
 
@@ -35,7 +35,7 @@ import com.frostwire.websearch.WebSearchResult;
  * @author aldenml
  *
  */
-public class SoundcloudSearchPerformer extends WebSearchPerformer {
+public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
 
     private static final int MAX_RESULTS = 16;
 
@@ -45,26 +45,15 @@ public class SoundcloudSearchPerformer extends WebSearchPerformer {
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     public SoundcloudSearchPerformer(String keywords, int timeout) {
-        super(keywords, timeout);
+        super(keywords, timeout, MAX_RESULTS / 4);
     }
 
     @Override
-    public void perform() {
-        int pages = MAX_RESULTS / 4;
-
-        for (int i = 1; i <= pages; i++) {
-            if (!isStopped()) {
-                onResults(this, searchPage(i, keywords));
-            }
-        }
-
-        onFinished(this);
-    }
-
-    private List<SearchResult<WebSearchResult>> searchPage(int page, String keywords) {
+    protected List<SearchResult<WebSearchResult>> searchPage(int page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        String html = client.get(getUrl(page), timeout);
+        String url = encodeUrl("http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1");
+        String html = client.get(url, timeout);
 
         Matcher matcher = PATTERN.matcher(html);
 
@@ -86,7 +75,7 @@ public class SoundcloudSearchPerformer extends WebSearchPerformer {
                     result.add(new SearchResult<WebSearchResult>(sr));
                     i++;
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 // do nothing
             }
         }
@@ -98,9 +87,5 @@ public class SoundcloudSearchPerformer extends WebSearchPerformer {
         //http://i1.sndcdn.com/artworks-000019588274-le8r71-crop.jpg?be0edad
         //https://i1.sndcdn.com/artworks-000019588274-le8r71-t500x500.jpg
         return "http://i1.sndcdn.com/artworks-" + str.substring(0, str.indexOf("-crop.")) + "-t300x300.jpg";
-    }
-
-    private String getUrl(int page) {
-        return encodeUrl("http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1");
     }
 }
