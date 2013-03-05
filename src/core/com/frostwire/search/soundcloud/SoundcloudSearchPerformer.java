@@ -27,12 +27,8 @@ import java.util.regex.Pattern;
 
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.WebSearchPerformer;
-import com.frostwire.util.HttpClient;
-import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.WebSearchResult;
-import com.frostwire.websearch.soundcloud.SoundcloudItem;
-import com.frostwire.websearch.soundcloud.SoundcloudTrackSearchResult;
 
 /**
  * @author gubatron
@@ -68,9 +64,7 @@ public class SoundcloudSearchPerformer extends WebSearchPerformer {
     private List<SearchResult<WebSearchResult>> searchPage(int page, String keywords) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        HttpClient c = HttpClientFactory.newDefaultInstance();
-
-        String html = c.get(getUrl(page), timeout);
+        String html = client.get(getUrl(page), timeout);
 
         Matcher matcher = PATTERN.matcher(html);
 

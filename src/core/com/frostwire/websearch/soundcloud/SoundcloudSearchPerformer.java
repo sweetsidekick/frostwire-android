@@ -26,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.search.soundcloud.SoundcloudItem;
+import com.frostwire.search.soundcloud.SoundcloudTrackSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;

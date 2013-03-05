@@ -26,9 +26,9 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
+import com.frostwire.search.soundcloud.SoundcloudTrackSearchResult;
 import com.frostwire.websearch.TorrentWebSearchResult;
 import com.frostwire.websearch.WebSearchResult;
-import com.frostwire.websearch.soundcloud.SoundcloudTrackSearchResult;
 import com.frostwire.websearch.youtube.YouTubeSearchResult;
 
 /**

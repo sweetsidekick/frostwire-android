@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.websearch.soundcloud.SoundcloudTrackSearchResult;
+import com.frostwire.search.soundcloud.SoundcloudTrackSearchResult;
 
 /**
  * @author gubatron
