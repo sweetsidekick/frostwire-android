@@ -43,26 +43,26 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(int page) {
+    protected String getUrl(int page) {
+        return String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS);
+    }
+
+    @Override
+    protected List<? extends SearchResult<?>> searchPage(String page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        String url = String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS);
-        String json = fetch(url);
-
-        json = fixJson(json);
+        String json = fixJson(page);
 
         YouTubeResponse response = JsonUtils.toObject(json, YouTubeResponse.class);
 
-        if (response != null && response.feed != null && response.feed.entry != null)
-            for (YouTubeEntry entry : response.feed.entry) {
-
-                if (!isStopped()) {
-                    WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
-                    result.add(new SearchResult<WebSearchResult>(vsr));
-                    WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
-                    result.add(new SearchResult<WebSearchResult>(asr));
-                }
+        for (YouTubeEntry entry : response.feed.entry) {
+            if (!isStopped()) {
+                WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
+                result.add(new SearchResult<WebSearchResult>(vsr));
+                WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
+                result.add(new SearchResult<WebSearchResult>(asr));
             }
+        }
 
         return result;
     }

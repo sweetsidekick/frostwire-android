@@ -49,13 +49,15 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult<?>> searchPage(int page) {
+    protected String getUrl(int page) {
+        return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1";
+    }
+
+    @Override
+    protected List<? extends SearchResult<?>> searchPage(String page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        String url = "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1";
-        String html = fetch(url);
-
-        Matcher matcher = PATTERN.matcher(html);
+        Matcher matcher = PATTERN.matcher(page);
 
         int max = MAX_RESULTS;
 

@@ -43,5 +43,13 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
         onFinished(this);
     }
 
-    protected abstract List<? extends SearchResult<?>> searchPage(int page);
+    protected List<? extends SearchResult<?>> searchPage(int page) {
+        String url = getUrl(page);
+        String text = fetch(url);
+        return searchPage(text);
+    }
+
+    protected abstract String getUrl(int page);
+
+    protected abstract List<? extends SearchResult<?>> searchPage(String page);
 }

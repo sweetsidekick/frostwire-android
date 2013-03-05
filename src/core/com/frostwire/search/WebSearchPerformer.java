@@ -50,7 +50,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         return get(encodeUrl(url));
     }
 
-    private String encodeUrl(String url) {
+    protected String encodeUrl(String url) {
         try {
             URL u = new URL(url);
             URI uri = new URI(u.getProtocol(), u.getUserInfo(), u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getRef());
@@ -62,7 +62,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         return url;
     }
 
-    private String get(String url) {
+    protected String get(String url) {
         return client.get(url, timeout);
     }
 }
