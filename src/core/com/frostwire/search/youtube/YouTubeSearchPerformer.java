@@ -16,19 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.websearch.youtube;
+package com.frostwire.search.youtube;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
-import com.frostwire.android.util.UrlUtils;
-import com.frostwire.search.youtube.YouTubeEntry;
-import com.frostwire.search.youtube.YouTubeResponse;
-import com.frostwire.search.youtube.YouTubeSearchResult;
+import com.frostwire.search.PagedWebSearchPerformer;
+import com.frostwire.search.SearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.HttpClient;
-import com.frostwire.websearch.WebSearchPerformer;
 import com.frostwire.websearch.WebSearchResult;
 
 /**
@@ -37,37 +34,38 @@ import com.frostwire.websearch.WebSearchResult;
  * @author aldenml
  *
  */
-public class YouTubeSearchPerformer implements WebSearchPerformer {
+public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
 
-    private static final int YOUTUBE_MAX_RESULTS = 10;
+    private static final int MAX_RESULTS = 10;
+
+    public YouTubeSearchPerformer(String keywords, int timeout) {
+        super(keywords, timeout, 1);
+    }
 
     @Override
-    public List<WebSearchResult> search(String keywords) {
-        List<WebSearchResult> result = new ArrayList<WebSearchResult>();
+    protected List<? extends SearchResult<?>> searchPage(int page) {
+        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        YouTubeResponse response = searchYouTube(keywords);
+        YouTubeResponse response = searchYouTube();
 
         if (response != null && response.feed != null && response.feed.entry != null)
             for (YouTubeEntry entry : response.feed.entry) {
 
-                WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
-                result.add(vsr);
-                WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
-                result.add(asr);
+                if (!isStopped()) {
+                    WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
+                    result.add(new SearchResult<WebSearchResult>(vsr));
+                    WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
+                    result.add(new SearchResult<WebSearchResult>(asr));
+                }
             }
 
         return result;
     }
 
-    private YouTubeResponse searchYouTube(String keywords) {
-        String q = UrlUtils.encode(keywords);
-        int maxResults = YOUTUBE_MAX_RESULTS;
+    private YouTubeResponse searchYouTube() {
 
-        String url = String.format("https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", q, maxResults);
-
-        HttpClient c = new HttpClient(url);
-
-        String json = c.get();
+        String url = encodeUrl(String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS));
+        String json = get(url);
 
         json = fixJson(json);
 

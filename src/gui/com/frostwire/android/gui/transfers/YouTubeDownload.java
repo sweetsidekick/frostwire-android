@@ -69,7 +69,7 @@ import com.frostwire.mp4.boxes.apple.AppleCoverBox;
 import com.frostwire.mp4.boxes.apple.AppleItemListBox;
 import com.frostwire.mp4.boxes.apple.AppleMediaTypeBox;
 import com.frostwire.mp4.boxes.apple.AppleTrackTitleBox;
-import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
+import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 
 /**
  * @author gubatron

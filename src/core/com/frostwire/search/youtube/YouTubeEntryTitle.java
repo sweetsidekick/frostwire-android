@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.websearch.youtube;
+package com.frostwire.search.youtube;
 
 /**
  * 
@@ -24,7 +24,7 @@ package com.frostwire.websearch.youtube;
  * @author aldenml
  *
  */
-public class YouTubeResponse {
+public class YouTubeEntryTitle {
 
-    public YouTubeFeed feed;
+    public String title;
 }

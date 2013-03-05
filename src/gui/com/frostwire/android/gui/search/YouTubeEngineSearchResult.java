@@ -18,8 +18,8 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.websearch.youtube.YouTubeSearchResult;
-import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
+import com.frostwire.search.youtube.YouTubeSearchResult;
+import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 
 /**
  * @author gubatron

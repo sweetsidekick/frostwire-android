@@ -37,14 +37,20 @@ public class SearchManagerImpl implements SearchManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchManagerImpl.class);
 
+    private static final int DEFAULT_NTHREADS = 4;
+
     private final ExecutorService executor;
     private final List<SearchTask> tasks;
 
     private SearchResultListener listener;
 
-    public SearchManagerImpl() {
-        this.executor = Executors.newSingleThreadExecutor();
+    public SearchManagerImpl(int nThreads) {
+        this.executor = Executors.newFixedThreadPool(nThreads);
         this.tasks = Collections.synchronizedList(new LinkedList<SearchTask>());
+    }
+
+    public SearchManagerImpl() {
+        this(DEFAULT_NTHREADS);
     }
 
     @Override

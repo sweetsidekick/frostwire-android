@@ -57,4 +57,8 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
         return url;
     }
+
+    protected String get(String url) {
+        return client.get(url, timeout);
+    }
 }

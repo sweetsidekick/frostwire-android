@@ -49,11 +49,11 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected List<SearchResult<WebSearchResult>> searchPage(int page) {
+    protected List<? extends SearchResult<?>> searchPage(int page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
         String url = encodeUrl("http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1");
-        String html = client.get(url, timeout);
+        String html = get(url);
 
         Matcher matcher = PATTERN.matcher(html);
 
