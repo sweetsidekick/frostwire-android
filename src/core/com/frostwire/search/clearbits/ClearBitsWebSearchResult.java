@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.mininova;
+package com.frostwire.search.clearbits;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,19 +28,20 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  * @author aldenml
  *
  */
-public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
+public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
 
-    private MininovaVuzeItem item;
+    private final ClearBitsItem item;
 
-    public MininovaVuzeWebSearchResult(MininovaVuzeItem item) {
+    public ClearBitsWebSearchResult(ClearBitsItem item) {
         this.item = item;
     }
 
     public long getCreationTime() {
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+        //2010-07-15T16:02:42Z
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         long result = System.currentTimeMillis();
         try {
-            result = date.parse(item.date).getTime();
+            result = date.parse(item.created_at).getTime();
         } catch (ParseException e) {
         }
         return result;
@@ -52,34 +53,34 @@ public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
     }
 
     public String getHash() {
-        return item.hash;
+        return item.hashstr;
     }
 
     public String getTorrentURI() {
-        return item.download;
+        return item.torrent_url;
     }
 
     public long getSize() {
-        return Long.valueOf(item.size);
-    }
-
-    @Override
-    public String getSource() {
-        return "Mininova";
+        return Long.valueOf(item.mb_size * 1024 * 1024);
     }
 
     public int getRank() {
-        return item.seeds + item.superseeds;
+        return item.seeds;
     }
 
     public String getTorrentDetailsURL() {
-        return item.cdp;
+        return item.location;
     }
 
     @Override
     public String getDisplayName() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public String getSource() {
+        return "ClearBits";
     }
 
     @Override

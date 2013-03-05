@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.clearbits;
+package com.frostwire.search.clearbits;
 
 /**
  * @author gubatron

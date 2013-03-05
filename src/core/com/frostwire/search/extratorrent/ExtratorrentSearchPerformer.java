@@ -16,17 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.extratorrent;
+package com.frostwire.search.extratorrent;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.android.util.StringUtils;
-import com.frostwire.search.extratorrent.ExtratorrentItem;
-import com.frostwire.search.extratorrent.ExtratorrentResponse;
-import com.frostwire.search.extratorrent.ExtratorrentResponseWebSearchResult;
+import com.frostwire.search.PagedWebSearchPerformer;
+import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.JsonSearchPerformer;
 import com.frostwire.websearch.TorrentWebSearchResult;
 import com.frostwire.websearch.WebSearchResult;
 
@@ -35,28 +32,30 @@ import com.frostwire.websearch.WebSearchResult;
  * @author aldenml
  *
  */
-public class ExtratorrentWebSearchPerformer extends JsonSearchPerformer {
+public class ExtratorrentSearchPerformer extends PagedWebSearchPerformer {
 
-    @Override
-    public List<WebSearchResult> search(String keywords) {
-        List<WebSearchResult> result = new ArrayList<WebSearchResult>();
-
-        ExtratorrentResponse response = searchExtratorrent(keywords);
-
-        if (response != null && response.list != null)
-            for (ExtratorrentItem item : response.list) {
-
-                TorrentWebSearchResult sr = new ExtratorrentResponseWebSearchResult(item);
-
-                result.add(sr);
-            }
-
-        return result;
+    public ExtratorrentSearchPerformer(String keywords, int timeout) {
+        super(keywords, timeout, 1);
     }
 
-    private ExtratorrentResponse searchExtratorrent(String keywords) {
-        String json = fetchJson("http://extratorrent.com/json/?search=" + StringUtils.encodeUrl(keywords));
+    @Override
+    protected String getUrl(int page, String encodedKeywords) {
+        return "http://extratorrent.com/json/?search=" + encodedKeywords;
+    }
 
-        return json != null ? JsonUtils.toObject(json, ExtratorrentResponse.class) : null;
+    @Override
+    protected List<? extends SearchResult<?>> searchPage(String page) {
+        List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
+
+        ExtratorrentResponse response = JsonUtils.toObject(page, ExtratorrentResponse.class);
+
+        for (ExtratorrentItem item : response.list) {
+            if (!isStopped()) {
+                TorrentWebSearchResult sr = new ExtratorrentResponseWebSearchResult(item);
+                result.add(new SearchResult<WebSearchResult>(sr));
+            }
+        }
+
+        return result;
     }
 }

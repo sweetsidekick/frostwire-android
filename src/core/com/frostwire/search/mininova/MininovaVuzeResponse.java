@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.mininova;
+package com.frostwire.search.mininova;
 
 import java.util.List;
 

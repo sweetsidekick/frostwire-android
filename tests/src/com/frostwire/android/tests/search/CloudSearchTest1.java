@@ -24,7 +24,10 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.WebSearchPerformer;
+import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
+import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
+import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.vertor.VertorSearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
@@ -51,10 +54,25 @@ public class CloudSearchTest1 extends TestCase {
     public void testISOHunt() {
         testPerformer(new ISOHuntSearchPerformer("frostclick", 5000));
     }
-    
+
     @MediumTest
     public void testVertor() {
         testPerformer(new VertorSearchPerformer("frostclick", 5000));
+    }
+
+    @MediumTest
+    public void testMininova() {
+        testPerformer(new MininovaSearchPerformer("frostclick", 5000));
+    }
+
+    @MediumTest
+    public void testClearBits() {
+        testPerformer(new ClearBitsSearchPerformer("Big Buck Bunny", 5000));
+    }
+
+    @MediumTest
+    public void testExtratorrent() {
+        testPerformer(new ExtratorrentSearchPerformer("frostclick", 5000));
     }
 
     private void testPerformer(WebSearchPerformer performer) {

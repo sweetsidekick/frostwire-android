@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.extratorrent;
+package com.frostwire.search.extratorrent;
+
+import java.util.List;
 
 /*
 {
@@ -47,33 +49,7 @@ package com.frostwire.android.bittorrent.websearch.extratorrent;
  * @author aldenml
  *
  */
-public class ExtratorrentItem {
+public class ExtratorrentResponse {
 
-    public String title;
-
-    public String category;
-
-    public String subcategory;
-
-    public String link;
-
-    public String guid;
-
-    public String pubDate;
-
-    public String torrentLink;
-
-    public int files;
-
-    public int comments;
-
-    public String hash;
-
-    public int peers;
-
-    public int seeds;
-
-    public int leechs;
-
-    public long size;
+    public List<ExtratorrentItem> list;
 }

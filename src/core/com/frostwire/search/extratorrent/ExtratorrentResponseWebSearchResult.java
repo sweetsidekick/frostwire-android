@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.extratorrent;
+package com.frostwire.search.extratorrent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

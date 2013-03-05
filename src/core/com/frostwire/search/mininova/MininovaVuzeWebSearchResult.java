@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.clearbits;
+package com.frostwire.search.mininova;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,20 +28,19 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  * @author aldenml
  *
  */
-public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
+public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
 
-    private final ClearBitsItem item;
+    private MininovaVuzeItem item;
 
-    public ClearBitsWebSearchResult(ClearBitsItem item) {
+    public MininovaVuzeWebSearchResult(MininovaVuzeItem item) {
         this.item = item;
     }
 
     public long getCreationTime() {
-        //2010-07-15T16:02:42Z
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
         long result = System.currentTimeMillis();
         try {
-            result = date.parse(item.created_at).getTime();
+            result = date.parse(item.date).getTime();
         } catch (ParseException e) {
         }
         return result;
@@ -53,34 +52,34 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
     }
 
     public String getHash() {
-        return item.hashstr;
+        return item.hash;
     }
 
     public String getTorrentURI() {
-        return item.torrent_url;
+        return item.download;
     }
 
     public long getSize() {
-        return Long.valueOf(item.mb_size * 1024 * 1024);
+        return Long.valueOf(item.size);
+    }
+
+    @Override
+    public String getSource() {
+        return "Mininova";
     }
 
     public int getRank() {
-        return item.seeds;
+        return item.seeds + item.superseeds;
     }
 
     public String getTorrentDetailsURL() {
-        return item.location;
+        return item.cdp;
     }
 
     @Override
     public String getDisplayName() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public String getSource() {
-        return "ClearBits";
     }
 
     @Override

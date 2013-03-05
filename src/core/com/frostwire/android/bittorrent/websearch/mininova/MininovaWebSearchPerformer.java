@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.search.mininova.MininovaVuzeItem;
+import com.frostwire.search.mininova.MininovaVuzeResponse;
+import com.frostwire.search.mininova.MininovaVuzeWebSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.JsonSearchPerformer;
 import com.frostwire.websearch.TorrentWebSearchResult;

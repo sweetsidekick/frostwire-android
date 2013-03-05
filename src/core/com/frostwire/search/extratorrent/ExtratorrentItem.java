@@ -16,44 +16,64 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.mininova;
+package com.frostwire.search.extratorrent;
 
 /*
- *               { "title": "...", 
- *               "date": "Wed, 18 Nov 2009 10:07:42 +0100", 
- *               "peers": 0, 
- *               "seeds": 10, 
- *               "superseeds": 3, 
- *               "category": "Music", 
- *               "cdp": "...", 
- *               "comments": 1, 
- *               "size": 4828003, 
- *               "votes": 1, 
- *               "download":"..." #notice how there's no comma
- *               "hash": "..." }
- */
+{
+ "title":"Extratorrent Search: ...",
+ "link":"http://extratorrent.com",
+ "description":"Extratorrent Search: ...",
+ "total_results":224,
+ "list":[
+    {
+    "title":"...",
+    "category":"Music",
+    "subcategory":"Music Videos",
+    "link":"...",
+    "guid":"...",
+    "pubDate":"Wed, 09 Jun 2010 18:08:27 +0100",
+    "torrentLink":"...",
+    "files":1,
+    "comments":11,
+    "hash":"...",
+    "peers":393,
+    "seeds":388,
+    "leechs":5,
+    "size":101146107
+    },
+*/
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class MininovaVuzeItem {
+public class ExtratorrentItem {
 
     public String title;
 
-    public String date;
+    public String category;
+
+    public String subcategory;
+
+    public String link;
+
+    public String guid;
+
+    public String pubDate;
+
+    public String torrentLink;
+
+    public int files;
+
+    public int comments;
+
+    public String hash;
 
     public int peers;
 
     public int seeds;
 
-    public int superseeds;
+    public int leechs;
 
-    public String cdp; //Torrent Detail URL
-
-    public long size; //file size
-
-    public String download; //.torrent download url
-
-    public String hash;
+    public long size;
 }
