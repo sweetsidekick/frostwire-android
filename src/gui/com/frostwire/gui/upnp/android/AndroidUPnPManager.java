@@ -20,11 +20,11 @@ package com.frostwire.gui.upnp.android;
 
 import java.net.InetAddress;
 
-import org.teleal.cling.UpnpService;
-import org.teleal.cling.binding.annotations.AnnotationLocalServiceBinder;
-import org.teleal.cling.model.DefaultServiceManager;
-import org.teleal.cling.model.meta.LocalDevice;
-import org.teleal.cling.model.meta.LocalService;
+import org.fourthline.cling.UpnpService;
+import org.fourthline.cling.binding.annotations.AnnotationLocalServiceBinder;
+import org.fourthline.cling.model.DefaultServiceManager;
+import org.fourthline.cling.model.meta.LocalDevice;
+import org.fourthline.cling.model.meta.LocalService;
 
 import android.content.ServiceConnection;
 

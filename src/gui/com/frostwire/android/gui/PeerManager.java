@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.teleal.cling.model.types.UDN;
+import org.fourthline.cling.model.types.UDN;
 
 import android.support.v4.util.LruCache;
 import android.util.Log;

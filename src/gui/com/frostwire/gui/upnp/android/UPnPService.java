@@ -18,12 +18,11 @@
 
 package com.frostwire.gui.upnp.android;
 
-import org.teleal.cling.android.AndroidUpnpServiceConfiguration;
-import org.teleal.cling.android.AndroidUpnpServiceImpl;
-import org.teleal.cling.model.types.ServiceType;
-import org.teleal.cling.model.types.UDAServiceType;
+import org.fourthline.cling.model.types.ServiceType;
+import org.fourthline.cling.model.types.UDAServiceType;
 
-import android.net.wifi.WifiManager;
+import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
+import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
 
 /**
  * 
@@ -36,8 +35,8 @@ public class UPnPService extends AndroidUpnpServiceImpl {
     private static final int REGISTRY_MAINTENANCE_INTERVAL_MILLIS = 5000; // 5 seconds
 
     @Override
-    protected AndroidUpnpServiceConfiguration createConfiguration(WifiManager wifiManager) {
-        return new AndroidUpnpServiceConfiguration(wifiManager) {
+    protected AndroidUpnpServiceConfiguration createConfiguration() {
+        return new AndroidUpnpServiceConfiguration() {
             @Override
             public int getRegistryMaintenanceIntervalMillis() {
                 return REGISTRY_MAINTENANCE_INTERVAL_MILLIS;
