@@ -46,7 +46,12 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
     protected List<? extends SearchResult<?>> searchPage(int page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        YouTubeResponse response = searchYouTube();
+        String url = String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS);
+        String json = fetch(url);
+
+        json = fixJson(json);
+
+        YouTubeResponse response = JsonUtils.toObject(json, YouTubeResponse.class);
 
         if (response != null && response.feed != null && response.feed.entry != null)
             for (YouTubeEntry entry : response.feed.entry) {
@@ -60,18 +65,6 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
             }
 
         return result;
-    }
-
-    private YouTubeResponse searchYouTube() {
-
-        String url = String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS);
-        String json = fetch(url);
-
-        json = fixJson(json);
-
-        YouTubeResponse response = JsonUtils.toObject(json, YouTubeResponse.class);
-
-        return response;
     }
 
     private String fixJson(String json) {
