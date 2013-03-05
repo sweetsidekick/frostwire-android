@@ -52,8 +52,8 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     protected List<? extends SearchResult<?>> searchPage(int page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        String url = encodeUrl("http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1");
-        String html = get(url);
+        String url = "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1";
+        String html = fetch(url);
 
         Matcher matcher = PATTERN.matcher(html);
 

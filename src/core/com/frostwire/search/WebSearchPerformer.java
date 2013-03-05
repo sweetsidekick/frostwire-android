@@ -37,8 +37,8 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
     private static final Logger LOG = LoggerFactory.getLogger(WebSearchPerformer.class);
 
     protected final String keywords;
-    protected final int timeout;
-    protected final HttpClient client;
+    private final int timeout;
+    private final HttpClient client;
 
     public WebSearchPerformer(String keywords, int timeout) {
         this.keywords = keywords;
@@ -46,7 +46,11 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         this.client = HttpClientFactory.newDefaultInstance();
     }
 
-    protected String encodeUrl(String url) {
+    protected String fetch(String url) {
+        return get(encodeUrl(url));
+    }
+
+    private String encodeUrl(String url) {
         try {
             URL u = new URL(url);
             URI uri = new URI(u.getProtocol(), u.getUserInfo(), u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getRef());
@@ -58,7 +62,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         return url;
     }
 
-    protected String get(String url) {
+    private String get(String url) {
         return client.get(url, timeout);
     }
 }

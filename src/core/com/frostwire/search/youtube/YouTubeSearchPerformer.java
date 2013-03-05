@@ -64,8 +64,8 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
 
     private YouTubeResponse searchYouTube() {
 
-        String url = encodeUrl(String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS));
-        String json = get(url);
+        String url = String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", keywords, MAX_RESULTS);
+        String json = fetch(url);
 
         json = fixJson(json);
 
