@@ -21,9 +21,6 @@ package com.frostwire.search.isohunt;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntItem;
-import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntResponse;
-import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntWebSearchResult;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.util.JsonUtils;

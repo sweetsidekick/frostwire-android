@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.isohunt;
+package com.frostwire.search.isohunt;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import com.frostwire.websearch.TorrentWebSearchResult;
 
@@ -38,7 +39,7 @@ public class ISOHuntWebSearchResult implements TorrentWebSearchResult {
 
     public long getCreationTime() {
         //Thu, 29 Apr 2010 16:32:44 GMT
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.pubDate).getTime();
@@ -90,7 +91,11 @@ public class ISOHuntWebSearchResult implements TorrentWebSearchResult {
 
     @Override
     public String getDetailsUrl() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.link;
+    }
+
+    @Override
+    public String toString() {
+        return getDetailsUrl();
     }
 }

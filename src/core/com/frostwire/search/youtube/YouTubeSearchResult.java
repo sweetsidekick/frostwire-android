@@ -90,6 +90,11 @@ public class YouTubeSearchResult implements WebSearchResult {
         return rt;
     }
 
+    @Override
+    public String toString() {
+        return getDetailsUrl();
+    }
+
     private long readCreationTime(YouTubeEntry entry) {
         try {
             return DATE_FORMAT.parse(entry.published.title.replace("000Z", "")).getTime();

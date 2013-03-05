@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.bittorrent.websearch.isohunt;
+package com.frostwire.search.isohunt;
 
 /*
  * Queries look like this:
