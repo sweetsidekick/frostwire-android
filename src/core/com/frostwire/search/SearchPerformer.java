@@ -29,5 +29,7 @@ public interface SearchPerformer {
 
     public void perform();
 
+    public void perform(SearchResult<?> sr);
+
     public void stop();
 }

@@ -45,6 +45,11 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         this.client = HttpClientFactory.newDefaultInstance();
     }
 
+    @Override
+    public void perform(SearchResult<?> sr) {
+        LOG.warn("Review your logic, calling deep search without implementation for: " + sr);
+    }
+
     protected String fetch(String url) {
         return client.get(url, timeout);
     }
