@@ -17,9 +17,13 @@
 
 package com.frostwire.android.tests.search;
 
+import java.util.concurrent.TimeUnit;
+
 import junit.framework.TestCase;
+import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.search.SearchManagerImpl;
+import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 
 /**
  * 
@@ -27,10 +31,22 @@ import com.frostwire.search.SearchManagerImpl;
  * @author aldenml
  *
  */
-public class SearchTest1 extends TestCase {
+public class CloudSearchTest1 extends TestCase {
 
-    public void testCallWithPerfomerNull() {
+    @MediumTest
+    public void testSoundcloud() {
+        MockSearchResultListener l = new MockSearchResultListener();
+
         SearchManagerImpl manager = new SearchManagerImpl();
-        manager.perform(null);
+        manager.registerListener(l);
+        manager.perform(new SoundcloudSearchPerformer("test", 5000));
+
+        assertTrue("Waiting too much time", manager.awaitIdle(30));
+
+        assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
+
+        assertTrue("More than one result", l.getNumResults() > 1);
+
+        l.logResults();
     }
 }

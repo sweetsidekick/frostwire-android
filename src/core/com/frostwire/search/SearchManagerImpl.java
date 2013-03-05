@@ -98,6 +98,19 @@ public class SearchManagerImpl implements SearchManager {
         return tasks.isEmpty();
     }
 
+    public boolean awaitIdle(int seconds) {
+        while (!tasks.isEmpty() && seconds > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+            seconds--;
+        }
+
+        return tasks.isEmpty();
+    }
+
     protected void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
         try {
             if (listener != null) {

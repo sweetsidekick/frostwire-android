@@ -35,6 +35,8 @@ public interface HttpClient {
     public HttpClientListener getListener();
 
     public String get(String url);
+    
+    public String get(String url, int timeout);
 
     public String get(String url, int timeout, String userAgent);
 

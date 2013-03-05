@@ -84,8 +84,13 @@ public class SoundcloudTrackSearchResult implements WebSearchResult {
     public String getTitle() {
         return item.title;
     }
-    
+
     public String getUsername() {
         return item.user.username;
+    }
+
+    @Override
+    public String toString() {
+        return getDetailsUrl();
     }
 }

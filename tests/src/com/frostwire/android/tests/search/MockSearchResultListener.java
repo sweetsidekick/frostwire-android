@@ -17,7 +17,12 @@
 
 package com.frostwire.android.tests.search;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -31,8 +36,16 @@ import com.frostwire.search.SearchResultListener;
  */
 public class MockSearchResultListener implements SearchResultListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MockSearchResultListener.class);
+
+    private final List<SearchResult<?>> results;
+
     private int numResults;
     private boolean finished;
+
+    public MockSearchResultListener() {
+        this.results = Collections.synchronizedList(new LinkedList<SearchResult<?>>());
+    }
 
     public int getNumResults() {
         return numResults;
@@ -44,11 +57,20 @@ public class MockSearchResultListener implements SearchResultListener {
 
     @Override
     public void onResults(SearchPerformer performer, List<? extends SearchResult<?>> results) {
+        this.results.addAll(results);
         this.numResults += results.size();
     }
 
     @Override
     public void onFinished(SearchPerformer performer) {
         this.finished = true;
+    }
+
+    public void logResults() {
+        synchronized (results) {
+            for (SearchResult<?> sr : results) {
+                LOG.info(sr.getValue().toString());
+            }
+        }
     }
 }

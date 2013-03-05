@@ -24,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
+import android.test.suitebuilder.annotation.MediumTest;
+
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -37,13 +39,10 @@ import com.frostwire.search.SearchResultListener;
  */
 public class SearchTest2 extends TestCase {
 
-    private SearchManagerImpl manager;
     private List<SearchResult<Integer>> results;
 
     @Override
     protected void setUp() throws Exception {
-        manager = new SearchManagerImpl();
-
         results = new ArrayList<SearchResult<Integer>>();
         results.add(new SearchResult<Integer>(1));
         results.add(new SearchResult<Integer>(2));
@@ -55,6 +54,7 @@ public class SearchTest2 extends TestCase {
     public void testFixedNumberResults() {
         MockSearchResultListener l = new MockSearchResultListener();
 
+        SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
         manager.perform(new SearchPerformer() {
 
@@ -83,6 +83,7 @@ public class SearchTest2 extends TestCase {
     public void testPerformFinished() {
         MockSearchResultListener l = new MockSearchResultListener();
 
+        SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
         manager.perform(new SearchPerformer() {
 
@@ -105,23 +106,27 @@ public class SearchTest2 extends TestCase {
         assertTrue(l.isFinished());
     }
 
+    @MediumTest
     public void testStopWithFastPerformers() {
         runStopWithPerformers(10, 0);
     }
 
+    @MediumTest
     public void testStopWithMediumFastPerformers() {
         runStopWithPerformers(10, 2000);
     }
 
+    @MediumTest
     public void testStopWithSlowPerformers() {
         runStopWithPerformers(10, 20000);
     }
 
-    public void runStopWithPerformers(int n, long timeMillis) {
+    private void runStopWithPerformers(int n, long timeMillis) {
         List<SearchPerformer> performers = createTimedPerformers(10, 2000);
 
         MockSearchResultListener l = new MockSearchResultListener();
 
+        SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
 
         for (SearchPerformer performer : performers) {

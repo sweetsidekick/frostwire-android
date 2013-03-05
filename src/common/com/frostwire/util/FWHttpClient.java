@@ -57,13 +57,17 @@ final class FWHttpClient implements HttpClient {
     private static final Logger LOG = LoggerFactory.getLogger(FWHttpClient.class);
 
     private static final int DEFAULT_TIMEOUT = 10000;
-    private static final String DEFAULT_USER_AGENT = "";//UserAgentGenerator.getUserAgent();
+    private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
     private HttpClientListener listener;
 
     private boolean canceled;
 
     public String get(String url) {
         return get(url, DEFAULT_TIMEOUT, DEFAULT_USER_AGENT);
+    }
+    
+    public String get(String url, int timeout) {
+        return get(url, timeout, DEFAULT_USER_AGENT);
     }
 
     public String get(String url, int timeout, String userAgent) {
