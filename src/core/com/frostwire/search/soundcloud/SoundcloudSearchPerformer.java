@@ -49,8 +49,8 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
     }
 
     @Override
-    protected String getUrl(int page) {
-        return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + keywords + "&q[downloadable]=true&advanced=1";
+    protected String getUrl(int page, String encodedKeywords) {
+        return "http://soundcloud.com/tracks/search?page=" + page + "&q[fulltext]=" + encodedKeywords + "&q[downloadable]=true&advanced=1";
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,58 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.youtube;
+package com.frostwire.search.isohunt;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
+import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntItem;
+import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntResponse;
+import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntWebSearchResult;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.websearch.TorrentWebSearchResult;
 import com.frostwire.websearch.WebSearchResult;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
  *
  */
-public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
+public class ISOHuntSearchPerformer extends PagedWebSearchPerformer {
 
-    private static final int MAX_RESULTS = 10;
-
-    public YouTubeSearchPerformer(String keywords, int timeout) {
+    public ISOHuntSearchPerformer(String keywords, int timeout) {
         super(keywords, timeout, 1);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return String.format(Locale.US, "https://gdata.youtube.com/feeds/api/videos?q=%s&orderby=relevance&start-index=1&max-results=%d&alt=json&prettyprint=true&v=2", encodedKeywords, MAX_RESULTS);
+        return "http://isohunt.com/js/json.php?ihq=" + encodedKeywords + "&start=1&rows=100&sort=seeds";
     }
 
     @Override
     protected List<? extends SearchResult<?>> searchPage(String page) {
         List<SearchResult<WebSearchResult>> result = new LinkedList<SearchResult<WebSearchResult>>();
 
-        String json = fixJson(page);
+        ISOHuntResponse response = JsonUtils.toObject(page, ISOHuntResponse.class);
 
-        YouTubeResponse response = JsonUtils.toObject(json, YouTubeResponse.class);
-
-        for (YouTubeEntry entry : response.feed.entry) {
-            if (!isStopped()) {
-                WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
-                result.add(new SearchResult<WebSearchResult>(vsr));
-                WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
-                result.add(new SearchResult<WebSearchResult>(asr));
-            }
+        for (ISOHuntItem item : response.items.list) {
+            TorrentWebSearchResult sr = new ISOHuntWebSearchResult(item);
+            result.add(new SearchResult<WebSearchResult>(sr));
         }
 
         return result;
-    }
-
-    private String fixJson(String json) {
-        return json.replace("\"$t\"", "\"title\"").replace("\"yt$userId\"", "\"ytuserId\"");
     }
 }

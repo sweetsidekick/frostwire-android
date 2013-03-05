@@ -23,7 +23,10 @@ import junit.framework.TestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.search.SearchManagerImpl;
+import com.frostwire.search.WebSearchPerformer;
+import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
+import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
  * 
@@ -35,11 +38,25 @@ public class CloudSearchTest1 extends TestCase {
 
     @MediumTest
     public void testSoundcloud() {
+        testPerformer(new SoundcloudSearchPerformer("frostclick", 5000));
+    }
+
+    @MediumTest
+    public void testYoutube() {
+        testPerformer(new YouTubeSearchPerformer("frostclick", 5000));
+    }
+
+    @MediumTest
+    public void testISOHunt() {
+        testPerformer(new ISOHuntSearchPerformer("frostclick", 5000));
+    }
+
+    private void testPerformer(WebSearchPerformer performer) {
         MockSearchResultListener l = new MockSearchResultListener();
 
         SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
-        manager.perform(new SoundcloudSearchPerformer("test", 5000));
+        manager.perform(performer);
 
         assertTrue("Waiting too much time", manager.awaitIdle(30));
 

@@ -44,12 +44,12 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
     }
 
     protected List<? extends SearchResult<?>> searchPage(int page) {
-        String url = getUrl(page);
+        String url = getUrl(page, encodeKeywords());
         String text = fetch(url);
         return searchPage(text);
     }
 
-    protected abstract String getUrl(int page);
+    protected abstract String getUrl(int page, String encodedKeywords);
 
     protected abstract List<? extends SearchResult<?>> searchPage(String page);
 }

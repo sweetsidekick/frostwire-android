@@ -17,8 +17,7 @@
 
 package com.frostwire.search;
 
-import java.net.URI;
-import java.net.URL;
+import java.net.URLEncoder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,22 +46,16 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
     }
 
     protected String fetch(String url) {
-        return get(encodeUrl(url));
+        return client.get(url, timeout);
     }
 
-    protected String encodeUrl(String url) {
+    protected String encodeKeywords() {
         try {
-            URL u = new URL(url);
-            URI uri = new URI(u.getProtocol(), u.getUserInfo(), u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getRef());
-            return uri.toURL().toString();
+            return URLEncoder.encode(keywords, "utf-8");
         } catch (Throwable e) {
-            LOG.warn("Unable to encode url: " + e.getMessage());
+            LOG.warn("Error encoding keywords:" + keywords + ", e: " + e.getMessage());
         }
 
-        return url;
-    }
-
-    protected String get(String url) {
-        return client.get(url, timeout);
+        return keywords;
     }
 }
