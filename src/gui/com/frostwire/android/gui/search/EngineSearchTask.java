@@ -77,7 +77,7 @@ class EngineSearchTask extends SearchTask {
             if (webResult instanceof TorrentWebSearchResult) {
                 TorrentWebSearchResult tsr = (TorrentWebSearchResult) webResult;
                 if (filter(tsr)) {
-                    BittorrentSearchResult sr = new BittorrentWebSearchResult(engine, tsr);
+                    BittorrentSearchResult sr = new BittorrentWebSearchResult(tsr);
                     result.add(sr);
                 }
             } else if (webResult instanceof YouTubeSearchResult) {

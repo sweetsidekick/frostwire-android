@@ -29,7 +29,5 @@ public interface BittorrentSearchResult extends SearchResult {
 
     public String getHash();
 
-    public int getSearchEngineId();
-
     public String getTorrentURI();
 }

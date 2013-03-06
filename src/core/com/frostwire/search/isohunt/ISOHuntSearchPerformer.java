@@ -33,7 +33,7 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  */
 public class ISOHuntSearchPerformer extends PagedWebSearchPerformer {
 
-    public ISOHuntSearchPerformer(int token, String keywords, int timeout) {
+    public ISOHuntSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
     }
 

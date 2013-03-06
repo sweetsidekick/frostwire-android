@@ -58,7 +58,14 @@ import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
 import com.frostwire.search.SearchManager;
 import com.frostwire.search.SearchManagerImpl;
+import com.frostwire.search.SearchPerformer;
+import com.frostwire.search.SearchResult;
+import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.soundcloud.SoundcloudSearchResult;
+import com.frostwire.search.youtube.YouTubeSearchResult;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -90,11 +97,11 @@ public final class LocalSearchEngine {
     private final List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
-    private final SortedSet<SearchResult> currentResults;
+    private final List<com.frostwire.android.gui.search.SearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
     private final Object lockObj = new Object();
-    
+
     private final SearchManager manager;
     private long currentSearchToken;
 
@@ -131,21 +138,16 @@ public final class LocalSearchEngine {
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
 
-        currentResults = Collections.synchronizedSortedSet(new TreeSet<SearchResult>(new Comparator<SearchResult>() {
-            @Override
-            public int compare(SearchResult lhs, SearchResult rhs) {
-                if (lhs.getRank() == rhs.getRank()) {
-                    return -1;
-                } else if (lhs.getRank() < rhs.getRank()) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        }));
+        this.currentResults = Collections.synchronizedList(new LinkedList<com.frostwire.android.gui.search.SearchResult>());
         currentTasks = new LinkedList<SearchTask>();
-        
+
         this.manager = new SearchManagerImpl();
+        this.manager.registerListener(new SearchResultListener() {
+            @Override
+            public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
+                addResults(normalizeWebResults(results));
+            }
+        });
     }
 
     public int getCurrentResultsCount() {
@@ -156,11 +158,11 @@ public final class LocalSearchEngine {
         return downloadTasks.size();
     }
 
-    public List<SearchResult> pollCurrentResults() {
+    public List<com.frostwire.android.gui.search.SearchResult> pollCurrentResults() {
         synchronized (currentResults) {
-            List<SearchResult> list = new ArrayList<SearchResult>(currentResults.size());
+            List<com.frostwire.android.gui.search.SearchResult> list = new ArrayList<com.frostwire.android.gui.search.SearchResult>(currentResults.size());
 
-            Iterator<SearchResult> it = currentResults.iterator();
+            Iterator<com.frostwire.android.gui.search.SearchResult> it = currentResults.iterator();
             while (it.hasNext()) {
                 list.add(it.next());
             }
@@ -171,11 +173,12 @@ public final class LocalSearchEngine {
 
     public void performSearch(String query) {
         cancelTasks();
+        manager.stop(currentSearchToken);
         currentResults.clear();
         performTorrentSearch(query);
     }
 
-    void addResults(List<SearchResult> results) {
+    void addResults(List<com.frostwire.android.gui.search.SearchResult> results) {
         currentResults.addAll(results);
     }
 
@@ -192,12 +195,12 @@ public final class LocalSearchEngine {
 
         execute(new DeepSearchTask(query));
         */
-        
+
         currentSearchToken = System.nanoTime();
         for (SearchEngine2 se : SearchEngine2.getEngines()) {
             if (se.isEnabled()) {
-                se.getPerformer(0, query);
-                //execute(new EngineSearchTask(searchEngine, query));
+                SearchPerformer p = se.getPerformer(currentSearchToken, query);
+                manager.perform(p);
             }
         }
     }
@@ -237,16 +240,16 @@ public final class LocalSearchEngine {
 
             // scan results for actual torrents
 
-            List<SearchResult> results = new ArrayList<SearchResult>(currentResults.size());
+            List<com.frostwire.android.gui.search.SearchResult> results = new ArrayList<com.frostwire.android.gui.search.SearchResult>(currentResults.size());
             synchronized (currentResults) {
-                Iterator<SearchResult> it = currentResults.iterator();
+                Iterator<com.frostwire.android.gui.search.SearchResult> it = currentResults.iterator();
                 while (it.hasNext()) {
                     results.add(it.next());
                 }
             }
 
             for (int j = 0; j < results.size() && downloaded < COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN && !task.isCancelled(); j++) {
-                SearchResult sr = results.get(j);
+                com.frostwire.android.gui.search.SearchResult sr = results.get(j);
                 if (sr instanceof BittorrentWebSearchResult) {
                     BittorrentWebSearchResult bsr = (BittorrentWebSearchResult) sr;
 
@@ -337,7 +340,7 @@ public final class LocalSearchEngine {
                         continue;
                     }
 
-                    results.add(new BittorrentLocalSearchResult(tfdb));
+                    //results.add(new BittorrentLocalSearchResult(tfdb));
                     knownInfoHashes.add(tfdb.torrent.hash);
                 } catch (Exception e) {
                     Log.e(TAG, "Error reading local search result", e);
@@ -346,7 +349,7 @@ public final class LocalSearchEngine {
 
             Log.i(TAG, "Ended up with " + results.size() + " results");
 
-            addResults(results);
+            addResults(normalizeWebResults(results));
         } finally {
             if (c != null) {
                 c.close();
@@ -355,7 +358,7 @@ public final class LocalSearchEngine {
     }
 
     void addResult(BittorrentDeepSearchResult result) {
-        currentResults.add(result);
+        //currentResults.add(result);
     }
 
     /**
@@ -394,7 +397,6 @@ public final class LocalSearchEngine {
         tdb.creationTime = sr.getCreationTime();
         tdb.fileName = sr.getFileName();
         tdb.hash = sr.getHash();
-        tdb.searchEngineID = sr.getSearchEngineId();
         tdb.seeds = sr.getRank();
         tdb.size = sr.getSize();
         tdb.torrentDetailsURL = sr.getDetailsUrl();
@@ -514,5 +516,31 @@ public final class LocalSearchEngine {
         }
 
         downloadTasks.clear();
+        manager.stop(currentSearchToken);
+    }
+
+    private List<com.frostwire.android.gui.search.SearchResult> normalizeWebResults(List<? extends SearchResult> webResults) {
+        List<com.frostwire.android.gui.search.SearchResult> result = new ArrayList<com.frostwire.android.gui.search.SearchResult>(webResults.size());
+        for (SearchResult webResult : webResults) {
+            if (webResult instanceof TorrentWebSearchResult) {
+                TorrentWebSearchResult tsr = (TorrentWebSearchResult) webResult;
+                //if (filter(tsr)) {
+                if (tsr.getRank() < 50) {
+                    continue;
+                }
+                BittorrentSearchResult sr = new BittorrentWebSearchResult(tsr);
+                result.add(sr);
+                //}
+            } else if (webResult instanceof YouTubeSearchResult) {
+                YouTubeEngineSearchResult sr = new YouTubeEngineSearchResult((YouTubeSearchResult) webResult);
+                result.add(sr);
+            } else if (webResult instanceof SoundcloudSearchResult) {
+                SoundcloudEngineSearchResult sr = new SoundcloudEngineSearchResult((SoundcloudSearchResult) webResult);
+                result.add(sr);
+            } else {
+                //result.add(new WebEngineSearchResult(webResult));
+            }
+        }
+        return result;
     }
 }

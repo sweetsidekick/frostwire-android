@@ -61,12 +61,7 @@ class BittorrentDeepSearchResult implements BittorrentSearchResult {
     public String getHash() {
         return bittorrentResult.getHash();
     }
-
-    @Override
-    public int getSearchEngineId() {
-        return bittorrentResult.getSearchEngineId();
-    }
-
+    
     @Override
     public String getDetailsUrl() {
         return bittorrentResult.getDetailsUrl();

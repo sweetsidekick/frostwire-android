@@ -61,7 +61,7 @@ public class SearchTest2 extends TestCase {
             private SearchResultListener listener;
 
             @Override
-            public int getToken() {
+            public long getToken() {
                 return 0;
             }
 
@@ -97,7 +97,7 @@ public class SearchTest2 extends TestCase {
         manager.perform(new SearchPerformer() {
 
             @Override
-            public int getToken() {
+            public long getToken() {
                 return 0;
             }
 
@@ -161,7 +161,7 @@ public class SearchTest2 extends TestCase {
                 private Object sync = new Object();
 
                 @Override
-                public int getToken() {
+                public long getToken() {
                     return 0;
                 }
 

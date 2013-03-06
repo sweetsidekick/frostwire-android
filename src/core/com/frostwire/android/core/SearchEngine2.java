@@ -55,7 +55,7 @@ public abstract class SearchEngine2 {
         return name;
     }
 
-    public abstract SearchPerformer getPerformer(int token, String keywords);
+    public abstract SearchPerformer getPerformer(long token, String keywords);
 
     public String getPreferenceKey() {
         return preferenceKey;
@@ -84,49 +84,49 @@ public abstract class SearchEngine2 {
 
     public static final SearchEngine2 CLEARBITS = new SearchEngine2("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new ClearBitsSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine2 EXTRATORRENT = new SearchEngine2("Extratorrent", Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new ExtratorrentSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine2 ISOHUNT = new SearchEngine2("ISOHunt", Constants.PREF_KEY_SEARCH_USE_ISOHUNT) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new ISOHuntSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine2 MININOVA = new SearchEngine2("Mininova", Constants.PREF_KEY_SEARCH_USE_MININOVA) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new MininovaSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         };
     };
 
     public static final SearchEngine2 VERTOR = new SearchEngine2("Vertor", Constants.PREF_KEY_SEARCH_USE_VERTOR) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new VertorSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         };
     };
 
     public static final SearchEngine2 YOUTUBE = new SearchEngine2("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new YouTubeSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         };
     };
 
     public static final SearchEngine2 SOUNCLOUD = new SearchEngine2("Soundcloud", Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD) {
         @Override
-        public SearchPerformer getPerformer(int token, String keywords) {
+        public SearchPerformer getPerformer(long token, String keywords) {
             return new SoundcloudSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         };
     };

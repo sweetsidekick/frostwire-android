@@ -69,11 +69,6 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public int getSearchEngineId() {
-        return -1;
-    }
-
-    @Override
     public String getDetailsUrl() {
         return slide.url;
     }

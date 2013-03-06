@@ -59,11 +59,6 @@ class BittorrentLocalSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public int getSearchEngineId() {
-        return tfdb.torrent.searchEngineID;
-    }
-
-    @Override
     public String getDetailsUrl() {
         return tfdb.torrent.torrentDetailsURL;
     }

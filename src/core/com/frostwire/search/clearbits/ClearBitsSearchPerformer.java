@@ -33,7 +33,7 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  */
 public class ClearBitsSearchPerformer extends PagedWebSearchPerformer {
 
-    public ClearBitsSearchPerformer(int token, String keywords, int timeout) {
+    public ClearBitsSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
     }
 

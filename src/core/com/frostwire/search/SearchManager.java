@@ -33,7 +33,7 @@ public interface SearchManager {
 
     public void stop();
 
-    public void stop(int token);
+    public void stop(long token);
 
     public boolean shutdown(long timeout, TimeUnit unit);
 }

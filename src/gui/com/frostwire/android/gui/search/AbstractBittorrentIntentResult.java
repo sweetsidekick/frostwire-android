@@ -61,11 +61,6 @@ public abstract class AbstractBittorrentIntentResult implements BittorrentSearch
     }
 
     @Override
-    public int getSearchEngineId() {
-        return 0;
-    }
-
-    @Override
     public String getDetailsUrl() {
         return null;
     }

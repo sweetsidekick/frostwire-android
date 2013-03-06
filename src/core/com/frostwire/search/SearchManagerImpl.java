@@ -82,7 +82,7 @@ public class SearchManagerImpl implements SearchManager {
     }
 
     @Override
-    public void stop(int token) {
+    public void stop(long token) {
         synchronized (tasks) {
             for (SearchTask task : tasks) {
                 if (task.performer.getToken() == token) {

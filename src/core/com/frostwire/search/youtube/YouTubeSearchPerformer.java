@@ -38,7 +38,7 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
 
     private static final int MAX_RESULTS = 10;
 
-    public YouTubeSearchPerformer(int token, String keywords, int timeout) {
+    public YouTubeSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
     }
 
