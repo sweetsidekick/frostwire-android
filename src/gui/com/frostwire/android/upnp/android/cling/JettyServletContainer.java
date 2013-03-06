@@ -15,6 +15,14 @@
 
 package com.frostwire.android.upnp.android.cling;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.jetty.server.AbstractHttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -22,15 +30,6 @@ import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.ExecutorThreadPool;
-import org.fourthline.cling.transport.spi.ServletContainerAdapter;
-
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A singleton wrapper of a <code>org.eclipse.jetty.server.Server</code>.
@@ -148,18 +147,26 @@ public class JettyServletContainer implements ServletContainerAdapter {
     public static boolean isConnectionOpen(HttpServletRequest request, byte[] heartbeat) {
         Request jettyRequest = (Request)request;
         AbstractHttpConnection connection = jettyRequest.getConnection();
-        Socket socket = (Socket)connection.getEndPoint().getTransport();
-        if (log.isLoggable(Level.FINE))
-            log.fine("Checking if client connection is still open: " + socket.getRemoteSocketAddress());
+        
+        //Socket socket = (Socket)connection.getEndPoint().getTransport();
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("Checking if client connection is still open: " + request.getRemoteAddr());
+            //log.fine("Checking if client connection is still open: " + socket.getRemoteSocketAddress());
+        }
         try {
-            socket.getOutputStream().write(heartbeat);
-            socket.getOutputStream().flush();
+            //socket.getOutputStream().write(heartbeat);
+            //socket.getOutputStream().flush();
+            
+            //gubatron: didn't want to add jetty-io-...jar
+            connection.getOutputStream().write(heartbeat);
+            connection.getOutputStream().flush();
             return true;
         } catch (IOException ex) {
-            if (log.isLoggable(Level.FINE))
-                log.fine("Client connection has been closed: " + socket.getRemoteSocketAddress());
+            if (log.isLoggable(Level.FINE)) {
+                log.fine("Client connection has been closed: " + request.getRemoteAddr());
+                //log.fine("Client connection has been closed: " + socket.getRemoteSocketAddress());
+            }
             return false;
         }
     }
-
 }

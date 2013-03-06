@@ -18,13 +18,14 @@ package com.frostwire.android.upnp.android.cling;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration;
 import org.fourthline.cling.binding.xml.DeviceDescriptorBinder;
 import org.fourthline.cling.binding.xml.ServiceDescriptorBinder;
+import org.fourthline.cling.binding.xml.UDA10DeviceDescriptorBinderImpl;
 import org.fourthline.cling.binding.xml.UDA10ServiceDescriptorBinderSAXImpl;
 import org.fourthline.cling.model.Namespace;
 import org.fourthline.cling.model.ServerClientTokens;
+import org.fourthline.cling.transport.impl.GENAEventProcessorImpl;
+import org.fourthline.cling.transport.impl.SOAPActionProcessorImpl;
 import org.fourthline.cling.transport.impl.StreamClientConfigurationImpl;
 import org.fourthline.cling.transport.impl.StreamClientImpl;
-import org.fourthline.cling.transport.impl.StreamServerConfigurationImpl;
-import org.fourthline.cling.transport.impl.StreamServerImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
@@ -109,12 +110,13 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
                 JettyServletContainer.INSTANCE,
                 networkAddressFactory.getStreamListenPort()
             )
-        )
+        );
     }
 
     @Override
     protected DeviceDescriptorBinder createDeviceDescriptorBinderUDA10() {
-        return null;// new RecoveringUDA10DeviceDescriptorBinderImpl();
+        return new UDA10DeviceDescriptorBinderImpl(); //gubatron
+        //return new RecoveringUDA10DeviceDescriptorBinderImpl();
     }
 
     @Override
@@ -124,12 +126,14 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
 
     @Override
     protected SOAPActionProcessor createSOAPActionProcessor() {
-        return null; //new RecoveringSOAPActionProcessorImpl();
+        return new SOAPActionProcessorImpl(); //gubatron
+        //return new RecoveringSOAPActionProcessorImpl();
     }
 
     @Override
     protected GENAEventProcessor createGENAEventProcessor() {
-        return null; //new RecoveringGENAEventProcessorImpl();
+        return new GENAEventProcessorImpl();
+        //return new RecoveringGENAEventProcessorImpl();
     }
 
     @Override
