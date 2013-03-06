@@ -57,7 +57,10 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
     }
 
     private void crawlTorrent(TorrentWebSearchResult sr) {
-        downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
+        // this check will disappear once we update the vuze core and keep the magnet handler
+        if (sr.getTorrentURI().startsWith("http")) {
+            downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
+        }
     }
 
     /**

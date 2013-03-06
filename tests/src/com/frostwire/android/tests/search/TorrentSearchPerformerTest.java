@@ -60,6 +60,11 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         downloadTorrent("http://www.clearbits.net/get/134-big-buck-bunny-720p.torrent", "http://www.clearbits.net/torrents/134-big-buck-bunny-720p");
     }
 
+//    @MediumTest
+//    public void testDownloadMagnet() {
+//        downloadTorrent("magnet:?xt=urn:btih:GO73E2FV7MGKWIS3BTFMVJZDL5RR33LW&tr=http://tracker.mininova.org/announce", "http://www.mininova.org/tor/3190001/0");
+//    }
+
     private void downloadTorrent(final String url, final String referrer) {
         TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0) {
 
