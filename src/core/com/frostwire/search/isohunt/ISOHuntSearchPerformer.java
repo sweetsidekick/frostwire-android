@@ -21,8 +21,8 @@ package com.frostwire.search.isohunt;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.TorrentSearchPerformer;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.TorrentWebSearchResult;
 
@@ -31,7 +31,7 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  * @author aldenml
  *
  */
-public class ISOHuntSearchPerformer extends PagedWebSearchPerformer {
+public class ISOHuntSearchPerformer extends TorrentSearchPerformer {
 
     public ISOHuntSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);

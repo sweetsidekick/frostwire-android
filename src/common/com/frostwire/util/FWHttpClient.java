@@ -45,15 +45,6 @@ import org.slf4j.LoggerFactory;
  */
 final class FWHttpClient implements HttpClient {
 
-    static {
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(FWHttpClient.class);
 
     private static final int DEFAULT_TIMEOUT = 10000;
@@ -129,6 +120,10 @@ final class FWHttpClient implements HttpClient {
         conn.setConnectTimeout(timeout);
         conn.setReadTimeout(timeout);
         conn.setRequestProperty("User-Agent", userAgent);
+        
+        if (conn instanceof HttpsURLConnection) {
+            setHostnameVerifier((HttpsURLConnection) conn);
+        }
 
         if (rangeStart > 0) {
             conn.setRequestProperty("Range", buildRange(rangeStart, rangeLength));
@@ -169,6 +164,15 @@ final class FWHttpClient implements HttpClient {
             closeQuietly(in);
             closeQuietly(conn);
         }
+    }
+    
+    private void setHostnameVerifier(HttpsURLConnection conn) {
+        conn.setHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
     }
 
     private int getResponseCode(URLConnection conn) {
