@@ -75,6 +75,7 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
         TorrentDownloadListener listener = new TorrentDownloadListener(url, finishSignal);
         TorrentDownloader downloader = TorrentDownloaderFactory.create(listener, url, referrer, saveDir);
+        downloader.setDownloadPath(saveDir, null);
         downloader.start();
 
         await(downloader, finishSignal);

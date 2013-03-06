@@ -56,8 +56,8 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
 
     @MediumTest
     public void testDownloadTorrent() {
-
         downloadTorrent("http://ca.isohunt.com/download/442362661/frostclick.torrent", "http://isohunt.com/torrent_details/442362661/frostclick?tab=summary");
+        downloadTorrent("http://www.clearbits.net/get/134-big-buck-bunny-720p.torrent", "http://www.clearbits.net/torrents/134-big-buck-bunny-720p");
     }
 
     private void downloadTorrent(final String url, final String referrer) {

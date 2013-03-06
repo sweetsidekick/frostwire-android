@@ -382,7 +382,9 @@ public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader
 
       filename = FileUtil.convertOSSpecificChars( filename, false );
       
-      directoryname = COConfigurationManager.getDirectoryParameter("General_sDefaultTorrent_Directory");
+      if (directoryname == null) { // aldenml: this hack is to allow a more logical use of save dir parameter
+          directoryname = COConfigurationManager.getDirectoryParameter("General_sDefaultTorrent_Directory");
+      }
       boolean useTorrentSave = COConfigurationManager.getBooleanParameter("Save Torrent Files");
 
       if (file_str != null) {
