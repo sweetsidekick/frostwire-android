@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.TorrentDeepSearchResult;
 
 /**
  * 
@@ -62,5 +63,17 @@ public class MockSearchResultListener implements SearchResultListener {
                 LOG.info(sr.toString());
             }
         }
+    }
+
+    public boolean containsTorrentDeepSearchResult() {
+        synchronized (results) {
+            for (SearchResult sr : results) {
+                if (sr instanceof TorrentDeepSearchResult) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

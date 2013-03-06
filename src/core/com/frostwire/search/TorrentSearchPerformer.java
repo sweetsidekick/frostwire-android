@@ -18,11 +18,16 @@
 package com.frostwire.search;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
+import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloader;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderCallBackInterface;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderFactory;
@@ -45,21 +50,42 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
     private static final int TORRENT_DOWNLOAD_TIMEOUT = 10000; // 10 seconds
 
-    public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
+    private int numTorrentDownloads;
+
+    public TorrentSearchPerformer(long token, String keywords, int timeout, int pages, int numTorrentDownloads) {
         super(token, keywords, timeout, pages);
+        this.numTorrentDownloads = numTorrentDownloads;
     }
 
     @Override
     public void crawl(CrawlableSearchResult sr) {
-        if (sr instanceof TorrentWebSearchResult) {
-            crawlTorrent((TorrentWebSearchResult) sr);
+        if (numTorrentDownloads > 0) {
+            numTorrentDownloads--;
+
+            if (sr instanceof TorrentWebSearchResult) {
+                crawlTorrent((TorrentWebSearchResult) sr);
+            }
         }
     }
 
     private void crawlTorrent(TorrentWebSearchResult sr) {
         // this check will disappear once we update the vuze core and keep the magnet handler
         if (sr.getTorrentURI().startsWith("http")) {
-            downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
+            TOTorrent torrent = downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
+
+            if (torrent != null) {
+                List<String> keywordTokens = tokenize(keywords);
+
+                TOTorrentFile[] files = torrent.getFiles();
+
+                for (int i = 0; !isStopped() && i < files.length; i++) {
+                    TOTorrentFile file = files[i];
+                    String fileStr = sr.getFileName() + " " + file.getRelativePath();
+                    if (match(keywordTokens, fileStr)) {
+                        onResults(this, Arrays.asList(new TorrentDeepSearchResult(sr, file)));
+                    }
+                }
+            }
         }
     }
 
@@ -84,6 +110,32 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
         await(downloader, finishSignal);
 
         return listener.getTorrent();
+    }
+
+    private List<String> tokenize(String keywords) {
+        // TODO: clean keywords
+
+        List<String> tokens = new LinkedList<String>();
+
+        for (String s : keywords.split(" ")) {
+            tokens.add(s.toLowerCase(Locale.US));
+        }
+
+        return tokens;
+    }
+
+    private boolean match(List<String> keywordTokens, String fileStr) {
+        // TODO: normalize fileStr
+
+        fileStr = fileStr.toLowerCase(Locale.US);
+
+        for (String t : keywordTokens) {
+            if (!fileStr.contains(t)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void await(TorrentDownloader downloader, CountDownLatch finishSignal) {

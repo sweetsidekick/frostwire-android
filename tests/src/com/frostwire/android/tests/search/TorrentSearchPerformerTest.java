@@ -18,17 +18,21 @@
 package com.frostwire.android.tests.search;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
 
 import android.test.ApplicationTestCase;
 import android.test.mock.MockApplication;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
+import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchPerformer;
+import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 
 /**
  * 
@@ -60,13 +64,18 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         downloadTorrent("http://www.clearbits.net/get/134-big-buck-bunny-720p.torrent", "http://www.clearbits.net/torrents/134-big-buck-bunny-720p");
     }
 
-//    @MediumTest
-//    public void testDownloadMagnet() {
-//        downloadTorrent("magnet:?xt=urn:btih:GO73E2FV7MGKWIS3BTFMVJZDL5RR33LW&tr=http://tracker.mininova.org/announce", "http://www.mininova.org/tor/3190001/0");
-//    }
+    //    @MediumTest
+    //    public void testDownloadMagnet() {
+    //        downloadTorrent("magnet:?xt=urn:btih:GO73E2FV7MGKWIS3BTFMVJZDL5RR33LW&tr=http://tracker.mininova.org/announce", "http://www.mininova.org/tor/3190001/0");
+    //    }
+
+    @LargeTest
+    public void testDeepSearch() {
+        deepSearch(new ISOHuntSearchPerformer(0, "frostclick", 5000));
+    }
 
     private void downloadTorrent(final String url, final String referrer) {
-        TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0) {
+        TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0, 0) {
 
             @Override
             public void perform() {
@@ -86,5 +95,21 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         };
 
         p.perform();
+    }
+
+    private void deepSearch(TorrentSearchPerformer performer) {
+        MockSearchResultListener l = new MockSearchResultListener();
+
+        SearchManagerImpl manager = new SearchManagerImpl();
+        manager.registerListener(l);
+        manager.perform(performer);
+
+        assertTrue("Waiting too much time", manager.awaitIdle(30));
+
+        assertTrue("Did not finish or took too much time", manager.shutdown(1, TimeUnit.MINUTES));
+
+        assertTrue("Didn't get a crawled search result", l.containsTorrentDeepSearchResult());
+
+        l.logResults();
     }
 }

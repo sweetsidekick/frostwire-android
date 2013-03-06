@@ -17,7 +17,6 @@
 
 package com.frostwire.android.tests.search;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;

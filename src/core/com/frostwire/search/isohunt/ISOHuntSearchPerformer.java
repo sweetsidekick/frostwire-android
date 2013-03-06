@@ -34,7 +34,7 @@ import com.frostwire.websearch.TorrentWebSearchResult;
 public class ISOHuntSearchPerformer extends TorrentSearchPerformer {
 
     public ISOHuntSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1);
+        super(token, keywords, timeout, 1, 3);
     }
 
     @Override
