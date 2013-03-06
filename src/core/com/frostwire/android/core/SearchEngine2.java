@@ -78,7 +78,7 @@ public abstract class SearchEngine2 {
         return name;
     }
 
-    public static List<SearchEngine2> getSearchEngines() {
+    public static List<SearchEngine2> getEngines() {
         return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE, SOUNCLOUD);
     }
 

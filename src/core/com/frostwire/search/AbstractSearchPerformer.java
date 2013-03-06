@@ -32,17 +32,17 @@ public abstract class AbstractSearchPerformer implements SearchPerformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractSearchPerformer.class);
 
-    private final int token;
+    private final long token;
 
     private SearchResultListener listener;
     private boolean stopped;
 
-    public AbstractSearchPerformer(int token) {
+    public AbstractSearchPerformer(long token) {
         this.token = token;
     }
 
     @Override
-    public int getToken() {
+    public long getToken() {
         return token;
     }
 

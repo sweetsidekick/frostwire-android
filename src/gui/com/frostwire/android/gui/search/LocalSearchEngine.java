@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -47,6 +48,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SearchEngine;
+import com.frostwire.android.core.SearchEngine2;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
 import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
@@ -54,6 +56,8 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.Normalizer;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
+import com.frostwire.search.SearchManager;
+import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -90,6 +94,9 @@ public final class LocalSearchEngine {
     private final List<SearchTask> currentTasks;
 
     private final Object lockObj = new Object();
+    
+    private final SearchManager manager;
+    private long currentSearchToken;
 
     static {
         downloads_torrents_executor = ExecutorsHelper.newFixedSizeThreadPool(MAX_TORRENT_DOWNLOADS, "DownloadTorrentsExecutor");
@@ -137,6 +144,8 @@ public final class LocalSearchEngine {
             }
         }));
         currentTasks = new LinkedList<SearchTask>();
+        
+        this.manager = new SearchManagerImpl();
     }
 
     public int getCurrentResultsCount() {
@@ -171,6 +180,7 @@ public final class LocalSearchEngine {
     }
 
     public void performTorrentSearch(String query) {
+        /*
         execute(new LocalSearchTask(query));
         //new LocalSearchTask(query).run();
 
@@ -181,6 +191,15 @@ public final class LocalSearchEngine {
         }
 
         execute(new DeepSearchTask(query));
+        */
+        
+        currentSearchToken = System.nanoTime();
+        for (SearchEngine2 se : SearchEngine2.getEngines()) {
+            if (se.isEnabled()) {
+                se.getPerformer(0, query);
+                //execute(new EngineSearchTask(searchEngine, query));
+            }
+        }
     }
 
     public void cancelSearch() {

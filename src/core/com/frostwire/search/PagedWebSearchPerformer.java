@@ -29,7 +29,7 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
 
     private final int pages;
 
-    public PagedWebSearchPerformer(int token, String keywords, int timeout, int pages) {
+    public PagedWebSearchPerformer(long token, String keywords, int timeout, int pages) {
         super(token, keywords, timeout);
         this.pages = pages;
     }
