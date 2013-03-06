@@ -63,7 +63,7 @@ public class SearchManagerImpl implements SearchManager {
         if (performer != null) {
             performer.registerListener(new PerformerResultListener(this));
 
-            SearchTask task = new SearchTask(this, performer);
+            SearchTask task = new PerformTask(this, performer);
 
             tasks.add(task);
             executor.execute(task);
@@ -74,22 +74,12 @@ public class SearchManagerImpl implements SearchManager {
 
     @Override
     public void stop() {
-        synchronized (tasks) {
-            for (SearchTask task : tasks) {
-                task.stop();
-            }
-        }
+        stopTasks(0);
     }
 
     @Override
     public void stop(long token) {
-        synchronized (tasks) {
-            for (SearchTask task : tasks) {
-                if (task.performer.getToken() == token) {
-                    task.stop();
-                }
-            }
-        }
+        stopTasks(token);
     }
 
     @Override
@@ -138,6 +128,27 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
+    private void stopTasks(long token) {
+        synchronized (tasks) {
+            for (SearchTask task : tasks) {
+                if (token == 0 || task.performer.getToken() == token) {
+                    task.stop();
+                }
+            }
+        }
+    }
+
+    private void crawl(SearchPerformer performer, CrawlableSearchResult sr) {
+        if (performer != null) {
+            SearchTask task = new CrawlTask(this, performer, sr);
+
+            tasks.add(task);
+            executor.execute(task);
+        } else {
+            LOG.warn("Search performer is null, review your logic");
+        }
+    }
+
     private static final class PerformerResultListener implements SearchResultListener {
 
         private final SearchManagerImpl manager;
@@ -154,6 +165,10 @@ public class SearchManagerImpl implements SearchManager {
                 if (sr instanceof CompleteSearchResult) {
                     list.add(sr);
                 }
+
+                if (sr instanceof CrawlableSearchResult) {
+                    manager.crawl(performer, (CrawlableSearchResult) sr);
+                }
             }
 
             if (!list.isEmpty()) {
@@ -162,10 +177,10 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
-    private static final class SearchTask implements Runnable {
+    private static abstract class SearchTask implements Runnable {
 
-        private final SearchManagerImpl manager;
-        private final SearchPerformer performer;
+        protected final SearchManagerImpl manager;
+        protected final SearchPerformer performer;
 
         public SearchTask(SearchManagerImpl manager, SearchPerformer performer) {
             this.manager = manager;
@@ -175,6 +190,13 @@ public class SearchManagerImpl implements SearchManager {
         public void stop() {
             performer.stop();
         }
+    }
+
+    private static final class PerformTask extends SearchTask {
+
+        public PerformTask(SearchManagerImpl manager, SearchPerformer performer) {
+            super(manager, performer);
+        }
 
         @Override
         public void run() {
@@ -182,6 +204,27 @@ public class SearchManagerImpl implements SearchManager {
                 performer.perform();
             } catch (Throwable e) {
                 LOG.warn("Error performing search: " + performer);
+            } finally {
+                manager.tasks.remove(this);
+            }
+        }
+    }
+
+    private static final class CrawlTask extends SearchTask {
+
+        private final CrawlableSearchResult sr;
+
+        public CrawlTask(SearchManagerImpl manager, SearchPerformer performer, CrawlableSearchResult sr) {
+            super(manager, performer);
+            this.sr = sr;
+        }
+
+        @Override
+        public void run() {
+            try {
+                performer.crawl(sr);
+            } catch (Throwable e) {
+                LOG.warn("Error performing crawling of: " + sr);
             } finally {
                 manager.tasks.remove(this);
             }

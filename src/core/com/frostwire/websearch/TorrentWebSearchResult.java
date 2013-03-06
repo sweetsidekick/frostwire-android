@@ -19,13 +19,14 @@
 package com.frostwire.websearch;
 
 import com.frostwire.search.CompleteSearchResult;
+import com.frostwire.search.CrawlableSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface TorrentWebSearchResult extends WebSearchResult, CompleteSearchResult {
+public interface TorrentWebSearchResult extends WebSearchResult, CompleteSearchResult, CrawlableSearchResult {
 
     public long getSize();
 
