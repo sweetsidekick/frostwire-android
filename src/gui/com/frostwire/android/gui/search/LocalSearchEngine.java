@@ -44,7 +44,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SearchEngine;
-import com.frostwire.android.core.SearchEngine2;
+import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
 import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
@@ -193,7 +193,7 @@ public final class LocalSearchEngine {
         */
 
         currentSearchToken = System.nanoTime();
-        for (SearchEngine2 se : SearchEngine2.getEngines()) {
+        for (SearchEngine se : SearchEngine.getEngines()) {
             if (se.isEnabled()) {
                 SearchPerformer p = se.getPerformer(currentSearchToken, query);
                 manager.perform(p);
@@ -324,6 +324,7 @@ public final class LocalSearchEngine {
             }
 
             List<SearchResult> results = new ArrayList<SearchResult>();
+            /*
             Map<Integer, SearchEngine> searchEngines = SearchEngine.getSearchEngineMap();
 
             while (c.moveToNext()) {
@@ -342,6 +343,7 @@ public final class LocalSearchEngine {
                     Log.e(TAG, "Error reading local search result", e);
                 }
             }
+            */
 
             Log.i(TAG, "Ended up with " + results.size() + " results");
 

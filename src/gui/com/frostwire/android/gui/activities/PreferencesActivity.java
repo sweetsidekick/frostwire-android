@@ -127,7 +127,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void setupSearchEngines() {
         PreferenceCategory category = (PreferenceCategory) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
-        for (SearchEngine engine : SearchEngine.getSearchEngines()) {
+        for (SearchEngine engine : SearchEngine.getEngines()) {
             CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
             if (!engine.isActive()) {
                 category.removePreference(preference);

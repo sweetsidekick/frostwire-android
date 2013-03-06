@@ -19,18 +19,16 @@
 package com.frostwire.android.core;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.frostwire.android.bittorrent.websearch.clearbits.ClearBitsWebSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.extratorrent.ExtratorrentWebSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.isohunt.ISOHuntWebSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.mininova.MininovaWebSearchPerformer;
-import com.frostwire.android.bittorrent.websearch.vertor.VertorWebSearchPerformer;
-import com.frostwire.websearch.WebSearchPerformer;
-import com.frostwire.websearch.soundcloud.SoundcloudSearchPerformer;
-import com.frostwire.websearch.youtube.YouTubeSearchPerformer;
+import com.frostwire.search.SearchPerformer;
+import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
+import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
+import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
+import com.frostwire.search.mininova.MininovaSearchPerformer;
+import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
+import com.frostwire.search.vertor.VertorSearchPerformer;
+import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
  * 
@@ -38,57 +36,26 @@ import com.frostwire.websearch.youtube.YouTubeSearchPerformer;
  * @author aldenml
  *
  */
-public final class SearchEngine {
+public abstract class SearchEngine {
 
-    public static final int CLEARBITS_ID = 0;
-    public static final int MININOVA_ID = 1;
-    public static final int ISOHUNT_ID = 2;
-    //public static final int BTJUNKIE_ID = 3;
-    public static final int EXTRATORRENT_ID = 4;
-    public static final int VERTOR_ID = 5;
-    //public static final int TPB_ID = 6;
-    public static final int MONOVA_ID = 7;
-    //public static final int KAT_ID = 8;
-    public static final int YOUTUBE_ID = 9;
-    public static final int SOUNDCLOUD_ID = 10;
+    private static final int DEFAULT_TIMEOUT = 5000;
 
-    private final int id;
     private final String name;
-    private final WebSearchPerformer performer;
     private final String preferenceKey;
 
     private boolean active;
 
-    //public static final SearchEngine BTJUNKIE = new SearchEngine(BTJUNKIE_ID, "BTJunkie", new BTJunkieWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_BTJUNKIE);
-    public static final SearchEngine CLEARBITS = new SearchEngine(CLEARBITS_ID, "ClearBits", new ClearBitsWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_CLEARBITS);
-    public static final SearchEngine EXTRATORRENT = new SearchEngine(EXTRATORRENT_ID, "Extratorrent", new ExtratorrentWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT);
-    public static final SearchEngine ISOHUNT = new SearchEngine(ISOHUNT_ID, "ISOHunt", new ISOHuntWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_ISOHUNT);
-    public static final SearchEngine MININOVA = new SearchEngine(MININOVA_ID, "Mininova", new MininovaWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_MININOVA);
-    //public static final SearchEngine TPB = new SearchEngine(TPB_ID, "TPB", new TPBWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_TPB);
-    public static final SearchEngine VERTOR = new SearchEngine(VERTOR_ID, "Vertor", new VertorWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_VERTOR);
-    //public static final SearchEngine KAT = new SearchEngine(KAT_ID, "KAT", new KATWebSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_KAT);
-    public static final SearchEngine YOUTUBE = new SearchEngine(YOUTUBE_ID, "YouTube", new YouTubeSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_YOUTUBE);
-    public static final SearchEngine SOUNCLOUD = new SearchEngine(SOUNDCLOUD_ID, "Soundcloud", new SoundcloudSearchPerformer(), Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD);
-
-    private SearchEngine(int id, String name, WebSearchPerformer performer, String preferenceKey) {
-        this.id = id;
+    private SearchEngine(String name, String preferenceKey) {
         this.name = name;
-        this.performer = performer;
         this.preferenceKey = preferenceKey;
         this.active = true;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public WebSearchPerformer getPerformer() {
-        return performer;
-    }
+    public abstract SearchPerformer getPerformer(long token, String keywords);
 
     public String getPreferenceKey() {
         return preferenceKey;
@@ -107,47 +74,60 @@ public final class SearchEngine {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return id == ((SearchEngine) obj).id;
-    }
-
-    @Override
     public String toString() {
         return name;
     }
 
-    public static List<SearchEngine> getSearchEngines() {
+    public static List<SearchEngine> getEngines() {
         return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE, SOUNCLOUD);
     }
 
-    public static SearchEngine getSearchEngine(int id) {
-        for (SearchEngine engine : getSearchEngines()) {
-            if (engine.getId() == id) {
-                return engine;
-            }
+    public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new ClearBitsSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
+    };
 
-        return null;
-    }
-
-    public static SearchEngine getSearchEngine(String name) {
-        for (SearchEngine engine : getSearchEngines()) {
-            if (engine.getName().equals(name)) {
-                return engine;
-            }
+    public static final SearchEngine EXTRATORRENT = new SearchEngine("Extratorrent", Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new ExtratorrentSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
+    };
 
-        return null;
-    }
-
-    //@SuppressLint("UseSparseArrays")
-    public static Map<Integer, SearchEngine> getSearchEngineMap() {
-        HashMap<Integer, SearchEngine> map = new HashMap<Integer, SearchEngine>();
-
-        for (SearchEngine engine : getSearchEngines()) {
-            map.put(engine.getId(), engine);
+    public static final SearchEngine ISOHUNT = new SearchEngine("ISOHunt", Constants.PREF_KEY_SEARCH_USE_ISOHUNT) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new ISOHuntSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
+    };
 
-        return map;
-    }
+    public static final SearchEngine MININOVA = new SearchEngine("Mininova", Constants.PREF_KEY_SEARCH_USE_MININOVA) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new MininovaSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        };
+    };
+
+    public static final SearchEngine VERTOR = new SearchEngine("Vertor", Constants.PREF_KEY_SEARCH_USE_VERTOR) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new VertorSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        };
+    };
+
+    public static final SearchEngine YOUTUBE = new SearchEngine("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new YouTubeSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        };
+    };
+
+    public static final SearchEngine SOUNCLOUD = new SearchEngine("Soundcloud", Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new SoundcloudSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        };
+    };
 }

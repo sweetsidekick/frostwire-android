@@ -287,12 +287,13 @@ public final class SoftwareUpdater {
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, ByteUtils.randomInt(0, 100) < update.config.supportThreshold);
 
+        /*
         for (String name : update.config.activeSearchEngines.keySet()) {
             SearchEngine engine = SearchEngine.getSearchEngine(name);
             if (engine != null) {
                 engine.setActive(update.config.activeSearchEngines.get(name));
             }
-        }
+        }*/
     }
 
     private static class Update {
