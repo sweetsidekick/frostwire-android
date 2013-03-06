@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -70,11 +70,12 @@ public class VertorSearchResult implements TorrentWebSearchResult {
         return item.download;
     }
 
-    public int getRank() {
+    @Override
+    public int getSeeds() {
         return Integer.valueOf(item.seeds);
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsURL() {
         return item.url;
     }
 

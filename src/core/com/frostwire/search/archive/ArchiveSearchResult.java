@@ -18,7 +18,7 @@
 
 package com.frostwire.search.archive;
 
-import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.search.WebSearchResult;
 
 /**
  * @author gubatron

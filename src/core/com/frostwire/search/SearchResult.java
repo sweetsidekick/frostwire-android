@@ -25,4 +25,5 @@ package com.frostwire.search;
  */
 public interface SearchResult {
 
+    public String getSource();
 }

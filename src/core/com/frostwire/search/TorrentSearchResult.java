@@ -16,18 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.websearch;
-
-import java.util.List;
-
-import com.frostwire.search.WebSearchResult;
+package com.frostwire.search;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchPerformer {
+public interface TorrentSearchResult extends CompleteSearchResult {
 
-    public List<WebSearchResult> search(String keywords);
+    public String getFileName();
+
+    public long getSize();
+
+    public long getCreationTime();
+
+    public String getHash();
+
+    public String getTorrentURI();
+
+    public String getDetailsURL();
+
+    public int getSeeds();
 }

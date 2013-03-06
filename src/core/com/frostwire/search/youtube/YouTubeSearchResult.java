@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.search.WebSearchResult;
 
 /**
  * @author gubatron
@@ -76,7 +76,6 @@ public class YouTubeSearchResult implements WebSearchResult {
         }
     }
 
-    @Override
     public int getRank() {
         return 20000;
     }

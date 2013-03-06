@@ -19,7 +19,7 @@
 package com.frostwire.android.gui.search;
 
 import com.frostwire.android.util.FilenameUtils;
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -28,9 +28,9 @@ import com.frostwire.websearch.TorrentWebSearchResult;
  */
 public class BittorrentWebSearchResult implements BittorrentSearchResult {
 
-    private final TorrentWebSearchResult webResult;
+    private final TorrentSearchResult webResult;
 
-    public BittorrentWebSearchResult(TorrentWebSearchResult webResult) {
+    public BittorrentWebSearchResult(TorrentSearchResult webResult) {
         this.webResult = webResult;
     }
 
@@ -43,7 +43,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public int getRank() {
-        return webResult.getRank();
+        return webResult.getSeeds();
     }
 
     public long getSize() {
@@ -59,7 +59,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public String getDetailsUrl() {
-        return webResult.getTorrentDetailsURL();
+        return webResult.getDetailsURL();
     }
 
     public String getTorrentURI() {

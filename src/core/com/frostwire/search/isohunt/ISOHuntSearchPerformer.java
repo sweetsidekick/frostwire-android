@@ -23,8 +23,8 @@ import java.util.List;
 
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchPerformer;
+import com.frostwire.search.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron

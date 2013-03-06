@@ -26,12 +26,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.soundcloud.SoundcloudItem;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron

@@ -21,14 +21,13 @@ package com.frostwire.search;
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 
 import com.frostwire.android.util.FilenameUtils;
-import com.frostwire.websearch.TorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class TorrentDeepSearchResult implements CompleteSearchResult {
+public class TorrentDeepSearchResult implements TorrentSearchResult {
 
     private TorrentWebSearchResult sr;
     private TOTorrentFile file;
@@ -46,10 +45,6 @@ public class TorrentDeepSearchResult implements CompleteSearchResult {
         return file.getRelativePath();
     }
 
-    public int getRank() {
-        return sr.getRank();
-    }
-
     public long getSize() {
         return file.getLength();
     }
@@ -62,15 +57,21 @@ public class TorrentDeepSearchResult implements CompleteSearchResult {
         return sr.getHash();
     }
 
-    public String getDetailsUrl() {
-        return sr.getDetailsUrl();
-    }
-
     public String getTorrentURI() {
         return sr.getTorrentURI();
     }
 
     public String getSource() {
         return sr.getSource();
+    }
+
+    @Override
+    public String getDetailsURL() {
+        return sr.getDetailsUrl();
+    }
+
+    @Override
+    public int getSeeds() {
+        return sr.getSeeds();
     }
 }

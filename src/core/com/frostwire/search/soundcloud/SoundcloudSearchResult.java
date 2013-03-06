@@ -19,7 +19,7 @@
 package com.frostwire.search.soundcloud;
 
 import com.frostwire.search.CompleteSearchResult;
-import com.frostwire.websearch.WebSearchResult;
+import com.frostwire.search.WebSearchResult;
 
 /**
  * @author gubatron
@@ -59,7 +59,6 @@ public class SoundcloudSearchResult implements WebSearchResult, CompleteSearchRe
         }
     }
 
-    @Override
     public int getRank() {
         return 10000;
     }

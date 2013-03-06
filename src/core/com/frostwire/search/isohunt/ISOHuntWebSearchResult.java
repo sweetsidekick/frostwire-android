@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -70,7 +70,8 @@ public class ISOHuntWebSearchResult implements TorrentWebSearchResult {
         return "ISOHunt";
     }
 
-    public int getRank() {
+    @Override
+    public int getSeeds() {
         try {
             return Integer.valueOf(item.Seeds);
         } catch (Exception e) {
@@ -79,7 +80,7 @@ public class ISOHuntWebSearchResult implements TorrentWebSearchResult {
         }
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsURL() {
         return item.link;
     }
 

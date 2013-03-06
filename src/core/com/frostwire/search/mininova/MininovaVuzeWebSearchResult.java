@@ -21,7 +21,7 @@ package com.frostwire.search.mininova;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -68,11 +68,12 @@ public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
         return "Mininova";
     }
 
-    public int getRank() {
+    @Override
+    public int getSeeds() {
         return item.seeds + item.superseeds;
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsURL() {
         return item.cdp;
     }
 

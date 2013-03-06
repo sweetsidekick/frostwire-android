@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.frostwire.android.util.UrlUtils;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.youtube.YouTubeEntry;
 import com.frostwire.search.youtube.YouTubeResponse;
 import com.frostwire.search.youtube.YouTubeSearchResult;
@@ -29,7 +30,6 @@ import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.HttpClient;
 import com.frostwire.websearch.WebSearchPerformer;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * 

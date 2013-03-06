@@ -21,7 +21,7 @@ package com.frostwire.search.clearbits;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -64,11 +64,12 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
         return Long.valueOf(item.mb_size * 1024 * 1024);
     }
 
-    public int getRank() {
+    @Override
+    public int getSeeds() {
         return item.seeds;
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsURL() {
         return item.location;
     }
 

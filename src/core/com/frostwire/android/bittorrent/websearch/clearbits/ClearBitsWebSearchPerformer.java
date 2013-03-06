@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.search.TorrentWebSearchResult;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.clearbits.ClearBitsItem;
 import com.frostwire.search.clearbits.ClearBitsResponse;
 import com.frostwire.search.clearbits.ClearBitsWebSearchResult;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.websearch.JsonSearchPerformer;
-import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron

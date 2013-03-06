@@ -20,8 +20,9 @@ package com.frostwire.search.extratorrent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
-import com.frostwire.websearch.TorrentWebSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 
 /**
  * @author gubatron
@@ -47,7 +48,7 @@ public class ExtratorrentResponseWebSearchResult implements TorrentWebSearchResu
 
     public long getCreationTime() {
         //Wed, 09 Jun 2010 18:08:27 +0100
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.pubDate).getTime();
@@ -69,11 +70,12 @@ public class ExtratorrentResponseWebSearchResult implements TorrentWebSearchResu
         return item.torrentLink;
     }
 
-    public int getRank() {
+    @Override
+    public int getSeeds() {
         return item.seeds;
     }
 
-    public String getTorrentDetailsURL() {
+    public String getDetailsURL() {
         return item.link;
     }
 

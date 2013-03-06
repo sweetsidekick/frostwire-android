@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * 

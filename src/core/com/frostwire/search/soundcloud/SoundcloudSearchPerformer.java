@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron

@@ -21,16 +21,12 @@ package com.frostwire.android.gui.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
@@ -61,11 +57,11 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult;
 import com.frostwire.util.JsonUtils;
-import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -522,10 +518,10 @@ public final class LocalSearchEngine {
     private List<com.frostwire.android.gui.search.SearchResult> normalizeWebResults(List<? extends SearchResult> webResults) {
         List<com.frostwire.android.gui.search.SearchResult> result = new ArrayList<com.frostwire.android.gui.search.SearchResult>(webResults.size());
         for (SearchResult webResult : webResults) {
-            if (webResult instanceof TorrentWebSearchResult) {
-                TorrentWebSearchResult tsr = (TorrentWebSearchResult) webResult;
+            if (webResult instanceof TorrentSearchResult) {
+                TorrentSearchResult tsr = (TorrentSearchResult) webResult;
                 //if (filter(tsr)) {
-                if (tsr.getRank() < 50) {
+                if (tsr.getSeeds() < 50) {
                     continue;
                 }
                 BittorrentSearchResult sr = new BittorrentWebSearchResult(tsr);

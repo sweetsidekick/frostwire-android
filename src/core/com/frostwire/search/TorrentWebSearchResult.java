@@ -16,26 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.websearch;
+package com.frostwire.search;
 
-import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchResult extends SearchResult {
-
-    public String getDisplayName();
-    
-    public String getFileName();
-    
-    public long getCreationTime();
-
-    public String getSource();
-
-    public int getRank();
-
-    public String getDetailsUrl();
+public interface TorrentWebSearchResult extends TorrentSearchResult, WebSearchResult, CrawlableSearchResult {
 }

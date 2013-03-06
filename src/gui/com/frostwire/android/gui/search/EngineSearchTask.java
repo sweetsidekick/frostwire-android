@@ -26,10 +26,10 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SearchEngine;
+import com.frostwire.search.TorrentWebSearchResult;
+import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult;
-import com.frostwire.websearch.TorrentWebSearchResult;
-import com.frostwire.websearch.WebSearchResult;
 
 /**
  * @author gubatron
@@ -96,7 +96,7 @@ class EngineSearchTask extends SearchTask {
     // this is a preliminary filter, since we need to provide the best user experience
     // we will remove "low quality" torrents, for example: low seeds, with bad names, etc.
     private boolean filter(TorrentWebSearchResult sr) {
-        if (sr.getRank() < MIN_SEEDS_TORRENT_RESULT) {
+        if (sr.getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
             return false;
         }
 
