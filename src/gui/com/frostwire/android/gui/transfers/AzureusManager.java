@@ -97,7 +97,9 @@ public final class AzureusManager {
     }
 
     private AzureusManager(Context context) {
-        azureusConfigurationInit();
+        initConfiguration();
+        asyncSaveConfiguration();
+
         loadMessages(context);
         azureusInit();
         azureusStart();
@@ -196,7 +198,7 @@ public final class AzureusManager {
         return getAzureusCore().getGlobalManager();
     }
 
-    private void azureusConfigurationInit() {
+    public static void initConfiguration() {
         File azureusPath = SystemUtils.getAzureusDirectory();
 
         System.setProperty("azureus.config.path", azureusPath.getAbsolutePath());
@@ -216,8 +218,6 @@ public final class AzureusManager {
         COConfigurationManager.setParameter("network.tcp.read.select.min.time", 1000);
         COConfigurationManager.setParameter("network.control.write.idle.time", 1000);
         COConfigurationManager.setParameter("network.control.read.idle.time", 1000);
-
-        asyncSaveConfiguration();
     }
 
     private void azureusInit() {
@@ -320,7 +320,7 @@ public final class AzureusManager {
         DisplayFormatters.loadMessages(map);
     }
 
-    private void asyncSaveConfiguration() {
+    private static void asyncSaveConfiguration() {
         SAFE_CONFIG_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
