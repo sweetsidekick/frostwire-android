@@ -19,13 +19,14 @@
 package com.frostwire.search.archive;
 
 import com.frostwire.search.AbstractWebSearchResult;
+import com.frostwire.search.CrawlableSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ArchiveSearchResult extends AbstractWebSearchResult {
+public class ArchiveSearchResult extends AbstractWebSearchResult implements CrawlableSearchResult {
 
     private final ArchiveItem item;
 

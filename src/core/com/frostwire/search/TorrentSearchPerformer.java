@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @author aldenml
  *
  */
-public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer<TorrentWebSearchResult> {
+public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerformer<TorrentWebSearchResult> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TorrentSearchPerformer.class);
 
@@ -47,7 +47,7 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer<Tor
     }
 
     @Override
-    public void crawlSearchResult(TorrentWebSearchResult sr) {
+    public void crawlResult(TorrentWebSearchResult sr) {
         if (sr.getTorrentURI().startsWith("http")) {
             TOTorrent torrent = downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
 
