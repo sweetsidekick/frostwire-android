@@ -18,6 +18,12 @@
 
 package com.frostwire.gui.upnp.android;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 
@@ -46,6 +52,16 @@ public class UPnPService extends AndroidUpnpServiceImpl {
             public ServiceType[] getExclusiveServiceTypes() {
                 return new ServiceType[] { new UDAServiceType("UPnPFWDeviceInfo") };
             }
+            
+            @Override
+            protected ExecutorService createDefaultExecutorService() {
+                return createFrostWireExecutor();
+            }
         };
     }
+    
+    protected ExecutorService createFrostWireExecutor() {
+        return new ThreadPoolExecutor(0,32,30,TimeUnit.SECONDS,new SynchronousQueue<Runnable>(),new ClingThreadFactory());
+    }
+
 }
