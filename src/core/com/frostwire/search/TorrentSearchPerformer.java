@@ -95,7 +95,7 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
             byte[] data = fetchBytes(url, referrer, TORRENT_DOWNLOAD_TIMEOUT);
             torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));
         } catch (TOTorrentException e) {
-            LOG.warn("Failed to download torrent: " + url, e);
+            LOG.warn("Failed to download torrent: " + url + ", e=" + e.getMessage());
         }
         return torrent;
     }

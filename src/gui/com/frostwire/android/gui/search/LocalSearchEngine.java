@@ -523,9 +523,9 @@ public final class LocalSearchEngine {
             if (webResult instanceof TorrentSearchResult) {
                 TorrentSearchResult tsr = (TorrentSearchResult) webResult;
                 //if (filter(tsr)) {
-                if (tsr.getSeeds() < 50) {
-                    continue;
-                }
+//                if (tsr.getSeeds() < 50) {
+//                    continue;
+//                }
                 BittorrentSearchResult sr = new BittorrentWebSearchResult(tsr);
                 result.add(sr);
                 //}
