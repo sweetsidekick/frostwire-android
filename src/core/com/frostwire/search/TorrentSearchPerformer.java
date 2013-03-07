@@ -40,8 +40,8 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TorrentSearchPerformer.class);
 
-    private static final int DEFAULT_NUM_TORRENT_DOWNLOADS = 1;
-    private static final int TORRENT_DOWNLOAD_TIMEOUT = 20000; // 10 seconds
+    private static final int DEFAULT_NUM_TORRENT_DOWNLOADS = 4;
+    private static final int TORRENT_DOWNLOAD_TIMEOUT = 10000; // 10 seconds
 
     private int numTorrentDownloads;
 
@@ -91,6 +91,7 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
     protected TOTorrent downloadTorrent(String url, String referrer) {
         TOTorrent torrent = null;
         try {
+            LOG.debug("Downloading torrent: " + url);
             byte[] data = fetchBytes(url, referrer, TORRENT_DOWNLOAD_TIMEOUT);
             torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));
         } catch (TOTorrentException e) {
@@ -118,7 +119,7 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
         for (String t : keywordTokens) {
             if (!fileStr.contains(t)) {
-                return false;
+                return true;
             }
         }
 

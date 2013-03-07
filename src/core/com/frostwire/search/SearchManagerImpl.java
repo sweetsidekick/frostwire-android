@@ -206,7 +206,7 @@ public class SearchManagerImpl implements SearchManager {
             try {
                 performer.perform();
             } catch (Throwable e) {
-                LOG.warn("Error performing search: " + performer);
+                LOG.warn("Error performing search: " + performer, e);
             } finally {
                 manager.tasks.remove(this);
             }

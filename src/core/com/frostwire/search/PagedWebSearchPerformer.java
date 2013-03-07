@@ -18,7 +18,11 @@
 
 package com.frostwire.search;
 
+import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author gubatron
@@ -26,6 +30,8 @@ import java.util.List;
  *
  */
 public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PagedWebSearchPerformer.class);
 
     private final int pages;
 
@@ -44,7 +50,12 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
     protected List<? extends SearchResult> searchPage(int page) {
         String url = getUrl(page, encodeKeywords());
         String text = fetch(url);
-        return searchPage(text);
+        if (text != null) {
+            return searchPage(text);
+        } else {
+            LOG.warn("Page content empty for url: " + url);
+            return Collections.emptyList();
+        }
     }
 
     protected abstract String getUrl(int page, String encodedKeywords);

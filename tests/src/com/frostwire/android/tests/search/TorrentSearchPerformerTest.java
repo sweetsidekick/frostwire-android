@@ -86,6 +86,11 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         deepSearch(new ExtratorrentSearchPerformer(0, "frostclick", 5000));
     }
 
+    @LargeTest
+    public void testDeepSearchClearBits() {
+        deepSearch(new ExtratorrentSearchPerformer(0, "Big Buck Bunny", 5000));
+    }
+
     private void downloadTorrent(final String url, final String referrer) {
         TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0, 0) {
 
