@@ -140,10 +140,13 @@ public class SearchManagerImpl implements SearchManager {
 
     private void crawl(SearchPerformer performer, CrawlableSearchResult sr) {
         if (performer != null) {
-            SearchTask task = new CrawlTask(this, performer, sr);
-
-            tasks.add(task);
-            executor.execute(task);
+            try {
+                SearchTask task = new CrawlTask(this, performer, sr);
+                tasks.add(task);
+                executor.execute(task);
+            } catch (Throwable e) {
+                LOG.warn("Error scheduling crawling of search result: " + sr);
+            }
         } else {
             LOG.warn("Search performer is null, review your logic");
         }

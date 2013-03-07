@@ -63,6 +63,8 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
             if (sr instanceof TorrentWebSearchResult) {
                 crawlTorrent((TorrentWebSearchResult) sr);
+            } else {
+                LOG.warn("Something wrong with the logic, need to pass a TorrentWebSearchResult instead of " + sr.getClass());
             }
         }
     }
