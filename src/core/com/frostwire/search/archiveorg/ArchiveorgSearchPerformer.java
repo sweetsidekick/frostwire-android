@@ -18,11 +18,12 @@
 
 package com.frostwire.search.archiveorg;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,23 +51,20 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         try {
             String json = fetch(url);
             JSONObject obj = new JSONObject(json);
-            Object files = obj.get("files");
-            LOG.info(files.toString());
+            JSONObject files = obj.getJSONObject("files");
+
+            @SuppressWarnings("unchecked")
+            Iterator<String> it = files.keys();
+
+            while (it.hasNext()) {
+                String name = it.next();
+                ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
+                // optimize here
+                onResults(this, Arrays.asList(new ArchiveorgDeepSearchResult(sr, name, file)));
+            }
         } catch (Throwable e) {
             LOG.warn("Unable to get details for url: " + url + ", e=" + e.getMessage());
         }
-
-        /*
-        if (numTorrentDownloads > 0) {
-            numTorrentDownloads--;
-
-            if (sr instanceof TorrentWebSearchResult) {
-                crawlTorrent((TorrentWebSearchResult) sr);
-            } else {
-                LOG.warn("Something wrong with the logic, need to pass a TorrentWebSearchResult instead of " + sr.getClass());
-            }
-        }
-        */
     }
 
     @Override

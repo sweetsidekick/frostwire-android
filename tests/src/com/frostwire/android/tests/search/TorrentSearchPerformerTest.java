@@ -134,7 +134,7 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
 
         assertTrue("Did not finish or took too much time", manager.shutdown(1, TimeUnit.MINUTES));
 
-        assertTrue("Didn't get a crawled search result", l.containsTorrentDeepSearchResult());
+        assertTrue("Didn't get a crawled search result", l.containsDeepSearchResult());
 
         l.logResults();
     }

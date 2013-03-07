@@ -18,7 +18,7 @@
 
 package com.frostwire.search.archiveorg;
 
-import java.util.List;
+import com.frostwire.search.CompleteSearchResult;
 
 /**
  * 
@@ -26,20 +26,25 @@ import java.util.List;
  * @author aldenml
  *
  */
-public class ArchiveorgItem {
+public class ArchiveorgDeepSearchResult implements CompleteSearchResult {
 
-    public String title;
-    public String mediatype;
-    public String description;
-    public String licenseurl;
-    public String publicdate;
-    public int downloads;
-    public int week;
-    public int month;
-    public int num_reviews;
-    public float avg_rating;
-    public String identifier;
-    public List<String> subject;
-    public List<String> format;
-    public List<String> collection;
+    private final ArchiveorgSearchResult sr;
+    private final String filename;
+    private final ArchiveorgFile file;
+
+    public ArchiveorgDeepSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
+        this.sr = sr;
+        this.filename = filename;
+        this.file = file;
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        return "http://archive.org/details/" + sr.getItem().identifier;
+    }
+
+    @Override
+    public String getSource() {
+        return sr.getSource();
+    }
 }
