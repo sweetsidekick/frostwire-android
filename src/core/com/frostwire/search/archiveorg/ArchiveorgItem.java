@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archive;
+package com.frostwire.search.archiveorg;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * @author aldenml
  *
  */
-public class ArchiveItem {
+public class ArchiveorgItem {
 
     public String title;
     public String mediatype;

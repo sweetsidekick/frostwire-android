@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archive;
+package com.frostwire.search.archiveorg;
 
 /*
 {
@@ -65,7 +65,7 @@ package com.frostwire.search.archive;
  * @author aldenml
  *
  */
-public class ArchiveResponse {
+public class ArchiveorgResponse {
 
-    public ArchiveResponseField response;
+    public ArchiveorgResponseField response;
 }

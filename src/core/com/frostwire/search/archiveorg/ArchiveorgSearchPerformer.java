@@ -16,10 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archive;
+package com.frostwire.search.archiveorg;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -30,14 +35,27 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-public class ArchiveSearchPerformer extends CrawlPagedWebSearchPerformer<ArchiveSearchResult> {
+public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<ArchiveorgSearchResult> {
 
-    public ArchiveSearchPerformer(int token, String keywords, int timeout) {
+    private static final Logger LOG = LoggerFactory.getLogger(ArchiveorgSearchPerformer.class);
+
+    public ArchiveorgSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
     }
 
     @Override
-    public void crawlResult(ArchiveSearchResult sr) {
+    public void crawlResult(ArchiveorgSearchResult sr) {
+        String url = "http://archive.org/details/" + sr.getItem().identifier + "?output=json";
+
+        try {
+            String json = fetch(url);
+            JSONObject obj = new JSONObject(json);
+            Object files = obj.get("files");
+            LOG.info(files.toString());
+        } catch (Throwable e) {
+            LOG.warn("Unable to get details for url: " + url + ", e=" + e.getMessage());
+        }
+
         /*
         if (numTorrentDownloads > 0) {
             numTorrentDownloads--;
@@ -62,11 +80,11 @@ public class ArchiveSearchPerformer extends CrawlPagedWebSearchPerformer<Archive
     protected List<? extends SearchResult> searchPage(String page) {
         List<SearchResult> result = new LinkedList<SearchResult>();
 
-        ArchiveResponse response = JsonUtils.toObject(page, ArchiveResponse.class);
+        ArchiveorgResponse response = JsonUtils.toObject(page, ArchiveorgResponse.class);
 
-        for (ArchiveItem item : response.response.docs) {
+        for (ArchiveorgItem item : response.response.docs) {
             if (!isStopped()) {
-                ArchiveSearchResult sr = new ArchiveSearchResult(item);
+                ArchiveorgSearchResult sr = new ArchiveorgSearchResult(item);
                 result.add(sr);
             }
         }

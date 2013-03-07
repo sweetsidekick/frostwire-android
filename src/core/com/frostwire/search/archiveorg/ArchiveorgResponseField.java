@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archive;
+package com.frostwire.search.archiveorg;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ import java.util.List;
  * @author aldenml
  *
  */
-public class ArchiveResponseField {
+public class ArchiveorgResponseField {
 
     public int numFound;
     public int start;
-    public List<ArchiveItem> docs;
+    public List<ArchiveorgItem> docs;
 }

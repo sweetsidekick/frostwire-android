@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.frostwire.search.SearchPerformer;
+import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
@@ -79,7 +80,7 @@ public abstract class SearchEngine {
     }
 
     public static List<SearchEngine> getEngines() {
-        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR/*, TPB*//*,KAT*/, YOUTUBE, SOUNCLOUD);
+        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
     }
 
     public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
@@ -107,27 +108,34 @@ public abstract class SearchEngine {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             return new MininovaSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        };
+        }
     };
 
     public static final SearchEngine VERTOR = new SearchEngine("Vertor", Constants.PREF_KEY_SEARCH_USE_VERTOR) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             return new VertorSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        };
+        }
     };
 
     public static final SearchEngine YOUTUBE = new SearchEngine("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             return new YouTubeSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        };
+        }
     };
 
     public static final SearchEngine SOUNCLOUD = new SearchEngine("Soundcloud", Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             return new SoundcloudSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        };
+        }
+    };
+
+    public static final SearchEngine ARCHIVE = new SearchEngine("Archive.org", Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        }
     };
 }

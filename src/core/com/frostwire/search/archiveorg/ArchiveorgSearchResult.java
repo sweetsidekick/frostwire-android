@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archive;
+package com.frostwire.search.archiveorg;
 
 import com.frostwire.search.AbstractWebSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
@@ -26,12 +26,16 @@ import com.frostwire.search.CrawlableSearchResult;
  * @author aldenml
  *
  */
-public class ArchiveSearchResult extends AbstractWebSearchResult implements CrawlableSearchResult {
+public class ArchiveorgSearchResult extends AbstractWebSearchResult implements CrawlableSearchResult {
 
-    private final ArchiveItem item;
+    private final ArchiveorgItem item;
 
-    public ArchiveSearchResult(ArchiveItem item) {
+    public ArchiveorgSearchResult(ArchiveorgItem item) {
         this.item = item;
+    }
+
+    public ArchiveorgItem getItem() {
+        return item;
     }
 
     public long getCreationTime() {
