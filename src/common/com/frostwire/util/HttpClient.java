@@ -35,17 +35,21 @@ public interface HttpClient {
     public HttpClientListener getListener();
 
     public String get(String url);
-    
+
     public String get(String url, int timeout);
 
     public String get(String url, int timeout, String userAgent);
+
+    public String get(String url, int timeout, String userAgent, String referrer);
+
+    public byte[] getBytes(String url, int timeout, String userAgent, String referrer);
 
     public void save(String url, File file, boolean resume) throws IOException;
 
     public void save(String url, File file, boolean resume, int timeout, String userAgent) throws IOException;
 
     public void cancel();
-    
+
     public boolean isCanceled();
 
     public interface HttpClientListener {

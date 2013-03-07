@@ -56,21 +56,44 @@ final class FWHttpClient implements HttpClient {
     public String get(String url) {
         return get(url, DEFAULT_TIMEOUT, DEFAULT_USER_AGENT);
     }
-    
+
     public String get(String url, int timeout) {
         return get(url, timeout, DEFAULT_USER_AGENT);
     }
 
     public String get(String url, int timeout, String userAgent) {
+        return get(url, timeout, userAgent, null);
+    }
+
+    public String get(String url, int timeout, String userAgent, String referrer) {
         String result = null;
 
         ByteArrayOutputStream baos = null;
 
         try {
             baos = new ByteArrayOutputStream();
-            get(url, baos, timeout, userAgent, -1);
+            get(url, baos, timeout, userAgent, referrer, -1);
 
             result = new String(baos.toByteArray(), "UTF-8");
+        } catch (Throwable e) {
+            LOG.warn("Error getting string from http body response: " + e.getMessage());
+        } finally {
+            closeQuietly(baos);
+        }
+
+        return result;
+    }
+    
+    public byte[] getBytes(String url, int timeout, String userAgent, String referrer) {
+        byte[] result = null;
+
+        ByteArrayOutputStream baos = null;
+
+        try {
+            baos = new ByteArrayOutputStream();
+            get(url, baos, timeout, userAgent, referrer, -1);
+
+            result = baos.toByteArray();
         } catch (Throwable e) {
             LOG.warn("Error getting string from http body response: " + e.getMessage());
         } finally {
@@ -85,6 +108,10 @@ final class FWHttpClient implements HttpClient {
     }
 
     public void save(String url, File file, boolean resume, int timeout, String userAgent) throws IOException {
+        save(url, file, resume, timeout, userAgent, null);
+    }
+
+    public void save(String url, File file, boolean resume, int timeout, String userAgent, String referrer) throws IOException {
         FileOutputStream fos = null;
         int rangeStart = 0;
 
@@ -97,7 +124,7 @@ final class FWHttpClient implements HttpClient {
                 rangeStart = -1;
             }
 
-            get(url, fos, timeout, userAgent, rangeStart);
+            get(url, fos, timeout, userAgent, referrer, rangeStart);
         } finally {
             closeQuietly(fos);
         }
@@ -108,11 +135,11 @@ final class FWHttpClient implements HttpClient {
         return prefix + ((rangeLength > -1) ? (rangeStart + rangeLength) : "");
     }
 
-    private void get(String url, OutputStream out, int timeout, String userAgent, int rangeStart) throws IOException {
-        get(url, out, timeout, userAgent, rangeStart, -1);
+    private void get(String url, OutputStream out, int timeout, String userAgent, String referrer, int rangeStart) throws IOException {
+        get(url, out, timeout, userAgent, referrer, rangeStart, -1);
     }
 
-    private void get(String url, OutputStream out, int timeout, String userAgent, int rangeStart, int rangeLength) throws IOException {
+    private void get(String url, OutputStream out, int timeout, String userAgent, String referrer, int rangeStart, int rangeLength) throws IOException {
         canceled = false;
         URL u = new URL(url);
         URLConnection conn = u.openConnection();
@@ -120,7 +147,11 @@ final class FWHttpClient implements HttpClient {
         conn.setConnectTimeout(timeout);
         conn.setReadTimeout(timeout);
         conn.setRequestProperty("User-Agent", userAgent);
-        
+
+        if (referrer != null) {
+            conn.setRequestProperty("Referer", referrer);
+        }
+
         if (conn instanceof HttpsURLConnection) {
             setHostnameVerifier((HttpsURLConnection) conn);
         }
@@ -165,7 +196,7 @@ final class FWHttpClient implements HttpClient {
             closeQuietly(conn);
         }
     }
-    
+
     private void setHostnameVerifier(HttpsURLConnection conn) {
         conn.setHostnameVerifier(new HostnameVerifier() {
             @Override

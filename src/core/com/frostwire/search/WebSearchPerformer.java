@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
+import com.frostwire.util.UserAgentGenerator;
 
 /**
  * 
@@ -34,6 +35,8 @@ import com.frostwire.util.HttpClientFactory;
 public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSearchPerformer.class);
+
+    private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
 
     protected final String keywords;
     private final int timeout;
@@ -53,6 +56,10 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
     protected String fetch(String url) {
         return client.get(url, timeout);
+    }
+
+    protected byte[] fetchBytes(String url, String referrer, int timeout) {
+        return client.getBytes(url, timeout, DEFAULT_USER_AGENT, referrer);
     }
 
     protected String encodeKeywords() {
