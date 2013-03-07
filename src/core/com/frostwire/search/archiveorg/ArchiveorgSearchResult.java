@@ -42,14 +42,17 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
         return -1;
     }
 
-    public String getFileName() {
-        return item.title;
+    @Override
+    public String getFilename() {
+        return null;
     }
 
+    @Override
     public String getHash() {
         return "";
     }
 
+    @Override
     public long getSize() {
         return -1;
     }

@@ -23,11 +23,9 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface SearchResult {
-    
-    public String getDisplayName();
+public interface FileSearchResult extends SearchResult {
 
-    public String getDetailsUrl();
-    
-    public String getSource();
+    public String getFilename();
+
+    public long getSize();
 }

@@ -20,9 +20,9 @@ package com.frostwire.android.gui;
 
 import java.util.List;
 
-import com.frostwire.android.gui.search.SearchResult;
-import com.frostwire.android.gui.transfers.BittorrentPromotionSearchResult;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
+import com.frostwire.android.gui.transfers.TorrentPromotionSearchResult;
+import com.frostwire.search.SearchResult;
 
 /**
  * 
@@ -42,7 +42,7 @@ public class PromotionsHandler {
     public SearchResult buildSearchResult(Slide slide) {
         switch (slide.method) {
         case Slide.DOWNLOAD_METHOD_TORRENT:
-            return new BittorrentPromotionSearchResult(slide);
+            return new TorrentPromotionSearchResult(slide);
         case Slide.DOWNLOAD_METHOD_HTTP:
             return new HttpSlideSearchResult(slide);
         default:

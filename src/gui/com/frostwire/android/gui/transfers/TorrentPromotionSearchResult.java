@@ -19,22 +19,22 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.android.gui.PromotionsHandler.Slide;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
-    
+public class TorrentPromotionSearchResult implements TorrentSearchResult {
+
     private static final String FROSTCLICK_VENDOR = "FrostClick";
 
     private final Slide slide;
     private final long creationTime;
 
-    public BittorrentPromotionSearchResult(Slide slide) {
+    public TorrentPromotionSearchResult(Slide slide) {
         this.slide = slide;
         this.creationTime = System.currentTimeMillis();
     }
@@ -49,13 +49,8 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     }
 
     @Override
-    public String getFileName() {
+    public String getFilename() {
         return FilenameUtils.getName(slide.url);
-    }
-
-    @Override
-    public int getRank() {
-        return 0;
     }
 
     @Override
@@ -81,5 +76,10 @@ public class BittorrentPromotionSearchResult implements BittorrentSearchResult {
     @Override
     public String getSource() {
         return FROSTCLICK_VENDOR;
+    }
+
+    @Override
+    public int getSeeds() {
+        return -1;
     }
 }

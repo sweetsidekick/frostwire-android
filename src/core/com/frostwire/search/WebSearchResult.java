@@ -18,21 +18,12 @@
 
 package com.frostwire.search;
 
-
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchResult extends SearchResult {
+public interface WebSearchResult extends FileSearchResult {
 
-    public String getDisplayName();
-    
-    public String getFileName();
-    
     public long getCreationTime();
-
-    public String getSource();
-
-    public String getDetailsUrl();
 }

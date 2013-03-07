@@ -23,11 +23,7 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface TorrentSearchResult extends CompleteSearchResult {
-
-    public String getFileName();
-
-    public long getSize();
+public interface TorrentSearchResult extends FileSearchResult, CompleteSearchResult {
 
     public long getCreationTime();
 

@@ -35,11 +35,11 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public String getDisplayName() {
-        return FilenameUtils.getName(webResult.getFileName());
+        return FilenameUtils.getName(webResult.getFilename());
     }
 
     public String getFileName() {
-        return webResult.getFileName();
+        return webResult.getFilename();
     }
 
     public int getRank() {

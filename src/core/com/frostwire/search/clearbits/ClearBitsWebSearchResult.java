@@ -48,7 +48,8 @@ public class ClearBitsWebSearchResult extends AbstractTorrentWebSearchResult {
         return result;
     }
 
-    public String getFileName() {
+    @Override
+    public String getFilename() {
         String titleNoTags = item.title.replace("<b>", "").replace("</b>", "");
         return titleNoTags + ".torrent";
     }
@@ -72,7 +73,7 @@ public class ClearBitsWebSearchResult extends AbstractTorrentWebSearchResult {
 
     @Override
     public String getDisplayName() {
-        return getFileName();
+        return getFilename();
     }
 
     @Override

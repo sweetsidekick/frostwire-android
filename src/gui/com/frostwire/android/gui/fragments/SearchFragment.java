@@ -40,7 +40,6 @@ import com.frostwire.android.gui.PromotionsHandler;
 import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.LocalSearchEngine;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -55,6 +54,8 @@ import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
+import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchResult;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 
@@ -131,7 +132,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
         return header;
     }
-    
+
     @Override
     protected void initComponents(final View view) {
         searchInput = findView(view, R.id.fragment_search_input);
@@ -149,7 +150,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             public void onMediaTypeSelected(View v, int mediaTypeId) {
                 SearchFragment.this.mediaTypeId = mediaTypeId;
                 updateHint(mediaTypeId);
-                
+
                 if (adapter != null) {
                     adapter.filter(mediaTypeId);
                 }
@@ -185,7 +186,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 }
             }
         });
-        
+
         updateHint(mediaTypeId);
     }
 
@@ -218,10 +219,12 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         };
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG)) {
-            NewTransferDialog dlg = new NewTransferDialog();
-            dlg.setSearchResult(sr);
-            dlg.setListener(listener);
-            dlg.show(getFragmentManager());
+            if (sr instanceof FileSearchResult) {
+                NewTransferDialog dlg = new NewTransferDialog();
+                dlg.setSearchResult((FileSearchResult) sr);
+                dlg.setListener(listener);
+                dlg.show(getFragmentManager());
+            }
         } else {
             listener.onYes(null);
         }
@@ -261,7 +264,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         UIUtils.showTransfersOnDownloadStart(getActivity());
         task.execute();
     }
-    
+
     private void startPromotionDownload(Slide slide) {
         SearchResult sr = new PromotionsHandler().buildSearchResult(slide);
         if (sr == null) {
@@ -327,7 +330,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
         }
     }
-    
+
     private void updateHint(int mediaTypeId) {
         String searchBoxHint = getActivity().getString(R.string.search_label) + " ";
         searchBoxHint += UIUtils.getMediaTypeString(getActivity().getResources(), mediaTypeId);

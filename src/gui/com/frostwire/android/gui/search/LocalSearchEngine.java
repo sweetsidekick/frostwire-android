@@ -93,7 +93,7 @@ public final class LocalSearchEngine {
     private final List<DownloadTorrentTask> downloadTasks;
     private final HashSet<String> knownInfoHashes;
 
-    private final List<com.frostwire.android.gui.search.SearchResult> currentResults;
+    private final List<SearchResult> currentResults;
     private final List<SearchTask> currentTasks;
 
     private final Object lockObj = new Object();
@@ -134,14 +134,14 @@ public final class LocalSearchEngine {
         downloadTasks = new ArrayList<DownloadTorrentTask>();
         knownInfoHashes = new HashSet<String>();
 
-        this.currentResults = Collections.synchronizedList(new LinkedList<com.frostwire.android.gui.search.SearchResult>());
+        this.currentResults = Collections.synchronizedList(new LinkedList<SearchResult>());
         currentTasks = new LinkedList<SearchTask>();
 
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new SearchResultListener() {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
-                addResults(normalizeWebResults(results));
+                addResults(results);
             }
         });
     }
@@ -154,11 +154,11 @@ public final class LocalSearchEngine {
         return downloadTasks.size();
     }
 
-    public List<com.frostwire.android.gui.search.SearchResult> pollCurrentResults() {
+    public List<SearchResult> pollCurrentResults() {
         synchronized (currentResults) {
-            List<com.frostwire.android.gui.search.SearchResult> list = new ArrayList<com.frostwire.android.gui.search.SearchResult>(currentResults.size());
+            List<SearchResult> list = new ArrayList<SearchResult>(currentResults.size());
 
-            Iterator<com.frostwire.android.gui.search.SearchResult> it = currentResults.iterator();
+            Iterator<SearchResult> it = currentResults.iterator();
             while (it.hasNext()) {
                 list.add(it.next());
             }
@@ -174,7 +174,7 @@ public final class LocalSearchEngine {
         performTorrentSearch(query);
     }
 
-    void addResults(List<com.frostwire.android.gui.search.SearchResult> results) {
+    void addResults(List<? extends SearchResult> results) {
         currentResults.addAll(results);
     }
 
@@ -227,6 +227,7 @@ public final class LocalSearchEngine {
     }
 
     public void deepSearch(DeepSearchTask task, String query) {
+        /*
         query = sanitize(query);
 
         int downloaded = 0;
@@ -270,6 +271,7 @@ public final class LocalSearchEngine {
 
             SystemClock.sleep(INTERVAL_MS_FOR_TORRENT_DEEP_SCAN);
         }
+        */
     }
 
     public int getIndexCount() {
@@ -347,7 +349,7 @@ public final class LocalSearchEngine {
 
             Log.i(TAG, "Ended up with " + results.size() + " results");
 
-            addResults(normalizeWebResults(results));
+            addResults(results);
         } finally {
             if (c != null) {
                 c.close();

@@ -35,13 +35,13 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
-import com.frostwire.android.gui.search.BittorrentIntentFileResult;
+import com.frostwire.android.gui.search.TorrentIntentFileResult;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.util.ByteUtils;
+import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
@@ -332,7 +332,7 @@ public final class TransferManager {
         boolean isFile = torrentURI.getScheme().equalsIgnoreCase("file");
 
         try {
-            TransferManager.instance().download(isFile ? new BittorrentIntentFileResult(intent) : new BittorrentIntentHttpResult(intent));
+            TransferManager.instance().download(isFile ? new TorrentIntentFileResult(intent) : new BittorrentIntentHttpResult(intent));
         } catch (Throwable e) {
             Log.e(TAG, e.getMessage(), e);
         }

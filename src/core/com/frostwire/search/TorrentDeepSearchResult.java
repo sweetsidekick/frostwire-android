@@ -37,14 +37,17 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
         this.file = file;
     }
 
+    @Override
     public String getDisplayName() {
         return FilenameUtils.getName(file.getRelativePath());
     }
 
-    public String getFileName() {
+    @Override
+    public String getFilename() {
         return file.getRelativePath();
     }
 
+    @Override
     public long getSize() {
         return file.getLength();
     }

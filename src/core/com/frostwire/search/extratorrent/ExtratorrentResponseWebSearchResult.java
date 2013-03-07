@@ -37,7 +37,8 @@ public class ExtratorrentResponseWebSearchResult extends AbstractTorrentWebSearc
         this.item = item;
     }
 
-    public String getFileName() {
+    @Override
+    public String getFilename() {
         String titleNoTags = item.title.replace("<b>", "").replace("</b>", "");
         return titleNoTags + ".torrent";
     }
@@ -77,7 +78,7 @@ public class ExtratorrentResponseWebSearchResult extends AbstractTorrentWebSearc
 
     @Override
     public String getDisplayName() {
-        return getFileName();
+        return getFilename();
     }
 
     @Override

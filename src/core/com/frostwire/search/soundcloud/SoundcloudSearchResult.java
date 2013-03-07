@@ -37,10 +37,11 @@ public class SoundcloudSearchResult extends AbstractWebSearchResult implements C
     }
 
     @Override
-    public String getFileName() {
+    public String getFilename() {
         return item.name + ".mp3";
     }
 
+    @Override
     public long getSize() {
         return Math.round((item.duration * 128f) / 8f);
     }

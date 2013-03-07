@@ -31,8 +31,9 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
@@ -45,7 +46,7 @@ public class NewTransferDialog extends AbstractDialog {
     private Button buttonYes;
     private CheckBox checkShow;
 
-    private SearchResult searchResult;
+    private FileSearchResult searchResult;
     private OnYesNoListener listener;
 
     /** When opening .torrent files from outside you don't want to
@@ -59,11 +60,11 @@ public class NewTransferDialog extends AbstractDialog {
         this.hideShowNextTimeOption = false; // discuss the use of this variable with @gubatron
     }
 
-    public SearchResult getSearchResult() {
+    public FileSearchResult getSearchResult() {
         return searchResult;
     }
 
-    public void setSearchResult(SearchResult searchResult) {
+    public void setSearchResult(FileSearchResult searchResult) {
         this.searchResult = searchResult;
     }
 

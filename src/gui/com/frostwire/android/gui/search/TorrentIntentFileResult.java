@@ -30,17 +30,17 @@ import android.net.Uri;
  * @author aldenml
  *
  */
-public class BittorrentIntentFileResult extends AbstractBittorrentIntentResult {
+public class TorrentIntentFileResult extends AbstractBittorrentIntentResult {
 
     private String fileName;
 
-    public BittorrentIntentFileResult(Intent intent) {
+    public TorrentIntentFileResult(Intent intent) {
         Uri torrentURI = intent.getData();
         fileName = torrentURI.getPath();
     }
 
     @Override
-    public String getFileName() {
+    public String getFilename() {
         return fileName;
     }
 }

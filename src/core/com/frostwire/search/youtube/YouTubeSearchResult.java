@@ -59,8 +59,13 @@ public class YouTubeSearchResult extends AbstractWebSearchResult implements Comp
     }
 
     @Override
-    public String getFileName() {
+    public String getFilename() {
         return getDisplayName() + (rt.equals(ResultType.VIDEO) ? ".mp4" : ".m4a");
+    }
+
+    @Override
+    public long getSize() {
+        return -1;
     }
 
     @Override

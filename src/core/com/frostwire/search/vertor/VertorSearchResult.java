@@ -37,11 +37,13 @@ public class VertorSearchResult extends AbstractTorrentWebSearchResult {
         this.item = item;
     }
 
-    public String getFileName() {
+    @Override
+    public String getFilename() {
         String titleNoTags = item.name.replace("<b>", "").replace("</b>", "");
         return titleNoTags + ".torrent";
     }
 
+    @Override
     public long getSize() {
         return Long.valueOf(item.size);
     }
@@ -77,7 +79,7 @@ public class VertorSearchResult extends AbstractTorrentWebSearchResult {
 
     @Override
     public String getDisplayName() {
-        return getFileName();
+        return getFilename();
     }
 
     @Override

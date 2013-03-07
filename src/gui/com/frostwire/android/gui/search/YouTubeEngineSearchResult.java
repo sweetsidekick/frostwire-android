@@ -41,7 +41,7 @@ public class YouTubeEngineSearchResult implements SearchResult {
 
     @Override
     public String getFileName() {
-        return sr.getFileName();
+        return sr.getFilename();
     }
 
     @Override

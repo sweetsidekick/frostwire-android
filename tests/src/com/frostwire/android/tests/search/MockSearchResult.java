@@ -13,4 +13,9 @@ public class MockSearchResult implements CompleteSearchResult {
     public String getDetailsUrl() {
         return null;
     }
+
+    @Override
+    public String getDisplayName() {
+        return null;
+    }
 }

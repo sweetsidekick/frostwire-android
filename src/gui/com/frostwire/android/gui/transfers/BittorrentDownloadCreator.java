@@ -37,7 +37,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.search.BittorrentIntentFileResult;
+import com.frostwire.android.gui.search.TorrentIntentFileResult;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
 import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.BittorrentWebSearchResult;
@@ -67,7 +67,7 @@ final class BittorrentDownloadCreator {
         } catch (Throwable e) {
             // ignore
         }
-        if (sr instanceof BittorrentWebSearchResult || sr instanceof BittorrentPromotionSearchResult || sr instanceof BittorrentIntentHttpResult) {
+        if (sr instanceof BittorrentWebSearchResult || sr instanceof TorrentPromotionSearchResult || sr instanceof BittorrentIntentHttpResult) {
             return create(manager, torrentFile, hash, null);
         } else {
             return create(manager, torrentFile, hash, sr.getFileName());
@@ -81,10 +81,10 @@ final class BittorrentDownloadCreator {
 
         GlobalManager gm = AzureusManager.instance().getGlobalManager();
 
-        if (sr instanceof BittorrentIntentFileResult) {
-            BittorrentIntentFileResult bifr = (BittorrentIntentFileResult) sr;
+        if (sr instanceof TorrentIntentFileResult) {
+            TorrentIntentFileResult bifr = (TorrentIntentFileResult) sr;
             TOTorrent torrent = TorrentUtils.readFromFile(new File(sr.getFileName()), false);
-            return create(manager, bifr.getFileName(), torrent.getHash(), null);
+            return create(manager, bifr.getFilename(), torrent.getHash(), null);
         } else if (StringUtils.isNullOrEmpty(sr.getHash())) {
             return new TorrentFetcherDownload(manager, sr);
         } else {

@@ -58,7 +58,7 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
 
                 for (int i = 0; !isStopped() && i < files.length; i++) {
                     TOTorrentFile file = files[i];
-                    String fileStr = sr.getFileName() + " " + file.getRelativePath();
+                    String fileStr = sr.getFilename() + " " + file.getRelativePath();
                     if (match(keywordTokens, fileStr)) {
                         // optimize here
                         onResults(this, Arrays.asList(new TorrentDeepSearchResult(sr, file)));

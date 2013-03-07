@@ -36,11 +36,13 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchResult;
+import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.WebSearchResult;
 
 /**
  * @author gubatron
@@ -70,25 +72,29 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     public boolean accept(SearchResult sr, int mediaTypeId) {
-        MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(sr.getFileName()));
-        if (mt == null) {
+        if (sr instanceof FileSearchResult) {
+            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
+            if (mt == null) {
+                return false;
+            }
+            return mt.getId() == mediaTypeId;
+        } else {
             return false;
         }
-        return mt.getId() == mediaTypeId;
     }
 
     @Override
     protected void populateView(View view, SearchResult sr) {
-        if (sr instanceof BittorrentSearchResult) {
-            populateBittorrentView(view, (BittorrentSearchResult) sr);
-        } else {
-            populateWebEngineView(view, sr);
+        if (sr instanceof TorrentSearchResult) {
+            populateBittorrentView(view, (TorrentSearchResult) sr);
+        } else if (sr instanceof FileSearchResult) {
+            populateWebEngineView(view, (FileSearchResult) sr);
         }
     }
 
-    protected void populateBittorrentView(View view, BittorrentSearchResult sr) {
+    protected void populateBittorrentView(View view, TorrentSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
+        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFilename())));
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
         title.setText(sr.getDisplayName());
@@ -99,10 +105,10 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
 
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
-        extra.setText(FilenameUtils.getExtension(sr.getFileName()));
+        extra.setText(FilenameUtils.getExtension(sr.getFilename()));
 
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
+        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getSeeds(), sr.getSeeds()));
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
         sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
@@ -115,9 +121,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         */
     }
 
-    protected void populateWebEngineView(View view, SearchResult sr) {
+    protected void populateWebEngineView(View view, FileSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFileName())));
+        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFilename())));
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
         title.setText(sr.getDisplayName());
@@ -132,7 +138,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         }
 
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
-        extra.setText(FilenameUtils.getExtension(sr.getFileName()));
+        extra.setText(FilenameUtils.getExtension(sr.getFilename()));
 
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
         //seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));

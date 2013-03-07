@@ -19,6 +19,7 @@
 package com.frostwire.search.archiveorg;
 
 import com.frostwire.search.CompleteSearchResult;
+import com.frostwire.search.FileSearchResult;
 
 /**
  * 
@@ -26,7 +27,7 @@ import com.frostwire.search.CompleteSearchResult;
  * @author aldenml
  *
  */
-public class ArchiveorgDeepSearchResult implements CompleteSearchResult {
+public class ArchiveorgDeepSearchResult implements FileSearchResult, CompleteSearchResult {
 
     private final ArchiveorgSearchResult sr;
     private final String filename;
@@ -39,8 +40,27 @@ public class ArchiveorgDeepSearchResult implements CompleteSearchResult {
     }
 
     @Override
+    public String getDisplayName() {
+        return filename;
+    }
+
+    @Override
     public String getDetailsUrl() {
         return "http://archive.org/details/" + sr.getItem().identifier;
+    }
+
+    @Override
+    public String getFilename() {
+        return filename;
+    }
+
+    @Override
+    public long getSize() {
+        try {
+            return Long.parseLong(file.size);
+        } catch (Throwable e) {
+            return -1;
+        }
     }
 
     @Override

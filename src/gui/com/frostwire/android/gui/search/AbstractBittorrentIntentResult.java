@@ -18,15 +18,17 @@
 
 package com.frostwire.android.gui.search;
 
+import com.frostwire.search.TorrentSearchResult;
+
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public abstract class AbstractBittorrentIntentResult implements BittorrentSearchResult {
+public abstract class AbstractBittorrentIntentResult implements TorrentSearchResult {
 
     @Override
-    public String getFileName() {
+    public String getFilename() {
         return null;
     }
     
@@ -46,7 +48,7 @@ public abstract class AbstractBittorrentIntentResult implements BittorrentSearch
     }
     
     @Override
-    public int getRank() {
+    public int getSeeds() {
         return 0;
     }
 
