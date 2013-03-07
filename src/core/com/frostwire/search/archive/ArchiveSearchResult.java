@@ -18,14 +18,14 @@
 
 package com.frostwire.search.archive;
 
-import com.frostwire.search.WebSearchResult;
+import com.frostwire.search.AbstractWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ArchiveSearchResult implements WebSearchResult {
+public class ArchiveSearchResult extends AbstractWebSearchResult {
 
     private final ArchiveItem item;
 
@@ -38,33 +38,20 @@ public class ArchiveSearchResult implements WebSearchResult {
     }
 
     public String getFileName() {
-        return null;
+        return item.title;
     }
 
     public String getHash() {
-        return null;
-    }
-
-    public String getTorrentURI() {
-        return null;
+        return "";
     }
 
     public long getSize() {
         return -1;
     }
 
-    public int getRank() {
-        return -1;
-    }
-
-    public String getTorrentDetailsURL() {
-        return null;
-    }
-
     @Override
     public String getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.title;
     }
 
     @Override
@@ -74,7 +61,6 @@ public class ArchiveSearchResult implements WebSearchResult {
 
     @Override
     public String getDetailsUrl() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.identifier;
     }
 }

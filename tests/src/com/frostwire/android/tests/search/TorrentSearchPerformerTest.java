@@ -92,7 +92,7 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
     }
 
     private void downloadTorrent(final String url, final String referrer) {
-        TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0, 0) {
+        TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0) {
 
             @Override
             public void perform() {

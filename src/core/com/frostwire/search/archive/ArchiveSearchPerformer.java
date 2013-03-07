@@ -21,8 +21,10 @@ package com.frostwire.search.archive;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.frostwire.search.CrawlableSearchResult;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -34,6 +36,21 @@ public class ArchiveSearchPerformer extends PagedWebSearchPerformer {
 
     public ArchiveSearchPerformer(int token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
+    }
+
+    @Override
+    public void crawl(CrawlableSearchResult sr) {
+        /*
+        if (numTorrentDownloads > 0) {
+            numTorrentDownloads--;
+
+            if (sr instanceof TorrentWebSearchResult) {
+                crawlTorrent((TorrentWebSearchResult) sr);
+            } else {
+                LOG.warn("Something wrong with the logic, need to pass a TorrentWebSearchResult instead of " + sr.getClass());
+            }
+        }
+        */
     }
 
     @Override

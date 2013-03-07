@@ -29,21 +29,43 @@ import org.slf4j.LoggerFactory;
  * @author aldenml
  *
  */
-public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
+public abstract class PagedWebSearchPerformer<T extends CrawlableSearchResult> extends WebSearchPerformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(PagedWebSearchPerformer.class);
 
+    private static final int DEFAULT_NUM_CRAWLS = 4;
+
     private final int pages;
 
-    public PagedWebSearchPerformer(long token, String keywords, int timeout, int pages) {
+    private int numCrawls;
+
+    public PagedWebSearchPerformer(long token, String keywords, int timeout, int pages, int numCrawls) {
         super(token, keywords, timeout);
         this.pages = pages;
+
+        this.numCrawls = numCrawls;
+    }
+
+    public PagedWebSearchPerformer(long token, String keywords, int timeout, int pages) {
+        this(token, keywords, timeout, pages, DEFAULT_NUM_CRAWLS);
     }
 
     @Override
     public void perform() {
         for (int i = 1; !isStopped() && i <= pages; i++) {
             onResults(this, searchPage(i));
+        }
+    }
+
+    @Override
+    public void crawl(CrawlableSearchResult sr) {
+        if (numCrawls > 0) {
+            numCrawls--;
+
+            T obj = cast(sr);
+            if (obj != null) {
+                crawlSearchResult(obj);
+            }
         }
     }
 
@@ -61,4 +83,18 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
     protected abstract String getUrl(int page, String encodedKeywords);
 
     protected abstract List<? extends SearchResult> searchPage(String page);
+
+    protected void crawlSearchResult(T sr) {
+    }
+
+    @SuppressWarnings("unchecked")
+    private T cast(CrawlableSearchResult sr) {
+        try {
+            return (T) sr;
+        } catch (ClassCastException e) {
+            LOG.warn("Something wrong with the logic, need to pass a crawlable search result with the correct type");
+        }
+
+        return null;
+    }
 }

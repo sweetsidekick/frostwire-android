@@ -36,39 +36,18 @@ import org.slf4j.LoggerFactory;
  * @author aldenml
  *
  */
-public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
+public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer<TorrentWebSearchResult> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TorrentSearchPerformer.class);
 
-    private static final int DEFAULT_NUM_TORRENT_DOWNLOADS = 4;
     private static final int TORRENT_DOWNLOAD_TIMEOUT = 10000; // 10 seconds
 
-    private int numTorrentDownloads;
-
-    public TorrentSearchPerformer(long token, String keywords, int timeout, int pages, int numTorrentDownloads) {
-        super(token, keywords, timeout, pages);
-        this.numTorrentDownloads = numTorrentDownloads;
-    }
-
     public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
-        this(token, keywords, timeout, pages, DEFAULT_NUM_TORRENT_DOWNLOADS);
+        super(token, keywords, timeout, pages);
     }
 
     @Override
-    public void crawl(CrawlableSearchResult sr) {
-        if (numTorrentDownloads > 0) {
-            numTorrentDownloads--;
-
-            if (sr instanceof TorrentWebSearchResult) {
-                crawlTorrent((TorrentWebSearchResult) sr);
-            } else {
-                LOG.warn("Something wrong with the logic, need to pass a TorrentWebSearchResult instead of " + sr.getClass());
-            }
-        }
-    }
-
-    private void crawlTorrent(TorrentWebSearchResult sr) {
-        // this check will disappear once we update the vuze core and keep the magnet handler
+    public void crawlSearchResult(TorrentWebSearchResult sr) {
         if (sr.getTorrentURI().startsWith("http")) {
             TOTorrent torrent = downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
 
