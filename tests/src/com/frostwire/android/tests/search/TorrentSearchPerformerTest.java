@@ -30,8 +30,11 @@ import android.test.suitebuilder.annotation.MediumTest;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.search.SearchManagerImpl;
+import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchPerformer;
+import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
+import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.vertor.VertorSearchPerformer;
@@ -88,7 +91,13 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
 
     @LargeTest
     public void testDeepSearchClearBits() {
-        deepSearch(new ExtratorrentSearchPerformer(0, "Big Buck Bunny", 5000));
+        deepSearch(new ClearBitsSearchPerformer(0, "Big Buck Bunny", 5000));
+    }
+
+    // refactor this test to a better suite
+    @LargeTest
+    public void testDeepSearchArchiveorg() {
+        deepSearch(new ArchiveorgSearchPerformer(0, "Big Buck Bunny", 5000));
     }
 
     private void downloadTorrent(final String url, final String referrer) {
@@ -114,7 +123,7 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         p.perform();
     }
 
-    private void deepSearch(TorrentSearchPerformer performer) {
+    private void deepSearch(SearchPerformer performer) {
         MockSearchResultListener l = new MockSearchResultListener();
 
         SearchManagerImpl manager = new SearchManagerImpl();
