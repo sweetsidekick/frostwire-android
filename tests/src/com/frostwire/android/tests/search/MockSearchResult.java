@@ -2,10 +2,15 @@ package com.frostwire.android.tests.search;
 
 import com.frostwire.search.CompleteSearchResult;
 
-public class MockSearchResult implements CompleteSearchResult{
+public class MockSearchResult implements CompleteSearchResult {
 
     @Override
     public String getSource() {
         return "Tests";
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        return null;
     }
 }

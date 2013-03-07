@@ -35,7 +35,5 @@ public interface TorrentSearchResult extends CompleteSearchResult {
 
     public String getTorrentURI();
 
-    public String getDetailsURL();
-
     public int getSeeds();
 }

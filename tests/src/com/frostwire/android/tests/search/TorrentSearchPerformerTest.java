@@ -33,6 +33,7 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchPerformer;
 import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
+import com.frostwire.search.vertor.VertorSearchPerformer;
 
 /**
  * 
@@ -70,8 +71,13 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
     //    }
 
     @LargeTest
-    public void testDeepSearch() {
+    public void testDeepSearchISOHunt() {
         deepSearch(new ISOHuntSearchPerformer(0, "frostclick", 5000));
+    }
+    
+    @LargeTest
+    public void testDeepSearchVertor() {
+        deepSearch(new VertorSearchPerformer(0, "frostclick", 5000));
     }
 
     private void downloadTorrent(final String url, final String referrer) {

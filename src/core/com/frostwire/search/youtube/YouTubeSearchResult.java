@@ -22,14 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.search.WebSearchResult;
+import com.frostwire.search.AbstractWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class YouTubeSearchResult implements WebSearchResult {
+public class YouTubeSearchResult extends AbstractWebSearchResult {
 
     //2010-07-15T16:02:42
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());

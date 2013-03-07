@@ -22,14 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.search.TorrentWebSearchResult;
+import com.frostwire.search.AbstractTorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
+public class MininovaVuzeWebSearchResult extends AbstractTorrentWebSearchResult {
 
     private MininovaVuzeItem item;
 
@@ -74,19 +74,13 @@ public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
         return item.seeds + item.superseeds;
     }
 
-    public String getDetailsURL() {
-        return item.cdp;
-    }
-
     @Override
     public String getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.title;
     }
 
     @Override
     public String getDetailsUrl() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.cdp;
     }
 }

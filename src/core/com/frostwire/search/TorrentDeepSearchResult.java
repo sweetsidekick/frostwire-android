@@ -66,12 +66,17 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
     }
 
     @Override
-    public String getDetailsURL() {
+    public String getDetailsUrl() {
         return sr.getDetailsUrl();
     }
 
     @Override
     public int getSeeds() {
         return sr.getSeeds();
+    }
+
+    @Override
+    public String toString() {
+        return sr.toString();
     }
 }

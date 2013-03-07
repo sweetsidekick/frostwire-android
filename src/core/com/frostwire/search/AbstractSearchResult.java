@@ -23,9 +23,10 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface SearchResult {
+public abstract class AbstractSearchResult implements SearchResult {
 
-    public String getDetailsUrl();
-    
-    public String getSource();
+    @Override
+    public String toString() {
+        return getDetailsUrl();
+    }
 }

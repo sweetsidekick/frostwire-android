@@ -59,7 +59,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public String getDetailsUrl() {
-        return webResult.getDetailsURL();
+        return webResult.getDetailsUrl();
     }
 
     public String getTorrentURI() {

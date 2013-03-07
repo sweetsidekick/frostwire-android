@@ -22,14 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.search.TorrentWebSearchResult;
+import com.frostwire.search.AbstractTorrentWebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
+public class ClearBitsWebSearchResult extends AbstractTorrentWebSearchResult {
 
     private final ClearBitsItem item;
 
@@ -70,10 +70,6 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
         return item.seeds;
     }
 
-    public String getDetailsURL() {
-        return item.location;
-    }
-
     @Override
     public String getDisplayName() {
         return getFileName();
@@ -86,7 +82,6 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
 
     @Override
     public String getDetailsUrl() {
-        // TODO Auto-generated method stub
-        return null;
+        return item.location;
     }
 }

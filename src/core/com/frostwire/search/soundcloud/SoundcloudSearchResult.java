@@ -18,15 +18,15 @@
 
 package com.frostwire.search.soundcloud;
 
+import com.frostwire.search.AbstractWebSearchResult;
 import com.frostwire.search.CompleteSearchResult;
-import com.frostwire.search.WebSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class SoundcloudSearchResult implements WebSearchResult, CompleteSearchResult {
+public class SoundcloudSearchResult extends AbstractWebSearchResult implements CompleteSearchResult {
 
     private final SoundcloudItem item;
     private final String trackUrl;
@@ -87,10 +87,5 @@ public class SoundcloudSearchResult implements WebSearchResult, CompleteSearchRe
 
     public String getUsername() {
         return item.user.username;
-    }
-
-    @Override
-    public String toString() {
-        return getDetailsUrl();
     }
 }

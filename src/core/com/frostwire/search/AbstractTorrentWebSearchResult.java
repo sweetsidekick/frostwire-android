@@ -23,9 +23,6 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface SearchResult {
+public abstract class AbstractTorrentWebSearchResult extends AbstractSearchResult implements TorrentWebSearchResult {
 
-    public String getDetailsUrl();
-    
-    public String getSource();
 }
