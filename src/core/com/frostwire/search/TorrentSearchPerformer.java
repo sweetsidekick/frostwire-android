@@ -47,13 +47,18 @@ public abstract class TorrentSearchPerformer extends PagedWebSearchPerformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TorrentSearchPerformer.class);
 
-    private static final int TORRENT_DOWNLOAD_TIMEOUT = 10000; // 10 seconds
+    private static final int DEFAULT_NUM_TORRENT_DOWNLOADS = 4;
+    private static final int TORRENT_DOWNLOAD_TIMEOUT = 20000; // 10 seconds
 
     private int numTorrentDownloads;
 
     public TorrentSearchPerformer(long token, String keywords, int timeout, int pages, int numTorrentDownloads) {
         super(token, keywords, timeout, pages);
         this.numTorrentDownloads = numTorrentDownloads;
+    }
+
+    public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
+        this(token, keywords, timeout, pages, DEFAULT_NUM_TORRENT_DOWNLOADS);
     }
 
     @Override

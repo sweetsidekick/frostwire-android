@@ -86,7 +86,7 @@ public class CloudSearchTest1 extends TestCase {
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
 
-        assertTrue("More than one result", l.getNumResults() > 1);
+        assertTrue("Didn't get more than one result", l.getNumResults() > 1);
 
         l.logResults();
     }

@@ -18,38 +18,6 @@
 
 package com.frostwire.search.soundcloud;
 
-/*
-{
-   "id":17768842,
-   "uid":"OJ5kG8UAXgDg",
-   "user":{
-      "username":"Rosine",
-      "permalink":"rosine"
-   },
-   "uri":"/rosine/shakira-ft-pitbull-rabiosa",
-   "duration":175713,
-   "token":"gK6xL",
-   "name":"shakira-ft-pitbull-rabiosa",
-   "title":"Shakira ft. Pitbull - Rabiosa",
-   "commentable":true,
-   "revealComments":true,
-   "commentUri":"/rosine/shakira-ft-pitbull-rabiosa/comments/",
-   "streamUrl":"http://media.soundcloud.com/stream/OJ5kG8UAXgDg?stream_token=gK6xL",
-   "waveformUrl":"http://w1.sndcdn.com/OJ5kG8UAXgDg_m.png",
-   "propertiesUri":"/rosine/shakira-ft-pitbull-rabiosa/properties/",
-   "statusUri":"/transcodings/OJ5kG8UAXgDg",
-   "replacingUid":null,
-   "preprocessingReady":true,
-   "renderingFailed":false,
-   "isPublic":true,
-   "geo":[
-
-   ],
-   "commentableByUser":true,
-   "favorite":false,
-   "followingTrackOwner":false
-}
- */
 /**
  * @author gubatron
  * @author aldenml
@@ -68,5 +36,5 @@ public class SoundcloudItem {
     public String streamUrl;
     public String thumbnailUrl;
     public long date;
-    
+
 }

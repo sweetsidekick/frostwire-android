@@ -20,6 +20,7 @@ package com.frostwire.search.mininova;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import com.frostwire.search.TorrentWebSearchResult;
 
@@ -37,7 +38,7 @@ public class MininovaVuzeWebSearchResult implements TorrentWebSearchResult {
     }
 
     public long getCreationTime() {
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.date).getTime();

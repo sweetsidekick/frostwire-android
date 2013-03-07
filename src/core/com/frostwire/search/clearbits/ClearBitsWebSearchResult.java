@@ -20,6 +20,7 @@ package com.frostwire.search.clearbits;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import com.frostwire.search.TorrentWebSearchResult;
 
@@ -38,7 +39,7 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
 
     public long getCreationTime() {
         //2010-07-15T16:02:42Z
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.created_at).getTime();
@@ -75,8 +76,7 @@ public class ClearBitsWebSearchResult implements TorrentWebSearchResult {
 
     @Override
     public String getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
+        return getFileName();
     }
 
     @Override

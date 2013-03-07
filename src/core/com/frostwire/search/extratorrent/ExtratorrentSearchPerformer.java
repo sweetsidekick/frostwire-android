@@ -21,8 +21,8 @@ package com.frostwire.search.extratorrent;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.TorrentSearchPerformer;
 import com.frostwire.search.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
@@ -31,7 +31,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-public class ExtratorrentSearchPerformer extends PagedWebSearchPerformer {
+public class ExtratorrentSearchPerformer extends TorrentSearchPerformer {
 
     public ExtratorrentSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
