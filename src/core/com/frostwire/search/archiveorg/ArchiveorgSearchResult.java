@@ -20,6 +20,7 @@ package com.frostwire.search.archiveorg;
 
 import com.frostwire.search.AbstractWebSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
+import com.frostwire.search.SearchResultCodec;
 
 /**
  * @author gubatron
@@ -48,7 +49,7 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
     }
 
     @Override
-    public String getHash() {
+    public String getCacheKey() {
         return "";
     }
 
@@ -70,5 +71,10 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
     @Override
     public String getDetailsUrl() {
         return item.identifier;
+    }
+
+    @Override
+    public SearchResultCodec getCodec() {
+        return new ArchiveorgSearchResultCodec();
     }
 }

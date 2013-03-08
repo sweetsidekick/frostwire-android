@@ -25,4 +25,7 @@ package com.frostwire.search;
  */
 public interface CrawlCache {
 
+    public CrawlableSearchResult get(String key);
+
+    public void put(CrawlableSearchResult sr);
 }

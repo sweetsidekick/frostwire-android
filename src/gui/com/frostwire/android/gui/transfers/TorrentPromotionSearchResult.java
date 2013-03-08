@@ -59,7 +59,7 @@ public class TorrentPromotionSearchResult implements TorrentSearchResult {
     }
 
     @Override
-    public String getHash() {
+    public String getCacheKey() {
         return null;
     }
 

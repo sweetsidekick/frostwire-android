@@ -25,4 +25,8 @@ package com.frostwire.search;
  */
 public abstract class AbstractTorrentWebSearchResult extends AbstractSearchResult implements TorrentWebSearchResult {
 
+    @Override
+    public SearchResultCodec getCodec() {
+        return new TorrentSearchResultCodec();
+    }
 }

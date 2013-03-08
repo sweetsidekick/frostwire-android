@@ -56,8 +56,8 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
         return sr.getCreationTime();
     }
 
-    public String getHash() {
-        return sr.getHash();
+    public String getCacheKey() {
+        return sr.getCacheKey();
     }
 
     public String getTorrentURI() {

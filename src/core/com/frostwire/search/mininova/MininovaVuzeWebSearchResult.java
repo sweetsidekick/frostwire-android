@@ -53,7 +53,7 @@ public class MininovaVuzeWebSearchResult extends AbstractTorrentWebSearchResult 
         return titleNoTags + ".torrent";
     }
 
-    public String getHash() {
+    public String getCacheKey() {
         return item.hash;
     }
 

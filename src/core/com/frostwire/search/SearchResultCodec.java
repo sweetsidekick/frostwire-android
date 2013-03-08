@@ -17,15 +17,17 @@
 
 package com.frostwire.search;
 
+import java.io.InputStream;
+
 /**
  * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface CrawlableSearchResult extends SearchResult {
+public interface SearchResultCodec {
 
-    public String getCacheKey();
+    public InputStream encode(SearchResult sr);
 
-    public SearchResultCodec getCodec();
+    public SearchResult decode(InputStream is);
 }

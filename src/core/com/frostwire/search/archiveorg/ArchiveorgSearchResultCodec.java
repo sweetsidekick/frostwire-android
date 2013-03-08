@@ -15,7 +15,12 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.search.archiveorg;
+
+import java.io.InputStream;
+
+import com.frostwire.search.SearchResult;
+import com.frostwire.search.SearchResultCodec;
 
 /**
  * 
@@ -23,9 +28,18 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public interface CrawlableSearchResult extends SearchResult {
+public class ArchiveorgSearchResultCodec implements SearchResultCodec {
 
-    public String getCacheKey();
+    @Override
+    public InputStream encode(SearchResult sr) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-    public SearchResultCodec getCodec();
+    @Override
+    public SearchResult decode(InputStream is) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

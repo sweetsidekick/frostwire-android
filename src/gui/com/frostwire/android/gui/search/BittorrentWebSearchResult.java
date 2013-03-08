@@ -55,7 +55,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public String getHash() {
-        return webResult.getHash();
+        return webResult.getCacheKey();
     }
 
     public String getDetailsUrl() {

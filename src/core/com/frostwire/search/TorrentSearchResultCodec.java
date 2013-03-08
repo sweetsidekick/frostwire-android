@@ -17,15 +17,26 @@
 
 package com.frostwire.search;
 
+import java.io.InputStream;
+
 /**
  * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface CrawlableSearchResult extends SearchResult {
+public class TorrentSearchResultCodec implements SearchResultCodec {
 
-    public String getCacheKey();
+    @Override
+    public InputStream encode(SearchResult sr) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-    public SearchResultCodec getCodec();
+    @Override
+    public SearchResult decode(InputStream is) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

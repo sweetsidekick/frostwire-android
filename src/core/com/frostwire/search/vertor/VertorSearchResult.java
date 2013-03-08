@@ -64,7 +64,7 @@ public class VertorSearchResult extends AbstractTorrentWebSearchResult {
         return "Vertor";
     }
 
-    public String getHash() {
+    public String getCacheKey() {
         return null;
     }
 

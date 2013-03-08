@@ -58,7 +58,7 @@ public abstract class AbstractBittorrentIntentResult implements TorrentSearchRes
     }
 
     @Override
-    public String getHash() {
+    public String getCacheKey() {
         return null;
     }
 

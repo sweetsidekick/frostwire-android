@@ -27,7 +27,7 @@ public interface TorrentSearchResult extends FileSearchResult, CompleteSearchRes
 
     public long getCreationTime();
 
-    public String getHash();
+    public String getCacheKey();
 
     public String getTorrentURI();
 
