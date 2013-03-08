@@ -74,6 +74,8 @@ public class AndroidUpnpServiceImpl extends Service {
                 // is done.
                 super.shutdown(true);
             }
+            
+            
         };
     }
 
@@ -119,5 +121,4 @@ public class AndroidUpnpServiceImpl extends Service {
             return upnpService.getControlPoint();
         }
     }
-
 }
