@@ -28,6 +28,8 @@ import org.fourthline.cling.model.types.DeviceType;
 import org.fourthline.cling.model.types.UDADeviceType;
 import org.fourthline.cling.model.types.UDN;
 
+import com.frostwire.android.core.ConfigurationManager;
+
 /**
  * 
  * @author gubatron
@@ -43,7 +45,9 @@ public class UPnPFWDevice {
     private final LocalService<?>[] services;
 
     public UPnPFWDevice(UPnPFWDeviceDesc desc, LocalService<?>[] services) {
-        this.identity = new DeviceIdentity(UDN.uniqueSystemIdentifier(desc.getIdentitySalt()));
+        //gubatron: this doesn't work for android see UDN.uniqueSystemIdentifier documentation.
+        //this.identity = new DeviceIdentity(UDN.uniqueSystemIdentifier(desc.getIdentitySalt()));
+        this.identity = new DeviceIdentity(new UDN(ConfigurationManager.instance().getUUIDString()));
         this.type = new UDADeviceType(desc.getType(), desc.getVersion());
 
         ManufacturerDetails manufacturer = new ManufacturerDetails(desc.getManufacturer());
