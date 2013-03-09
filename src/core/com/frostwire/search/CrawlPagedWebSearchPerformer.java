@@ -18,7 +18,6 @@
 
 package com.frostwire.search;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -34,6 +33,7 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
     private static final Logger LOG = LoggerFactory.getLogger(CrawlPagedWebSearchPerformer.class);
 
     private static final int DEFAULT_NUM_CRAWLS = 4;
+    private static final int DEFAULT_CRAWL_TIMEOUT = 10000; // 10 seconds
 
     private static final CrawlCache cache = new DiskCrawlCache();
 
@@ -55,24 +55,52 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
 
             T obj = cast(sr);
             if (obj != null) {
-                onResults(this, crawlResult(obj));
+
+                String url = getCrawlUrl(obj);
+
+                byte[] data = cacheGet(url);
+
+                if (data == null) { // not a big deal about synchronization here
+                    LOG.debug("Downloading data for: " + url);
+                    data = fetchBytes(url, sr.getDetailsUrl(), DEFAULT_CRAWL_TIMEOUT);
+                    if (data != null) {
+                        cachePut(url, data);
+                    } else {
+                        LOG.warn("Failed to download data: " + url);
+                    }
+                }
+
+                try {
+                    if (data != null) {
+                        onResults(this, crawlResult(obj, data));
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Error creating crawled results from downloaded data: " + e.getMessage());
+                    cacheRemove(url); // invalidating cache data
+                }
             }
         }
     }
 
-    protected List<? extends SearchResult> crawlResult(T sr) {
-        return Collections.emptyList();
-    }
+    protected abstract String getCrawlUrl(T sr);
 
-    protected byte[] cacheGet(String key) {
+    protected abstract List<? extends SearchResult> crawlResult(T sr, byte[] data) throws Exception;
+
+    private byte[] cacheGet(String key) {
         synchronized (cache) {
             return cache.get(key);
         }
     }
 
-    protected void cachePut(String key, byte[] data) {
+    private void cachePut(String key, byte[] data) {
         synchronized (cache) {
             cache.put(key, data);
+        }
+    }
+
+    private void cacheRemove(String key) {
+        synchronized (cache) {
+            cache.remove(key);
         }
     }
 

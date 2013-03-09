@@ -22,11 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
-import org.gudy.azureus2.core3.torrent.TOTorrentException;
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 import org.gudy.azureus2.core3.util.TorrentUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -36,43 +33,30 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerformer<TorrentWebSearchResult> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TorrentSearchPerformer.class);
-
-    private static final int TORRENT_DOWNLOAD_TIMEOUT = 10000; // 10 seconds
-
     public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
         super(token, keywords, timeout, pages);
     }
 
     @Override
-    public List<? extends SearchResult> crawlResult(TorrentWebSearchResult sr) {
+    protected String getCrawlUrl(TorrentWebSearchResult sr) {
+        return sr.getTorrentURI();
+    }
+
+    @Override
+    protected List<? extends SearchResult> crawlResult(TorrentWebSearchResult sr, byte[] data) throws Exception {
         List<TorrentDeepSearchResult> list = new LinkedList<TorrentDeepSearchResult>();
 
-        if (sr.getTorrentURI().startsWith("http")) {
-            TOTorrent torrent = downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
+        TOTorrent torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));
 
-            if (torrent != null) {
-                TOTorrentFile[] files = torrent.getFiles();
+        if (torrent != null) {
+            TOTorrentFile[] files = torrent.getFiles();
 
-                for (int i = 0; !isStopped() && i < files.length; i++) {
-                    TOTorrentFile file = files[i];
-                    list.add(new TorrentDeepSearchResult(sr, file));
-                }
+            for (int i = 0; !isStopped() && i < files.length; i++) {
+                TOTorrentFile file = files[i];
+                list.add(new TorrentDeepSearchResult(sr, file));
             }
         }
 
         return list;
-    }
-
-    protected TOTorrent downloadTorrent(String url, String referrer) {
-        TOTorrent torrent = null;
-        try {
-            LOG.debug("Downloading torrent: " + url);
-            byte[] data = fetchBytes(url, referrer, TORRENT_DOWNLOAD_TIMEOUT);
-            torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));
-        } catch (TOTorrentException e) {
-            LOG.warn("Failed to download torrent: " + url + ", e=" + e.getMessage());
-        }
-        return torrent;
     }
 }

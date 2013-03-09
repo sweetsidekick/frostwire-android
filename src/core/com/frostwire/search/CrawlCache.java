@@ -28,4 +28,6 @@ public interface CrawlCache {
     public byte[] get(String key);
 
     public void put(String key, byte[] data);
+
+    public void remove(String key);
 }

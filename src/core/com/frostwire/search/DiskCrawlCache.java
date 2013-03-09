@@ -103,7 +103,7 @@ public class DiskCrawlCache implements CrawlCache {
                 cache.flush();
                 editor.commit();
                 if (BuildConfig.DEBUG) {
-                    LOG.warn("value put on disk cache " + key);
+                    LOG.debug("value put on disk cache " + key);
                 }
             } catch (Throwable e) {
                 LOG.warn("Error putting value to crawl cache", e);
@@ -116,6 +116,15 @@ public class DiskCrawlCache implements CrawlCache {
             }
         } else {
             LOG.warn("Crawl cache is null");
+        }
+    }
+
+    @Override
+    public void remove(String key) {
+        try {
+            cache.remove(key);
+        } catch (Throwable e) {
+            LOG.warn("Error deleting value from crawl cache: " + e.getMessage());
         }
     }
 

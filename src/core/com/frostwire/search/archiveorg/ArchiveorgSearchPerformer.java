@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -37,36 +35,8 @@ import com.frostwire.util.JsonUtils;
  */
 public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<ArchiveorgSearchResult> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ArchiveorgSearchPerformer.class);
-
     public ArchiveorgSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
-    }
-
-    @Override
-    public List<? extends SearchResult> crawlResult(ArchiveorgSearchResult sr) {
-        List<ArchiveorgDeepSearchResult> list = new LinkedList<ArchiveorgDeepSearchResult>();
-
-        String url = "http://archive.org/details/" + sr.getItem().identifier + "?output=json";
-
-        try {
-            String json = fetch(url);
-            JSONObject obj = new JSONObject(json);
-            JSONObject files = obj.getJSONObject("files");
-
-            @SuppressWarnings("unchecked")
-            Iterator<String> it = files.keys();
-
-            while (it.hasNext()) {
-                String name = it.next();
-                ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
-                list.add(new ArchiveorgDeepSearchResult(sr, name, file));
-            }
-        } catch (Throwable e) {
-            LOG.warn("Unable to get details for url: " + url + ", e=" + e.getMessage());
-        }
-
-        return list;
     }
 
     @Override
@@ -90,5 +60,30 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         }
 
         return result;
+    }
+
+    @Override
+    protected String getCrawlUrl(ArchiveorgSearchResult sr) {
+        return "http://archive.org/details/" + sr.getItem().identifier + "?output=json";
+    }
+
+    @Override
+    protected List<? extends SearchResult> crawlResult(ArchiveorgSearchResult sr, byte[] data) throws Exception {
+        List<ArchiveorgDeepSearchResult> list = new LinkedList<ArchiveorgDeepSearchResult>();
+
+        String json = new String(data, "UTF-8");
+        JSONObject obj = new JSONObject(json);
+        JSONObject files = obj.getJSONObject("files");
+
+        @SuppressWarnings("unchecked")
+        Iterator<String> it = files.keys();
+
+        while (it.hasNext()) {
+            String name = it.next();
+            ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
+            list.add(new ArchiveorgDeepSearchResult(sr, name, file));
+        }
+
+        return list;
     }
 }
