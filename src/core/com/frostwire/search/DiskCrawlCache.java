@@ -18,17 +18,22 @@
 package com.frostwire.search;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.frostwire.android.BuildConfig;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.ByteUtils;
 import com.jakewharton.DiskLruCache;
+import com.jakewharton.DiskLruCache.Editor;
 import com.jakewharton.DiskLruCache.Snapshot;
 
 /**
@@ -56,17 +61,18 @@ public class DiskCrawlCache implements CrawlCache {
         }
     }
 
-    public CrawlableSearchResult get(String key) {
-        CrawlableSearchResult sr = null;
+    @Override
+    public byte[] get(String key) {
+        byte[] data = null;
 
         if (cache != null) {
             Snapshot snapshot = null;
 
             try {
-                snapshot = cache.get(key);
+                snapshot = cache.get(encodeKey(key));
 
                 if (snapshot != null) {
-                    sr = decode(snapshot);
+                    data = decode(snapshot);
                 }
             } catch (Throwable e) {
                 LOG.warn("Error getting value from crawl cache", e);
@@ -79,21 +85,21 @@ public class DiskCrawlCache implements CrawlCache {
             LOG.warn("Crawl cache is null");
         }
 
-        return sr;
+        return data;
     }
 
-    public void put(CrawlableSearchResult sr) {
+    @Override
+    public void put(String key, byte[] data) {
         if (cache != null) {
             DiskLruCache.Editor editor = null;
             try {
-                String key = sr.getCacheKey();
 
-                editor = cache.edit(key);
+                editor = cache.edit(encodeKey(key));
                 if (editor == null) {
                     return;
                 }
 
-                encode(sr, editor);
+                encode(editor, data);
                 cache.flush();
                 editor.commit();
                 if (BuildConfig.DEBUG) {
@@ -113,27 +119,38 @@ public class DiskCrawlCache implements CrawlCache {
         }
     }
 
-    private CrawlableSearchResult decode(Snapshot snapshot) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String codec = snapshot.getString(0);
-        Class<?> clazz = Class.forName(codec);
-
-        SearchResultCodec searchResultCodec = (SearchResultCodec) clazz.newInstance();
-
-        return (CrawlableSearchResult) searchResultCodec.decode(snapshot.getInputStream(1));
+    private byte[] decode(Snapshot snapshot) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        InputStream in = snapshot.getInputStream(0);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        copy(in, out);
+        return out.toByteArray();
     }
 
-    private void encode(CrawlableSearchResult sr, DiskLruCache.Editor editor) throws IOException, FileNotFoundException {
-        editor.set(0, sr.getCodec().getClass().getName());
-
+    private void encode(Editor editor, byte[] data) throws IOException, FileNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
         OutputStream out = null;
         try {
-            out = new BufferedOutputStream(editor.newOutputStream(1), IO_BUFFER_SIZE);
-            copy(sr.getCodec().encode(sr), out);
+            out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
+            copy(in, out);
         } finally {
             if (out != null) {
                 out.close();
             }
         }
+    }
+
+    private String encodeKey(String key) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] md5hash = new byte[32];
+            byte[] bytes = key.toString().getBytes("utf-8");
+            md.update(bytes, 0, bytes.length);
+            md5hash = md.digest();
+            return ByteUtils.encodeHex(md5hash);
+        } catch (Throwable e) {
+            LOG.error("Error encoding cache key", e);
+        }
+        return key;
     }
 
     private void copy(InputStream input, OutputStream output) throws IOException {
