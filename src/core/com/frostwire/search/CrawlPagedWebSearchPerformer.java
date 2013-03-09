@@ -35,6 +35,8 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
 
     private static final int DEFAULT_NUM_CRAWLS = 4;
 
+    private static final CrawlCache cache = new DiskCrawlCache();
+
     private int numCrawls;
 
     public CrawlPagedWebSearchPerformer(long token, String keywords, int timeout, int pages, int numCrawls) {
@@ -60,6 +62,18 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
 
     protected List<? extends SearchResult> crawlResult(T sr) {
         return Collections.emptyList();
+    }
+
+    protected byte[] cacheGet(String key) {
+        synchronized (cache) {
+            return cache.get(key);
+        }
+    }
+
+    protected void cachePut(String key, byte[] data) {
+        synchronized (cache) {
+            cache.put(key, data);
+        }
     }
 
     @SuppressWarnings("unchecked")

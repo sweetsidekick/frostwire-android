@@ -48,11 +48,6 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
     }
 
     @Override
-    public String getCacheKey() {
-        return "";
-    }
-
-    @Override
     public long getSize() {
         return -1;
     }
