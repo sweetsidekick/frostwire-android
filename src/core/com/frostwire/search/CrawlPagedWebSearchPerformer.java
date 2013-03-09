@@ -18,6 +18,9 @@
 
 package com.frostwire.search;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,12 +53,13 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
 
             T obj = cast(sr);
             if (obj != null) {
-                crawlResult(obj);
+                onResults(this, crawlResult(obj));
             }
         }
     }
 
-    protected void crawlResult(T sr) {
+    protected List<? extends SearchResult> crawlResult(T sr) {
+        return Collections.emptyList();
     }
 
     @SuppressWarnings("unchecked")

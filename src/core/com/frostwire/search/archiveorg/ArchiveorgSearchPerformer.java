@@ -18,7 +18,6 @@
 
 package com.frostwire.search.archiveorg;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,9 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
     }
 
     @Override
-    public void crawlResult(ArchiveorgSearchResult sr) {
+    public List<? extends SearchResult> crawlResult(ArchiveorgSearchResult sr) {
+        List<ArchiveorgDeepSearchResult> list = new LinkedList<ArchiveorgDeepSearchResult>();
+
         String url = "http://archive.org/details/" + sr.getItem().identifier + "?output=json";
 
         try {
@@ -59,12 +60,13 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
             while (it.hasNext()) {
                 String name = it.next();
                 ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
-                // optimize here
-                onResults(this, Arrays.asList(new ArchiveorgDeepSearchResult(sr, name, file)));
+                list.add(new ArchiveorgDeepSearchResult(sr, name, file));
             }
         } catch (Throwable e) {
             LOG.warn("Unable to get details for url: " + url + ", e=" + e.getMessage());
         }
+
+        return list;
     }
 
     @Override

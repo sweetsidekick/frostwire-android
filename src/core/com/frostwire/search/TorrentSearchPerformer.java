@@ -18,10 +18,8 @@
 package com.frostwire.search;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.gudy.azureus2.core3.torrent.TOTorrent;
 import org.gudy.azureus2.core3.torrent.TOTorrentException;
@@ -47,25 +45,23 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
     }
 
     @Override
-    public void crawlResult(TorrentWebSearchResult sr) {
+    public List<? extends SearchResult> crawlResult(TorrentWebSearchResult sr) {
+        List<TorrentDeepSearchResult> list = new LinkedList<TorrentDeepSearchResult>();
+
         if (sr.getTorrentURI().startsWith("http")) {
             TOTorrent torrent = downloadTorrent(sr.getTorrentURI(), sr.getDetailsUrl());
 
             if (torrent != null) {
-                List<String> keywordTokens = tokenize(keywords);
-
                 TOTorrentFile[] files = torrent.getFiles();
 
                 for (int i = 0; !isStopped() && i < files.length; i++) {
                     TOTorrentFile file = files[i];
-                    String fileStr = sr.getFilename() + " " + file.getRelativePath();
-                    if (match(keywordTokens, fileStr)) {
-                        // optimize here
-                        onResults(this, Arrays.asList(new TorrentDeepSearchResult(sr, file)));
-                    }
+                    list.add(new TorrentDeepSearchResult(sr, file));
                 }
             }
         }
+
+        return list;
     }
 
     protected TOTorrent downloadTorrent(String url, String referrer) {
@@ -78,31 +74,5 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
             LOG.warn("Failed to download torrent: " + url + ", e=" + e.getMessage());
         }
         return torrent;
-    }
-
-    private List<String> tokenize(String keywords) {
-        // TODO: clean keywords
-
-        List<String> tokens = new LinkedList<String>();
-
-        for (String s : keywords.split(" ")) {
-            tokens.add(s.toLowerCase(Locale.US));
-        }
-
-        return tokens;
-    }
-
-    private boolean match(List<String> keywordTokens, String fileStr) {
-        // TODO: normalize fileStr
-
-        fileStr = fileStr.toLowerCase(Locale.US);
-
-        for (String t : keywordTokens) {
-            if (!fileStr.contains(t)) {
-                return true;
-            }
-        }
-
-        return true;
     }
 }
