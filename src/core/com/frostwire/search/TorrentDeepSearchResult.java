@@ -56,10 +56,6 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
         return sr.getCreationTime();
     }
 
-    public String getCacheKey() {
-        return sr.getCacheKey();
-    }
-
     public String getTorrentURI() {
         return sr.getTorrentURI();
     }
@@ -76,6 +72,11 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
     @Override
     public int getSeeds() {
         return sr.getSeeds();
+    }
+    
+    @Override
+    public String getHash() {
+        return sr.getHash();
     }
 
     @Override

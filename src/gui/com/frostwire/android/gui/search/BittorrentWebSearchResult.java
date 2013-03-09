@@ -26,7 +26,7 @@ import com.frostwire.search.TorrentSearchResult;
  * @author aldenml
  *
  */
-public class BittorrentWebSearchResult implements BittorrentSearchResult {
+public class BittorrentWebSearchResult implements TorrentSearchResult {
 
     private final TorrentSearchResult webResult;
 
@@ -38,11 +38,11 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
         return FilenameUtils.getName(webResult.getFilename());
     }
 
-    public String getFileName() {
+    public String getFilename() {
         return webResult.getFilename();
     }
 
-    public int getRank() {
+    public int getSeeds() {
         return webResult.getSeeds();
     }
 
@@ -55,7 +55,7 @@ public class BittorrentWebSearchResult implements BittorrentSearchResult {
     }
 
     public String getHash() {
-        return webResult.getCacheKey();
+        return webResult.getHash();
     }
 
     public String getDetailsUrl() {

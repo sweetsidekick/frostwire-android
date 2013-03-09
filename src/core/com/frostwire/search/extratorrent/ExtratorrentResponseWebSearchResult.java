@@ -63,7 +63,8 @@ public class ExtratorrentResponseWebSearchResult extends AbstractTorrentWebSearc
         return "Extratorrent";
     }
 
-    public String getCacheKey() {
+    @Override
+    public String getHash() {
         return item.hash;
     }
 

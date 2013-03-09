@@ -58,17 +58,18 @@ public abstract class AbstractBittorrentIntentResult implements TorrentSearchRes
     }
 
     @Override
-    public String getCacheKey() {
-        return null;
-    }
-
-    @Override
     public String getDetailsUrl() {
         return null;
     }
 
     @Override
     public String getSource() {
+        return null;
+    }
+    
+    @Override
+    public String getHash() {
+        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
@@ -36,7 +35,6 @@ import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
 
@@ -44,11 +42,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SearchEngine;
-import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
-import com.frostwire.android.gui.search.SearchTask.SearchTaskListener;
-import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.Normalizer;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
@@ -57,10 +52,6 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.SearchResultListener;
-import com.frostwire.search.TorrentSearchResult;
-import com.frostwire.search.TorrentWebSearchResult;
-import com.frostwire.search.soundcloud.SoundcloudSearchResult;
-import com.frostwire.search.youtube.YouTubeSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -195,7 +186,7 @@ public final class LocalSearchEngine {
         manager.stop(currentSearchToken);
     }
 
-    public void deepSearch(DeepSearchTask task, String query) {
+    public void deepSearch(String query) {
         /*
         query = sanitize(query);
 
@@ -359,9 +350,9 @@ public final class LocalSearchEngine {
         TorrentDB tdb = new TorrentDB();
 
         tdb.creationTime = sr.getCreationTime();
-        tdb.fileName = sr.getFileName();
+        tdb.fileName = sr.getFilename();
         tdb.hash = sr.getHash();
-        tdb.seeds = sr.getRank();
+        tdb.seeds = sr.getSeeds();
         tdb.size = sr.getSize();
         tdb.torrentDetailsURL = sr.getDetailsUrl();
         tdb.torrentURI = sr.getTorrentURI();
