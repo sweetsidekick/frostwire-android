@@ -35,13 +35,13 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
-import com.frostwire.android.gui.search.TorrentIntentFileResult;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
 import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
+import com.frostwire.android.gui.search.TorrentIntentFileResult;
 import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -108,8 +108,8 @@ public final class TransferManager {
             return new ExistingDownload();
         }
         
-        if (sr instanceof BittorrentSearchResult) {
-            return newBittorrentDownload((BittorrentSearchResult) sr);
+        if (sr instanceof TorrentSearchResult) {
+            return newBittorrentDownload((TorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
             return newHttpDownload((HttpSlideSearchResult) sr);
         } else if (sr instanceof YouTubeEngineSearchResult) {
@@ -338,7 +338,7 @@ public final class TransferManager {
         }
     }
 
-    private BittorrentDownload newBittorrentDownload(BittorrentSearchResult sr) throws Exception {
+    private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) throws Exception {
         BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
 
         if (!(download instanceof InvalidBittorrentDownload)) {

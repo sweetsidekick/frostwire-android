@@ -31,7 +31,7 @@ import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderFactory;
 import android.util.Log;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -43,7 +43,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     private static final String TAG = "FW.TorrentFetcherDownload";
 
     private final TransferManager manager;
-    private final BittorrentSearchResult sr;
+    private final TorrentSearchResult sr;
     private final Date dateCreated;
 
     private int statusResId;
@@ -53,7 +53,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     private boolean removed;
 
-    public TorrentFetcherDownload(TransferManager manager, BittorrentSearchResult sr) {
+    public TorrentFetcherDownload(TransferManager manager, TorrentSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
         this.dateCreated = new Date();
@@ -63,7 +63,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         this.torrentDownloader.start();
     }
 
-    public BittorrentSearchResult getSearchResult() {
+    public TorrentSearchResult getSearchResult() {
         return sr;
     }
 
