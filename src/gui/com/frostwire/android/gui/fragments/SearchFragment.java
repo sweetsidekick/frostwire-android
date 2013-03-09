@@ -340,7 +340,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     private void adjustDeepSearchProgress(View v) {
         int visibility;
 
-        if (adapter != null && LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
+        if (adapter != null && false) {//LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
             progress = (progress + 20) % 100;
             if (progress == 0) {
                 progress = 10;

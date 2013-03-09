@@ -17,22 +17,16 @@
 
 package com.frostwire.android.tests.search;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.gudy.azureus2.core3.torrent.TOTorrent;
 
 import android.test.ApplicationTestCase;
 import android.test.mock.MockApplication;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
-import com.frostwire.search.SearchResult;
-import com.frostwire.search.TorrentSearchPerformer;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
@@ -45,13 +39,13 @@ import com.frostwire.search.vertor.VertorSearchPerformer;
  * @author aldenml
  *
  */
-public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplication> {
+public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
 
-    public TorrentSearchPerformerTest() {
+    public DeepSearchTest() {
         this(MockApplication.class);
     }
 
-    public TorrentSearchPerformerTest(Class<MockApplication> applicationClass) {
+    public DeepSearchTest(Class<MockApplication> applicationClass) {
         super(applicationClass);
     }
 
@@ -62,17 +56,6 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
         ConfigurationManager.create(getApplication());
         AzureusManager.initConfiguration();
     }
-
-    @MediumTest
-    public void testDownloadTorrent() {
-        downloadTorrent("http://ca.isohunt.com/download/442362661/frostclick.torrent", "http://isohunt.com/torrent_details/442362661/frostclick?tab=summary");
-        downloadTorrent("http://www.clearbits.net/get/134-big-buck-bunny-720p.torrent", "http://www.clearbits.net/torrents/134-big-buck-bunny-720p");
-    }
-
-    //    @MediumTest
-    //    public void testDownloadMagnet() {
-    //        downloadTorrent("magnet:?xt=urn:btih:GO73E2FV7MGKWIS3BTFMVJZDL5RR33LW&tr=http://tracker.mininova.org/announce", "http://www.mininova.org/tor/3190001/0");
-    //    }
 
     @LargeTest
     public void testDeepSearchISOHunt() {
@@ -98,29 +81,6 @@ public class TorrentSearchPerformerTest extends ApplicationTestCase<MockApplicat
     @LargeTest
     public void testDeepSearchArchiveorg() {
         deepSearch(new ArchiveorgSearchPerformer(0, "Big Buck Bunny", 5000));
-    }
-
-    private void downloadTorrent(final String url, final String referrer) {
-        TorrentSearchPerformer p = new TorrentSearchPerformer(0, null, 0, 0) {
-
-            @Override
-            public void perform() {
-                TOTorrent torrent = downloadTorrent(url, referrer);
-                assertNotNull("Unable to download torrent: " + url, torrent);
-            }
-
-            @Override
-            protected String getUrl(int page, String encodedKeywords) {
-                return null;
-            }
-
-            @Override
-            protected List<? extends SearchResult> searchPage(String page) {
-                return null;
-            }
-        };
-
-        p.perform();
     }
 
     private void deepSearch(SearchPerformer performer) {
