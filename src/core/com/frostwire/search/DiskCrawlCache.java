@@ -66,8 +66,7 @@ public class DiskCrawlCache implements CrawlCache {
                 snapshot = cache.get(key);
 
                 if (snapshot != null) {
-                    String codec = snapshot.getString(0);
-                    sr = decode(codec, snapshot.getInputStream(1));
+                    sr = decode(snapshot);
                 }
             } catch (Throwable e) {
                 LOG.warn("Error getting value from crawl cache", e);
@@ -94,7 +93,6 @@ public class DiskCrawlCache implements CrawlCache {
                     return;
                 }
 
-                editor.set(0, sr.getCodec().getClass().getName());
                 encode(sr, editor);
                 cache.flush();
                 editor.commit();
@@ -115,15 +113,18 @@ public class DiskCrawlCache implements CrawlCache {
         }
     }
 
-    private CrawlableSearchResult decode(String codec, InputStream is) throws Exception {
+    private CrawlableSearchResult decode(Snapshot snapshot) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        String codec = snapshot.getString(0);
         Class<?> clazz = Class.forName(codec);
 
         SearchResultCodec searchResultCodec = (SearchResultCodec) clazz.newInstance();
 
-        return (CrawlableSearchResult) searchResultCodec.decode(is);
+        return (CrawlableSearchResult) searchResultCodec.decode(snapshot.getInputStream(1));
     }
 
     private void encode(CrawlableSearchResult sr, DiskLruCache.Editor editor) throws IOException, FileNotFoundException {
+        editor.set(0, sr.getCodec().getClass().getName());
+
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(editor.newOutputStream(1), IO_BUFFER_SIZE);
