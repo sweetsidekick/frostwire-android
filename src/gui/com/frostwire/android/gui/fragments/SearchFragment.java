@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.fragments;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -43,25 +45,25 @@ import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.NewTransferDialog;
 import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
-import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.SearchResultListener;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements Refreshable, MainFragment {
+public class SearchFragment extends AbstractListFragment implements MainFragment {
 
     private static final String TAG = "FW.SearchFragment";
 
@@ -83,28 +85,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setupAdapter2();
         setRetainInstance(true);
-
-        if (getActivity() instanceof AbstractActivity) {
-            ((AbstractActivity) getActivity()).addRefreshable(this);
-        }
-    }
-
-    @Override
-    public void refresh() {
-        if (adapter != null) {
-            if (LocalSearchEngine.instance().getCurrentResultsCount() != adapter.getList().size()) {
-                adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
-            }
-        } else {
-            setupAdapter();
-        }
-
-        if (adapter != null && adapter.getCount() > 0) {
-            switchView(getView(), android.R.id.list);
-        }
-
-        adjustDeepSearchProgress(getView());
     }
 
     @Override
@@ -119,14 +101,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     @Override
     protected void initComponents(final View view) {
 
-        adapter = new SearchResultListAdapter(view.getContext()) {
-            @Override
-            protected void searchResultClicked(SearchResult sr) {
-                startTransfer(sr, getString(R.string.download_added_to_queue));
-            }
-        };
-        setListAdapter(adapter);
-
         searchInput = findView(view, R.id.fragment_search_input);
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
@@ -136,7 +110,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 adjustDeepSearchProgress(getView());
                 switchView(getView(), R.id.fragment_search_search_progress);
                 LocalSearchEngine.instance().performSearch(query);
-                setupAdapter();
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
@@ -180,20 +153,37 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     private void showResultsOrPromotion(View view) {
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            setupAdapter();
             switchView(view, android.R.id.list);
         } else {
             switchView(view, R.id.fragment_search_promos);
         }
     }
 
-    private void setupAdapter() {
-        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-
-            if (adapter.getCount() > 0) {
-                switchView(getView(), android.R.id.list);
+    private void setupAdapter2() {
+        adapter = new SearchResultListAdapter(getActivity()) {
+            @Override
+            protected void searchResultClicked(SearchResult sr) {
+                startTransfer(sr, getString(R.string.download_added_to_queue));
             }
-        }
+        };
+        setListAdapter(adapter);
+
+        LocalSearchEngine.instance().registerListener(new SearchResultListener() {
+            @Override
+            public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void run() {
+                        adapter.addList((List<SearchResult>) results); // java, java, and type erasure
+                        if (adapter.getCount() > 0) {
+                            switchView(getView(), android.R.id.list);
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     private void startTransfer(final SearchResult sr, final String toastMessage) {

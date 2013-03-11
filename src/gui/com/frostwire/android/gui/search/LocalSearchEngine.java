@@ -81,9 +81,9 @@ public final class LocalSearchEngine {
     private final int MAX_TORRENT_FILES_TO_INDEX;
     private final int FULLTEXT_SEARCH_RESULTS_LIMIT;
 
-    
+    private SearchResultListener listener;
     private final List<SearchResult> currentResults;
-    
+
     private final Object lockObj = new Object();
 
     private final SearchManager manager;
@@ -119,16 +119,21 @@ public final class LocalSearchEngine {
         MAX_TORRENT_FILES_TO_INDEX = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
         FULLTEXT_SEARCH_RESULTS_LIMIT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
 
-        
         this.currentResults = Collections.synchronizedList(new LinkedList<SearchResult>());
-        
+
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new SearchResultListener() {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
-                addResults(results);
+                if (listener != null) {
+                    listener.onResults(performer, results);
+                }
             }
         });
+    }
+
+    public void registerListener(SearchResultListener listener) {
+        this.listener = listener;
     }
 
     public int getCurrentResultsCount() {

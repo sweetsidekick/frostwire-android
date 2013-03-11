@@ -56,7 +56,10 @@ public abstract class AbstractListFragment extends ListFragment {
             listContainer.setId(INTERNAL_LIST_CONTAINER_ID);
         }
 
-        initComponents(v);
+        if (!v.isInEditMode()) {
+            initComponents(v);
+        }
+
         return v;
     }
 
