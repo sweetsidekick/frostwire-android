@@ -38,7 +38,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.PromotionsHandler;
 import com.frostwire.android.gui.PromotionsHandler.Slide;
-import com.frostwire.android.gui.adapters.SearchResultListAdapter2;
+import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
@@ -70,7 +70,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     private SearchInputView searchInput;
 
-    private SearchResultListAdapter2 adapter;
+    private SearchResultListAdapter adapter;
 
     private int mediaTypeId;
     private ProgressDialog progressDlg;
@@ -192,9 +192,9 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     private void setupAdapter() {
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            adapter = new SearchResultListAdapter2(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
+            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
                 @Override
-                protected void onStartTransfer(SearchResult sr) {
+                protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
                 }
             };

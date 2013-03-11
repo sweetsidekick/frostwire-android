@@ -19,22 +19,18 @@
 package com.frostwire.android.gui.adapters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
@@ -50,33 +46,40 @@ import com.frostwire.search.TorrentSearchResult;
  */
 public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
-    private final Map<String, Drawable> drawableCache;
-    private final DownloadClickListener downloadClickListener;
+    private static final int NO_FILE_TYPE = -1;
+
+    private final OnLinkClickListener linkListener;
+
+    private int fileType;
 
     public SearchResultListAdapter(Context context, List<SearchResult> list) {
         super(context, R.layout.view_bittorrent_search_result_list_item, list);
 
-        drawableCache = new HashMap<String, Drawable>();
-        downloadClickListener = new DownloadClickListener();
+        this.linkListener = new OnLinkClickListener();
+
+        this.fileType = NO_FILE_TYPE;
     }
 
-    public void filter(int mediaTypeId) {
-        visualList = new ArrayList<SearchResult>();
+    public void filter(int fileType) {
+        this.fileType = fileType;
+
+        // review this in deep looking for synchronization issues
+        this.visualList = new ArrayList<SearchResult>();
         for (SearchResult sr : new ArrayList<SearchResult>(list)) {
-            if (accept(sr, mediaTypeId)) {
+            if (accept(sr)) {
                 visualList.add(sr);
             }
         }
         notifyDataSetInvalidated();
     }
 
-    public boolean accept(SearchResult sr, int mediaTypeId) {
+    public boolean accept(SearchResult sr) {
         if (sr instanceof FileSearchResult) {
             MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
             if (mt == null) {
                 return false;
             }
-            return mt.getId() == mediaTypeId;
+            return mt.getId() == fileType;
         } else {
             return false;
         }
@@ -84,45 +87,17 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     @Override
     protected void populateView(View view, SearchResult sr) {
+        if (sr instanceof FileSearchResult) {
+            populateFilePart(view, (FileSearchResult) sr);
+        }
         if (sr instanceof TorrentSearchResult) {
-            populateBittorrentView(view, (TorrentSearchResult) sr);
-        } else if (sr instanceof FileSearchResult) {
-            populateWebEngineView(view, (FileSearchResult) sr);
+            populateTorrentPart(view, (TorrentSearchResult) sr);
         }
     }
 
-    protected void populateBittorrentView(View view, TorrentSearchResult sr) {
+    protected void populateFilePart(View view, FileSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFilename())));
-
-        TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
-        title.setText(sr.getDisplayName());
-        // if marked as downloading
-        // title.setTextColor(GlobalConstants.COLOR_DARK_BLUE);
-
-        TextView fileSize = findView(view, R.id.view_bittorrent_search_result_list_item_file_size);
-        fileSize.setText(UIUtils.getBytesInHuman(sr.getSize()));
-
-        TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
-        extra.setText(FilenameUtils.getExtension(sr.getFilename()));
-
-        TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getSeeds(), sr.getSeeds()));
-
-        TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
-        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getDetailsUrl()));
-
-        /**
-        ImageButton downloadButton = findView(view, R.id.view_bittorrent_search_result_list_item_button_download);
-        downloadButton.setTag(sr);
-        downloadButton.setOnClickListener(downloadClickListener);
-        */
-    }
-
-    protected void populateWebEngineView(View view, FileSearchResult sr) {
-        ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setImageDrawable(getDrawable(FilenameUtils.getExtension(sr.getFilename())));
+        fileTypeIcon.setImageResource(getFileTypeIconId());
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
         title.setText(sr.getDisplayName());
@@ -140,92 +115,59 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         extra.setText(FilenameUtils.getExtension(sr.getFilename()));
 
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        //seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getRank(), sr.getRank()));
         seeds.setText("");
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
-        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getDetailsUrl()));
+        sourceLink.setText(sr.getSource());
+        sourceLink.setTag(sr.getDetailsUrl());
+        sourceLink.setOnClickListener(linkListener);
+    }
+
+    protected void populateTorrentPart(View view, TorrentSearchResult sr) {
+        TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
+        if (sr.getSeeds() > 0) {
+            seeds.setText(getContext().getResources().getQuantityString(R.plurals.count_seeds_source, sr.getSeeds(), sr.getSeeds()));
+        } else {
+            seeds.setText("");
+        }
     }
 
     @Override
     protected void onItemClicked(View v) {
-        downloadClickListener.onClick(v);
+        SearchResult sr = (SearchResult) v.getTag();
+        searchResultClicked(sr);
     }
 
-    protected void onStartTransfer(SearchResult sr) {
+    protected void searchResultClicked(SearchResult sr) {
     }
 
-    private Drawable getDrawable(String ext) {
-        Drawable d;
-        if (drawableCache.containsKey(ext)) {
-            d = drawableCache.get(ext);
-        } else {
-            d = getContext().getResources().getDrawable(getFileTypeIconId(ext));
-            drawableCache.put(ext, d);
-        }
-
-        return d;
-    }
-
-    private static int getFileTypeIconId(String ext) {
-        MediaType mt = MediaType.getMediaTypeForExtension(ext);
-        if (mt == null) {
-            return R.drawable.question_mark;
-        }
-        if (mt.equals(MediaType.getApplicationsMediaType())) {
+    private int getFileTypeIconId() {
+        switch (fileType) {
+        case Constants.FILE_TYPE_APPLICATIONS:
             return R.drawable.browse_peer_application_icon_selector_off;
-        } else if (mt.equals(MediaType.getAudioMediaType())) {
+        case Constants.FILE_TYPE_AUDIO:
             return R.drawable.browse_peer_audio_icon_selector_off;
-        } else if (mt.equals(MediaType.getDocumentMediaType())) {
+        case Constants.FILE_TYPE_DOCUMENTS:
             return R.drawable.browse_peer_document_icon_selector_off;
-        } else if (mt.equals(MediaType.getImageMediaType())) {
+        case Constants.FILE_TYPE_PICTURES:
             return R.drawable.browse_peer_picture_icon_selector_off;
-        } else if (mt.equals(MediaType.getVideoMediaType())) {
+        case Constants.FILE_TYPE_VIDEOS:
             return R.drawable.browse_peer_video_icon_selector_off;
-        } else if (mt.equals(MediaType.getTorrentMediaType())) {
+        case Constants.FILE_TYPE_TORRENTS:
             return R.drawable.browse_peer_torrent_icon_selector_off;
-        } else {
+        default:
             return R.drawable.question_mark;
         }
     }
 
-    private void startTransfer(final SearchResult sr) {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                onStartTransfer(sr);
-            }
-        };
-
-        task.execute();
-    }
-
-    private class OnLinkClickListener implements OnClickListener {
-
-        private final String url;
-
-        public OnLinkClickListener(String url) {
-            this.url = url;
-        }
+    private static class OnLinkClickListener implements OnClickListener {
 
         @Override
         public void onClick(View v) {
+            String url = (String) v.getTag();
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
-            getContext().startActivity(i);
-        }
-    }
-
-    private final class DownloadClickListener implements OnClickListener {
-        public void onClick(View v) {
-            SearchResult sr = (SearchResult) v.getTag();
-            startTransfer(sr);
+            v.getContext().startActivity(i);
         }
     }
 }
