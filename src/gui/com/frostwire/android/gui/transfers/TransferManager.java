@@ -36,12 +36,12 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
-import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.search.TorrentIntentFileResult;
-import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.soundcloud.SoundcloudSearchResult;
+import com.frostwire.search.youtube.YouTubeSearchResult;
 
 /**
  * @author gubatron
@@ -87,14 +87,12 @@ public final class TransferManager {
         return transfers;
     }
 
-    private boolean alreadyDownloading(Object obj) {
+    private boolean alreadyDownloading(String detailsUrl) {
         synchronized (alreadyDownloadingMonitor ) {
             for (DownloadTransfer dt : downloads) {
                 if (dt.isDownloading()) {
-                    if (dt instanceof TaggableTransfer<?>) {
-                        if (obj.equals(((TaggableTransfer<?>) dt).getTag())) {
-                            return true;
-                        }
+                    if (dt.getDetailsUrl() != null && dt.getDetailsUrl().equals(detailsUrl)) {
+                        return true;
                     }
                 }
             }
@@ -104,7 +102,7 @@ public final class TransferManager {
     
     public DownloadTransfer download(SearchResult sr) throws Exception {
 
-        if (alreadyDownloading(sr)) {
+        if (alreadyDownloading(sr.getDetailsUrl())) {
             return new ExistingDownload();
         }
         
@@ -112,10 +110,10 @@ public final class TransferManager {
             return newBittorrentDownload((TorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
             return newHttpDownload((HttpSlideSearchResult) sr);
-        } else if (sr instanceof YouTubeEngineSearchResult) {
-            return newYouTubeDownload((YouTubeEngineSearchResult) sr);
-        } else if (sr instanceof SoundcloudEngineSearchResult) {
-            return newSoundcloudDownload((SoundcloudEngineSearchResult) sr);
+        } else if (sr instanceof YouTubeSearchResult) {
+            return newYouTubeDownload((YouTubeSearchResult) sr);
+        } else if (sr instanceof SoundcloudSearchResult) {
+            return newSoundcloudDownload((SoundcloudSearchResult) sr);
         } else {
             return new InvalidDownload();
         }
@@ -124,7 +122,7 @@ public final class TransferManager {
     public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
         
-        if (alreadyDownloading(download.getTag())) {
+        if (alreadyDownloading(download.getDetailsUrl())) {
             return new ExistingDownload();
         }
         
@@ -357,7 +355,7 @@ public final class TransferManager {
         return download;
     }
 
-    private DownloadTransfer newYouTubeDownload(YouTubeEngineSearchResult sr) {
+    private DownloadTransfer newYouTubeDownload(YouTubeSearchResult sr) {
         YouTubeDownload download = new YouTubeDownload(this, sr);
 
         downloads.add(download);
@@ -366,7 +364,7 @@ public final class TransferManager {
         return download;
     }
 
-    private DownloadTransfer newSoundcloudDownload(SoundcloudEngineSearchResult sr) {
+    private DownloadTransfer newSoundcloudDownload(SoundcloudSearchResult sr) {
         SoundcloudDownload download = new SoundcloudDownload(this, sr);
 
         downloads.add(download);

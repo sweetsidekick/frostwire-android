@@ -44,7 +44,7 @@ import com.frostwire.android.util.concurrent.AbstractRunnable;
  * @author aldenml
  *
  */
-public final class PeerHttpDownload implements DownloadTransfer, TaggableTransfer<String> {
+public final class PeerHttpDownload implements DownloadTransfer {
 
     private static final String TAG = "FW.PeerHttpDownload";
 
@@ -285,7 +285,7 @@ public final class PeerHttpDownload implements DownloadTransfer, TaggableTransfe
     }
 
     @Override
-    public String getTag() {
+    public String getDetailsUrl() {
         return getPeer().getDownloadUri(getFD());
     }
 }

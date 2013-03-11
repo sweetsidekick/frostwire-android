@@ -20,8 +20,8 @@ package com.frostwire.android.gui;
 
 import java.util.List;
 
+import com.frostwire.android.gui.search.TorrentPromotionSearchResult;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
-import com.frostwire.android.gui.transfers.TorrentPromotionSearchResult;
 import com.frostwire.search.SearchResult;
 
 /**

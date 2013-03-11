@@ -300,41 +300,44 @@ public final class LocalSearchEngine {
      * @param torrent
      * @param force
      */
+    /*
     void indexTorrent(BittorrentWebSearchResult sr, TOTorrent torrent, Set<String> indexed) {
-        TorrentDB tdb = searchResultToTorrentDB(sr);
-        long now = System.currentTimeMillis();
-
-        TOTorrentFile[] files = torrent.getFiles();
-
-        for (int i = 0; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
-            if (!indexed.contains(files[i].getRelativePath())) {
-                indexTorrentFile(now, files[i], tdb);
-                Thread.yield(); // try to play nice with others
-            }
-        }
-    }
-
+//        TorrentDB tdb = searchResultToTorrentDB(sr);
+//        long now = System.currentTimeMillis();
+//
+//        TOTorrentFile[] files = torrent.getFiles();
+//
+//        for (int i = 0; i < files.length && i < MAX_TORRENT_FILES_TO_INDEX; i++) {
+//            if (!indexed.contains(files[i].getRelativePath())) {
+//                indexTorrentFile(now, files[i], tdb);
+//                Thread.yield(); // try to play nice with others
+//            }
+//        }
+    }*/
+/*
     void indexTorrentFile(BittorrentWebSearchResult sr, TOTorrentFile file) {
-        TorrentDB tdb = searchResultToTorrentDB(sr);
-        long now = System.currentTimeMillis();
-        indexTorrentFile(now, file, tdb);
-    }
+//        TorrentDB tdb = searchResultToTorrentDB(sr);
+//        long now = System.currentTimeMillis();
+//        indexTorrentFile(now, file, tdb);
+    }*/
 
+    /*
     private TorrentDB searchResultToTorrentDB(BittorrentWebSearchResult sr) {
-        TorrentDB tdb = new TorrentDB();
+//        TorrentDB tdb = new TorrentDB();
+//
+//        tdb.creationTime = sr.getCreationTime();
+//        tdb.fileName = sr.getFilename();
+//        tdb.hash = sr.getHash();
+//        tdb.seeds = sr.getSeeds();
+//        tdb.size = sr.getSize();
+//        tdb.torrentDetailsURL = sr.getDetailsUrl();
+//        tdb.torrentURI = sr.getTorrentURI();
+//        tdb.vendor = sr.getSource();
 
-        tdb.creationTime = sr.getCreationTime();
-        tdb.fileName = sr.getFilename();
-        tdb.hash = sr.getHash();
-        tdb.seeds = sr.getSeeds();
-        tdb.size = sr.getSize();
-        tdb.torrentDetailsURL = sr.getDetailsUrl();
-        tdb.torrentURI = sr.getTorrentURI();
-        tdb.vendor = sr.getSource();
+        return null;// tdb;
+    }*/
 
-        return tdb;
-    }
-
+    /*
     private void indexTorrentFile(long time, TOTorrentFile file, TorrentDB tdb) {
         TorrentFileDB tfdb = new TorrentFileDB();
         tfdb.relativePath = file.getRelativePath();
@@ -347,7 +350,8 @@ public final class LocalSearchEngine {
         String json = JsonUtils.toJson(tfdb);
 
         insert(time, tdb.hash, tdb.fileName, tdb.seeds, tfdb.relativePath, keywords, json);
-    }
+
+    }*/
 
     final static String sanitize(String str) {
         str = Html.fromHtml(str).toString();
@@ -389,6 +393,7 @@ public final class LocalSearchEngine {
         return sb.toString().trim();
     }
 
+    /*
     private boolean torrentIndexed(BittorrentWebSearchResult result) {
         ContentResolver cr = context.getContentResolver();
         Cursor c = null;
@@ -400,7 +405,7 @@ public final class LocalSearchEngine {
                 c.close();
             }
         }
-    }
+    }*/
 
     private void insert(long timestamp, String torrentInfoHash, String torrentFileName, int torrentSeeds, String relativePath, String keywords, String json) {
         synchronized (lockObj) {

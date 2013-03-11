@@ -27,20 +27,20 @@ import java.util.List;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.search.SoundcloudEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
 import com.frostwire.mp3.ID3Wrapper;
 import com.frostwire.mp3.ID3v1Tag;
 import com.frostwire.mp3.ID3v23Tag;
 import com.frostwire.mp3.Mp3File;
+import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngineSearchResult> {
+public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSearchResult> {
 
     private static final String TAG = "FW.SoundcloudDownload";
 
@@ -48,7 +48,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
 
     private final TransferManager manager;
 
-    public SoundcloudDownload(TransferManager manager, SoundcloudEngineSearchResult sr) {
+    public SoundcloudDownload(TransferManager manager, SoundcloudSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
     }
@@ -202,7 +202,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudEngi
         HttpDownloadLink link = new HttpDownloadLink(sr.getStreamUrl());
 
         link.setSize(sr.getSize());
-        link.setFileName(FileUtils.getValidFileName(sr.getFileName()));
+        link.setFileName(FileUtils.getValidFileName(sr.getFilename()));
         link.setDisplayName(sr.getDisplayName());
         link.setCompressed(false);
 

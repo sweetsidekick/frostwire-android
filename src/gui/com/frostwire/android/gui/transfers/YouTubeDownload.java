@@ -45,7 +45,6 @@ import android.util.Log;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
 import com.frostwire.android.util.IOUtils;
@@ -69,6 +68,7 @@ import com.frostwire.mp4.boxes.apple.AppleCoverBox;
 import com.frostwire.mp4.boxes.apple.AppleItemListBox;
 import com.frostwire.mp4.boxes.apple.AppleMediaTypeBox;
 import com.frostwire.mp4.boxes.apple.AppleTrackTitleBox;
+import com.frostwire.search.youtube.YouTubeSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 
 /**
@@ -76,7 +76,7 @@ import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
  * @author aldenml
  * 
  */
-public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSearchResult> {
+public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResult> {
 
     private static final String TAG = "FW.YouTubeDownload";
 
@@ -91,7 +91,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
     private final TransferManager manager;
 
-    public YouTubeDownload(TransferManager manager, YouTubeEngineSearchResult sr) {
+    public YouTubeDownload(TransferManager manager, YouTubeSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
     }

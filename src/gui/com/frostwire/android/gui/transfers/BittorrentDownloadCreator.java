@@ -37,13 +37,12 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
-import com.frostwire.android.gui.search.BittorrentWebSearchResult;
 import com.frostwire.android.gui.search.TorrentIntentFileResult;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.search.TorrentDeepSearchResult;
 import com.frostwire.search.TorrentSearchResult;
 
 /**
@@ -67,10 +66,10 @@ final class BittorrentDownloadCreator {
         } catch (Throwable e) {
             // ignore
         }
-        if (sr instanceof BittorrentWebSearchResult || sr instanceof TorrentPromotionSearchResult || sr instanceof BittorrentIntentHttpResult) {
-            return create(manager, torrentFile, hash, null);
-        } else {
+        if (sr instanceof TorrentDeepSearchResult) {
             return create(manager, torrentFile, hash, sr.getFilename());
+        } else {
+            return create(manager, torrentFile, hash, null);
         }
     }
 
@@ -94,10 +93,10 @@ final class BittorrentDownloadCreator {
                 Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
                 return new TorrentFetcherDownload(manager, sr);
             } else {
-                if (sr instanceof BittorrentWebSearchResult) {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
-                } else {
+                if (sr instanceof TorrentDeepSearchResult) {
                     return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
+                } else {
+                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
                 }
             }
         }

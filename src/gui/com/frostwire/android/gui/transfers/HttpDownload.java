@@ -368,4 +368,9 @@ public final class HttpDownload implements DownloadTransfer {
             }
         }
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return link.getUrl();
+    }
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.transfers;
+package com.frostwire.android.gui.search;
 
 import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.util.FilenameUtils;
