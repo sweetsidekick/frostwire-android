@@ -60,10 +60,10 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         this.fileType = NO_FILE_TYPE;
     }
 
-    @Override
-    public void updateList(List<SearchResult> g) {
-        super.updateList(g);
-        filter(fileType);
+    @SuppressWarnings("unchecked")
+    public void addResults(List<? extends SearchResult> g) {
+        super.addList((List<SearchResult>) g); // java, java, and type erasure
+        filter();
     }
 
     public int getFileType() {
@@ -72,11 +72,10 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     public void setFileType(int fileType) {
         this.fileType = fileType;
+        filter();
     }
 
-    public void filter(int fileType) {
-        this.fileType = fileType;
-
+    private void filter() {
         // review this in deep looking for synchronization issues
         this.visualList = new ArrayList<SearchResult>();
         for (SearchResult sr : new ArrayList<SearchResult>(list)) {

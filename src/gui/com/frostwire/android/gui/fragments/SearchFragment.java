@@ -63,17 +63,15 @@ import com.frostwire.search.SearchResultListener;
  * @author aldenml
  *
  */
-public class SearchFragment extends AbstractListFragment implements MainFragment {
+public final class SearchFragment extends AbstractListFragment implements MainFragment {
 
     private static final String TAG = "FW.SearchFragment";
-
-    private SearchInputView searchInput;
 
     private SearchResultListAdapter adapter;
 
     private int progress;
 
-    private TextView header;
+    private SearchInputView searchInput;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
 
@@ -91,8 +89,9 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
 
     @Override
     public View getHeader(Activity activity) {
+
         LayoutInflater inflater = LayoutInflater.from(activity);
-        header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
+        TextView header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
         header.setText(R.string.search);
 
         return header;
@@ -104,33 +103,17 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
         searchInput = findView(view, R.id.fragment_search_input);
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
-                switchView(view, android.R.id.list);
-                adapter.setFileType(mediaTypeId);
-                adapter.clear();
-                adjustDeepSearchProgress(getView());
-                switchView(getView(), R.id.fragment_search_search_progress);
-                LocalSearchEngine.instance().performSearch(query);
+                performSearch(query, mediaTypeId);
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
                 adapter.setFileType(mediaTypeId);
-
-                if (adapter != null) {
-                    adapter.filter(mediaTypeId);
-                }
             }
 
             public void onClear(View v) {
-                switchView(view, R.id.fragment_search_promos);
-                LocalSearchEngine.instance().cancelSearch();
-                adapter.clear();
-                adjustDeepSearchProgress(getView());
+                cancelSearch(view);
             }
         });
-
-        adjustDeepSearchProgress(view);
-
-        showResultsOrPromotion(view);
 
         promotions = findView(view, R.id.fragment_search_promos);
         promotions.setOnPromotionClickListener(new OnPromotionClickListener() {
@@ -141,17 +124,31 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
                 }
             }
         });
+
         searchProgress = findView(view, R.id.fragment_search_search_progress);
         searchProgress.setCancelOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocalSearchEngine.instance().cancelSearch();
-                showResultsOrPromotion(view);
+                cancelSearch(view);
             }
         });
+
+        showSearchView(view);
     }
 
-    private void showResultsOrPromotion(View view) {
+    private void performSearch(String query, int mediaTypeId) {
+        adapter.clear();
+        adapter.setFileType(mediaTypeId);
+        LocalSearchEngine.instance().performSearch(query);
+    }
+
+    private void cancelSearch(final View view) {
+        adapter.clear();
+        LocalSearchEngine.instance().cancelSearch();
+        showSearchView(getView());
+    }
+
+    private void showSearchView(View view) {
         if (adapter.getCount() > 0) {
             switchView(view, android.R.id.list);
         } else {
@@ -172,13 +169,10 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
             @Override
             public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
                 getActivity().runOnUiThread(new Runnable() {
-                    @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        adapter.addList((List<SearchResult>) results); // java, java, and type erasure
-                        if (adapter.getCount() > 0) {
-                            switchView(getView(), android.R.id.list);
-                        }
+                        adapter.addResults(results);
+                        showSearchView(getView());
                     }
                 });
             }
