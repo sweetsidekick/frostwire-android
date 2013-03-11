@@ -52,6 +52,11 @@
             android:id="@+id/fragment_search_promos"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
+        
+        <com.frostwire.android.gui.views.SearchProgressView
+            android:id="@+id/fragment_search_search_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
         <ListView
             android:id="@id/android:list"

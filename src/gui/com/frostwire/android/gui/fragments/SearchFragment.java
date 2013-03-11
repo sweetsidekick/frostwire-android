@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -54,6 +55,7 @@ import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
+import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
 import com.google.ads.AdSize;
@@ -73,13 +75,14 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     private SearchResultListAdapter adapter;
 
     private int mediaTypeId;
-    private ProgressDialog progressDlg;
+    //private ProgressDialog progressDlg;
     private int progress;
 
     private AdView adView;
 
     private TextView header;
     private PromotionsView promotions;
+    private SearchProgressView searchProgress;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
@@ -109,7 +112,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         }
 
         if (adapter != null && adapter.getCount() > 0) {
-            hideProgressDialog();
+            switchView(getView(), android.R.id.list);
         }
 
         adjustDeepSearchProgress(getView());
@@ -170,12 +173,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
         adjustDeepSearchProgress(view);
 
-        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            setupAdapter();
-            switchView(view, android.R.id.list);
-        } else {
-            switchView(view, R.id.fragment_search_promos);
-        }
+        showResultsOrPromotion(view);
 
         promotions = findView(view, R.id.fragment_search_promos);
         promotions.setOnPromotionClickListener(new OnPromotionClickListener() {
@@ -186,8 +184,25 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 }
             }
         });
+        searchProgress = findView(view, R.id.fragment_search_search_progress);
+        searchProgress.setCancelOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocalSearchEngine.instance().cancelSearch();
+                showResultsOrPromotion(view);
+            }
+        });
 
         updateHint(mediaTypeId);
+    }
+
+    private void showResultsOrPromotion(View view) {
+        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+            setupAdapter();
+            switchView(view, android.R.id.list);
+        } else {
+            switchView(view, R.id.fragment_search_promos);
+        }
     }
 
     private void setupAdapter() {
@@ -201,7 +216,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             adapter.filter(mediaTypeId);
 
             if (adapter.getCount() > 0) {
-                hideProgressDialog();
+                switchView(getView(), android.R.id.list);
             }
 
             setListAdapter(adapter);
@@ -291,43 +306,46 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     }
 
     private void showProgressDialog() {
-        hideProgressDialog();
-
-        progressDlg = new ProgressDialog(getActivity());
-        progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDlg.setMessage(getString(R.string.searching_indeterminate));
-        progressDlg.setCancelable(false);
-
-        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                LocalSearchEngine.instance().cancelSearch();
-                hideProgressDialog();
-            }
-        });
-
-        trackDialog(progressDlg).show();
+        switchView(getView(), R.id.fragment_search_search_progress);
+        //        hideProgressDialog();
+        //
+        //        progressDlg = new ProgressDialog(getActivity());
+        //        progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //        progressDlg.setMessage(getString(R.string.searching_indeterminate));
+        //        progressDlg.setCancelable(false);
+        //
+        //        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+        //
+        //            @Override
+        //            public void onClick(DialogInterface dialog, int which) {
+        //                LocalSearchEngine.instance().cancelSearch();
+        //                hideProgressDialog();
+        //            }
+        //        });
+        //
+        //        trackDialog(progressDlg).show();
     }
 
     private void hideProgressDialog() {
-        if (progressDlg != null) {
-            try {
-                progressDlg.dismiss();
-                progressDlg = null;
-            } catch (Throwable e) {
-                // ignore
-            }
-        }
+        //        if (progressDlg != null) {
+        //            try {
+        //                progressDlg.dismiss();
+        //                progressDlg = null;
+        //            } catch (Throwable e) {
+        //                // ignore
+        //            }
+        //        }
     }
 
     private void switchView(View v, int id) {
-        FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
+        if (v != null) {
+            FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
 
-        int childCount = frameLayout.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = frameLayout.getChildAt(i);
-            childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
+            int childCount = frameLayout.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = frameLayout.getChildAt(i);
+                childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
+            }
         }
     }
 

@@ -18,38 +18,29 @@
 
 package com.frostwire.android.gui.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.frostwire.android.R;
-
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.frostwire.android.R;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class AbstractListFragment extends ListFragment {
+public abstract class AbstractListFragment extends ListFragment {
 
-    private static final String TAG = "FW.AbstractListFragment";
-
-    static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
-    static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
+    private static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
+    private static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
 
     private final int resource;
-    private final List<Dialog> dialogs;
 
     public AbstractListFragment(int resource) {
         this.resource = resource;
-        this.dialogs = new ArrayList<Dialog>();
     }
 
     @Override
@@ -76,13 +67,6 @@ public class AbstractListFragment extends ListFragment {
     }
 
     public void dismissDialogs() {
-        for (Dialog dialog : dialogs) {
-            try {
-                dialog.dismiss();
-            } catch (Throwable e) {
-                Log.w(TAG, "Error dismissing dialog", e);
-            }
-        }
     }
 
     protected void initComponents(View v) {
@@ -96,10 +80,5 @@ public class AbstractListFragment extends ListFragment {
     @SuppressWarnings("unchecked")
     protected final <T extends Fragment> T findFragment(int id) {
         return (T) getFragmentManager().findFragmentById(id);
-    }
-
-    protected Dialog trackDialog(Dialog dialog) {
-        dialogs.add(dialog);
-        return dialog;
     }
 }
