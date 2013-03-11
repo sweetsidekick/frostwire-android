@@ -88,9 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/view_bittorrent_search_result_list_item_file_size"
             android:layout_marginRight="6dp"
-            android:autoLink="web"
             android:clickable="true"
-            android:linksClickable="true"
             android:text="@string/dummy_engine" />
 
         <TextView

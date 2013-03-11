@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -118,7 +117,7 @@ public class SearchResultListAdapter2 extends AbstractListAdapter<SearchResult> 
         seeds.setText("");
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
+        sourceLink.setText(sr.getSource());
         sourceLink.setTag(sr.getDetailsUrl());
         sourceLink.setOnClickListener(linkListener);
     }
