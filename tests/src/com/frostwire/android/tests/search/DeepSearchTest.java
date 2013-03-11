@@ -78,7 +78,6 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
         deepSearch(new ClearBitsSearchPerformer(0, "Big Buck Bunny", 5000));
     }
 
-    // refactor this test to a better suite
     @LargeTest
     public void testDeepSearchArchiveorg() {
         deepSearch(new ArchiveorgSearchPerformer(0, "Big Buck Bunny", 5000));

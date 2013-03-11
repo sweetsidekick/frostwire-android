@@ -149,34 +149,40 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     }
 
     private void showSearchView(View view) {
-        if (adapter.getCount() > 0) {
-            switchView(view, android.R.id.list);
-        } else {
+        if (LocalSearchEngine.instance().isSearchStopped()) {
             switchView(view, R.id.fragment_search_promos);
+        } else {
+            if (adapter.getCount() > 0) {
+                switchView(view, android.R.id.list);
+            } else {
+                switchView(view, R.id.fragment_search_search_progress);
+            }
         }
     }
 
     private void setupAdapter() {
-        adapter = new SearchResultListAdapter(getActivity()) {
-            @Override
-            protected void searchResultClicked(SearchResult sr) {
-                startTransfer(sr, getString(R.string.download_added_to_queue));
-            }
-        };
-        setListAdapter(adapter);
+        if (adapter == null) {
+            adapter = new SearchResultListAdapter(getActivity()) {
+                @Override
+                protected void searchResultClicked(SearchResult sr) {
+                    startTransfer(sr, getString(R.string.download_added_to_queue));
+                }
+            };
+            setListAdapter(adapter);
 
-        LocalSearchEngine.instance().registerListener(new SearchResultListener() {
-            @Override
-            public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.addResults(results);
-                        showSearchView(getView());
-                    }
-                });
-            }
-        });
+            LocalSearchEngine.instance().registerListener(new SearchResultListener() {
+                @Override
+                public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.addResults(results);
+                            showSearchView(getView());
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void startTransfer(final SearchResult sr, final String toastMessage) {

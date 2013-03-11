@@ -123,7 +123,11 @@ public final class LocalSearchEngine {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
                 if (listener != null && !performer.isStopped()) {
-                    listener.onResults(performer, results);
+                    if (performer.getToken() == currentSearchToken) { // one more additional protection
+                        listener.onResults(performer, results);
+                    } else {
+                        performer.stop(); // why? just in case there is an inner error in an alternative search manager
+                    }
                 }
             }
         });
@@ -135,25 +139,6 @@ public final class LocalSearchEngine {
 
     public void performSearch(String query) {
         manager.stop(currentSearchToken);
-        performTorrentSearch(query);
-    }
-
-    private void addResults(List<? extends SearchResult> results) {
-    }
-
-    public void performTorrentSearch(String query) {
-        /*
-        execute(new LocalSearchTask(query));
-        //new LocalSearchTask(query).run();
-
-        for (SearchEngine searchEngine : SearchEngine.getSearchEngines()) {
-            if (searchEngine.isEnabled()) {
-                execute(new EngineSearchTask(searchEngine, query));
-            }
-        }
-
-        execute(new DeepSearchTask(query));
-        */
 
         currentSearchToken = System.nanoTime();
         for (SearchEngine se : SearchEngine.getEngines()) {
@@ -166,9 +151,14 @@ public final class LocalSearchEngine {
 
     public void cancelSearch() {
         manager.stop(currentSearchToken);
+        currentSearchToken = 0;
     }
 
-    public void deepSearch(String query) {
+    public boolean isSearchStopped() {
+        return currentSearchToken == 0;
+    }
+
+    private void deepSearch(String query) {
         /*
         query = sanitize(query);
 
@@ -238,7 +228,7 @@ public final class LocalSearchEngine {
         return cr.delete(Torrents.Media.CONTENT_URI, null, null);
     }
 
-    public void search(String query) {
+    private void search(String query) {
         //Log.d(TAG, "Local search query: " + query);
         List<Integer> ids = new ArrayList<Integer>();
 
@@ -290,7 +280,7 @@ public final class LocalSearchEngine {
 
             Log.i(TAG, "Ended up with " + results.size() + " results");
 
-            addResults(results);
+            //addResults(results);
         } finally {
             if (c != null) {
                 c.close();
