@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,6 +154,16 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                         public void run() {
                             adapter.addResults(results);
                             showSearchView(getView());
+                        }
+                    });
+                }
+
+                @Override
+                public void onFinished(SearchPerformer performer) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            deepSearchProgress.setVisibility(View.GONE);
                         }
                     });
                 }

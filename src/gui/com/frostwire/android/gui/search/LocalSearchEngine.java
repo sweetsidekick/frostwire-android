@@ -59,11 +59,6 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  * 
  */
-/*
- * I (aldenml) changing this class to a singleton. Since at the end
- * there are a lot of structures that must be shared between different searches,
- * for example the "know info hashes" map.
- */
 public final class LocalSearchEngine {
 
     private static final String TAG = "FW.LocalSearchEngine";
@@ -128,6 +123,13 @@ public final class LocalSearchEngine {
                     } else {
                         performer.stop(); // why? just in case there is an inner error in an alternative search manager
                     }
+                }
+            }
+
+            @Override
+            public void onFinished(SearchPerformer performer) {
+                if (listener != null) {
+                    listener.onFinished(performer);
                 }
             }
         });

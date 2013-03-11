@@ -57,6 +57,10 @@ public class MockSearchResultListener implements SearchResultListener {
         this.results.addAll(results);
         this.numResults += results.size();
     }
+    
+    @Override
+    public void onFinished(SearchPerformer performer) {
+    }
 
     public void logResults() {
         synchronized (results) {

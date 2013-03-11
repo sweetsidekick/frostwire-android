@@ -116,6 +116,16 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
+    protected void onFinished(SearchPerformer performer) {
+        try {
+            if (listener != null) {
+                listener.onFinished(performer);
+            }
+        } catch (Throwable e) {
+            LOG.warn("Error sending results back to receiver: " + e.getMessage());
+        }
+    }
+
     private void stopTasks(long token) {
         synchronized (tasks) {
             Iterator<SearchTask> it = tasks.iterator();
@@ -140,6 +150,23 @@ public class SearchManagerImpl implements SearchManager {
             }
         } else {
             LOG.warn("Search performer is null or stopped, review your logic");
+        }
+    }
+
+    private void checkIfFinished(SearchPerformer performer) {
+        SearchTask pendingTask = null;
+        synchronized (tasks) {
+            Iterator<SearchTask> it = tasks.iterator();
+
+            while (it.hasNext() && pendingTask == null) {
+                SearchTask task = it.next();
+                if (task.getToken() == performer.getToken()) {
+                    pendingTask = task;
+                }
+            }
+        }
+        if (pendingTask == null) {
+            onFinished(performer);
         }
     }
 
@@ -169,6 +196,11 @@ public class SearchManagerImpl implements SearchManager {
                 manager.onResults(performer, list);
             }
         }
+
+        @Override
+        public void onFinished(SearchPerformer performer) {
+            // ignored, performers doesn't know or are not reliable for this check
+        }
     }
 
     private static abstract class SearchTask implements Runnable {
@@ -179,6 +211,10 @@ public class SearchManagerImpl implements SearchManager {
         public SearchTask(SearchManagerImpl manager, SearchPerformer performer) {
             this.manager = manager;
             this.performer = performer;
+        }
+
+        public long getToken() {
+            return performer.getToken();
         }
 
         public void stop() {
@@ -202,6 +238,7 @@ public class SearchManagerImpl implements SearchManager {
                 LOG.warn("Error performing search: " + performer + ", e=" + e.getMessage());
             } finally {
                 manager.tasks.remove(this);
+                manager.checkIfFinished(performer);
             }
         }
     }
@@ -225,6 +262,7 @@ public class SearchManagerImpl implements SearchManager {
                 LOG.warn("Error performing crawling of: " + sr);
             } finally {
                 manager.tasks.remove(this);
+                manager.checkIfFinished(performer);
             }
         }
     }
