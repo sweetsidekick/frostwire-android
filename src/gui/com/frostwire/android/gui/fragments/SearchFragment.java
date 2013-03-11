@@ -19,8 +19,6 @@
 package com.frostwire.android.gui.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -58,8 +55,6 @@ import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
 
 /**
  * @author gubatron
@@ -75,10 +70,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     private SearchResultListAdapter adapter;
 
     private int mediaTypeId;
-    //private ProgressDialog progressDlg;
     private int progress;
-
-    private AdView adView;
 
     private TextView header;
     private PromotionsView promotions;
@@ -144,7 +136,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 SearchFragment.this.mediaTypeId = mediaTypeId;
                 switchView(view, android.R.id.list);
                 clearAdapter();
-                showProgressDialog();
+                switchView(getView(), R.id.fragment_search_search_progress);
                 LocalSearchEngine.instance().performSearch(query);
                 setupAdapter();
                 updateHint(mediaTypeId);
@@ -165,11 +157,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 clearAdapter();
             }
         });
-
-        LinearLayout llayout = findView(view, R.id.fragment_search_adview_layout);
-        adView = new AdView(this.getActivity(), AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
-        adView.setVisibility(View.GONE);
-        llayout.addView(adView, 0);
 
         adjustDeepSearchProgress(view);
 
@@ -301,40 +288,7 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             adapter.clear();
             adapter = null;
         }
-        adView.setVisibility(View.GONE);
         adjustDeepSearchProgress(getView());
-    }
-
-    private void showProgressDialog() {
-        switchView(getView(), R.id.fragment_search_search_progress);
-        //        hideProgressDialog();
-        //
-        //        progressDlg = new ProgressDialog(getActivity());
-        //        progressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        //        progressDlg.setMessage(getString(R.string.searching_indeterminate));
-        //        progressDlg.setCancelable(false);
-        //
-        //        progressDlg.setButton(ProgressDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-        //
-        //            @Override
-        //            public void onClick(DialogInterface dialog, int which) {
-        //                LocalSearchEngine.instance().cancelSearch();
-        //                hideProgressDialog();
-        //            }
-        //        });
-        //
-        //        trackDialog(progressDlg).show();
-    }
-
-    private void hideProgressDialog() {
-        //        if (progressDlg != null) {
-        //            try {
-        //                progressDlg.dismiss();
-        //                progressDlg = null;
-        //            } catch (Throwable e) {
-        //                // ignore
-        //            }
-        //        }
     }
 
     private void switchView(View v, int id) {
