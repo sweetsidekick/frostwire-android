@@ -82,6 +82,11 @@ public class SearchTest2 extends TestCase {
             @Override
             public void stop() {
             }
+            
+            @Override
+            public boolean isStopped() {
+                return false;
+            }
         });
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
@@ -116,6 +121,11 @@ public class SearchTest2 extends TestCase {
 
             @Override
             public void stop() {
+            }
+            
+            @Override
+            public boolean isStopped() {
+                return false;
             }
         });
 
@@ -187,6 +197,11 @@ public class SearchTest2 extends TestCase {
                     synchronized (sync) {
                         sync.notifyAll();
                     }
+                }
+                
+                @Override
+                public boolean isStopped() {
+                    return false;
                 }
             });
         }

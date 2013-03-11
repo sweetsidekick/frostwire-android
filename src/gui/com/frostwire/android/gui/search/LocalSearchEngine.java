@@ -122,7 +122,7 @@ public final class LocalSearchEngine {
         this.manager.registerListener(new SearchResultListener() {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
-                if (listener != null) {
+                if (listener != null && !performer.isStopped()) {
                     listener.onResults(performer, results);
                 }
             }

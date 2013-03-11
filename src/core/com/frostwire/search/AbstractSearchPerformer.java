@@ -56,7 +56,8 @@ public abstract class AbstractSearchPerformer implements SearchPerformer {
         this.stopped = true;
     }
 
-    protected boolean isStopped() {
+    @Override
+    public boolean isStopped() {
         return stopped;
     }
 

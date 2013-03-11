@@ -19,6 +19,7 @@ package com.frostwire.android.tests.search;
 
 import java.util.concurrent.TimeUnit;
 
+import android.os.SystemClock;
 import android.test.ApplicationTestCase;
 import android.test.mock.MockApplication;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -90,7 +91,7 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
         manager.registerListener(l);
         manager.perform(performer);
 
-        assertTrue("Waiting too much time", manager.awaitIdle(30));
+        SystemClock.sleep(10000);
 
         assertTrue("Did not finish or took too much time", manager.shutdown(1, TimeUnit.MINUTES));
 

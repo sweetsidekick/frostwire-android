@@ -17,7 +17,6 @@
 
 package com.frostwire.search;
 
-
 /**
  * 
  * @author gubatron
@@ -35,4 +34,6 @@ public interface SearchPerformer {
     public void crawl(CrawlableSearchResult sr);
 
     public void stop();
+
+    public boolean isStopped();
 }

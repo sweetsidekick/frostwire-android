@@ -78,7 +78,7 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         @SuppressWarnings("unchecked")
         Iterator<String> it = files.keys();
 
-        while (it.hasNext()) {
+        while (it.hasNext() && !isStopped()) {
             String name = it.next();
             ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
             list.add(new ArchiveorgDeepSearchResult(sr, name, file));

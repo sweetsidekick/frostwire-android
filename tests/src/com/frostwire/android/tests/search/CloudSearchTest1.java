@@ -20,6 +20,7 @@ package com.frostwire.android.tests.search;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
+import android.os.SystemClock;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.search.SearchManagerImpl;
@@ -82,7 +83,7 @@ public class CloudSearchTest1 extends TestCase {
         manager.registerListener(l);
         manager.perform(performer);
 
-        assertTrue("Waiting too much time", manager.awaitIdle(30));
+        SystemClock.sleep(10000);
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
 

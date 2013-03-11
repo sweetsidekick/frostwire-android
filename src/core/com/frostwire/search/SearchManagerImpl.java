@@ -18,6 +18,7 @@
 package com.frostwire.search;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -105,19 +106,6 @@ public class SearchManagerImpl implements SearchManager {
         return tasks.isEmpty();
     }
 
-    public boolean awaitIdle(int seconds) {
-        while (!tasks.isEmpty() && seconds > 0) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // ignore
-            }
-            seconds--;
-        }
-
-        return tasks.isEmpty();
-    }
-
     protected void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
         try {
             if (listener != null) {
@@ -130,16 +118,19 @@ public class SearchManagerImpl implements SearchManager {
 
     private void stopTasks(long token) {
         synchronized (tasks) {
-            for (SearchTask task : tasks) {
+            Iterator<SearchTask> it = tasks.iterator();
+            while (it.hasNext()) {
+                SearchTask task = it.next();
                 if (token == 0 || task.performer.getToken() == token) {
                     task.stop();
+                    it.remove();
                 }
             }
         }
     }
 
     private void crawl(SearchPerformer performer, CrawlableSearchResult sr) {
-        if (performer != null) {
+        if (performer != null && !performer.isStopped()) {
             try {
                 SearchTask task = new CrawlTask(this, performer, sr);
                 tasks.add(task);
@@ -148,7 +139,7 @@ public class SearchManagerImpl implements SearchManager {
                 LOG.warn("Error scheduling crawling of search result: " + sr);
             }
         } else {
-            LOG.warn("Search performer is null, review your logic");
+            LOG.warn("Search performer is null or stopped, review your logic");
         }
     }
 
@@ -204,7 +195,9 @@ public class SearchManagerImpl implements SearchManager {
         @Override
         public void run() {
             try {
-                performer.perform();
+                if (!performer.isStopped()) {
+                    performer.perform();
+                }
             } catch (Throwable e) {
                 LOG.warn("Error performing search: " + performer + ", e=" + e.getMessage());
             } finally {
@@ -225,7 +218,9 @@ public class SearchManagerImpl implements SearchManager {
         @Override
         public void run() {
             try {
-                performer.crawl(sr);
+                if (!performer.isStopped()) {
+                    performer.crawl(sr);
+                }
             } catch (Throwable e) {
                 LOG.warn("Error performing crawling of: " + sr);
             } finally {
