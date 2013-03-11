@@ -40,7 +40,7 @@
         style="@style/ProgressBarHolo.Horizontal"
         android:layout_width="fill_parent"
         android:layout_height="4dip"
-        android:indeterminate="false"
+        android:indeterminate="true"
         android:progress="25" />
 
     <FrameLayout

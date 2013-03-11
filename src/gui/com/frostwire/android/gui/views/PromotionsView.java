@@ -79,7 +79,7 @@ public class PromotionsView extends LinearLayout {
             gridview.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Slide slide = (Slide) gridview.getAdapter().getItem(position);
-                    if (onPromotionClickListener != null) {
+                    if (onPromotionClickListener != null && slide != null) {
                         onPromotionClickListener.onPromotionClick(PromotionsView.this, slide);
                     }
                 }

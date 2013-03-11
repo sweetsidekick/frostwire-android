@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,9 +70,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
     private SearchResultListAdapter adapter;
 
-    private int progress;
-
     private SearchInputView searchInput;
+    private ProgressBar deepSearchProgress;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
 
@@ -115,13 +115,14 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         });
 
+        deepSearchProgress = findView(view, R.id.fragment_search_deepsearch_progress);
+        deepSearchProgress.setVisibility(View.GONE);
+
         promotions = findView(view, R.id.fragment_search_promos);
         promotions.setOnPromotionClickListener(new OnPromotionClickListener() {
             @Override
             public void onPromotionClick(PromotionsView v, Slide slide) {
-                if (slide != null) {
-                    startPromotionDownload(slide);
-                }
+                startPromotionDownload(slide);
             }
         });
 
@@ -134,30 +135,6 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         });
 
         showSearchView(view);
-    }
-
-    private void performSearch(String query, int mediaTypeId) {
-        adapter.clear();
-        adapter.setFileType(mediaTypeId);
-        LocalSearchEngine.instance().performSearch(query);
-    }
-
-    private void cancelSearch(final View view) {
-        adapter.clear();
-        LocalSearchEngine.instance().cancelSearch();
-        showSearchView(getView());
-    }
-
-    private void showSearchView(View view) {
-        if (LocalSearchEngine.instance().isSearchStopped()) {
-            switchView(view, R.id.fragment_search_promos);
-        } else {
-            if (adapter.getCount() > 0) {
-                switchView(view, android.R.id.list);
-            } else {
-                switchView(view, R.id.fragment_search_search_progress);
-            }
-        }
     }
 
     private void setupAdapter() {
@@ -182,6 +159,46 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                     });
                 }
             });
+        }
+    }
+
+    private void performSearch(String query, int mediaTypeId) {
+        adapter.clear();
+        adapter.setFileType(mediaTypeId);
+        LocalSearchEngine.instance().performSearch(query);
+        showSearchView(getView());
+    }
+
+    private void cancelSearch(View view) {
+        adapter.clear();
+        LocalSearchEngine.instance().cancelSearch();
+        showSearchView(getView());
+    }
+
+    private void showSearchView(View view) {
+        if (LocalSearchEngine.instance().isSearchStopped()) {
+            switchView(view, R.id.fragment_search_promos);
+            deepSearchProgress.setVisibility(View.GONE);
+        } else {
+            if (adapter.getCount() > 0) {
+                switchView(view, android.R.id.list);
+                deepSearchProgress.setVisibility(View.VISIBLE);
+            } else {
+                switchView(view, R.id.fragment_search_search_progress);
+                deepSearchProgress.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void switchView(View v, int id) {
+        if (v != null) {
+            FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
+
+            int childCount = frameLayout.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = frameLayout.getChildAt(i);
+                childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
+            }
         }
     }
 
@@ -255,38 +272,5 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             return;
         }
         startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
-    }
-
-    private void switchView(View v, int id) {
-        if (v != null) {
-            FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
-
-            int childCount = frameLayout.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = frameLayout.getChildAt(i);
-                childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
-            }
-        }
-    }
-
-    private void adjustDeepSearchProgress(View v) {
-        int visibility;
-
-        if (adapter != null && false) {//LocalSearchEngine.instance().getDownloadTasksCount() > 0) {
-            progress = (progress + 20) % 100;
-            if (progress == 0) {
-                progress = 10;
-            }
-            visibility = View.VISIBLE;
-        } else {
-            progress = 0;
-            visibility = View.GONE;
-        }
-
-        if (v != null) {
-            ProgressBar progressBar = findView(v, R.id.fragment_search_deepsearch_progress);
-            progressBar.setProgress(progress);
-            progressBar.setVisibility(visibility);
-        }
     }
 }
