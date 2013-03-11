@@ -50,44 +50,36 @@ public class SearchResultListAdapter2 extends AbstractListAdapter<SearchResult> 
 
     private static final int NO_FILE_TYPE = -1;
 
-    private final DownloadClickListener downloadClickListener;
+    private final OnLinkClickListener linkListener;
 
     private int fileType;
 
     public SearchResultListAdapter2(Context context, List<SearchResult> list) {
         super(context, R.layout.view_bittorrent_search_result_list_item, list);
 
-        downloadClickListener = new DownloadClickListener();
+        this.linkListener = new OnLinkClickListener();
 
         this.fileType = NO_FILE_TYPE;
     }
 
-    public int getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(int fileType) {
+    public void filter(int fileType) {
         this.fileType = fileType;
-    }
-
-    public void filter(int mediaTypeId) {
-        setFileType(mediaTypeId);
-        visualList = new ArrayList<SearchResult>();
+        this.visualList = new ArrayList<SearchResult>();
         for (SearchResult sr : new ArrayList<SearchResult>(list)) {
-            if (accept(sr, mediaTypeId)) {
+            if (accept(sr)) {
                 visualList.add(sr);
             }
         }
         notifyDataSetInvalidated();
     }
 
-    public boolean accept(SearchResult sr, int mediaTypeId) {
+    public boolean accept(SearchResult sr) {
         if (sr instanceof FileSearchResult) {
             MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
             if (mt == null) {
                 return false;
             }
-            return mt.getId() == mediaTypeId;
+            return mt.getId() == fileType;
         } else {
             return false;
         }
@@ -127,7 +119,8 @@ public class SearchResultListAdapter2 extends AbstractListAdapter<SearchResult> 
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
         sourceLink.setText(Html.fromHtml("<a href=\"" + sr.getDetailsUrl() + "\">" + sr.getSource() + "</a>"), TextView.BufferType.SPANNABLE);
-        sourceLink.setOnClickListener(new OnLinkClickListener(sr.getDetailsUrl()));
+        sourceLink.setTag(sr.getDetailsUrl());
+        sourceLink.setOnClickListener(linkListener);
     }
 
     protected void populateTorrentPart(View view, TorrentSearchResult sr) {
@@ -141,7 +134,8 @@ public class SearchResultListAdapter2 extends AbstractListAdapter<SearchResult> 
 
     @Override
     protected void onItemClicked(View v) {
-        downloadClickListener.onClick(v);
+        SearchResult sr = (SearchResult) v.getTag();
+        startTransfer(sr);
     }
 
     protected void onStartTransfer(SearchResult sr) {
@@ -182,26 +176,14 @@ public class SearchResultListAdapter2 extends AbstractListAdapter<SearchResult> 
         task.execute();
     }
 
-    private class OnLinkClickListener implements OnClickListener {
-
-        private final String url;
-
-        public OnLinkClickListener(String url) {
-            this.url = url;
-        }
+    private static class OnLinkClickListener implements OnClickListener {
 
         @Override
         public void onClick(View v) {
+            String url = (String) v.getTag();
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
-            getContext().startActivity(i);
-        }
-    }
-
-    private final class DownloadClickListener implements OnClickListener {
-        public void onClick(View v) {
-            SearchResult sr = (SearchResult) v.getTag();
-            startTransfer(sr);
+            v.getContext().startActivity(i);
         }
     }
 }
