@@ -52,12 +52,26 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     private int fileType;
 
-    public SearchResultListAdapter(Context context, List<SearchResult> list) {
-        super(context, R.layout.view_bittorrent_search_result_list_item, list);
+    public SearchResultListAdapter(Context context) {
+        super(context, R.layout.view_bittorrent_search_result_list_item);
 
         this.linkListener = new OnLinkClickListener();
 
         this.fileType = NO_FILE_TYPE;
+    }
+
+    @Override
+    public void updateList(List<SearchResult> g) {
+        super.updateList(g);
+        filter(fileType);
+    }
+
+    public int getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(int fileType) {
+        this.fileType = fileType;
     }
 
     public void filter(int fileType) {

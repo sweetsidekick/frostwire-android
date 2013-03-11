@@ -69,7 +69,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     private SearchResultListAdapter adapter;
 
-    private int mediaTypeId;
     private int progress;
 
     private TextView header;
@@ -78,7 +77,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     public SearchFragment() {
         super(R.layout.fragment_search);
-        mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
     }
 
     @Override
@@ -97,7 +95,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         if (adapter != null) {
             if (LocalSearchEngine.instance().getCurrentResultsCount() != adapter.getList().size()) {
                 adapter.updateList(LocalSearchEngine.instance().pollCurrentResults());
-                adapter.filter(mediaTypeId);
             }
         } else {
             setupAdapter();
@@ -111,15 +108,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
     }
 
     @Override
-    public void dismissDialogs() {
-        super.dismissDialogs();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
-        }
-    }
-
-    @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
@@ -130,21 +118,29 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     @Override
     protected void initComponents(final View view) {
+
+        adapter = new SearchResultListAdapter(view.getContext()) {
+            @Override
+            protected void searchResultClicked(SearchResult sr) {
+                startTransfer(sr, getString(R.string.download_added_to_queue));
+            }
+        };
+        setListAdapter(adapter);
+
         searchInput = findView(view, R.id.fragment_search_input);
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
-                SearchFragment.this.mediaTypeId = mediaTypeId;
                 switchView(view, android.R.id.list);
-                clearAdapter();
+                adapter.setFileType(mediaTypeId);
+                adapter.clear();
+                adjustDeepSearchProgress(getView());
                 switchView(getView(), R.id.fragment_search_search_progress);
                 LocalSearchEngine.instance().performSearch(query);
                 setupAdapter();
-                updateHint(mediaTypeId);
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
-                SearchFragment.this.mediaTypeId = mediaTypeId;
-                updateHint(mediaTypeId);
+                adapter.setFileType(mediaTypeId);
 
                 if (adapter != null) {
                     adapter.filter(mediaTypeId);
@@ -154,7 +150,8 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
             public void onClear(View v) {
                 switchView(view, R.id.fragment_search_promos);
                 LocalSearchEngine.instance().cancelSearch();
-                clearAdapter();
+                adapter.clear();
+                adjustDeepSearchProgress(getView());
             }
         });
 
@@ -179,8 +176,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 showResultsOrPromotion(view);
             }
         });
-
-        updateHint(mediaTypeId);
     }
 
     private void showResultsOrPromotion(View view) {
@@ -194,19 +189,10 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
 
     private void setupAdapter() {
         if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
-            adapter = new SearchResultListAdapter(getActivity(), LocalSearchEngine.instance().pollCurrentResults()) {
-                @Override
-                protected void searchResultClicked(SearchResult sr) {
-                    startTransfer(sr, getString(R.string.download_added_to_queue));
-                }
-            };
-            adapter.filter(mediaTypeId);
 
             if (adapter.getCount() > 0) {
                 switchView(getView(), android.R.id.list);
             }
-
-            setListAdapter(adapter);
         }
     }
 
@@ -282,15 +268,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
         startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
     }
 
-    private void clearAdapter() {
-        setListAdapter(null);
-        if (adapter != null) {
-            adapter.clear();
-            adapter = null;
-        }
-        adjustDeepSearchProgress(getView());
-    }
-
     private void switchView(View v, int id) {
         if (v != null) {
             FrameLayout frameLayout = findView(v, R.id.fragment_search_framelayout);
@@ -301,12 +278,6 @@ public class SearchFragment extends AbstractListFragment implements Refreshable,
                 childAt.setVisibility((childAt.getId() == id) ? View.VISIBLE : View.INVISIBLE);
             }
         }
-    }
-
-    private void updateHint(int mediaTypeId) {
-        String searchBoxHint = getActivity().getString(R.string.search_label) + " ";
-        searchBoxHint += UIUtils.getMediaTypeString(getActivity().getResources(), mediaTypeId);
-        searchInput.updateHint(searchBoxHint);
     }
 
     private void adjustDeepSearchProgress(View v) {

@@ -51,7 +51,6 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
@@ -268,30 +267,11 @@ public final class UIUtils {
             return resources.getString(R.string.ringtones);
         case Constants.FILE_TYPE_VIDEOS:
             return resources.getString(R.string.video);
+        case Constants.FILE_TYPE_TORRENTS:
+            return resources.getString(R.string.media_type_torrents);
         default:
             return resources.getString(R.string.unknown);
         }
-    }
-    
-    public static String getMediaTypeString(Resources resources, int mediaTypeId) {
-
-        int resId = R.string.unknown;
-        
-        if (mediaTypeId == MediaType.getAudioMediaType().getId()) {
-            resId = MediaType.getAudioMediaType().getDescriptionKeyResourceId();
-        } else if (mediaTypeId == MediaType.getVideoMediaType().getId()) {
-            resId = MediaType.getVideoMediaType().getDescriptionKeyResourceId();
-        } else if (mediaTypeId == MediaType.getImageMediaType().getId()) {
-            resId = MediaType.getImageMediaType().getDescriptionKeyResourceId();
-        } else if (mediaTypeId == MediaType.getApplicationsMediaType().getId()) {
-            resId = MediaType.getApplicationsMediaType().getDescriptionKeyResourceId();
-        } else if (mediaTypeId == MediaType.getDocumentMediaType().getId()) {
-            resId = MediaType.getDocumentMediaType().getDescriptionKeyResourceId();
-        } else if (mediaTypeId == MediaType.getTorrentMediaType().getId()) {
-            resId = MediaType.getTorrentMediaType().getDescriptionKeyResourceId();
-        }
-        
-        return resources.getString(resId);
     }
 
     /**
