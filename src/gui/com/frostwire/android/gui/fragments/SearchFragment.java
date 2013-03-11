@@ -85,7 +85,7 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setupAdapter2();
+        setupAdapter();
         setRetainInstance(true);
     }
 
@@ -152,14 +152,14 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
     }
 
     private void showResultsOrPromotion(View view) {
-        if (LocalSearchEngine.instance().getCurrentResultsCount() > 0) {
+        if (adapter.getCount() > 0) {
             switchView(view, android.R.id.list);
         } else {
             switchView(view, R.id.fragment_search_promos);
         }
     }
 
-    private void setupAdapter2() {
+    private void setupAdapter() {
         adapter = new SearchResultListAdapter(getActivity()) {
             @Override
             protected void searchResultClicked(SearchResult sr) {
@@ -181,7 +181,6 @@ public class SearchFragment extends AbstractListFragment implements MainFragment
                         }
                     }
                 });
-
             }
         });
     }

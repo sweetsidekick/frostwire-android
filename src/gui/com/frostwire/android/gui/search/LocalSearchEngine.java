@@ -82,7 +82,6 @@ public final class LocalSearchEngine {
     private final int FULLTEXT_SEARCH_RESULTS_LIMIT;
 
     private SearchResultListener listener;
-    private final List<SearchResult> currentResults;
 
     private final Object lockObj = new Object();
 
@@ -119,8 +118,6 @@ public final class LocalSearchEngine {
         MAX_TORRENT_FILES_TO_INDEX = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX);
         FULLTEXT_SEARCH_RESULTS_LIMIT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
 
-        this.currentResults = Collections.synchronizedList(new LinkedList<SearchResult>());
-
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new SearchResultListener() {
             @Override
@@ -136,31 +133,12 @@ public final class LocalSearchEngine {
         this.listener = listener;
     }
 
-    public int getCurrentResultsCount() {
-        return currentResults.size();
-    }
-
-    public List<SearchResult> pollCurrentResults() {
-        synchronized (currentResults) {
-            List<SearchResult> list = new ArrayList<SearchResult>(currentResults.size());
-
-            Iterator<SearchResult> it = currentResults.iterator();
-            while (it.hasNext()) {
-                list.add(it.next());
-            }
-
-            return list;
-        }
-    }
-
     public void performSearch(String query) {
         manager.stop(currentSearchToken);
-        currentResults.clear();
         performTorrentSearch(query);
     }
 
-    void addResults(List<? extends SearchResult> results) {
-        currentResults.addAll(results);
+    private void addResults(List<? extends SearchResult> results) {
     }
 
     public void performTorrentSearch(String query) {
@@ -187,7 +165,6 @@ public final class LocalSearchEngine {
     }
 
     public void cancelSearch() {
-        currentResults.clear();
         manager.stop(currentSearchToken);
     }
 
