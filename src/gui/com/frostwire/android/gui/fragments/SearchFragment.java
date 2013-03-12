@@ -38,7 +38,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.search.LocalSearchEngine;
-import com.frostwire.android.gui.search.PromotionsHandler;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -49,10 +48,12 @@ import com.frostwire.android.gui.views.NewTransferDialog;
 import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
-import com.frostwire.android.gui.views.PromotionsView.Slide;
 import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.frostwire.android.gui.views.SearchProgressView;
+import com.frostwire.frostclick.HttpSlideSearchResult;
+import com.frostwire.frostclick.Slide;
+import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -269,7 +270,14 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     }
 
     private void startPromotionDownload(Slide slide) {
-        SearchResult sr = new PromotionsHandler().buildSearchResult(slide);
+        SearchResult sr = null;
+
+        switch (slide.method) {
+        case Slide.DOWNLOAD_METHOD_TORRENT:
+            sr = new TorrentPromotionSearchResult(slide);
+        case Slide.DOWNLOAD_METHOD_HTTP:
+            sr = new HttpSlideSearchResult(slide);
+        }
         if (sr == null) {
 
             //check if there is a URL available to open a web browser.

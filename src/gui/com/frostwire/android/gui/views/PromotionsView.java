@@ -35,6 +35,8 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.frostclick.Slide;
+import com.frostwire.frostclick.SlideList;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -125,78 +127,5 @@ public class PromotionsView extends LinearLayout {
 
     public static interface OnPromotionClickListener {
         public void onPromotionClick(PromotionsView v, Slide slide);
-    }
-    
-    public static class SlideList {
-        public List<Slide> slides;
-    }
-
-    public static class Slide {
-
-        /** Open the URL if available, don't download */
-        public static final int DOWNLOAD_METHOD_OPEN_URL = -1;
-        
-        /** Download the torrent file */
-        public static final int DOWNLOAD_METHOD_TORRENT = 0;
-
-        /** Download the file via HTTP */
-        public static final int DOWNLOAD_METHOD_HTTP = 1;
-        
-        /** Download and install Pokki (unused on android for now) */
-        public static final int DOWNLOAD_METHOD_INSTALL_POKKI = 2;
-
-        /**
-         * http address where to go if user clicks on this slide
-         */
-        public String url;
-
-        /**
-         * Download method
-         * 0 - Torrent
-         * 1 - HTTP
-         */
-        public int method;
-
-        /**
-         * url of torrent file that should be opened if user clicks on this slide
-         */
-        public String torrent;
-
-        public String httpUrl;
-
-        public boolean uncompress;
-
-        /**
-         * url of image that will be displayed on this slide
-         */
-        public String imageSrc;
-
-        /**
-         * length of time this slide will be shown
-         */
-        public long duration;
-
-        /**
-         * language (optional filter) = Can be given in the forms of:
-         * *
-         * en
-         * en_US
-         * 
-         */
-        public String language;
-
-        /**
-         * os (optional filter) = Can be given in the forms of:
-         * windows
-         * mac
-         * linux
-         */
-        public String os;
-
-        /** Title of the promotion */
-        public String title;
-
-        /** Total size in bytes */
-        public long size;
-    }
+    }    
 }

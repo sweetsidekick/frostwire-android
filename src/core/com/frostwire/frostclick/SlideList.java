@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,36 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
+package com.frostwire.frostclick;
 
-import com.frostwire.android.gui.views.PromotionsView.Slide;
-import com.frostwire.search.SearchResult;
+import java.util.List;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
-public class PromotionsHandler {
-
-    public PromotionsHandler() {
-    }
-
-    /**
-     * This is to create a sort of "non real" search result.
-     * @return
-     */
-    public SearchResult buildSearchResult(Slide slide) {
-        switch (slide.method) {
-        case Slide.DOWNLOAD_METHOD_TORRENT:
-            return new TorrentPromotionSearchResult(slide);
-        case Slide.DOWNLOAD_METHOD_HTTP:
-            return new HttpSlideSearchResult(slide);
-        default:
-            return null;
-        }
-    }
-
-    
+public class SlideList {
+    public List<Slide> slides;
 }

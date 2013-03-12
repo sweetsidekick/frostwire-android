@@ -30,7 +30,7 @@ import android.widget.ImageView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.ImageLoader;
-import com.frostwire.android.gui.views.PromotionsView.Slide;
+import com.frostwire.frostclick.Slide;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of

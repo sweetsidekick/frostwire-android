@@ -16,27 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
+package com.frostwire.frostclick;
 
-import com.frostwire.android.gui.transfers.HttpDownloadLink;
-import com.frostwire.android.gui.views.PromotionsView.Slide;
 import com.frostwire.android.util.FilenameUtils;
-import com.frostwire.search.WebSearchResult;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class HttpSlideSearchResult implements WebSearchResult {
+public class TorrentPromotionSearchResult implements TorrentSearchResult {
+
+    private static final String FROSTCLICK_VENDOR = "FrostClick";
 
     private final Slide slide;
+    private final long creationTime;
 
-    public HttpSlideSearchResult(Slide slide) {
+    public TorrentPromotionSearchResult(Slide slide) {
         this.slide = slide;
+        this.creationTime = System.currentTimeMillis();
     }
 
-    @Override
     public String getDisplayName() {
         return slide.title;
     }
@@ -46,44 +47,38 @@ public class HttpSlideSearchResult implements WebSearchResult {
         return slide.size;
     }
 
-    public String getHttpUrl() {
-        return slide.httpUrl;
-    }
-
-    public boolean isCompressed() {
-        return slide.uncompress;
-    }
-
     @Override
     public String getFilename() {
-        // TODO Auto-generated method stub
-        return null;
+        return FilenameUtils.getName(slide.url);
     }
 
     @Override
-    public String getSource() {
-        // TODO Auto-generated method stub
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    @Override
+    public String getHash() {
         return null;
     }
 
     @Override
     public String getDetailsUrl() {
-        // TODO Auto-generated method stub
-        return null;
+        return slide.url;
     }
 
-    public HttpDownloadLink getDownloadLink() {
-        HttpDownloadLink link = new HttpDownloadLink(slide.httpUrl);
-        link.setDisplayName(slide.title);
-        link.setSize(slide.size);
-        link.setCompressed(slide.uncompress);
-        link.setFileName(FilenameUtils.getName(slide.httpUrl));
-        return link;
-    }
-    
     @Override
-    public long getCreationTime() {
-        // TODO Auto-generated method stub
-        return 0;
+    public String getTorrentURI() {
+        return slide.torrent;
+    }
+
+    @Override
+    public String getSource() {
+        return FROSTCLICK_VENDOR;
+    }
+
+    @Override
+    public int getSeeds() {
+        return -1;
     }
 }
