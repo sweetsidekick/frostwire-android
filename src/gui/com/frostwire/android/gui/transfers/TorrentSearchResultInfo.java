@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
+package com.frostwire.android.gui.transfers;
 
-import android.content.Intent;
-import android.net.Uri;
+import com.frostwire.search.TorrentSearchResult;
 
 /**
- * 
- * Represents a local .torrent file obtained from an Intent looking to start
- * it's download.
- * 
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public class TorrentIntentFileResult extends AbstractBittorrentIntentResult {
+class TorrentSearchResultInfo implements TorrentDownloadInfo {
 
-    private String fileName;
+    private final TorrentSearchResult sr;
 
-    public TorrentIntentFileResult(Intent intent) {
-        Uri torrentURI = intent.getData();
-        fileName = torrentURI.getPath();
+    public TorrentSearchResultInfo(TorrentSearchResult sr) {
+        this.sr = sr;
     }
 
     @Override
-    public String getFilename() {
-        return fileName;
+    public String getTorrentUrl() {
+        return sr.getTorrentURI();
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        return sr.getDetailsUrl();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return sr.getDisplayName();
+    }
+
+    @Override
+    public long getSize() {
+        return sr.getSize();
+    }
+
+    @Override
+    public String getHash() {
+        return sr.getHash();
     }
 }

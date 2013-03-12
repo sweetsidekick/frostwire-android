@@ -31,7 +31,6 @@ import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderFactory;
 import android.util.Log;
 
 import com.frostwire.android.R;
-import com.frostwire.search.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -43,7 +42,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     private static final String TAG = "FW.TorrentFetcherDownload";
 
     private final TransferManager manager;
-    private final TorrentSearchResult sr;
+    private final TorrentDownloadInfo info;
     private final Date dateCreated;
 
     private int statusResId;
@@ -53,18 +52,14 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     private boolean removed;
 
-    public TorrentFetcherDownload(TransferManager manager, TorrentSearchResult sr) {
+    public TorrentFetcherDownload(TransferManager manager, TorrentDownloadInfo info) {
         this.manager = manager;
-        this.sr = sr;
+        this.info = info;
         this.dateCreated = new Date();
 
         this.statusResId = R.string.torrent_fetcher_download_status_downloading_torrent;
-        this.torrentDownloader = TorrentDownloaderFactory.create(new TorrentDownloaderListener(), sr.getTorrentURI(), null, null);
+        this.torrentDownloader = TorrentDownloaderFactory.create(new TorrentDownloaderListener(), info.getTorrentUrl(), info.getDetailsUrl(), null);
         this.torrentDownloader.start();
-    }
-
-    public TorrentSearchResult getSearchResult() {
-        return sr;
     }
 
     public BittorrentDownload getDelegate() {
@@ -72,7 +67,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     }
 
     public String getDisplayName() {
-        return delegate != null ? delegate.getDisplayName() : sr.getDisplayName();
+        return delegate != null ? delegate.getDisplayName() : info.getDisplayName();
     }
 
     public String getStatus() {
@@ -84,7 +79,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     }
 
     public long getSize() {
-        return delegate != null ? delegate.getSize() : sr.getSize();
+        return delegate != null ? delegate.getSize() : info.getSize();
     }
 
     public Date getDateCreated() {
@@ -120,7 +115,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     }
 
     public String getHash() {
-        return delegate != null ? delegate.getHash() : sr.getHash();
+        return delegate != null ? delegate.getHash() : info.getHash();
     }
 
     public String getPeers() {
@@ -218,7 +213,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (state == TorrentDownloader.STATE_FINISHED && finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = BittorrentDownloadCreator.create(manager, sr, inf.getFile().getAbsolutePath());
+                    delegate = BittorrentDownloadCreator.create(manager, inf.getFile().getAbsolutePath(), null, null);
 
                     if (delegate instanceof InvalidBittorrentDownload) {
                         cancel();
@@ -245,6 +240,6 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     @Override
     public String getDetailsUrl() {
-        return sr.getDetailsUrl();
+        return info.getDetailsUrl();
     }
 }

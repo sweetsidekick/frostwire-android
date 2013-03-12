@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,45 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
-
-import com.frostwire.search.TorrentSearchResult;
+package com.frostwire.android.gui.transfers;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public abstract class AbstractBittorrentIntentResult implements TorrentSearchResult {
+class TorrentUrlInfo implements TorrentDownloadInfo {
 
-    @Override
-    public String getFilename() {
-        return null;
-    }
-    
-    @Override
-    public String getTorrentURI() {
-        return null;
+    private final String url;
+
+    public TorrentUrlInfo(String url) {
+        this.url = url;
     }
 
     @Override
-    public String getDisplayName() {
-        return null;
-    }
-
-    @Override
-    public long getSize() {
-        return 0;
-    }
-    
-    @Override
-    public int getSeeds() {
-        return 0;
-    }
-
-    @Override
-    public long getCreationTime() {
-        return 0;
+    public String getTorrentUrl() {
+        return url;
     }
 
     @Override
@@ -63,13 +42,17 @@ public abstract class AbstractBittorrentIntentResult implements TorrentSearchRes
     }
 
     @Override
-    public String getSource() {
-        return null;
+    public String getDisplayName() {
+        return url;
     }
-    
+
+    @Override
+    public long getSize() {
+        return -1;
+    }
+
     @Override
     public String getHash() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
-
-import android.content.Intent;
+package com.frostwire.android.gui.transfers;
 
 /**
- * 
- * Represents a .torrent file that lives on a remote URL specified by the given Intent
- * a torrent download.
- * 
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public class BittorrentIntentHttpResult extends AbstractBittorrentIntentResult {
+interface TorrentDownloadInfo {
 
-    private String uri;
+    public String getTorrentUrl();
+    
+    public String getDetailsUrl();
+    
+    public String getDisplayName();
+    
+    public long getSize();
 
-    public BittorrentIntentHttpResult(Intent intent) {
-        uri = intent.getDataString();
-    }
-
-    @Override
-    public String getTorrentURI() {
-        return uri;
-    }
+    public String getHash();
 }

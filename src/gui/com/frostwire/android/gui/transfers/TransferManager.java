@@ -18,25 +18,26 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.gudy.azureus2.core3.download.DownloadManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 
+import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
-import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
-import com.frostwire.android.gui.search.TorrentIntentFileResult;
+import com.frostwire.android.gui.search.HttpSlideSearchResult;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchResult;
@@ -51,6 +52,7 @@ import com.frostwire.search.youtube.YouTubeSearchResult;
 public final class TransferManager {
 
     private static final String TAG = "FW.TransferManager";
+    private static final Logger LOG = LoggerFactory.getLogger(TransferManager.class);
 
     private final List<DownloadTransfer> downloads;
     private final List<UploadTransfer> uploads;
@@ -88,7 +90,7 @@ public final class TransferManager {
     }
 
     private boolean alreadyDownloading(String detailsUrl) {
-        synchronized (alreadyDownloadingMonitor ) {
+        synchronized (alreadyDownloadingMonitor) {
             for (DownloadTransfer dt : downloads) {
                 if (dt.isDownloading()) {
                     if (dt.getDetailsUrl() != null && dt.getDetailsUrl().equals(detailsUrl)) {
@@ -99,13 +101,13 @@ public final class TransferManager {
         }
         return false;
     }
-    
-    public DownloadTransfer download(SearchResult sr) throws Exception {
+
+    public DownloadTransfer download(SearchResult sr) {
 
         if (alreadyDownloading(sr.getDetailsUrl())) {
             return new ExistingDownload();
         }
-        
+
         if (sr instanceof TorrentSearchResult) {
             return newBittorrentDownload((TorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
@@ -121,11 +123,10 @@ public final class TransferManager {
 
     public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
-        
+
         if (alreadyDownloading(download.getDetailsUrl())) {
             return new ExistingDownload();
         }
-        
 
         downloads.add(download);
         download.start();
@@ -321,32 +322,37 @@ public final class TransferManager {
         }
     }
 
-    /**
-     * Start a torrent download from an intent.
-     */
-    public void download(Intent intent) {
-        Uri torrentURI = intent.getData();
-
-        boolean isFile = torrentURI.getScheme().equalsIgnoreCase("file");
-
+    public BittorrentDownload downloadTorrent(String uri) {
         try {
-            TransferManager.instance().download(isFile ? new TorrentIntentFileResult(intent) : new BittorrentIntentHttpResult(intent));
+            BittorrentDownload download = BittorrentDownloadCreator.create(this, new URI(uri));
+
+            if (!(download instanceof InvalidBittorrentDownload)) {
+                bittorrentDownloads.add(download);
+            }
+
+            return download;
         } catch (Throwable e) {
-            Log.e(TAG, e.getMessage(), e);
+            LOG.warn("Error creating download from uri: " + uri);
+            return new InvalidBittorrentDownload(R.string.empty_string);
         }
     }
 
-    private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) throws Exception {
-        BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
+    private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
+        try {
+            BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
 
-        if (!(download instanceof InvalidBittorrentDownload)) {
-            bittorrentDownloads.add(download);
+            if (!(download instanceof InvalidBittorrentDownload)) {
+                bittorrentDownloads.add(download);
+            }
+
+            return download;
+        } catch (Throwable e) {
+            LOG.warn("Error creating download from search result: " + sr);
+            return new InvalidBittorrentDownload(R.string.empty_string);
         }
-
-        return download;
     }
 
-    private HttpDownload newHttpDownload(HttpSlideSearchResult sr) throws Exception {
+    private HttpDownload newHttpDownload(HttpSlideSearchResult sr) {
         HttpDownload download = new HttpDownload(this, sr.getDownloadLink());
 
         downloads.add(download);
@@ -372,13 +378,13 @@ public final class TransferManager {
 
         return download;
     }
-    
+
     /** Stops all HttpDownloads (Cloud and Wi-Fi) */
     public void stopHttpTransfers() {
         List<Transfer> transfers = new ArrayList<Transfer>();
         transfers.addAll(downloads);
         transfers.addAll(uploads);
-        
+
         for (Transfer t : transfers) {
             if (t instanceof DownloadTransfer) {
                 DownloadTransfer d = (DownloadTransfer) t;
@@ -387,12 +393,12 @@ public final class TransferManager {
                 }
             } else if (t instanceof UploadTransfer) {
                 UploadTransfer u = (UploadTransfer) t;
-                
+
                 if (!u.isComplete() && u.isUploading()) {
                     u.cancel();
                 }
             }
         }
     }
-    
+
 }
