@@ -75,6 +75,7 @@ public final class LocalSearchEngine {
 
     private final SearchManager manager;
     private long currentSearchToken;
+    private boolean searchFinished;
 
     static {
         downloads_torrents_executor = ExecutorsHelper.newFixedSizeThreadPool(MAX_TORRENT_DOWNLOADS, "DownloadTorrentsExecutor");
@@ -121,6 +122,7 @@ public final class LocalSearchEngine {
 
             @Override
             public void onFinished(SearchPerformer performer) {
+                searchFinished = true;
                 if (listener != null) {
                     listener.onFinished(performer);
                 }
@@ -136,6 +138,7 @@ public final class LocalSearchEngine {
         manager.stop(currentSearchToken);
 
         currentSearchToken = System.nanoTime();
+        searchFinished = false;
         for (SearchEngine se : SearchEngine.getEngines()) {
             if (se.isEnabled()) {
                 SearchPerformer p = se.getPerformer(currentSearchToken, query);
@@ -147,10 +150,15 @@ public final class LocalSearchEngine {
     public void cancelSearch() {
         manager.stop(currentSearchToken);
         currentSearchToken = 0;
+        searchFinished = true;
     }
 
     public boolean isSearchStopped() {
         return currentSearchToken == 0;
+    }
+    
+    public boolean isSearchFinished() {
+        return searchFinished;
     }
 
     private void deepSearch(String query) {

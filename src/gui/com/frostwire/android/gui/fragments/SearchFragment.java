@@ -110,6 +110,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
                 adapter.setFileType(mediaTypeId);
+                showSearchView(view);
             }
 
             public void onClear(View v) {
@@ -132,7 +133,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         searchProgress.setCancelOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelSearch(view);
+                if (LocalSearchEngine.instance().isSearchFinished()) {
+                    performSearch(searchInput.getText(), adapter.getFileType()); // retry
+                } else {
+                    cancelSearch(view);
+                }
             }
         });
 
@@ -166,6 +171,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            searchProgress.stopProgress();
                             deepSearchProgress.setVisibility(View.GONE);
                         }
                     });
@@ -178,12 +184,14 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         adapter.clear();
         adapter.setFileType(mediaTypeId);
         LocalSearchEngine.instance().performSearch(query);
+        searchProgress.startProgress();
         showSearchView(getView());
     }
 
     private void cancelSearch(View view) {
         adapter.clear();
         LocalSearchEngine.instance().cancelSearch();
+        searchProgress.stopProgress();
         showSearchView(getView());
     }
 
@@ -194,7 +202,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         } else {
             if (adapter.getCount() > 0) {
                 switchView(view, android.R.id.list);
-                deepSearchProgress.setVisibility(View.VISIBLE);
+                if (!LocalSearchEngine.instance().isSearchFinished()) {
+                    deepSearchProgress.setVisibility(View.VISIBLE);
+                } else {
+                    deepSearchProgress.setVisibility(View.GONE);
+                }
             } else {
                 switchView(view, R.id.fragment_search_search_progress);
                 deepSearchProgress.setVisibility(View.GONE);

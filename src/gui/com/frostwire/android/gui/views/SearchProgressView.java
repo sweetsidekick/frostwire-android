@@ -23,6 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.frostwire.android.R;
 
@@ -33,6 +34,7 @@ import com.frostwire.android.R;
  */
 public class SearchProgressView extends LinearLayout {
 
+    private ProgressBar progressbar;
     private Button buttonCancel;
 
     public SearchProgressView(Context context, AttributeSet attrs) {
@@ -48,6 +50,22 @@ public class SearchProgressView extends LinearLayout {
         super.onFinishInflate();
 
         View.inflate(getContext(), R.layout.view_search_progress, this);
+
+        if (isInEditMode()) {
+            return;
+        }
+
+        progressbar = (ProgressBar) findViewById(R.id.view_search_progress_progressbar);
         buttonCancel = (Button) findViewById(R.id.view_search_progress_button_cancel);
+    }
+
+    public void startProgress() {
+        progressbar.setVisibility(View.VISIBLE);
+        buttonCancel.setText(android.R.string.cancel);
+    }
+
+    public void stopProgress() {
+        progressbar.setVisibility(View.GONE);
+        buttonCancel.setText(R.string.retry_search);
     }
 }
