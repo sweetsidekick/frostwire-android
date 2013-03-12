@@ -33,7 +33,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.search.FileSearchResult;
-import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron

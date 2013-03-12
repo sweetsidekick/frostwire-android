@@ -20,12 +20,14 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,8 +38,8 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
-import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -66,7 +68,7 @@ import com.frostwire.search.SearchResultListener;
  */
 public final class SearchFragment extends AbstractListFragment implements MainFragment {
 
-    private static final String TAG = "FW.SearchFragment";
+    private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
 
@@ -243,7 +245,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 try {
                     transfer = TransferManager.instance().download(sr);
                 } catch (Throwable e) {
-                    Log.e(TAG, "Error adding new download from result: " + sr, e);
+                    LOG.warn("Error adding new download from result: " + sr, e);
                 }
 
                 return transfer;
