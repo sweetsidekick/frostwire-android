@@ -36,7 +36,6 @@ import android.widget.PopupWindow;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.search.SuggestionsAdapter;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;

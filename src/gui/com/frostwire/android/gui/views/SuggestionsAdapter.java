@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.search;
+package com.frostwire.android.gui.views;
 
-import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Locale;
 
@@ -29,8 +28,9 @@ import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.HttpClient;
+import com.frostwire.util.HttpClientFactory;
 
 /**
  * 
@@ -38,15 +38,18 @@ import com.frostwire.android.util.StringUtils;
  * @author aldenml
  * 
  */
-public class SuggestionsAdapter extends SimpleCursorAdapter {
+class SuggestionsAdapter extends SimpleCursorAdapter {
 
     private static final String SUGGESTIONS_URL = buildSuggestionsUrl();
     private static final int HTTP_QUERY_TIMEOUT = 1000;
+
+    private final HttpClient client;
 
     private boolean discardLastResult;
 
     public SuggestionsAdapter(Context context) {
         super(context, R.layout.view_suggestion_item, null, new String[] { SuggestionsCursor.COLUMN_SUGGESTION }, new int[] { R.id.view_suggestion_item_text }, 0);
+        this.client = HttpClientFactory.newDefaultInstance();
     }
 
     @Override
@@ -54,8 +57,7 @@ public class SuggestionsAdapter extends SimpleCursorAdapter {
         try {
             String url = String.format(SUGGESTIONS_URL, URLEncoder.encode(constraint.toString(), "UTF-8"));
 
-            HttpFetcher fetcher = new HttpFetcher(new URI(url), HTTP_QUERY_TIMEOUT);
-            String json = StringUtils.getUTF8String(fetcher.fetch());
+            String json = client.get(url, HTTP_QUERY_TIMEOUT);
 
             if (!discardLastResult) {
                 return new SuggestionsCursor(new JSONArray(json).getJSONArray(1));

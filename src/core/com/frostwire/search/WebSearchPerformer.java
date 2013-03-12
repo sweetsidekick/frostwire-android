@@ -64,7 +64,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
     protected String encodeKeywords() {
         try {
-            return URLEncoder.encode(keywords, "utf-8");
+            return URLEncoder.encode(keywords, "UTF-8");
         } catch (Throwable e) {
             LOG.warn("Error encoding keywords:" + keywords + ", e: " + e.getMessage());
             return URLEncoder.encode(keywords);

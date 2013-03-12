@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.android.util.FilenameUtils;
+
 /**
  * @author gubatron
  * @author aldenml
@@ -43,7 +45,7 @@ class TorrentUrlInfo implements TorrentDownloadInfo {
 
     @Override
     public String getDisplayName() {
-        return url;
+        return FilenameUtils.getName(url);
     }
 
     @Override
