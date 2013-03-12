@@ -171,7 +171,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            searchProgress.stopProgress();
+                            searchProgress.setProgressEnabled(false);
                             deepSearchProgress.setVisibility(View.GONE);
                         }
                     });
@@ -184,14 +184,14 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         adapter.clear();
         adapter.setFileType(mediaTypeId);
         LocalSearchEngine.instance().performSearch(query);
-        searchProgress.startProgress();
+        searchProgress.setProgressEnabled(true);
         showSearchView(getView());
     }
 
     private void cancelSearch(View view) {
         adapter.clear();
         LocalSearchEngine.instance().cancelSearch();
-        searchProgress.stopProgress();
+        searchProgress.setProgressEnabled(false);
         showSearchView(getView());
     }
 
@@ -202,16 +202,13 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         } else {
             if (adapter.getCount() > 0) {
                 switchView(view, android.R.id.list);
-                if (!LocalSearchEngine.instance().isSearchFinished()) {
-                    deepSearchProgress.setVisibility(View.VISIBLE);
-                } else {
-                    deepSearchProgress.setVisibility(View.GONE);
-                }
+                deepSearchProgress.setVisibility(LocalSearchEngine.instance().isSearchFinished() ? View.GONE : View.VISIBLE);
             } else {
                 switchView(view, R.id.fragment_search_search_progress);
                 deepSearchProgress.setVisibility(View.GONE);
             }
         }
+        searchProgress.setProgressEnabled(!LocalSearchEngine.instance().isSearchFinished());
     }
 
     private void switchView(View v, int id) {

@@ -37,8 +37,28 @@ public class SearchProgressView extends LinearLayout {
     private ProgressBar progressbar;
     private Button buttonCancel;
 
+    private boolean progressEnabled;
+
     public SearchProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        
+        this.progressEnabled = true;
+    }
+
+    public boolean isProgressEnabled() {
+        return progressEnabled;
+    }
+
+    public void setProgressEnabled(boolean enabled) {
+        if (this.progressEnabled != enabled) {
+            this.progressEnabled = enabled;
+
+            if (enabled) {
+                startProgress();
+            } else {
+                stopProgress();
+            }
+        }
     }
 
     public void setCancelOnClickListener(OnClickListener l) {
@@ -59,12 +79,12 @@ public class SearchProgressView extends LinearLayout {
         buttonCancel = (Button) findViewById(R.id.view_search_progress_button_cancel);
     }
 
-    public void startProgress() {
+    private void startProgress() {
         progressbar.setVisibility(View.VISIBLE);
         buttonCancel.setText(android.R.string.cancel);
     }
 
-    public void stopProgress() {
+    private void stopProgress() {
         progressbar.setVisibility(View.GONE);
         buttonCancel.setText(R.string.retry_search);
     }
