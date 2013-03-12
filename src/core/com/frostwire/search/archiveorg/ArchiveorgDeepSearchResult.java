@@ -23,6 +23,7 @@ import java.util.Locale;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.search.HttpSearchResult;
+import com.frostwire.search.SearchResultLicence;
 
 /**
  * 
@@ -82,5 +83,10 @@ public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSea
     @Override
     public String getDownloadUrl() {
         return downloadUrl;
+    }
+
+    @Override
+    public SearchResultLicence getLicence() {
+        return sr.getLicence();
     }
 }

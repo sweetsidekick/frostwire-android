@@ -23,15 +23,23 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public abstract class AbstractSearchResult implements SearchResult {
+public class SearchResultLicence {
 
-    @Override
-    public SearchResultLicence getLicence() {
-        return SearchResultLicence.UNKNOWN;
+    public static final SearchResultLicence UNKNOWN = new SearchResultLicence("", "");
+
+    private final String name;
+    private final String url;
+
+    public SearchResultLicence(String name, String url) {
+        this.name = name;
+        this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return getDetailsUrl();
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

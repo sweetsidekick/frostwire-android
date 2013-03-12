@@ -24,10 +24,12 @@ package com.frostwire.search;
  *
  */
 public interface SearchResult {
-    
+
     public String getDisplayName();
 
     public String getDetailsUrl();
-    
+
     public String getSource();
+
+    public SearchResultLicence getLicence();
 }

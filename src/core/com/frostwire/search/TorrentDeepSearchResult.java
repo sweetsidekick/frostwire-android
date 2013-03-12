@@ -73,7 +73,7 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
     public int getSeeds() {
         return sr.getSeeds();
     }
-    
+
     @Override
     public String getHash() {
         return sr.getHash();
@@ -82,5 +82,10 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
     @Override
     public String toString() {
         return sr.toString();
+    }
+
+    @Override
+    public SearchResultLicence getLicence() {
+        return SearchResultLicence.UNKNOWN;
     }
 }

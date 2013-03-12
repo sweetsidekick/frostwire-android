@@ -20,6 +20,7 @@ package com.frostwire.search.archiveorg;
 
 import com.frostwire.search.CrawlableSearchResult;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.SearchResultLicence;
 
 /**
  * @author gubatron
@@ -51,5 +52,10 @@ public class ArchiveorgSearchResult implements SearchResult, CrawlableSearchResu
     @Override
     public String getDetailsUrl() {
         return "http://archive.org/details/" + item.identifier;
+    }
+
+    @Override
+    public SearchResultLicence getLicence() {
+        return SearchResultLicence.UNKNOWN;
     }
 }
