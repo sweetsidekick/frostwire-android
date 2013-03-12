@@ -29,8 +29,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.search.PromotionsHandler;
 import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.gui.views.PromotionsView.Slide;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -43,11 +43,11 @@ import com.frostwire.android.gui.views.ImageLoader;
 public class PromotionsAdapter extends BaseAdapter {
 
     private final Context context;
-    private final List<PromotionsHandler.Slide> slides;
+    private final List<Slide> slides;
     private final ImageLoader imageLoader;
     private final Drawable defaultDrawable;
 
-    public PromotionsAdapter(Context context, List<PromotionsHandler.Slide> slides) {
+    public PromotionsAdapter(Context context, List<Slide> slides) {
         this.context = context;
         this.slides = slides;
         this.imageLoader = ImageLoader.getDefault();
@@ -82,7 +82,7 @@ public class PromotionsAdapter extends BaseAdapter {
     }
 
     @Override
-    public PromotionsHandler.Slide getItem(int position) {
+    public Slide getItem(int position) {
         return slides.get(position);
     }
 

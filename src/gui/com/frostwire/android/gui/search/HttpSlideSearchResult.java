@@ -18,8 +18,8 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.android.gui.search.PromotionsHandler.Slide;
 import com.frostwire.android.gui.transfers.HttpDownloadLink;
+import com.frostwire.android.gui.views.PromotionsView.Slide;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.WebSearchResult;
 
