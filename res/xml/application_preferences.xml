@@ -96,6 +96,10 @@
             android:key="frostwire.prefs.search.use_soundcloud"
             android:summary="@string/use_soundcloud"
             android:title="@string/use_soundcloud" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_archiveorg"
+            android:summary="@string/use_archiveorg"
+            android:title="@string/use_archiveorg" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference

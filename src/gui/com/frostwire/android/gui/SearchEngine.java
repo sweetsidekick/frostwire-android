@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.core;
+package com.frostwire.android.gui;
 
 import java.util.Arrays;
 import java.util.List;
 
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
@@ -49,6 +51,7 @@ public abstract class SearchEngine {
     private SearchEngine(String name, String preferenceKey) {
         this.name = name;
         this.preferenceKey = preferenceKey;
+
         this.active = true;
     }
 
@@ -80,7 +83,17 @@ public abstract class SearchEngine {
     }
 
     public static List<SearchEngine> getEngines() {
-        return Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
+        return ALL_ENGINES;
+    }
+
+    public static SearchEngine forName(String name) {
+        for (SearchEngine engine : getEngines()) {
+            if (engine.getName().equals(name)) {
+                return engine;
+            }
+        }
+
+        return null;
     }
 
     public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
@@ -138,4 +151,6 @@ public abstract class SearchEngine {
             return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
+
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
 }

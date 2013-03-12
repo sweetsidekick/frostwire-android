@@ -59,7 +59,7 @@ public final class SoftwareUpdater {
 
     private static final String UPDATE_ACTION_OTA = "ota";
     private static final String UPDATE_ACTION_MARKET = "market";
-    
+
     private boolean oldVersion;
     private String latestVersion;
     private Update update;
@@ -88,7 +88,7 @@ public final class SoftwareUpdater {
     public String getLatestVersion() {
         return latestVersion;
     }
-    
+
     public void checkForUpdate(final Context context) {
         long now = System.currentTimeMillis();
 
@@ -119,7 +119,7 @@ public final class SoftwareUpdater {
 
                     if (oldVersion) {
                         if (update.a == null) {
-                            update.a =UPDATE_ACTION_OTA; // make it the old behavior
+                            update.a = UPDATE_ACTION_OTA; // make it the old behavior
                         }
 
                         if (update.a.equals(UPDATE_ACTION_OTA)) {
@@ -168,7 +168,7 @@ public final class SoftwareUpdater {
                 if (!SystemUtils.getUpdateInstallerPath().exists()) {
                     return;
                 }
-                
+
                 String message = StringUtils.getLocaleString(update.updateMessages, context.getString(R.string.update_message));
 
                 UIUtils.showYesNoDialog(context, R.drawable.app_icon, message, R.string.update_title, new OnClickListener() {
@@ -178,7 +178,7 @@ public final class SoftwareUpdater {
                     }
                 });
             } else if (update.a.equals(UPDATE_ACTION_MARKET)) {
-                
+
                 String message = StringUtils.getLocaleString(update.marketMessages, context.getString(R.string.update_message));
 
                 UIUtils.showYesNoDialog(context, R.drawable.app_icon, message, R.string.update_title, new OnClickListener() {
@@ -286,13 +286,12 @@ public final class SoftwareUpdater {
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, ByteUtils.randomInt(0, 100) < update.config.supportThreshold);
 
-        /*
         for (String name : update.config.activeSearchEngines.keySet()) {
-            SearchEngine engine = SearchEngine.getSearchEngine(name);
+            SearchEngine engine = SearchEngine.forName(name);
             if (engine != null) {
                 engine.setActive(update.config.activeSearchEngines.get(name));
             }
-        }*/
+        }
     }
 
     private static class Update {

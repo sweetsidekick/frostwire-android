@@ -35,7 +35,6 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.SearchEngine;
 import com.frostwire.android.core.providers.UniversalStore.Torrents;
 import com.frostwire.android.core.providers.UniversalStore.Torrents.TorrentFilesColumns;
 import com.frostwire.android.util.Normalizer;

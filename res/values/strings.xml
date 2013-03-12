@@ -408,4 +408,5 @@
     <string name="donation_thanks">Thank you so much for Supporting FrostWire</string>
     <string name="torrent_scheme_download_not_supported">Download not supported</string>
     <string name="retry_search">Retry</string>
+    <string name="use_archiveorg">Use Archive.org</string>
 </resources>
