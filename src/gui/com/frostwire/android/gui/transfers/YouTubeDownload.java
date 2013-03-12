@@ -47,6 +47,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
+import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.IOUtils;
 import com.frostwire.mp4.DefaultMp4Builder;
 import com.frostwire.mp4.IsoFile;
@@ -185,10 +186,6 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
         try {
             final HttpDownloadLink link = decrypt();
             if (link != null) {
-
-                if (sr.getResultType().equals(ResultType.AUDIO)) {
-                    link.setFileName(link.getFileName().replace(".mp4", ".m4a"));
-                }
 
                 delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
                 delegate.setListener(new HttpDownloadListener() {
@@ -355,15 +352,14 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
             for (final Entry<DestinationFormat, ArrayList<Info>> next : this.possibleconverts.entrySet()) {
                 final DestinationFormat convertTo = next.getKey();
                 for (final Info info : next.getValue()) {
-                    final HttpDownloadLink thislink = new HttpDownloadLink(info.link);
+                    String link = info.link;
                     //thislink.setBrowserUrl(parameter);
                     //thislink.setFinalFileName(YT_FILENAME + info.desc + convertTo.getExtFirst());
-                    thislink.setSize(info.size);
+                    long size = info.size;
                     String name = null;
                     if (convertTo != DestinationFormat.AUDIOMP3) {
                         name = YT_FILENAME + info.desc + convertTo.getExtFirst();
                         name = FileUtils.getValidFileName(name);
-                        thislink.setFileName(name);
                     } else {
                         /*
                          * because demuxer will fail when mp3 file already
@@ -372,6 +368,9 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
                         //name = YT_FILENAME + info.desc + ".tmp";
                         //thislink.setProperty("name", name);
                     }
+                    if (sr.getResultType().equals(ResultType.AUDIO)) {
+                        name = name.replace(".mp4", ".m4a");
+                    }
                     //thislink.setProperty("convertto", convertTo.name());
                     //thislink.setProperty("videolink", parameter);
                     //thislink.setProperty("valid", true);
@@ -379,7 +378,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
                     //thislink.setProperty("LINKDUPEID", name);
 
                     if (lastFmt < info.fmt) {
-                        decryptedLink = thislink;
+                        decryptedLink = new HttpDownloadLink(link, name, FilenameUtils.getBaseName(name), size, false);
                     }
                 }
             }

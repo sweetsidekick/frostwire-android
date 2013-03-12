@@ -18,44 +18,24 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.frostclick.Slide;
+
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class HttpDownloadLink {
+public final class SlideDownloadLink extends HttpDownloadLink {
 
-    private final String url;
-    private final String filename;
-    private final String displayName;
-    private final long size;
-    private final boolean compressed;
+    private final Slide slide;
 
-    public HttpDownloadLink(String url, String filename, String displayName, long size, boolean compressed) {
-        this.url = url;
-        this.filename = filename;
-        this.displayName = displayName;
-        this.size = size;
-        this.compressed = compressed;
+    public SlideDownloadLink(Slide slide) {
+        super(slide.httpUrl, FilenameUtils.getName(slide.httpUrl), slide.title, slide.size, slide.uncompress);
+        this.slide = slide;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public String getFileName() {
-        return filename;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public boolean isCompressed() {
-        return compressed;
+    public Slide getSlide() {
+        return slide;
     }
 }

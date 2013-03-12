@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.frostclick;
+package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.gui.transfers.HttpDownloadLink;
-import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.frostclick.Slide;
 import com.frostwire.search.WebSearchResult;
 
 /**
@@ -72,14 +71,9 @@ public class HttpSlideSearchResult implements WebSearchResult {
     }
 
     public HttpDownloadLink getDownloadLink() {
-        HttpDownloadLink link = new HttpDownloadLink(slide.httpUrl);
-        link.setDisplayName(slide.title);
-        link.setSize(slide.size);
-        link.setCompressed(slide.uncompress);
-        link.setFileName(FilenameUtils.getName(slide.httpUrl));
-        return link;
+        return new SlideDownloadLink(slide);
     }
-    
+
     @Override
     public long getCreationTime() {
         // TODO Auto-generated method stub

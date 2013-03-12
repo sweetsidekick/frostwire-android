@@ -28,7 +28,6 @@ import android.util.Log;
 
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.FileUtils;
 import com.frostwire.mp3.ID3Wrapper;
 import com.frostwire.mp3.ID3v1Tag;
 import com.frostwire.mp3.ID3v23Tag;
@@ -164,57 +163,49 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
         }
     }
 
-
     private void downloadAndUpdateCoverArt(File tempFile) {
         //abort if file is too large.
         if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
 
             byte[] coverArtBytes = downloadCoverArt();
-            Log.v(TAG,"cover art array length (@"+coverArtBytes.hashCode()+"): " + coverArtBytes.length);
-            
+            Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
+
             if (coverArtBytes != null && coverArtBytes.length > 0) {
                 File finalFile = getFinalFile(tempFile, Constants.FILE_TYPE_AUDIO);
                 if (setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), finalFile.getAbsolutePath())) {
                     tempFile.delete();
                     this.savePath = finalFile;
-                } else {    
-                    moveFile(tempFile,Constants.FILE_TYPE_AUDIO);
+                } else {
+                    moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
                 }
             }
         } else {
-            moveFile(tempFile,Constants.FILE_TYPE_AUDIO);
+            moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
         }
     }
-    
+
     private byte[] downloadCoverArt() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Log.v(TAG,"thumbnail url: " + sr.getThumbnailUrl());
+            Log.v(TAG, "thumbnail url: " + sr.getThumbnailUrl());
             HttpDownload.simpleHTTP(sr.getThumbnailUrl(), baos, 3000);
             return baos.toByteArray();
         } catch (Throwable e) {
-            Log.e(TAG,"Error downloading SoundCloud cover art.",e);
+            Log.e(TAG, "Error downloading SoundCloud cover art.", e);
         }
         return null;
     }
 
-    private HttpDownloadLink buildDownloadLink() throws Exception {
-        HttpDownloadLink link = new HttpDownloadLink(sr.getStreamUrl());
-
-        link.setSize(sr.getSize());
-        link.setFileName(FileUtils.getValidFileName(sr.getFilename()));
-        link.setDisplayName(sr.getDisplayName());
-        link.setCompressed(false);
-
-        return link;
+    private HttpDownloadLink buildDownloadLink() {
+        return new SoundcloudDownloadLink(sr);
     }
-    
+
     private boolean setAlbumArt(byte[] imageBytes, String mp3Filename, String mp3outputFilename) {
         try {
             Mp3File mp3 = new Mp3File(mp3Filename);
-            
+
             ID3Wrapper newId3Wrapper = new ID3Wrapper(new ID3v1Tag(), new ID3v23Tag());
-            
+
             newId3Wrapper.setAlbum(sr.getUsername() + ": " + sr.getTitle() + " via SoundCloud.com");
             newId3Wrapper.setArtist(sr.getUsername());
             newId3Wrapper.setTitle(sr.getTitle());
@@ -224,12 +215,12 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
             mp3.setId3v1Tag(newId3Wrapper.getId3v1Tag());
             mp3.setId3v2Tag(newId3Wrapper.getId3v2Tag());
-            
+
             mp3.save(mp3outputFilename);
-            
+
             return true;
         } catch (Throwable e) {
             return false;
         }
-    }        
+    }
 }
