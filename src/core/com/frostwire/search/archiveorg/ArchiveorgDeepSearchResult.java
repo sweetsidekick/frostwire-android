@@ -18,9 +18,11 @@
 
 package com.frostwire.search.archiveorg;
 
+import java.util.Locale;
+
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.CompleteSearchResult;
-import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.HttpSearchResult;
 
 /**
  * 
@@ -28,13 +30,16 @@ import com.frostwire.search.FileSearchResult;
  * @author aldenml
  *
  */
-public class ArchiveorgDeepSearchResult implements FileSearchResult, CompleteSearchResult {
+public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSearchResult {
+
+    private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
 
     private final ArchiveorgSearchResult sr;
     private final String filename;
     private final ArchiveorgFile file;
 
     private final String displayName;
+    private final String downloadUrl;
 
     public ArchiveorgDeepSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
         this.sr = sr;
@@ -42,6 +47,7 @@ public class ArchiveorgDeepSearchResult implements FileSearchResult, CompleteSea
         this.file = file;
 
         this.displayName = FilenameUtils.getBaseName(filename);
+        this.downloadUrl = String.format(Locale.US, DOWNLOAD_URL, sr.getItem().identifier, filename);
     }
 
     @Override
@@ -71,5 +77,10 @@ public class ArchiveorgDeepSearchResult implements FileSearchResult, CompleteSea
     @Override
     public String getSource() {
         return sr.getSource();
+    }
+
+    @Override
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 }

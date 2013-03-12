@@ -38,6 +38,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.util.ByteUtils;
+import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.TorrentSearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
@@ -115,6 +116,8 @@ public final class TransferManager {
             return newYouTubeDownload((YouTubeSearchResult) sr);
         } else if (sr instanceof SoundcloudSearchResult) {
             return newSoundcloudDownload((SoundcloudSearchResult) sr);
+        } else if (sr instanceof HttpSearchResult) {
+            return newHttpDownload((HttpSearchResult) sr);
         } else {
             return new InvalidDownload();
         }
@@ -371,6 +374,15 @@ public final class TransferManager {
 
     private DownloadTransfer newSoundcloudDownload(SoundcloudSearchResult sr) {
         SoundcloudDownload download = new SoundcloudDownload(this, sr);
+
+        downloads.add(download);
+        download.start();
+
+        return download;
+    }
+
+    private DownloadTransfer newHttpDownload(HttpSearchResult sr) {
+        HttpDownload download = new HttpDownload(this, new HttpSearchResultDownloadLink(sr));
 
         downloads.add(download);
         download.start();

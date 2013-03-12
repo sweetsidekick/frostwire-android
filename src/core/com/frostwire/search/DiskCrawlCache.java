@@ -100,13 +100,13 @@ public class DiskCrawlCache implements CrawlCache {
                 }
 
                 encode(editor, data);
-                cache.flush();
+                flushCache();
                 editor.commit();
                 if (BuildConfig.DEBUG) {
                     LOG.debug("value put on disk cache " + key);
                 }
             } catch (Throwable e) {
-                LOG.warn("Error putting value to crawl cache", e);
+                LOG.warn("Error putting value to crawl cache: " + e.getMessage());
                 try {
                     if (editor != null) {
                         editor.abort();
@@ -167,6 +167,18 @@ public class DiskCrawlCache implements CrawlCache {
         int n = 0;
         while ((n = input.read(buffer)) != -1) {
             output.write(buffer, 0, n);
+        }
+    }
+
+    private void flushCache() throws IOException {
+        try {
+            cache.flush();
+        } catch (IOException e) {
+            if (e.getMessage().contains("failed to delete")) {
+                // eat
+            } else {
+                throw e;
+            }
         }
     }
 }
