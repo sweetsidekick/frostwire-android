@@ -18,6 +18,7 @@
 
 package com.frostwire.search.archiveorg;
 
+import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.search.FileSearchResult;
 
@@ -33,20 +34,24 @@ public class ArchiveorgDeepSearchResult implements FileSearchResult, CompleteSea
     private final String filename;
     private final ArchiveorgFile file;
 
+    private final String displayName;
+
     public ArchiveorgDeepSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
         this.sr = sr;
         this.filename = filename;
         this.file = file;
+
+        this.displayName = FilenameUtils.getBaseName(filename);
     }
 
     @Override
     public String getDisplayName() {
-        return filename;
+        return displayName;
     }
 
     @Override
     public String getDetailsUrl() {
-        return "http://archive.org/details/" + sr.getItem().identifier;
+        return sr.getDetailsUrl();
     }
 
     @Override

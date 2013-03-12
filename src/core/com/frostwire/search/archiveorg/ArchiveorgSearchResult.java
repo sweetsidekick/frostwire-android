@@ -18,15 +18,15 @@
 
 package com.frostwire.search.archiveorg;
 
-import com.frostwire.search.AbstractWebSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
+import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ArchiveorgSearchResult extends AbstractWebSearchResult implements CrawlableSearchResult {
+public class ArchiveorgSearchResult implements SearchResult, CrawlableSearchResult {
 
     private final ArchiveorgItem item;
 
@@ -36,20 +36,6 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
 
     public ArchiveorgItem getItem() {
         return item;
-    }
-
-    public long getCreationTime() {
-        return -1;
-    }
-
-    @Override
-    public String getFilename() {
-        return null;
-    }
-
-    @Override
-    public long getSize() {
-        return -1;
     }
 
     @Override
@@ -64,6 +50,6 @@ public class ArchiveorgSearchResult extends AbstractWebSearchResult implements C
 
     @Override
     public String getDetailsUrl() {
-        return item.identifier;
+        return "http://archive.org/details/" + item.identifier;
     }
 }

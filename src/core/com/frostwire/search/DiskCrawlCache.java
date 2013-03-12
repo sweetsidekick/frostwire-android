@@ -122,7 +122,7 @@ public class DiskCrawlCache implements CrawlCache {
     @Override
     public void remove(String key) {
         try {
-            cache.remove(key);
+            cache.remove(encodeKey(key));
         } catch (Throwable e) {
             LOG.warn("Error deleting value from crawl cache: " + e.getMessage());
         }

@@ -81,9 +81,27 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         while (it.hasNext() && !isStopped()) {
             String name = it.next();
             ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
-            list.add(new ArchiveorgDeepSearchResult(sr, name, file));
+            if (filter(file)) {
+                list.add(new ArchiveorgDeepSearchResult(sr, cleanName(name), file));
+            }
         }
 
         return list;
+    }
+
+    private String cleanName(String name) {
+        if (name.startsWith("/")) {
+            name = name.substring(1);
+        }
+
+        return name;
+    }
+
+    private boolean filter(ArchiveorgFile file) {
+        if (file.format != null && file.format.equalsIgnoreCase("metadata")) {
+            return false;
+        }
+
+        return true;
     }
 }
