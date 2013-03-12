@@ -188,7 +188,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
             if (link != null) {
 
                 if (sr.getResultType().equals(ResultType.AUDIO)) {
-                    link = new HttpDownloadLink(link, link.getFileName().replace(".mp4", ".m4a"));
+                    link = link.withFilename(link.getFileName().replace(".mp4", ".m4a"));
                 }
                 
                 final HttpDownloadLink finalLink = link;
