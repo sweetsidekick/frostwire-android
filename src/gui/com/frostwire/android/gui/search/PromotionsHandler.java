@@ -16,12 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui;
+package com.frostwire.android.gui.search;
 
 import java.util.List;
 
-import com.frostwire.android.gui.search.HttpSlideSearchResult;
-import com.frostwire.android.gui.search.TorrentPromotionSearchResult;
 import com.frostwire.search.SearchResult;
 
 /**

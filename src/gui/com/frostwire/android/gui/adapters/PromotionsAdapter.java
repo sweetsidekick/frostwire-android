@@ -29,7 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.PromotionsHandler;
+import com.frostwire.android.gui.search.PromotionsHandler;
 import com.frostwire.android.gui.views.ImageLoader;
 
 /**

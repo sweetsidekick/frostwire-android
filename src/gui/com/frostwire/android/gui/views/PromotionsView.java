@@ -34,9 +34,9 @@ import android.widget.LinearLayout;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.android.gui.PromotionsHandler;
-import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.android.gui.search.PromotionsHandler;
+import com.frostwire.android.gui.search.PromotionsHandler.Slide;
 import com.frostwire.util.JsonUtils;
 
 /**

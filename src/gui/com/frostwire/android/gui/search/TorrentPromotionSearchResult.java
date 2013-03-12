@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.search;
 
-import com.frostwire.android.gui.PromotionsHandler.Slide;
+import com.frostwire.android.gui.search.PromotionsHandler.Slide;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.TorrentSearchResult;
 
