@@ -60,12 +60,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         this.fileType = NO_FILE_TYPE;
     }
 
-    @SuppressWarnings("unchecked")
-    public void addResults(List<? extends SearchResult> g) {
-        super.addList((List<SearchResult>) g); // java, java, and type erasure
-        filter();
-    }
-
     public int getFileType() {
         return fileType;
     }
@@ -75,27 +69,11 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         filter();
     }
 
-    private void filter() {
-        // review this in deep looking for synchronization issues
-        this.visualList = new ArrayList<SearchResult>();
-        for (SearchResult sr : new ArrayList<SearchResult>(list)) {
-            if (accept(sr)) {
-                visualList.add(sr);
-            }
-        }
-        notifyDataSetInvalidated();
-    }
-
-    public boolean accept(SearchResult sr) {
-        if (sr instanceof FileSearchResult) {
-            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
-            if (mt == null) {
-                return false;
-            }
-            return mt.getId() == fileType;
-        } else {
-            return false;
-        }
+    @SuppressWarnings("unchecked")
+    public void addResults(List<? extends SearchResult> g) {
+        visualList.addAll(filter((List<SearchResult>) g)); // java, java, and type erasure
+        list.addAll(g);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -152,6 +130,33 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     protected void searchResultClicked(SearchResult sr) {
+    }
+
+    private void filter() {
+        this.visualList = filter(list);
+        notifyDataSetInvalidated();
+    }
+
+    private List<SearchResult> filter(List<SearchResult> results) {
+        ArrayList<SearchResult> l = new ArrayList<SearchResult>();
+        for (SearchResult sr : results) {
+            if (accept(sr)) {
+                l.add(sr);
+            }
+        }
+        return l;
+    }
+
+    private boolean accept(SearchResult sr) {
+        if (sr instanceof FileSearchResult) {
+            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
+            if (mt == null) {
+                return false;
+            }
+            return mt.getId() == fileType;
+        } else {
+            return false;
+        }
     }
 
     private int getFileTypeIconId() {
