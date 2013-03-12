@@ -39,6 +39,10 @@ public class HttpDownloadLink {
         this.compressed = compressed;
     }
 
+    HttpDownloadLink(HttpDownloadLink link, String filename) {
+        this(link.url, filename, link.displayName, link.size, link.compressed);
+    }
+
     public String getUrl() {
         return url;
     }

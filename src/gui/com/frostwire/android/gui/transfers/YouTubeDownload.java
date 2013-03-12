@@ -184,15 +184,21 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
 
     public void start() {
         try {
-            final HttpDownloadLink link = decrypt();
+            HttpDownloadLink link = decrypt();
             if (link != null) {
+
+                if (sr.getResultType().equals(ResultType.AUDIO)) {
+                    link = new HttpDownloadLink(link, link.getFileName().replace(".mp4", ".m4a"));
+                }
+                
+                final HttpDownloadLink finalLink = link;
 
                 delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {
                         if (sr.getResultType().equals(ResultType.AUDIO)) {
-                            if (!demuxMP4Audio(link, download, sr.getDetailsUrl())) {
+                            if (!demuxMP4Audio(finalLink, download, sr.getDetailsUrl())) {
                                 // handle demux error here. Why? java.lang.RuntimeException: too many PopLocalFrame calls
                             }
                         }
@@ -367,9 +373,6 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
                          */
                         //name = YT_FILENAME + info.desc + ".tmp";
                         //thislink.setProperty("name", name);
-                    }
-                    if (sr.getResultType().equals(ResultType.AUDIO)) {
-                        name = name.replace(".mp4", ".m4a");
                     }
                     //thislink.setProperty("convertto", convertTo.name());
                     //thislink.setProperty("videolink", parameter);
@@ -717,20 +720,20 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResu
 
                     return new FileTypeBox("M4A ", 0, minorBrands);
                 };
-                
+
                 protected MovieBox createMovieBox(Movie movie) {
                     MovieBox moov = super.createMovieBox(movie);
                     moov.getMovieHeaderBox().setVersion(0);
                     return moov;
                 };
-                
+
                 protected TrackBox createTrackBox(Track track, Movie movie) {
                     TrackBox trak = super.createTrackBox(track, movie);
-                    
+
                     TrackHeaderBox tkhd = trak.getTrackHeaderBox();
                     tkhd.setVersion(0);
                     tkhd.setVolume(1.0f);
-                    
+
                     return trak;
                 };
 
