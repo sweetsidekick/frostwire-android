@@ -27,19 +27,22 @@ import com.frostwire.android.util.FilenameUtils;
  * @author aldenml
  * 
  */
-public class TorrentDeepSearchResult implements TorrentSearchResult {
+public class TorrentDeepSearchResult extends AbstractCrawledSearchResult implements TorrentSearchResult {
 
-    private TorrentWebSearchResult sr;
-    private TOTorrentFile file;
+    private final TorrentWebSearchResult sr;
+    private final TOTorrentFile file;
+    private final String displayName;
 
     public TorrentDeepSearchResult(TorrentWebSearchResult sr, TOTorrentFile file) {
+        super(sr);
         this.sr = sr;
         this.file = file;
+        this.displayName = FilenameUtils.getName(file.getRelativePath());
     }
 
     @Override
     public String getDisplayName() {
-        return FilenameUtils.getName(file.getRelativePath());
+        return displayName;
     }
 
     @Override
@@ -52,21 +55,14 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
         return file.getLength();
     }
 
+    @Override
     public long getCreationTime() {
         return sr.getCreationTime();
     }
 
+    @Override
     public String getTorrentURI() {
         return sr.getTorrentURI();
-    }
-
-    public String getSource() {
-        return sr.getSource();
-    }
-
-    @Override
-    public String getDetailsUrl() {
-        return sr.getDetailsUrl();
     }
 
     @Override
@@ -77,15 +73,5 @@ public class TorrentDeepSearchResult implements TorrentSearchResult {
     @Override
     public String getHash() {
         return sr.getHash();
-    }
-
-    @Override
-    public String toString() {
-        return sr.toString();
-    }
-
-    @Override
-    public SearchResultLicence getLicence() {
-        return SearchResultLicence.UNKNOWN;
     }
 }

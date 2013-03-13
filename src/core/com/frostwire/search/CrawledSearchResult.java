@@ -16,46 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.archiveorg;
-
-import com.frostwire.licences.Licence;
-import com.frostwire.search.CrawlableSearchResult;
-import com.frostwire.search.SearchResult;
+package com.frostwire.search;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ArchiveorgSearchResult implements SearchResult, CrawlableSearchResult {
+public interface CrawledSearchResult extends SearchResult {
 
-    private final ArchiveorgItem item;
-
-    public ArchiveorgSearchResult(ArchiveorgItem item) {
-        this.item = item;
-    }
-
-    public ArchiveorgItem getItem() {
-        return item;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return item.title;
-    }
-
-    @Override
-    public String getSource() {
-        return "Archive.org";
-    }
-
-    @Override
-    public String getDetailsUrl() {
-        return "http://archive.org/details/" + item.identifier;
-    }
-
-    @Override
-    public Licence getLicence() {
-        return Licence.UNKNOWN;
-    }
+    public CrawlableSearchResult getParent();
 }

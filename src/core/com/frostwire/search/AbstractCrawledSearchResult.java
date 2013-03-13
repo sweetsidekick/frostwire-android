@@ -17,29 +17,39 @@
 
 package com.frostwire.search;
 
+import com.frostwire.licences.Licence;
+
 /**
  * 
  * @author gubatron
  * @author aldenml
  *
  */
-public class SearchResultLicence {
+public abstract class AbstractCrawledSearchResult extends AbstractSearchResult implements CrawledSearchResult {
 
-    public static final SearchResultLicence UNKNOWN = new SearchResultLicence("", "");
+    private final CrawlableSearchResult sr;
 
-    private final String name;
-    private final String url;
-
-    public SearchResultLicence(String name, String url) {
-        this.name = name;
-        this.url = url;
+    public AbstractCrawledSearchResult(CrawlableSearchResult parent) {
+        this.sr = parent;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public CrawlableSearchResult getParent() {
+        return sr;
     }
 
-    public String getUrl() {
-        return url;
+    @Override
+    public String getDetailsUrl() {
+        return sr.getDetailsUrl();
+    }
+
+    @Override
+    public String getSource() {
+        return sr.getSource();
+    }
+
+    @Override
+    public Licence getLicence() {
+        return sr.getLicence();
     }
 }

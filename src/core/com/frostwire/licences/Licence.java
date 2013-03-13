@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
-
-import com.frostwire.licences.Licence;
+package com.frostwire.licences;
 
 /**
  * 
@@ -25,13 +23,23 @@ import com.frostwire.licences.Licence;
  * @author aldenml
  *
  */
-public interface SearchResult {
+public class Licence {
 
-    public String getDisplayName();
+    public static final Licence UNKNOWN = new Licence("", "");
 
-    public String getDetailsUrl();
+    private final String name;
+    private final String url;
 
-    public String getSource();
+    public Licence(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
-    public Licence getLicence();
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

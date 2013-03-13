@@ -19,7 +19,7 @@
 package com.frostwire.frostclick;
 
 import com.frostwire.android.util.FilenameUtils;
-import com.frostwire.search.SearchResultLicence;
+import com.frostwire.licences.Licence;
 import com.frostwire.search.TorrentSearchResult;
 
 /**
@@ -84,7 +84,7 @@ public class TorrentPromotionSearchResult implements TorrentSearchResult {
     }
 
     @Override
-    public SearchResultLicence getLicence() {
-        return SearchResultLicence.UNKNOWN;
+    public Licence getLicence() {
+        return Licence.UNKNOWN;
     }
 }

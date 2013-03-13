@@ -21,9 +21,9 @@ package com.frostwire.search.archiveorg;
 import java.util.Locale;
 
 import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.search.AbstractCrawledSearchResult;
 import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.search.HttpSearchResult;
-import com.frostwire.search.SearchResultLicence;
 
 /**
  * 
@@ -31,11 +31,10 @@ import com.frostwire.search.SearchResultLicence;
  * @author aldenml
  *
  */
-public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSearchResult {
+public class ArchiveorgDeepSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult, CompleteSearchResult {
 
     private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
 
-    private final ArchiveorgSearchResult sr;
     private final String filename;
     private final ArchiveorgFile file;
 
@@ -43,7 +42,7 @@ public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSea
     private final String downloadUrl;
 
     public ArchiveorgDeepSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
-        this.sr = sr;
+        super(sr);
         this.filename = filename;
         this.file = file;
 
@@ -54,11 +53,6 @@ public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSea
     @Override
     public String getDisplayName() {
         return displayName;
-    }
-
-    @Override
-    public String getDetailsUrl() {
-        return sr.getDetailsUrl();
     }
 
     @Override
@@ -76,17 +70,7 @@ public class ArchiveorgDeepSearchResult implements HttpSearchResult, CompleteSea
     }
 
     @Override
-    public String getSource() {
-        return sr.getSource();
-    }
-
-    @Override
     public String getDownloadUrl() {
         return downloadUrl;
-    }
-
-    @Override
-    public SearchResultLicence getLicence() {
-        return sr.getLicence();
     }
 }

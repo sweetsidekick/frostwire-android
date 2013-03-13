@@ -1,7 +1,7 @@
 package com.frostwire.android.tests.search;
 
+import com.frostwire.licences.Licence;
 import com.frostwire.search.CompleteSearchResult;
-import com.frostwire.search.SearchResultLicence;
 
 public class MockSearchResult implements CompleteSearchResult {
 
@@ -21,7 +21,7 @@ public class MockSearchResult implements CompleteSearchResult {
     }
     
     @Override
-    public SearchResultLicence getLicence() {
-        return SearchResultLicence.UNKNOWN;
+    public Licence getLicence() {
+        return Licence.UNKNOWN;
     }
 }
