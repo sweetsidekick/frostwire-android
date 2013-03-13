@@ -59,7 +59,7 @@ public class ClearBitsWebSearchResult extends AbstractTorrentWebSearchResult {
         return item.hashstr;
     }
 
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return item.torrent_url;
     }
 

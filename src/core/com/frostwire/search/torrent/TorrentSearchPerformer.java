@@ -42,7 +42,7 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
 
     @Override
     protected String getCrawlUrl(TorrentWebSearchResult sr) {
-        return sr.getTorrentURI();
+        return sr.getTorrentUrl();
     }
 
     @Override

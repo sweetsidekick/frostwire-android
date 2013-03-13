@@ -18,10 +18,8 @@
 
 package com.frostwire.search.archiveorg;
 
-import com.frostwire.licences.Licence;
 import com.frostwire.search.AbstractSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
-import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron

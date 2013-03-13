@@ -58,7 +58,7 @@ public class MininovaVuzeWebSearchResult extends AbstractTorrentWebSearchResult 
         return item.hash;
     }
 
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return item.download;
     }
 

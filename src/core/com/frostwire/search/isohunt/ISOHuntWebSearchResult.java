@@ -59,7 +59,7 @@ public class ISOHuntWebSearchResult extends AbstractTorrentWebSearchResult {
         return item.hash;
     }
 
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return item.enclosure_url;
     }
 

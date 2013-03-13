@@ -68,7 +68,7 @@ public class ExtratorrentResponseWebSearchResult extends AbstractTorrentWebSearc
         return item.hash;
     }
 
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return item.torrentLink;
     }
 

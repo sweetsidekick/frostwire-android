@@ -69,7 +69,7 @@ public class VertorSearchResult extends AbstractTorrentWebSearchResult {
         return null;
     }
 
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return item.download;
     }
 

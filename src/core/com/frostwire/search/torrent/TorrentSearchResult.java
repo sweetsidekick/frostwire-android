@@ -30,7 +30,7 @@ public interface TorrentSearchResult extends FileSearchResult, CompleteSearchRes
 
     public long getCreationTime();
 
-    public String getTorrentURI();
+    public String getTorrentUrl();
 
     public int getSeeds();
     

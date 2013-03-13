@@ -69,7 +69,7 @@ public class TorrentPromotionSearchResult implements TorrentSearchResult {
     }
 
     @Override
-    public String getTorrentURI() {
+    public String getTorrentUrl() {
         return slide.torrent;
     }
 

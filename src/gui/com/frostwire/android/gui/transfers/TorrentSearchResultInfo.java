@@ -35,7 +35,7 @@ class TorrentSearchResultInfo implements TorrentDownloadInfo {
 
     @Override
     public String getTorrentUrl() {
-        return sr.getTorrentURI();
+        return sr.getTorrentUrl();
     }
 
     @Override

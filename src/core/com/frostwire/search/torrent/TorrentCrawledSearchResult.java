@@ -62,8 +62,8 @@ public class TorrentCrawledSearchResult extends AbstractCrawledSearchResult impl
     }
 
     @Override
-    public String getTorrentURI() {
-        return sr.getTorrentURI();
+    public String getTorrentUrl() {
+        return sr.getTorrentUrl();
     }
 
     @Override
