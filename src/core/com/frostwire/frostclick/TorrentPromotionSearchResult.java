@@ -20,7 +20,7 @@ package com.frostwire.frostclick;
 
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.licences.Licence;
-import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron

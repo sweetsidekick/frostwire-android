@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.search.torrent;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
@@ -24,6 +24,9 @@ import java.util.List;
 import org.gudy.azureus2.core3.torrent.TOTorrent;
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 import org.gudy.azureus2.core3.util.TorrentUtils;
+
+import com.frostwire.search.CrawlPagedWebSearchPerformer;
+import com.frostwire.search.SearchResult;
 
 /**
  * 
@@ -44,7 +47,7 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
 
     @Override
     protected List<? extends SearchResult> crawlResult(TorrentWebSearchResult sr, byte[] data) throws Exception {
-        List<TorrentDeepSearchResult> list = new LinkedList<TorrentDeepSearchResult>();
+        List<TorrentCrawledSearchResult> list = new LinkedList<TorrentCrawledSearchResult>();
 
         TOTorrent torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));
 
@@ -53,7 +56,7 @@ public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerforme
 
             for (int i = 0; !isStopped() && i < files.length; i++) {
                 TOTorrentFile file = files[i];
-                list.add(new TorrentDeepSearchResult(sr, file));
+                list.add(new TorrentCrawledSearchResult(sr, file));
             }
         }
 

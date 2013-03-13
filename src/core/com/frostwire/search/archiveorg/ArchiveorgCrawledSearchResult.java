@@ -31,7 +31,7 @@ import com.frostwire.search.HttpSearchResult;
  * @author aldenml
  *
  */
-public class ArchiveorgDeepSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult, CompleteSearchResult {
+public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult, CompleteSearchResult {
 
     private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
 
@@ -41,7 +41,7 @@ public class ArchiveorgDeepSearchResult extends AbstractCrawledSearchResult impl
     private final String displayName;
     private final String downloadUrl;
 
-    public ArchiveorgDeepSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
+    public ArchiveorgCrawledSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
         super(sr);
         this.filename = filename;
         this.file = file;

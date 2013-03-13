@@ -16,24 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search;
+package com.frostwire.search.torrent;
 
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 
 import com.frostwire.android.util.FilenameUtils;
+import com.frostwire.search.AbstractCrawledSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class TorrentDeepSearchResult extends AbstractCrawledSearchResult implements TorrentSearchResult {
+public class TorrentCrawledSearchResult extends AbstractCrawledSearchResult implements TorrentSearchResult {
 
     private final TorrentWebSearchResult sr;
     private final TOTorrentFile file;
     private final String displayName;
 
-    public TorrentDeepSearchResult(TorrentWebSearchResult sr, TOTorrentFile file) {
+    public TorrentCrawledSearchResult(TorrentWebSearchResult sr, TOTorrentFile file) {
         super(sr);
         this.sr = sr;
         this.file = file;

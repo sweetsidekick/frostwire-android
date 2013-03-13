@@ -22,8 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.TorrentSearchPerformer;
-import com.frostwire.search.TorrentWebSearchResult;
+import com.frostwire.search.torrent.TorrentSearchPerformer;
+import com.frostwire.search.torrent.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**

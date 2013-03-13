@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.SearchResultListener;
-import com.frostwire.search.TorrentDeepSearchResult;
-import com.frostwire.search.archiveorg.ArchiveorgDeepSearchResult;
+import com.frostwire.search.archiveorg.ArchiveorgCrawledSearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 
 /**
  * 
@@ -73,7 +73,7 @@ public class MockSearchResultListener implements SearchResultListener {
     public boolean containsDeepSearchResult() {
         synchronized (results) {
             for (SearchResult sr : results) {
-                if (sr instanceof TorrentDeepSearchResult || sr instanceof ArchiveorgDeepSearchResult) {
+                if (sr instanceof TorrentCrawledSearchResult || sr instanceof ArchiveorgCrawledSearchResult) {
                     return true;
                 }
             }

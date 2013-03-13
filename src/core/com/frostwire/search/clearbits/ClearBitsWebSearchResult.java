@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.search.AbstractTorrentWebSearchResult;
+import com.frostwire.search.torrent.AbstractTorrentWebSearchResult;
 
 /**
  * @author gubatron

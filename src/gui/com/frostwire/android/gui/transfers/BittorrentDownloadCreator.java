@@ -42,8 +42,8 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.StringUtils;
-import com.frostwire.search.TorrentDeepSearchResult;
-import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -66,7 +66,7 @@ final class BittorrentDownloadCreator {
         } catch (Throwable e) {
             // ignore
         }
-        if (sr instanceof TorrentDeepSearchResult) {
+        if (sr instanceof TorrentCrawledSearchResult) {
             return create(manager, torrentFile, hash, sr.getFilename());
         } else {
             return create(manager, torrentFile, hash, null);
@@ -99,7 +99,7 @@ final class BittorrentDownloadCreator {
                 Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
                 return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
             } else {
-                if (sr instanceof TorrentDeepSearchResult) {
+                if (sr instanceof TorrentCrawledSearchResult) {
                     return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
                 } else {
                     return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);

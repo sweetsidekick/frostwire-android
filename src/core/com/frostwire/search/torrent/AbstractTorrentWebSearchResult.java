@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.search.torrent;
+
+import com.frostwire.search.AbstractSearchResult;
 
 /**
  * 

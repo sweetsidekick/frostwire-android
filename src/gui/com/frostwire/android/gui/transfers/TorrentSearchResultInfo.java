@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron

@@ -40,8 +40,8 @@ import com.frostwire.android.gui.Peer;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.TorrentSearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult;
 
 /**

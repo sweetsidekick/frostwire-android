@@ -69,7 +69,7 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
 
     @Override
     protected List<? extends SearchResult> crawlResult(ArchiveorgSearchResult sr, byte[] data) throws Exception {
-        List<ArchiveorgDeepSearchResult> list = new LinkedList<ArchiveorgDeepSearchResult>();
+        List<ArchiveorgCrawledSearchResult> list = new LinkedList<ArchiveorgCrawledSearchResult>();
 
         String json = new String(data, "UTF-8");
         JSONObject obj = new JSONObject(json);
@@ -82,7 +82,7 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
             String name = it.next();
             ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
             if (filter(file)) {
-                list.add(new ArchiveorgDeepSearchResult(sr, cleanName(name), file));
+                list.add(new ArchiveorgCrawledSearchResult(sr, cleanName(name), file));
             }
         }
 

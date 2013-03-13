@@ -37,7 +37,7 @@ import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.TorrentSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron
