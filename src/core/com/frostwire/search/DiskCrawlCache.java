@@ -175,7 +175,7 @@ public class DiskCrawlCache implements CrawlCache {
             cache.flush();
         } catch (IOException e) {
             if (e.getMessage().contains("failed to delete")) {
-                // eat
+                LOG.warn("Important!, unable to flush disk crawl cache");
             } else {
                 throw e;
             }

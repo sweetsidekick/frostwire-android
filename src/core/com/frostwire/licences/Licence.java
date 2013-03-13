@@ -17,6 +17,9 @@
 
 package com.frostwire.licences;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 
  * @author gubatron
@@ -26,6 +29,18 @@ package com.frostwire.licences;
 public abstract class Licence {
 
     public static final Licence UNKNOWN = new UnknownLicence();
+
+    public static final Licence CC_BY = new CCLicence("CC BY", "Creative Commons Attribution", "http://creativecommons.org/licenses/by/3.0");
+    public static final Licence CC_BY_SA = new CCLicence("CC BY-SA", "Creative Commons Attribution-ShareAlike", "http://creativecommons.org/licenses/by-sa/3.0");
+    public static final Licence CC_BY_ND = new CCLicence("CC BY-ND", "Creative Commons Attribution-NoDerivs", "http://creativecommons.org/licenses/by-nd/3.0");
+    public static final Licence CC_BY_NC = new CCLicence("CC BY-NC", "Creative Commons Attribution-NonCommercial", "http://creativecommons.org/licenses/by-nc/3.0");
+    public static final Licence CC_BY_NC_SA = new CCLicence("CC BY", "Creative Commons Attribution-NonCommercial-ShareAlike", "http://creativecommons.org/licenses/by-nc-sa/3.0");
+    public static final Licence CC_BY_NC_ND = new CCLicence("CC BY", "Creative Commons Attribution-NonCommercial-NoDerivs", "http://creativecommons.org/licenses/by-nc-nd/3.0");
+    public static final Licence CC_CC0 = new CCLicence("CC0", "Creative Commons Public Domain Dedication", "http://creativecommons.org/publicdomain/zero/1.0");
+
+    public static final Licence CC_PUBLIC_DOMAIN = new PublicDomainLicence();
+
+    public static final List<Licence> CREATIVE_COMMONS = Arrays.asList(CC_BY, CC_BY_SA, CC_BY_ND, CC_BY_NC, CC_BY_NC_SA, CC_BY_NC_ND, CC_CC0, CC_PUBLIC_DOMAIN);
 
     private final String name;
     private final String url;
@@ -41,5 +56,38 @@ public abstract class Licence {
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Licence)) {
+            return false;
+        }
+
+        return name.equals(((Licence) o).name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public static Licence creativeCommonsByUrl(String url) {
+        Licence lic = UNKNOWN;
+
+        if (url != null) {
+            for (Licence cc : CREATIVE_COMMONS) {
+                if (url.contains(cc.getUrl())) {
+                    lic = cc;
+                }
+            }
+        }
+
+        return lic;
     }
 }
