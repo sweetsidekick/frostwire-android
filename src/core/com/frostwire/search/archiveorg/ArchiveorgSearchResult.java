@@ -18,7 +18,7 @@
 
 package com.frostwire.search.archiveorg;
 
-import com.frostwire.licences.Licence;
+import com.frostwire.licences.License;
 import com.frostwire.search.AbstractSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
 
@@ -31,12 +31,12 @@ public class ArchiveorgSearchResult extends AbstractSearchResult implements Craw
 
     private final ArchiveorgItem item;
     private final String detailsUrl;
-    private final Licence licence;
+    private final License licence;
 
     public ArchiveorgSearchResult(ArchiveorgItem item) {
         this.item = item;
         this.detailsUrl = "http://archive.org/details/" + item.identifier;
-        this.licence = Licence.creativeCommonsByUrl(item.licenseurl);
+        this.licence = License.creativeCommonsByUrl(item.licenseurl);
     }
 
     public ArchiveorgItem getItem() {
@@ -59,7 +59,7 @@ public class ArchiveorgSearchResult extends AbstractSearchResult implements Craw
     }
 
     @Override
-    public Licence getLicence() {
+    public License getLicense() {
         return licence;
     }
 }

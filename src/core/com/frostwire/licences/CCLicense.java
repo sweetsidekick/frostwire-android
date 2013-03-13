@@ -23,11 +23,11 @@ package com.frostwire.licences;
  * @author aldenml
  *
  */
-public class CCLicence extends Licence {
+public class CCLicense extends License {
 
     private final String longName;
 
-    CCLicence(String name, String longName, String url) {
+    CCLicense(String name, String longName, String url) {
         super(name, url);
         this.longName = longName;
     }

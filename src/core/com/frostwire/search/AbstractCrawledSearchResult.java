@@ -17,7 +17,7 @@
 
 package com.frostwire.search;
 
-import com.frostwire.licences.Licence;
+import com.frostwire.licences.License;
 
 /**
  * 
@@ -49,7 +49,7 @@ public abstract class AbstractCrawledSearchResult extends AbstractSearchResult i
     }
 
     @Override
-    public Licence getLicence() {
-        return sr.getLicence();
+    public License getLicense() {
+        return sr.getLicense();
     }
 }

@@ -17,7 +17,7 @@
 
 package com.frostwire.search;
 
-import com.frostwire.licences.Licence;
+import com.frostwire.licences.License;
 
 /**
  * 
@@ -35,5 +35,5 @@ public interface SearchResult {
 
     public String getSource();
 
-    public Licence getLicence();
+    public License getLicense();
 }

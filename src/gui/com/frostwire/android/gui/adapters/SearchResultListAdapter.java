@@ -35,7 +35,7 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.util.FilenameUtils;
-import com.frostwire.licences.Licence;
+import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
@@ -109,10 +109,10 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
         seeds.setText("");
 
-        String licence = sr.getLicence().equals(Licence.UNKNOWN) ? "" : " - " + sr.getLicence();
+        String license = sr.getLicense().equals(License.UNKNOWN) ? "" : " - " + sr.getLicense();
 
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(sr.getSource() + licence); // TODO: ask for design
+        sourceLink.setText(sr.getSource() + license); // TODO: ask for design
         sourceLink.setTag(sr.getDetailsUrl());
         sourceLink.setOnClickListener(linkListener);
     }

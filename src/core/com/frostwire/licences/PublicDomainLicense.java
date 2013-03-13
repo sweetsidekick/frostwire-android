@@ -23,9 +23,9 @@ package com.frostwire.licences;
  * @author aldenml
  *
  */
-public final class UnknownLicence extends Licence {
+public final class PublicDomainLicense extends CCLicense {
 
-    UnknownLicence() {
-        super("Unknown", null);
+    PublicDomainLicense() {
+        super("Public Domain", "Creative Commons Public Domain", "http://creativecommons.org/licenses/publicdomain");
     }
 }

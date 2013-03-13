@@ -17,7 +17,7 @@
 
 package com.frostwire.search;
 
-import com.frostwire.licences.Licence;
+import com.frostwire.licences.License;
 
 /**
  * 
@@ -28,8 +28,8 @@ import com.frostwire.licences.Licence;
 public abstract class AbstractSearchResult implements SearchResult {
 
     @Override
-    public Licence getLicence() {
-        return Licence.UNKNOWN;
+    public License getLicense() {
+        return License.UNKNOWN;
     }
 
     @Override
