@@ -23,23 +23,6 @@ package com.frostwire.licences;
  * @author aldenml
  *
  */
-public abstract class Licence {
+public class CreativeCommonsLicence {
 
-    public static final Licence UNKNOWN = new UnknownLicence();
-
-    private final String name;
-    private final String url;
-
-    Licence(String name, String url) {
-        this.name = name;
-        this.url = url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
 }

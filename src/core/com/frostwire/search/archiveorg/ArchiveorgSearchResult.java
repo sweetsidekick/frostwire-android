@@ -19,6 +19,7 @@
 package com.frostwire.search.archiveorg;
 
 import com.frostwire.licences.Licence;
+import com.frostwire.search.AbstractSearchResult;
 import com.frostwire.search.CrawlableSearchResult;
 import com.frostwire.search.SearchResult;
 
@@ -27,7 +28,7 @@ import com.frostwire.search.SearchResult;
  * @author aldenml
  *
  */
-public class ArchiveorgSearchResult implements SearchResult, CrawlableSearchResult {
+public class ArchiveorgSearchResult extends AbstractSearchResult implements CrawlableSearchResult {
 
     private final ArchiveorgItem item;
 
@@ -52,10 +53,5 @@ public class ArchiveorgSearchResult implements SearchResult, CrawlableSearchResu
     @Override
     public String getDetailsUrl() {
         return "http://archive.org/details/" + item.identifier;
-    }
-
-    @Override
-    public Licence getLicence() {
-        return Licence.UNKNOWN;
     }
 }
