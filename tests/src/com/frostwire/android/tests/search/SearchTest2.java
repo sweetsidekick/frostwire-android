@@ -26,10 +26,10 @@ import junit.framework.TestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.frostwire.search.CrawlableSearchResult;
+import com.frostwire.search.SearchListener;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchResultListener;
 
 /**
  * 
@@ -58,7 +58,7 @@ public class SearchTest2 extends TestCase {
         manager.registerListener(l);
         manager.perform(new SearchPerformer() {
 
-            private SearchResultListener listener;
+            private SearchListener listener;
 
             @Override
             public long getToken() {
@@ -66,7 +66,7 @@ public class SearchTest2 extends TestCase {
             }
 
             @Override
-            public void registerListener(SearchResultListener listener) {
+            public void registerListener(SearchListener listener) {
                 this.listener = listener;
             }
 
@@ -82,7 +82,7 @@ public class SearchTest2 extends TestCase {
             @Override
             public void stop() {
             }
-            
+
             @Override
             public boolean isStopped() {
                 return false;
@@ -107,7 +107,7 @@ public class SearchTest2 extends TestCase {
             }
 
             @Override
-            public void registerListener(SearchResultListener listener) {
+            public void registerListener(SearchListener listener) {
             }
 
             @Override
@@ -122,7 +122,7 @@ public class SearchTest2 extends TestCase {
             @Override
             public void stop() {
             }
-            
+
             @Override
             public boolean isStopped() {
                 return false;
@@ -176,7 +176,7 @@ public class SearchTest2 extends TestCase {
                 }
 
                 @Override
-                public void registerListener(SearchResultListener listener) {
+                public void registerListener(SearchListener listener) {
                 }
 
                 @Override
@@ -198,7 +198,7 @@ public class SearchTest2 extends TestCase {
                         sync.notifyAll();
                     }
                 }
-                
+
                 @Override
                 public boolean isStopped() {
                     return false;

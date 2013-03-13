@@ -25,9 +25,7 @@ import java.util.List;
  * @author aldenml
  *
  */
-public interface SearchResultListener {
+public interface SearchListener {
 
     public void onResults(SearchPerformer performer, List<? extends SearchResult> results);
-    
-    public void onFinished(SearchPerformer performer);
 }

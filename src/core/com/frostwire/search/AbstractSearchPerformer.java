@@ -34,7 +34,7 @@ public abstract class AbstractSearchPerformer implements SearchPerformer {
 
     private final long token;
 
-    private SearchResultListener listener;
+    private SearchListener listener;
     private boolean stopped;
 
     public AbstractSearchPerformer(long token) {
@@ -47,7 +47,7 @@ public abstract class AbstractSearchPerformer implements SearchPerformer {
     }
 
     @Override
-    public void registerListener(SearchResultListener listener) {
+    public void registerListener(SearchListener listener) {
         this.listener = listener;
     }
 

@@ -17,23 +17,17 @@
 
 package com.frostwire.search;
 
+import java.util.List;
+
 /**
  * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface SearchPerformer {
+public interface SearchManagerListener {
 
-    public long getToken();
+    public void onResults(SearchPerformer performer, List<? extends SearchResult> results);
 
-    public void registerListener(SearchListener listener);
-
-    public void perform();
-
-    public void crawl(CrawlableSearchResult sr);
-
-    public void stop();
-
-    public boolean isStopped();
+    public void onFinished(SearchPerformer performer);
 }

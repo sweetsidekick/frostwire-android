@@ -59,7 +59,7 @@ import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.SearchManagerListener;
 
 /**
  * @author gubatron
@@ -154,7 +154,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             };
             setListAdapter(adapter);
 
-            LocalSearchEngine.instance().registerListener(new SearchResultListener() {
+            LocalSearchEngine.instance().registerListener(new SearchManagerListener() {
                 @Override
                 public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
                     getActivity().runOnUiThread(new Runnable() {

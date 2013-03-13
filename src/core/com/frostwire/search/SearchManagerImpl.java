@@ -43,7 +43,7 @@ public class SearchManagerImpl implements SearchManager {
     private final ExecutorService executor;
     private final List<SearchTask> tasks;
 
-    private SearchResultListener listener;
+    private SearchManagerListener listener;
 
     public SearchManagerImpl(int nThreads) {
         this.executor = Executors.newFixedThreadPool(nThreads);
@@ -55,7 +55,7 @@ public class SearchManagerImpl implements SearchManager {
     }
 
     @Override
-    public void registerListener(SearchResultListener listener) {
+    public void registerListener(SearchManagerListener listener) {
         this.listener = listener;
     }
 
@@ -170,7 +170,7 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
-    private static final class PerformerResultListener implements SearchResultListener {
+    private static final class PerformerResultListener implements SearchListener {
 
         private final SearchManagerImpl manager;
 
@@ -195,11 +195,6 @@ public class SearchManagerImpl implements SearchManager {
             if (!list.isEmpty()) {
                 manager.onResults(performer, list);
             }
-        }
-
-        @Override
-        public void onFinished(SearchPerformer performer) {
-            // ignored, performers doesn't know or are not reliable for this check
         }
     }
 

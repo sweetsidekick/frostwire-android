@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.archiveorg.ArchiveorgCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 
@@ -36,7 +36,7 @@ import com.frostwire.search.torrent.TorrentCrawledSearchResult;
  * @author aldenml
  *
  */
-public class MockSearchResultListener implements SearchResultListener {
+public class MockSearchResultListener implements SearchManagerListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockSearchResultListener.class);
 

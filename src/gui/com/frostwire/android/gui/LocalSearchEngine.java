@@ -44,7 +44,7 @@ import com.frostwire.search.SearchManager;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchResultListener;
+import com.frostwire.search.SearchManagerListener;
 
 /**
  * @author gubatron
@@ -68,7 +68,7 @@ public final class LocalSearchEngine {
     private final int MAX_TORRENT_FILES_TO_INDEX;
     private final int FULLTEXT_SEARCH_RESULTS_LIMIT;
 
-    private SearchResultListener listener;
+    private SearchManagerListener listener;
 
     private final Object lockObj = new Object();
 
@@ -107,7 +107,7 @@ public final class LocalSearchEngine {
         FULLTEXT_SEARCH_RESULTS_LIMIT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT);
 
         this.manager = new SearchManagerImpl();
-        this.manager.registerListener(new SearchResultListener() {
+        this.manager.registerListener(new SearchManagerListener() {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
                 if (listener != null && !performer.isStopped()) {
@@ -129,7 +129,7 @@ public final class LocalSearchEngine {
         });
     }
 
-    public void registerListener(SearchResultListener listener) {
+    public void registerListener(SearchManagerListener listener) {
         this.listener = listener;
     }
 
