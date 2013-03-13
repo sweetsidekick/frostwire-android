@@ -23,7 +23,6 @@ import java.util.List;
 
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchPerformer;
-import com.frostwire.search.torrent.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -52,7 +51,7 @@ public class MininovaSearchPerformer extends TorrentSearchPerformer {
 
         for (MininovaVuzeItem item : response.results) {
             if (!isStopped()) {
-                TorrentWebSearchResult sr = new MininovaVuzeWebSearchResult(item);
+                SearchResult sr = new MininovaVuzeWebSearchResult(item);
                 result.add(sr);
             }
         }

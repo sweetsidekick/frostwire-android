@@ -19,7 +19,12 @@ public class MockSearchResult implements CompleteSearchResult {
     public String getDisplayName() {
         return null;
     }
-    
+
+    @Override
+    public long getCreationTime() {
+        return -1;
+    }
+
     @Override
     public Licence getLicence() {
         return Licence.UNKNOWN;

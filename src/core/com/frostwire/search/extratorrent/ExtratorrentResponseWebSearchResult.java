@@ -22,14 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.frostwire.search.torrent.AbstractTorrentWebSearchResult;
+import com.frostwire.search.torrent.AbstractTorrentSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ExtratorrentResponseWebSearchResult extends AbstractTorrentWebSearchResult {
+public class ExtratorrentResponseWebSearchResult extends AbstractTorrentSearchResult {
 
     private final ExtratorrentItem item;
 

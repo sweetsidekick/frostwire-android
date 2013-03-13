@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search;
+package com.frostwire.search.torrent;
+
+import com.frostwire.search.CrawlableSearchResult;
+
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public interface WebSearchResult extends FileSearchResult {
-
-    public long getCreationTime();
+public interface TorrentCrawlableSearchResult extends TorrentSearchResult, CrawlableSearchResult {
 }

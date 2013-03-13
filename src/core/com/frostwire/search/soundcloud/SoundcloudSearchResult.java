@@ -18,7 +18,7 @@
 
 package com.frostwire.search.soundcloud;
 
-import com.frostwire.search.AbstractWebSearchResult;
+import com.frostwire.search.AbstractFileSearchResult;
 import com.frostwire.search.CompleteSearchResult;
 
 /**
@@ -26,7 +26,7 @@ import com.frostwire.search.CompleteSearchResult;
  * @author aldenml
  *
  */
-public class SoundcloudSearchResult extends AbstractWebSearchResult implements CompleteSearchResult {
+public class SoundcloudSearchResult extends AbstractFileSearchResult implements CompleteSearchResult {
 
     private final SoundcloudItem item;
     private final String trackUrl;

@@ -34,19 +34,19 @@ import com.frostwire.search.SearchResult;
  * @author aldenml
  *
  */
-public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerformer<TorrentWebSearchResult> {
+public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerformer<TorrentCrawlableSearchResult> {
 
     public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
         super(token, keywords, timeout, pages);
     }
 
     @Override
-    protected String getCrawlUrl(TorrentWebSearchResult sr) {
+    protected String getCrawlUrl(TorrentCrawlableSearchResult sr) {
         return sr.getTorrentUrl();
     }
 
     @Override
-    protected List<? extends SearchResult> crawlResult(TorrentWebSearchResult sr, byte[] data) throws Exception {
+    protected List<? extends SearchResult> crawlResult(TorrentCrawlableSearchResult sr, byte[] data) throws Exception {
         List<TorrentCrawledSearchResult> list = new LinkedList<TorrentCrawledSearchResult>();
 
         TOTorrent torrent = TorrentUtils.readFromBEncodedInputStream(new ByteArrayInputStream(data));

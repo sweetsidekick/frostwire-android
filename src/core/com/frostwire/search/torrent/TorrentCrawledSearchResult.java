@@ -30,11 +30,11 @@ import com.frostwire.search.AbstractCrawledSearchResult;
  */
 public class TorrentCrawledSearchResult extends AbstractCrawledSearchResult implements TorrentSearchResult {
 
-    private final TorrentWebSearchResult sr;
+    private final TorrentCrawlableSearchResult sr;
     private final TOTorrentFile file;
     private final String displayName;
 
-    public TorrentCrawledSearchResult(TorrentWebSearchResult sr, TOTorrentFile file) {
+    public TorrentCrawledSearchResult(TorrentCrawlableSearchResult sr, TOTorrentFile file) {
         super(sr);
         this.sr = sr;
         this.file = file;

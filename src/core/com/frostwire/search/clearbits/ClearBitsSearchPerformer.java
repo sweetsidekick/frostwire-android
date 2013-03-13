@@ -23,7 +23,6 @@ import java.util.List;
 
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchPerformer;
-import com.frostwire.search.torrent.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -51,7 +50,7 @@ public class ClearBitsSearchPerformer extends TorrentSearchPerformer {
 
         for (ClearBitsItem bucket : response.results) {
             if (!isStopped()) {
-                TorrentWebSearchResult sr = new ClearBitsWebSearchResult(bucket);
+                SearchResult sr = new ClearBitsWebSearchResult(bucket);
                 result.add(sr);
             }
         }

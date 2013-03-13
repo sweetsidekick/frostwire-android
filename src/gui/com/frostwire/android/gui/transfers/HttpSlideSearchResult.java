@@ -19,14 +19,14 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.frostclick.Slide;
-import com.frostwire.search.AbstractWebSearchResult;
+import com.frostwire.search.AbstractFileSearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class HttpSlideSearchResult extends AbstractWebSearchResult {
+public class HttpSlideSearchResult extends AbstractFileSearchResult {
 
     private final Slide slide;
 

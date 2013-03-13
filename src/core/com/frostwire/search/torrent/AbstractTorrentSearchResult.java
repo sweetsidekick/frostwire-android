@@ -17,7 +17,7 @@
 
 package com.frostwire.search.torrent;
 
-import com.frostwire.search.AbstractSearchResult;
+import com.frostwire.search.AbstractFileSearchResult;
 
 /**
  * 
@@ -25,6 +25,6 @@ import com.frostwire.search.AbstractSearchResult;
  * @author aldenml
  *
  */
-public abstract class AbstractTorrentWebSearchResult extends AbstractSearchResult implements TorrentWebSearchResult {
+public abstract class AbstractTorrentSearchResult extends AbstractFileSearchResult implements TorrentCrawlableSearchResult {
 
 }

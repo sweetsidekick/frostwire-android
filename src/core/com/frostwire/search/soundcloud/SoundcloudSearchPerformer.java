@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.WebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -72,7 +71,7 @@ public class SoundcloudSearchPerformer extends PagedWebSearchPerformer {
                 } catch (Throwable e) {
                     item.date = -1;
                 }
-                WebSearchResult sr = new SoundcloudSearchResult(item);
+                SearchResult sr = new SoundcloudSearchResult(item);
                 if (sr != null) {
                     result.add(sr);
                     i++;

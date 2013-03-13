@@ -23,6 +23,6 @@ package com.frostwire.search;
  * @author aldenml
  *
  */
-public abstract class AbstractWebSearchResult extends AbstractSearchResult implements WebSearchResult {
+public abstract class AbstractFileSearchResult extends AbstractSearchResult implements FileSearchResult {
 
 }

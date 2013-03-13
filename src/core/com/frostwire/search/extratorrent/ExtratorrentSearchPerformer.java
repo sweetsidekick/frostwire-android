@@ -23,7 +23,6 @@ import java.util.List;
 
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchPerformer;
-import com.frostwire.search.torrent.TorrentWebSearchResult;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -50,7 +49,7 @@ public class ExtratorrentSearchPerformer extends TorrentSearchPerformer {
 
         for (ExtratorrentItem item : response.list) {
             if (!isStopped()) {
-                TorrentWebSearchResult sr = new ExtratorrentResponseWebSearchResult(item);
+                SearchResult sr = new ExtratorrentResponseWebSearchResult(item);
                 result.add(sr);
             }
         }

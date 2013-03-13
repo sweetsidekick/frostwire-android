@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.WebSearchResult;
 import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 import com.frostwire.util.JsonUtils;
 
@@ -57,9 +56,9 @@ public class YouTubeSearchPerformer extends PagedWebSearchPerformer {
 
         for (YouTubeEntry entry : response.feed.entry) {
             if (!isStopped()) {
-                WebSearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
+                SearchResult vsr = new YouTubeSearchResult(entry, ResultType.VIDEO);
                 result.add(vsr);
-                WebSearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
+                SearchResult asr = new YouTubeSearchResult(entry, ResultType.AUDIO);
                 result.add(asr);
             }
         }

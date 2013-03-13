@@ -30,6 +30,8 @@ public interface SearchResult {
     public String getDisplayName();
 
     public String getDetailsUrl();
+    
+    public long getCreationTime();
 
     public String getSource();
 

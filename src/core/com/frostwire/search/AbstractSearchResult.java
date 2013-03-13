@@ -33,6 +33,11 @@ public abstract class AbstractSearchResult implements SearchResult {
     }
 
     @Override
+    public long getCreationTime() {
+        return -1;
+    }
+
+    @Override
     public String toString() {
         return getDetailsUrl();
     }
