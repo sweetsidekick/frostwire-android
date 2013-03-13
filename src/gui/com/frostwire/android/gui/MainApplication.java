@@ -44,7 +44,6 @@ public class MainApplication extends Application {
             ConfigurationManager.create(this);
             NetworkManager.create(this);
             Librarian.create(this);
-            LocalSearchEngine.create(this);
             Engine.create(this);
 
             ImageLoader.createDefaultInstance(this);

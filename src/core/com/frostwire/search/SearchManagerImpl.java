@@ -116,10 +116,10 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
-    protected void onFinished(SearchPerformer performer) {
+    protected void onFinished() {
         try {
             if (listener != null) {
-                listener.onFinished(performer);
+                listener.onFinished();
             }
         } catch (Throwable e) {
             LOG.warn("Error sending results back to receiver: " + e.getMessage());
@@ -166,7 +166,7 @@ public class SearchManagerImpl implements SearchManager {
             }
         }
         if (pendingTask == null) {
-            onFinished(performer);
+            onFinished();
         }
     }
 

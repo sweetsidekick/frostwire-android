@@ -121,11 +121,35 @@ public class DiskCrawlCache implements CrawlCache {
 
     @Override
     public void remove(String key) {
-        try {
-            cache.remove(encodeKey(key));
-        } catch (Throwable e) {
-            LOG.warn("Error deleting value from crawl cache: " + e.getMessage());
+        if (cache != null) {
+            try {
+                cache.remove(encodeKey(key));
+            } catch (Throwable e) {
+                LOG.warn("Error deleting value from crawl cache: " + e.getMessage());
+            }
         }
+    }
+
+    @Override
+    public void clear() {
+        if (cache != null) {
+            try {
+                cache.delete();
+            } catch (Throwable e) {
+                LOG.warn("Error deleting crawl cache: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public long size() {
+        long size = 0;
+
+        if (cache != null) {
+            size = cache.size();
+        }
+
+        return size;
     }
 
     private byte[] decode(Snapshot snapshot) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {

@@ -48,6 +48,10 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
         this(token, keywords, timeout, pages, DEFAULT_NUM_CRAWLS);
     }
 
+    public static CrawlCache getCache() {
+        return cache;
+    }
+
     @Override
     public void crawl(CrawlableSearchResult sr) {
         if (numCrawls > 0) {

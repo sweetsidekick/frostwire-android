@@ -118,8 +118,8 @@ public class PreferencesActivity extends PreferenceActivity {
         updateIndexSummary(preference);
         preference.setOnActionListener(new OnClickListener() {
             public void onClick(View v) {
-                int count = LocalSearchEngine.instance().clearIndex();
-                UIUtils.showShortMessage(PreferencesActivity.this, R.string.delete_n_torrents_indexed, count);
+                LocalSearchEngine.instance().clearCache();
+                UIUtils.showShortMessage(PreferencesActivity.this, R.string.deleted_crawl_cache);
                 updateIndexSummary(preference);
             }
         });
@@ -136,8 +136,8 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void updateIndexSummary(SimpleActionPreference preference) {
-        int count = LocalSearchEngine.instance().getIndexCount();
-        preference.setSummary(getResources().getQuantityString(R.plurals.count_torrents_indexed, count, count));
+        float size = (((float) LocalSearchEngine.instance().getCacheSize()) / 1024) / 1024;
+        preference.setSummary(getString(R.string.crawl_cache_size, size));
     }
 
     private void setupStoragePathOption() {

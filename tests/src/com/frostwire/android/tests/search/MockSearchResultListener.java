@@ -57,9 +57,9 @@ public class MockSearchResultListener implements SearchManagerListener {
         this.results.addAll(results);
         this.numResults += results.size();
     }
-    
+
     @Override
-    public void onFinished(SearchPerformer performer) {
+    public void onFinished() {
     }
 
     public void logResults() {

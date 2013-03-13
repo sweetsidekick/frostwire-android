@@ -167,7 +167,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
 
                 @Override
-                public void onFinished(SearchPerformer performer) {
+                public void onFinished() {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

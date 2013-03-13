@@ -48,7 +48,7 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
     }
 
     protected List<? extends SearchResult> searchPage(int page) {
-        String url = getUrl(page, encodeKeywords());
+        String url = getUrl(page, getEncodedKeywords());
         String text = fetch(url);
         if (text != null) {
             return searchPage(text);

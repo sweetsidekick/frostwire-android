@@ -409,4 +409,6 @@
     <string name="torrent_scheme_download_not_supported">Download not supported</string>
     <string name="retry_search">Retry</string>
     <string name="use_archiveorg">Use Archive.org</string>
+    <string name="crawl_cache_size">Crawl Cache %1$.2fMB</string>
+    <string name="deleted_crawl_cache">Deleted crawl cache</string>
 </resources>

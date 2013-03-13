@@ -30,4 +30,8 @@ public interface CrawlCache {
     public void put(String key, byte[] data);
 
     public void remove(String key);
+
+    public void clear();
+
+    public long size();
 }

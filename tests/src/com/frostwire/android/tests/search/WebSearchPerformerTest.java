@@ -50,7 +50,7 @@ public class WebSearchPerformerTest extends TestCase {
         WebSearchPerformer p = new WebSearchPerformer(0, keywords, 0) {
             @Override
             public void perform() {
-                sb.append(encodeKeywords());
+                sb.append(getEncodedKeywords());
             }
         };
 

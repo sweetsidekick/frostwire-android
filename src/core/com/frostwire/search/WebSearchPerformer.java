@@ -38,15 +38,25 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
     private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
 
-    protected final String keywords;
+    private final String keywords;
+    private final String encodedKeywords;
     private final int timeout;
     private final HttpClient client;
 
     public WebSearchPerformer(long token, String keywords, int timeout) {
         super(token);
         this.keywords = keywords;
+        this.encodedKeywords = encodeKeywords(keywords);
         this.timeout = timeout;
         this.client = HttpClientFactory.newDefaultInstance();
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public String getEncodedKeywords() {
+        return encodedKeywords;
     }
 
     @Override
@@ -62,7 +72,7 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         return client.getBytes(url, timeout, DEFAULT_USER_AGENT, referrer);
     }
 
-    protected String encodeKeywords() {
+    private String encodeKeywords(String keywords) {
         try {
             return URLEncoder.encode(keywords, "UTF-8");
         } catch (Throwable e) {
