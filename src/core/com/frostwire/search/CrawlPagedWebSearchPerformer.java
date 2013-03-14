@@ -32,7 +32,7 @@ public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResu
 
     private static final Logger LOG = LoggerFactory.getLogger(CrawlPagedWebSearchPerformer.class);
 
-    private static final int DEFAULT_NUM_CRAWLS = 4;
+    private static final int DEFAULT_NUM_CRAWLS = 6;
     private static final int DEFAULT_CRAWL_TIMEOUT = 10000; // 10 seconds
 
     private static final CrawlCache cache = new DiskCrawlCache();

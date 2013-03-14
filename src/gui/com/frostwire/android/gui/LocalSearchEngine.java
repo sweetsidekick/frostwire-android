@@ -30,6 +30,8 @@ import java.util.Set;
 
 import android.text.Html;
 
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.util.Normalizer;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
@@ -40,6 +42,7 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -49,6 +52,9 @@ import com.frostwire.search.SearchResult;
 public final class LocalSearchEngine {
 
     private final SearchManager manager;
+
+    // filter constants
+    private final int MIN_SEEDS_TORRENT_RESULT;
 
     private SearchManagerListener listener;
 
@@ -66,6 +72,8 @@ public final class LocalSearchEngine {
     private LocalSearchEngine() {
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new ManagerListener());
+
+        this.MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
     }
 
     public void registerListener(SearchManagerListener listener) {
@@ -140,6 +148,12 @@ public final class LocalSearchEngine {
 
         try {
             for (SearchResult sr : results) {
+                if (sr instanceof TorrentSearchResult) {
+                    if (((TorrentSearchResult) sr).getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
+                        continue;
+                    }
+                }
+
                 if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
                     list.add(sr);
                 }
