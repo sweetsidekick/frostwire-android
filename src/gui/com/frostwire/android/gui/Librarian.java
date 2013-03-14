@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -64,6 +65,7 @@ import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumn
 import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.FileUtils;
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.gui.upnp.UPnPManager;
@@ -821,6 +823,23 @@ public final class Librarian {
         }
     }
 
+    private void scan2(File file, Set<File> ignorableFiles) {
+        //if we just have a single file, do it the old way
+        if (file.isFile()) {
+            new UniversalScanner(context).scan(file.getAbsolutePath());   
+        } else if (file.isDirectory() && file.canRead()) {
+            Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file,null);
+
+            if (ignorableFiles != null && !ignorableFiles.isEmpty()) {
+                flattenedFiles.remove(ignorableFiles);
+            }
+            
+            if (flattenedFiles != null && !flattenedFiles.isEmpty()) {
+                new UniversalScanner(context).scan(flattenedFiles);
+            }
+        }
+    }
+    
     private void scan(File file, Set<File> ignorableFiles) {
         if (ignorableFiles.contains(file)) {
             return;
