@@ -80,15 +80,23 @@ public final class TransferManager {
     public List<Transfer> getTransfers() {
         List<Transfer> transfers = new ArrayList<Transfer>();
 
-        transfers.addAll(downloads);
-        transfers.addAll(uploads);
-        transfers.addAll(bittorrentDownloads);
+        if (downloads != null) {
+            transfers.addAll(downloads);
+        }
+
+        if (uploads != null) {
+            transfers.addAll(uploads);
+        }
+
+        if (bittorrentDownloads != null) {
+            transfers.addAll(bittorrentDownloads);
+        }
 
         return transfers;
     }
 
     private boolean alreadyDownloading(Object obj) {
-        synchronized (alreadyDownloadingMonitor ) {
+        synchronized (alreadyDownloadingMonitor) {
             for (DownloadTransfer dt : downloads) {
                 if (dt.isDownloading()) {
                     if (dt instanceof TaggableTransfer<?>) {
@@ -101,13 +109,13 @@ public final class TransferManager {
         }
         return false;
     }
-    
+
     public DownloadTransfer download(SearchResult sr) throws Exception {
 
         if (alreadyDownloading(sr)) {
             return new ExistingDownload();
         }
-        
+
         if (sr instanceof BittorrentSearchResult) {
             return newBittorrentDownload((BittorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
@@ -123,11 +131,10 @@ public final class TransferManager {
 
     public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
-        
+
         if (alreadyDownloading(download.getTag())) {
             return new ExistingDownload();
         }
-        
 
         downloads.add(download);
         download.start();
@@ -167,10 +174,10 @@ public final class TransferManager {
         List<Transfer> transfers = getTransfers();
 
         for (Transfer transfer : transfers) {
-            if (transfer.isComplete()) {
+            if (transfer != null && transfer.isComplete()) {
                 if (transfer instanceof BittorrentDownload) {
                     BittorrentDownload bd = (BittorrentDownload) transfer;
-                    if (bd.isResumable()) {
+                    if (bd != null && bd.isResumable()) {
                         bd.cancel();
                     }
                 } else {
@@ -374,13 +381,13 @@ public final class TransferManager {
 
         return download;
     }
-    
+
     /** Stops all HttpDownloads (Cloud and Wi-Fi) */
     public void stopHttpTransfers() {
         List<Transfer> transfers = new ArrayList<Transfer>();
         transfers.addAll(downloads);
         transfers.addAll(uploads);
-        
+
         for (Transfer t : transfers) {
             if (t instanceof DownloadTransfer) {
                 DownloadTransfer d = (DownloadTransfer) t;
@@ -389,12 +396,12 @@ public final class TransferManager {
                 }
             } else if (t instanceof UploadTransfer) {
                 UploadTransfer u = (UploadTransfer) t;
-                
+
                 if (!u.isComplete() && u.isUploading()) {
                     u.cancel();
                 }
             }
         }
     }
-    
+
 }
