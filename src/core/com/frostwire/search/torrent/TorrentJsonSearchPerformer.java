@@ -16,37 +16,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.isohunt;
+package com.frostwire.search.torrent;
 
+import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
-import com.frostwire.util.JsonUtils;
+import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class ISOHuntSearchPerformer extends TorrentJsonSearchPerformer<ISOHuntItem, ISOHuntSearchResult> {
+public abstract class TorrentJsonSearchPerformer<T, R extends TorrentSearchResult> extends TorrentSearchPerformer {
 
-    public ISOHuntSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1);
+    public TorrentJsonSearchPerformer(long token, String keywords, int timeout, int pages) {
+        super(token, keywords, timeout, pages);
     }
 
     @Override
-    protected String getUrl(int page, String encodedKeywords) {
-        return "http://isohunt.com/js/json.php?ihq=" + encodedKeywords + "&start=1&rows=100&sort=seeds";
+    protected final List<? extends SearchResult> searchPage(String page) {
+        List<SearchResult> result = new LinkedList<SearchResult>();
+
+        List<T> items = parseJson(page);
+
+        for (T item : items) {
+            if (!isStopped()) {
+                SearchResult sr = fromItem(item);
+                result.add(sr);
+            }
+        }
+
+        return result;
     }
 
-    @Override
-    protected List<ISOHuntItem> parseJson(String json) {
-        ISOHuntResponse response = JsonUtils.toObject(json, ISOHuntResponse.class);
-        return response.items.list;
-    }
+    protected abstract List<T> parseJson(String json);
 
-    @Override
-    protected ISOHuntSearchResult fromItem(ISOHuntItem item) {
-        return new ISOHuntSearchResult(item);
-    }
+    protected abstract R fromItem(T item);
 }

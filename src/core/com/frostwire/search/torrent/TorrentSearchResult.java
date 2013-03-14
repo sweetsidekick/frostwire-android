@@ -33,6 +33,6 @@ public interface TorrentSearchResult extends FileSearchResult, CompleteSearchRes
     public String getTorrentUrl();
 
     public int getSeeds();
-    
+
     public String getHash();
 }

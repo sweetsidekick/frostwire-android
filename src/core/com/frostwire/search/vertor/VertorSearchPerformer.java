@@ -18,11 +18,9 @@
 
 package com.frostwire.search.vertor;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.SearchResult;
-import com.frostwire.search.torrent.TorrentSearchPerformer;
+import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -30,7 +28,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-public class VertorSearchPerformer extends TorrentSearchPerformer {
+public class VertorSearchPerformer extends TorrentJsonSearchPerformer<VertorItem, VertorSearchResult> {
 
     public VertorSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
@@ -42,18 +40,13 @@ public class VertorSearchPerformer extends TorrentSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult> searchPage(String page) {
-        List<SearchResult> result = new LinkedList<SearchResult>();
+    protected List<VertorItem> parseJson(String json) {
+        VertorResponse response = JsonUtils.toObject(json, VertorResponse.class);
+        return response.results;
+    }
 
-        VertorResponse response = JsonUtils.toObject(page, VertorResponse.class);
-
-        for (VertorItem item : response.results) {
-            if (!isStopped()) {
-                SearchResult sr = new VertorSearchResult(item);
-                result.add(sr);
-            }
-        }
-
-        return result;
+    @Override
+    protected VertorSearchResult fromItem(VertorItem item) {
+        return new VertorSearchResult(item);
     }
 }

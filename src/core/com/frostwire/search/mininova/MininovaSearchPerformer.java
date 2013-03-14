@@ -18,11 +18,9 @@
 
 package com.frostwire.search.mininova;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.SearchResult;
-import com.frostwire.search.torrent.TorrentSearchPerformer;
+import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -30,7 +28,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-public class MininovaSearchPerformer extends TorrentSearchPerformer {
+public class MininovaSearchPerformer extends TorrentJsonSearchPerformer<MininovaVuzeItem, MininovaVuzeSearchResult> {
 
     public MininovaSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
@@ -42,20 +40,15 @@ public class MininovaSearchPerformer extends TorrentSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult> searchPage(String page) {
-        List<SearchResult> result = new LinkedList<SearchResult>();
-
+    protected List<MininovaVuzeItem> parseJson(String json) {
         //fix what seems to be an intentional JSON syntax typo put ther by mininova
-        String json = page.replace("\"hash\":", ", \"hash\":");
+        json = json.replace("\"hash\":", ", \"hash\":");
         MininovaVuzeResponse response = JsonUtils.toObject(json, MininovaVuzeResponse.class);
+        return response.results;
+    }
 
-        for (MininovaVuzeItem item : response.results) {
-            if (!isStopped()) {
-                SearchResult sr = new MininovaVuzeWebSearchResult(item);
-                result.add(sr);
-            }
-        }
-
-        return result;
+    @Override
+    protected MininovaVuzeSearchResult fromItem(MininovaVuzeItem item) {
+        return new MininovaVuzeSearchResult(item);
     }
 }

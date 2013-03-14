@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.clearbits;
+package com.frostwire.search.isohunt;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,20 +29,20 @@ import com.frostwire.search.torrent.AbstractTorrentSearchResult;
  * @author aldenml
  *
  */
-public class ClearBitsWebSearchResult extends AbstractTorrentSearchResult {
+public class ISOHuntSearchResult extends AbstractTorrentSearchResult {
 
-    private final ClearBitsItem item;
+    private ISOHuntItem item;
 
-    public ClearBitsWebSearchResult(ClearBitsItem item) {
+    public ISOHuntSearchResult(ISOHuntItem item) {
         this.item = item;
     }
 
     public long getCreationTime() {
-        //2010-07-15T16:02:42Z
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        //Thu, 29 Apr 2010 16:32:44 GMT
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         long result = System.currentTimeMillis();
         try {
-            result = date.parse(item.created_at).getTime();
+            result = date.parse(item.pubDate).getTime();
         } catch (ParseException e) {
         }
         return result;
@@ -56,20 +56,30 @@ public class ClearBitsWebSearchResult extends AbstractTorrentSearchResult {
 
     @Override
     public String getHash() {
-        return item.hashstr;
+        return item.hash;
     }
 
     public String getTorrentUrl() {
-        return item.torrent_url;
+        return item.enclosure_url;
     }
 
     public long getSize() {
-        return Long.valueOf(item.mb_size * 1024 * 1024);
+        return Long.valueOf(item.length);
+    }
+
+    @Override
+    public String getSource() {
+        return "ISOHunt";
     }
 
     @Override
     public int getSeeds() {
-        return item.seeds;
+        try {
+            return Integer.valueOf(item.Seeds);
+        } catch (Exception e) {
+            //oh well
+            return 0;
+        }
     }
 
     @Override
@@ -78,12 +88,7 @@ public class ClearBitsWebSearchResult extends AbstractTorrentSearchResult {
     }
 
     @Override
-    public String getSource() {
-        return "ClearBits";
-    }
-
-    @Override
     public String getDetailsUrl() {
-        return item.location;
+        return item.link;
     }
 }

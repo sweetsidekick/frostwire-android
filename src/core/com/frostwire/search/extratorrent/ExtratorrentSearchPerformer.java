@@ -18,11 +18,9 @@
 
 package com.frostwire.search.extratorrent;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import com.frostwire.search.SearchResult;
-import com.frostwire.search.torrent.TorrentSearchPerformer;
+import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -30,7 +28,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  *
  */
-public class ExtratorrentSearchPerformer extends TorrentSearchPerformer {
+public class ExtratorrentSearchPerformer extends TorrentJsonSearchPerformer<ExtratorrentItem, ExtratorrentSearchResult> {
 
     public ExtratorrentSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1);
@@ -42,18 +40,13 @@ public class ExtratorrentSearchPerformer extends TorrentSearchPerformer {
     }
 
     @Override
-    protected List<? extends SearchResult> searchPage(String page) {
-        List<SearchResult> result = new LinkedList<SearchResult>();
+    protected List<ExtratorrentItem> parseJson(String json) {
+        ExtratorrentResponse response = JsonUtils.toObject(json, ExtratorrentResponse.class);
+        return response.list;
+    }
 
-        ExtratorrentResponse response = JsonUtils.toObject(page, ExtratorrentResponse.class);
-
-        for (ExtratorrentItem item : response.list) {
-            if (!isStopped()) {
-                SearchResult sr = new ExtratorrentResponseWebSearchResult(item);
-                result.add(sr);
-            }
-        }
-
-        return result;
+    @Override
+    protected ExtratorrentSearchResult fromItem(ExtratorrentItem item) {
+        return new ExtratorrentSearchResult(item);
     }
 }

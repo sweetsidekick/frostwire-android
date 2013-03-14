@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.extratorrent;
+package com.frostwire.search.mininova;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,12 +29,22 @@ import com.frostwire.search.torrent.AbstractTorrentSearchResult;
  * @author aldenml
  *
  */
-public class ExtratorrentResponseWebSearchResult extends AbstractTorrentSearchResult {
+public class MininovaVuzeSearchResult extends AbstractTorrentSearchResult {
 
-    private final ExtratorrentItem item;
+    private MininovaVuzeItem item;
 
-    public ExtratorrentResponseWebSearchResult(ExtratorrentItem item) {
+    public MininovaVuzeSearchResult(MininovaVuzeItem item) {
         this.item = item;
+    }
+
+    public long getCreationTime() {
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
+        long result = System.currentTimeMillis();
+        try {
+            result = date.parse(item.date).getTime();
+        } catch (ParseException e) {
+        }
+        return result;
     }
 
     @Override
@@ -43,47 +53,36 @@ public class ExtratorrentResponseWebSearchResult extends AbstractTorrentSearchRe
         return titleNoTags + ".torrent";
     }
 
-    public long getSize() {
-        return item.size;
-    }
-
-    public long getCreationTime() {
-        //Wed, 09 Jun 2010 18:08:27 +0100
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
-        long result = System.currentTimeMillis();
-        try {
-            result = date.parse(item.pubDate).getTime();
-        } catch (ParseException e) {
-        }
-        return result;
-    }
-
-    @Override
-    public String getSource() {
-        return "Extratorrent";
-    }
-
     @Override
     public String getHash() {
         return item.hash;
     }
 
     public String getTorrentUrl() {
-        return item.torrentLink;
+        return item.download;
+    }
+
+    public long getSize() {
+        return Long.valueOf(item.size);
+    }
+
+    @Override
+    public String getSource() {
+        return "Mininova";
     }
 
     @Override
     public int getSeeds() {
-        return item.seeds;
+        return item.seeds + item.superseeds;
     }
 
     @Override
     public String getDisplayName() {
-        return getFilename();
+        return item.title;
     }
 
     @Override
     public String getDetailsUrl() {
-        return item.link;
+        return item.cdp;
     }
 }

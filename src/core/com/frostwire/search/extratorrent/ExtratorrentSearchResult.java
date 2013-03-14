@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.isohunt;
+package com.frostwire.search.extratorrent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,17 +29,27 @@ import com.frostwire.search.torrent.AbstractTorrentSearchResult;
  * @author aldenml
  *
  */
-public class ISOHuntWebSearchResult extends AbstractTorrentSearchResult {
+public class ExtratorrentSearchResult extends AbstractTorrentSearchResult {
 
-    private ISOHuntItem item;
+    private final ExtratorrentItem item;
 
-    public ISOHuntWebSearchResult(ISOHuntItem item) {
+    public ExtratorrentSearchResult(ExtratorrentItem item) {
         this.item = item;
     }
 
+    @Override
+    public String getFilename() {
+        String titleNoTags = item.title.replace("<b>", "").replace("</b>", "");
+        return titleNoTags + ".torrent";
+    }
+
+    public long getSize() {
+        return item.size;
+    }
+
     public long getCreationTime() {
-        //Thu, 29 Apr 2010 16:32:44 GMT
-        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        //Wed, 09 Jun 2010 18:08:27 +0100
+        SimpleDateFormat date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
         long result = System.currentTimeMillis();
         try {
             result = date.parse(item.pubDate).getTime();
@@ -49,9 +59,8 @@ public class ISOHuntWebSearchResult extends AbstractTorrentSearchResult {
     }
 
     @Override
-    public String getFilename() {
-        String titleNoTags = item.title.replace("<b>", "").replace("</b>", "");
-        return titleNoTags + ".torrent";
+    public String getSource() {
+        return "Extratorrent";
     }
 
     @Override
@@ -60,26 +69,12 @@ public class ISOHuntWebSearchResult extends AbstractTorrentSearchResult {
     }
 
     public String getTorrentUrl() {
-        return item.enclosure_url;
-    }
-
-    public long getSize() {
-        return Long.valueOf(item.length);
-    }
-
-    @Override
-    public String getSource() {
-        return "ISOHunt";
+        return item.torrentLink;
     }
 
     @Override
     public int getSeeds() {
-        try {
-            return Integer.valueOf(item.Seeds);
-        } catch (Exception e) {
-            //oh well
-            return 0;
-        }
+        return item.seeds;
     }
 
     @Override
