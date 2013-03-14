@@ -54,11 +54,7 @@ public class DiskCrawlCache implements CrawlCache {
     private DiskLruCache cache;
 
     public DiskCrawlCache() {
-        try {
-            this.cache = DiskLruCache.open(SystemUtils.getDeepScanTorrentsDirectory(), APP_VERSION, VALUE_COUNT, DISK_CACHE_SIZE);
-        } catch (Throwable e) {
-            LOG.warn("Unable to create crawl cache", e);
-        }
+        createCache();
     }
 
     @Override
@@ -135,6 +131,7 @@ public class DiskCrawlCache implements CrawlCache {
         if (cache != null) {
             try {
                 cache.delete();
+                createCache();
             } catch (Throwable e) {
                 LOG.warn("Error deleting crawl cache: " + e.getMessage());
             }
@@ -150,6 +147,14 @@ public class DiskCrawlCache implements CrawlCache {
         }
 
         return size;
+    }
+
+    private void createCache() {
+        try {
+            this.cache = DiskLruCache.open(SystemUtils.getDeepScanTorrentsDirectory(), APP_VERSION, VALUE_COUNT, DISK_CACHE_SIZE);
+        } catch (Throwable e) {
+            LOG.warn("Unable to create crawl cache", e);
+        }
     }
 
     private byte[] decode(Snapshot snapshot) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
