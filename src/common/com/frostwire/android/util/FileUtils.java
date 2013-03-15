@@ -121,16 +121,24 @@ public final class FileUtils {
         Stack<File> subFolders = new Stack<File>();
         File currentFolder = folder;
         while (currentFolder != null && currentFolder.isDirectory() && currentFolder.canRead()) {
-            File[] fs = currentFolder.listFiles();
-            for (File f : fs) {
-                if (!f.isDirectory()) {
-                    if (extensions == null || FilenameUtils.isExtension(f.getName(), extensions)) {
-                        results.add(f);
+            File[] fs = null;
+            try {
+                fs = currentFolder.listFiles();
+            } catch (SecurityException e) {
+            }
+            
+            if (fs != null && fs.length > 0) {
+                for (File f : fs) {
+                    if (!f.isDirectory()) {
+                        if (extensions == null || FilenameUtils.isExtension(f.getName(), extensions)) {
+                            results.add(f);
+                        }
+                    } else {
+                        subFolders.push(f);
                     }
-                } else {
-                    subFolders.push(f);
                 }
             }
+            
             if (!subFolders.isEmpty()) {
                 currentFolder = subFolders.pop();
             } else {
@@ -138,5 +146,6 @@ public final class FileUtils {
             }
         }
         return results;
-    }
+    }    
+
 }
