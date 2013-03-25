@@ -17,13 +17,17 @@
 
 package com.frostwire.android.tests.search;
 
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
-import android.os.SystemClock;
 import android.test.suitebuilder.annotation.MediumTest;
 
+import com.frostwire.android.tests.TestUtils;
 import com.frostwire.search.SearchManagerImpl;
+import com.frostwire.search.SearchPerformer;
+import com.frostwire.search.SearchResult;
 import com.frostwire.search.WebSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
@@ -77,13 +81,21 @@ public class CloudSearchTest1 extends TestCase {
     }
 
     private void testPerformer(WebSearchPerformer performer) {
-        MockSearchResultListener l = new MockSearchResultListener();
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        MockSearchResultListener l = new MockSearchResultListener() {
+            @Override
+            public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
+                super.onResults(performer, results);
+                signal.countDown();
+            }
+        };
 
         SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
         manager.perform(performer);
 
-        SystemClock.sleep(10000);
+        assertTrue("Unable to get results in less than 10 seconds", TestUtils.await(signal, 10, TimeUnit.SECONDS));
 
         assertTrue("Did not finish or took too much time", manager.shutdown(5, TimeUnit.SECONDS));
 

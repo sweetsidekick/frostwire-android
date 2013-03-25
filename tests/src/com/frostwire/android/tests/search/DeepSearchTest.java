@@ -17,17 +17,20 @@
 
 package com.frostwire.android.tests.search;
 
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import android.os.SystemClock;
 import android.test.ApplicationTestCase;
 import android.test.mock.MockApplication;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
+import com.frostwire.android.tests.TestUtils;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
+import com.frostwire.search.SearchResult;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
@@ -84,13 +87,23 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
     }
 
     private void deepSearch(SearchPerformer performer) {
-        MockSearchResultListener l = new MockSearchResultListener();
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        MockSearchResultListener l = new MockSearchResultListener() {
+            @Override
+            public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
+                super.onResults(performer, results);
+                if (containsDeepSearchResult()) {
+                    signal.countDown();
+                }
+            }
+        };
 
         SearchManagerImpl manager = new SearchManagerImpl();
         manager.registerListener(l);
         manager.perform(performer);
 
-        SystemClock.sleep(10000);
+        assertTrue("Unable to get crawled results in less than 10 seconds", TestUtils.await(signal, 10, TimeUnit.SECONDS));
 
         assertTrue("Did not finish or took too much time", manager.shutdown(1, TimeUnit.MINUTES));
 
