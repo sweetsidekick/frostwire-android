@@ -178,7 +178,7 @@ public final class LocalSearchEngine {
             sb.append(((FileSearchResult) sr).getFilename());
         }
 
-        String str = sanitize(sr.getDisplayName());
+        String str = sanitize(sb.toString());
         str = normalize(str);
 
         Iterator<String> it = tokens.iterator();

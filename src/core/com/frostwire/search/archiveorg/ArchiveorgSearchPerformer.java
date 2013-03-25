@@ -36,7 +36,7 @@ import com.frostwire.util.JsonUtils;
 public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<ArchiveorgSearchResult> {
 
     public ArchiveorgSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1);
+        super(token, keywords, timeout, 1, 12);
     }
 
     @Override
