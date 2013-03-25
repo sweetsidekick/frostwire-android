@@ -24,8 +24,6 @@ import org.fourthline.cling.model.Namespace;
 import org.fourthline.cling.model.ServerClientTokens;
 import org.fourthline.cling.transport.impl.GENAEventProcessorImpl;
 import org.fourthline.cling.transport.impl.SOAPActionProcessorImpl;
-import org.fourthline.cling.transport.impl.StreamClientConfigurationImpl;
-import org.fourthline.cling.transport.impl.StreamClientImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
