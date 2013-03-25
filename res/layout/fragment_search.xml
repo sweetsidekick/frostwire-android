@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
         style="@style/ProgressBarHolo.Horizontal"
         android:layout_width="fill_parent"
         android:layout_height="4dip"
-        android:indeterminate="false"
+        android:indeterminate="true"
         android:progress="25" />
 
     <FrameLayout
@@ -50,6 +50,11 @@
 
         <com.frostwire.android.gui.views.PromotionsView
             android:id="@+id/fragment_search_promos"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+        
+        <com.frostwire.android.gui.views.SearchProgressView
+            android:id="@+id/fragment_search_search_progress"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 

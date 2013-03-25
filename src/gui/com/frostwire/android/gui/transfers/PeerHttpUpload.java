@@ -164,4 +164,9 @@ public class PeerHttpUpload implements UploadTransfer {
             totalSentSinceLastSpeedStamp = bytesSent;
         }
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return null;
+    }
 }

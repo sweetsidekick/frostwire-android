@@ -173,4 +173,9 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     public List<? extends BittorrentDownloadItem> getBittorrentItems() {
         return null;
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return null;
+    }
 }

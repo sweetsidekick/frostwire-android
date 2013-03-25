@@ -37,9 +37,9 @@ import android.view.View.OnClickListener;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.SearchEngine;
+import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.search.LocalSearchEngine;
+import com.frostwire.android.gui.SearchEngine;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
@@ -118,8 +118,8 @@ public class PreferencesActivity extends PreferenceActivity {
         updateIndexSummary(preference);
         preference.setOnActionListener(new OnClickListener() {
             public void onClick(View v) {
-                int count = LocalSearchEngine.instance().clearIndex();
-                UIUtils.showShortMessage(PreferencesActivity.this, R.string.delete_n_torrents_indexed, count);
+                LocalSearchEngine.instance().clearCache();
+                UIUtils.showShortMessage(PreferencesActivity.this, R.string.deleted_crawl_cache);
                 updateIndexSummary(preference);
             }
         });
@@ -127,7 +127,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void setupSearchEngines() {
         PreferenceCategory category = (PreferenceCategory) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
-        for (SearchEngine engine : SearchEngine.getSearchEngines()) {
+        for (SearchEngine engine : SearchEngine.getEngines()) {
             CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
             if (!engine.isActive()) {
                 category.removePreference(preference);
@@ -136,8 +136,8 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void updateIndexSummary(SimpleActionPreference preference) {
-        int count = LocalSearchEngine.instance().getIndexCount();
-        preference.setSummary(getResources().getQuantityString(R.plurals.count_torrents_indexed, count, count));
+        float size = (((float) LocalSearchEngine.instance().getCacheSize()) / 1024) / 1024;
+        preference.setSummary(getString(R.string.crawl_cache_size, size));
     }
 
     private void setupStoragePathOption() {

@@ -34,9 +34,9 @@ import android.widget.LinearLayout;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.android.gui.PromotionsHandler;
-import com.frostwire.android.gui.PromotionsHandler.Slide;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.frostclick.Slide;
+import com.frostwire.frostclick.SlideList;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -79,7 +79,7 @@ public class PromotionsView extends LinearLayout {
             gridview.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Slide slide = (Slide) gridview.getAdapter().getItem(position);
-                    if (onPromotionClickListener != null) {
+                    if (onPromotionClickListener != null && slide != null) {
                         onPromotionClickListener.onPromotionClick(PromotionsView.this, slide);
                     }
                 }
@@ -92,7 +92,7 @@ public class PromotionsView extends LinearLayout {
     }
 
     private void loadSlidesAsync() {
-        AsyncTask<Void, Void, List<PromotionsHandler.Slide>> task = new AsyncTask<Void, Void, List<PromotionsHandler.Slide>>() {
+        AsyncTask<Void, Void, List<Slide>> task = new AsyncTask<Void, Void, List<Slide>>() {
 
             @Override
             protected List<Slide> doInBackground(Void... params) {
@@ -115,9 +115,9 @@ public class PromotionsView extends LinearLayout {
         task.execute();
     }
 
-    private List<PromotionsHandler.Slide> loadSlides() {
+    private List<Slide> loadSlides() {
         byte[] jsonBytes = new HttpFetcher(buildUrl()).fetch();
-        PromotionsHandler.SlideList slides = JsonUtils.toObject(new String(jsonBytes), PromotionsHandler.SlideList.class);
+        SlideList slides = JsonUtils.toObject(new String(jsonBytes), SlideList.class);
         return slides.slides;
     }
 
@@ -127,5 +127,5 @@ public class PromotionsView extends LinearLayout {
 
     public static interface OnPromotionClickListener {
         public void onPromotionClick(PromotionsView v, Slide slide);
-    }
+    }    
 }

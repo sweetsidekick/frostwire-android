@@ -107,7 +107,7 @@
     <string name="uh_still_listening_on_port">Uh? I\'m still listening on port</string>
     <string name="new_port_saved">New Port saved</string>
     <string name="now_on_port">Now on port</string>
-    <string name="stop_all_transfers_message">This will cancel all ongoing and queued downloads. All transfered data will be lost. Are you sure?</string>
+    <string name="stop_all_transfers_message">This will cancel all ongoing and queued downloads. All transferred data will be lost. Are you sure?</string>
     <string name="files">files</string>
     <string name="touch_filetype_icon">Touch icon to change file type</string>
     <string name="tos_title">Terms of Use</string>
@@ -406,4 +406,9 @@
     <string name="upnp_discovery_summary">Share files with peers on the local Wi-Fi network.</string>
     <string name="youtube_download_status_verifying">Verifying</string>
     <string name="donation_thanks">Thank you so much for Supporting FrostWire</string>
+    <string name="torrent_scheme_download_not_supported">Download not supported</string>
+    <string name="retry_search">Retry</string>
+    <string name="use_archiveorg">Use Archive.org</string>
+    <string name="crawl_cache_size">Crawl Cache %1$.2fMB</string>
+    <string name="deleted_crawl_cache">Deleted crawl cache</string>
 </resources>

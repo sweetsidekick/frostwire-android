@@ -22,7 +22,6 @@ import android.app.Application;
 import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.gui.search.LocalSearchEngine;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
@@ -45,7 +44,6 @@ public class MainApplication extends Application {
             ConfigurationManager.create(this);
             NetworkManager.create(this);
             Librarian.create(this);
-            LocalSearchEngine.create(this);
             Engine.create(this);
 
             ImageLoader.createDefaultInstance(this);

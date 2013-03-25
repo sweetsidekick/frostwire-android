@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@ package com.frostwire.android.gui.transfers;
 import java.io.File;
 
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.search.SearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.search.SearchResult;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public abstract class TemporaryDownloadTransfer<T extends SearchResult> implements DownloadTransfer, TaggableTransfer<T> {
+public abstract class TemporaryDownloadTransfer<T extends SearchResult> implements DownloadTransfer {
 
     protected File savePath;
     protected HttpDownload delegate;
@@ -46,7 +46,11 @@ public abstract class TemporaryDownloadTransfer<T extends SearchResult> implemen
         return path;
     }
     
-
+    @Override
+    public String getDetailsUrl() {
+        return sr.getDetailsUrl();
+    }
+    
     protected void moveFile(File savePath, byte fileType) {
         File finalFile = getFinalFile(savePath, fileType);
         if (savePath.renameTo(finalFile)) {

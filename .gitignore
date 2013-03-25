@@ -7,4 +7,5 @@ tools/local.properties
 tools/emulator.properties
 .DS_Store
 *~
-
+tests/bin/
+tests/gen/

@@ -20,7 +20,6 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,8 +36,8 @@ import android.widget.PopupWindow;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.search.SuggestionsAdapter;
 import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 
 /**
@@ -47,8 +46,6 @@ import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
  *
  */
 public class SearchInputView extends LinearLayout {
-
-    private static final String TAG = "FW.SearchInputView";
 
     private final SuggestionsAdapter adapter;
 
@@ -81,7 +78,7 @@ public class SearchInputView extends LinearLayout {
     public String getText() {
         return textInput.getText();
     }
-    
+
     public void updateHint(String newHint) {
         textInput.setHint(newHint);
     }
@@ -92,46 +89,48 @@ public class SearchInputView extends LinearLayout {
 
         View.inflate(getContext(), R.layout.view_searchinput, this);
 
-        try {
-            mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
-
-            buttonMediaType = (ImageButton) findViewById(R.id.view_search_input_button_mediatype);
-            buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
-            buttonMediaType.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    buttonMediaType_onClick(v);
-                }
-            });
-
-            textInput = (ClearableEditTextView) findViewById(R.id.view_search_input_text_input);
-            textInput.setOnKeyListener(new OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                        startSearch(v);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            textInput.setOnActionListener(new OnActionListener() {
-                public void onTextChanged(View v, String str) {
-                }
-
-                public void onClear(View v) {
-                    SearchInputView.this.onClear();
-                }
-            });
-            textInput.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startSearch(textInput);
-                }
-            });
-            textInput.setAdapter(adapter);
-        } catch (Throwable e) {
-            Log.e(TAG, "Error creating view", e);
+        if (isInEditMode()) {
+            return;
         }
+
+        mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
+
+        buttonMediaType = (ImageButton) findViewById(R.id.view_search_input_button_mediatype);
+        buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
+        buttonMediaType.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonMediaType_onClick(v);
+            }
+        });
+
+        textInput = (ClearableEditTextView) findViewById(R.id.view_search_input_text_input);
+        textInput.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    startSearch(v);
+                    return true;
+                }
+                return false;
+            }
+        });
+        textInput.setOnActionListener(new OnActionListener() {
+            public void onTextChanged(View v, String str) {
+            }
+
+            public void onClear(View v) {
+                SearchInputView.this.onClear();
+            }
+        });
+        textInput.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startSearch(textInput);
+            }
+        });
+        textInput.setAdapter(adapter);
+
+        updateHint(mediaTypeId);
     }
 
     @Override
@@ -207,6 +206,7 @@ public class SearchInputView extends LinearLayout {
         b.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                updateHint(mediaTypeId);
                 onMediaTypeSelected(mediaTypeId);
 
                 buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
@@ -271,6 +271,12 @@ public class SearchInputView extends LinearLayout {
         if (manager != null) {
             manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+    private void updateHint(int fileType) {
+        String hint = getContext().getString(R.string.search_label) + " ";
+        hint += UIUtils.getFileTypeAsString(getContext().getResources(), (byte) fileType);
+        textInput.setHint(hint);
     }
 
     public static interface OnSearchListener {

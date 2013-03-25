@@ -53,4 +53,6 @@ public interface Transfer {
     public List<? extends TransferItem> getItems();
 
     public void cancel();
+    
+    public String getDetailsUrl();
 }
