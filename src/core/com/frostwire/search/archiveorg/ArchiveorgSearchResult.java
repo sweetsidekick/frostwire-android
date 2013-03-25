@@ -62,4 +62,9 @@ public class ArchiveorgSearchResult extends AbstractSearchResult implements Craw
     public License getLicense() {
         return licence;
     }
+
+    @Override
+    public boolean isComplete() {
+        return false;
+    }
 }

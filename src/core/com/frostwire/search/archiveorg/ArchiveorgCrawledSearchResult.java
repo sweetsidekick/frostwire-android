@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.AbstractCrawledSearchResult;
-import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.search.HttpSearchResult;
 
 /**
@@ -31,7 +30,7 @@ import com.frostwire.search.HttpSearchResult;
  * @author aldenml
  *
  */
-public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult, CompleteSearchResult {
+public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult {
 
     private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
 

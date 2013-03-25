@@ -27,4 +27,8 @@ import com.frostwire.search.AbstractFileSearchResult;
  */
 public abstract class AbstractTorrentSearchResult extends AbstractFileSearchResult implements TorrentCrawlableSearchResult {
 
+    @Override
+    public boolean isComplete() {
+        return true;
+    }
 }

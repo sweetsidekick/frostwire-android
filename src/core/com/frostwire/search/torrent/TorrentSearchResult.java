@@ -18,7 +18,6 @@
 
 package com.frostwire.search.torrent;
 
-import com.frostwire.search.CompleteSearchResult;
 import com.frostwire.search.FileSearchResult;
 
 /**
@@ -26,7 +25,7 @@ import com.frostwire.search.FileSearchResult;
  * @author aldenml
  *
  */
-public interface TorrentSearchResult extends FileSearchResult, CompleteSearchResult {
+public interface TorrentSearchResult extends FileSearchResult {
 
     public long getCreationTime();
 

@@ -183,12 +183,16 @@ public class SearchManagerImpl implements SearchManager {
             List<SearchResult> list = new LinkedList<SearchResult>();
 
             for (SearchResult sr : results) {
-                if (sr instanceof CompleteSearchResult) {
-                    list.add(sr);
-                }
-
                 if (sr instanceof CrawlableSearchResult) {
-                    manager.crawl(performer, (CrawlableSearchResult) sr);
+                    CrawlableSearchResult csr = (CrawlableSearchResult) sr;
+
+                    if (csr.isComplete()) {
+                        list.add(sr);
+                    }
+
+                    manager.crawl(performer, csr);
+                } else {
+                    list.add(sr);
                 }
             }
 
