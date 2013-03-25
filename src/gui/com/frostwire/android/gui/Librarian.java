@@ -823,9 +823,13 @@ public final class Librarian {
         }
     }
 
-    private void scan2(File file, Set<File> ignorableFiles) {
+    private void scan(File file, Set<File> ignorableFiles) {
         //if we just have a single file, do it the old way
         if (file.isFile()) {
+            if (ignorableFiles.contains(file)) {
+                return;
+            }
+            
             new UniversalScanner(context).scan(file.getAbsolutePath());   
         } else if (file.isDirectory() && file.canRead()) {
             Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file,null);
@@ -837,22 +841,6 @@ public final class Librarian {
             if (flattenedFiles != null && !flattenedFiles.isEmpty()) {
                 new UniversalScanner(context).scan(flattenedFiles);
             }
-        }
-    }
-    
-    private void scan(File file, Set<File> ignorableFiles) {
-        if (ignorableFiles.contains(file)) {
-            return;
-        }
-
-        if (file.isDirectory()) {
-            for (File child : file.listFiles()) {
-                if (child.isDirectory() || child.isFile()) {
-                    scan(child);
-                }
-            }
-        } else if (file.isFile()) {
-            new UniversalScanner(context).scan(file.getAbsolutePath());
         }
     }
 
