@@ -835,7 +835,7 @@ public final class Librarian {
             Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file,null);
 
             if (ignorableFiles != null && !ignorableFiles.isEmpty()) {
-                flattenedFiles.remove(ignorableFiles);
+                flattenedFiles.removeAll(ignorableFiles);
             }
             
             if (flattenedFiles != null && !flattenedFiles.isEmpty()) {
