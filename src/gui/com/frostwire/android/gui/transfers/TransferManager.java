@@ -82,12 +82,21 @@ public final class TransferManager {
     public List<Transfer> getTransfers() {
         List<Transfer> transfers = new ArrayList<Transfer>();
 
-        transfers.addAll(downloads);
-        transfers.addAll(uploads);
-        transfers.addAll(bittorrentDownloads);
+        if (downloads != null) {
+            transfers.addAll(downloads);
+        }
+
+        if (uploads != null) {
+            transfers.addAll(uploads);
+        }
+
+        if (bittorrentDownloads != null) {
+            transfers.addAll(bittorrentDownloads);
+        }
 
         return transfers;
     }
+
 
     private boolean alreadyDownloading(String detailsUrl) {
         synchronized (alreadyDownloadingMonitor) {
@@ -103,7 +112,6 @@ public final class TransferManager {
     }
 
     public DownloadTransfer download(SearchResult sr) {
-
         if (alreadyDownloading(sr.getDetailsUrl())) {
             return new ExistingDownload();
         }
@@ -168,10 +176,10 @@ public final class TransferManager {
         List<Transfer> transfers = getTransfers();
 
         for (Transfer transfer : transfers) {
-            if (transfer.isComplete()) {
+            if (transfer != null && transfer.isComplete()) {
                 if (transfer instanceof BittorrentDownload) {
                     BittorrentDownload bd = (BittorrentDownload) transfer;
-                    if (bd.isResumable()) {
+                    if (bd != null && bd.isResumable()) {
                         bd.cancel();
                     }
                 } else {

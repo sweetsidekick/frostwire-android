@@ -302,12 +302,13 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         ImageView artworkImageView = findView(R.id.activity_mediaplayer_artwork);
         ImageLoader imageLoader = ImageLoader.getDefault();
-        String artworkKey = "player.artwork:"+mediaFD.id;
-        
-        if (!imageLoader.hasBitmap(artworkKey)) {
-            imageLoader.cacheBitmap(artworkKey, readArtWork());
+        String artworkKey = "player.artwork:" + mediaFD.id;
+
+        Bitmap artworkBitmap = null;
+        if (!imageLoader.hasBitmap(artworkKey) && (artworkBitmap = readArtWork()) != null) {
+            imageLoader.cacheBitmap(artworkKey, artworkBitmap);
         }
-        
+
         imageLoader.displayImage(artworkKey, artworkImageView, null);
     }
 
@@ -336,7 +337,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     @Override
     protected void onResume() {
         super.onResume();
-        
+
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         registerReceiver(broadcastReceiver, filter);
@@ -355,7 +356,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (Engine.instance().getMediaPlayer() != null) {
             mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
         }
-                
+
         if (mediaFD != null) {
             refreshUIData();
         }
@@ -369,7 +370,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         } catch (Throwable e) {
             Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
         }
-        
+
         return artwork;
     }
 
@@ -545,7 +546,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             handler.sendEmptyMessage(SHOW_PROGRESS);
         }
     };
-
 
     public void setMediaPlayer(MediaPlayerControl player) {
         this.player = player;
