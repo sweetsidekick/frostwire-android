@@ -250,7 +250,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             startActivity(i);
 
             //go!
-            TransferManager.instance().download(intent);
+            TransferManager.instance().downloadTorrent(intent.getDataString());
         } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
             handleDesktopUploadRequest(intent);
         }
@@ -471,7 +471,7 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             showShareIndication();
         }
     }
-    
+
     private void showShareIndication() {
         ShareIndicationDialog dlg = new ShareIndicationDialog();
         dlg.show(getSupportFragmentManager());

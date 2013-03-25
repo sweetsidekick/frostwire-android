@@ -112,4 +112,9 @@ public class InvalidDownload implements DownloadTransfer, InvalidTransfer {
 
     public void cancel(boolean deleteData) {
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return null;
+    }
 }

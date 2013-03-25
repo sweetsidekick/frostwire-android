@@ -84,11 +84,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- with mime and classic url pattern -->
                 <data android:scheme="file" />
-
-                <!-- maybe it has to be one or the other, I'll comment files for a sec. -->
+                <data android:mimeType="*/*" />
                 <data android:pathPattern=".*\\.torrent" />
+                <data android:host="*" />
             </intent-filter>
 
             <!-- share a file sent by another app -->
@@ -130,7 +129,6 @@
         <activity
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-
 
         <!-- providers -->
 

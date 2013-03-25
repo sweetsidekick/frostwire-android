@@ -31,6 +31,7 @@ import android.util.Log;
 
 import com.frostwire.android.BuildConfig;
 import com.frostwire.android.util.ByteUtils;
+import com.jakewharton.DiskLruCache;
 
 // Taken from
 // http://stackoverflow.com/questions/10185898/using-disklrucache-in-android-4-0-does-not-provide-for-opencache-method

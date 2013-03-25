@@ -94,6 +94,10 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
         this(context, viewItemId, list, new HashSet<T>());
     }
 
+    public AbstractListAdapter(Context context, int viewItemId) {
+        this(context, viewItemId, new ArrayList<T>(), new HashSet<T>());
+    }
+
     public int getViewItemId() {
         return viewItemId;
     }
@@ -494,7 +498,8 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
             List<T> list = adapter.getList();
 
             FilterResults result = new FilterResults();
-            if (filter == null) { /** || StringUtils.isNullOrEmpty(constraint.toString(), true)) { */
+            if (filter == null) {
+                /** || StringUtils.isNullOrEmpty(constraint.toString(), true)) { */
                 result.values = list;
                 result.count = list.size();
             } else {
@@ -519,6 +524,6 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
             adapter.visualList = (List<T>) results.values;
             notifyDataSetInvalidated();
         }
-        
+
     }
 }

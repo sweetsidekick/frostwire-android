@@ -249,4 +249,9 @@ public class DesktopTransfer implements DownloadTransfer {
         }
         return String.valueOf(resId);
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return null;
+    }
 }

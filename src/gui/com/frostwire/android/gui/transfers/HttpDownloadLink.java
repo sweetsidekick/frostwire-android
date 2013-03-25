@@ -25,49 +25,41 @@ package com.frostwire.android.gui.transfers;
  */
 public class HttpDownloadLink {
 
-    private String url;
-    private long size;
-    private String filename;
-    private String displayName;
-    private boolean compressed;
+    private final String url;
+    private final String filename;
+    private final String displayName;
+    private final long size;
+    private final boolean compressed;
 
-    public HttpDownloadLink(String url) {
+    public HttpDownloadLink(String url, String filename, String displayName, long size, boolean compressed) {
         this.url = url;
+        this.filename = filename;
+        this.displayName = displayName;
+        this.size = size;
+        this.compressed = compressed;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
     public String getFileName() {
         return filename;
-    }
-
-    public void setFileName(String name) {
-        this.filename = name;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public long getSize() {
+        return size;
     }
 
     public boolean isCompressed() {
         return compressed;
     }
 
-    public void setCompressed(boolean compressed) {
-        this.compressed = compressed;
+    public HttpDownloadLink withFilename(String filename) {
+        return new HttpDownloadLink(this.url, filename, this.displayName, this.size, this.compressed);
     }
 }

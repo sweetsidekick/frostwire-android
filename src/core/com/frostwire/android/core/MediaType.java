@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -326,29 +324,6 @@ public class MediaType implements Serializable {
      */
     public static MediaType getApplicationsMediaType() {
         return TYPE_APPLICATIONS;
-    }
-
-    /** Utility class for aggregating MediaTypes.
-     *  This class is not synchronized - it should never be used in a fashion
-     *  where synchronization is necessary.  If that changes, add synch.
-     */
-    public static class Aggregator {
-        /** A list of MediaType objects. */
-        private List<MediaType> _filters = new LinkedList<MediaType>();
-
-        private Aggregator() {
-        }
-
-        /** @return true if the Response falls within one of the MediaTypes
-         *  this aggregates.
-         */
-        public boolean allow(final String fName) {
-            for (MediaType mt : _filters) {
-                if (mt.matches(fName))
-                    return true;
-            }
-            return false;
-        }
     }
 
     /**

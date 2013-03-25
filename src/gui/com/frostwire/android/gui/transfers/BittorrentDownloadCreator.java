@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
@@ -37,14 +38,12 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.search.BittorrentIntentFileResult;
-import com.frostwire.android.gui.search.BittorrentIntentHttpResult;
-import com.frostwire.android.gui.search.BittorrentSearchResult;
-import com.frostwire.android.gui.search.BittorrentWebSearchResult;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
  * @author gubatron
@@ -58,7 +57,7 @@ final class BittorrentDownloadCreator {
     private BittorrentDownloadCreator() {
     }
 
-    public static BittorrentDownload create(TransferManager manager, BittorrentSearchResult sr, String torrentFile) throws TOTorrentException {
+    public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr, String torrentFile) throws TOTorrentException {
         byte[] hash = null;
         try {
             if (sr.getHash() != null) {
@@ -67,37 +66,43 @@ final class BittorrentDownloadCreator {
         } catch (Throwable e) {
             // ignore
         }
-        if (sr instanceof BittorrentWebSearchResult || sr instanceof BittorrentPromotionSearchResult || sr instanceof BittorrentIntentHttpResult) {
-            return create(manager, torrentFile, hash, null);
+        if (sr instanceof TorrentCrawledSearchResult) {
+            return create(manager, torrentFile, hash, sr.getFilename());
         } else {
-            return create(manager, torrentFile, hash, sr.getFileName());
+            return create(manager, torrentFile, hash, null);
         }
     }
 
-    public static BittorrentDownload create(TransferManager manager, BittorrentSearchResult sr) throws TOTorrentException {
+    public static BittorrentDownload create(TransferManager manager, URI uri) throws TOTorrentException {
+        if (uri.getScheme().equalsIgnoreCase("file")) {
+            return create(manager, uri.getPath(), null, null);
+        } else if (uri.getScheme().equalsIgnoreCase("http")) {
+            return new TorrentFetcherDownload(manager, new TorrentUrlInfo(uri.toString()));
+        } else {
+            return new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
+        }
+    }
+
+    public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr) throws TOTorrentException {
         if (!AzureusManager.isCreated()) {
             return new InvalidBittorrentDownload(R.string.azureus_manager_not_created);
         }
 
         GlobalManager gm = AzureusManager.instance().getGlobalManager();
 
-        if (sr instanceof BittorrentIntentFileResult) {
-            BittorrentIntentFileResult bifr = (BittorrentIntentFileResult) sr;
-            TOTorrent torrent = TorrentUtils.readFromFile(new File(sr.getFileName()), false);
-            return create(manager, bifr.getFileName(), torrent.getHash(), null);
-        } else if (StringUtils.isNullOrEmpty(sr.getHash())) {
-            return new TorrentFetcherDownload(manager, sr);
+        if (StringUtils.isNullOrEmpty(sr.getHash())) {
+            return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
         } else {
             Log.d(TAG, "About to create download for hash: " + sr.getHash());
             DownloadManager dm = gm.getDownloadManager(new HashWrapper(ByteUtils.decodeHex(sr.getHash())));
             if (dm == null) {// new download, I need to download the torrent
                 Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
-                return new TorrentFetcherDownload(manager, sr);
+                return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
             } else {
-                if (sr instanceof BittorrentWebSearchResult) {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
+                if (sr instanceof TorrentCrawledSearchResult) {
+                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
                 } else {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFileName());
+                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
                 }
             }
         }
@@ -118,7 +123,7 @@ final class BittorrentDownloadCreator {
      * @return
      * @throws TOTorrentException
      */
-    private static BittorrentDownload create(TransferManager manager, String torrentFile, byte[] hash, String relativePartialPath) throws TOTorrentException {
+    public static BittorrentDownload create(TransferManager manager, String torrentFile, byte[] hash, String relativePartialPath) throws TOTorrentException {
         GlobalManager gm = AzureusManager.instance().getGlobalManager();
         TOTorrent torrent = null;
         DownloadManager dm = null;

@@ -375,4 +375,9 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     public List<? extends BittorrentDownloadItem> getBittorrentItems() {
         return items;
     }
+    
+    @Override
+    public String getDetailsUrl() {
+        return null;
+    }
 }

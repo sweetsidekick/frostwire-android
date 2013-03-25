@@ -45,9 +45,9 @@ import android.util.Log;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.search.YouTubeEngineSearchResult;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.FileUtils;
+import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.android.util.IOUtils;
 import com.frostwire.mp4.DefaultMp4Builder;
 import com.frostwire.mp4.IsoFile;
@@ -69,14 +69,15 @@ import com.frostwire.mp4.boxes.apple.AppleCoverBox;
 import com.frostwire.mp4.boxes.apple.AppleItemListBox;
 import com.frostwire.mp4.boxes.apple.AppleMediaTypeBox;
 import com.frostwire.mp4.boxes.apple.AppleTrackTitleBox;
-import com.frostwire.websearch.youtube.YouTubeSearchResult.ResultType;
+import com.frostwire.search.youtube.YouTubeSearchResult;
+import com.frostwire.search.youtube.YouTubeSearchResult.ResultType;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSearchResult> {
+public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeSearchResult> {
 
     private static final String TAG = "FW.YouTubeDownload";
 
@@ -91,7 +92,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
     private final TransferManager manager;
 
-    public YouTubeDownload(TransferManager manager, YouTubeEngineSearchResult sr) {
+    public YouTubeDownload(TransferManager manager, YouTubeSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
     }
@@ -183,19 +184,21 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
     public void start() {
         try {
-            final HttpDownloadLink link = decrypt();
+            HttpDownloadLink link = decrypt();
             if (link != null) {
 
                 if (sr.getResultType().equals(ResultType.AUDIO)) {
-                    link.setFileName(link.getFileName().replace(".mp4", ".m4a"));
+                    link = link.withFilename(link.getFileName().replace(".mp4", ".m4a"));
                 }
+                
+                final HttpDownloadLink finalLink = link;
 
                 delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {
                         if (sr.getResultType().equals(ResultType.AUDIO)) {
-                            if (!demuxMP4Audio(link, download, sr.getDetailsUrl())) {
+                            if (!demuxMP4Audio(finalLink, download, sr.getDetailsUrl())) {
                                 // handle demux error here. Why? java.lang.RuntimeException: too many PopLocalFrame calls
                             }
                         }
@@ -355,15 +358,14 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
             for (final Entry<DestinationFormat, ArrayList<Info>> next : this.possibleconverts.entrySet()) {
                 final DestinationFormat convertTo = next.getKey();
                 for (final Info info : next.getValue()) {
-                    final HttpDownloadLink thislink = new HttpDownloadLink(info.link);
+                    String link = info.link;
                     //thislink.setBrowserUrl(parameter);
                     //thislink.setFinalFileName(YT_FILENAME + info.desc + convertTo.getExtFirst());
-                    thislink.setSize(info.size);
+                    long size = info.size;
                     String name = null;
                     if (convertTo != DestinationFormat.AUDIOMP3) {
                         name = YT_FILENAME + info.desc + convertTo.getExtFirst();
                         name = FileUtils.getValidFileName(name);
-                        thislink.setFileName(name);
                     } else {
                         /*
                          * because demuxer will fail when mp3 file already
@@ -379,7 +381,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
                     //thislink.setProperty("LINKDUPEID", name);
 
                     if (lastFmt < info.fmt) {
-                        decryptedLink = thislink;
+                        decryptedLink = new HttpDownloadLink(link, name, FilenameUtils.getBaseName(name), size, false);
                     }
                 }
             }
@@ -718,20 +720,20 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeEngineSear
 
                     return new FileTypeBox("M4A ", 0, minorBrands);
                 };
-                
+
                 protected MovieBox createMovieBox(Movie movie) {
                     MovieBox moov = super.createMovieBox(movie);
                     moov.getMovieHeaderBox().setVersion(0);
                     return moov;
                 };
-                
+
                 protected TrackBox createTrackBox(Track track, Movie movie) {
                     TrackBox trak = super.createTrackBox(track, movie);
-                    
+
                     TrackHeaderBox tkhd = trak.getTrackHeaderBox();
                     tkhd.setVersion(0);
                     tkhd.setVolume(1.0f);
-                    
+
                     return trak;
                 };
 
