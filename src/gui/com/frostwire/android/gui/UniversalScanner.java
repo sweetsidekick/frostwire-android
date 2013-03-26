@@ -59,7 +59,7 @@ final class UniversalScanner {
     }
 
     public void scan(final String filePath) {
-        new SingleFileAndroidScanner(filePath).scan();
+        scan(Arrays.asList(new File(filePath)));
     }
     
     public void scan(final Collection<File> filesToScan) {
@@ -127,58 +127,6 @@ final class UniversalScanner {
         return result;
     }
 
-    private final class SingleFileAndroidScanner implements MediaScannerConnectionClient {
-
-        private final String path;
-
-        private MediaScannerConnection connection;
-
-        public SingleFileAndroidScanner(String path) {
-            this.path = path;
-        }
-
-        public void scan() {
-            try {
-                connection = new MediaScannerConnection(context, this);
-                connection.connect();
-            } catch (Throwable e) {
-                LOG.log(Level.WARNING, "Error scanning file with android internal scanner, one retry", e);
-                SystemClock.sleep(1000);
-                connection = new MediaScannerConnection(context, this);
-                connection.connect();
-            }
-        }
-
-        public void onMediaScannerConnected() {
-            try {
-                /** should only arrive here on connected state, but let's double check since it's possible */
-                if (connection.isConnected()) {
-                    connection.scanFile(path, null);
-                }
-            } catch (IllegalStateException e) {
-                LOG.log(Level.WARNING, "Scanner service wasn't really connected or service was null", e);
-                //should we try to connect again? don't want to end up in endless loop
-                //maybe destroy connection?
-            }
-        }
-
-        public void onScanCompleted(String path, Uri uri) {
-            connection.disconnect();
-
-            if (uri != null) {
-                //Log.d(TAG, "Scanned new file: " + uri);
-                shareFinishedDownload(Librarian.instance().getFileDescriptor(uri));
-            } else {
-                if (path.endsWith(".apk")) {
-                    //Log.d(TAG, "Can't scan apk for security concerns: " + path);
-                } else {
-                    scanDocument(path);
-                    //Log.d(TAG, "Scanned new file as document: " + path);
-                }
-            }
-        }
-    }
-    
     private final class MultiFileAndroidScanner implements MediaScannerConnectionClient {
 
         private MediaScannerConnection connection;
