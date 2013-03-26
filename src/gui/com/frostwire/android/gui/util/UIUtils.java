@@ -36,7 +36,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.MediaStore.MediaColumns;
 import android.text.InputType;
 import android.text.method.KeyListener;
 import android.text.method.NumberKeyListener;
@@ -318,12 +317,9 @@ public final class UIUtils {
 
     private static boolean openAudioInternal(String filePath) {
         try {
-            String where = MediaColumns.DATA + " LIKE ?";
-            String[] whereArgs = new String[] { filePath };
-
-            List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, where, whereArgs);
-
-            if (fds.size() == 1) {
+            List<FileDescriptor> fds = Librarian.instance().getFiles(filePath, true);
+            
+            if (fds.size() == 1 && fds.get(0).fileType == Constants.FILE_TYPE_AUDIO) {
                 playEphemeralPlaylist(fds.get(0));
                 return true;
             } else {

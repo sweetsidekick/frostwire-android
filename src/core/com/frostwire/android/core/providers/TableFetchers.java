@@ -33,6 +33,8 @@ import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsCo
 /**
  * Help yourself with TableFetchers.
  * 
+ * Note: if you need to fetch files by file path(s) see Librarian.instance().getFiles(filepath,exactMatch)
+ * 
  * @author gubatron
  * @author aldenml
  * 

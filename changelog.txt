@@ -12,6 +12,9 @@ FrostWire 1.0.6 - 03/26/2013
  - Improved mime type detection.
  - Updated UPnP cling libraries for better Wi-Fi sharing discovery.
  - Multiple crashes and freezes fixed.
+ - Opens .torrent files from urls and from any file browser.
+ - Fixes a crash when sharing files from third party apps like FileKicker
+   which pass filepath uris instead of android provider uris.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.

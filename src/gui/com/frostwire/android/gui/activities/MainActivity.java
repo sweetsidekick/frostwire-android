@@ -302,10 +302,13 @@ public class MainActivity extends AbstractActivity implements SlideMenuInterface
             return;
         }
 
+        
         FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
-        fileDescriptor.shared = true;
 
-        Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
+        if (fileDescriptor != null) {
+            fileDescriptor.shared = true;
+            Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
+        }
     }
 
     private void handleSendMultipleFiles(Intent intent) {

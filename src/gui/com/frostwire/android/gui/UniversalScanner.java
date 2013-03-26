@@ -68,11 +68,13 @@ final class UniversalScanner {
 
 
     private static void shareFinishedDownload(FileDescriptor fd) {
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TRANSFER_SHARE_FINISHED_DOWNLOADS)) {
-            fd.shared = true;
-            Librarian.instance().updateSharedStates(fd.fileType, Arrays.asList(fd));
+        if (fd != null) {
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TRANSFER_SHARE_FINISHED_DOWNLOADS)) {
+                fd.shared = true;
+                Librarian.instance().updateSharedStates(fd.fileType, Arrays.asList(fd));
+            }
+            Librarian.instance().invalidateCountCache(fd.fileType);
         }
-        Librarian.instance().invalidateCountCache(fd.fileType);
     }
 
     private void scanDocument(String filePath) {

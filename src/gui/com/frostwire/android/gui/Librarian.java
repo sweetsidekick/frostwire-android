@@ -53,6 +53,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.MediaType;
 import com.frostwire.android.core.player.EphemeralPlaylist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.core.providers.TableFetcher;
@@ -250,7 +251,8 @@ public final class Librarian {
                     cr.insert(Sharing.Media.CONTENT_URI, contentValues);
                 } else {
                     // everything else is an update
-                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?", new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
+                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?",
+                            new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
                 }
             }
 
@@ -376,14 +378,13 @@ public final class Librarian {
     }
 
     public EphemeralPlaylist createEphemeralPlaylist(FileDescriptor fd) {
-        String where = MediaColumns.DATA + " LIKE ?";
-        String[] whereArgs = new String[] { "%" + FilenameUtils.getPath(fd.filePath) + "%" };
-        List<FileDescriptor> fds = Librarian.instance().getFiles(fd.fileType, where, whereArgs);
+        List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO,FilenameUtils.getPath(fd.filePath), false);
 
         if (fds.size() == 0) { // just in case
             Log.w(TAG, "Logic error creating ephemeral playlist");
             fds.add(fd);
         }
+
         EphemeralPlaylist playlist = new EphemeralPlaylist(fds);
         playlist.setNextItem(new PlaylistItem(fd));
 
@@ -650,6 +651,24 @@ public final class Librarian {
         return result;
     }
 
+    public List<FileDescriptor> getFiles(String filepath, boolean exactPathMatch) {
+        return getFiles(getFileType(filepath, true), filepath, exactPathMatch);
+    }
+
+    /**
+     * 
+     * @param filepath
+     * @param exactPathMatch - set it to false and pass an incomplete filepath prefix to get files in a folder for example.
+     * @return
+     */
+    public List<FileDescriptor> getFiles(byte fileType, String filepath, boolean exactPathMatch) {
+        String where = MediaColumns.DATA + " LIKE ?";
+        String[] whereArgs = new String[] { (exactPathMatch) ? filepath : "%" + filepath + "%" };
+
+        List<FileDescriptor> fds = Librarian.instance().getFiles(fileType, where, whereArgs);
+        return fds;
+    }
+
     private Pair<List<Integer>, List<String>> getAllFiles(byte fileType) {
         Pair<List<Integer>, List<String>> result = new Pair<List<Integer>, List<String>>(new ArrayList<Integer>(), new ArrayList<String>());
 
@@ -741,7 +760,8 @@ public final class Librarian {
     private void deleteSharedState(byte fileType, int fileId) {
         try {
             ContentResolver cr = context.getContentResolver();
-            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?", new String[] { String.valueOf(fileId), String.valueOf(fileType) });
+            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?",
+                    new String[] { String.valueOf(fileId), String.valueOf(fileType) });
             Log.d(TAG, "deleteSharedState " + deleted + " rows  (fileType: " + fileType + ", fileId: " + fileId + " )");
         } catch (Throwable e) {
             Log.e(TAG, "Failed to delete shared state for fileType=" + fileType + ", fileId=" + fileId, e);
@@ -829,15 +849,15 @@ public final class Librarian {
             if (ignorableFiles.contains(file)) {
                 return;
             }
-            
-            new UniversalScanner(context).scan(file.getAbsolutePath());   
+
+            new UniversalScanner(context).scan(file.getAbsolutePath());
         } else if (file.isDirectory() && file.canRead()) {
-            Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file,null);
+            Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file, null);
 
             if (ignorableFiles != null && !ignorableFiles.isEmpty()) {
                 flattenedFiles.removeAll(ignorableFiles);
             }
-            
+
             if (flattenedFiles != null && !flattenedFiles.isEmpty()) {
                 new UniversalScanner(context).scan(flattenedFiles);
             }
@@ -920,13 +940,46 @@ public final class Librarian {
         }
     }
 
-    public FileDescriptor getFileDescriptor(Uri uri) {
-        TableFetcher fetcher = TableFetchers.getFetcher(uri);
-
-        FileDescriptor fd = new FileDescriptor();
-        fd.fileType = fetcher.getFileType();
-        fd.id = Integer.valueOf(uri.getLastPathSegment());
-
+    private FileDescriptor getFileDescriptor(File f) {
+        FileDescriptor fd = null;
+        if (f.exists()) {
+            List<FileDescriptor> files = getFiles(f.getAbsolutePath(), false);
+            if (!files.isEmpty()) {
+                fd = files.get(0);
+            }
+        }
         return fd;
+    }
+
+    public FileDescriptor getFileDescriptor(Uri uri) {
+        FileDescriptor fd = null;
+        if (uri != null) {
+            if (uri.toString().startsWith("file://")) {
+                fd = getFileDescriptor(new File(uri.getPath()));
+            } else {
+                TableFetcher fetcher = TableFetchers.getFetcher(uri);
+
+                fd = new FileDescriptor();
+                fd.fileType = fetcher.getFileType();
+                fd.id = Integer.valueOf(uri.getLastPathSegment());
+            }
+        }
+        return fd;
+    }
+
+    private byte getFileType(String filename, boolean returnTorrentsAsDocument) {
+        byte result = Constants.FILE_TYPE_DOCUMENTS;
+
+        MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(filename));
+
+        if (mt != null) {
+            result = (byte) mt.getId();
+        }
+
+        if (returnTorrentsAsDocument && result == Constants.FILE_TYPE_TORRENTS) {
+            result = Constants.FILE_TYPE_DOCUMENTS;
+        }
+
+        return result;
     }
 }
