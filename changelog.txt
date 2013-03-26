@@ -15,6 +15,7 @@ FrostWire 1.0.6 - 03/26/2013
  - Opens .torrent files from urls and from any file browser.
  - Fixes a crash when sharing files from third party apps like FileKicker
    which pass filepath uris instead of android provider uris.
+ - Fixes double audio playback issue with third party media playing apps.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.

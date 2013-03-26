@@ -267,11 +267,25 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     }
 
     private final class FocusListener implements OnAudioFocusChangeListener {
-
+        
+        private boolean shouldUnpause;
+        
         @Override
         public void onAudioFocusChange(int focusChange) {
+
+            AudioManager am = (AudioManager) service.getSystemService(Context.AUDIO_SERVICE);
+            int audioMode = am.getMode();
+            
+            shouldUnpause = (audioMode == AudioManager.MODE_IN_CALL ||
+                    audioMode == AudioManager.MODE_IN_COMMUNICATION ||
+                    audioMode == AudioManager.MODE_RINGTONE) &&
+                    isPlaying();
+            
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                togglePause();
+                if (isPlaying() || shouldUnpause) {
+                    shouldUnpause = false;
+                    togglePause();
+                }
             }
         }
     }
