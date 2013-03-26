@@ -1,12 +1,17 @@
-FrostWire 1.0.7
+FrostWire 1.0.6 - 03/26/2013
+ - Faster search results. Search architecture revised and improved.
+ - Includes search results from archive.org, which indexes millions
+   of public domain and creative commons works from all over the
+   internet.
  - FrostWire won't disable screen locking during audio playback.
    It's now up to the user to set longer auto-locking timeouts if
    they want to use FrostWire as an audio player in their vehicles.
  - UI fix, media player screen is correctly updated if a song starts
    while the screen was locked.
-
-FrostWire 1.0.6
+ - Updated icons and graphics.
  - Improved mime type detection.
+ - Updated UPnP cling libraries for better Wi-Fi sharing discovery.
+ - Multiple crashes and freezes fixed.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
