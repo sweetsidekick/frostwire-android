@@ -171,8 +171,8 @@
 
         <com.frostwire.android.gui.views.preference.SimpleActionPreference
             android:key="frostwire.prefs.internal.clear_index"
-            android:summary="@string/clear_torrent_index_summary"
-            android:title="@string/clear_torrent_index"
+            android:summary="@string/clear_search_cache_summary"
+            android:title="@string/clear_search_cache"
             frostwire:button_text="@string/clear" />
     </PreferenceCategory>
 

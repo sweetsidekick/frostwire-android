@@ -286,8 +286,13 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         switch (slide.method) {
         case Slide.DOWNLOAD_METHOD_TORRENT:
             sr = new TorrentPromotionSearchResult(slide);
+            break;
         case Slide.DOWNLOAD_METHOD_HTTP:
             sr = new HttpSlideSearchResult(slide);
+            break;
+        default:
+            sr = null;
+            break;
         }
         if (sr == null) {
 
