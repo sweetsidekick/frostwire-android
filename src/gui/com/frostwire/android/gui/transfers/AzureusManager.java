@@ -324,7 +324,17 @@ public final class AzureusManager {
         SAFE_CONFIG_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
-                COConfigurationManager.save();
+                try {
+                    COConfigurationManager.save();
+                } catch (Throwable t) {
+                    //gubatron 03/26/2013
+                    //for some reason we're getting a ConcurrentModification exception
+                    //even though the treemap is being cloned inside the save() implementation
+                    //also, the dalvik vm is killing the app even though the error
+                    //occurrs in a thread.
+                    //catching the possible exception and logging for now.
+                    Log.e(TAG, "Failed to save configuration", t);
+                }
             }
         });
     }
