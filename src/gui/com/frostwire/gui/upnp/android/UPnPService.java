@@ -23,12 +23,11 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
+import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 import org.fourthline.cling.protocol.ProtocolFactory;
-import org.fourthline.cling.transport.RouterException;
 
 import android.content.Context;
 
@@ -82,16 +81,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
     
     @Override
     protected AndroidRouter createRouter(UpnpServiceConfiguration configuration, ProtocolFactory protocolFactory, Context context) {
-        return new AndroidRouter(configuration, protocolFactory, context) {
-            @Override
-            protected void handleRouterExceptionOnNetworkTypeChange(RouterException ex) {
-                try {
-                    super.handleRouterExceptionOnNetworkTypeChange(ex);
-                } catch (Throwable t) {
-                    //damn
-                }
-            }
-        };
+        return new AndroidRouter(configuration, protocolFactory, context);
     }
-
 }
