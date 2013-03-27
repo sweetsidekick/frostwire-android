@@ -44,7 +44,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name="com.frostwire.android.gui.MainApplication"
+	    android:name="com.frostwire.android.gui.MainApplication"
         android:icon="@drawable/app_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >

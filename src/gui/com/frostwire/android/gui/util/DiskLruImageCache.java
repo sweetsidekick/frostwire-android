@@ -86,7 +86,7 @@ public class DiskLruImageCache {
         put(encodeKey(key), data);
     }
 
-    public void put(String key, Bitmap data) {
+    private void put(String key, Bitmap data) {
 
         DiskLruCache.Editor editor = null;
         try {
@@ -107,7 +107,7 @@ public class DiskLruImageCache {
                     Log.d("cache_test_DISK_", "ERROR on: image put on disk cache " + key);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             if (BuildConfig.DEBUG) {
                 Log.d("cache_test_DISK_", "ERROR on: image put on disk cache " + key);
             }
@@ -124,7 +124,7 @@ public class DiskLruImageCache {
         return getBitmap(encodeKey(key));
     }
 
-    public Bitmap getBitmap(String key) {
+    private Bitmap getBitmap(String key) {
 
         Bitmap bitmap = null;
         DiskLruCache.Snapshot snapshot = null;
@@ -161,16 +161,20 @@ public class DiskLruImageCache {
 
     public boolean containsKey(String key) {
 
+        
         boolean contained = false;
-        DiskLruCache.Snapshot snapshot = null;
-        try {
-            snapshot = mDiskCache.get(key);
-            contained = snapshot != null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (snapshot != null) {
-                snapshot.close();
+        
+        if (mDiskCache != null) {
+            DiskLruCache.Snapshot snapshot = null;
+            try {
+                snapshot = mDiskCache.get(key);
+                contained = snapshot != null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (snapshot != null) {
+                    snapshot.close();
+                }
             }
         }
 
@@ -179,17 +183,15 @@ public class DiskLruImageCache {
     }
 
     public void clearCache() {
-        if (BuildConfig.DEBUG) {
-            Log.d("cache_test_DISK_", "disk cache CLEARED");
+        if (mDiskCache != null) {
+            if (BuildConfig.DEBUG) {
+                Log.d("cache_test_DISK_", "disk cache CLEARED");
+            }
+            try {
+                mDiskCache.delete();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            mDiskCache.delete();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public File getCacheFolder() {
-        return mDiskCache.getDirectory();
     }
 }
