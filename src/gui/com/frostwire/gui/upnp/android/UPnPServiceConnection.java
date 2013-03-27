@@ -92,7 +92,7 @@ public class UPnPServiceConnection implements ServiceConnection {
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(15000);
 
                         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
                             UPnPServiceConnection.this.service.getControlPoint().search();

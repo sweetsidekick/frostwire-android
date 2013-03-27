@@ -81,7 +81,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         
         refreshUPnPCount++;
 
-        if (refreshUPnPCount % 5 == 0) {
+        if (refreshUPnPCount % 10 == 0) {
             if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
                 UPnPManager.instance().refreshRemoteDevices();
             }
