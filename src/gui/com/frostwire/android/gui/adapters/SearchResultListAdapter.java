@@ -76,6 +76,12 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         list.addAll(g);
         notifyDataSetChanged();
     }
+    
+    public void addResults(List<? extends SearchResult> completeList, List<? extends SearchResult> filteredList) {
+        visualList.addAll(filteredList); // java, java, and type erasure
+        list.addAll(completeList);
+        notifyDataSetChanged();        
+    }
 
     @Override
     protected void populateView(View view, SearchResult sr) {
@@ -140,7 +146,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         notifyDataSetInvalidated();
     }
 
-    private List<SearchResult> filter(List<SearchResult> results) {
+    public List<SearchResult> filter(List<SearchResult> results) {
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
             if (accept(sr)) {

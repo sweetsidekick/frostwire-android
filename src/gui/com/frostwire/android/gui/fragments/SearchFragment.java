@@ -57,9 +57,9 @@ import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchManagerListener;
 
 /**
  * @author gubatron
@@ -157,10 +157,13 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             LocalSearchEngine.instance().registerListener(new SearchManagerListener() {
                 @Override
                 public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
+                    @SuppressWarnings("unchecked")
+                    final List<SearchResult> filteredList = adapter.filter((List<SearchResult>) results);
+                    
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.addResults(results);
+                            adapter.addResults(results,filteredList);
                             showSearchView(getView());
                         }
                     });
