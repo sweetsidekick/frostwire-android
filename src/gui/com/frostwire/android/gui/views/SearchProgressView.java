@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 
@@ -36,6 +37,7 @@ public class SearchProgressView extends LinearLayout {
 
     private ProgressBar progressbar;
     private Button buttonCancel;
+    private TextView textNoResults;
 
     private boolean progressEnabled;
 
@@ -77,15 +79,18 @@ public class SearchProgressView extends LinearLayout {
 
         progressbar = (ProgressBar) findViewById(R.id.view_search_progress_progressbar);
         buttonCancel = (Button) findViewById(R.id.view_search_progress_button_cancel);
+        textNoResults = (TextView) findViewById(R.id.view_search_progress_text_no_results_feedback);
     }
 
     private void startProgress() {
         progressbar.setVisibility(View.VISIBLE);
         buttonCancel.setText(android.R.string.cancel);
+        textNoResults.setVisibility(View.GONE);
     }
 
     private void stopProgress() {
         progressbar.setVisibility(View.GONE);
         buttonCancel.setText(R.string.retry_search);
+        textNoResults.setVisibility(View.VISIBLE);
     }
 }

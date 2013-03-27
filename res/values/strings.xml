@@ -413,5 +413,5 @@
     <string name="deleted_crawl_cache">Deleted crawl cache</string>
     <string name="clear_search_cache">Clear Search Cache</string>
     <string name="clear_search_cache_summary">Clear search cache entries</string>
-    
+    <string name="no_results_feedback">No results were found.\n\nCheck your internet connection or\ntry different search terms.</string>
 </resources>
