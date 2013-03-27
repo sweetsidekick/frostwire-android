@@ -23,10 +23,16 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
+import org.fourthline.cling.protocol.ProtocolFactory;
+import org.fourthline.cling.transport.RouterException;
 
+import android.content.Context;
+
+import com.frostwire.android.upnp.android.cling.AndroidRouter;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
 
@@ -67,8 +73,22 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 try {
                     super.execute(command);
                 } catch (Throwable e) {
-                    //gubtron: we're catching a RejectedExecutionException until we figure out a solution.
+                    //gubatron: we're catching a RejectedExecutionException until we figure out a solution.
                     //we're probably being too aggresive submitting tasks in the first place.
+                }
+            }
+        };
+    }
+    
+    @Override
+    protected AndroidRouter createRouter(UpnpServiceConfiguration configuration, ProtocolFactory protocolFactory, Context context) {
+        return new AndroidRouter(configuration, protocolFactory, context) {
+            @Override
+            protected void handleRouterExceptionOnNetworkTypeChange(RouterException ex) {
+                try {
+                    super.handleRouterExceptionOnNetworkTypeChange(ex);
+                } catch (Throwable t) {
+                    //damn
                 }
             }
         };
