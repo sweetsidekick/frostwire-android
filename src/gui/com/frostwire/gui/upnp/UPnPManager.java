@@ -257,7 +257,7 @@ public abstract class UPnPManager {
             @Override
             protected void ended(GENASubscription subscription, CancelReason reason, UpnpResponse responseStatus) {
                 LOG.log(Level.INFO, "Ended subscrition to device info with id=" + subscription.getSubscriptionId() + ", restoring attempt");
-                upnpService.getControlPoint().search();
+                //upnpService.getControlPoint().search();
             }
         };
 
