@@ -1,4 +1,4 @@
-FrostWire 1.0.6 - 03/26/2013
+FrostWire 1.0.6 - 03/28/2013
  - Faster search results. Search architecture revised and improved.
  - Includes search results from archive.org, which indexes millions
    of public domain and creative commons works from all over the
@@ -16,6 +16,7 @@ FrostWire 1.0.6 - 03/26/2013
  - Fixes a crash when sharing files from third party apps like FileKicker
    which pass filepath uris instead of android provider uris.
  - Fixes double audio playback issue with third party media playing apps.
+ - Fixes bug where the app would force close and restart on phones without SD cards.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
