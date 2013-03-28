@@ -17,6 +17,8 @@ FrostWire 1.0.6 - 03/28/2013
    which pass filepath uris instead of android provider uris.
  - Fixes double audio playback issue with third party media playing apps.
  - Fixes bug where the app would force close and restart on phones without SD cards.
+ - Fixes bug on Android 4.x where finished document downloads wouldn't appear under
+   documents.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.

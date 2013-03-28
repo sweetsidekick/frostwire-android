@@ -21,8 +21,9 @@ package com.frostwire.android.gui;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -36,6 +37,7 @@ import android.os.SystemClock;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.MediaType;
 import com.frostwire.android.core.providers.UniversalStore;
 import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
@@ -50,7 +52,7 @@ import com.frostwire.android.util.FilenameUtils;
  */
 final class UniversalScanner {
 
-    private static final Logger LOG = Logger.getLogger(UniversalScanner.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(UniversalScanner.class);
 
     private final Context context;
 
@@ -117,7 +119,7 @@ final class UniversalScanner {
             c = cr.query(UniversalStore.Documents.Media.CONTENT_URI, new String[] { DocumentsColumns._ID }, DocumentsColumns.DATA + "=?" + " AND " + DocumentsColumns.SIZE + "=?", new String[] { filePath, String.valueOf(size) }, null);
             result = c != null && c.getCount() != 0;
         } catch (Throwable e) {
-            LOG.log(Level.WARNING, "Error detecting if file exists: " + filePath, e);
+            LOG.warn("Error detecting if file exists: " + filePath, e);
         } finally {
             if (c != null) {
                 c.close();
@@ -143,7 +145,7 @@ final class UniversalScanner {
                 connection = new MediaScannerConnection(context, this);
                 connection.connect();
             } catch (Throwable e) {
-                LOG.log(Level.WARNING, "Error scanning file with android internal scanner, one retry", e);
+                LOG.warn("Error scanning file with android internal scanner, one retry", e);
                 SystemClock.sleep(1000);
                 connection = new MediaScannerConnection(context, this);
                 connection.connect();
@@ -159,14 +161,13 @@ final class UniversalScanner {
                     }
                 }
             } catch (IllegalStateException e) {
-                LOG.log(Level.WARNING, "Scanner service wasn't really connected or service was null", e);
+                LOG.warn("Scanner service wasn't really connected or service was null", e);
                 //should we try to connect again? don't want to end up in endless loop
                 //maybe destroy connection?
             }
         }
 
         public void onScanCompleted(String path, Uri uri) {
-
             /** This will work if onScanCompleted is invoked after scanFile finishes. */
             numCompletedScans++;
             if (numCompletedScans == files.size()) {
@@ -174,14 +175,19 @@ final class UniversalScanner {
             }
             
             if (uri != null) {
-                //Log.d(TAG, "Scanned new file: " + uri);
-                shareFinishedDownload(Librarian.instance().getFileDescriptor(uri));
+                MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(path));
+                if (mt != null && mt.getId() == Constants.FILE_TYPE_DOCUMENTS) {
+                    scanDocument(path);
+                } else {
+                    //LOG.debug("Scanned new file: " + uri);
+                    shareFinishedDownload(Librarian.instance().getFileDescriptor(uri));
+                }
             } else {
                 if (path.endsWith(".apk")) {
-                    //Log.d(TAG, "Can't scan apk for security concerns: " + path);
+                    //LOG.debug("Can't scan apk for security concerns: " + path);
                 } else {
                     scanDocument(path);
-                    //Log.d(TAG, "Scanned new file as document: " + path);
+                    //LOG.debug("Scanned new file as document: " + path);
                 }
             }
         }
