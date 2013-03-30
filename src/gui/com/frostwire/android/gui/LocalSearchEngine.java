@@ -87,7 +87,7 @@ public final class LocalSearchEngine {
 
         manager.stop(currentSearchToken);
 
-        currentSearchToken = System.nanoTime();
+        currentSearchToken = Math.abs(System.nanoTime());
         currentSearchTokens = tokenize(query);
         searchFinished = false;
 
