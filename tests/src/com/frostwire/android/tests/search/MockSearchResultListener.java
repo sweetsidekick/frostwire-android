@@ -59,7 +59,7 @@ public class MockSearchResultListener implements SearchManagerListener {
     }
 
     @Override
-    public void onFinished() {
+    public void onFinished(long token) {
     }
 
     public void logResults() {

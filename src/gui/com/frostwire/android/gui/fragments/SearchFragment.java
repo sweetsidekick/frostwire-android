@@ -170,7 +170,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
 
                 @Override
-                public void onFinished() {
+                public void onFinished(long token) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

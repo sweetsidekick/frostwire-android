@@ -82,7 +82,6 @@ public final class LocalSearchEngine {
 
     public void performSearch(String query) {
         if (StringUtils.isNullOrEmpty(query, true)) {
-            onFinished();
             return;
         }
 
@@ -123,11 +122,10 @@ public final class LocalSearchEngine {
         return CrawlPagedWebSearchPerformer.getCache().size();
     }
 
-    private void onFinished() {
+    private void onFinished(long token) {
         searchFinished = true;
-        currentSearchTokens = null;
         if (listener != null) {
-            listener.onFinished();
+            listener.onFinished(token);
         }
     }
 
@@ -245,8 +243,10 @@ public final class LocalSearchEngine {
         }
 
         @Override
-        public void onFinished() {
-            LocalSearchEngine.this.onFinished();
+        public void onFinished(long token) {
+            if (token == currentSearchToken) {
+                LocalSearchEngine.this.onFinished(token);
+            }
         }
     }
 }
