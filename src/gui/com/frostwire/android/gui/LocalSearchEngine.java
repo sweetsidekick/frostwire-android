@@ -152,7 +152,11 @@ public final class LocalSearchEngine {
                     }
                 }
 
-                if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
+                if (sr instanceof CrawledSearchResult) {
+                    if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
+                        list.add(sr);
+                    }
+                } else {
                     list.add(sr);
                 }
             }
