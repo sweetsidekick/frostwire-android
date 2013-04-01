@@ -34,9 +34,6 @@ import java.util.logging.Logger;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.model.UnsupportedDataException;
-import org.fourthline.cling.model.message.IncomingDatagramMessage;
-import org.fourthline.cling.model.message.UpnpRequest;
-import org.fourthline.cling.model.message.discovery.IncomingSearchRequest;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 import org.fourthline.cling.protocol.ProtocolFactory;
@@ -53,6 +50,8 @@ import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
 import android.content.Context;
 
+import ch.qos.logback.classic.Level;
+
 import com.frostwire.android.upnp.android.cling.AndroidRouter;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
@@ -65,7 +64,7 @@ import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
  */
 public class UPnPService extends AndroidUpnpServiceImpl {
     
-    private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
+    //private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
 
     private static Logger log = Logger.getLogger(UPnPService.class.getName());
 
@@ -92,34 +91,12 @@ public class UPnPService extends AndroidUpnpServiceImpl {
             public DatagramIO createDatagramIO(NetworkAddressFactory networkAddressFactory) {
                 return new DatagramIOImpl(new DatagramIOConfigurationImpl()) {
                     public void run() {
-                        //log.fine("Entering blocking receiving loop, listening for UDP datagrams on: " + socket.getLocalAddress());
-                        
-                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
-                        
                         while (true) {
-                            
-                            
                             try {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
-
                                 socket.receive(datagram);
-
-                                /*
-                                log.fine(
-                                        "UDP datagram received from: "
-                                                + datagram.getAddress().getHostAddress()
-                                                + ":" + datagram.getPort()
-                                                + " on: " + localAddress
-                                );
-                                */
-
-                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
-                                
-                                if (! (incomingDatagramMessage instanceof IncomingSearchRequest)) {
-                                    //router.received(incomingDatagramMessage);
-                                }
-
+                                router.received(datagramProcessor.read(localAddress.getAddress(), datagram));
                             } catch (SocketException ex) {
                                 log.fine("Socket closed");
                                 break;
@@ -128,21 +105,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
-                            
-                            /**
-                            try {
-                                //Throttles datagram parsing for less CPU usage
-                                if (rate == 0) {
-                                    //Thread.sleep(DATAGRAM_RECEIVER_THROTTLE_PAUSE);
-                                    rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
-                                } else {
-                                    rate--;
-                                }
-                            } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                            */
                         }
                         try {
                             if (!socket.isClosed()) {
@@ -187,8 +149,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     }
 
                     public void run() {
-                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
-                        //log.fine("Entering blocking receiving loop, listening for UDP datagrams on: " + socket.getLocalAddress());
                         while (true) {
                             try {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
@@ -199,44 +159,16 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                                 InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address,
                                         datagram.getAddress());
 
-                                //log.info("UDP datagram received from: " + datagram.getAddress().getHostAddress() + ":" + datagram.getPort() + " on local interface: "
-                                //        + multicastInterface.getDisplayName() + " and address: " + receivedOnLocalAddress.getHostAddress());
-
-//                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
-                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
-                                
-                                if (incomingDatagramMessage.getOperation() instanceof UpnpRequest) {
-                                    IncomingDatagramMessage<UpnpRequest> incomingRequest = incomingDatagramMessage;
-
-                                    if (incomingRequest.getOperation().getMethod() != UpnpRequest.Method.MSEARCH) {
-                                        router.received(incomingDatagramMessage);
-                                    }
-                                    
-                                }
-
+                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
                             } catch (SocketException ex) {
                                 log.info("Socket closed");
                                 break;
                             } catch (UnsupportedDataException ex) {
                                 log.info("Could not read datagram: " + ex.getMessage());
+                                ex.printStackTrace();
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
-                            
-                            /**
-                            try {
-                                //Throttles datagram parsing for less CPU usage
-                                if (rate == 0) {
-                                    Thread.sleep(DATAGRAM_RECEIVER_THROTTLE_PAUSE);
-                                    rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
-                                } else {
-                                    rate--;
-                                }
-                            } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                            */
                         }
                         try {
                             if (!socket.isClosed()) {
