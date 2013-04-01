@@ -203,7 +203,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             switchView(view, R.id.fragment_search_promos);
             deepSearchProgress.setVisibility(View.GONE);
         } else {
-            if (adapter.getCount() > 0) {
+            if (adapter != null && adapter.getCount() > 0) {
                 switchView(view, android.R.id.list);
                 deepSearchProgress.setVisibility(LocalSearchEngine.instance().isSearchFinished() ? View.GONE : View.VISIBLE);
             } else {
