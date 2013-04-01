@@ -13,24 +13,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package com.frostwire.android.upnp.android.cling;
+package org.fourthline.cling.android;
 
+import android.os.Build;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration;
 import org.fourthline.cling.binding.xml.DeviceDescriptorBinder;
+import org.fourthline.cling.binding.xml.RecoveringUDA10DeviceDescriptorBinderImpl;
 import org.fourthline.cling.binding.xml.ServiceDescriptorBinder;
-import org.fourthline.cling.binding.xml.UDA10DeviceDescriptorBinderImpl;
 import org.fourthline.cling.binding.xml.UDA10ServiceDescriptorBinderSAXImpl;
 import org.fourthline.cling.model.Namespace;
 import org.fourthline.cling.model.ServerClientTokens;
-import org.fourthline.cling.transport.impl.GENAEventProcessorImpl;
-import org.fourthline.cling.transport.impl.SOAPActionProcessorImpl;
+import org.fourthline.cling.transport.impl.AsyncServletStreamServerConfigurationImpl;
+import org.fourthline.cling.transport.impl.AsyncServletStreamServerImpl;
+import org.fourthline.cling.transport.impl.RecoveringGENAEventProcessorImpl;
+import org.fourthline.cling.transport.impl.RecoveringSOAPActionProcessorImpl;
+import org.fourthline.cling.transport.impl.jetty.JettyServletContainer;
+import org.fourthline.cling.transport.impl.jetty.StreamClientConfigurationImpl;
+import org.fourthline.cling.transport.impl.jetty.StreamClientImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
 import org.fourthline.cling.transport.spi.StreamClient;
 import org.fourthline.cling.transport.spi.StreamServer;
-
-import android.os.Build;
 
 /**
  * Configuration settings for deployment on Android.
@@ -90,7 +94,7 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
                 public String getUserAgentValue(int majorVersion, int minorVersion) {
                     // TODO: UPNP VIOLATION: Synology NAS requires User-Agent to contain
                     // "Android" to return DLNA protocolInfo required to stream to Samsung TV
-                    // see: http://two-play.com/forums/viewtopic.php?f=6&t=81
+			        // see: http://two-play.com/forums/viewtopic.php?f=6&t=81
                     ServerClientTokens tokens = new ServerClientTokens(majorVersion, minorVersion);
                     tokens.setOsName("Android");
                     tokens.setOsVersion(Build.VERSION.RELEASE);
@@ -113,8 +117,7 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
 
     @Override
     protected DeviceDescriptorBinder createDeviceDescriptorBinderUDA10() {
-        return new UDA10DeviceDescriptorBinderImpl(); //gubatron
-        //return new RecoveringUDA10DeviceDescriptorBinderImpl();
+        return new RecoveringUDA10DeviceDescriptorBinderImpl();
     }
 
     @Override
@@ -124,14 +127,12 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
 
     @Override
     protected SOAPActionProcessor createSOAPActionProcessor() {
-        return new SOAPActionProcessorImpl(); //gubatron
-        //return new RecoveringSOAPActionProcessorImpl();
+        return new RecoveringSOAPActionProcessorImpl();
     }
 
     @Override
     protected GENAEventProcessor createGENAEventProcessor() {
-        return new GENAEventProcessorImpl();
-        //return new RecoveringGENAEventProcessorImpl();
+        return new RecoveringGENAEventProcessorImpl();
     }
 
     @Override

@@ -13,8 +13,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package com.frostwire.android.upnp.android.cling;
+package org.fourthline.cling.android;
 
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.UpnpServiceImpl;
@@ -22,11 +26,6 @@ import org.fourthline.cling.controlpoint.ControlPoint;
 import org.fourthline.cling.protocol.ProtocolFactory;
 import org.fourthline.cling.registry.Registry;
 import org.fourthline.cling.transport.Router;
-
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 
 /**
  * Provides a UPnP stack with Android configuration as an application service component.
@@ -74,8 +73,6 @@ public class AndroidUpnpServiceImpl extends Service {
                 // is done.
                 super.shutdown(true);
             }
-            
-            
         };
     }
 
@@ -121,4 +118,5 @@ public class AndroidUpnpServiceImpl extends Service {
             return upnpService.getControlPoint();
         }
     }
+
 }

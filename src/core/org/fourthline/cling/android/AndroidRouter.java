@@ -13,12 +13,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package com.frostwire.android.upnp.android.cling;
+package org.fourthline.cling.android;
 
-import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.model.ModelUtil;
 import org.fourthline.cling.protocol.ProtocolFactory;
@@ -28,13 +31,9 @@ import org.fourthline.cling.transport.RouterImpl;
 import org.fourthline.cling.transport.spi.InitializationException;
 import org.seamless.util.Exceptions;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Monitors all network connectivity changes, switching the router accordingly.
@@ -69,7 +68,7 @@ public class AndroidRouter extends RouterImpl {
             context.registerReceiver(broadcastReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
         }
     }
-    
+
     @Override
     protected int getLockTimeoutMillis() {
         return 15000;
@@ -140,10 +139,10 @@ public class AndroidRouter extends RouterImpl {
             // workaround (HTC One X, 4.0.3)
             //java.lang.SecurityException: Permission Denial: writing com.android.providers.settings.SettingsProvider
             // uri content://settings/system from pid=4691, uid=10226 requires android.permission.WRITE_SETTINGS
-            //  at android.os.Parcel.readException(Parcel.java:1332)
-            //  at android.os.Parcel.readException(Parcel.java:1286)
-            //  at android.net.wifi.IWifiManager$Stub$Proxy.setWifiEnabled(IWifiManager.java:1115)
-            //  at android.net.wifi.WifiManager.setWifiEnabled(WifiManager.java:946)
+            //	at android.os.Parcel.readException(Parcel.java:1332)
+            //	at android.os.Parcel.readException(Parcel.java:1286)
+            //	at android.net.wifi.IWifiManager$Stub$Proxy.setWifiEnabled(IWifiManager.java:1115)
+            //	at android.net.wifi.WifiManager.setWifiEnabled(WifiManager.java:946)
             log.log(Level.WARNING, "SetWifiEnabled failed", t);
             return false;
         }

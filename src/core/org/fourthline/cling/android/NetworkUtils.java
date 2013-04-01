@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package com.frostwire.android.upnp.android.cling;
+package org.fourthline.cling.android;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

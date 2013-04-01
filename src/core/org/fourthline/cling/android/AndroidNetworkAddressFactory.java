@@ -13,7 +13,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package com.frostwire.android.upnp.android.cling;
+package org.fourthline.cling.android;
+
+import org.fourthline.cling.transport.impl.NetworkAddressFactoryImpl;
+import org.fourthline.cling.transport.spi.InitializationException;
 
 import java.lang.reflect.Field;
 import java.net.Inet4Address;
@@ -22,9 +25,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.fourthline.cling.transport.impl.NetworkAddressFactoryImpl;
-import org.fourthline.cling.transport.spi.InitializationException;
 
 /**
  * This factory tries to work around and patch some Android bugs.

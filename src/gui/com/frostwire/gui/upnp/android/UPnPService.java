@@ -33,6 +33,9 @@ import java.util.logging.Logger;
 
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.UpnpServiceConfiguration;
+import org.fourthline.cling.android.AndroidRouter;
+import org.fourthline.cling.android.AndroidUpnpServiceConfiguration;
+import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.model.UnsupportedDataException;
 import org.fourthline.cling.model.message.IncomingDatagramMessage;
 import org.fourthline.cling.model.message.UpnpRequest;
@@ -52,10 +55,6 @@ import org.fourthline.cling.transport.spi.MulticastReceiver;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
 import android.content.Context;
-
-import com.frostwire.android.upnp.android.cling.AndroidRouter;
-import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
-import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
 
 /**
  * 
