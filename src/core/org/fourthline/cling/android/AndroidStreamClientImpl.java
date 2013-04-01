@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fourthline.cling.model.ModelUtil;
 import org.fourthline.cling.model.message.StreamRequestMessage;
 import org.fourthline.cling.model.message.StreamResponseMessage;
 import org.fourthline.cling.model.message.UpnpHeaders;
@@ -88,7 +87,7 @@ public class AndroidStreamClientImpl implements StreamClient {
                 // loads on Android, even if it doesn't work...
                 URL.setURLStreamHandlerFactory(
                     (URLStreamHandlerFactory) Class.forName(
-                        "org.fourthline.cling.transport.impl.FixedSunURLStreamHandler"
+                        "org.fourthline.cling.android.AndroidURLStreamHandlerFactory"
                     ).newInstance()
                 );
             } catch (Throwable t) {

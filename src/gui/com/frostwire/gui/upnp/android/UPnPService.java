@@ -115,9 +115,9 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
                                 
-                                if (! (incomingDatagramMessage instanceof IncomingSearchRequest)) {
-                                    //router.received(incomingDatagramMessage);
-                                }
+                                //if (! (incomingDatagramMessage instanceof IncomingSearchRequest)) {
+                                    router.received(incomingDatagramMessage);
+                                //}
 
                             } catch (SocketException ex) {
                                 log.fine("Socket closed");
@@ -204,14 +204,14 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 //                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
                                 
-                                if (incomingDatagramMessage.getOperation() instanceof UpnpRequest) {
-                                    IncomingDatagramMessage<UpnpRequest> incomingRequest = incomingDatagramMessage;
+                                //if (incomingDatagramMessage.getOperation() instanceof UpnpRequest) {
+                                //    IncomingDatagramMessage<UpnpRequest> incomingRequest = incomingDatagramMessage;
 
-                                    if (incomingRequest.getOperation().getMethod() != UpnpRequest.Method.MSEARCH) {
+                                //    if (incomingRequest.getOperation().getMethod() != UpnpRequest.Method.MSEARCH) {
                                         router.received(incomingDatagramMessage);
-                                    }
+                                 //   }
                                     
-                                }
+                                //}
 
                             } catch (SocketException ex) {
                                 log.info("Socket closed");

@@ -76,7 +76,8 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
     @Override
     protected Namespace createNamespace() {
         // For the Jetty server, this is the servlet context path
-        return new Namespace("/upnp");
+        //return new Namespace("/upnp");
+        return new Namespace();
     }
 
     @Override
