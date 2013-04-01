@@ -15,7 +15,6 @@
 
 package org.fourthline.cling.android;
 
-import android.os.Build;
 import org.fourthline.cling.DefaultUpnpServiceConfiguration;
 import org.fourthline.cling.binding.xml.DeviceDescriptorBinder;
 import org.fourthline.cling.binding.xml.RecoveringUDA10DeviceDescriptorBinderImpl;
@@ -23,18 +22,16 @@ import org.fourthline.cling.binding.xml.ServiceDescriptorBinder;
 import org.fourthline.cling.binding.xml.UDA10ServiceDescriptorBinderSAXImpl;
 import org.fourthline.cling.model.Namespace;
 import org.fourthline.cling.model.ServerClientTokens;
-import org.fourthline.cling.transport.impl.AsyncServletStreamServerConfigurationImpl;
-import org.fourthline.cling.transport.impl.AsyncServletStreamServerImpl;
 import org.fourthline.cling.transport.impl.RecoveringGENAEventProcessorImpl;
 import org.fourthline.cling.transport.impl.RecoveringSOAPActionProcessorImpl;
-import org.fourthline.cling.transport.impl.jetty.JettyServletContainer;
-import org.fourthline.cling.transport.impl.jetty.StreamClientConfigurationImpl;
-import org.fourthline.cling.transport.impl.jetty.StreamClientImpl;
+import org.fourthline.cling.transport.impl.StreamClientConfigurationImpl;
+import org.fourthline.cling.transport.impl.StreamClientImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
 import org.fourthline.cling.transport.spi.StreamClient;
-import org.fourthline.cling.transport.spi.StreamServer;
+
+import android.os.Build;
 
 /**
  * Configuration settings for deployment on Android.
@@ -104,16 +101,16 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
         );
     }
 
-    @Override
-    public StreamServer createStreamServer(NetworkAddressFactory networkAddressFactory) {
-        // Use Jetty, start/stop a new shared instance of JettyServletContainer
-        return new AsyncServletStreamServerImpl(
-            new AsyncServletStreamServerConfigurationImpl(
-                JettyServletContainer.INSTANCE,
-                networkAddressFactory.getStreamListenPort()
-            )
-        );
-    }
+//    @Override
+//    public StreamServer createStreamServer(NetworkAddressFactory networkAddressFactory) {
+//        // Use Jetty, start/stop a new shared instance of JettyServletContainer
+//        return new AsyncServletStreamServerImpl(
+//            new AsyncServletStreamServerConfigurationImpl(
+//                JettyServletContainer.INSTANCE,
+//                networkAddressFactory.getStreamListenPort()
+//            )
+//        );
+//    }
 
     @Override
     protected DeviceDescriptorBinder createDeviceDescriptorBinderUDA10() {
