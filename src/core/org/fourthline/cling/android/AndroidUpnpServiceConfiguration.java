@@ -25,7 +25,6 @@ import org.fourthline.cling.model.ServerClientTokens;
 import org.fourthline.cling.transport.impl.RecoveringGENAEventProcessorImpl;
 import org.fourthline.cling.transport.impl.RecoveringSOAPActionProcessorImpl;
 import org.fourthline.cling.transport.impl.StreamClientConfigurationImpl;
-import org.fourthline.cling.transport.impl.StreamClientImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
@@ -82,8 +81,7 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
 
     @Override
     public StreamClient createStreamClient() {
-        // Use Jetty
-        return new StreamClientImpl(
+        return new AndroidStreamClientImpl(
             new StreamClientConfigurationImpl(
                 getSyncProtocolExecutorService()
             ) {
