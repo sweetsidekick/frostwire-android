@@ -44,7 +44,7 @@ public class AndroidUPnPFWDeviceDesc implements UPnPFWDeviceDesc {
         this.manufacturer = "FrostWire";
         this.modelName = "FrostWire Android phone";
         this.modelDescription = "FrostWire Android phone device";
-        this.modelNumber = "v1";
+        this.modelNumber = "v2";
     }
 
     @Override
