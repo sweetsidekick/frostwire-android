@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.UpnpServiceConfiguration;
+import org.fourthline.cling.android.AndroidNetworkAddressFactory;
 import org.fourthline.cling.android.AndroidRouter;
 import org.fourthline.cling.android.AndroidUpnpServiceConfiguration;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
@@ -63,7 +64,7 @@ import android.content.Context;
  * 
  */
 public class UPnPService extends AndroidUpnpServiceImpl {
-    
+
     private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
 
     private static Logger log = Logger.getLogger(UPnPService.class.getName());
@@ -87,17 +88,34 @@ public class UPnPService extends AndroidUpnpServiceImpl {
             protected ExecutorService createDefaultExecutorService() {
                 return createFrostWireExecutor();
             }
-            
+
+            @Override
+            protected NetworkAddressFactory createNetworkAddressFactory(int streamListenPort) {
+                return new AndroidNetworkAddressFactory(streamListenPort) {
+                    
+                    private byte[] addressCached = null;
+                    
+                    @Override
+                    public byte[] getHardwareAddress(InetAddress inetAddress) {
+                        if (addressCached == null) {
+                            // ignoring synchronization issues since it's not a big deal here
+                            // also, assuming that the inetAddress (the preferred one) is always the same
+                            addressCached = super.getHardwareAddress(inetAddress);
+                        }
+                        return addressCached;
+                    }
+                };
+            }
+
             public DatagramIO createDatagramIO(NetworkAddressFactory networkAddressFactory) {
                 return new DatagramIOImpl(new DatagramIOConfigurationImpl()) {
                     public void run() {
                         //log.fine("Entering blocking receiving loop, listening for UDP datagrams on: " + socket.getLocalAddress());
-                        
-                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
-                        
+
+                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE / 1000;
+
                         while (true) {
-                            
-                            
+
                             try {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
@@ -114,9 +132,9 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                                 */
 
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
-                                
+
                                 //if (! (incomingDatagramMessage instanceof IncomingSearchRequest)) {
-                                    router.received(incomingDatagramMessage);
+                                router.received(incomingDatagramMessage);
                                 //}
 
                             } catch (SocketException ex) {
@@ -127,7 +145,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
-                            
+
                             /**
                             try {
                                 //Throttles datagram parsing for less CPU usage
@@ -151,7 +169,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
-                    } 
+                    }
                 };
             }
 
@@ -159,9 +177,8 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 return new MulticastReceiverImpl(new MulticastReceiverConfigurationImpl(networkAddressFactory.getMulticastGroup(), networkAddressFactory.getMulticastPort())) {
 
                     private MulticastSocket socket;
-                    
-                    synchronized public void init(NetworkInterface networkInterface, Router router, NetworkAddressFactory networkAddressFactory, DatagramProcessor datagramProcessor)
-                            throws InitializationException {
+
+                    synchronized public void init(NetworkInterface networkInterface, Router router, NetworkAddressFactory networkAddressFactory, DatagramProcessor datagramProcessor) throws InitializationException {
 
                         this.router = router;
                         this.networkAddressFactory = networkAddressFactory;
@@ -186,7 +203,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     }
 
                     public void run() {
-                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE/1000;
+                        int rate = DATAGRAM_RECEIVER_THROTTLE_PAUSE / 1000;
                         //log.fine("Entering blocking receiving loop, listening for UDP datagrams on: " + socket.getLocalAddress());
                         while (true) {
                             try {
@@ -195,22 +212,21 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
                                 socket.receive(datagram);
 
-                                InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address,
-                                        datagram.getAddress());
+                                InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address, datagram.getAddress());
 
                                 //log.info("UDP datagram received from: " + datagram.getAddress().getHostAddress() + ":" + datagram.getPort() + " on local interface: "
                                 //        + multicastInterface.getDisplayName() + " and address: " + receivedOnLocalAddress.getHostAddress());
 
-//                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
+                                //                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
-                                
+
                                 //if (incomingDatagramMessage.getOperation() instanceof UpnpRequest) {
                                 //    IncomingDatagramMessage<UpnpRequest> incomingRequest = incomingDatagramMessage;
 
                                 //    if (incomingRequest.getOperation().getMethod() != UpnpRequest.Method.MSEARCH) {
-                                        router.received(incomingDatagramMessage);
-                                 //   }
-                                    
+                                router.received(incomingDatagramMessage);
+                                //   }
+
                                 //}
 
                             } catch (SocketException ex) {
@@ -221,7 +237,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
-                            
+
                             /**
                             try {
                                 //Throttles datagram parsing for less CPU usage
