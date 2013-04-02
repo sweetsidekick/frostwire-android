@@ -4,6 +4,8 @@
 	<classpathentry kind="src" path="src/jdownloader"/>
 	<classpathentry kind="src" path="src/medialib"/>
 	<classpathentry kind="src" path="common/components/httpserver"/>
+	<classpathentry kind="src" path="common/components/javax"/>
+	<classpathentry kind="src" path="common/components/seamless"/>
 	<classpathentry kind="src" path="common/components/cling"/>
 	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/core"/>
