@@ -163,7 +163,7 @@ public class UpnpURLConnection extends HttpURLConnection {
         // see if the method supports output
         if (method.equals("PUT") || method.equals("POST") || method.equals("NOTIFY")) {
             // fake the method so the inner connection method sets its instance variables
-            method = "PUT";
+            method = "POST";
         } else {
             // use any method that doesn't support output, an exception will be
             // raised by the superclass
