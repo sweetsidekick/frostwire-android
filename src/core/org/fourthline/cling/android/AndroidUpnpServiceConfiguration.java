@@ -24,7 +24,8 @@ import org.fourthline.cling.model.Namespace;
 import org.fourthline.cling.model.ServerClientTokens;
 import org.fourthline.cling.transport.impl.RecoveringGENAEventProcessorImpl;
 import org.fourthline.cling.transport.impl.RecoveringSOAPActionProcessorImpl;
-import org.fourthline.cling.transport.impl.StreamClientConfigurationImpl;
+import org.fourthline.cling.transport.impl.apache.StreamClientConfigurationImpl;
+import org.fourthline.cling.transport.impl.apache.StreamClientImpl;
 import org.fourthline.cling.transport.spi.GENAEventProcessor;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 import org.fourthline.cling.transport.spi.SOAPActionProcessor;
@@ -35,7 +36,7 @@ import android.os.Build;
 /**
  * Configuration settings for deployment on Android.
  * <p>
- * This configuration utilizes the Jetty transport implementation
+ * This configuration utilizes the apache transport implementation
  * found in {@link org.fourthline.cling.transport.impl.jetty} for TCP/HTTP networking, as
  * client and server. The servlet context path for UPnP is set to <code>/upnp</code>.
  * </p>
@@ -75,14 +76,14 @@ public class AndroidUpnpServiceConfiguration extends DefaultUpnpServiceConfigura
 
     @Override
     protected Namespace createNamespace() {
-        // For the Jetty server, this is the servlet context path
-        //return new Namespace("/upnp");
-        return new Namespace();
+        // NA: For the Jetty server, this is the servlet context path
+        return new Namespace("/upnp");
     }
 
     @Override
-    public StreamClient createStreamClient() {
-        return new AndroidStreamClientImpl(
+    public StreamClient<?> createStreamClient() {
+        // Use apache
+        return new StreamClientImpl(
             new StreamClientConfigurationImpl(
                 getSyncProtocolExecutorService()
             ) {
