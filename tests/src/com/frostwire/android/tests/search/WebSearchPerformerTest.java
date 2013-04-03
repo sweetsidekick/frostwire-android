@@ -32,7 +32,7 @@ public class WebSearchPerformerTest extends TestCase {
 
     @SmallTest
     public void testKeywordsEncoding() {
-        testEncoding("A B%C", "A+B%25C");
+        testEncoding("A B%C", "A%20B%25C");
         testEncoding("A+B_Ó", "A%2BB_%C3%93");
         testEncoding("&&^^{}", "%26%26%5E%5E%7B%7D");
         testEncoding("P~~Lüñ", "P%7E%7EL%C3%BC%C3%B1");
