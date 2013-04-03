@@ -23,20 +23,28 @@
 package org.gudy.azureus2.core3.util;
 
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
  * SHA-1 hasher utility frontend.
  */
 public final class SHA1Hasher {
-  private final SHA1 sha1;
-
+  //private final SHA1 sha1;
+  private MessageDigest sha1;
 
   /**
    * Create a new SHA1Hasher instance
    */
   public SHA1Hasher() {
-    sha1 = new SHA1();
+    try {
+        sha1 = MessageDigest.getInstance("SHA-1");
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+        
+    }
+    //sha1 = new SHA1();
   }
 
   
@@ -58,7 +66,8 @@ public final class SHA1Hasher {
    */
   public byte[] calculateHash( ByteBuffer buffer ) {
     sha1.reset();
-    return sha1.digest( buffer );
+    sha1.update(buffer);
+    return sha1.digest();
   }
   
   
@@ -116,7 +125,7 @@ public final class SHA1Hasher {
    * Save the current hasher state for later resuming.
    */
   public void saveHashState() {
-    sha1.saveState();
+    //sha1.saveState();
   }
   
   
@@ -124,7 +133,7 @@ public final class SHA1Hasher {
    * Restore the hasher state from previous save.
    */
   public void restoreHashState() {
-    sha1.restoreState();
+    //sha1.restoreState();
   }
   
 }
