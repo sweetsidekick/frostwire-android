@@ -31,7 +31,7 @@ import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.vertor.VertorSearchPerformer;
-import com.frostwire.search.youtube2.YouTubeSearchPerformer;
+import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
  * 

@@ -43,7 +43,7 @@ import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
-import com.frostwire.search.youtube2.YouTubeCrawledSearchResult;
+import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 
 /**
  * @author gubatron
