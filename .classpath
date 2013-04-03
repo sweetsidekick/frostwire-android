@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/azureus"/>
 	<classpathentry kind="src" path="src/jdownloader"/>
-	<classpathentry kind="src" path="src/medialib"/>
 	<classpathentry kind="src" path="common/components/httpserver"/>
 	<classpathentry kind="src" path="common/components/javax"/>
 	<classpathentry kind="src" path="common/components/seamless"/>
@@ -10,7 +9,6 @@
 	<classpathentry kind="src" path="common/components/apache"/>
 	<classpathentry kind="src" path="common/components/common"/>
 	<classpathentry kind="src" path="common/components/core"/>
-	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
