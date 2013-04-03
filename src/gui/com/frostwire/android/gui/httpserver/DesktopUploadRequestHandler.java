@@ -24,6 +24,7 @@ import java.io.OutputStream;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import sun.net.httpserver.Code;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -32,9 +33,8 @@ import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.util.StringUtils;
-import com.frostwire.httpserver.Code;
-import com.frostwire.httpserver.HttpExchange;
 import com.frostwire.util.JsonUtils;
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * @author gubatron

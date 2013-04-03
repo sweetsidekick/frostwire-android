@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.util.concurrent.ThreadPool;
-import com.frostwire.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * @author gubatron
@@ -60,7 +60,7 @@ public class HttpServerManager {
 
         try {
 
-            httpServer = new HttpServer("http", new InetSocketAddress(port), 10);
+            httpServer = HttpServer.create(new InetSocketAddress(port), 10);
 
             httpServer.createContext("/finger", new FingerHandler());
             httpServer.createContext("/browse", new BrowseHandler());

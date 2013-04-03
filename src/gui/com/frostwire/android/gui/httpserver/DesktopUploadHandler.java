@@ -28,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import sun.net.httpserver.Code;
 import android.util.Log;
 
 import com.frostwire.android.core.DesktopUploadRequest;
@@ -38,8 +39,7 @@ import com.frostwire.android.gui.transfers.DesktopTransfer;
 import com.frostwire.android.gui.transfers.DesktopTransferItem;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.httpserver.Code;
-import com.frostwire.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * @author gubatron

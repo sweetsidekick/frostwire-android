@@ -23,7 +23,7 @@ import java.io.IOException;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpHandler;
 
 /**
  * @author gubatron

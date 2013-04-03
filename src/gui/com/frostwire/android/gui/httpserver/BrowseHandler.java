@@ -26,11 +26,12 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import sun.net.httpserver.Code;
+
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.httpserver.Code;
-import com.frostwire.httpserver.HttpExchange;
 import com.frostwire.util.JsonUtils;
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * @author gubatron

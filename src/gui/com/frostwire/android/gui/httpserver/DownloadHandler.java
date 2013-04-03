@@ -29,14 +29,15 @@ import java.util.logging.Logger;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import sun.net.httpserver.Code;
+
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.httpserver.Code;
-import com.frostwire.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * @author gubatron

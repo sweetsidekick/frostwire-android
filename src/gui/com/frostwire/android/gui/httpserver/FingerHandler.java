@@ -22,11 +22,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
+import sun.net.httpserver.Code;
+
 import com.frostwire.android.gui.Finger;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.httpserver.Code;
-import com.frostwire.httpserver.HttpExchange;
 import com.frostwire.util.JsonUtils;
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * @author gubatron
