@@ -40,6 +40,7 @@ import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
+import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 
 /**
  * @author gubatron
@@ -92,6 +93,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         if (sr instanceof TorrentSearchResult) {
             populateTorrentPart(view, (TorrentSearchResult) sr);
         }
+        if (sr instanceof YouTubeCrawledSearchResult) {
+            populateYouTubePart(view, (YouTubeCrawledSearchResult) sr);
+        }
     }
 
     protected void populateFilePart(View view, FileSearchResult sr) {
@@ -122,6 +126,11 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         sourceLink.setText(sr.getSource() + license); // TODO: ask for design
         sourceLink.setTag(sr.getDetailsUrl());
         sourceLink.setOnClickListener(linkListener);
+    }
+    
+    protected void populateYouTubePart(View view, YouTubeCrawledSearchResult sr) {
+        TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
+        extra.setText(FilenameUtils.getExtension(sr.getFilename()) + " " + sr.getMediaQuality());
     }
 
     protected void populateTorrentPart(View view, TorrentSearchResult sr) {
