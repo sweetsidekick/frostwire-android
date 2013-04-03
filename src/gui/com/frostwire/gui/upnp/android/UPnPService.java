@@ -41,11 +41,8 @@ import org.fourthline.cling.android.AndroidRouter;
 import org.fourthline.cling.android.AndroidUpnpServiceConfiguration;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.model.UnsupportedDataException;
-<<<<<<< HEAD
-=======
 import org.fourthline.cling.model.message.IncomingDatagramMessage;
 import org.fourthline.cling.model.message.UpnpRequest;
->>>>>>> cling2
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 import org.fourthline.cling.protocol.ProtocolFactory;
@@ -63,15 +60,6 @@ import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
 import android.content.Context;
 
-<<<<<<< HEAD
-import ch.qos.logback.classic.Level;
-
-import com.frostwire.android.upnp.android.cling.AndroidRouter;
-import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
-import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
-
-=======
->>>>>>> cling2
 /**
  * 
  * @author gubatron
@@ -79,28 +67,21 @@ import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
  * 
  */
 public class UPnPService extends AndroidUpnpServiceImpl {
-<<<<<<< HEAD
-    
-    //private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
-=======
-
-    private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
->>>>>>> cling2
 
     private static Logger log = Logger.getLogger(UPnPService.class.getName());
 
     private static final int REGISTRY_MAINTENANCE_INTERVAL_MILLIS = 5000; // 5 seconds
-    
+
     private long lastTimeIncomingSearchRequestParsed = -1;
-    
+
     private final int INCOMING_SEARCH_REQUEST_PARSE_INTERVAL = 2500;
-    
+
     private Map<String, Long> readResponseWindows = new LinkedHashMap<String, Long>();
 
     @Override
     protected AndroidUpnpServiceConfiguration createConfiguration() {
         return new AndroidUpnpServiceConfiguration() {
-            
+
             @Override
             public int getRegistryMaintenanceIntervalMillis() {
                 return REGISTRY_MAINTENANCE_INTERVAL_MILLIS;
@@ -119,9 +100,9 @@ public class UPnPService extends AndroidUpnpServiceImpl {
             @Override
             protected NetworkAddressFactory createNetworkAddressFactory(int streamListenPort) {
                 return new AndroidNetworkAddressFactory(streamListenPort) {
-                    
+
                     private byte[] addressCached = null;
-                    
+
                     @Override
                     public byte[] getHardwareAddress(InetAddress inetAddress) {
                         if (addressCached == null) {
@@ -133,7 +114,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     }
                 };
             }
-            
+
             @Override
             protected DatagramProcessor createDatagramProcessor() {
                 return new DatagramProcessorImpl() {
@@ -142,8 +123,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     private final long WINDOW_SIZE = 1000;
 
                     @Override
-                    protected IncomingDatagramMessage readRequestMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, String requestMethod, String httpProtocol)
-                            throws Exception {
+                    protected IncomingDatagramMessage readRequestMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, String requestMethod, String httpProtocol) throws Exception {
                         //Throttle the parsing of incoming search messages.
                         if (UpnpRequest.Method.getByHttpName(requestMethod).equals(UpnpRequest.Method.MSEARCH)) {
                             if (System.currentTimeMillis() - lastTimeIncomingSearchRequestParsed < INCOMING_SEARCH_REQUEST_PARSE_INTERVAL) {
@@ -152,17 +132,16 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                                 lastTimeIncomingSearchRequestParsed = System.currentTimeMillis();
                             }
                         }
-                        
+
                         return super.readRequestMessage(receivedOnAddress, datagram, is, requestMethod, httpProtocol);
                     }
-                    
+
                     @Override
-                    protected IncomingDatagramMessage readResponseMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, int statusCode, String statusMessage,
-                            String httpProtocol) throws Exception {
+                    protected IncomingDatagramMessage readResponseMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, int statusCode, String statusMessage, String httpProtocol) throws Exception {
 
                         IncomingDatagramMessage response = null;
                         String host = datagram.getAddress().getHostAddress();
-                        
+
                         if (!readResponseWindows.containsKey(host)) {
                             response = super.readResponseMessage(receivedOnAddress, datagram, is, statusCode, statusMessage, httpProtocol);
                             readResponseWindows.put(host, System.currentTimeMillis());
@@ -172,13 +151,13 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             long delta = System.currentTimeMillis() - windowStart;
                             if (delta >= 0 && delta < WINDOW_SIZE) {
                                 response = super.readResponseMessage(receivedOnAddress, datagram, is, statusCode, statusMessage, httpProtocol);
-                            } else if ((System.currentTimeMillis() - windowStart > (2*WINDOW_SIZE)/3)) {
+                            } else if ((System.currentTimeMillis() - windowStart > (2 * WINDOW_SIZE) / 3)) {
                                 readResponseWindows.put(host, System.currentTimeMillis() + WAIT_TIME);
                             } else {
                                 //System.out.println("Come back later " + host + " !!!");
                             }
                         }
-                        
+
                         return response;
                     }
                 };
@@ -188,25 +167,16 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 return new DatagramIOImpl(new DatagramIOConfigurationImpl()) {
                     public void run() {
                         while (true) {
-<<<<<<< HEAD
-=======
-
->>>>>>> cling2
                             try {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
                                 socket.receive(datagram);
-<<<<<<< HEAD
-                                router.received(datagramProcessor.read(localAddress.getAddress(), datagram));
-=======
-
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
 
                                 if (incomingDatagramMessage != null) {
                                     router.received(incomingDatagramMessage);
                                 }
 
->>>>>>> cling2
                             } catch (SocketException ex) {
                                 log.fine("Socket closed");
                                 break;
@@ -230,33 +200,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
             public MulticastReceiver createMulticastReceiver(NetworkAddressFactory networkAddressFactory) {
                 return new MulticastReceiverImpl(new MulticastReceiverConfigurationImpl(networkAddressFactory.getMulticastGroup(), networkAddressFactory.getMulticastPort())) {
-
-                    private MulticastSocket socket;
-
-                    synchronized public void init(NetworkInterface networkInterface, Router router, NetworkAddressFactory networkAddressFactory, DatagramProcessor datagramProcessor) throws InitializationException {
-
-                        this.router = router;
-                        this.networkAddressFactory = networkAddressFactory;
-                        this.datagramProcessor = datagramProcessor;
-                        this.multicastInterface = networkInterface;
-
-                        try {
-
-                            log.info("Creating wildcard socket (for receiving multicast datagrams) on port: " + configuration.getPort());
-                            multicastAddress = new InetSocketAddress(configuration.getGroup(), configuration.getPort());
-
-                            socket = new MulticastSocket(configuration.getPort());
-                            socket.setReuseAddress(true);
-                            socket.setReceiveBufferSize(32768); // Keep a backlog of incoming datagrams if we are not fast enough
-
-                            log.info("Joining multicast group: " + multicastAddress + " on network interface: " + multicastInterface.getDisplayName());
-                            socket.joinGroup(multicastAddress, multicastInterface);
-
-                        } catch (Exception ex) {
-                            throw new InitializationException("Could not initialize " + getClass().getSimpleName() + ": " + ex);
-                        }
-                    }
-
                     public void run() {
                         while (true) {
                             try {
@@ -265,21 +208,14 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
                                 socket.receive(datagram);
 
-<<<<<<< HEAD
-                                InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address,
-                                        datagram.getAddress());
-
-                                router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
-=======
                                 InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address, datagram.getAddress());
 
                                 IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
-                                
+
                                 if (incomingDatagramMessage != null) {
                                     router.received(incomingDatagramMessage);
                                 }
 
->>>>>>> cling2
                             } catch (SocketException ex) {
                                 log.info("Socket closed");
                                 break;
@@ -289,10 +225,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
-<<<<<<< HEAD
-=======
-
->>>>>>> cling2
                         }
                         try {
                             if (!socket.isClosed()) {
@@ -326,6 +258,5 @@ public class UPnPService extends AndroidUpnpServiceImpl {
     protected AndroidRouter createRouter(UpnpServiceConfiguration configuration, ProtocolFactory protocolFactory, Context context) {
         return new AndroidRouter(configuration, protocolFactory, context);
     }
-    
-    
+
 }
