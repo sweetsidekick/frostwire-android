@@ -43,6 +43,7 @@ import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
+import com.frostwire.search.youtube2.YouTubeCrawledSearchResult;
 
 /**
  * @author gubatron
@@ -154,7 +155,9 @@ public final class LocalSearchEngine {
                 }
 
                 if (sr instanceof CrawledSearchResult) {
-                    if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
+                    if (sr instanceof YouTubeCrawledSearchResult) {
+                        list.add(sr);
+                    } else if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
                         list.add(sr);
                     }
                 } else {

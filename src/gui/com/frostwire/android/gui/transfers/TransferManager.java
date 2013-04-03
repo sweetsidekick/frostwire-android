@@ -42,7 +42,7 @@ import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
-import com.frostwire.search.youtube.YouTubeSearchResult;
+import com.frostwire.search.youtube2.YouTubeCrawledSearchResult;
 
 /**
  * @author gubatron
@@ -120,8 +120,8 @@ public final class TransferManager {
             return newBittorrentDownload((TorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
             return newHttpDownload((HttpSlideSearchResult) sr);
-        } else if (sr instanceof YouTubeSearchResult) {
-            return newYouTubeDownload((YouTubeSearchResult) sr);
+        } else if (sr instanceof YouTubeCrawledSearchResult) {
+            return newYouTubeDownload((YouTubeCrawledSearchResult) sr);
         } else if (sr instanceof SoundcloudSearchResult) {
             return newSoundcloudDownload((SoundcloudSearchResult) sr);
         } else if (sr instanceof HttpSearchResult) {
@@ -371,7 +371,7 @@ public final class TransferManager {
         return download;
     }
 
-    private DownloadTransfer newYouTubeDownload(YouTubeSearchResult sr) {
+    private DownloadTransfer newYouTubeDownload(YouTubeCrawledSearchResult sr) {
         YouTubeDownload download = new YouTubeDownload(this, sr);
 
         downloads.add(download);
