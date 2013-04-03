@@ -28,6 +28,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
@@ -2934,7 +2936,7 @@ DiskManagerCheckRequestListener, IPFilterListener
 		return _timeStartedSeeding;
 	}
 
-	private byte[] computeMd5Hash(DirectByteBuffer buffer)
+	private byte[] computeMd5HashOld(DirectByteBuffer buffer)
 	{ 			
 		BrokenMd5Hasher md5 	= new BrokenMd5Hasher();
 
@@ -2955,6 +2957,39 @@ DiskManagerCheckRequestListener, IPFilterListener
 
 		return result;    
 	}
+	
+	   private byte[] computeMd5Hash(DirectByteBuffer buffer)
+	    {           
+	        MessageDigest md5;
+            try {
+                md5 = MessageDigest.getInstance("MD5");
+//                final int position = buffer.position(DirectByteBuffer.SS_DW);
+                md5.update(buffer.getBuffer(DirectByteBuffer.SS_DW));
+                return md5.digest();
+
+            } catch (NoSuchAlgorithmException e) {
+
+                e.printStackTrace();
+                return null;
+            }
+	        
+	        /*
+	        buffer.position(DirectByteBuffer.SS_DW, position);
+
+	        ByteBuffer md5Result    = ByteBuffer.allocate(16);
+	        md5Result.position(0);
+	        md5.finalDigest( md5Result );
+
+	        final byte[] result =new byte[16];
+	        md5Result.position(0);
+	        for (int i =0; i <result.length; i++ )
+	        {
+	            result[i] = md5Result.get();
+	        }   
+
+	        return result; 
+	        */   
+	    }
 
 	private void MD5CheckPiece(PEPiece piece, boolean correct)
 	{

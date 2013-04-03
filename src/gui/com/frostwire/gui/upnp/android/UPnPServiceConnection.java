@@ -19,6 +19,7 @@
 package com.frostwire.gui.upnp.android;
 
 import org.fourthline.cling.UpnpService;
+import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.model.meta.Device;
 import org.fourthline.cling.model.meta.LocalDevice;
 
@@ -29,7 +30,6 @@ import android.os.IBinder;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.upnp.android.cling.AndroidUpnpService;
 import com.frostwire.gui.upnp.UPnPFWDevice;
 import com.frostwire.gui.upnp.UPnPManager;
 import com.frostwire.gui.upnp.UPnPRegistryListener;

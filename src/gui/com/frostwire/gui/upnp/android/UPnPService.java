@@ -18,6 +18,7 @@
 
 package com.frostwire.gui.upnp.android;
 
+import java.io.ByteArrayInputStream;
 import java.net.DatagramPacket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -25,6 +26,8 @@ import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -33,13 +36,23 @@ import java.util.logging.Logger;
 
 import org.fourthline.cling.DefaultUpnpServiceConfiguration.ClingThreadFactory;
 import org.fourthline.cling.UpnpServiceConfiguration;
+import org.fourthline.cling.android.AndroidNetworkAddressFactory;
+import org.fourthline.cling.android.AndroidRouter;
+import org.fourthline.cling.android.AndroidUpnpServiceConfiguration;
+import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.model.UnsupportedDataException;
+<<<<<<< HEAD
+=======
+import org.fourthline.cling.model.message.IncomingDatagramMessage;
+import org.fourthline.cling.model.message.UpnpRequest;
+>>>>>>> cling2
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 import org.fourthline.cling.protocol.ProtocolFactory;
 import org.fourthline.cling.transport.Router;
 import org.fourthline.cling.transport.impl.DatagramIOConfigurationImpl;
 import org.fourthline.cling.transport.impl.DatagramIOImpl;
+import org.fourthline.cling.transport.impl.DatagramProcessorImpl;
 import org.fourthline.cling.transport.impl.MulticastReceiverConfigurationImpl;
 import org.fourthline.cling.transport.impl.MulticastReceiverImpl;
 import org.fourthline.cling.transport.spi.DatagramIO;
@@ -50,12 +63,15 @@ import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
 import android.content.Context;
 
+<<<<<<< HEAD
 import ch.qos.logback.classic.Level;
 
 import com.frostwire.android.upnp.android.cling.AndroidRouter;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceConfiguration;
 import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
 
+=======
+>>>>>>> cling2
 /**
  * 
  * @author gubatron
@@ -63,16 +79,28 @@ import com.frostwire.android.upnp.android.cling.AndroidUpnpServiceImpl;
  * 
  */
 public class UPnPService extends AndroidUpnpServiceImpl {
+<<<<<<< HEAD
     
     //private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
+=======
+
+    private static final int DATAGRAM_RECEIVER_THROTTLE_PAUSE = 4000;
+>>>>>>> cling2
 
     private static Logger log = Logger.getLogger(UPnPService.class.getName());
 
     private static final int REGISTRY_MAINTENANCE_INTERVAL_MILLIS = 5000; // 5 seconds
+    
+    private long lastTimeIncomingSearchRequestParsed = -1;
+    
+    private final int INCOMING_SEARCH_REQUEST_PARSE_INTERVAL = 2500;
+    
+    private Map<String, Long> readResponseWindows = new LinkedHashMap<String, Long>();
 
     @Override
     protected AndroidUpnpServiceConfiguration createConfiguration() {
         return new AndroidUpnpServiceConfiguration() {
+            
             @Override
             public int getRegistryMaintenanceIntervalMillis() {
                 return REGISTRY_MAINTENANCE_INTERVAL_MILLIS;
@@ -87,16 +115,98 @@ public class UPnPService extends AndroidUpnpServiceImpl {
             protected ExecutorService createDefaultExecutorService() {
                 return createFrostWireExecutor();
             }
+
+            @Override
+            protected NetworkAddressFactory createNetworkAddressFactory(int streamListenPort) {
+                return new AndroidNetworkAddressFactory(streamListenPort) {
+                    
+                    private byte[] addressCached = null;
+                    
+                    @Override
+                    public byte[] getHardwareAddress(InetAddress inetAddress) {
+                        if (addressCached == null) {
+                            // ignoring synchronization issues since it's not a big deal here
+                            // also, assuming that the inetAddress (the preferred one) is always the same
+                            addressCached = super.getHardwareAddress(inetAddress);
+                        }
+                        return addressCached;
+                    }
+                };
+            }
             
+            @Override
+            protected DatagramProcessor createDatagramProcessor() {
+                return new DatagramProcessorImpl() {
+
+                    private final long WAIT_TIME = 8000;
+                    private final long WINDOW_SIZE = 1000;
+
+                    @Override
+                    protected IncomingDatagramMessage readRequestMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, String requestMethod, String httpProtocol)
+                            throws Exception {
+                        //Throttle the parsing of incoming search messages.
+                        if (UpnpRequest.Method.getByHttpName(requestMethod).equals(UpnpRequest.Method.MSEARCH)) {
+                            if (System.currentTimeMillis() - lastTimeIncomingSearchRequestParsed < INCOMING_SEARCH_REQUEST_PARSE_INTERVAL) {
+                                return null;
+                            } else {
+                                lastTimeIncomingSearchRequestParsed = System.currentTimeMillis();
+                            }
+                        }
+                        
+                        return super.readRequestMessage(receivedOnAddress, datagram, is, requestMethod, httpProtocol);
+                    }
+                    
+                    @Override
+                    protected IncomingDatagramMessage readResponseMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, int statusCode, String statusMessage,
+                            String httpProtocol) throws Exception {
+
+                        IncomingDatagramMessage response = null;
+                        String host = datagram.getAddress().getHostAddress();
+                        
+                        if (!readResponseWindows.containsKey(host)) {
+                            response = super.readResponseMessage(receivedOnAddress, datagram, is, statusCode, statusMessage, httpProtocol);
+                            readResponseWindows.put(host, System.currentTimeMillis());
+
+                        } else {
+                            long windowStart = readResponseWindows.get(host);
+                            long delta = System.currentTimeMillis() - windowStart;
+                            if (delta >= 0 && delta < WINDOW_SIZE) {
+                                response = super.readResponseMessage(receivedOnAddress, datagram, is, statusCode, statusMessage, httpProtocol);
+                            } else if ((System.currentTimeMillis() - windowStart > (2*WINDOW_SIZE)/3)) {
+                                readResponseWindows.put(host, System.currentTimeMillis() + WAIT_TIME);
+                            } else {
+                                //System.out.println("Come back later " + host + " !!!");
+                            }
+                        }
+                        
+                        return response;
+                    }
+                };
+            }
+
             public DatagramIO createDatagramIO(NetworkAddressFactory networkAddressFactory) {
                 return new DatagramIOImpl(new DatagramIOConfigurationImpl()) {
                     public void run() {
                         while (true) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> cling2
                             try {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
                                 socket.receive(datagram);
+<<<<<<< HEAD
                                 router.received(datagramProcessor.read(localAddress.getAddress(), datagram));
+=======
+
+                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
+
+                                if (incomingDatagramMessage != null) {
+                                    router.received(incomingDatagramMessage);
+                                }
+
+>>>>>>> cling2
                             } catch (SocketException ex) {
                                 log.fine("Socket closed");
                                 break;
@@ -114,7 +224,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
-                    } 
+                    }
                 };
             }
 
@@ -122,9 +232,8 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 return new MulticastReceiverImpl(new MulticastReceiverConfigurationImpl(networkAddressFactory.getMulticastGroup(), networkAddressFactory.getMulticastPort())) {
 
                     private MulticastSocket socket;
-                    
-                    synchronized public void init(NetworkInterface networkInterface, Router router, NetworkAddressFactory networkAddressFactory, DatagramProcessor datagramProcessor)
-                            throws InitializationException {
+
+                    synchronized public void init(NetworkInterface networkInterface, Router router, NetworkAddressFactory networkAddressFactory, DatagramProcessor datagramProcessor) throws InitializationException {
 
                         this.router = router;
                         this.networkAddressFactory = networkAddressFactory;
@@ -156,10 +265,21 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
                                 socket.receive(datagram);
 
+<<<<<<< HEAD
                                 InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address,
                                         datagram.getAddress());
 
                                 router.received(datagramProcessor.read(receivedOnLocalAddress, datagram));
+=======
+                                InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address, datagram.getAddress());
+
+                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
+                                
+                                if (incomingDatagramMessage != null) {
+                                    router.received(incomingDatagramMessage);
+                                }
+
+>>>>>>> cling2
                             } catch (SocketException ex) {
                                 log.info("Socket closed");
                                 break;
@@ -169,6 +289,10 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cling2
                         }
                         try {
                             if (!socket.isClosed()) {
@@ -202,4 +326,6 @@ public class UPnPService extends AndroidUpnpServiceImpl {
     protected AndroidRouter createRouter(UpnpServiceConfiguration configuration, ProtocolFactory protocolFactory, Context context) {
         return new AndroidRouter(configuration, protocolFactory, context);
     }
+    
+    
 }
