@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.android.gui;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.frostwire.android.BuildConfig;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
+import com.frostwire.search.CrawlCache;
 import com.jakewharton.DiskLruCache;
 import com.jakewharton.DiskLruCache.Editor;
 import com.jakewharton.DiskLruCache.Snapshot;

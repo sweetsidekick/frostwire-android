@@ -70,6 +70,7 @@ public final class LocalSearchEngine {
     }
 
     private LocalSearchEngine() {
+        CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache());
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new ManagerListener());
 

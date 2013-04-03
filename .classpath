@@ -9,6 +9,7 @@
 	<classpathentry kind="src" path="common/components/cling"/>
 	<classpathentry kind="src" path="common/components/apache"/>
 	<classpathentry kind="src" path="common/components/common"/>
+	<classpathentry kind="src" path="common/components/core"/>
 	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
