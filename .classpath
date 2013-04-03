@@ -7,6 +7,7 @@
 	<classpathentry kind="src" path="common/components/javax"/>
 	<classpathentry kind="src" path="common/components/seamless"/>
 	<classpathentry kind="src" path="common/components/cling"/>
+	<classpathentry kind="src" path="common/components/apache"/>
 	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>

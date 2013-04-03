@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
@@ -37,7 +38,6 @@ import com.frostwire.android.gui.transfers.DesktopTransfer;
 import com.frostwire.android.gui.transfers.DesktopTransferItem;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.httpserver.Code;
 import com.frostwire.httpserver.HttpExchange;
 

@@ -18,7 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.util.FilenameUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import com.frostwire.frostclick.Slide;
 
 /**

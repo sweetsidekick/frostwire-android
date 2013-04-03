@@ -18,9 +18,9 @@
 
 package com.frostwire.search.torrent;
 
+import org.apache.commons.io.FilenameUtils;
 import org.gudy.azureus2.core3.torrent.TOTorrentFile;
 
-import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.search.AbstractCrawledSearchResult;
 
 /**

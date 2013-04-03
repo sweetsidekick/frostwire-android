@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,7 +65,6 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
-import com.frostwire.android.util.FilenameUtils;
 
 /**
  * 

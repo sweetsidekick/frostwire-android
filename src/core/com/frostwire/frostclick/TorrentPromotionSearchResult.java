@@ -18,7 +18,8 @@
 
 package com.frostwire.frostclick;
 
-import com.frostwire.android.util.FilenameUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import com.frostwire.licences.License;
 import com.frostwire.search.torrent.TorrentSearchResult;
 

@@ -20,9 +20,10 @@ package com.frostwire.android.gui.transfers;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron

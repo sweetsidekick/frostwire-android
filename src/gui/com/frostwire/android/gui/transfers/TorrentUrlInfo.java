@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.util.FilenameUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author gubatron

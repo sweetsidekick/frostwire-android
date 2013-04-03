@@ -20,7 +20,8 @@ package com.frostwire.search.archiveorg;
 
 import java.util.Locale;
 
-import com.frostwire.android.util.FilenameUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import com.frostwire.search.AbstractCrawledSearchResult;
 import com.frostwire.search.HttpSearchResult;
 

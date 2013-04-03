@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderIterator;
@@ -66,7 +67,6 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
-import com.frostwire.android.util.IOUtils;
 import com.frostwire.util.UserAgentGenerator;
 
 /**

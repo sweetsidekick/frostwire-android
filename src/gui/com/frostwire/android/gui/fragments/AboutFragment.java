@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -49,7 +51,6 @@ import com.frostwire.android.market.Consts.PurchaseState;
 import com.frostwire.android.market.Consts.ResponseCode;
 import com.frostwire.android.market.PurchaseObserver;
 import com.frostwire.android.market.ResponseHandler;
-import com.frostwire.android.util.IOUtils;
 
 /**
  * @author gubatron

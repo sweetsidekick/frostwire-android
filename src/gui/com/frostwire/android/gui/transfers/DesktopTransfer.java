@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.frostwire.android.R;
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron

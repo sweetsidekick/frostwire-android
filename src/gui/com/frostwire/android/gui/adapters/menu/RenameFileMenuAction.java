@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.adapters.menu;
 
+import org.apache.commons.io.FilenameUtils;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -29,7 +31,6 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.adapters.FileListAdapter;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
-import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron

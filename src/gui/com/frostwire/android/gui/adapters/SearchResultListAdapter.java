@@ -21,6 +21,8 @@ package com.frostwire.android.gui.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,7 +36,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;

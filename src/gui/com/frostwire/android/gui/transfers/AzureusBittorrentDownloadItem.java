@@ -20,9 +20,8 @@ package com.frostwire.android.gui.transfers;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-
-import com.frostwire.android.util.FilenameUtils;
 
 /**
  * @author gubatron

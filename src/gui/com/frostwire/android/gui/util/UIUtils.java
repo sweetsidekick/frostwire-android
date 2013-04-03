@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.io.FilenameUtils;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -53,7 +55,6 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.util.FilenameUtils;
 import com.frostwire.util.MimeDetector;
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
