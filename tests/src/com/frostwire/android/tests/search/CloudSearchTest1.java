@@ -35,7 +35,6 @@ import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.vertor.VertorSearchPerformer;
-import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
  * 
@@ -48,11 +47,6 @@ public class CloudSearchTest1 extends TestCase {
     @MediumTest
     public void testSoundcloud() {
         testPerformer(new SoundcloudSearchPerformer(0, "frostclick", 5000));
-    }
-
-    @MediumTest
-    public void testYoutube() {
-        testPerformer(new YouTubeSearchPerformer(0, "frostclick", 5000));
     }
 
     @MediumTest

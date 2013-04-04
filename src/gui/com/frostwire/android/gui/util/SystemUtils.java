@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.util.FileUtils;
+import com.frostwire.util.FileUtils;
 
 /**
  * @author gubatron

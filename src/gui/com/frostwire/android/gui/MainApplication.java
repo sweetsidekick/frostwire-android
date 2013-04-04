@@ -25,7 +25,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
-import com.frostwire.android.util.FileUtils;
+import com.frostwire.util.FileUtils;
 
 /**
  * 
