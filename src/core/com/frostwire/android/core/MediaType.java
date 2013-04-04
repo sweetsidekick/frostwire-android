@@ -62,10 +62,11 @@ public class MediaType implements Serializable {
     /**
      * Type for 'documents'
      */
-    private static final MediaType TYPE_DOCUMENTS = new MediaType(Constants.FILE_TYPE_DOCUMENTS, SCHEMA_DOCUMENTS, DOCUMENTS_STRING_RESOURCE_ID, new String[] { "html", "htm", "xhtml", "mht", "mhtml", "xml", "txt", "ans", "asc", "diz", "eml", "pdf", "ps", "eps", "epsf", "dvi", "rtf", "wri", "doc", "mcw", "wps", "xls", "wk1",
-            "dif", "csv", "ppt", "tsv", "hlp", "chm", "lit", "tex", "texi", "latex", "info", "man", "wp", "wpd", "wp5", "wk3", "wk4", "shw", "sdd", "sdw", "sdp", "sdc", "sxd", "sxw", "sxp", "sxc", "abw", "kwd", "mobi", "azw", "aeh", "lrf", "lrx", "cbr", "cbz", "cb7", "chm", "dnl", "djvu", "epub",
-            "pdb", "fb2", "xeb", "ceb", "prc", "pkg", "opf", "pdg", "pdb", "tr2", "tr3", "cbr", "cbz", "cb7", "cbt", "cba" });
-
+    private static final MediaType TYPE_DOCUMENTS = new MediaType(Constants.FILE_TYPE_DOCUMENTS, SCHEMA_DOCUMENTS, DOCUMENTS_STRING_RESOURCE_ID, new String[] { "html", "htm", "xhtml", "mht", "mhtml",
+            "xml", "txt", "ans", "asc", "diz", "eml", "pdf", "ps", "eps", "epsf", "dvi", "rtf", "wri", "doc", "docx", "mcw", "wps", "xls", "wk1", "dif", "csv", "ppt", "tsv", "hlp", "chm", "lit",
+            "tex", "texi", "latex", "info", "man", "wp", "wpd", "wp5", "wk3", "wk4", "shw", "sdd", "sdw", "sdp", "sdc", "sxd", "sxw", "sxp", "sxc", "abw", "kwd", "mobi", "azw", "aeh", "lrf", "lrx",
+            "cbr", "cbz", "cb7", "chm", "dnl", "djvu", "epub", "pdb", "fb2", "xeb", "ceb", "prc", "pkg", "opf", "pdg", "pdb", "tr2", "tr3", "cbr", "cbz", "cb7", "cbt", "cba", "zip", "7z", "rar",
+            "gzip", "tar", "gz", "cab", "msi", "ace", "sit", "dmg", "taz", "sh", "awk", "pl", "java", "py", "rb", "c", "cpp", "h", "hpp" });
 
     /**
      * Type for applications.
