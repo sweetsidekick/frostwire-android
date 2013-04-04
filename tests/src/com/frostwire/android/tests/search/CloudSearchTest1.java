@@ -51,11 +51,6 @@ public class CloudSearchTest1 extends TestCase {
     }
 
     @MediumTest
-    public void testYoutube() {
-        testPerformer(new YouTubeSearchPerformer(0, "frostclick", 5000));
-    }
-
-    @MediumTest
     public void testISOHunt() {
         testPerformer(new ISOHuntSearchPerformer(0, "frostclick", 5000));
     }
