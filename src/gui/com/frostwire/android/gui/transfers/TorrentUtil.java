@@ -48,7 +48,7 @@ import android.util.Log;
 import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.ui.UIFunctions;
 import com.aelitis.azureus.ui.UIFunctionsManager;
-import com.frostwire.android.util.FileUtils;
+import com.frostwire.util.FileUtils;
 
 /**
  * @author gubatron

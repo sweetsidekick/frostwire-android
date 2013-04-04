@@ -18,8 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.util.FileUtils;
 import com.frostwire.search.HttpSearchResult;
+import com.frostwire.util.FileUtils;
 
 /**
  * @author gubatron
