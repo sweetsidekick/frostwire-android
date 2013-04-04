@@ -1,8 +1,9 @@
-FrostWire 1.0.6 - 03/28/2013
+FrostWire 1.0.6 - APR/03/2013
  - Faster search results. Search architecture revised and improved.
  - Includes search results from archive.org, which indexes millions
    of public domain and creative commons works from all over the
    internet.
+ - Reduces CPU and battery consumption up to 84%.
  - FrostWire won't disable screen locking during audio playback.
    It's now up to the user to set longer auto-locking timeouts if
    they want to use FrostWire as an audio player in their vehicles.
@@ -10,9 +11,11 @@ FrostWire 1.0.6 - 03/28/2013
    while the screen was locked.
  - Updated icons and graphics.
  - Improved mime type detection.
+ - Supports WebM video search results.
  - Updated UPnP cling libraries for better Wi-Fi sharing discovery.
  - Multiple crashes and freezes fixed.
  - Opens .torrent files from urls and from any file browser.
+ - Faster hashing and checking of ongoing and finished torrent downloads.
  - Fixes a crash when sharing files from third party apps like FileKicker
    which pass filepath uris instead of android provider uris.
  - Fixes double audio playback issue with third party media playing apps.
