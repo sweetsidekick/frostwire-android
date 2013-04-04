@@ -93,7 +93,7 @@ public class MediaType implements Serializable {
      * Type for 'video'
      */
     private static final MediaType TYPE_VIDEO = new MediaType(Constants.FILE_TYPE_VIDEOS, SCHEMA_VIDEO, VIDEO_STRING_RESOURCE_ID, new String[] { "mpg", "mpeg", "mpe", "mng", "mpv", "m1v", "vob", "mp2", "mpv2", "mp2v", "m2p", "m2v", "mpgv", "vcd", "mp4", "dv", "dvd", "div", "divx", "dvx", "smi", "smil", "rm", "ram", "rv",
-            "rmm", "rmvb", "avi", "asf", "asx", "wmv", "qt", "mov", "fli", "flc", "flx", "flv", "wml", "vrml", "swf", "dcr", "jve", "nsv", "mkv", "ogm", "cdg", "srt", "sub", "idx", "webm" });
+            "rmm", "rmvb", "avi", "asf", "asx", "wmv", "qt", "mov", "fli", "flc", "flx", "flv", "wml", "vrml", "swf", "dcr", "jve", "nsv", "mkv", "ogm", "cdg", "srt", "sub", "idx", "webm", "3gp" });
 
     /**
      * Type for 'images'
