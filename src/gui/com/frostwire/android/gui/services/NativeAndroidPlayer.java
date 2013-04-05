@@ -277,7 +277,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             int audioMode = am.getMode();
             
             shouldUnpause = (audioMode == AudioManager.MODE_IN_CALL ||
-                    audioMode == AudioManager.MODE_IN_COMMUNICATION ||
+                    //audioMode == AudioManager.MODE_IN_COMMUNICATION ||  // not in api 10
                     audioMode == AudioManager.MODE_RINGTONE) &&
                     isPlaying();
             
