@@ -26,6 +26,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.PeerManager;
@@ -71,7 +72,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
         setupFragments();
 
-        setInitialFragment(savedInstanceState);
+        setupInitialFragment(savedInstanceState);
 
         setupSlideMenu();
     }
@@ -98,6 +99,21 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         syncSlideMenu();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+            if (!(getCurrentFragment() instanceof SearchFragment)) {
+                switchFragment(R.id.menu_main_search);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            getSlidingMenu().toggle();
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
+        return true;
     }
 
     public void switchFragment(int itemId) {
@@ -130,6 +146,8 @@ public class MainActivity2 extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
+
+        syncSlideMenu();
     }
 
     private void setupFragments() {
@@ -144,7 +162,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
         library.setPeer(PeerManager.instance().getLocalPeer());
     }
 
-    private void setInitialFragment(Bundle savedInstanceState) {
+    private void setupInitialFragment(Bundle savedInstanceState) {
         Fragment fragment = null;
 
         if (savedInstanceState != null) {
