@@ -27,16 +27,17 @@ import org.slf4j.LoggerFactory;
 
 import android.app.NotificationManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -50,6 +51,7 @@ import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
+import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.SlideMenuFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
@@ -61,6 +63,7 @@ import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
@@ -130,6 +133,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         syncSlideMenu();
+        updateHeader(getCurrentFragment());
     }
 
     @Override
@@ -154,6 +158,15 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
     }
 
+    public void showMyFiles() {
+        if (!(getCurrentFragment() instanceof BrowsePeerFragment)) {
+            switchFragment(R.id.menu_main_library);
+        }
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
+            showShareIndication();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -166,6 +179,15 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         SoftwareUpdater.instance().checkForUpdate(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        search.dismissDialogs();
+        library.dismissDialogs();
+        peers.dismissDialogs();
     }
 
     @Override
@@ -264,6 +286,28 @@ public class MainActivity2 extends AbstractSlidingActivity {
         getSlidingMenu().showContent();
 
         syncSlideMenu();
+
+        updateHeader(fragment);
+    }
+
+    private void updateHeader(Fragment fragment) {
+        try {
+            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+            if (placeholder.getChildCount() > 0) {
+                placeholder.removeAllViews();
+            }
+
+            if (fragment instanceof MainFragment) {
+                View header = ((MainFragment) fragment).getHeader(this);
+                if (header != null) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    placeholder.addView(header, params);
+                }
+            }
+        } catch (Throwable e) {
+            LOG.error("Error updating main header", e);
+        }
     }
 
     private void setupFragments() {
@@ -289,6 +333,8 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).commit();
+
+        updateHeader(fragment);
     }
 
     private void setupSlideMenu() {
@@ -431,5 +477,10 @@ public class MainActivity2 extends AbstractSlidingActivity {
             }
             UIUtils.showLongMessage(this, getString(R.string.n_files_shared, fileUris.size()));
         }
+    }
+
+    private void showShareIndication() {
+        ShareIndicationDialog dlg = new ShareIndicationDialog();
+        dlg.show(getSupportFragmentManager());
     }
 }
