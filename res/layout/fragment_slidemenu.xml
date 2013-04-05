@@ -23,7 +23,7 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:layout_width="250dip"
+        android:layout_width="@dimen/mainmenu_width"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 

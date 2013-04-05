@@ -342,9 +342,9 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
 
         SlidingMenu menu = getSlidingMenu();
-        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowWidthRes(R.dimen.mainmenu_shadow_width);
         menu.setShadowDrawable(R.drawable.mainmenu_shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        menu.setBehindWidthRes(R.dimen.mainmenu_width);
         menu.setFadeDegree(0.35f);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setBehindScrollScale(0.0f);
