@@ -652,6 +652,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         int hours = totalSeconds / 3600;
 
         formatBuilder.setLength(0);
+        formatBuilder.trimToSize();
+        
         if (hours > 0) {
             return formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
         } else {
