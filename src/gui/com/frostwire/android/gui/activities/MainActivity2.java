@@ -51,8 +51,6 @@ public class MainActivity2 extends AbstractSlidingActivity {
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
 
-    private Fragment currentFragment;
-
     private SlideMenuFragment menuFragment;
 
     private SearchFragment search;
@@ -71,16 +69,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
         setupFragments();
 
-        // set the Above View
-        if (savedInstanceState != null) {
-            currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
-        }
-        if (currentFragment == null) {
-            currentFragment = search;
-        }
-
-        // set the Above View
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, currentFragment, FRAGMENT_STACK_TAG).commit();
+        setInitialFragment(savedInstanceState);
 
         // set the Behind View
         setBehindContentView(R.layout.slidemenu_frame);
@@ -141,7 +130,6 @@ public class MainActivity2 extends AbstractSlidingActivity {
     }
 
     private void switchContent(Fragment fragment) {
-        currentFragment = fragment;
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
@@ -157,6 +145,19 @@ public class MainActivity2 extends AbstractSlidingActivity {
         about = new AboutFragment();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
+    }
+
+    private void setInitialFragment(Bundle savedInstanceState) {
+        Fragment fragment = null;
+
+        if (savedInstanceState != null) {
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+        }
+        if (fragment == null) {
+            fragment = search;
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).commit();
     }
 
     private Fragment getFragmentByMenuId(int id) {
