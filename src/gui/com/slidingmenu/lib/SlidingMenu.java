@@ -3,7 +3,7 @@ package com.slidingmenu.lib;
 import java.lang.reflect.Method;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
+//import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,7 +14,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
+//import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -967,27 +967,27 @@ public class SlidingMenu extends RelativeLayout {
 		return true;
 	}
 	
-	private Handler mHandler = new Handler();
+	//private Handler mHandler = new Handler();
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	//@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void manageLayers(float percentOpen) {
 		if (Build.VERSION.SDK_INT < 11) return;
 
-		boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-		final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
-
-		if (layerType != getContent().getLayerType()) {
-			mHandler.post(new Runnable() {
-				public void run() {
-					Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
-					getContent().setLayerType(layerType, null);
-					getMenu().setLayerType(layerType, null);
-					if (getSecondaryMenu() != null) {
-						getSecondaryMenu().setLayerType(layerType, null);
-					}
-				}
-			});
-		}
+//		boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
+//		final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+//
+//		if (layerType != getContent().getLayerType()) {
+//			mHandler.post(new Runnable() {
+//				public void run() {
+//					Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
+//					getContent().setLayerType(layerType, null);
+//					getMenu().setLayerType(layerType, null);
+//					if (getSecondaryMenu() != null) {
+//						getSecondaryMenu().setLayerType(layerType, null);
+//					}
+//				}
+//			});
+//		}
 	}
 
 }
