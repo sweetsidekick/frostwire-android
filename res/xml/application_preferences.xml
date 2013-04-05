@@ -30,7 +30,7 @@
         <com.frostwire.android.gui.views.preference.SimpleActionPreference
             android:key="frostwire.prefs.internal.connect_disconnect"
             android:summary="@string/empty_string"
-            android:title="@string/conectivity"
+            android:title="@string/connectivity"
             frostwire:button_text="@string/empty_string" />
 
         <CheckBoxPreference
