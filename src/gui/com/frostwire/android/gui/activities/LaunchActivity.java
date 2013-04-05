@@ -44,7 +44,7 @@ public class LaunchActivity extends AbstractActivity {
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
-                startActivity(new Intent(this, MainActivity2.class));
+                startActivity(new Intent(this, MainActivity.class));
             } else {
                 startActivity(new Intent(this, WizardActivity.class));
             }

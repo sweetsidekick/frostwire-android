@@ -41,7 +41,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.activities.MainActivity2;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 
 /**
@@ -88,12 +88,21 @@ public class SlideMenuFragment extends ListFragment {
         }
     }
 
+    public void setSelectedItem(int id) {
+        try {
+            MenuAdapter adapter = (MenuAdapter) getListAdapter();
+            adapter.setSelectedItem(id);
+        } catch (Throwable e) { // protecting from weird android UI engine issues
+            LOG.warn("Error setting slide menu item selected", e);
+        }
+    }
+
     private void switchFragment(int itemId) {
         if (getActivity() == null)
             return;
 
-        if (getActivity() instanceof MainActivity2) {
-            MainActivity2 activity = (MainActivity2) getActivity();
+        if (getActivity() instanceof MainActivity) {
+            MainActivity activity = (MainActivity) getActivity();
             activity.switchFragment(itemId);
         }
     }
@@ -166,7 +175,6 @@ public class SlideMenuFragment extends ListFragment {
         public MenuAdapter(Activity activity, MenuItem[] items) {
             super(activity, R.id.slidemenu_listitem_label, items);
             this.activity = activity;
-            items[0].selected = true;
         }
 
         @Override

@@ -74,7 +74,7 @@ import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
  */
 public class MainActivity extends AbstractSlidingActivity {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MainActivity2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
     private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
@@ -94,7 +94,7 @@ public class MainActivity extends AbstractSlidingActivity {
     private String durToken;
 
     public MainActivity() {
-        super(R.layout.activity_main2, false, 2);
+        super(R.layout.activity_main, false, 2);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class MainActivity extends AbstractSlidingActivity {
              */
 
             //Show me the transfer tab
-            Intent i = new Intent(this, MainActivity2.class);
+            Intent i = new Intent(this, MainActivity.class);
             i.setAction(Constants.ACTION_SHOW_TRANSFERS);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
