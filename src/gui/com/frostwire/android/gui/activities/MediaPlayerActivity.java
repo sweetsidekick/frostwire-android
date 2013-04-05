@@ -26,6 +26,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Camera;
@@ -276,6 +277,30 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
 
+        if (isWebViewCacheGood()) {
+            initSupportFrostWire();
+        }
+    }
+
+    /**
+     * The AdMob SDK happens to have a WebView component that breaks on some devices
+     * at android.webkit.WebViewDatabase.initDatabase(WebViewDatabase.java:231)
+     * 
+     * @param context
+     * @return
+     */
+    private boolean isWebViewCacheGood() {
+        boolean isGood = false;
+        try {
+            SQLiteDatabase cacheDb = openOrCreateDatabase("webviewCache.db", 0, null);
+            isGood = cacheDb != null;
+            cacheDb.close();
+        } catch (Throwable t) {
+        }
+        return isGood;
+    }
+    
+    private void initSupportFrostWire() {
         LinearLayout llayout = findView(R.id.activity_mediaplayer_adview_placeholder);
         adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
         adView.setVisibility(View.GONE);
