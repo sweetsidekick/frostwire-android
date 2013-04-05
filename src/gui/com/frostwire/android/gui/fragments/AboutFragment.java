@@ -65,7 +65,7 @@ public class AboutFragment extends Fragment implements MainFragment {
     private static final String SKU_05_DOLLARS = "frostwire.donation.five";
     private static final String SKU_10_DOLLARS = "frostwire.donation.ten";
     private static final String SKU_25_DOLLARS = "frostwire.donation.twentyfive";
-    
+
     private Handler handler = new Handler();
     private DonationsPurchaseObserver donationsPurchaseObserver;
 
@@ -104,7 +104,7 @@ public class AboutFragment extends Fragment implements MainFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView title = (TextView) view.findViewById(R.id.fragment_about_title);
-        title.setText("FrostWire v"+Constants.FROSTWIRE_VERSION_STRING);
+        title.setText("FrostWire v" + Constants.FROSTWIRE_VERSION_STRING);
 
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
@@ -142,7 +142,10 @@ public class AboutFragment extends Fragment implements MainFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        billingService.unbind();
+
+        if (billingService != null) {
+            billingService.unbind();
+        }
     }
 
     private String getAboutText() {
