@@ -122,12 +122,6 @@ public class MainActivity2 extends AbstractSlidingActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        saveLastFragment(outState);
-    }
-
-    @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             super.onBackPressed();
@@ -172,6 +166,14 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         SoftwareUpdater.instance().checkForUpdate(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveLastFragment(outState);
+
+        outState.putString(DUR_TOKEN_KEY, durToken);
     }
 
     @Override
