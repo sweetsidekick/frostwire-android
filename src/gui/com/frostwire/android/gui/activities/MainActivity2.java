@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -37,6 +38,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 /**
  * @author gubatron
@@ -71,12 +73,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
         setInitialFragment(savedInstanceState);
 
-        // set the Behind View
-        setBehindContentView(R.layout.slidemenu_frame);
-        getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
-
-        // customize the SlidingMenu
-        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        setupSlideMenu();
     }
 
     @Override
@@ -158,6 +155,26 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).commit();
+    }
+
+    private void setupSlideMenu() {
+        setBehindContentView(R.layout.slidemenu_frame);
+        getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
+
+        SlidingMenu menu = getSlidingMenu();
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.mainmenu_shadow);
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        menu.setFadeDegree(0.35f);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setBehindScrollScale(0.0f);
+        menu.setBehindCanvasTransformer(new CanvasTransformer() {
+            @Override
+            public void transformCanvas(Canvas canvas, float percentOpen) {
+                float scale = (float) (percentOpen * 0.25 + 0.75);
+                canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+            }
+        });
     }
 
     private Fragment getFragmentByMenuId(int id) {
