@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.PeerManager;
@@ -54,6 +53,8 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
     private Fragment currentFragment;
 
+    private SlideMenuFragment menuFragment;
+
     private SearchFragment search;
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
@@ -71,17 +72,19 @@ public class MainActivity2 extends AbstractSlidingActivity {
         setupFragments();
 
         // set the Above View
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
-        if (currentFragment == null)
+        }
+        if (currentFragment == null) {
             currentFragment = search;
+        }
 
         // set the Above View
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, currentFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, currentFragment, FRAGMENT_STACK_TAG).commit();
 
         // set the Behind View
         setBehindContentView(R.layout.slidemenu_frame);
-        getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, new SlideMenuFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
 
         // customize the SlidingMenu
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -94,12 +97,21 @@ public class MainActivity2 extends AbstractSlidingActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        syncSlideMenu();
+    }
+
+    @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             super.onBackPressed();
         } else {
             handleLastBackPressed();
         }
+
+        syncSlideMenu();
     }
 
     public void switchFragment(int itemId) {
@@ -109,11 +121,14 @@ public class MainActivity2 extends AbstractSlidingActivity {
         }
     }
 
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
+    }
+
     private void saveLastFragment(Bundle outState) {
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag(FRAGMENT_STACK_TAG);
+        Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            manager.putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
         }
     }
 
@@ -133,6 +148,8 @@ public class MainActivity2 extends AbstractSlidingActivity {
     }
 
     private void setupFragments() {
+        menuFragment = new SlideMenuFragment();
+
         search = new SearchFragment();
         library = new BrowsePeerFragment();
         transfers = new TransfersFragment();
@@ -156,6 +173,22 @@ public class MainActivity2 extends AbstractSlidingActivity {
             return about;
         default:
             return null;
+        }
+    }
+
+    private void syncSlideMenu() {
+        Fragment fragment = getCurrentFragment();
+
+        if (fragment instanceof SearchFragment) {
+            menuFragment.setSelectedItem(R.id.menu_main_search);
+        } else if (fragment instanceof BrowsePeerFragment) {
+            menuFragment.setSelectedItem(R.id.menu_main_library);
+        } else if (fragment instanceof TransfersFragment) {
+            menuFragment.setSelectedItem(R.id.menu_main_transfers);
+        } else if (fragment instanceof BrowsePeersFragment) {
+            menuFragment.setSelectedItem(R.id.menu_main_peers);
+        } else if (fragment instanceof AboutFragment) {
+            menuFragment.setSelectedItem(R.id.menu_main_about);
         }
     }
 }
