@@ -21,6 +21,8 @@ package com.frostwire.android.gui.activities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +35,7 @@ import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.SlideMenuFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.slidingmenu.lib.SlidingMenu;
 
@@ -45,8 +48,9 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity2.class);
 
-    private static final String CURRENT_FRAGMENT_SAVE_INSTANCE_KEY = "current_fragment";
-    private static final String DUR_TOKEN_SAVE_INSTANCE_KEY = "dur_token";
+    private static final String FRAGMENT_STACK_TAG = "fragment_stack";
+    private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
+    private static final String DUR_TOKEN_KEY = "dur_token";
 
     private Fragment currentFragment;
 
@@ -68,7 +72,7 @@ public class MainActivity2 extends AbstractSlidingActivity {
 
         // set the Above View
         if (savedInstanceState != null)
-            currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_SAVE_INSTANCE_KEY);
+            currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
         if (currentFragment == null)
             currentFragment = search;
 
@@ -86,12 +90,44 @@ public class MainActivity2 extends AbstractSlidingActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_SAVE_INSTANCE_KEY, currentFragment);
+        saveLastFragment(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+        } else {
+            handleLastBackPressed();
+        }
+    }
+
+    public void switchFragment(int itemId) {
+        Fragment fragment = getFragmentByMenuId(itemId);
+        if (fragment != null) {
+            switchContent(fragment);
+        }
+    }
+
+    private void saveLastFragment(Bundle outState) {
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentByTag(FRAGMENT_STACK_TAG);
+        if (fragment != null) {
+            manager.putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+        }
+    }
+
+    private void handleLastBackPressed() {
+        trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                moveTaskToBack(true);
+            }
+        }));
     }
 
     private void switchContent(Fragment fragment) {
         currentFragment = fragment;
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
     }
@@ -120,13 +156,6 @@ public class MainActivity2 extends AbstractSlidingActivity {
             return about;
         default:
             return null;
-        }
-    }
-
-    public void switchFragment(int itemId) {
-        Fragment fragment = getFragmentByMenuId(itemId);
-        if (fragment != null) {
-            switchContent(fragment);
         }
     }
 }
