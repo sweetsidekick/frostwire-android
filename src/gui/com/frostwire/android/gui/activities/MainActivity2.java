@@ -27,6 +27,8 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.PeerManager;
@@ -75,6 +77,14 @@ public class MainActivity2 extends AbstractSlidingActivity {
         setupInitialFragment(savedInstanceState);
 
         setupSlideMenu();
+
+        ImageButton buttonMenu = findView(R.id.activity_main_button_menu);
+        buttonMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSlidingMenu().toggle();
+            }
+        });
     }
 
     @Override
