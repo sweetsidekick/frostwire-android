@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -42,7 +43,10 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.views.PlayerMenuItemView;
 
 /**
  * @author gubatron
@@ -53,9 +57,21 @@ public class SlideMenuFragment extends ListFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(SlideMenuFragment.class);
 
+    private PlayerMenuItemView playerItem;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_slidemenu, null);
+        View view = inflater.inflate(R.layout.fragment_slidemenu, null);
+
+        playerItem = (PlayerMenuItemView) view.findViewById(R.id.slidemenu_player_menuitem);
+        playerItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchPlayerActivity();
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -161,6 +177,23 @@ public class SlideMenuFragment extends ListFragment {
         context.startActivity(i);
     }
 
+    private void launchPlayerActivity() {
+        if (getActivity() == null) {
+            return;
+        }
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showContent();
+        }
+
+        if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
+            Intent i = new Intent(getActivity(), MediaPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(i);
+        }
+    }
+
     private static class MenuItem {
         public int id;
         public Drawable icon;
@@ -207,5 +240,9 @@ public class SlideMenuFragment extends ListFragment {
 
             notifyDataSetChanged();
         }
+    }
+
+    public void refreshPlayerItem() {
+        playerItem.refresh();
     }
 }

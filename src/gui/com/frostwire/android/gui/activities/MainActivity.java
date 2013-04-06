@@ -66,6 +66,7 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
+import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
 
 /**
  * @author gubatron
@@ -342,17 +343,26 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
 
         SlidingMenu menu = getSlidingMenu();
+        
         menu.setShadowWidthRes(R.dimen.mainmenu_shadow_width);
         menu.setShadowDrawable(R.drawable.mainmenu_shadow);
         menu.setBehindWidthRes(R.dimen.mainmenu_width);
         menu.setFadeDegree(0.35f);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setBehindScrollScale(0.0f);
+        
         menu.setBehindCanvasTransformer(new CanvasTransformer() {
             @Override
             public void transformCanvas(Canvas canvas, float percentOpen) {
                 float scale = (float) (percentOpen * 0.25 + 0.75);
                 canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+            }
+        });
+        
+        menu.setOnOpenListener(new OnOpenListener() {
+            @Override
+            public void onOpen() {
+                menuFragment.refreshPlayerItem();
             }
         });
     }

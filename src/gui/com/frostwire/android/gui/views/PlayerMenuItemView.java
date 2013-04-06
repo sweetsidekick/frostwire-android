@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.MusicUtils;
@@ -53,38 +52,42 @@ public class PlayerMenuItemView extends LinearLayout {
 
         View.inflate(getContext(), R.layout.view_player_menuitem, this);
 
+        if (isInEditMode()) {
+            return;
+        }
+
         imageThumbnail = (ImageView) findViewById(R.id.view_player_menu_item_thumbnail);
         textTitle = (TextView) findViewById(R.id.view_player_menu_item_title);
         textArtist = (TextView) findViewById(R.id.view_player_menu_item_artist);
 
-        try {
-            FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
-
-            if (fd != null) {
-                if (getVisibility() == View.GONE) {
-                    setVisibility(View.VISIBLE);
-
-                    imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
-                    textTitle.setText(fd.title);
-                    textArtist.setText(fd.artist);
-                }
-            } else {
-                if (getVisibility() == View.VISIBLE) {
-                    setVisibility(View.GONE);
-
-                    imageThumbnail.setImageBitmap(null);
-                    textTitle.setText("");
-                    textArtist.setText("");
-                }
-            }
-        } catch (CoreRuntimeException e) {
-            // ignore, engine core still not created
-        }
+        refresh();
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         onTouchEvent(ev);
         return false;
+    }
+
+    public void refresh() {
+        FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
+
+        if (fd != null) {
+            if (getVisibility() == View.GONE) {
+                setVisibility(View.VISIBLE);
+
+                imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
+                textTitle.setText(fd.title);
+                textArtist.setText(fd.artist);
+            }
+        } else {
+            if (getVisibility() == View.VISIBLE) {
+                setVisibility(View.GONE);
+
+                imageThumbnail.setImageBitmap(null);
+                textTitle.setText("");
+                textArtist.setText("");
+            }
+        }
     }
 }
