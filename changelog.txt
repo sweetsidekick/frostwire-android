@@ -22,6 +22,7 @@ FrostWire 1.0.6 - APR/03/2013
  - Fixes bug where the app would force close and restart on phones without SD cards.
  - Fixes bug on Android 4.x where finished document downloads wouldn't appear under
    documents.
+ - Avoids crash caused by AdMobSDK and WebView's cache being null.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.

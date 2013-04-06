@@ -15,6 +15,9 @@
 
 package org.fourthline.cling.android;
 
+import java.util.Collections;
+import java.util.List;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +26,15 @@ import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.controlpoint.ControlPoint;
+import org.fourthline.cling.model.NetworkAddress;
+import org.fourthline.cling.model.message.IncomingDatagramMessage;
+import org.fourthline.cling.model.message.UpnpRequest;
+import org.fourthline.cling.model.message.discovery.OutgoingSearchResponse;
+import org.fourthline.cling.model.meta.LocalDevice;
 import org.fourthline.cling.protocol.ProtocolFactory;
+import org.fourthline.cling.protocol.ProtocolFactoryImpl;
+import org.fourthline.cling.protocol.ReceivingAsync;
+import org.fourthline.cling.protocol.async.ReceivingSearch;
 import org.fourthline.cling.registry.Registry;
 import org.fourthline.cling.transport.Router;
 
@@ -72,6 +83,27 @@ public class AndroidUpnpServiceImpl extends Service {
                 // Android main UI thread. This will complete probably after the main UI thread
                 // is done.
                 super.shutdown(true);
+            }
+            
+            @Override
+            protected ProtocolFactory createProtocolFactory() {
+                
+                return new ProtocolFactoryImpl(this) {
+                    @Override
+                    protected ReceivingAsync createReceivingSearch(IncomingDatagramMessage<UpnpRequest> incomingRequest) {
+                        return new ReceivingSearch(getUpnpService(), incomingRequest) {
+                            @Override
+                            protected List<OutgoingSearchResponse> createServiceTypeMessages(LocalDevice device, NetworkAddress activeStreamServer) {
+                                List<OutgoingSearchResponse> result = Collections.emptyList();
+                                try {
+                                    result = super.createServiceTypeMessages(device, activeStreamServer);
+                                } catch (Throwable e) {
+                                }
+                                return result;
+                            }
+                        };
+                    }
+                };
             }
         };
     }
