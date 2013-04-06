@@ -25,7 +25,7 @@
     android:versionName="1.0.6" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="10"
         android:targetSdkVersion="13" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -44,7 +44,8 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-	    android:name="com.frostwire.android.gui.MainApplication"
+        android:name="com.frostwire.android.gui.MainApplication"
+        android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/application_label"
         android:theme="@style/FrostWireTheme" >
@@ -52,17 +53,13 @@
         <!-- activities -->
 
         <activity
-            android:name="com.frostwire.android.gui.activities.LaunchActivity"
+            android:name="com.frostwire.android.gui.activities.MainActivity"
             android:label="@string/application_label" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.frostwire.android.gui.activities.MainActivity"
-            android:label="@string/application_label" >
 
             <!-- handle .torrent urls -->
             <intent-filter>
@@ -126,10 +123,13 @@
         <activity
             android:name="com.frostwire.android.gui.activities.AboutActivity"
             android:label="@string/activity_about" />
-                 
-        <!-- activity
+
+        <!--
+             activity
             android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" /-->
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" /
+        -->
+
 
         <!-- providers -->
 

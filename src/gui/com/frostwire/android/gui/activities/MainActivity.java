@@ -64,6 +64,8 @@ import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
+import com.frostwire.android.gui.views.TOS;
+import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -172,14 +174,19 @@ public class MainActivity extends AbstractSlidingActivity {
     protected void onResume() {
         super.onResume();
 
-        syncSlideMenu();
-
-        if (firstTime) {
-            firstTime = false;
-            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
+                mainResume();
+            } else {
+                startWizardActivity();
+            }
+        } else {
+            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
+                public void onAccept() {
+                    startWizardActivity();
+                }
+            }));
         }
-
-        SoftwareUpdater.instance().checkForUpdate(this);
     }
 
     @Override
@@ -276,7 +283,7 @@ public class MainActivity extends AbstractSlidingActivity {
     private void handleLastBackPressed() {
         trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                moveTaskToBack(true);
+                finish();
             }
         }));
     }
@@ -343,14 +350,14 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
 
         SlidingMenu menu = getSlidingMenu();
-        
+
         menu.setShadowWidthRes(R.dimen.mainmenu_shadow_width);
         menu.setShadowDrawable(R.drawable.mainmenu_shadow);
         menu.setBehindWidthRes(R.dimen.mainmenu_width);
         menu.setFadeDegree(0.35f);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setBehindScrollScale(0.0f);
-        
+
         menu.setBehindCanvasTransformer(new CanvasTransformer() {
             @Override
             public void transformCanvas(Canvas canvas, float percentOpen) {
@@ -358,7 +365,7 @@ public class MainActivity extends AbstractSlidingActivity {
                 canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
             }
         });
-        
+
         menu.setOnOpenListener(new OnOpenListener() {
             @Override
             public void onOpen() {
@@ -492,5 +499,22 @@ public class MainActivity extends AbstractSlidingActivity {
     private void showShareIndication() {
         ShareIndicationDialog dlg = new ShareIndicationDialog();
         dlg.show(getSupportFragmentManager());
+    }
+
+    private void startWizardActivity() {
+        Intent i = new Intent(this, WizardActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+    }
+
+    private void mainResume() {
+        syncSlideMenu();
+
+        if (firstTime) {
+            firstTime = false;
+            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        }
+
+        SoftwareUpdater.instance().checkForUpdate(this);
     }
 }

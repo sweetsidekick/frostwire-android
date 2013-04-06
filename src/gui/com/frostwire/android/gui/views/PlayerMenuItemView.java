@@ -70,23 +70,26 @@ public class PlayerMenuItemView extends LinearLayout {
     }
 
     public void refresh() {
-        FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
+        if (Engine.instance() != null && Engine.instance().getMediaPlayer() != null) {
 
-        if (fd != null) {
-            if (getVisibility() == View.GONE) {
-                setVisibility(View.VISIBLE);
+            FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
 
-                imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
-                textTitle.setText(fd.title);
-                textArtist.setText(fd.artist);
-            }
-        } else {
-            if (getVisibility() == View.VISIBLE) {
-                setVisibility(View.GONE);
+            if (fd != null) {
+                if (getVisibility() == View.GONE) {
+                    setVisibility(View.VISIBLE);
 
-                imageThumbnail.setImageBitmap(null);
-                textTitle.setText("");
-                textArtist.setText("");
+                    imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
+                    textTitle.setText(fd.title);
+                    textArtist.setText(fd.artist);
+                }
+            } else {
+                if (getVisibility() == View.VISIBLE) {
+                    setVisibility(View.GONE);
+
+                    imageThumbnail.setImageBitmap(null);
+                    textTitle.setText("");
+                    textArtist.setText("");
+                }
             }
         }
     }
