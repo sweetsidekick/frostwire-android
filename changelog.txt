@@ -23,6 +23,8 @@ FrostWire 1.0.6 - APR/03/2013
  - Fixes bug on Android 4.x where finished document downloads wouldn't appear under
    documents.
  - Avoids crash caused by AdMobSDK and WebView's cache being null.
+ - Replaced navigation menu for a better one that presents itself with a smooth
+   brief zoom-in animation.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
