@@ -20,10 +20,13 @@ package com.frostwire.android.tests.misc;
 import java.util.Formatter;
 import java.util.Locale;
 
-import android.test.ApplicationTestCase;
-import android.test.mock.MockApplication;
+import android.content.Intent;
+import android.os.SystemClock;
+import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.widget.TextView;
+
+import com.frostwire.android.tests.LeakyActivity;
 
 /**
  * 
@@ -31,51 +34,50 @@ import android.widget.TextView;
  * @author aldenml
  *
  */
-public class MemLeakTest extends ApplicationTestCase<MockApplication> {
+public class MemLeakTest extends ActivityUnitTestCase<LeakyActivity> {
+
+    public MemLeakTest() {
+        super(LeakyActivity.class);
+    }
 
     private StringBuilder formatBuilder;
     private Formatter formatter;
     private Runtime runtime;
-    private final int MB = 1024 * 1024;
+    private final int KB = 1024;
     private TextView textView;
-
-    public MemLeakTest() {
-        this(MockApplication.class);
-    }
-
-    public MemLeakTest(Class<MockApplication> applicationClass) {
-        super(applicationClass);
-        try {
-            textView = new TextView(getContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        startActivity(new Intent(getInstrumentation().getContext(), LeakyActivity.class), null, null);
+
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
         runtime = Runtime.getRuntime();
+        textView = getActivity().getTextView();
     }
 
     @LargeTest
     public void testStringForTimeLeak() {
-        int jumps = 100000;
-        for (int i = Integer.MIN_VALUE; i < Integer.MAX_VALUE; i += jumps) {
+        assertNotNull(textView);
+        
+        int jumps = 10000;
+        
+        for (int i = 1000000; i < Integer.MAX_VALUE; i += jumps) {
             String s = stringForTime(i);
-            if (textView != null) {
-                textView.setText(s);
-            }
-            if (i % 20000000 == 0) {
-                System.out.println(i);
-                System.out.println(s);
-                System.out.println(textView == null);
-                System.out.println("Used memory: " + (runtime.totalMemory() - runtime.freeMemory()) / MB);
-                System.out.println("Free memory: " + runtime.freeMemory() / MB);
-                System.out.println("String Builder length: " + formatBuilder.length());
+            textView.setText(s);
+            assertEquals(textView.getText(), s);
+            
+            long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / KB;
+            
+            if (i%1000000==0) {
                 System.out.println("================================================================");
+                System.out.println("Time: " + i);
+                System.out.println("Text View Text: " + textView.getText());
+                System.out.println("Used memory: " + usedMemory);
+                System.out.println("Free memory: " + runtime.freeMemory() / KB);
+                System.out.println("String Builder length: " + formatBuilder.length());
+                System.out.println("================================================================\n");
             }
         }
     }

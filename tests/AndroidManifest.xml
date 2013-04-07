@@ -8,7 +8,7 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.frostwire.android" />
+        android:targetPackage="com.frostwire.android.tests" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -16,4 +16,8 @@
         <uses-library android:name="android.test.runner" />
     </application>
 
+    <activity
+            android:name="com.frostwire.android.tests.MemLeakTest"
+            android:label="@string/application_label" >
+    </activity>
 </manifest>
