@@ -119,11 +119,12 @@ public abstract class AbstractActivity extends FragmentActivity {
 
         dismissDialogs();
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //unbindDrawables(findViewById(R.id.RootView));
+        // read link: http://code.google.com/p/android/issues/detail?id=8488#c109
+        unbindDrawables(findViewById(R.id.RootView));
     }
 
     protected void onRefresh() {
