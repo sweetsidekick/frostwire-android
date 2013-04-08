@@ -18,33 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/mainmenu_width"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/slidemenu_listitem_icon"
-        style="@style/SlideMenu.Item.Image"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@null" />
-
-    <TextView
-        android:id="@+id/slidemenu_listitem_label"
-        style="@style/SlideMenu.Item.Text"
+    <com.frostwire.android.gui.views.PlayerMenuItemView
+        android:id="@+id/slidemenu_player_menuitem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/slidemenu_listitem_icon" />
+        android:visibility="gone" />
 
-    <View
+    <ListView
+        android:id="@android:id/list"
+        style="@style/SlideMenu.List"
         android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/slidemenu_listitem_icon"
-        android:background="#ff172c40" />
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:choiceMode="singleChoice" />
 
-</RelativeLayout>
+</LinearLayout>

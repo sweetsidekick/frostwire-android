@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.MusicUtils;
@@ -53,11 +52,26 @@ public class PlayerMenuItemView extends LinearLayout {
 
         View.inflate(getContext(), R.layout.view_player_menuitem, this);
 
+        if (isInEditMode()) {
+            return;
+        }
+
         imageThumbnail = (ImageView) findViewById(R.id.view_player_menu_item_thumbnail);
         textTitle = (TextView) findViewById(R.id.view_player_menu_item_title);
         textArtist = (TextView) findViewById(R.id.view_player_menu_item_artist);
 
-        try {
+        refresh();
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        onTouchEvent(ev);
+        return false;
+    }
+
+    public void refresh() {
+        if (Engine.instance() != null && Engine.instance().getMediaPlayer() != null) {
+
             FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
 
             if (fd != null) {
@@ -77,14 +91,6 @@ public class PlayerMenuItemView extends LinearLayout {
                     textArtist.setText("");
                 }
             }
-        } catch (CoreRuntimeException e) {
-            // ignore, engine core still not created
         }
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        onTouchEvent(ev);
-        return false;
     }
 }

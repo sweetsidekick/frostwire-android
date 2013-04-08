@@ -383,14 +383,18 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void updateHeader() {
         if (finger == null) {
-            Log.w(TAG, "Something wrong, finger is null");
-            removePeerAndFinish();
-            return;
+            if (peer == null) {
+                Log.w(TAG, "Something wrong, finger  and peer are null");
+                removePeerAndFinish();
+                return;
+            } else {
+                finger = peer.finger();
+            }
         }
 
-        if (header != null && adapter != null) {
+        if (header != null) {
 
-            byte fileType = adapter.getFileType();
+            byte fileType = adapter != null ? adapter.getFileType() : Constants.FILE_TYPE_AUDIO;
 
             int numShared = 0;
             int numTotal = 0;
@@ -443,6 +447,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         if (adapter != null) {
             onRefreshShared(adapter.getFileType());
+        } else {
+            browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
         }
     }
 
@@ -492,9 +498,12 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     private void removePeerAndFinish() {
-        UIUtils.showShortMessage(getActivity(), R.string.is_not_responding, peer.getNickname());
-        PeerManager.instance().removePeer(peer);
-        getActivity().finish();
+        Activity activity = getActivity();
+        if (activity != null) {
+            UIUtils.showShortMessage(activity, R.string.is_not_responding, peer.getNickname());
+            PeerManager.instance().removePeer(peer);
+            activity.finish();
+        }
     }
 
     private final class LocalBroadcastReceiver extends BroadcastReceiver {

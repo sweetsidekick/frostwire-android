@@ -1,4 +1,4 @@
-FrostWire 1.0.6 - APR/03/2013
+FrostWire 1.0.6 - APR/08/2013
  - Faster search results. Search architecture revised and improved.
  - Includes search results from archive.org, which indexes millions
    of public domain and creative commons works from all over the
@@ -26,6 +26,8 @@ FrostWire 1.0.6 - APR/03/2013
  - Fixes bug where sharing files from a third party app would open FrostWire
    in a way that hitting the back button would take the user to the desktop and
    not back into the third party app.
+ - Replaced navigation menu for a better one that presents itself with a smooth
+   brief zoom-in animation.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
