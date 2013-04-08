@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.io.IOUtils;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -82,7 +85,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
-    
+
     public static final int FILE_LIST_FILTER_SHOW_ALL = 0;
     public static final int FILE_LIST_FILTER_SHOW_SHARED = 1;
     public static final int FILE_LIST_FILTER_SHOW_UNSHARED = 2;
@@ -93,7 +96,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         super(context, getViewItemId(local, fileType), files);
 
         setShowMenuOnClick(true);
-        
+
         fileListFilter = new FileListFilter();
         setAdapterFilter(fileListFilter);
 
@@ -110,14 +113,14 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     public byte getFileType() {
         return fileType;
     }
-    
+
     /**
      * @param sharedState FILE_LIST_FILTER_SHOW_ALL, FILE_LIST_FILTER_SHOW_SHARED, FILE_LIST_FILTER_SHOW_UNSHARED
      */
     public void setFileVisibilityBySharedState(int sharedState) {
         fileListFilter.filterBySharedState(sharedState);
     }
-    
+
     public int getFileVisibilityBySharedState() {
         return fileListFilter.getCurrentSharedStateShown();
     }
@@ -237,13 +240,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
                 fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (Throwable e) {
-                        // ignore
-                    }
-                }
+                IOUtils.closeQuietly(is);
             }
         } else {
             thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
@@ -399,41 +396,38 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             return R.drawable.question_mark;
         }
     }
-    
 
     private static class FileListFilter implements ListAdapterFilter<FileDescriptor> {
-        
+
         private int visibleFiles;
-        
+
         public void filterBySharedState(int state) {
             this.visibleFiles = state;
         }
-        
+
         public int getCurrentSharedStateShown() {
             return visibleFiles;
         }
-        
+
         public boolean accept(FileDescriptor obj, CharSequence constraint) {
             if (visibleFiles != FILE_LIST_FILTER_SHOW_ALL && ((obj.shared && visibleFiles == FILE_LIST_FILTER_SHOW_UNSHARED) || (!obj.shared && visibleFiles == FILE_LIST_FILTER_SHOW_SHARED))) {
                 return false;
             }
-            
+
             String keywords = constraint.toString();
 
             if (keywords == null || keywords.length() == 0) {
                 return true;
             }
 
-
-            
-            keywords = keywords.toLowerCase();
+            keywords = keywords.toLowerCase(Locale.US);
 
             FileDescriptor fd = obj;
 
             if (fd.fileType == Constants.FILE_TYPE_AUDIO) {
-                return fd.album.trim().toLowerCase().contains(keywords) || fd.artist.trim().toLowerCase().contains(keywords) || fd.title.trim().toLowerCase().contains(keywords) || fd.filePath.trim().toLowerCase().contains(keywords);
+                return fd.album.trim().toLowerCase(Locale.US).contains(keywords) || fd.artist.trim().toLowerCase(Locale.US).contains(keywords) || fd.title.trim().toLowerCase(Locale.US).contains(keywords) || fd.filePath.trim().toLowerCase(Locale.US).contains(keywords);
             } else {
-                return fd.title.trim().toLowerCase().contains(keywords) || fd.filePath.trim().toLowerCase().contains(keywords);
+                return fd.title.trim().toLowerCase(Locale.US).contains(keywords) || fd.filePath.trim().toLowerCase(Locale.US).contains(keywords);
             }
         }
     }
