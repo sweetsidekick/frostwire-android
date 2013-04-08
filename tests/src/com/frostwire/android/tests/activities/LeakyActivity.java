@@ -1,4 +1,9 @@
-package com.frostwire.android.tests;
+package com.frostwire.android.tests.activities;
+
+import com.frostwire.android.tests.R;
+import com.frostwire.android.tests.R.id;
+import com.frostwire.android.tests.R.layout;
+import com.frostwire.android.tests.R.menu;
 
 import android.app.Activity;
 import android.os.Bundle;
