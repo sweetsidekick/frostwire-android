@@ -21,7 +21,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.frostwire.android"
     android:installLocation="preferExternal"
-    android:versionCode="82"
+    android:versionCode="83"
     android:versionName="1.0.6" >
 
     <uses-sdk
@@ -124,11 +124,9 @@
             android:name="com.frostwire.android.gui.activities.AboutActivity"
             android:label="@string/activity_about" />
 
-        <!--
-             activity
-            android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" /
-        -->
+
+	<activity android:name="com.google.ads.AdActivity"
+		android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
 
         <!-- providers -->

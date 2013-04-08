@@ -29,6 +29,7 @@ FrostWire 1.0.6 - APR/08/2013
  - Replaced navigation menu for a better one that presents itself with a smooth
    brief zoom-in animation.
  - Navigation menu and transfer screen looks properly on Motorola Razor
+ - More efficient use of Bitmaps should cut down on the number of Out of Memory errors on most devices.
  
 FrostWire 1.0.5
  - Kindle Fire HD Compatible.
