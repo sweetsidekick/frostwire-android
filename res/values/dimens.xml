@@ -22,5 +22,7 @@
 
     <dimen name="mainmenu_width">250dp</dimen>
     <dimen name="mainmenu_shadow_width">15dp</dimen>
+    <dimen name="promotion_column_width">200dp</dimen>
+    <dimen name="promotion_column_height">170dp</dimen>
 
 </resources>

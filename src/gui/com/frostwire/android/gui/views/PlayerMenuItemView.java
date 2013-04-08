@@ -19,6 +19,8 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -78,10 +80,11 @@ public class PlayerMenuItemView extends LinearLayout {
                 if (getVisibility() == View.GONE) {
                     setVisibility(View.VISIBLE);
 
-                    imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
                     textTitle.setText(fd.title);
                     textArtist.setText(fd.artist);
                 }
+
+                setArtwork(fd);
             } else {
                 if (getVisibility() == View.VISIBLE) {
                     setVisibility(View.GONE);
@@ -91,6 +94,15 @@ public class PlayerMenuItemView extends LinearLayout {
                     textArtist.setText("");
                 }
             }
+        }
+    }
+
+    private void setArtwork(FileDescriptor fd) {
+        Drawable d = imageThumbnail.getDrawable();
+        imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
+        if (d instanceof BitmapDrawable) {
+            // can't figure out what the problem is
+            //((BitmapDrawable) d).getBitmap().recycle();
         }
     }
 }

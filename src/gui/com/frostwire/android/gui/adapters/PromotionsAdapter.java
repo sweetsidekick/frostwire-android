@@ -59,16 +59,16 @@ public class PromotionsAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(context);
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            int h = (int) context.getResources().getDimension(R.dimen.promotion_column_height);
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, h));
             imageView.setAdjustViewBounds(true);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(6, 6, 6, 6);
         } else {
             imageView = (ImageView) convertView;
         }
 
         try {
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable);
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable, 2);
         } catch (Throwable e) {
             // ignore
         }

@@ -91,6 +91,18 @@ public final class ImageLoader {
                 //return bitmap.getByteCount();
                 return bitmap.getRowBytes() * bitmap.getHeight();
             }
+
+            /* Don't enable this, causing a lot of problems
+            @Override
+            protected void entryRemoved(boolean evicted, Integer key, Bitmap oldValue, Bitmap newValue) {
+                try {
+                    if (oldValue != null && !oldValue.isRecycled()) {
+                        oldValue.recycle();
+                    }
+                } catch (Throwable e) {
+                    LOG.warn("Unable to recycle bitmap from LRU cache, possible memory leak", e);
+                }
+            }*/
         };
 
         this.diskCache = new DiskLruImageCache(SystemUtils.getImageCacheDirectory(), DISK_CACHE_SIZE, CompressFormat.JPEG, 80);
@@ -99,26 +111,30 @@ public final class ImageLoader {
     }
 
     public void displayImage(Object key, ImageView imageView, Drawable defaultDrawable) {
+        displayImage(key, imageView, defaultDrawable, 1);
+    }
+
+    public void displayImage(Object key, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
         imageViews.put(imageView, key);
         Bitmap bitmap = cache.get(key.hashCode());
-        if (bitmap != null) {
+        if (bitmap != null && !bitmap.isRecycled()) {
             imageView.setScaleType(ScaleType.FIT_CENTER);
             imageView.setImageBitmap(bitmap);
         } else if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.CENTER);
             imageView.setImageDrawable(defaultDrawable);
-            queueImage(key, imageView);
+            queueImage(key, imageView, sampleSize);
         }
     }
-    
+
     public void cacheBitmap(Object key, Bitmap bitmap) {
         cache.put(key.hashCode(), bitmap);
     }
-    
+
     public boolean hasBitmap(Object key) {
         return cache.get(key.hashCode()) != null;
     }
-    
+
     public void clearCache() {
         cache.evictAll();
     }
@@ -131,15 +147,15 @@ public final class ImageLoader {
         return false;
     }
 
-    private void queueImage(Object key, ImageView imageView) {
-        ImageToLoad p = new ImageToLoad(key, imageView);
+    private void queueImage(Object key, ImageView imageView, int sampleSize) {
+        ImageToLoad p = new ImageToLoad(key, imageView, sampleSize);
         BitmapWorkerTask task = new BitmapWorkerTask(p);
         task.execute();
     }
 
-    private Bitmap getBitmap(Context context, Object key) {
+    private Bitmap getBitmap(Context context, Object key, int sampleSize) {
         if (isKeyRemote(key)) {
-            return getBitmap((String) key);
+            return getBitmap((String) key, sampleSize);
         } else if (key instanceof FileDescriptor) {
             return getBitmap(context, (FileDescriptor) key);
         } else {
@@ -147,7 +163,7 @@ public final class ImageLoader {
         }
     }
 
-    private Bitmap getBitmap(String url) {
+    private Bitmap getBitmap(String url, int sampleSize) {
         Bitmap bmp = null;
 
         try {
@@ -155,7 +171,13 @@ public final class ImageLoader {
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
             conn.setInstanceFollowRedirects(true);
-            bmp = BitmapFactory.decodeStream(conn.getInputStream());
+
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inPurgeable = true;
+            opts.inSampleSize = sampleSize;
+            opts.inPreferQualityOverSpeed = false;
+
+            bmp = BitmapFactory.decodeStream(conn.getInputStream(), null, opts);
         } catch (Throwable e) {
             bmp = null;
             // ignore
@@ -208,10 +230,12 @@ public final class ImageLoader {
 
         public final Object key;
         public final ImageView imageView;
+        public final int sampleSize;
 
-        public ImageToLoad(Object key, ImageView imageView) {
+        public ImageToLoad(Object key, ImageView imageView, int sampleSize) {
             this.key = key;
             this.imageView = imageView;
+            this.sampleSize = sampleSize;
         }
     }
 
@@ -225,9 +249,7 @@ public final class ImageLoader {
 
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            if (imageToLoad==null || 
-                imageToLoad.key == null || 
-                imageViewReused(imageToLoad)) {
+            if (imageToLoad == null || imageToLoad.key == null || imageViewReused(imageToLoad)) {
                 return null;
             }
             Bitmap bmp = null;
@@ -237,7 +259,7 @@ public final class ImageLoader {
             }
 
             if (bmp == null) {
-                bmp = getBitmap(context, imageToLoad.key);
+                bmp = getBitmap(context, imageToLoad.key, imageToLoad.sampleSize);
             }
 
             if (bmp != null) {
@@ -259,7 +281,7 @@ public final class ImageLoader {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
+            if (bitmap != null && !bitmap.isRecycled()) {
                 if (imageViewReused(imageToLoad)) {
                     return;
                 }

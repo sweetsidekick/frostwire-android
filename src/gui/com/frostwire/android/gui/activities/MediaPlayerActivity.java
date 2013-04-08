@@ -390,8 +390,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private Bitmap readArtWork() {
         Bitmap artwork = null;
         try {
-            artwork = MusicUtils.getArtwork(this, mediaFD.id, -1);
-            artwork = applyEffect(artwork);
+            Bitmap temp = MusicUtils.getArtwork(this, mediaFD.id, -1);
+            artwork = applyEffect(temp);
+            temp.recycle();
         } catch (Throwable e) {
             Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
         }
