@@ -18,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/fragment_transfers_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/browse_peer_filetype_buttons_background"
@@ -60,17 +61,11 @@
             android:text="@string/clear" />
     </LinearLayout>
 
-    <ExpandableListView
-        android:id="@id/android:list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fadingEdge="none"
-        android:groupIndicator="@android:color/transparent" />
-
     <LinearLayout
+        android:id="@+id/fragment_transfers_indicators"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/transfers_indicators_background"
         android:gravity="right" >
 
@@ -93,4 +88,13 @@
             android:text="@string/dummy_uploads_indicator" />
     </LinearLayout>
 
-</LinearLayout>
+    <ExpandableListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment_transfers_indicators"
+        android:layout_below="@id/fragment_transfers_buttons"
+        android:fadingEdge="none"
+        android:groupIndicator="@android:color/transparent" />
+
+</RelativeLayout>
