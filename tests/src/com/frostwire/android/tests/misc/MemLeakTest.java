@@ -21,9 +21,9 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import android.content.Intent;
-import android.os.SystemClock;
 import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.test.suitebuilder.annotation.Suppress;
 import android.widget.TextView;
 
 import com.frostwire.android.tests.LeakyActivity;
@@ -34,6 +34,7 @@ import com.frostwire.android.tests.LeakyActivity;
  * @author aldenml
  *
  */
+@Suppress
 public class MemLeakTest extends ActivityUnitTestCase<LeakyActivity> {
 
     public MemLeakTest() {
@@ -60,17 +61,17 @@ public class MemLeakTest extends ActivityUnitTestCase<LeakyActivity> {
     @LargeTest
     public void testStringForTimeLeak() {
         assertNotNull(textView);
-        
+
         int jumps = 10000;
-        
+
         for (int i = 1000000; i < Integer.MAX_VALUE; i += jumps) {
             String s = stringForTime(i);
             textView.setText(s);
             assertEquals(textView.getText(), s);
-            
+
             long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / KB;
-            
-            if (i%1000000==0) {
+
+            if (i % 1000000 == 0) {
                 System.out.println("================================================================");
                 System.out.println("Time: " + i);
                 System.out.println("Text View Text: " + textView.getText());
