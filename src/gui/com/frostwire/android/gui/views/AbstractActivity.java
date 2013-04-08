@@ -21,13 +21,18 @@ package com.frostwire.android.gui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+
+import com.frostwire.android.R;
 
 /**
  * 
@@ -38,7 +43,7 @@ import android.view.Window;
  */
 public abstract class AbstractActivity extends FragmentActivity {
 
-    private static final String TAG = "FW.AbstractActivity";
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractActivity.class);
 
     private final int layoutResId;
     private final boolean title;
@@ -114,13 +119,19 @@ public abstract class AbstractActivity extends FragmentActivity {
 
         dismissDialogs();
     }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //unbindDrawables(findViewById(R.id.RootView));
+    }
 
     protected void onRefresh() {
         for (Refreshable refreshable : refreshables) {
             try {
                 refreshable.refresh();
             } catch (Throwable e) {
-                Log.e(TAG, "Error refreshing component", e);
+                LOG.error("Error refreshing component", e);
             }
         }
     }
@@ -145,8 +156,24 @@ public abstract class AbstractActivity extends FragmentActivity {
             try {
                 dialog.dismiss();
             } catch (Throwable e) {
-                Log.w(TAG, "Error dismissing dialog", e);
+                LOG.warn("Error dismissing dialog", e);
             }
+        }
+    }
+
+    private void unbindDrawables(View view) {
+        try {
+            if (view.getBackground() != null) {
+                view.getBackground().setCallback(null);
+            }
+            if (view instanceof ViewGroup) {
+                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                    unbindDrawables(((ViewGroup) view).getChildAt(i));
+                }
+                ((ViewGroup) view).removeAllViews();
+            }
+        } catch (Throwable e) {
+            LOG.warn("Failed to unbind drawables and remove views", e);
         }
     }
 }

@@ -338,7 +338,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void initGestures() {
-        LinearLayout lowestLayout = findView(R.id.activity_mediaplayer_layout);
+        LinearLayout lowestLayout = findView(R.id.RootView);
         lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
             @Override
             public void onLeftToRightSwipe() {
