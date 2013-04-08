@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
-package com.frostwire.android.tests;
+package com.frostwire.android.tests.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
+
+import com.frostwire.android.tests.R;
 
 /**
  * 

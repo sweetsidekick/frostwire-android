@@ -26,7 +26,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.Suppress;
 import android.widget.TextView;
 
-import com.frostwire.android.tests.LeakyActivity;
+import com.frostwire.android.tests.activities.LeakyActivity;
 
 /**
  * 
