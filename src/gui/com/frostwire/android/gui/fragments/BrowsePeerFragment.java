@@ -242,31 +242,36 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     protected void onRefreshShared(byte fileType) {
-        if (onRefreshSharedListener != null) {
-            int numShared = 0;
+        try {
+            if (onRefreshSharedListener != null && finger != null) {
+                int numShared = 0;
 
-            switch (fileType) {
-            case Constants.FILE_TYPE_APPLICATIONS:
-                numShared = finger.numSharedApplicationFiles;
-                break;
-            case Constants.FILE_TYPE_AUDIO:
-                numShared = finger.numSharedAudioFiles;
-                break;
-            case Constants.FILE_TYPE_DOCUMENTS:
-                numShared = finger.numSharedDocumentFiles;
-                break;
-            case Constants.FILE_TYPE_PICTURES:
-                numShared = finger.numSharedPictureFiles;
-                break;
-            case Constants.FILE_TYPE_RINGTONES:
-                numShared = finger.numSharedRingtoneFiles;
-                break;
-            case Constants.FILE_TYPE_VIDEOS:
-                numShared = finger.numSharedVideoFiles;
-                break;
+                switch (fileType) {
+                case Constants.FILE_TYPE_APPLICATIONS:
+                    numShared = finger.numSharedApplicationFiles;
+                    break;
+                case Constants.FILE_TYPE_AUDIO:
+                    numShared = finger.numSharedAudioFiles;
+                    break;
+                case Constants.FILE_TYPE_DOCUMENTS:
+                    numShared = finger.numSharedDocumentFiles;
+                    break;
+                case Constants.FILE_TYPE_PICTURES:
+                    numShared = finger.numSharedPictureFiles;
+                    break;
+                case Constants.FILE_TYPE_RINGTONES:
+                    numShared = finger.numSharedRingtoneFiles;
+                    break;
+                case Constants.FILE_TYPE_VIDEOS:
+                    numShared = finger.numSharedVideoFiles;
+                    break;
+                }
+
+                onRefreshSharedListener.onRefresh(this, fileType, numShared);
             }
-
-            onRefreshSharedListener.onRefresh(this, fileType, numShared);
+        } catch (Throwable e) {
+            // this catch is mostly due to the mutable nature of finger and onRefreshSharedListener 
+            Log.e(TAG, "Error notifying shared refresh", e);
         }
     }
 
