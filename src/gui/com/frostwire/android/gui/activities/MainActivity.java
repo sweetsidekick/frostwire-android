@@ -392,18 +392,20 @@ public class MainActivity extends AbstractSlidingActivity {
     }
 
     private void syncSlideMenu() {
-        Fragment fragment = getCurrentFragment();
+        if (menuFragment != null) {
+            Fragment fragment = getCurrentFragment();
 
-        if (fragment instanceof SearchFragment) {
-            menuFragment.setSelectedItem(R.id.menu_main_search);
-        } else if (fragment instanceof BrowsePeerFragment) {
-            menuFragment.setSelectedItem(R.id.menu_main_library);
-        } else if (fragment instanceof TransfersFragment) {
-            menuFragment.setSelectedItem(R.id.menu_main_transfers);
-        } else if (fragment instanceof BrowsePeersFragment) {
-            menuFragment.setSelectedItem(R.id.menu_main_peers);
-        } else if (fragment instanceof AboutFragment) {
-            menuFragment.setSelectedItem(R.id.menu_main_about);
+            if (fragment instanceof SearchFragment) {
+                menuFragment.setSelectedItem(R.id.menu_main_search);
+            } else if (fragment instanceof BrowsePeerFragment) {
+                menuFragment.setSelectedItem(R.id.menu_main_library);
+            } else if (fragment instanceof TransfersFragment) {
+                menuFragment.setSelectedItem(R.id.menu_main_transfers);
+            } else if (fragment instanceof BrowsePeersFragment) {
+                menuFragment.setSelectedItem(R.id.menu_main_peers);
+            } else if (fragment instanceof AboutFragment) {
+                menuFragment.setSelectedItem(R.id.menu_main_about);
+            }
         }
     }
 
