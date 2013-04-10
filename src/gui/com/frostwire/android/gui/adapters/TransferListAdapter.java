@@ -176,6 +176,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 // creating a dummy view to avoid a force close due to a NPE
                 // next time the "if" will try to recover the actual layout
                 convertView = new TextView(context);
+                ((TextView) convertView).setText("Rendering error");
             }
         }
 
