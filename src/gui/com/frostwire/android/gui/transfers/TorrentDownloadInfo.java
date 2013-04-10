@@ -26,12 +26,14 @@ package com.frostwire.android.gui.transfers;
 interface TorrentDownloadInfo {
 
     public String getTorrentUrl();
-    
+
     public String getDetailsUrl();
-    
+
     public String getDisplayName();
-    
+
     public long getSize();
 
     public String getHash();
+
+    public String getRelativePath();
 }

@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 
 /**
@@ -56,5 +57,14 @@ class TorrentSearchResultInfo implements TorrentDownloadInfo {
     @Override
     public String getHash() {
         return sr.getHash();
+    }
+
+    @Override
+    public String getRelativePath() {
+        if (sr instanceof TorrentCrawledSearchResult) {
+            return ((TorrentCrawledSearchResult) sr).getRelativePath();
+        } else {
+            return null;
+        }
     }
 }

@@ -213,7 +213,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (state == TorrentDownloader.STATE_FINISHED && finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = BittorrentDownloadCreator.create(manager, inf.getFile().getAbsolutePath(), null, null);
+                    delegate = BittorrentDownloadCreator.create(manager, inf.getFile().getAbsolutePath(), null, info.getRelativePath());
 
                     if (delegate instanceof InvalidBittorrentDownload) {
                         cancel();
