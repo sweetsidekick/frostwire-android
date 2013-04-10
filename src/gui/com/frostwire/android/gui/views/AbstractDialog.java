@@ -31,7 +31,7 @@ import android.view.View;
  * @author aldenml
  * 
  */
-public class AbstractDialog extends DialogFragment {
+public abstract class AbstractDialog extends DialogFragment {
 
     private final String tag;
 
@@ -40,10 +40,22 @@ public class AbstractDialog extends DialogFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onDestroyView() {
+        // android bug: http://code.google.com/p/android/issues/detail?id=17423
+        Dialog dialog = getDialog();
+
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+
+        super.onDestroyView();
     }
 
     public void show(FragmentManager manager) {
