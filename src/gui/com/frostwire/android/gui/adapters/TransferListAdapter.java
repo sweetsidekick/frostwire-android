@@ -168,8 +168,15 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         Transfer item = getGroupItem(groupPosition);
 
-        if (convertView == null) {
-            convertView = View.inflate(context, R.layout.view_transfer_list_item, null);
+        if (convertView == null || convertView instanceof TextView) {
+            // convertView could be a dummy view due to an issue with the slide menu layout request order
+            try {
+                convertView = View.inflate(context, R.layout.view_transfer_list_item, null);
+            } catch (Throwable e) {
+                // creating a dummy view to avoid a force close due to a NPE
+                // next time the "if" will try to recover the actual layout
+                convertView = new TextView(context);
+            }
         }
 
         try {
