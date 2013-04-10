@@ -505,8 +505,15 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private void removePeerAndFinish() {
         Activity activity = getActivity();
         if (activity != null) {
-            UIUtils.showShortMessage(activity, R.string.is_not_responding, peer.getNickname());
-            PeerManager.instance().removePeer(peer);
+            if (peer != null) {
+                try {
+                    UIUtils.showShortMessage(activity, R.string.is_not_responding, peer.getNickname());
+                    PeerManager.instance().removePeer(peer);
+                } catch (Throwable e) {
+                    // still possible to get an exception since peer is mutable.
+                    Log.e(TAG, "Error removing a not null peer", e);
+                }
+            }
             activity.finish();
         }
     }
