@@ -1,3 +1,7 @@
+FrostWire 1.0.7 - APR/10/2013
+ - 3 crashes fixed.
+ - Partial file torrent download bug fixed.
+
 FrostWire 1.0.6 - APR/08/2013
  - Faster search results. Search architecture revised and improved.
  - Includes search results from archive.org, which indexes millions

@@ -21,8 +21,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.frostwire.android"
     android:installLocation="preferExternal"
-    android:versionCode="84"
-    android:versionName="1.0.6" >
+    android:versionCode="85"
+    android:versionName="1.0.7" >
 
     <uses-sdk
         android:minSdkVersion="10"
