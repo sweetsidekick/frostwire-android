@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import junit.framework.TestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
+import com.frostwire.torrent.TOTorrent;
 import com.frostwire.torrent.TOTorrentException;
 import com.frostwire.torrent.TorrentUtils;
 import com.frostwire.util.HttpClient;
@@ -34,34 +35,29 @@ import com.frostwire.util.UserAgentGenerator;
  * @author aldenml
  *
  */
-public class HTMLTorrentParsingTest extends TestCase {
+public class SingleTorrentTest extends TestCase {
 
     @MediumTest
-    public void testHTML1() {
-        testDownloadFrom("http://www.yahoo.com");
-        testDownloadFrom("http://www.google.com");
-        testDownloadFrom("http://www.microsoft.com");
+    public void testFromUrl1() {
+        testDownloadFrom("http://www.mininova.org/tor/3191902/0"); // good torrent
     }
 
-    @MediumTest
-    public void testHTML2() {
-        testDownloadFrom("http://www.mininova.org/tor/3191902/0");
-        testDownloadFrom("http://www.mininova.org/tor/3190001/0");
-        testDownloadFrom("http://www.mininova.org/tor/13202769/0");
-        testDownloadFrom("http://www.mininova.org/tor/13202770/0");
-    }
-
-    private void testDownloadFrom(String url) {
+    public void testDownloadFrom(String url) {
         HttpClient c = HttpClientFactory.newDefaultInstance();
         byte[] data = c.getBytes(url, 10000, UserAgentGenerator.getUserAgent(), null);
         ByteArrayInputStream is = new ByteArrayInputStream(data);
+
         try {
-            TorrentUtils.readFromBEncodedInputStream(is);
+            TOTorrent t = TorrentUtils.readFromBEncodedInputStream(is);
+
+            assertNotNull(t.getName());
+            assertNotNull(t.getPieces());
+            assertTrue(t.getPieceLength() > 0);
+
+            System.out.println("Parsed: " + url);
+
         } catch (TOTorrentException e) {
-            assertEquals("Correct exception reason", TOTorrentException.RT_READ_FAILS, e.getReason());
-            assertTrue("Inner exception is TOTorrentException", e.getCause() instanceof TOTorrentException);
-            assertEquals("Correct inner exception reason", TOTorrentException.RT_DECODE_FAILS, ((TOTorrentException) e.getCause()).getReason());
-            assertTrue("Exception contains HTML", e.getMessage().contains("HTML"));
+            assertTrue("Exception for torrent: " + url, false);
         }
     }
 }
