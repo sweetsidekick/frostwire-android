@@ -17,8 +17,11 @@
 
 package com.frostwire.android.tests;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import android.os.Debug;
 
 /**
  * 
@@ -36,6 +39,16 @@ public final class TestUtils {
             return signal.await(timeout, unit);
         } catch (InterruptedException e) {
             return false;
+        }
+    }
+
+    public static long getPss() {
+        System.gc();
+        try {
+            Method m = Debug.class.getDeclaredMethod("getPss");
+            return (Long) m.invoke(null);
+        } catch (Throwable e) {
+            throw new RuntimeException("Unable to run test on this device", e);
         }
     }
 }
