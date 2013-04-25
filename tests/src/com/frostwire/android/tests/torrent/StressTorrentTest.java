@@ -82,7 +82,7 @@ public class StressTorrentTest extends TestCase {
         testDownloadFrom(p);
     }
 
-    public void testDownloadFrom(final TorrentSearchPerformer p) {
+    private void testDownloadFrom(final TorrentSearchPerformer p) {
         p.registerListener(new SearchListener() {
             @Override
             public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
