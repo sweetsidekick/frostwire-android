@@ -48,7 +48,24 @@ import com.frostwire.torrent.TorrentUtils;
 public class MemStressTorrentTest extends TestCase {
 
     @LargeTest
-    public void testMemoryAllocation() {
+    public void testMemoryAllocation1() {
+        long mem = trackMemoryAllocation();
+
+        System.out.println("Memory test 1: " + mem + "MB");
+
+        assertTrue("Memory increase no more than 1MB", mem <= 15000);
+    }
+
+    @LargeTest
+    public void testMemoryAllocation2() {
+        long mem = trackMemoryAllocation();
+
+        System.out.println("Memory test 2: " + mem + "MB");
+
+        assertTrue("Memory increase no more than 1MB", mem <= 15000);
+    }
+
+    private long trackMemoryAllocation() {
         long m1 = TestUtils.getPss();
 
         downloadFromClearBits();
@@ -60,11 +77,7 @@ public class MemStressTorrentTest extends TestCase {
 
         long m2 = TestUtils.getPss();
 
-        long mem = m2 - m1;
-
-        System.out.println("Memory: " + mem + "MB");
-
-        assertTrue("Memory increase no more than 1MB", mem <= 1024);
+        return m2 - m1;
     }
 
     private void downloadFromClearBits() {
