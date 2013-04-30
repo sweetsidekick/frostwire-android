@@ -42,6 +42,14 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    
+    <!--  offercast permissions -->
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+	<uses-permission
+		android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS" />
+	<uses-permission
+		android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
 
     <application
         android:name="com.frostwire.android.gui.MainApplication"
@@ -127,6 +135,28 @@
 
 	<activity android:name="com.google.ads.AdActivity"
 		android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+	<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
+		android:label="@string/application_label" />
+	<service android:name="com.offercast.android.sdk.OCService" />
+	<receiver android:name="com.offercast.android.sdk.OCBroadcastReceiver"
+		android:enabled="true" android:exported="false">
+		<intent-filter android:priority="1001">
+			<action android:name="android.intent.action.BOOT_COMPLETED" />
+		</intent-filter>
+	</receiver>
+
+    <!--  offercast development -->
+	<meta-data android:name="application-id" android:value="8"/>
+	<meta-data android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/>
+	<meta-data android:name="store-name" android:value="[target store]"/>
+	<meta-data android:name="store-category" android:value="[store category]"/>
+
+    <!--  offercast production -->
+	<meta-data android:name="application-id" android:value="7"/>
+	<meta-data android:name="access-token" android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad"/>
+	<meta-data android:name="store-name" android:value="[target store]"/>
+	<meta-data android:name="store-category" android:value="[store category]"/>
 
 
         <!-- providers -->
