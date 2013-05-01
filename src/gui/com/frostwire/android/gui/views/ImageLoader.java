@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.views;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
@@ -45,6 +46,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.util.DiskLruImageCache;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.util.FileUtils;
 
 /**
  * @author gubatron
@@ -105,7 +107,8 @@ public final class ImageLoader {
             }*/
         };
 
-        this.diskCache = new DiskLruImageCache(SystemUtils.getImageCacheDirectory(), DISK_CACHE_SIZE, CompressFormat.JPEG, 80);
+        File imgCacheDir = SystemUtils.getImageCacheDirectory();
+        this.diskCache = (FileUtils.isValidDirectory(imgCacheDir)) ? new DiskLruImageCache(imgCacheDir, DISK_CACHE_SIZE, CompressFormat.JPEG, 80) : null;
 
         this.imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, Object>());
     }
@@ -254,7 +257,7 @@ public final class ImageLoader {
             }
             Bitmap bmp = null;
 
-            if (isKeyRemote(imageToLoad.key)) {
+            if (diskCache != null && isKeyRemote(imageToLoad.key)) {
                 bmp = diskCache.getBitmap(imageToLoad.key);
             }
 
@@ -266,7 +269,7 @@ public final class ImageLoader {
                 cache.put(imageToLoad.key.hashCode(), bmp);
 
                 if (isKeyRemote(imageToLoad.key)) {
-                    if (!diskCache.containsKey(imageToLoad.key)) {
+                    if (diskCache != null && !diskCache.containsKey(imageToLoad.key)) {
                         diskCache.put(imageToLoad.key, bmp);
                     }
                 }
