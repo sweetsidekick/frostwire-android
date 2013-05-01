@@ -66,6 +66,7 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.offercast.android.sdk.OffercastSDK;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;

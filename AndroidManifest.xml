@@ -136,6 +136,7 @@
 	<activity android:name="com.google.ads.AdActivity"
 		android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
+    <!--  offercast -->
 	<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
 		android:label="@string/application_label" />
 	<service android:name="com.offercast.android.sdk.OCService" />
@@ -146,18 +147,20 @@
 		</intent-filter>
 	</receiver>
 
-    <!--  offercast development -->
+    <!--  offercast metadata development -->
+    
 	<meta-data android:name="application-id" android:value="8"/>
 	<meta-data android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/>
-	<meta-data android:name="store-name" android:value="[target store]"/>
-	<meta-data android:name="store-category" android:value="[store category]"/>
+	<meta-data android:name="store-name" android:value="Google"/>
+	<meta-data android:name="store-category" android:value="Media &amp; Video"/>
 
-    <!--  offercast production -->
+    <!--  offercast metadata production -->
+    <!--
 	<meta-data android:name="application-id" android:value="7"/>
 	<meta-data android:name="access-token" android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad"/>
-	<meta-data android:name="store-name" android:value="[target store]"/>
-	<meta-data android:name="store-category" android:value="[store category]"/>
-
+	<meta-data android:name="store-name" android:value="Google"/>
+	<meta-data android:name="store-category" android:value="Media &amp; Video"/>
+	-->
 
         <!-- providers -->
 
