@@ -49,7 +49,7 @@
     <PreferenceCategory android:title="@string/networking_preferences" >
         <CheckBoxPreference
             android:key="frostwire.prefs.network.use_mobile_data"
-            android:summary="@string/use_mobile_data"
+            android:summary="@string/use_mobile_data_summary"
             android:title="@string/use_mobile_data" />
 
         <com.frostwire.android.gui.views.preference.NumberSpinnerPreference

@@ -173,8 +173,8 @@
     <string name="tip_rename_your_files">Tip: Rename files so they can be found</string>
     <string name="other_settings">Other settings</string>
     <string name="vibrate_on_finished_download">Vibrate when download finishes</string>
-    <string name="use_mobile_data">Use 3G/4G</string>
-    <string name="use_mobile_data_summary">Data Overage charges may apply. Use carefully.</string>
+    <string name="use_mobile_data">Use 3G/4G for BitTorrent</string>
+    <string name="use_mobile_data_summary">Use mobile network for BitTorrent downloads. Data Overage charges may apply. Use carefully.</string>
     <string name="connected_using_dataplan">Connected using Data Plan</string>
     <string name="send_to_chat">Send to Chat</string>
     <string name="sent_file_to_chat">Sent file to Chat</string>
