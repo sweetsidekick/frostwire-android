@@ -29,7 +29,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.WizardPageView;
 import com.frostwire.android.gui.views.WizardPageView.OnCompleteListener;
-import com.offercast.android.sdk.OffercastSDK;
 
 /**
  * @author gubatron
@@ -69,9 +68,6 @@ public class WizardActivity extends AbstractActivity {
 
     @Override
     protected void initComponents() {
-        OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-        offercast.authorize();
-        
         buttonPrevious = findView(R.id.activity_wizard_button_previous);
         buttonPrevious.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
