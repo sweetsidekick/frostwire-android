@@ -13,7 +13,6 @@
 	<classpathentry kind="src" path="src/gui"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/gson-2.0.jar"/>
-	<classpathentry kind="lib" path="libs/GoogleAdMobAdsSdk-6.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/disklrucache-1.3.1.jar"/>
 	<classpathentry kind="lib" path="libs/logback-android-1.0.7-1.jar"/>
