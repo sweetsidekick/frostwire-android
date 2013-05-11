@@ -28,7 +28,7 @@ public final class DonateButtonListener implements OnClickListener {
 
         if (biller.isInAppBillingSupported()) {
             // TODO: evaluate sending some value in the payload (last parameter)
-            biller.updateBillingSupportStatus(!biller.getBillingService().requestPurchase(sku, Consts.ITEM_TYPE_INAPP, null));
+            biller.updateBillingSupportStatus(biller.getBillingService().requestPurchase(sku, Consts.ITEM_TYPE_INAPP, null));
         } else {
             Intent i = new Intent("android.intent.action.VIEW", Uri.parse(url));
             biller.startActivity(i);

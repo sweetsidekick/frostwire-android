@@ -39,10 +39,7 @@ public class Biller extends PurchaseObserver {
         //        if (!billingService.checkBillingSupported()) {
         //            showDialog(DIALOG_CANNOT_CONNECT_ID);
         //        }
-
-        if (!billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP)) {
-            updateBillingSupportStatus(false);
-        }
+        updateBillingSupportStatus(billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP));
     }
 
     public void updateBillingSupportStatus(boolean supported) {
