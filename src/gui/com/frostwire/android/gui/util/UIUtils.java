@@ -21,9 +21,7 @@ package com.frostwire.android.gui.util;
 import java.io.File;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,9 +53,8 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.util.MimeDetector;
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
 
 /**
  * @author gubatron
@@ -331,21 +328,21 @@ public final class UIUtils {
         }
     }
     
-    public static void supportFrostWire(AdView adView, String keywordsStr) {
+    /**
+     * This method sets up the visibility of the support frostwire control (@see {@link DonationsView})
+     * depending on remote configuration parameters and local configuration preferences.
+     * @param supportFrostWireView
+     */
+    public static void supportFrostWire(View supportFrostWireView) {
         //remote kill switch
         if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD)) {
-            adView.setVisibility(View.GONE);
+            supportFrostWireView.setVisibility(View.GONE);
             Log.v(TAG,"Hiding support, above threshold.");
         } else if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE)) {
-            AdRequest request = new AdRequest();
-            HashSet<String> keywords = new HashSet<String>(Arrays.asList(keywordsStr.split(" ")));
-            keywords.add("download");
-            request.setKeywords(keywords);
-            adView.loadAd(request);
-            adView.setVisibility(View.VISIBLE);
+            supportFrostWireView.setVisibility(View.VISIBLE);
             
-            if (adView.getLayoutParams() != null) {
-                adView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
+            if (supportFrostWireView.getLayoutParams() != null) {
+                supportFrostWireView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
             }
         }
     }

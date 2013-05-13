@@ -66,6 +66,7 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.offercast.android.sdk.OffercastSDK;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -173,6 +174,9 @@ public class MainActivity extends AbstractSlidingActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
+        offercast.authorize();
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {

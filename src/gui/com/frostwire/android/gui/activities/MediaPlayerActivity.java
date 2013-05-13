@@ -26,7 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Camera;
@@ -56,6 +55,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Biller;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
@@ -65,11 +65,10 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.ContextMenuDialog;
 import com.frostwire.android.gui.views.ContextMenuItem;
+import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
 
 /**
  * 
@@ -88,8 +87,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private ImageButton buttonBack;
     private ImageButton buttonMenu;
-
-    private AdView adView;
 
     public MediaPlayerActivity() {
         super(R.layout.activity_mediaplayer, false, 0);
@@ -277,37 +274,16 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
 
-        if (isWebViewCacheGood()) {
-            initSupportFrostWire();
-        }
+        initSupportFrostWire();
     }
 
-    /**
-     * The AdMob SDK happens to have a WebView component that breaks on some devices
-     * at android.webkit.WebViewDatabase.initDatabase(WebViewDatabase.java:231)
-     * 
-     * @param context
-     * @return
-     */
-    private boolean isWebViewCacheGood() {
-        boolean isGood = false;
-        try {
-            SQLiteDatabase cacheDb = openOrCreateDatabase("webviewCache.db", 0, null);
-            isGood = cacheDb != null;
-            cacheDb.close();
-        } catch (Throwable t) {
-        }
-        return isGood;
-    }
-    
     private void initSupportFrostWire() {
-        LinearLayout llayout = findView(R.id.activity_mediaplayer_adview_placeholder);
-        adView = new AdView(this, AdSize.SMART_BANNER, Constants.ADMOB_PUBLISHER_ID);
-        adView.setVisibility(View.GONE);
-        llayout.addView(adView, 0);
+        DonationsView donationsView = findView(R.id.activity_mediaplayer_donations_view_placeholder);
+        donationsView.setBiller(new Biller(this));
+        donationsView.setVisibility(View.GONE);
 
         if (mediaFD != null) {
-            UIUtils.supportFrostWire(adView, mediaFD.artist + " " + mediaFD.title + " " + mediaFD.album + " " + mediaFD.year);
+            UIUtils.supportFrostWire(donationsView);
         }
     }
 
@@ -654,7 +630,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         formatBuilder.setLength(0);
         formatBuilder.trimToSize();
-        
+
         if (hours > 0) {
             return formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
         } else {
