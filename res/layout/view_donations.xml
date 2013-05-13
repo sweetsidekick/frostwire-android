@@ -19,7 +19,7 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/searchbox_background"
     android:baselineAligned="false"
@@ -63,34 +63,39 @@
         <Button
             android:id="@+id/fragment_about_button_donate1"
             style="@style/BlueButton"
-            android:layout_width="50sp"
+            android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginRight="8sp"
-            android:text="$1" />
+            android:text="$1"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/fragment_about_button_donate2"
             style="@style/BlueButton"
-            android:layout_width="50sp"
+            android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$5" />
+            android:text="$5"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/fragment_about_button_donate3"
             style="@style/BlueButton"
-            android:layout_width="50sp"
+            android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$10" />
+            android:text="$10"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/fragment_about_button_donate4"
             style="@style/BlueButton"
-            android:layout_width="50sp"
+            android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$25" />
+            android:text="$25"
+            android:textSize="15sp" />
+
     </LinearLayout>
  
 </LinearLayout>
