@@ -22,12 +22,17 @@ public class DonationsView extends LinearLayout {
     
     public void setBiller(Biller b) {
         biller = b;
+        setupDonationButtons();
     }
-
+    
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         View.inflate(getContext(), R.layout.view_donations, this);
+        setupDonationButtons();
+    }
+
+    private void setupDonationButtons() {
         setupDonateButton(R.id.fragment_about_button_donate1, SKU_01_DOLLARS, "https://gumroad.com/l/pH");
         setupDonateButton(R.id.fragment_about_button_donate2, SKU_05_DOLLARS, "https://gumroad.com/l/oox");
         setupDonateButton(R.id.fragment_about_button_donate3, SKU_10_DOLLARS, "https://gumroad.com/l/rPl");

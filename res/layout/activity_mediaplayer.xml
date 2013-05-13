@@ -166,10 +166,9 @@
             android:contentDescription="@null" />
     </LinearLayout>
 
-    <LinearLayout
+    <com.frostwire.android.gui.views.DonationsView
         android:id="@+id/activity_mediaplayer_donations_view_placeholder"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

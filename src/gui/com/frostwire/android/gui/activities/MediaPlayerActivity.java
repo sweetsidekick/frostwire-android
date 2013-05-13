@@ -278,12 +278,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void initSupportFrostWire() {
-        LinearLayout llayout = findView(R.id.activity_mediaplayer_donations_view_placeholder);
-
-        DonationsView donationsView = findView(R.id.view_donations);
+        DonationsView donationsView = findView(R.id.activity_mediaplayer_donations_view_placeholder);
         donationsView.setBiller(new Biller(this));
         donationsView.setVisibility(View.GONE);
-        llayout.addView(donationsView, 0);
 
         if (mediaFD != null) {
             UIUtils.supportFrostWire(donationsView);

@@ -26,13 +26,13 @@
     android:orientation="horizontal"
     android:paddingBottom="1dp"
     android:paddingTop="1dp" >
-
+ 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:paddingLeft="8sp"
         android:paddingBottom="8sp"
+        android:paddingLeft="8sp"
         android:paddingTop="8sp" >
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:layout_marginRight="8sp"
-            android:text="&#36;1" />
+            android:text="$1" />
 
         <Button
             android:id="@+id/fragment_about_button_donate2"
@@ -74,7 +74,7 @@
             android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="&#36;5" />
+            android:text="$5" />
 
         <Button
             android:id="@+id/fragment_about_button_donate3"
@@ -82,7 +82,7 @@
             android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="&#36;10" />
+            android:text="$10" />
 
         <Button
             android:id="@+id/fragment_about_button_donate4"
@@ -90,7 +90,7 @@
             android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="&#36;25" />
+            android:text="$25" />
     </LinearLayout>
-
+ 
 </LinearLayout>
