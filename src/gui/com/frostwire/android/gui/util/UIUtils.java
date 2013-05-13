@@ -53,6 +53,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.util.MimeDetector;
 
 /**
@@ -327,6 +328,11 @@ public final class UIUtils {
         }
     }
     
+    /**
+     * This method sets up the visibility of the support frostwire control (@see {@link DonationsView})
+     * depending on remote configuration parameters and local configuration preferences.
+     * @param supportFrostWireView
+     */
     public static void supportFrostWire(View supportFrostWireView) {
         //remote kill switch
         if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD)) {
