@@ -3,6 +3,7 @@ FrostWire 1.0.8 - MAY/13/2013
  - Less intensive HTML detection during torrent parsing
  - Added jdk14 logging library.
  - Fixes crash reported when there is no access to the image cache folder.
+ - Fixes crash initializing donations Billing Service.
  - Better description for mobile network data usage and bittorrent preferences.
  - Removed Google AdMob.
  - Added donations request component instead of ads.
