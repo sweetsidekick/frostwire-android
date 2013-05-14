@@ -69,12 +69,19 @@
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
+    <com.frostwire.android.gui.views.DonationsView
+        android:id="@+id/activity_mediaplayer_donations_view_placeholder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/fragment_transfers_indicators"
+        android:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/fragment_transfers_indicators"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/activity_mediaplayer_donations_view_placeholder"
-        android:layout_alignParentBottom="false"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/transfers_indicators_background"
         android:gravity="right" >
 
@@ -96,12 +103,5 @@
             android:paddingRight="8dp"
             android:text="@string/dummy_uploads_indicator" />
     </LinearLayout>
-
-    <com.frostwire.android.gui.views.DonationsView
-        android:id="@+id/activity_mediaplayer_donations_view_placeholder"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>
