@@ -28,8 +28,6 @@ import org.gudy.azureus2.core3.global.GlobalManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.util.Log;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -51,7 +49,6 @@ import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
  */
 public final class TransferManager {
 
-    private static final String TAG = "FW.TransferManager";
     private static final Logger LOG = LoggerFactory.getLogger(TransferManager.class);
 
     private final List<DownloadTransfer> downloads;
@@ -282,12 +279,12 @@ public final class TransferManager {
             if (obj instanceof DownloadManager) {
                 try {
                     if (((DownloadManager) obj).getTorrent() != null && ((DownloadManager) obj).getTorrent().getHash() != null) {
-                        Log.d(TAG, "Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
+                        LOG.debug("Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
                         downloads.add((DownloadManager) obj);
                     }
                 } catch (Throwable e) {
                     // ignore
-                    Log.d(TAG, "error loading torrent (not the end of the world, keep going)");
+                    LOG.debug("error loading torrent (not the end of the world, keep going)");
                 }
             }
         }
