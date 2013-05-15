@@ -123,6 +123,16 @@ public class ConfigurationManager {
     public void resetToDefaults() {
         resetToDefaults(defaults.getDefaultValues());
     }
+    
+    public void resetToDefault(String key) {
+        if (defaults != null) {
+            Map<String, Object> defaultValues = defaults.getDefaultValues();
+            if (defaultValues!= null && defaultValues.containsKey(key)) {
+                Object defaultValue = defaultValues.get(key);
+                initPreference(key, defaultValue, true);
+            }
+        }
+    }
 
     public String getNickname() {
         return getString(Constants.PREF_KEY_GUI_NICKNAME);
@@ -174,48 +184,54 @@ public class ConfigurationManager {
 
     private void initPreferences() {
         for (Entry<String, Object> entry : defaults.getDefaultValues().entrySet()) {
-            if (entry.getValue() instanceof String) {
-                initStringPreference(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Integer) {
-                initIntPreference(entry.getKey(), (Integer) entry.getValue());
-            } else if (entry.getValue() instanceof Long) {
-                initLongPreference(entry.getKey(), (Long) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                initBooleanPreference(entry.getKey(), (Boolean) entry.getValue());
-            } else if (entry.getValue() instanceof byte[]) {
-                initByteArrayPreference(entry.getKey(), (byte[]) entry.getValue());
-            }
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            initPreference(key, value, false);
         }
 
         //there are some configuration values that need to be reset every time to a desired value
         resetToDefaults(defaults.getResetValues());
     }
 
-    private void initStringPreference(String prefKeyName, String defaultValue) {
-        if (!preferences.contains(prefKeyName)) {
+    private void initPreference(String key, Object value, boolean force) {
+        if (value instanceof String) {
+            initStringPreference(key, (String) value, force);
+        } else if (value instanceof Integer) {
+            initIntPreference(key, (Integer) value, force);
+        } else if (value instanceof Long) {
+            initLongPreference(key, (Long) value, force);
+        } else if (value instanceof Boolean) {
+            initBooleanPreference(key, (Boolean) value, force);
+        } else if (value instanceof byte[]) {
+            initByteArrayPreference(key, (byte[]) value, force);
+        }
+    }
+
+    private void initStringPreference(String prefKeyName, String defaultValue, boolean force) {
+        if (!preferences.contains(prefKeyName) || force) {
             setString(prefKeyName, defaultValue);
         }
     }
-
-    private void initByteArrayPreference(String prefKeyName, byte[] defaultValue) {
-        if (!preferences.contains(prefKeyName)) {
+    
+    private void initByteArrayPreference(String prefKeyName, byte[] defaultValue, boolean force) {
+        if (!preferences.contains(prefKeyName) || force) {
             setByteArray(prefKeyName, defaultValue);
         }
     }
-
-    private void initBooleanPreference(String prefKeyName, boolean defaultValue) {
-        if (!preferences.contains(prefKeyName)) {
+    
+    private void initBooleanPreference(String prefKeyName, boolean defaultValue, boolean force) {
+        if (!preferences.contains(prefKeyName) || force ) {
             setBoolean(prefKeyName, defaultValue);
         }
     }
 
-    private void initIntPreference(String prefKeyName, int defaultValue) {
-        if (!preferences.contains(prefKeyName)) {
+    private void initIntPreference(String prefKeyName, int defaultValue, boolean force) {
+        if (!preferences.contains(prefKeyName) || force) {
             setInt(prefKeyName, defaultValue);
         }
     }
-
-    private void initLongPreference(String prefKeyName, long defaultValue) {
+    
+    private void initLongPreference(String prefKeyName, long defaultValue, boolean force) {
         if (!preferences.contains(prefKeyName)) {
             setLong(prefKeyName, defaultValue);
         }
