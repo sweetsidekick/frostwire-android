@@ -42,8 +42,8 @@ import org.gudy.azureus2.plugins.sharing.ShareResourceFile;
 import org.gudy.azureus2.plugins.tracker.Tracker;
 import org.gudy.azureus2.plugins.tracker.TrackerTorrent;
 import org.gudy.azureus2.pluginsimpl.local.PluginCoreUtils;
-
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.ui.UIFunctions;
@@ -57,8 +57,8 @@ import com.frostwire.util.FileUtils;
  */
 public class TorrentUtil {
 
-    private static final String TAG = "FW.TorrentUtil";
-
+    private static final Logger LOG = LoggerFactory.getLogger(TorrentUtil.class);
+    
     private static AsyncDispatcher async = new AsyncDispatcher(2000);
 
     public static Set<DiskManagerFileInfo> getNoSkippedFileInfoSet(DownloadManager dm) {
@@ -416,7 +416,7 @@ public class TorrentUtil {
                 return (int) (fileInfo.getDownloaded() * 100 / length);
             }
         } catch (Throwable e) {
-            Log.e(TAG, "Error calculating download percent", e);
+            LOG.error("Error calculating download percent", e);
             return 0;
         }
     }
@@ -447,10 +447,10 @@ public class TorrentUtil {
         for (File f : filesToDelete) {
             try {
                 if (f.exists() && !f.delete()) {
-                    Log.w(TAG, "Can't delete file: " + f);
+                    LOG.warn("Can't delete file: " + f);
                 }
             } catch (Throwable e) {
-                Log.e(TAG, "Can't delete file: " + f, e);
+                LOG.error("Can't delete file: " + f, e);
             }
         }
 
