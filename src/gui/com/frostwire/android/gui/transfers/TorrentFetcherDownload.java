@@ -28,7 +28,8 @@ import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloader;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderCallBackInterface;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderFactory;
 
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.frostwire.android.R;
 
@@ -38,9 +39,9 @@ import com.frostwire.android.R;
  *
  */
 public class TorrentFetcherDownload implements BittorrentDownload {
-
-    private static final String TAG = "FW.TorrentFetcherDownload";
-
+    
+    private static final Logger LOG = LoggerFactory.getLogger(TorrentFetcherDownload.class);
+            
     private final TransferManager manager;
     private final TorrentDownloadInfo info;
     private final Date dateCreated;
@@ -178,13 +179,13 @@ public class TorrentFetcherDownload implements BittorrentDownload {
                 torrentDownloader.cancel();
             } catch (Throwable e) {
                 // ignore, I can't do anything
-                Log.e(TAG, "Error canceling torrent downloader");
+                LOG.error("Error canceling torrent downloader",e);
             }
             try {
                 torrentDownloader.getFile().delete();
             } catch (Throwable e) {
                 // ignore, I can't do anything
-                Log.e(TAG, "Error deleting file of torrent downloader");
+                LOG.error("Error deleting file of torrent downloader",e);
             }
         }
         manager.remove(this);
@@ -220,12 +221,12 @@ public class TorrentFetcherDownload implements BittorrentDownload {
                     }
 
                     if (delegate == null) {
-                        Log.e(TAG, "Error creating the actual torrent download, delegate after creation is null");
+                        LOG.error("Error creating the actual torrent download, delegate after creation is null");
                     }
 
                 } catch (Throwable e) {
                     statusResId = R.string.torrent_fetcher_download_status_error;
-                    Log.e(TAG, "Error creating the actual torrent download", e);
+                    LOG.error("Error creating the actual torrent download", e);
                 }
             } else if (state == TorrentDownloader.STATE_ERROR) {
                 statusResId = R.string.torrent_fetcher_download_status_error;
