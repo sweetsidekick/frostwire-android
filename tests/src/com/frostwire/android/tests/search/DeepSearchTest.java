@@ -86,6 +86,7 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
         deepSearch(new ArchiveorgSearchPerformer(0, "Big Buck Bunny", 5000));
     }
 
+    
     private void deepSearch(SearchPerformer performer) {
         final CountDownLatch signal = new CountDownLatch(1);
 

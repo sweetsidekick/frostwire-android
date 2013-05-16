@@ -24,9 +24,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.archiveorg.ArchiveorgCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 
@@ -65,7 +65,12 @@ public class MockSearchResultListener implements SearchManagerListener {
     public void logResults() {
         synchronized (results) {
             for (SearchResult sr : results) {
-                LOG.info(sr.toString());
+                if (sr instanceof TorrentCrawledSearchResult) {
+                    TorrentCrawledSearchResult tsr = (TorrentCrawledSearchResult) sr;
+                    System.out.println("Files name: " +  tsr.getFilename());
+                } else {
+                    LOG.info(sr.toString());
+                }
             }
         }
     }
@@ -74,6 +79,10 @@ public class MockSearchResultListener implements SearchManagerListener {
         synchronized (results) {
             for (SearchResult sr : results) {
                 if (sr instanceof TorrentCrawledSearchResult || sr instanceof ArchiveorgCrawledSearchResult) {
+                    if (sr instanceof TorrentCrawledSearchResult) {
+                        TorrentCrawledSearchResult tsr = (TorrentCrawledSearchResult) sr;
+                        System.out.println("Display name: " +  tsr.getFilename());
+                    }
                     return true;
                 }
             }

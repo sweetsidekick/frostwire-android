@@ -38,7 +38,7 @@ public class HttpMovedTempTest extends TestCase{
 
     public void testFWClientOnMovedTempTest() {
         HttpClient client = HttpClientFactory.newDefaultInstance();
-        byte[] result = client.getBytes("http://extratorrent.com/download/2132998/",5000,"Internet Xploder",null);
+        byte[] result = client.getBytes("http://extratorrent.com/download/-------/",5000,"Internet Xploder",null);
         assertNotNull(result);
         assertTrue(result.length > 0);
         System.out.println(result);
