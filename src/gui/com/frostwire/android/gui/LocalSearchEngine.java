@@ -117,11 +117,11 @@ public final class LocalSearchEngine {
     }
 
     public void clearCache() {
-        CrawlPagedWebSearchPerformer.getCache().clear();
+        CrawlPagedWebSearchPerformer.clearCache();
     }
 
     public long getCacheSize() {
-        return CrawlPagedWebSearchPerformer.getCache().size();
+        return CrawlPagedWebSearchPerformer.getCacheSize();
     }
 
     private void onFinished(long token) {
@@ -186,7 +186,7 @@ public final class LocalSearchEngine {
 
         String str = sanitize(sb.toString());
         str = normalize(str);
-
+        
         Iterator<String> it = tokens.iterator();
         while (it.hasNext()) {
             String token = it.next();
