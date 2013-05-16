@@ -18,6 +18,7 @@
 
 package com.frostwire.android.core;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -103,6 +104,15 @@ public class ConfigurationManager {
 
     public void setBoolean(String key, boolean value) {
         editor.putBoolean(key, value);
+        editor.commit();
+    }
+    
+    public File getFile(String key) {
+        return new File(preferences.getString(key, ""));
+    }
+    
+    public void setFile(String key, File value) {
+        editor.putString(key, value.getAbsolutePath());
         editor.commit();
     }
 
@@ -204,6 +214,8 @@ public class ConfigurationManager {
             initBooleanPreference(key, (Boolean) value, force);
         } else if (value instanceof byte[]) {
             initByteArrayPreference(key, (byte[]) value, force);
+        } else if (value instanceof File) {
+            initFilePreference(key, (File) value, force);
         }
     }
 
@@ -232,11 +244,18 @@ public class ConfigurationManager {
     }
     
     private void initLongPreference(String prefKeyName, long defaultValue, boolean force) {
-        if (!preferences.contains(prefKeyName)) {
+        if (!preferences.contains(prefKeyName) || force) {
             setLong(prefKeyName, defaultValue);
         }
     }
 
+    private void initFilePreference(String prefKeyName, File defaultValue, boolean force) {
+        if (!preferences.contains(prefKeyName) || force) {
+            setFile(prefKeyName, defaultValue);
+        }
+    }
+
+    
     private void resetToDefaults(Map<String, Object> map) {
         for (Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -249,6 +268,8 @@ public class ConfigurationManager {
                 setBoolean(entry.getKey(), (Boolean) entry.getValue());
             } else if (entry.getValue() instanceof byte[]) {
                 setByteArray(entry.getKey(), (byte[]) entry.getValue());
+            } else if (entry.getValue() instanceof File) {
+                setFile(entry.getKey(), (File) entry.getValue());
             }
         }
     }
