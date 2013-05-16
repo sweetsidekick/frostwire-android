@@ -33,6 +33,7 @@ import com.frostwire.android.BuildConfig;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.CrawlCache;
+import com.frostwire.util.FileUtils;
 import com.jakewharton.DiskLruCache;
 import com.jakewharton.DiskLruCache.Editor;
 import com.jakewharton.DiskLruCache.Snapshot;
@@ -97,18 +98,23 @@ public class DiskCrawlCache implements CrawlCache {
                 }
 
                 encode(editor, data);
-                flushCache();
+                cache.flush();
                 editor.commit();
                 if (BuildConfig.DEBUG) {
                     LOG.debug("value put on disk cache " + key);
                 }
             } catch (Throwable e) {
-                LOG.warn("Error putting value to crawl cache: " + e.getMessage());
+                LOG.warn("Error putting value to crawl cache, will force a cache rebuild: " + e.getMessage());
                 try {
                     if (editor != null) {
                         editor.abort();
                     }
                 } catch (IOException ignored) {
+                    
+                }
+                
+                if (e.getMessage().contains("failed to delete")) {
+                    forceCacheRecovery();
                 }
             }
         } else {
@@ -135,7 +141,20 @@ public class DiskCrawlCache implements CrawlCache {
                 createCache();
             } catch (Throwable e) {
                 LOG.warn("Error deleting crawl cache: " + e.getMessage());
+                forceCacheRecovery();
             }
+        }
+    }
+
+    private void forceCacheRecovery() {
+        if (cache != null) {
+            try {
+                cache.close();
+            } catch (Exception e) { }
+            
+            FileUtils.deleteFolderRecursively(cache.getDirectory());
+            
+            createCache();
         }
     }
 
@@ -197,18 +216,6 @@ public class DiskCrawlCache implements CrawlCache {
         int n = 0;
         while ((n = input.read(buffer)) != -1) {
             output.write(buffer, 0, n);
-        }
-    }
-
-    private void flushCache() throws IOException {
-        try {
-            cache.flush();
-        } catch (IOException e) {
-            if (e.getMessage().contains("failed to delete")) {
-                LOG.error("Important!, unable to flush disk crawl cache",e);
-            } else {
-                throw e;
-            }
         }
     }
 }
