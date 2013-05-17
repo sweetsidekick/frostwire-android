@@ -2,8 +2,6 @@ package com.slidingmenu.lib;
 
 import java.lang.reflect.Method;
 
-import android.annotation.SuppressLint;
-//import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,7 +12,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-//import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -29,6 +26,8 @@ import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
 import com.slidingmenu.lib.CustomViewAbove.OnPageChangeListener;
+//import android.annotation.TargetApi;
+//import android.os.Handler;
 
 public class SlidingMenu extends RelativeLayout {
 
@@ -953,7 +952,7 @@ public class SlidingMenu extends RelativeLayout {
 	/* (non-Javadoc)
 	 * @see android.view.ViewGroup#fitSystemWindows(android.graphics.Rect)
 	 */
-	@SuppressLint("NewApi")
+	//@SuppressLint("NewApi")
 	@Override
 	protected boolean fitSystemWindows(Rect insets) {
 		int leftPadding = insets.left;
