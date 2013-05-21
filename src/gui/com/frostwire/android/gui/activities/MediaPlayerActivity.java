@@ -36,6 +36,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
@@ -288,6 +289,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void refreshUIData() {
+        //if for some weird reason this happens
+        if (mediaFD == null) {
+            return;
+        }
+        
         TextView artist = findView(R.id.activity_mediaplayer_artist);
         if (!StringUtils.isNullOrEmpty(mediaFD.artist, true)) {
             artist.setText(mediaFD.artist);
@@ -303,14 +309,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         ImageView artworkImageView = findView(R.id.activity_mediaplayer_artwork);
         ImageLoader imageLoader = ImageLoader.getDefault();
-        String artworkKey = "player.artwork:" + mediaFD.id;
-
-        Bitmap artworkBitmap = null;
-        if (!imageLoader.hasBitmap(artworkKey) && (artworkBitmap = readArtWork()) != null) {
-            imageLoader.cacheBitmap(artworkKey, artworkBitmap);
-        }
-
-        imageLoader.displayImage(artworkKey, artworkImageView, null);
+        Drawable defaultArtWork = getResources().getDrawable(R.drawable.artwork_default);
+        imageLoader.displayImage(mediaFD, artworkImageView, defaultArtWork);
     }
 
     private void initGestures() {

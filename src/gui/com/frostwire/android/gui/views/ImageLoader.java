@@ -18,14 +18,11 @@
 
 package com.frostwire.android.gui.views;
 
-import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,19 +31,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
-import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.gui.util.DiskLruImageCache;
-import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.util.FileUtils;
+import com.frostwire.android.gui.util.MusicUtils;
+import com.squareup.picasso.Loader;
+import com.squareup.picasso.LruCache;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.Builder;
+import com.squareup.picasso.UrlConnectionLoader;
+
 
 /**
  * @author gubatron
@@ -55,15 +54,13 @@ import com.frostwire.util.FileUtils;
  */
 public final class ImageLoader {
 
-    private final LruCache<Integer, Bitmap> cache;
-    private final Map<ImageView, Object> imageViews;
-
-    private final DiskLruImageCache diskCache;
-    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
+    private static final int CACHE_SIZE = 1024 * 1024 * 4; // 2MB
 
     private final Context context;
 
     private static ImageLoader defaultInstance;
+
+    private final Picasso picasso;
 
     public static ImageLoader getDefault() {
         return defaultInstance;
@@ -77,85 +74,52 @@ public final class ImageLoader {
 
     public ImageLoader(Context context) {
         this.context = context;
-
-        // code taken from http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
-        // Get memory class of this device, exceeding this amount will throw an
-        // OutOfMemory exception.
-        final int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 1024 * 1024 * memClass / 8;
-
-        this.cache = new LruCache<Integer, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(Integer key, Bitmap bitmap) {
-                // The cache size will be measured in bytes rather than number of items.
-                //return bitmap.getByteCount();
-                return bitmap.getRowBytes() * bitmap.getHeight();
-            }
-
-            /* Don't enable this, causing a lot of problems
-            @Override
-            protected void entryRemoved(boolean evicted, Integer key, Bitmap oldValue, Bitmap newValue) {
-                try {
-                    if (oldValue != null && !oldValue.isRecycled()) {
-                        oldValue.recycle();
-                    }
-                } catch (Throwable e) {
-                    LOG.warn("Unable to recycle bitmap from LRU cache, possible memory leak", e);
-                }
-            }*/
-        };
-
-        File imgCacheDir = SystemUtils.getImageCacheDirectory();
-        this.diskCache = (FileUtils.isValidDirectory(imgCacheDir)) ? new DiskLruImageCache(imgCacheDir, DISK_CACHE_SIZE, CompressFormat.JPEG, 80) : null;
-
-        this.imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, Object>());
+        picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(CACHE_SIZE)).build();
     }
 
-    public void displayImage(Object key, ImageView imageView, Drawable defaultDrawable) {
-        displayImage(key, imageView, defaultDrawable, 1);
+    public void displayImage(FileDescriptor image, ImageView imageView, Drawable defaultDrawable) {
+        displayImage(image, imageView, defaultDrawable, 1);
     }
 
-    public void displayImage(Object key, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
-        imageViews.put(imageView, key);
-        Bitmap bitmap = cache.get(key.hashCode());
-        if (bitmap != null && !bitmap.isRecycled()) {
-            imageView.setScaleType(ScaleType.FIT_CENTER);
-            imageView.setImageBitmap(bitmap);
-        } else if (defaultDrawable != null) {
+    public void displayImage(FileDescriptor fd, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
+        StringBuilder path = getResourceIdentifier(fd);
+        displayImage(path.toString(), imageView, defaultDrawable, sampleSize);
+    }
+
+    /**
+     * @param fd
+     * @return Depending on the file type returns either video:<id> or image:<id>
+     */
+    private StringBuilder getResourceIdentifier(FileDescriptor fd) {
+        StringBuilder path = new StringBuilder();
+
+        switch (fd.fileType) {
+        case Constants.FILE_TYPE_PICTURES:
+            path.append("image:");
+            break;
+        case Constants.FILE_TYPE_VIDEOS:
+            path.append("video:");
+            break;
+        case Constants.FILE_TYPE_AUDIO:
+            path.append("audio:");
+            break;
+        default:
+            path.append("image:");
+            break;
+        }
+        path.append(fd.id);
+        return path;
+    }
+
+    public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
+        if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.CENTER);
-            imageView.setImageDrawable(defaultDrawable);
-            queueImage(key, imageView, sampleSize);
+            picasso.setDebugging(true);
+            picasso.load(imageSrc).placeholder(defaultDrawable).into(imageView);
         }
     }
 
-    public void cacheBitmap(Object key, Bitmap bitmap) {
-        cache.put(key.hashCode(), bitmap);
-    }
-
-    public boolean hasBitmap(Object key) {
-        return cache.get(key.hashCode()) != null;
-    }
-
-    public void clearCache() {
-        cache.evictAll();
-    }
-
-    private boolean imageViewReused(ImageToLoad imageToLoad) {
-        Object key = imageViews.get(imageToLoad.imageView);
-        if (key == null || !key.equals(imageToLoad.key)) {
-            return true;
-        }
-        return false;
-    }
-
-    private void queueImage(Object key, ImageView imageView, int sampleSize) {
-        ImageToLoad p = new ImageToLoad(key, imageView, sampleSize);
-        BitmapWorkerTask task = new BitmapWorkerTask(p);
-        task.execute();
-    }
-
+    /**
     private Bitmap getBitmap(Context context, Object key, int sampleSize) {
         if (isKeyRemote(key)) {
             return getBitmap((String) key, sampleSize);
@@ -188,26 +152,7 @@ public final class ImageLoader {
 
         return bmp;
     }
-
-    private Bitmap getBitmap(Context context, FileDescriptor fd) {
-        Bitmap bmp = null;
-
-        try {
-            ContentResolver cr = context.getContentResolver();
-
-            if (fd.fileType == Constants.FILE_TYPE_PICTURES) {
-                bmp = Images.Thumbnails.getThumbnail(cr, fd.id, Images.Thumbnails.MICRO_KIND, null);
-            } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
-                bmp = Video.Thumbnails.getThumbnail(cr, fd.id, Video.Thumbnails.MICRO_KIND, null);
-                bmp = overlayVideoIcon(context, bmp);
-            }
-        } catch (Throwable e) {
-            bmp = null;
-            // ignore
-        }
-
-        return bmp;
-    }
+    */
 
     private Bitmap overlayVideoIcon(Context context, Bitmap bmp) {
         Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
@@ -225,72 +170,83 @@ public final class ImageLoader {
         return bitmap;
     }
 
-    private boolean isKeyRemote(Object key) {
-        return key instanceof String && ((String) key).startsWith("http://");
+    private Bitmap getBitmap(Context context, byte fileType, long id) {
+        Bitmap bmp = null;
+
+        try {
+            ContentResolver cr = context.getContentResolver();
+
+            if (fileType == Constants.FILE_TYPE_PICTURES) {
+                bmp = Images.Thumbnails.getThumbnail(cr, id, Images.Thumbnails.MICRO_KIND, null);
+            } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
+                bmp = Video.Thumbnails.getThumbnail(cr, id, Video.Thumbnails.MICRO_KIND, null);
+                bmp = overlayVideoIcon(context, bmp);
+            } else if (fileType == Constants.FILE_TYPE_AUDIO) {
+                bmp = MusicUtils.getArtwork(context, id, -1);
+            }
+        } catch (Throwable e) {
+            bmp = null;
+            // ignore
+        }
+
+        return bmp;
     }
 
-    private static final class ImageToLoad {
-
-        public final Object key;
-        public final ImageView imageView;
-        public final int sampleSize;
-
-        public ImageToLoad(Object key, ImageView imageView, int sampleSize) {
-            this.key = key;
-            this.imageView = imageView;
-            this.sampleSize = sampleSize;
-        }
-    }
-
-    private class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
-
-        private final ImageToLoad imageToLoad;
-
-        public BitmapWorkerTask(ImageToLoad imageToLoad) {
-            this.imageToLoad = imageToLoad;
+    private class ThumbnailLoader implements Loader {
+        
+        private final Loader fallback;
+        
+        public ThumbnailLoader() {
+            fallback = new UrlConnectionLoader(context);
         }
 
+        /**
+         * @param itemIdentifier video:<videoId>, or image:<imageId>, where the Id is an Integer.
+         */
         @Override
-        protected Bitmap doInBackground(Integer... params) {
-            if (imageToLoad == null || imageToLoad.key == null || imageViewReused(imageToLoad)) {
-                return null;
-            }
-            Bitmap bmp = null;
+        public Response load(String itemIdentifier, boolean localCacheOnly) throws IOException {
+            Response response = null;
+            
+            byte fileType = getFileType(itemIdentifier);
 
-            if (diskCache != null && isKeyRemote(imageToLoad.key)) {
-                bmp = diskCache.getBitmap(imageToLoad.key);
-            }
+            if (fileType != -1) {
+                long id = getFileId(itemIdentifier);
+                Bitmap bitmap = getBitmap(context, fileType, id);
 
-            if (bmp == null) {
-                bmp = getBitmap(context, imageToLoad.key, imageToLoad.sampleSize);
-            }
-
-            if (bmp != null) {
-                cache.put(imageToLoad.key.hashCode(), bmp);
-
-                if (isKeyRemote(imageToLoad.key)) {
-                    if (diskCache != null && !diskCache.containsKey(imageToLoad.key)) {
-                        diskCache.put(imageToLoad.key, bmp);
-                    }
+                if (bitmap == null) {
+                    throw new IOException("ThumbnailLoader - bitmap not found.");
                 }
-            }
 
-            if (imageViewReused(imageToLoad)) {
-                return null;
+                response = new Response(convertToStream(bitmap), localCacheOnly);
+            } else {
+                response = fallback.load(itemIdentifier, localCacheOnly);
             }
-
-            return bmp;
+            
+            return response;
         }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !bitmap.isRecycled()) {
-                if (imageViewReused(imageToLoad)) {
-                    return;
-                }
-                imageToLoad.imageView.setScaleType(ScaleType.FIT_CENTER);
-                imageToLoad.imageView.setImageBitmap(bitmap);
+        private InputStream convertToStream(Bitmap bitmap) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(bitmap.getByteCount());
+            bitmap.compress(CompressFormat.PNG, 100, baos);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            return bais;
+        }
+
+        private byte getFileType(String itemIdentifier) {
+            byte fileType = -1;
+
+            if (itemIdentifier.startsWith("image:")) {
+                fileType = Constants.FILE_TYPE_PICTURES;
+            } else if (itemIdentifier.startsWith("video:")) {
+                fileType = Constants.FILE_TYPE_VIDEOS;
+            } else if (itemIdentifier.startsWith("audio:")) {
+                fileType = Constants.FILE_TYPE_AUDIO;
             }
+            return fileType;
+        }
+
+        private long getFileId(String itemIdentifier) {
+            return Long.valueOf(itemIdentifier.substring(6));
         }
     }
 }
