@@ -29,7 +29,7 @@ public class Biller extends PurchaseObserver {
         super(activity, new Handler());
         this.context = activity;
         billingService = new BillingService();
-        billingService.setContext(context);
+        billingService.setContext(context.getApplicationContext());
 
         updateBillingSupportStatus(false);
 
