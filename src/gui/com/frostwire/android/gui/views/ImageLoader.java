@@ -85,6 +85,7 @@ public final class ImageLoader {
         this.context = context;
         diskCache = diskCacheOpen();
         picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
+        picasso.setDebugging(false);
     }
 
     private DiskLruRawDataCache diskCacheOpen() {
@@ -131,7 +132,6 @@ public final class ImageLoader {
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
         if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.CENTER);
-            picasso.setDebugging(true);
             picasso.load(imageSrc).placeholder(defaultDrawable).into(imageView);
         }
     }
