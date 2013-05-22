@@ -131,7 +131,7 @@ public final class ImageLoader {
 
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
         if (defaultDrawable != null) {
-            imageView.setScaleType(ScaleType.CENTER);
+            imageView.setScaleType(ScaleType.FIT_CENTER);
             picasso.load(imageSrc).placeholder(defaultDrawable).into(imageView);
         }
     }

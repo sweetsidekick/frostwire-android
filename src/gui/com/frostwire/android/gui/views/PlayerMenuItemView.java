@@ -19,7 +19,6 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.MusicUtils;
 
 /**
  * @author gubatron
@@ -79,12 +77,13 @@ public class PlayerMenuItemView extends LinearLayout {
             if (fd != null) {
                 if (getVisibility() == View.GONE) {
                     setVisibility(View.VISIBLE);
-
-                    textTitle.setText(fd.title);
-                    textArtist.setText(fd.artist);
                 }
 
-                setArtwork(fd);
+                if (getVisibility() == View.VISIBLE) {
+                    textTitle.setText(fd.title);
+                    textArtist.setText(fd.artist);
+                    setArtwork(fd);
+                }
             } else {
                 if (getVisibility() == View.VISIBLE) {
                     setVisibility(View.GONE);
@@ -98,11 +97,7 @@ public class PlayerMenuItemView extends LinearLayout {
     }
 
     private void setArtwork(FileDescriptor fd) {
-        Drawable d = imageThumbnail.getDrawable();
-        imageThumbnail.setImageBitmap(MusicUtils.getArtwork(getContext(), fd.id, -1));
-        if (d instanceof BitmapDrawable) {
-            // can't figure out what the problem is
-            //((BitmapDrawable) d).getBitmap().recycle();
-        }
+        Drawable defaultArtWork = getResources().getDrawable(R.drawable.artwork_default);
+        ImageLoader.getDefault().displayImage(fd, imageThumbnail, defaultArtWork);
     }
 }
