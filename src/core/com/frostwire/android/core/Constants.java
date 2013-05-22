@@ -100,6 +100,7 @@ public final class Constants {
     public static final String ACTION_SHOW_TRANSFERS = "com.frostwire.android.ACTION_SHOW_TRANSFERS";
     public static final String ACTION_MEDIA_PLAYER_PLAY = "com.frostwire.android.ACTION_MEDIA_PLAYER_PLAY";
     public static final String ACTION_MEDIA_PLAYER_STOPPED = "com.frostwire.android.ACTION_MEDIA_PLAYER_STOPPED";
+    public static final String ACTION_MEDIA_PLAYER_PAUSED = "com.frostwire.android.ACTION_MEDIA_PLAYER_PAUSED";
     public static final String ACTION_REFRESH_FINGER = "com.frostwire.android.ACTION_REFRESH_FINGER";
     public static final String ACTION_DESKTOP_UPLOAD_REQUEST = "com.frostwire.android.ACTION_DESKTOP_UPLOAD_REQUEST";
     public static final String EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION = "com.frostwire.android.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION";

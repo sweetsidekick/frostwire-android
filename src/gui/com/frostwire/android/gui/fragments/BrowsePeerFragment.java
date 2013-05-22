@@ -164,6 +164,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         super.onResume();
 
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_PLAY));
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_PAUSED));
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED));
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_REFRESH_FINGER));
 
@@ -521,7 +522,9 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private final class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
+            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || 
+                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) ||
+                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }

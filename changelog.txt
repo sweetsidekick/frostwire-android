@@ -1,5 +1,6 @@
-FrostWire 1.0.8 - MAY/13/2013
+FrostWire 1.0.8 - MAY/22/2013
  - Search algorithm improvement brings better quality and missing search results.
+ - Fixes bug where audio player would stop instead of pausing when removing headphones.
  - Updated Image caching based on Picasso, better frame rate overall, should see
    less Out of memory error reports.
  - Fixes bug where the search cache couldn't purge old entries nor it could be deleted.

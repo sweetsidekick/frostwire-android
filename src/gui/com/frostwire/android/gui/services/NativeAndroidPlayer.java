@@ -111,6 +111,8 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
                 } else {
                     mp.start();
                 }
+                
+                service.sendBroadcast(new Intent(mp.isPlaying() ? Constants.ACTION_MEDIA_PLAYER_PLAY : Constants.ACTION_MEDIA_PLAYER_PAUSED));
             }
         } catch (Throwable e) {
             Log.e(TAG, "Error performing media player pause", e);

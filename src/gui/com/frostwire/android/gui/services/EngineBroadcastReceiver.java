@@ -78,7 +78,6 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             } else if (action.equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
                 Librarian.instance().syncMediaStore();
             } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 
                 if (networkInfo.getDetailedState() == DetailedState.DISCONNECTED) {
@@ -87,7 +86,9 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                     handleConnectedNetwork(networkInfo);
                 }
             } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-                Engine.instance().getMediaPlayer().stop();
+                if (Engine.instance().getMediaPlayer().isPlaying()) {
+                    Engine.instance().getMediaPlayer().togglePause();
+                }
             } else if (action.equals(Intent.ACTION_PACKAGE_ADDED)) {
                 Librarian.instance().syncApplicationsProvider();
             } else if (action.equals(Intent.ACTION_PACKAGE_REMOVED)) {

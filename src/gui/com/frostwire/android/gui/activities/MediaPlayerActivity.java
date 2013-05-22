@@ -95,17 +95,24 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
-                    try {
-                        finish();
-                    } catch (Throwable e) {
-                        // ignore
-                    }
-                } else if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY)) {
-                    try {
-                        initComponents();
-                    } catch (Throwable e) {
-                        // ignore
+                if (intent != null) {
+                    String action = intent.getAction();
+                    
+                    if (action != null) {
+                        if (action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
+                            try {
+                                finish();
+                            } catch (Throwable e) {
+                                // ignore
+                            }
+                        } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) ||
+                                   action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+                            try {
+                                initComponents();
+                            } catch (Throwable e) {
+                                // ignore
+                            }
+                        }
                     }
                 }
             }
@@ -341,6 +348,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
+        filter.addAction(Constants.ACTION_MEDIA_PLAYER_PAUSED);
         registerReceiver(broadcastReceiver, filter);
 
         refreshFD();
