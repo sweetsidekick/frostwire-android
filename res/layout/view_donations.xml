@@ -66,7 +66,7 @@
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginRight="8sp"
-            android:text="$1"
+            android:text="@string/one_dollar"
             android:textSize="16sp" />
 
         <Button
@@ -75,7 +75,7 @@
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$5"
+            android:text="@string/five_dollars"
             android:textSize="16sp" />
 
         <Button
@@ -84,7 +84,7 @@
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$10"
+            android:text="@string/ten_dollars"
             android:textSize="15sp" />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8sp"
-            android:text="$25"
+            android:text="@string/twenty_five_dollars"
             android:textSize="15sp" />
 
     </LinearLayout>
