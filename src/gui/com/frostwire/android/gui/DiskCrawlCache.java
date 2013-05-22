@@ -34,9 +34,9 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.search.CrawlCache;
 import com.frostwire.util.FileUtils;
-import com.jakewharton.DiskLruCache;
-import com.jakewharton.DiskLruCache.Editor;
-import com.jakewharton.DiskLruCache.Snapshot;
+import com.jakewharton.disklrucache.DiskLruCache;
+import com.jakewharton.disklrucache.DiskLruCache.Editor;
+import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
 
 /**
  * 

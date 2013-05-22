@@ -20,8 +20,12 @@ package com.frostwire.android.gui.views;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+
+import org.apache.commons.io.IOUtils;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -39,13 +43,15 @@ import android.widget.ImageView.ScaleType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.util.DiskLruRawDataCache;
 import com.frostwire.android.gui.util.MusicUtils;
+import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.util.FileUtils;
 import com.squareup.picasso.Loader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 import com.squareup.picasso.UrlConnectionLoader;
-
 
 /**
  * @author gubatron
@@ -54,7 +60,10 @@ import com.squareup.picasso.UrlConnectionLoader;
  */
 public final class ImageLoader {
 
-    private static final int CACHE_SIZE = 1024 * 1024 * 4; // 2MB
+    private static final int MEMORY_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+
+    private final DiskLruRawDataCache diskCache;
 
     private final Context context;
 
@@ -74,7 +83,15 @@ public final class ImageLoader {
 
     public ImageLoader(Context context) {
         this.context = context;
-        picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(CACHE_SIZE)).build();
+        diskCache = diskCacheOpen();
+        picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
+    }
+
+    private DiskLruRawDataCache diskCacheOpen() {
+        DiskLruRawDataCache cache = null;
+        File imgCacheDir = SystemUtils.getImageCacheDirectory();
+        cache = (FileUtils.isValidDirectory(imgCacheDir)) ? new DiskLruRawDataCache(imgCacheDir, DISK_CACHE_SIZE) : null;
+        return cache;
     }
 
     public void displayImage(FileDescriptor image, ImageView imageView, Drawable defaultDrawable) {
@@ -117,6 +134,10 @@ public final class ImageLoader {
             picasso.setDebugging(true);
             picasso.load(imageSrc).placeholder(defaultDrawable).into(imageView);
         }
+    }
+
+    private boolean isKeyRemote(String key) {
+        return key.startsWith("http://");
     }
 
     /**
@@ -192,36 +213,96 @@ public final class ImageLoader {
         return bmp;
     }
 
+    private class RawDataResponse extends Loader.Response {
+
+        private final byte[] data;
+
+        public RawDataResponse(byte[] data, boolean loadedFromCache) {
+            super(new ByteArrayInputStream(data), loadedFromCache);
+            this.data = data;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+    }
+
+    /**
+     * We'll use the Raw data response given by this loader to store bytes
+     * on a PRIVATE disk cache that nobody else will come and erase or share with us,
+     * like the default HttpResponseCache that Picasso uses (which doesn't work for
+     * older androids, and which I believe sucks balls)
+     * @author gubatron
+     *
+     */
+    private class RawDataUrlConnectionLoader extends UrlConnectionLoader {
+
+        public RawDataUrlConnectionLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public RawDataResponse load(String url, boolean localCacheOnly) throws IOException {
+            HttpURLConnection connection = openConnection(url);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            IOUtils.copy(connection.getInputStream(), baos);
+            connection.disconnect();
+            return new RawDataResponse(baos.toByteArray(), localCacheOnly);
+        }
+    }
+
     private class ThumbnailLoader implements Loader {
-        
-        private final Loader fallback;
-        
+
+        private final RawDataUrlConnectionLoader fallback;
+
         public ThumbnailLoader() {
-            fallback = new UrlConnectionLoader(context);
+            fallback = new RawDataUrlConnectionLoader(context);
         }
 
         /**
-         * @param itemIdentifier video:<videoId>, or image:<imageId>, where the Id is an Integer.
+         * @param itemIdentifier video:<videoId>, or image:<imageId>, audio:<audioId>, where the Id is an Integer.
          */
         @Override
         public Response load(String itemIdentifier, boolean localCacheOnly) throws IOException {
             Response response = null;
-            
+
             byte fileType = getFileType(itemIdentifier);
 
             if (fileType != -1) {
-                long id = getFileId(itemIdentifier);
-                Bitmap bitmap = getBitmap(context, fileType, id);
-
-                if (bitmap == null) {
-                    throw new IOException("ThumbnailLoader - bitmap not found.");
-                }
-
-                response = new Response(convertToStream(bitmap), localCacheOnly);
+                response = fromFileType(itemIdentifier, localCacheOnly, fileType);
+            } else if (isKeyRemote(itemIdentifier)) {
+                response = fromRemote(itemIdentifier, localCacheOnly);
             } else {
                 response = fallback.load(itemIdentifier, localCacheOnly);
             }
-            
+
+            return response;
+        }
+
+        private Response fromRemote(String itemIdentifier, boolean localCacheOnly) throws IOException {
+            RawDataResponse response = null;
+
+            if (!diskCache.containsKey(itemIdentifier)) {
+                response = fallback.load(itemIdentifier, localCacheOnly);
+                diskCache.put(itemIdentifier, response.getData());
+            } else {
+                byte[] data = diskCache.getBytes(itemIdentifier);
+                response = new RawDataResponse(data,localCacheOnly);
+            }
+
+            return response;
+        }
+        
+        private Response fromFileType(String itemIdentifier, boolean localCacheOnly, byte fileType) throws IOException {
+            Response response;
+            long id = getFileId(itemIdentifier);
+            Bitmap bitmap = getBitmap(context, fileType, id);
+
+            if (bitmap == null) {
+                throw new IOException("ThumbnailLoader - bitmap not found.");
+            }
+
+            response = new Response(convertToStream(bitmap), localCacheOnly);
             return response;
         }
 

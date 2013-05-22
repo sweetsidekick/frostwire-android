@@ -17,6 +17,8 @@ package com.frostwire.android.gui.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,43 +26,38 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
+import org.apache.commons.io.IOUtils;
+
 import android.util.Log;
 
 import com.frostwire.android.BuildConfig;
 import com.frostwire.android.util.ByteUtils;
-import com.jakewharton.DiskLruCache;
+import com.jakewharton.disklrucache.DiskLruCache;
 
 // Taken from
 // http://stackoverflow.com/questions/10185898/using-disklrucache-in-android-4-0-does-not-provide-for-opencache-method
-public class DiskLruImageCache {
+public class DiskLruRawDataCache {
 
     private DiskLruCache mDiskCache;
-    private CompressFormat mCompressFormat = CompressFormat.JPEG;
-    private int mCompressQuality = 70;
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
     //private static final String TAG = "DiskLruImageCache";
 
     private static final int IO_BUFFER_SIZE = 4 * 1024;
 
-    public DiskLruImageCache(File diskCacheDir, int diskCacheSize, CompressFormat compressFormat, int quality) {
+    public DiskLruRawDataCache(File diskCacheDir, int diskCacheSize) {
         try {
             mDiskCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, diskCacheSize);
-            mCompressFormat = compressFormat;
-            mCompressQuality = quality;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor) throws IOException, FileNotFoundException {
+    private boolean writeBytesToFile(byte[] data, DiskLruCache.Editor editor) throws IOException, FileNotFoundException {
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
-            return bitmap.compress(mCompressFormat, mCompressQuality, out);
+            return IOUtils.copy(new ByteArrayInputStream(data), out) > 0;
         } finally {
             if (out != null) {
                 out.close();
@@ -82,11 +79,11 @@ public class DiskLruImageCache {
         return key.toString();
     }
 
-    public void put(Object key, Bitmap data) {
+    public void put(Object key, byte[] data) {
         put(encodeKey(key), data);
     }
 
-    private void put(String key, Bitmap data) {
+    private void put(String key, byte[] data) {
 
         DiskLruCache.Editor editor = null;
         try {
@@ -95,7 +92,7 @@ public class DiskLruImageCache {
                 return;
             }
 
-            if (writeBitmapToFile(data, editor)) {
+            if (writeBytesToFile(data, editor)) {
                 mDiskCache.flush();
                 editor.commit();
                 if (BuildConfig.DEBUG) {
@@ -120,13 +117,13 @@ public class DiskLruImageCache {
         }
     }
 
-    public Bitmap getBitmap(Object key) {
-        return getBitmap(encodeKey(key));
+    public byte[] getBytes(Object key) {
+        return getBytes(encodeKey(key));
     }
 
-    private Bitmap getBitmap(String key) {
+    private byte[] getBytes(String key) {
 
-        Bitmap bitmap = null;
+        byte[] data = null;
         DiskLruCache.Snapshot snapshot = null;
         try {
 
@@ -137,7 +134,14 @@ public class DiskLruImageCache {
             final InputStream in = snapshot.getInputStream(0);
             if (in != null) {
                 final BufferedInputStream buffIn = new BufferedInputStream(in, IO_BUFFER_SIZE);
-                bitmap = BitmapFactory.decodeStream(buffIn);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                try {
+                    IOUtils.copy(buffIn, baos);
+                    data = baos.toByteArray();
+                } finally {
+                    baos.close();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,10 +152,10 @@ public class DiskLruImageCache {
         }
 
         if (BuildConfig.DEBUG) {
-            Log.d("cache_test_DISK_", bitmap == null ? "" : "image read from disk " + key);
+            Log.d("cache_test_DISK_", data == null ? "" : "data read from disk " + key);
         }
 
-        return bitmap;
+        return data;
 
     }
 
@@ -159,11 +163,10 @@ public class DiskLruImageCache {
         return containsKey(encodeKey(key));
     }
 
-    public boolean containsKey(String key) {
+    private boolean containsKey(String key) {
 
-        
         boolean contained = false;
-        
+
         if (mDiskCache != null) {
             DiskLruCache.Snapshot snapshot = null;
             try {
