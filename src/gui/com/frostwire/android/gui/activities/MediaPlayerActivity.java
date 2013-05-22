@@ -26,16 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Camera;
-import android.graphics.Canvas;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -60,7 +50,6 @@ import com.frostwire.android.gui.Biller;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
-import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
@@ -369,78 +358,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (mediaFD != null) {
             refreshUIData();
         }
-    }
-
-    private Bitmap readArtWork() {
-        Bitmap artwork = null;
-        try {
-            Bitmap temp = MusicUtils.getArtwork(this, mediaFD.id, -1);
-            artwork = applyEffect(temp);
-            temp.recycle();
-        } catch (Throwable e) {
-            Log.e(TAG, "Can't read the cover art for fd: " + mediaFD);
-        }
-
-        return artwork;
-    }
-
-    private Bitmap applyEffect(Bitmap bmp) {
-        int width = bmp.getWidth();
-        int height = bmp.getHeight();
-
-        Camera cam = new Camera();
-        cam.rotateX(-120);
-
-        Matrix mat = new Matrix();
-        cam.getMatrix(mat);
-
-        int cX = width / 2;
-        int cY = height / 2;
-
-        mat.preTranslate(-cX, -cY);
-        mat.postTranslate(cX, cY);
-
-        Bitmap reflection = Bitmap.createBitmap(bmp, 0, height / 2, width, height / 2, mat, true);
-
-        int h1 = reflection.getHeight();
-        int w1 = reflection.getWidth();
-        double d1 = (2f * h1) / Math.sqrt(3);
-
-        double s1 = (w1 - d1) / w1;
-
-        mat.reset();
-        mat.postScale((float) s1, (float) s1);
-
-        Bitmap scaled = Bitmap.createBitmap(bmp, 0, 0, width, height, mat, true);
-        reflection = Bitmap.createBitmap(reflection, 0, 0, w1, h1, mat, true);
-
-        int gap = 4;
-        int padding = 16;
-        int glowSize = 16;
-
-        Bitmap result = Bitmap.createBitmap(width - padding, height - padding, Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(result);
-        //Paint blur = new Paint();
-        //blur.setColor(0x33505050);
-        //blur.setMaskFilter(new BlurMaskFilter(glowSize, Blur.OUTER));
-        //blur.setShadowLayer(1, 0, 0, 0x33505050);
-        //int bx1 = (result.getWidth() - scaled.getWidth()) / 2;
-        //int by1 = glowSize;
-        //int bx2 = bx1 + scaled.getWidth();
-        //int by2 = by1 + scaled.getHeight();
-        //canvas.drawRect(bx1 - 1, by1 - 1, bx2 + 1, by2 + 1, blur);
-
-        canvas.drawBitmap(scaled, (result.getWidth() - scaled.getWidth()) / 2, glowSize, null);
-
-        canvas.drawBitmap(reflection, (result.getWidth() - reflection.getWidth()) / 2, scaled.getHeight() + gap + glowSize, null);
-
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, scaled.getHeight(), 0, result.getHeight() + gap + glowSize, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
-        paint.setShader(shader);
-        paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
-        canvas.drawRect(0, scaled.getHeight() + glowSize, width, result.getHeight() + gap + glowSize, paint);
-        return result;
     }
 
     // media player controls

@@ -140,41 +140,6 @@ public final class ImageLoader {
         return key.startsWith("http://");
     }
 
-    /**
-    private Bitmap getBitmap(Context context, Object key, int sampleSize) {
-        if (isKeyRemote(key)) {
-            return getBitmap((String) key, sampleSize);
-        } else if (key instanceof FileDescriptor) {
-            return getBitmap(context, (FileDescriptor) key);
-        } else {
-            return null;
-        }
-    }
-
-    private Bitmap getBitmap(String url, int sampleSize) {
-        Bitmap bmp = null;
-
-        try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            conn.setInstanceFollowRedirects(true);
-
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inPurgeable = true;
-            opts.inSampleSize = sampleSize;
-            opts.inPreferQualityOverSpeed = false;
-
-            bmp = BitmapFactory.decodeStream(conn.getInputStream(), null, opts);
-        } catch (Throwable e) {
-            bmp = null;
-            // ignore
-        }
-
-        return bmp;
-    }
-    */
-
     private Bitmap overlayVideoIcon(Context context, Bitmap bmp) {
         Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
         Canvas canvas = new Canvas(bitmap);
