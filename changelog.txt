@@ -1,5 +1,7 @@
 FrostWire 1.0.8 - MAY/13/2013
  - Search algorithm improvement brings better quality and missing search results.
+ - Updated Image caching based on Picasso, better frame rate overall, should see
+   less Out of memory error reports.
  - Fixes bug where the search cache couldn't purge old entries nor it could be deleted.
  - Fix for parsing torrents with minor mistakes in trackers list.
  - Less intensive HTML detection during torrent parsing
