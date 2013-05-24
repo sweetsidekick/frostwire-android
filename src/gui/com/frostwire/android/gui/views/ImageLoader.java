@@ -319,24 +319,24 @@ public final class ImageLoader {
         
         @Override
         public Bitmap transform(Bitmap source) {
-            Bitmap bmp = overlayIcon(context, source, overlayIconId, overlayWidthPercentage, overlayHeightPercentage);
+            Bitmap bmp = overlayIcon(source, overlayIconId, overlayWidthPercentage, overlayHeightPercentage);
             source.recycle();
             return bmp;
         }
 
         @Override
         public String key() {
-            return keyPrefix + ":" + overlayIconId + ":" + imageView.getWidth() + "," + imageView.getHeight();
+            return keyPrefix + ":" + overlayIconId + ":" + imageView.getWidth() + "," + imageView.getHeight() + ":" + overlayWidthPercentage + "," + overlayHeightPercentage;
         }
         
-        private Bitmap overlayIcon(Context context, Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
+        private Bitmap overlayIcon(Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
             Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
             Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap,backgroundBmp);
-            paintScaledIcon(context, iconResId, iconWidthPercentage, iconHeightPercentage, canvas);
+            paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
             return canvasBitmap;
         }
 
-        private void paintScaledIcon(Context context, int iconResId, int iconWidthPercentage, int iconHeightPercentage, Canvas canvas) {
+        private void paintScaledIcon(Canvas canvas, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(), iconResId);
             Rect iconSrcRect = new Rect(0, 0, icon.getWidth(), icon.getHeight());
             int iconResizedWidth = (int) (imageView.getWidth() * (iconWidthPercentage / 100f));
