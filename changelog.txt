@@ -1,4 +1,5 @@
-FrostWire 1.0.8 - MAY/23/2013
+FrostWire 1.0.8 - MAY/24/2013
+ - New main menu entry to launch "FrostWire TV" app.
  - Search algorithm improvement brings better quality and missing search results.
  - Local audio files now show album art making local music browsing friendlier.
  - Fixes bug where audio player would stop instead of pausing when removing headphones.
