@@ -339,8 +339,8 @@ public final class ImageLoader {
         private void paintScaledIcon(Canvas canvas, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(), iconResId);
             Rect iconSrcRect = new Rect(0, 0, icon.getWidth(), icon.getHeight());
-            int iconResizedWidth = (int) (imageView.getWidth() * (iconWidthPercentage / 100f));
-            int iconResizedHeight = (int) (imageView.getHeight() * (iconHeightPercentage / 100f));
+            int iconResizedWidth = (int) ((imageView.getWidth() * iconWidthPercentage) / 100f);
+            int iconResizedHeight = (int) ((imageView.getHeight() * iconHeightPercentage) / 100f);
             int left = (imageView.getWidth() - iconResizedWidth) >> 1;
             int top = (imageView.getHeight() - iconResizedHeight) >> 1;
             Rect iconDestRect = new Rect(left, top, left + iconResizedWidth, top + iconResizedHeight);

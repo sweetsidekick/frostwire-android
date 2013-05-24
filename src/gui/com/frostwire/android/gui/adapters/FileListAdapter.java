@@ -263,26 +263,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         fileThumbnail.setOnClickListener(downloadButtonClickListener);
     }
 
-    /*
-    private Drawable getDrawable(FileDescriptor fd) {
-        Bitmap bmp = null;
-
-        try {
-            ContentResolver cr = getContext().getContentResolver();
-
-            if (fd.fileType == Constants.FILE_TYPE_PICTURES) {
-                bmp = Images.Thumbnails.getThumbnail(cr, fd.id, Images.Thumbnails.MICRO_KIND, null);
-            } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
-                bmp = Video.Thumbnails.getThumbnail(cr, fd.id, Video.Thumbnails.MICRO_KIND, null);
-            }
-        } catch (Throwable e) {
-            // ignore
-        }
-
-        return bmp != null ? new BitmapDrawable(bmp) : null;
-    }
-    */
-
     /**
      * Same factors are considered to show the padlock icon state and color.
      * 
