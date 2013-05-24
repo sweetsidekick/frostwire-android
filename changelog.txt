@@ -1,5 +1,6 @@
-FrostWire 1.0.8 - MAY/22/2013
+FrostWire 1.0.8 - MAY/23/2013
  - Search algorithm improvement brings better quality and missing search results.
+ - Local audio files now show album art making local music browsing friendlier.
  - Fixes bug where audio player would stop instead of pausing when removing headphones.
  - Updated Image caching based on Picasso, better frame rate overall, should see
    less Out of memory error reports.
