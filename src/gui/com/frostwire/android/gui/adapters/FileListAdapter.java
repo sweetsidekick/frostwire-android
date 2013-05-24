@@ -235,13 +235,17 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 ContentResolver cr = getContext().getContentResolver();
                 is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
                 Drawable icon = Drawable.createFromStream(is, "");
-                fileThumbnail.setImageDrawable(icon);
+                thumbnailLoader.displayImage(fd,fileThumbnail,fileTypeDrawable);
+                //fileThumbnail.setImageDrawable(icon);
             } catch (Throwable e) {
                 fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
-                fileThumbnail.setImageDrawable(fileTypeDrawable);
+                thumbnailLoader.displayImage(fd,fileThumbnail,fileTypeDrawable);
+                //fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
                 IOUtils.closeQuietly(is);
             }
+        } else if (local && (fileType == Constants.FILE_TYPE_AUDIO || fileType == Constants.FILE_TYPE_VIDEOS)) {
+            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable, ImageLoader.OVERLAY_FLAG_PLAY);
         } else {
             thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
         }
@@ -371,7 +375,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private static int getViewItemId(boolean local, byte fileType) {
-        if (local && (fileType == Constants.FILE_TYPE_PICTURES || fileType == Constants.FILE_TYPE_VIDEOS || fileType == Constants.FILE_TYPE_APPLICATIONS)) {
+        if (local && (fileType == Constants.FILE_TYPE_PICTURES || fileType == Constants.FILE_TYPE_VIDEOS || fileType == Constants.FILE_TYPE_APPLICATIONS || fileType == Constants.FILE_TYPE_AUDIO)) {
             return R.layout.view_browse_thumbnail_peer_list_item;
         } else {
             return R.layout.view_browse_peer_list_item;

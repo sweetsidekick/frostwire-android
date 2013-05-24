@@ -35,6 +35,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import android.widget.ImageView.ScaleType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.gui.util.DiskLruRawDataCache;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.SystemUtils;
@@ -51,6 +53,8 @@ import com.squareup.picasso.Loader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
+import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.Transformation;
 import com.squareup.picasso.UrlConnectionLoader;
 
 /**
@@ -62,6 +66,8 @@ public final class ImageLoader {
 
     private static final int MEMORY_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+    
+    public static final int OVERLAY_FLAG_PLAY = 1;
 
     private final DiskLruRawDataCache diskCache;
 
@@ -96,12 +102,12 @@ public final class ImageLoader {
     }
 
     public void displayImage(FileDescriptor image, ImageView imageView, Drawable defaultDrawable) {
-        displayImage(image, imageView, defaultDrawable, 1);
+        displayImage(image, imageView, defaultDrawable, 0);
     }
 
-    public void displayImage(FileDescriptor fd, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
+    public void displayImage(FileDescriptor fd, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
         StringBuilder path = getResourceIdentifier(fd);
-        displayImage(path.toString(), imageView, defaultDrawable, sampleSize);
+        displayImage(path.toString(), imageView, defaultDrawable, overlayFlags);
     }
 
     /**
@@ -121,6 +127,9 @@ public final class ImageLoader {
         case Constants.FILE_TYPE_AUDIO:
             path.append("audio:");
             break;
+        case Constants.FILE_TYPE_APPLICATIONS:
+            path.append("application:");
+            break;
         default:
             path.append("image:");
             break;
@@ -129,31 +138,22 @@ public final class ImageLoader {
         return path;
     }
 
-    public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int sampleSize) {
+    public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
         if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.FIT_CENTER);
-            picasso.load(imageSrc).placeholder(defaultDrawable).into(imageView);
+            
+            RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
+            
+            if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
+                requestBuilder.transform(new OverlayBitmapTransformation(imageView,imageSrc,R.drawable.play_icon_transparent,40,40));
+            }
+            
+            requestBuilder.into(imageView);
         }
     }
 
     private boolean isKeyRemote(String key) {
         return key.startsWith("http://");
-    }
-
-    private Bitmap overlayVideoIcon(Context context, Bitmap bmp) {
-        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-        Canvas canvas = new Canvas(bitmap);
-
-        canvas.drawBitmap(bmp, 0, 0, null);
-
-        Bitmap playIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_icon_transparent);
-        Rect src = new Rect(0, 0, playIcon.getWidth(), playIcon.getHeight());
-        int dx = (bmp.getWidth() - src.width()) / 2;
-        int dy = (bmp.getHeight() - src.height()) / 2;
-        Rect dst = new Rect(dx, dy, src.width() + dx, src.height() + dy);
-        canvas.drawBitmap(playIcon, src, dst, null);
-
-        return bitmap;
     }
 
     private Bitmap getBitmap(Context context, byte fileType, long id) {
@@ -166,9 +166,12 @@ public final class ImageLoader {
                 bmp = Images.Thumbnails.getThumbnail(cr, id, Images.Thumbnails.MICRO_KIND, null);
             } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
                 bmp = Video.Thumbnails.getThumbnail(cr, id, Video.Thumbnails.MICRO_KIND, null);
-                bmp = overlayVideoIcon(context, bmp);
             } else if (fileType == Constants.FILE_TYPE_AUDIO) {
                 bmp = MusicUtils.getArtwork(context, id, -1);
+            } else if (fileType == Constants.FILE_TYPE_APPLICATIONS) {
+                InputStream is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(id)));
+                bmp = BitmapFactory.decodeStream(is);
+                is.close();
             }
         } catch (Throwable e) {
             bmp = null;
@@ -261,6 +264,7 @@ public final class ImageLoader {
         private Response fromFileType(String itemIdentifier, boolean localCacheOnly, byte fileType) throws IOException {
             Response response;
             long id = getFileId(itemIdentifier);
+            
             Bitmap bitmap = getBitmap(context, fileType, id);
 
             if (bitmap == null) {
@@ -287,12 +291,67 @@ public final class ImageLoader {
                 fileType = Constants.FILE_TYPE_VIDEOS;
             } else if (itemIdentifier.startsWith("audio:")) {
                 fileType = Constants.FILE_TYPE_AUDIO;
+            } else if (itemIdentifier.startsWith("application:")) {
+                fileType = Constants.FILE_TYPE_APPLICATIONS;
             }
             return fileType;
         }
 
         private long getFileId(String itemIdentifier) {
-            return Long.valueOf(itemIdentifier.substring(6));
+            return Long.valueOf(itemIdentifier.substring(itemIdentifier.indexOf(':')+1));
+        }
+    }
+    
+    private class OverlayBitmapTransformation implements Transformation {
+        private final ImageView imageView;
+        private final String keyPrefix;
+        private final int overlayIconId;
+        private final int overlayWidthPercentage;
+        private final int overlayHeightPercentage;
+        
+        public OverlayBitmapTransformation(ImageView imageView, String keyPrefix, int overlayIconId, int overlayWidthPercentage, int overlayHeightPercentage) {
+            this.imageView = imageView;
+            this.keyPrefix = keyPrefix;
+            this.overlayIconId = overlayIconId;
+            this.overlayWidthPercentage = overlayWidthPercentage;
+            this.overlayHeightPercentage = overlayHeightPercentage;
+        }
+        
+        @Override
+        public Bitmap transform(Bitmap source) {
+            Bitmap bmp = overlayIcon(context, source, overlayIconId, overlayWidthPercentage, overlayHeightPercentage);
+            source.recycle();
+            return bmp;
+        }
+
+        @Override
+        public String key() {
+            return keyPrefix + ":" + overlayIconId + ":" + imageView.getWidth() + "," + imageView.getHeight();
+        }
+        
+        private Bitmap overlayIcon(Context context, Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
+            Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
+            Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap,backgroundBmp);
+            paintScaledIcon(context, iconResId, iconWidthPercentage, iconHeightPercentage, canvas);
+            return canvasBitmap;
+        }
+
+        private void paintScaledIcon(Context context, int iconResId, int iconWidthPercentage, int iconHeightPercentage, Canvas canvas) {
+            Bitmap icon = BitmapFactory.decodeResource(context.getResources(), iconResId);
+            Rect iconSrcRect = new Rect(0, 0, icon.getWidth(), icon.getHeight());
+            int iconResizedWidth = (int) (imageView.getWidth() * (iconWidthPercentage / 100f));
+            int iconResizedHeight = (int) (imageView.getHeight() * (iconHeightPercentage / 100f));
+            int left = (imageView.getWidth() - iconResizedWidth) >> 1;
+            int top = (imageView.getHeight() - iconResizedHeight) >> 1;
+            Rect iconDestRect = new Rect(left, top, left + iconResizedWidth, top + iconResizedHeight);
+            canvas.drawBitmap(icon, iconSrcRect, iconDestRect, null);
+        }
+
+        private Canvas resizeBackgroundToFitImageView(Bitmap canvasBitmap, Bitmap backgroundBmp) {
+            Rect backgroundDestRect = new Rect(0,0,imageView.getWidth(), imageView.getHeight());
+            Canvas canvas = new Canvas(canvasBitmap);
+            canvas.drawBitmap(backgroundBmp, null, backgroundDestRect, null);
+            return canvas;
         }
     }
 }
