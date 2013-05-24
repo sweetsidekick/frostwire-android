@@ -32,7 +32,7 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 0, (byte) 7 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 0, (byte) 8 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
 
