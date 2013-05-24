@@ -26,10 +26,8 @@ import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -39,7 +37,6 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.adapters.menu.DeleteFileMenuAction;
@@ -232,15 +229,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             InputStream is = null;
 
             try {
-                ContentResolver cr = getContext().getContentResolver();
-                is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(fd.id)));
-                Drawable icon = Drawable.createFromStream(is, "");
                 thumbnailLoader.displayImage(fd,fileThumbnail,fileTypeDrawable);
-                //fileThumbnail.setImageDrawable(icon);
             } catch (Throwable e) {
-                fileThumbnail.setScaleType(ImageView.ScaleType.CENTER);
-                thumbnailLoader.displayImage(fd,fileThumbnail,fileTypeDrawable);
-                //fileThumbnail.setImageDrawable(fileTypeDrawable);
+                fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
                 IOUtils.closeQuietly(is);
             }
