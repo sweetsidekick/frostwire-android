@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -95,7 +96,10 @@ public class SlideMenuFragment extends ListFragment {
             if (item.id == R.id.menu_main_preferences) {
                 adapter.notifyDataSetChanged();
                 showPreferences(getActivity());
-            } else {
+            } else if (item.id == R.id.menu_launch_tv) {
+                launchFrostWireTV();
+            }
+            else {
                 adapter.setSelectedItem(item.id);
                 switchFragment(item.id);
             }
@@ -104,6 +108,25 @@ public class SlideMenuFragment extends ListFragment {
         }
     }
 
+    /**
+     * Will try to launch the app, if it cannot find the launch intent, it'll take the user to the Android market.
+     */
+    private void launchFrostWireTV() {
+        Intent intent = null;
+        try {
+            intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.frostwire.android.tv");
+
+            //on the nexus it wasn't throwing the NameNotFoundException, it was just returning null
+            if (intent == null) {
+                throw new NullPointerException();
+            }
+        } catch (Throwable t) {
+            intent = new Intent();
+            intent.setData(Uri.parse("market://details?id=com.frostwire.android.tv"));
+        }
+        startActivity(intent);
+    }
+    
     public void setSelectedItem(int id) {
         try {
             MenuAdapter adapter = (MenuAdapter) getListAdapter();

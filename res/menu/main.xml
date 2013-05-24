@@ -41,6 +41,12 @@
         android:title="@string/wifi_sharing">
     </item>
     <item
+        android:id="@+id/menu_launch_tv"
+        android:icon="@drawable/menu_icon_tv"
+        android:title="@string/watch_tv">
+    </item>
+    
+    <item
         android:id="@+id/menu_main_preferences"
         android:icon="@drawable/menu_icon_preferences"
         android:title="@string/preferences">
