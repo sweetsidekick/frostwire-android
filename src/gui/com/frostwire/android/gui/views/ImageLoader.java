@@ -36,6 +36,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.widget.ImageView;
@@ -276,12 +277,20 @@ public final class ImageLoader {
         }
 
         private InputStream convertToStream(Bitmap bitmap) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(bitmap.getByteCount());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(getByteCount(bitmap));
             bitmap.compress(CompressFormat.PNG, 100, baos);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             return bais;
         }
-
+        
+        private int getByteCount(final Bitmap bitmap) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+                return bitmap.getRowBytes() * bitmap.getHeight();
+            } else {
+                return bitmap.getByteCount();
+            }
+        }
+        
         private byte getFileType(String itemIdentifier) {
             byte fileType = -1;
 
