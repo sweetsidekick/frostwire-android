@@ -99,19 +99,26 @@ public class AboutFragment extends Fragment implements MainFragment {
     @Override
     public void onStart() {
         super.onStart();
-        ResponseHandler.register(biller);
+        if (biller != null) {
+            ResponseHandler.register(biller);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ResponseHandler.unregister(biller);
+        
+        if (biller != null) {
+            ResponseHandler.unregister(biller);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        biller.onDestroy();
+        if (biller != null) {
+            biller.onDestroy();
+        }
     }
 
     private String getAboutText() {
