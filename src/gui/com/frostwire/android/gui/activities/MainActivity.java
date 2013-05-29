@@ -175,8 +175,10 @@ public class MainActivity extends AbstractSlidingActivity {
     protected void onResume() {
         super.onResume();
         
-        OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-        offercast.authorize();
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
+            offercast.authorize();
+        }
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {

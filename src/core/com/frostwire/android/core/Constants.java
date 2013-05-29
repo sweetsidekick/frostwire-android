@@ -84,6 +84,8 @@ public final class Constants {
     public static final String PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG = "frostwire.prefs.gui.show_new_transfer_dialog";
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE = "frostwire.prefs.gui.support_frostwire";
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD = "frostwire.prefs.gui.support_frostwire_threshold";
+    public static final String PREF_KEY_GUI_SHOW_TV_MENU_ITEM = "frostwire.prefs.gui.show_tv_menu_item";
+    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
 
     public static final String PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED = "frostwire.prefs.torrent.max_download_speed";
     public static final String PREF_KEY_TORRENT_MAX_UPLOAD_SPEED = "frostwire.prefs.torrent.max_upload_speed";

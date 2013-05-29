@@ -292,6 +292,9 @@ public final class SoftwareUpdater {
                 engine.setActive(update.config.activeSearchEngines.get(name));
             }
         }
+        
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM,update.config.tv);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
     }
 
     private static class Update {
@@ -319,5 +322,7 @@ public final class SoftwareUpdater {
     private static class Config {
         public int supportThreshold = 100;
         public Map<String, Boolean> activeSearchEngines;
+        public boolean tv = true;
+        public boolean offercast = true;
     }
 }
