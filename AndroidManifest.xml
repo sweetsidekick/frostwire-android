@@ -12,7 +12,7 @@
 	*/ -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="preferExternal"
-	android:versionCode="87" android:versionName="1.0.8">
+	android:versionCode="88" android:versionName="1.0.8">
 
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="13" />
 
@@ -164,18 +164,21 @@
 		</receiver>
 
 		<!-- offercast metadata development -->
-		<!-- <meta-data android:name="application-id" android:value="8"/> <meta-data 
+		<!-- 
+		 <meta-data android:name="application-id" android:value="8"/> <meta-data 
 			android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/> 
 			<meta-data android:name="store-name" android:value="Google"/> <meta-data 
-			android:name="store-category" android:value="Media &amp; Video"/> -->
+			android:name="store-category" android:value="Media &amp; Video"/>
+		 -->
 
 		<!-- offercast metadata production -->
-
+		<!-- -->
 		<meta-data android:name="application-id" android:value="7" />
 		<meta-data android:name="access-token"
 			android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad" />
 		<meta-data android:name="store-name" android:value="Google" />
 		<meta-data android:name="store-category" android:value="Media &amp; Video" />
+	   <!-- -->
 
 		<!-- providers -->
 

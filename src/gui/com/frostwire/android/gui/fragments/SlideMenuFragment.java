@@ -43,6 +43,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
@@ -79,8 +81,23 @@ public class SlideMenuFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         MenuItem[] items = parseXml(getActivity(), R.menu.main).toArray(new MenuItem[0]);
+        
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
+            items = removeMenuItem(R.id.menu_launch_tv,items);
+        }
+        
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
         setListAdapter(adapter);
+    }
+
+    private MenuItem[] removeMenuItem(int idToRemove, MenuItem[] originalItems) {
+        List<MenuItem> items = new ArrayList<SlideMenuFragment.MenuItem>();
+        for (MenuItem i : originalItems) {
+            if (i.id != idToRemove) {
+                items.add(i);
+            }
+        }
+        return items.toArray(new MenuItem[0]);
     }
 
     @Override

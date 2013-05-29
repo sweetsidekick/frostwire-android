@@ -176,8 +176,7 @@ public class MainActivity extends AbstractSlidingActivity {
         super.onResume();
         
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-            offercast.authorize();
+            startOffercast();
         }
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
@@ -192,6 +191,16 @@ public class MainActivity extends AbstractSlidingActivity {
                     startWizardActivity();
                 }
             }));
+        }
+    }
+
+    private void startOffercast() {
+        try {
+            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
+            offercast.authorize();
+            LOG.info("Offercast started.");
+        } catch (Exception e) {
+            LOG.error("Offercast could not start.",e);
         }
     }
 
