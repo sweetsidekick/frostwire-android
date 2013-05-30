@@ -45,6 +45,8 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.SoftwareUpdater;
+import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
@@ -56,7 +58,7 @@ import com.frostwire.android.gui.views.PlayerMenuItemView;
  * @author aldenml
  *
  */
-public class SlideMenuFragment extends ListFragment {
+public class SlideMenuFragment extends ListFragment implements ConfigurationUpdateListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(SlideMenuFragment.class);
 
@@ -80,12 +82,16 @@ public class SlideMenuFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        System.out.println("new SlideMenuFragment instance adding itself to SoftwareUpdater listeners.");
+        SoftwareUpdater.instance().addConfigurationUpdateListener(this);
+        initMenuItems();
+    }
+
+    private void initMenuItems() {
         MenuItem[] items = parseXml(getActivity(), R.menu.main).toArray(new MenuItem[0]);
-        
         if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_launch_tv,items);
         }
-        
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
         setListAdapter(adapter);
     }
@@ -284,5 +290,18 @@ public class SlideMenuFragment extends ListFragment {
 
     public void refreshPlayerItem() {
         playerItem.refresh();
+    }
+
+    @Override
+    public void onConfigurationUpdate() {
+        initMenuItems();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        //avoid memory leaks when the device is tilted and the menu gets recreated.
+        SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
     }
 }

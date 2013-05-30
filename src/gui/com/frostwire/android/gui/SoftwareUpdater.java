@@ -24,7 +24,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +55,10 @@ import com.frostwire.util.JsonUtils;
  */
 public final class SoftwareUpdater {
 
+    public interface ConfigurationUpdateListener {
+        void onConfigurationUpdate();
+    }
+
     private static final String TAG = "FW.SoftwareUpdater";
 
     private static final long UPDATE_MESSAGE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
@@ -67,6 +73,8 @@ public final class SoftwareUpdater {
     private long updateTimestamp;
     private AsyncTask<Void, Void, Boolean> updateTask;
 
+    private final Set<ConfigurationUpdateListener> configurationUpdateListeners;
+
     private static SoftwareUpdater instance;
 
     public static SoftwareUpdater instance() {
@@ -79,6 +87,7 @@ public final class SoftwareUpdater {
     private SoftwareUpdater() {
         this.oldVersion = false;
         this.latestVersion = Constants.FROSTWIRE_VERSION_STRING;
+        this.configurationUpdateListeners = new HashSet<ConfigurationUpdateListener>();
     }
 
     public boolean isOldVersion() {
@@ -152,10 +161,21 @@ public final class SoftwareUpdater {
                 if (result && !isCancelled()) {
                     notifyUpdate(context);
                 }
+                
+                //nav menu always needs to be updated after we read the config.
+                notifyConfigurationUpdateListeners();
             }
         };
 
         updateTask.execute();
+    }
+    
+    public void addConfigurationUpdateListener(ConfigurationUpdateListener listener) {
+        try {
+            configurationUpdateListeners.add(listener);
+        } catch (Throwable t) {
+            
+        }
     }
 
     private void notifyUpdate(final Context context) {
@@ -296,6 +316,16 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM,update.config.tv);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
     }
+    
+    private void notifyConfigurationUpdateListeners() {
+        for (ConfigurationUpdateListener listener : configurationUpdateListeners) {
+            try {
+                listener.onConfigurationUpdate();
+            } catch (Throwable t) {
+                
+            }
+        }
+    }
 
     private static class Update {
         public String v;
@@ -324,5 +354,11 @@ public final class SoftwareUpdater {
         public Map<String, Boolean> activeSearchEngines;
         public boolean tv = true;
         public boolean offercast = true;
+    }
+
+    public void removeConfigurationUpdateListener(Object slideMenuFragment) {
+        if (configurationUpdateListeners.size() > 0) {
+            configurationUpdateListeners.remove(slideMenuFragment);
+        }
     }
 }
