@@ -82,7 +82,6 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        System.out.println("new SlideMenuFragment instance adding itself to SoftwareUpdater listeners.");
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
         initMenuItems();
     }
