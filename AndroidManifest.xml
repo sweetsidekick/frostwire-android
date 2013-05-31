@@ -12,7 +12,7 @@
 	*/ -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="preferExternal"
-	android:versionCode="89" android:versionName="1.0.8">
+	android:versionCode="90" android:versionName="1.0.8">
 
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="13" />
 
