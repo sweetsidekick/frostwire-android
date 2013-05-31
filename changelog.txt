@@ -1,4 +1,4 @@
-FrostWire 1.0.8 - MAY/30/2013
+FrostWire 1.0.8 - MAY/31/2013
  - New main menu entry to launch "FrostWire TV" app.
  - Search algorithm improvement brings better quality and missing search results.
  - Local audio files now show album art making local music browsing friendlier.
@@ -16,6 +16,7 @@ FrostWire 1.0.8 - MAY/30/2013
  - Removed Google AdMob.
  - Added donations request component instead of ads.
  - Integrates Offercast offers on installation.
+ - Experimental OUYA compatibility.
 
 FrostWire 1.0.7 - APR/10/2013
  - 3 crashes fixed.
