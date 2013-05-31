@@ -250,13 +250,17 @@ public final class ImageLoader {
 
         private Response fromRemote(String itemIdentifier, boolean localCacheOnly) throws IOException {
             RawDataResponse response = null;
-
-            if (!diskCache.containsKey(itemIdentifier)) {
-                response = fallback.load(itemIdentifier, localCacheOnly);
-                diskCache.put(itemIdentifier, response.getData());
+            
+            if (diskCache != null) {
+                if (!diskCache.containsKey(itemIdentifier)) {
+                    response = fallback.load(itemIdentifier, localCacheOnly);
+                    diskCache.put(itemIdentifier, response.getData());
+                } else {
+                    byte[] data = diskCache.getBytes(itemIdentifier);
+                    response = new RawDataResponse(data,localCacheOnly);
+                }
             } else {
-                byte[] data = diskCache.getBytes(itemIdentifier);
-                response = new RawDataResponse(data,localCacheOnly);
+                response = fallback.load(itemIdentifier, false);
             }
 
             return response;
