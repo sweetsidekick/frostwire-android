@@ -83,6 +83,7 @@ public class MainActivity extends AbstractSlidingActivity {
     private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
+    private static final String OFFERCAST_STARTED_KEY = "offercast_started";
 
     private static boolean firstTime = true;
 
@@ -96,6 +97,8 @@ public class MainActivity extends AbstractSlidingActivity {
 
     // not sure about this variable, quick solution for now
     private String durToken;
+    
+    private boolean offercastStarted = false;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -121,6 +124,7 @@ public class MainActivity extends AbstractSlidingActivity {
 
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
+            offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
         }
 
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
@@ -175,7 +179,7 @@ public class MainActivity extends AbstractSlidingActivity {
     protected void onResume() {
         super.onResume();
         
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
             startOffercast();
         }
 
@@ -198,8 +202,10 @@ public class MainActivity extends AbstractSlidingActivity {
         try {
             OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
             offercast.authorize();
+            offercastStarted = true;
             LOG.info("Offercast started.");
         } catch (Exception e) {
+            offercastStarted = false;
             LOG.error("Offercast could not start.",e);
         }
     }
@@ -219,6 +225,7 @@ public class MainActivity extends AbstractSlidingActivity {
         saveLastFragment(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
+        outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
     }
 
     @Override
