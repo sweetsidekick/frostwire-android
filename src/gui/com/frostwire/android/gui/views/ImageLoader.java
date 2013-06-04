@@ -64,11 +64,12 @@ import com.squareup.picasso.UrlConnectionLoader;
  * 
  */
 public final class ImageLoader {
-
+    
     private static final int MEMORY_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
     
     public static final int OVERLAY_FLAG_PLAY = 1;
+    public static final int DOWNSCALE_HUGE_BITMAPS = OVERLAY_FLAG_PLAY << 1;
 
     private final DiskLruRawDataCache diskCache;
 
@@ -271,14 +272,17 @@ public final class ImageLoader {
         private Response fromFileType(String itemIdentifier, boolean localCacheOnly, byte fileType) throws IOException {
             Response response;
             long id = getFileId(itemIdentifier);
+            Bitmap bitmap = null;
             
-            Bitmap bitmap = getBitmap(context, fileType, id);
-
-            if (bitmap == null) {
+            try {
+                bitmap = getBitmap(context, fileType, id);
+                response = new Response(convertToStream(bitmap), localCacheOnly);
+            } catch (NullPointerException npe) {
                 throw new IOException("ThumbnailLoader - bitmap not found.");
+            } catch (Throwable e) {
+                throw new IOException("ThumbnailLoader - bitmap might be too big.");
             }
-
-            response = new Response(convertToStream(bitmap), localCacheOnly);
+            
             return response;
         }
 

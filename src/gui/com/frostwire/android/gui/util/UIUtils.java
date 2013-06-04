@@ -270,6 +270,25 @@ public final class UIUtils {
             return resources.getString(R.string.unknown);
         }
     }
+    
+    public static int getFileTypeIconId(byte fileType) {
+        switch (fileType) {
+        case Constants.FILE_TYPE_APPLICATIONS:
+            return R.drawable.browse_peer_application_icon_selector_off;
+        case Constants.FILE_TYPE_AUDIO:
+            return R.drawable.browse_peer_audio_icon_selector_off;
+        case Constants.FILE_TYPE_DOCUMENTS:
+            return R.drawable.browse_peer_document_icon_selector_off;
+        case Constants.FILE_TYPE_PICTURES:
+            return R.drawable.browse_peer_picture_icon_selector_off;
+        case Constants.FILE_TYPE_RINGTONES:
+            return R.drawable.browse_peer_ringtone_icon_selector_off;
+        case Constants.FILE_TYPE_VIDEOS:
+            return R.drawable.browse_peer_video_icon_selector_off;
+        default:
+            return R.drawable.question_mark;
+        }
+    }
 
     /**
      * Opens the given file with the default Android activity for that File and

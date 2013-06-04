@@ -993,6 +993,7 @@ public class MusicUtils {
 
     /** Get album art for specified album. You should not pass in the album id
      * for the "unknown" album here (use -1 instead)
+     * TODO: Refactor to pass a scaleDown factor, useful for thumbnails.
      */
     public static Bitmap getArtwork(Context context, long song_id, long album_id,
             boolean allowdefault) {

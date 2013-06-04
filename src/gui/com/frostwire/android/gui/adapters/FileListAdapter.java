@@ -101,7 +101,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.local = local;
         this.fileType = fileType;
         this.thumbnailLoader = ImageLoader.getDefault();
-        this.fileTypeDrawable = getContext().getResources().getDrawable(getFileTypeIconId(fileType));
+        this.fileTypeDrawable = getContext().getResources().getDrawable(UIUtils.getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -353,24 +353,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
     }
 
-    private static int getFileTypeIconId(byte fileType) {
-        switch (fileType) {
-        case Constants.FILE_TYPE_APPLICATIONS:
-            return R.drawable.browse_peer_application_icon_selector_off;
-        case Constants.FILE_TYPE_AUDIO:
-            return R.drawable.browse_peer_audio_icon_selector_off;
-        case Constants.FILE_TYPE_DOCUMENTS:
-            return R.drawable.browse_peer_document_icon_selector_off;
-        case Constants.FILE_TYPE_PICTURES:
-            return R.drawable.browse_peer_picture_icon_selector_off;
-        case Constants.FILE_TYPE_RINGTONES:
-            return R.drawable.browse_peer_ringtone_icon_selector_off;
-        case Constants.FILE_TYPE_VIDEOS:
-            return R.drawable.browse_peer_video_icon_selector_off;
-        default:
-            return R.drawable.question_mark;
-        }
-    }
+
 
     private static class FileListFilter implements ListAdapterFilter<FileDescriptor> {
 
