@@ -987,22 +987,22 @@ public class MusicUtils {
      * for the "unknown" album here (use -1 instead)
      * This method always returns the default album art icon when no album art is found.
      */
-    public static Bitmap getArtwork(Context context, long song_id, long album_id) {
-        return getArtwork(context, song_id, album_id, true);
+    public static Bitmap getArtwork(Context context, long song_id, long album_id, int inSampleSize) {
+        return getArtwork(context, song_id, album_id, true, inSampleSize);
     }
 
     /** Get album art for specified album. You should not pass in the album id
      * for the "unknown" album here (use -1 instead)
-     * TODO: Refactor to pass a scaleDown factor, useful for thumbnails.
+     * 
      */
     public static Bitmap getArtwork(Context context, long song_id, long album_id,
-            boolean allowdefault) {
+            boolean allowdefault, int inSampleSize) {
 
         if (album_id < 0) {
             // This is something that is not in the database, so get the album art directly
             // from the file.
             if (song_id >= 0) {
-                Bitmap bm = getArtworkFromFile(context, song_id, -1);
+                Bitmap bm = getArtworkFromFile(context, song_id, -1, inSampleSize);
                 if (bm != null) {
                     return bm;
                 }
@@ -1023,7 +1023,7 @@ public class MusicUtils {
             } catch (FileNotFoundException ex) {
                 // The album art thumbnail does not actually exist. Maybe the user deleted it, or
                 // maybe it never existed to begin with.
-                Bitmap bm = getArtworkFromFile(context, song_id, album_id);
+                Bitmap bm = getArtworkFromFile(context, song_id, album_id, inSampleSize);
                 if (bm != null) {
                     if (bm.getConfig() == null) {
                         bm = bm.copy(Bitmap.Config.RGB_565, false);
@@ -1050,7 +1050,7 @@ public class MusicUtils {
     
     // get album art for specified file
     //private static final String sExternalMediaUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString();
-    private static Bitmap getArtworkFromFile(Context context, long songid, long albumid) {
+    private static Bitmap getArtworkFromFile(Context context, long songid, long albumid, int inSampleSize) {
         Bitmap bm = null;
         //byte [] art = null;
         //String path = null;
@@ -1066,6 +1066,7 @@ public class MusicUtils {
              */
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPurgeable = true;
+            options.inSampleSize = inSampleSize;
 
             Uri uri = null;
             
