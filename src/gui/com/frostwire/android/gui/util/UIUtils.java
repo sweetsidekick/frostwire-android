@@ -307,7 +307,7 @@ public final class UIUtils {
             }
         } catch (Throwable e) {
             UIUtils.showShortMessage(context, R.string.cant_open_file);
-            Log.e(TAG, "Failed to open file: " + filePath);
+            Log.e(TAG, "Failed to open file: " + filePath,e);
         }
     }
 
