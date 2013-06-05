@@ -20,6 +20,9 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,7 +33,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,8 +60,7 @@ import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
  */
 public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object>, MainFragment {
 
-    private static final String TAG = "FW.BrowsePeerFragment";
-
+    private static final Logger log = LoggerFactory.getLogger(BrowsePeerFragment.class);
     private static final int LOADER_FINGER_ID = 0;
     private static final int LOADER_FILES_ID = 1;
 
@@ -136,7 +137,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     @Override
     public void onLoadFinished(Loader<Object> loader, Object data) {
         if (data == null) {
-            Log.w(TAG, "Something wrong, data is null");
+            log.warn("Something wrong, data is null");
             removePeerAndFinish();
             return;
         }
@@ -272,7 +273,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
         } catch (Throwable e) {
             // this catch is mostly due to the mutable nature of finger and onRefreshSharedListener 
-            Log.e(TAG, "Error notifying shared refresh", e);
+            log.error("Error notifying shared refresh", e);
         }
     }
 
@@ -362,7 +363,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 try {
                     return peer.finger();
                 } catch (Throwable e) {
-                    Log.e(TAG, "Error performing finger", e);
+                    log.error("Error performing finger", e);
                 }
                 return null;
             }
@@ -378,7 +379,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 try {
                     return new Object[] { fileType, peer.browse(fileType) };
                 } catch (Throwable e) {
-                    Log.e(TAG, "Error performing finger", e);
+                    log.error("Error performing finger", e);
                 }
                 return null;
             }
@@ -390,7 +391,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private void updateHeader() {
         if (finger == null) {
             if (peer == null) {
-                Log.w(TAG, "Something wrong, finger  and peer are null");
+                log.warn("Something wrong, finger  and peer are null");
                 removePeerAndFinish();
                 return;
             } else {
@@ -460,7 +461,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void updateFiles(Object[] data) {
         if (data == null) {
-            Log.w(TAG, "Something wrong, data is null");
+            log.warn("Something wrong, data is null");
             removePeerAndFinish();
             return;
         }
@@ -481,7 +482,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             adapter.setCheckboxesVisibility(true);
             setListAdapter(adapter);
         } catch (Throwable e) {
-            Log.e(TAG, "Error updating files in list", e);
+            log.error("Error updating files in list", e);
         }
     }
 
@@ -512,7 +513,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                     PeerManager.instance().removePeer(peer);
                 } catch (Throwable e) {
                     // still possible to get an exception since peer is mutable.
-                    Log.e(TAG, "Error removing a not null peer", e);
+                    log.error("Error removing a not null peer", e);
                 }
             }
             activity.finish();
@@ -529,7 +530,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                     adapter.notifyDataSetChanged();
                 }
             } else if (intent.getAction().equals(Constants.ACTION_REFRESH_FINGER)) {
-                getLoaderManager().restartLoader(LOADER_FINGER_ID, null, BrowsePeerFragment.this);
+                try {
+                    getLoaderManager().restartLoader(LOADER_FINGER_ID, null, BrowsePeerFragment.this);
+                } catch (Throwable t) {
+                    log.error("LocalBroadcastReceiver can't restart loader on ACTION_REFRESH_FINGER, fragment not attached?", t);
+                }
             }
         }
     }
@@ -537,7 +542,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private class FileVisibilityFilterListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            Log.v(TAG, "clicked filter");
+            log.debug("clicked filter");
 
             adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
             adapter.getFilter().filter(filesBar.getText());
