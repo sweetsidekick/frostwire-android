@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -76,7 +77,7 @@ public final class PeerHttpDownload implements DownloadTransfer {
         this.peer = peer;
         this.fd = fd;
         this.dateCreated = new Date();
-        this.savePath = new File(SystemUtils.getSaveDirectory(fd.fileType), FilenameUtils.cleanFileName(FilenameUtils.getName(fd.filePath)));
+        this.savePath = new File(SystemUtils.getSaveDirectory(fd.fileType), cleanFileName(FilenameUtils.getName(fd.filePath)));
         status = STATUS_DOWNLOADING;
     }
 
@@ -243,6 +244,28 @@ public final class PeerHttpDownload implements DownloadTransfer {
             // ignore
         }
     }
+    
+    // aldenml: figure out the proper way to solve this, since
+    // illegal characters for file names are tied to the
+    // limitations of the file system, hence are OS dependent
+    /**
+     * Sorted list of invalid filename character keycodes.
+     * @author gubatron
+     */
+    public final static int[] illegalChars = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 42, 47, 58, 60, 62, 63, 92, 124};
+    
+    public static String cleanFileName(String badFileName) {
+
+        StringBuilder cleanName = new StringBuilder();
+        for (int i = 0; i < badFileName.length(); i++) {
+            int c = (int) badFileName.charAt(i);
+            if (Arrays.binarySearch(illegalChars, c) < 0) {
+                cleanName.append((char) c);
+            }
+        }
+        return cleanName.toString();
+    }
+   
 
     private final class DownloadListener implements HttpFetcherListener {
 
