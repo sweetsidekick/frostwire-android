@@ -76,7 +76,7 @@ public final class PeerHttpDownload implements DownloadTransfer {
         this.peer = peer;
         this.fd = fd;
         this.dateCreated = new Date();
-        this.savePath = new File(SystemUtils.getSaveDirectory(fd.fileType), FilenameUtils.getName(fd.filePath));
+        this.savePath = new File(SystemUtils.getSaveDirectory(fd.fileType), FilenameUtils.cleanFileName(FilenameUtils.getName(fd.filePath)));
         status = STATUS_DOWNLOADING;
     }
 
