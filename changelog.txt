@@ -1,6 +1,6 @@
 FrostWire 1.0.9 - JUN/04/2013
- - Fixes crashes on phones with very little memory when trying
-   to load high resolutoin album cover art.
+ - Fixed crashes on devices with little memory when trying to load high resolution bitmaps.
+ - Fixed Bug where files with invalid characters would not be transfered via Wi-Fi.
 
 FrostWire 1.0.8 - MAY/31/2013
  - New main menu entry to launch "FrostWire TV" app.
