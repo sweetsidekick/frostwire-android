@@ -22,9 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.net.DatagramPacket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,7 +43,6 @@ import org.fourthline.cling.model.message.UpnpRequest;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.model.types.UDAServiceType;
 import org.fourthline.cling.protocol.ProtocolFactory;
-import org.fourthline.cling.transport.Router;
 import org.fourthline.cling.transport.impl.DatagramIOConfigurationImpl;
 import org.fourthline.cling.transport.impl.DatagramIOImpl;
 import org.fourthline.cling.transport.impl.DatagramProcessorImpl;
@@ -54,7 +50,6 @@ import org.fourthline.cling.transport.impl.MulticastReceiverConfigurationImpl;
 import org.fourthline.cling.transport.impl.MulticastReceiverImpl;
 import org.fourthline.cling.transport.spi.DatagramIO;
 import org.fourthline.cling.transport.spi.DatagramProcessor;
-import org.fourthline.cling.transport.spi.InitializationException;
 import org.fourthline.cling.transport.spi.MulticastReceiver;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
@@ -123,7 +118,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     private final long WINDOW_SIZE = 1000;
 
                     @Override
-                    protected IncomingDatagramMessage readRequestMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, String requestMethod, String httpProtocol) throws Exception {
+                    protected IncomingDatagramMessage<?> readRequestMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, String requestMethod, String httpProtocol) throws Exception {
                         //Throttle the parsing of incoming search messages.
                         if (UpnpRequest.Method.getByHttpName(requestMethod).equals(UpnpRequest.Method.MSEARCH)) {
                             if (System.currentTimeMillis() - lastTimeIncomingSearchRequestParsed < INCOMING_SEARCH_REQUEST_PARSE_INTERVAL) {
@@ -137,9 +132,9 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                     }
 
                     @Override
-                    protected IncomingDatagramMessage readResponseMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, int statusCode, String statusMessage, String httpProtocol) throws Exception {
+                    protected IncomingDatagramMessage<?> readResponseMessage(InetAddress receivedOnAddress, DatagramPacket datagram, ByteArrayInputStream is, int statusCode, String statusMessage, String httpProtocol) throws Exception {
 
-                        IncomingDatagramMessage response = null;
+                        IncomingDatagramMessage<?> response = null;
                         String host = datagram.getAddress().getHostAddress();
 
                         if (!readResponseWindows.containsKey(host)) {
@@ -163,7 +158,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 };
             }
 
-            public DatagramIO createDatagramIO(NetworkAddressFactory networkAddressFactory) {
+            public DatagramIO<?> createDatagramIO(NetworkAddressFactory networkAddressFactory) {
                 return new DatagramIOImpl(new DatagramIOConfigurationImpl()) {
                     public void run() {
                         while (true) {
@@ -171,7 +166,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
                                 socket.receive(datagram);
-                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
+                                IncomingDatagramMessage<?> incomingDatagramMessage = datagramProcessor.read(localAddress.getAddress(), datagram);
 
                                 if (incomingDatagramMessage != null) {
                                     router.received(incomingDatagramMessage);
@@ -198,7 +193,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
                 };
             }
 
-            public MulticastReceiver createMulticastReceiver(NetworkAddressFactory networkAddressFactory) {
+            public MulticastReceiver<?> createMulticastReceiver(NetworkAddressFactory networkAddressFactory) {
                 return new MulticastReceiverImpl(new MulticastReceiverConfigurationImpl(networkAddressFactory.getMulticastGroup(), networkAddressFactory.getMulticastPort())) {
                     public void run() {
                         while (true) {
@@ -210,7 +205,7 @@ public class UPnPService extends AndroidUpnpServiceImpl {
 
                                 InetAddress receivedOnLocalAddress = networkAddressFactory.getLocalAddress(multicastInterface, multicastAddress.getAddress() instanceof Inet6Address, datagram.getAddress());
 
-                                IncomingDatagramMessage incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
+                                IncomingDatagramMessage<?> incomingDatagramMessage = datagramProcessor.read(receivedOnLocalAddress, datagram);
 
                                 if (incomingDatagramMessage != null) {
                                     router.received(incomingDatagramMessage);
