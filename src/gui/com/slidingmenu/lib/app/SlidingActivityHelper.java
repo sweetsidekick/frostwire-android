@@ -42,7 +42,11 @@ public class SlidingActivityHelper {
 	 * @param savedInstanceState the saved instance state (unused)
 	 */
 	public void onCreate(Bundle savedInstanceState) {
-		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(R.layout.slidingmenumain, null);
+        try {
+            mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(R.layout.slidingmenumain, null);
+        } catch (Throwable t) {
+            //catch possible Caused by: android.content.res.Resources$NotFoundException: Resource ID #0x7f030012
+        }
 	}
 
 	/**
