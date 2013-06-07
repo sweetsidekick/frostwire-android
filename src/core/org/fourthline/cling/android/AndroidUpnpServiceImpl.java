@@ -90,7 +90,7 @@ public class AndroidUpnpServiceImpl extends Service {
                 
                 return new ProtocolFactoryImpl(this) {
                     @Override
-                    protected ReceivingAsync createReceivingSearch(IncomingDatagramMessage<UpnpRequest> incomingRequest) {
+                    protected ReceivingAsync<?> createReceivingSearch(IncomingDatagramMessage<UpnpRequest> incomingRequest) {
                         return new ReceivingSearch(getUpnpService(), incomingRequest) {
                             @Override
                             protected List<OutgoingSearchResponse> createServiceTypeMessages(LocalDevice device, NetworkAddress activeStreamServer) {
