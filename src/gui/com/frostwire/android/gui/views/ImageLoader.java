@@ -235,23 +235,24 @@ public final class ImageLoader {
         @Override
         public Response load(String itemIdentifier, boolean localCacheOnly) throws IOException {
             Response response = null;
+            try {
+                byte fileType = getFileType(itemIdentifier);
 
-            byte fileType = getFileType(itemIdentifier);
-
-            if (fileType != -1) {
-                response = fromFileType(itemIdentifier, localCacheOnly, fileType);
-            } else if (isKeyRemote(itemIdentifier)) {
-                response = fromRemote(itemIdentifier, localCacheOnly);
-            } else {
-                response = fallback.load(itemIdentifier, localCacheOnly);
+                if (fileType != -1) {
+                    response = fromFileType(itemIdentifier, localCacheOnly, fileType);
+                } else if (isKeyRemote(itemIdentifier)) {
+                    response = fromRemote(itemIdentifier, localCacheOnly);
+                } else {
+                    response = fallback.load(itemIdentifier, localCacheOnly);
+                }
+            } catch (Throwable t) {
+                throw new IOException("load caught a non-IOException", t);
             }
-
             return response;
         }
 
         private Response fromRemote(String itemIdentifier, boolean localCacheOnly) throws IOException {
             RawDataResponse response = null;
-            
             if (itemIdentifier != null) {
                 if (diskCache != null) {
                     if (!diskCache.containsKey(itemIdentifier)) {
@@ -259,13 +260,12 @@ public final class ImageLoader {
                         diskCache.put(itemIdentifier, response.getData());
                     } else {
                         byte[] data = diskCache.getBytes(itemIdentifier);
-                        response = new RawDataResponse(data,localCacheOnly);
+                        response = new RawDataResponse(data, localCacheOnly);
                     }
                 } else {
                     response = fallback.load(itemIdentifier, false);
                 }
             }
-
             return response;
         }
         
