@@ -349,10 +349,14 @@ public final class ImageLoader {
         }
         
         private Bitmap overlayIcon(Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
-            Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
-            Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap,backgroundBmp);
-            paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
-            return canvasBitmap;
+            Bitmap result = backgroundBmp;
+            if (imageView.getWidth() > 0 && imageView.getHeight() > 0) {
+                Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
+                Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap,backgroundBmp);
+                paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
+                result = canvasBitmap;
+            }
+            return result;
         }
 
         private void paintScaledIcon(Canvas canvas, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
