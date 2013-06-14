@@ -276,10 +276,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private void initSupportFrostWire() {
         DonationsView donationsView = findView(R.id.activity_mediaplayer_donations_view_placeholder);
-        donationsView.setBiller(new Biller(this));
+        boolean isKindle = UIUtils.isAmazonDevice();
+        if (!isKindle) {
+            donationsView.setBiller(new Biller(this));
+        }
         donationsView.setVisibility(View.GONE);
-
-        if (mediaFD != null) {
+        if (mediaFD != null && !isKindle) {
             UIUtils.supportFrostWire(donationsView);
         }
     }

@@ -400,4 +400,8 @@ public final class UIUtils {
             context.startActivity(i);
         }
     }
+    
+    public static boolean isAmazonDevice() {
+        return android.os.Build.MANUFACTURER.toLowerCase().equals("amazon");
+    }
 }

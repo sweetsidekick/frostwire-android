@@ -153,9 +153,14 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     
     private void initSupportFrostWire(View v) {
         DonationsView donationsView = (DonationsView) findView(v, R.id.activity_mediaplayer_donations_view_placeholder);
-        donationsView.setBiller(new Biller(this.getActivity()));
+        boolean isKindle = UIUtils.isAmazonDevice();
+        if (!isKindle) {
+            donationsView.setBiller(new Biller(this.getActivity()));
+        }
         donationsView.setVisibility(View.GONE);
-        UIUtils.supportFrostWire(donationsView);
+        if (!isKindle) {
+            UIUtils.supportFrostWire(donationsView);
+        }
     }
 
     private void setupAdapter() {
