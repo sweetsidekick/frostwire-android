@@ -154,7 +154,7 @@ public class EngineService extends Service implements IEngineService {
         Librarian.instance().invalidateCountCache();
 
         AzureusManager.create(this);
-        TransferManager.instance().loadTorrents();
+        //TransferManager.instance().loadTorrents();
 
         if (AzureusManager.isCreated()) { // safe move
             AzureusManager.instance().resume();

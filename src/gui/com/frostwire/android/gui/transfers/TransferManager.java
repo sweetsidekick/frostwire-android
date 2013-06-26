@@ -28,6 +28,9 @@ import org.gudy.azureus2.core3.global.GlobalManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aelitis.azureus.core.AzureusCore;
+import com.aelitis.azureus.core.AzureusCoreFactory;
+import com.aelitis.azureus.core.AzureusCoreRunningListener;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -74,6 +77,8 @@ public final class TransferManager {
         this.bittorrentDownloads = new LinkedList<BittorrentDownload>();
 
         this.downloadsToReview = 0;
+
+        loadTorrents();
     }
 
     public List<Transfer> getTransfers() {
@@ -93,7 +98,6 @@ public final class TransferManager {
 
         return transfers;
     }
-
 
     private boolean alreadyDownloading(String detailsUrl) {
         synchronized (alreadyDownloadingMonitor) {
@@ -271,40 +275,46 @@ public final class TransferManager {
             return;
         }
 
-        GlobalManager globalManager = AzureusManager.instance().getAzureusCore().getGlobalManager();
-        List<?> downloadManagers = globalManager.getDownloadManagers();
+        AzureusCoreFactory.addCoreRunningListener(new AzureusCoreRunningListener() {
 
-        List<DownloadManager> downloads = new ArrayList<DownloadManager>();
-        for (Object obj : downloadManagers) {
-            if (obj instanceof DownloadManager) {
-                try {
-                    if (((DownloadManager) obj).getTorrent() != null && ((DownloadManager) obj).getTorrent().getHash() != null) {
-                        LOG.debug("Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
-                        downloads.add((DownloadManager) obj);
+            @Override
+            public void azureusCoreRunning(AzureusCore core) {
+                GlobalManager globalManager = AzureusManager.instance().getAzureusCore().getGlobalManager();
+                List<?> downloadManagers = globalManager.getDownloadManagers();
+
+                List<DownloadManager> downloads = new ArrayList<DownloadManager>();
+                for (Object obj : downloadManagers) {
+                    if (obj instanceof DownloadManager) {
+                        try {
+                            if (((DownloadManager) obj).getTorrent() != null && ((DownloadManager) obj).getTorrent().getHash() != null) {
+                                LOG.debug("Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
+                                downloads.add((DownloadManager) obj);
+                            }
+                        } catch (Throwable e) {
+                            // ignore
+                            LOG.debug("error loading torrent (not the end of the world, keep going)");
+                        }
                     }
-                } catch (Throwable e) {
-                    // ignore
-                    LOG.debug("error loading torrent (not the end of the world, keep going)");
+                }
+
+                boolean stop = false;
+                if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
+                    stop = true;
+                } else {
+                    if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
+                        stop = true;
+                    }
+                }
+
+                for (DownloadManager dm : downloads) {
+                    if (stop && TorrentUtil.isComplete(dm)) {
+                        TorrentUtil.stop(dm);
+                    }
+
+                    bittorrentDownloads.add(BittorrentDownloadCreator.create(TransferManager.this, dm));
                 }
             }
-        }
-
-        boolean stop = false;
-        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
-            stop = true;
-        } else {
-            if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                stop = true;
-            }
-        }
-
-        for (DownloadManager dm : downloads) {
-            if (stop && TorrentUtil.isComplete(dm)) {
-                TorrentUtil.stop(dm);
-            }
-
-            bittorrentDownloads.add(BittorrentDownloadCreator.create(this, dm));
-        }
+        });
     }
 
     List<BittorrentDownload> getBittorrentDownloads() {
