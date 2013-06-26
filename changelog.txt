@@ -1,3 +1,6 @@
+FrostWire 1.1.1 - JUN/26/2013
+ - Fixes "Error: Inconsistent download state" bug when connectivity is lost and resumed.
+
 FrostWire 1.1.0 - JUN/10/2013
  - Upgrades to HTTP client.
  - Upgrades to Cloud search.
