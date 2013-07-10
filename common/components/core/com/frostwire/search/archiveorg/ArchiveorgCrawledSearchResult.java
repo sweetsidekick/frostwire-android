@@ -36,18 +36,18 @@ public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult i
     private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
 
     private final String filename;
-    private final ArchiveorgFile file;
 
     private final String displayName;
     private final String downloadUrl;
+    private final long size;
 
     public ArchiveorgCrawledSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
         super(sr);
         this.filename = filename;
-        this.file = file;
 
         this.displayName = FilenameUtils.getBaseName(filename) + " (" + sr.getDisplayName() + ")";
         this.downloadUrl = String.format(Locale.US, DOWNLOAD_URL, sr.getItem().identifier, filename);
+        this.size = calcSize(file);
     }
 
     @Override
@@ -62,15 +62,19 @@ public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult i
 
     @Override
     public long getSize() {
-        try {
-            return Long.parseLong(file.size);
-        } catch (Throwable e) {
-            return -1;
-        }
+        return size;
     }
 
     @Override
     public String getDownloadUrl() {
         return downloadUrl;
+    }
+
+    private long calcSize(ArchiveorgFile file) {
+        try {
+            return Long.parseLong(file.size);
+        } catch (Throwable e) {
+            return -1;
+        }
     }
 }
