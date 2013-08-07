@@ -168,6 +168,9 @@ public class AbstractSlidingActivity extends AbstractActivity implements Sliding
 	 */
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (mHelper == null) {
+	        return false;
+	    }
 		boolean b = mHelper.onKeyUp(keyCode, event);
 		if (b) return b;
 		return super.onKeyUp(keyCode, event);
