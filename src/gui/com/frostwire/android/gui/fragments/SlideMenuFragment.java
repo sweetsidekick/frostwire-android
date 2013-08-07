@@ -302,5 +302,7 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
         
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
+        
+        playerItem.unbindDrawables();
     }
 }

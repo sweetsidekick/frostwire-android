@@ -100,4 +100,11 @@ public class PlayerMenuItemView extends LinearLayout {
         Drawable defaultArtWork = getResources().getDrawable(R.drawable.artwork_default);
         ImageLoader.getDefault().displayImage(fd, imageThumbnail, defaultArtWork);
     }
+
+    public void unbindDrawables() {
+        Drawable drawable = imageThumbnail.getDrawable();
+        if (drawable != null) {
+            drawable.setCallback(null);
+        }
+    }
 }
