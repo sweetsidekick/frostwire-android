@@ -163,7 +163,7 @@
 
 		<!-- offercast -->
 		<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
-			android:label="@string/application_label" />
+			android:label="@string/application_label" android:screenOrientation="portrait" />
 		<service android:name="com.offercast.android.sdk.OCService" />
 		<receiver android:name="com.offercast.android.sdk.OCBroadcastReceiver"
 			android:enabled="true" android:exported="false">
