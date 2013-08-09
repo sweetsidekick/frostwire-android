@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
+import com.offercast.android.sdk.OffercastSDK;
 
 /**
  * @author gubatron
@@ -73,6 +75,20 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
             @Override
             public void onClick(View v) {
                 launchPlayerActivity();
+            }
+        });
+        
+        Button button = (Button) view.findViewById(R.id.slidemenu_free_apps);
+        button.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                try {
+                    OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
+                    offercast.showAppWallAd();
+                } catch (Exception e) {
+                    LOG.error("Can't show app wall", e);
+                }
             }
         });
 

@@ -129,7 +129,7 @@ public class MainActivity extends AbstractSlidingActivity {
 
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
 
-        onNewIntent(getIntent());
+        onNewIntent(getIntent());        
     }
 
     @Override
