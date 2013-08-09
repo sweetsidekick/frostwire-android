@@ -47,9 +47,9 @@
 	<classpathentry exported="true" kind="lib" path="libs/slf4j-api-1.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mp4parser.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/picasso-1.0.1.jar" sourcepath="/Users/gubatron/src/picasso/picasso"/>
+	<classpathentry exported="true" kind="lib" path="libs/offercast-mobile-sdk-1.2.1.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="libs/offercast-mobile-sdk-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
