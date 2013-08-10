@@ -40,6 +40,12 @@
         android:icon="@drawable/menu_icon_peers"
         android:title="@string/wifi_sharing">
     </item>
+    
+    <item android:id="@+id/menu_free_apps"
+        android:icon="@drawable/menu_icon_free_apps"
+        android:title="@string/free_apps">        
+    </item>
+    
     <item
         android:id="@+id/menu_launch_tv"
         android:icon="@drawable/menu_icon_tv"

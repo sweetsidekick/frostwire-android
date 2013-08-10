@@ -392,4 +392,20 @@
 	<string name="upnp_discovery">Comparte en Wi-Fi</string>
     <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
 	<string name="youtube_download_status_verifying">Verificando</string>
+    <string name="donation_thanks">Muchas gracias por apoyar a FrostWire</string>
+    <string name="torrent_scheme_download_not_supported">Descarga no suportada</string>
+    <string name="retry_search">Reintentar</string>
+    <string name="use_archiveorg">Usa Archive.org</string>
+    <string name="crawl_cache_size">Crawl Cache %1$.2fMB</string>
+    <string name="deleted_crawl_cache">Borrar crawl cache</string>
+    <string name="clear_search_cache">Limpiar cache de busquedas</string>
+    <string name="clear_search_cache_summary">Limpiar entradas en cache de búsquedas</string>
+    <string name="no_results_feedback">No se encontraron resultados.\n\nRevisa tu conexión a Internet o\nprueba otra búsqueda.</string>
+    <string name="donate">Donar</string>
+    <string name="one_dollar">$1</string>
+    <string name="five_dollars">$5</string>
+    <string name="ten_dollars">$10</string>
+    <string name="twenty_five_dollars">$25</string>
+    <string name="watch_tv">Ver TV</string>
+    <string name="free_apps">Apps Gratis</string>
 </resources>

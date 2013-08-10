@@ -38,7 +38,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,20 +76,6 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
                 launchPlayerActivity();
             }
         });
-        
-        Button button = (Button) view.findViewById(R.id.slidemenu_free_apps);
-        button.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                try {
-                    OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
-                    offercast.showAppWallAd();
-                } catch (Exception e) {
-                    LOG.error("Can't show app wall", e);
-                }
-            }
-        });
 
         return view;
     }
@@ -106,6 +91,10 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
         MenuItem[] items = parseXml(getActivity(), R.menu.main).toArray(new MenuItem[0]);
         if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_launch_tv,items);
+        }
+        
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+            items = removeMenuItem(R.id.menu_free_apps,items);
         }
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
         setListAdapter(adapter);
@@ -130,14 +119,14 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
         try {
             MenuAdapter adapter = (MenuAdapter) lv.getAdapter();
             MenuItem item = (MenuItem) adapter.getItem(position);
-
             if (item.id == R.id.menu_main_preferences) {
                 adapter.notifyDataSetChanged();
                 showPreferences(getActivity());
             } else if (item.id == R.id.menu_launch_tv) {
                 launchFrostWireTV();
-            }
-            else {
+            } else if (item.id == R.id.menu_free_apps) {
+                showFreeApps();
+            } else {
                 adapter.setSelectedItem(item.id);
                 switchFragment(item.id);
             }
@@ -164,6 +153,16 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
         }
         startActivity(intent);
     }
+    
+    private void showFreeApps() {
+        try {
+            OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
+            offercast.showAppWallAd();
+        } catch (Exception e) {
+            LOG.error("Can't show app wall", e);
+        }
+    }
+
     
     public void setSelectedItem(int id) {
         try {

@@ -35,7 +35,4 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:choiceMode="singleChoice" />
-    
-    <Button android:id="@+id/slidemenu_free_apps" android:text="Free Apps" android:layout_width="fill_parent" android:layout_height="wrap_content"/>
-
 </LinearLayout>
