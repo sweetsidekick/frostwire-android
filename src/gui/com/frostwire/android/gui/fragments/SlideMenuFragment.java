@@ -89,11 +89,12 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
 
     private void initMenuItems() {
         MenuItem[] items = parseXml(getActivity(), R.menu.main).toArray(new MenuItem[0]);
-        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
+        ConfigurationManager config = ConfigurationManager.instance();
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_launch_tv,items);
         }
         
-        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_free_apps,items);
         }
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
