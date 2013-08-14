@@ -48,5 +48,14 @@
         android:minHeight="45dp"
         android:minWidth="150dp"
         android:text="@android:string/cancel" />
+    
+    <Button android:id="@+id/view_search_progress_button_free_apps"
+      style="@style/BlueButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:minHeight="45dp"
+      android:minWidth="150dp"
+      android:text="@string/free_apps"/>
 
 </LinearLayout>

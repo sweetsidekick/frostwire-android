@@ -27,6 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.offercast.android.sdk.OffercastSDK;
 
 /**
  * @author gubatron
@@ -37,6 +40,7 @@ public class SearchProgressView extends LinearLayout {
 
     private ProgressBar progressbar;
     private Button buttonCancel;
+    private Button buttonFreeApps;
     private TextView textNoResults;
 
     private boolean progressEnabled;
@@ -79,18 +83,49 @@ public class SearchProgressView extends LinearLayout {
 
         progressbar = (ProgressBar) findViewById(R.id.view_search_progress_progressbar);
         buttonCancel = (Button) findViewById(R.id.view_search_progress_button_cancel);
+        buttonFreeApps = (Button) findViewById(R.id.view_search_progress_button_free_apps);
         textNoResults = (TextView) findViewById(R.id.view_search_progress_text_no_results_feedback);
+        
+        initButtonFreeApps();
+    }
+
+    private void initButtonFreeApps() {
+        buttonFreeApps.setVisibility(View.GONE);
+        buttonFreeApps.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                onFreeAppsClick();
+            }
+        });
     }
 
     private void startProgress() {
         progressbar.setVisibility(View.VISIBLE);
         buttonCancel.setText(android.R.string.cancel);
         textNoResults.setVisibility(View.GONE);
+        buttonFreeApps.setVisibility(View.GONE);
     }
 
     private void stopProgress() {
         progressbar.setVisibility(View.GONE);
         buttonCancel.setText(R.string.retry_search);
         textNoResults.setVisibility(View.VISIBLE);
+        buttonFreeApps.setVisibility(isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
+    }
+    
+    private boolean isfreeAppsEnabled() {
+       ConfigurationManager config = ConfigurationManager.instance();
+       return config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
+    }
+    
+    private void onFreeAppsClick() {
+        if (isfreeAppsEnabled()) {
+            try {
+                OffercastSDK instance = OffercastSDK.getInstance(getContext());
+                instance.showAppWallAd();
+            } catch (Throwable t) {
+            }
+        }
     }
 }
