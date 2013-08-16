@@ -100,6 +100,10 @@
             android:key="frostwire.prefs.search.use_archiveorg"
             android:summary="@string/use_archiveorg"
             android:title="@string/use_archiveorg" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_frostclick"
+            android:summary="@string/use_frostclick"
+            android:title="@string/use_frostclick" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference

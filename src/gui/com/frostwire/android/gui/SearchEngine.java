@@ -151,6 +151,14 @@ public abstract class SearchEngine {
             return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
+    
+    public static final SearchEngine FROSTCLICK = new SearchEngine("FrostClick", Constants.PREF_KEY_SEARCH_USE_FROSTCLICK) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        }
+    };
+    
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
 }

@@ -88,6 +88,7 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_YOUTUBE, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_FROSTCLICK, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
