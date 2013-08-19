@@ -102,9 +102,11 @@ public class PlayerMenuItemView extends LinearLayout {
     }
 
     public void unbindDrawables() {
-        Drawable drawable = imageThumbnail.getDrawable();
-        if (drawable != null) {
-            drawable.setCallback(null);
+        if (imageThumbnail != null) {
+            Drawable drawable = imageThumbnail.getDrawable();
+            if (drawable != null) {
+                drawable.setCallback(null);
+            }
         }
     }
 }
