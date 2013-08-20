@@ -50,13 +50,13 @@ import com.frostwire.android.gui.util.DiskLruRawDataCache;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.util.FileUtils;
-import com.squareup.picasso.Loader;
+import com.squareup.picasso.Downloader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 import com.squareup.picasso.RequestBuilder;
 import com.squareup.picasso.Transformation;
-import com.squareup.picasso.UrlConnectionLoader;
+import com.squareup.picasso.UrlConnectionDownloader;
 
 /**
  * @author gubatron
@@ -92,7 +92,7 @@ public final class ImageLoader {
     public ImageLoader(Context context) {
         this.context = context;
         diskCache = diskCacheOpen();
-        picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
+        picasso = new Builder(context).downloader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
         picasso.setDebugging(false);
     }
 
@@ -183,7 +183,7 @@ public final class ImageLoader {
         return bmp;
     }
 
-    private class RawDataResponse extends Loader.Response {
+    private class RawDataResponse extends Downloader.Response {
 
         private final byte[] data;
 
@@ -205,15 +205,15 @@ public final class ImageLoader {
      * @author gubatron
      *
      */
-    private class RawDataUrlConnectionLoader extends UrlConnectionLoader {
+    private class RawDataUrlConnectionLoader extends UrlConnectionDownloader {
 
         public RawDataUrlConnectionLoader(Context context) {
             super(context);
         }
 
         @Override
-        public RawDataResponse load(String url, boolean localCacheOnly) throws IOException {
-            HttpURLConnection connection = openConnection(url);
+        public RawDataResponse load(Uri uri, boolean localCacheOnly) throws IOException {
+            HttpURLConnection connection = openConnection(uri);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             IOUtils.copy(connection.getInputStream(), baos);
             connection.disconnect();
@@ -221,7 +221,7 @@ public final class ImageLoader {
         }
     }
 
-    private class ThumbnailLoader implements Loader {
+    private class ThumbnailLoader implements Downloader {
 
         private final RawDataUrlConnectionLoader fallback;
 
@@ -233,7 +233,8 @@ public final class ImageLoader {
          * @param itemIdentifier video:<videoId>, or image:<imageId>, audio:<audioId>, where the Id is an Integer.
          */
         @Override
-        public Response load(String itemIdentifier, boolean localCacheOnly) throws IOException {
+        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            String itemIdentifier = uri.toString();
             Response response = null;
             try {
                 byte fileType = getFileType(itemIdentifier);
@@ -243,7 +244,7 @@ public final class ImageLoader {
                 } else if (isKeyRemote(itemIdentifier)) {
                     response = fromRemote(itemIdentifier, localCacheOnly);
                 } else {
-                    response = fallback.load(itemIdentifier, localCacheOnly);
+                    response = fallback.load(uri, localCacheOnly);
                 }
             } catch (Throwable t) {
                 throw new IOException("load caught a non-IOException", t);
@@ -256,14 +257,14 @@ public final class ImageLoader {
             if (itemIdentifier != null) {
                 if (diskCache != null) {
                     if (!diskCache.containsKey(itemIdentifier)) {
-                        response = fallback.load(itemIdentifier, localCacheOnly);
+                        response = fallback.load(Uri.parse(itemIdentifier), localCacheOnly);
                         diskCache.put(itemIdentifier, response.getData());
                     } else {
                         byte[] data = diskCache.getBytes(itemIdentifier);
                         response = new RawDataResponse(data, localCacheOnly);
                     }
                 } else {
-                    response = fallback.load(itemIdentifier, false);
+                    response = fallback.load(Uri.parse(itemIdentifier), false);
                 }
             }
             return response;
@@ -297,7 +298,7 @@ public final class ImageLoader {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
                 return bitmap.getRowBytes() * bitmap.getHeight();
             } else {
-                return bitmap.getByteCount();
+                return bitmap.getRowBytes() * bitmap.getHeight();//return bitmap.getByteCount();
             }
         }
         
