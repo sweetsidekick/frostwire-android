@@ -30,7 +30,6 @@ import org.apache.commons.io.IOUtils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -276,7 +275,7 @@ public final class ImageLoader {
 
             try {
                 bitmap = getBitmap(context, fileType, id);
-                response = new Response(convertToStream(bitmap), localCacheOnly);
+                response = new Response(bitmap, localCacheOnly);
             } catch (NullPointerException npe) {
                 throw new IOException("ThumbnailLoader - bitmap not found.");
             } catch (Throwable e) {
@@ -284,17 +283,6 @@ public final class ImageLoader {
             }
 
             return response;
-        }
-
-        private InputStream convertToStream(Bitmap bitmap) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(getByteCount(bitmap));
-            bitmap.compress(CompressFormat.PNG, 100, baos);
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            return bais;
-        }
-
-        private int getByteCount(final Bitmap bitmap) {
-            return bitmap.getRowBytes() * bitmap.getHeight();
         }
 
         private byte getFileType(String itemIdentifier) {
@@ -347,9 +335,12 @@ public final class ImageLoader {
         private Bitmap overlayIcon(Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
             Bitmap result = backgroundBmp;
             if (imageView.getWidth() > 0 && imageView.getHeight() > 0) {
+
                 Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
                 Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap, backgroundBmp);
                 paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
+
+                backgroundBmp.recycle();
                 result = canvasBitmap;
             }
             return result;
@@ -364,6 +355,7 @@ public final class ImageLoader {
             int top = (imageView.getHeight() - iconResizedHeight) >> 1;
             Rect iconDestRect = new Rect(left, top, left + iconResizedWidth, top + iconResizedHeight);
             canvas.drawBitmap(icon, iconSrcRect, iconDestRect, null);
+            icon.recycle();
         }
 
         private Canvas resizeBackgroundToFitImageView(Bitmap canvasBitmap, Bitmap backgroundBmp) {
