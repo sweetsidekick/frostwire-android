@@ -250,6 +250,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (buttonPause != null) {
             buttonPause.requestFocus();
             buttonPause.setOnClickListener(pauseListener);
+            buttonPause.setOnLongClickListener(stopListener);
         }
 
         buttonNext = (ImageButton) findViewById(R.id.activity_mediaplayer_button_next);
@@ -401,6 +402,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             sync();
         }
     };
+    
+    private View.OnLongClickListener stopListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            stop();
+            return true;
+        }
+    };
+    
 
     private View.OnClickListener previousListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -642,7 +652,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         };
 
         ContextMenuItem stop = new ContextMenuItem() {
-
             @Override
             public void onClick() {
                 stop();
