@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff6f6f6" >
 
-    <com.frostwire.android.gui.views.FWGridView
-        android:id="@+id/view_promotions_gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="@dimen/promotion_column_width"
-        android:gravity="center"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth" />
+package com.frostwire.android.gui.views;
 
-</LinearLayout>
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.ScrollView;
+
+/**
+ * @author gubatron
+ * @author aldenml
+ * 
+ */
+public class FWScrollView extends ScrollView {
+
+    public FWScrollView(Context context, AttributeSet attrs, int defStyle) {
+        super(new FWContextWrapper(context), attrs, defStyle);
+    }
+
+    public FWScrollView(Context context, AttributeSet attrs) {
+        super(new FWContextWrapper(context), attrs);
+    }
+
+    public FWScrollView(Context context) {
+        super(new FWContextWrapper(context));
+    }
+}

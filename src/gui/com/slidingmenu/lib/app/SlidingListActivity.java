@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ListView;
 
+import com.frostwire.android.gui.views.FWListView;
 import com.slidingmenu.lib.SlidingMenu;
 
 public class SlidingListActivity extends ListActivity implements SlidingActivityBase {
@@ -21,7 +22,7 @@ public class SlidingListActivity extends ListActivity implements SlidingActivity
 		super.onCreate(savedInstanceState);
 		mHelper = new SlidingActivityHelper(this);
 		mHelper.onCreate(savedInstanceState);
-		ListView listView = new ListView(this);
+		ListView listView = new FWListView(this);
 		listView.setId(android.R.id.list);
 		setContentView(listView);
 	}
