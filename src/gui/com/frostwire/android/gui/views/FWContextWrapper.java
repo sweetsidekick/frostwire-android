@@ -32,6 +32,8 @@ import com.frostwire.android.R;
  * 
  */
 public class FWContextWrapper extends ContextWrapper {
+    
+    private static final String TAG = "FW.FWContextWrapper";
 
     private final Resources resources;
 
@@ -81,7 +83,7 @@ public class FWContextWrapper extends ContextWrapper {
             try {
                 id = Class.forName("com.android.internal.R$drawable").getField(name).getInt(null);
             } catch (Throwable e) {
-                Log.e("FrostWire", "Cannot find internal resource class");
+                Log.e(TAG, "Cannot find internal resource class");
             }
             return id;
         }
