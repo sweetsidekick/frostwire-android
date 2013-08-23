@@ -315,6 +315,10 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
         for (TrackBox trackBox : trackBoxes) {
             m.addTrack(new Mp4TrackImpl(trackBox));
         }
+        
+        
+        IOUtils.closeQuietly(isoFile);
+        
         return m;
     }
     
