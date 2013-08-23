@@ -688,7 +688,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
             @Override
             public void onClick() {
-                UIUtils.showYesNoDialog(getApplicationContext(), R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
+                UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         onDeleteCurrentTrack();
                     }
@@ -707,22 +707,24 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         PlaylistItem currentPlaylistItem = new PlaylistItem(currentFD);
         Playlist playlist = Engine.instance().getMediaPlayer().getPlaylist();
         
+        AsyncTask<Void, Void, Void> asyncDeleteTrackTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                Librarian.instance().deleteFiles(Constants.FILE_TYPE_AUDIO, new ArrayList<FileDescriptor>(Arrays.asList(currentFD)));
+                return null;
+            }
+        };
+        
         if (playlist != null) {
             PlaylistItem nextItem = playlist.getNextItem();
             if (nextItem == null || nextItem.equals(currentPlaylistItem)) {
+                asyncDeleteTrackTask.execute();
                 stop();
                 return;
             }
         }
         
         Engine.instance().getMediaPlayer().playNext();
-        
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                Librarian.instance().deleteFiles(Constants.FILE_TYPE_AUDIO, new ArrayList<FileDescriptor>(Arrays.asList(currentFD)));
-                return null;
-            }
-        }.execute();
+        asyncDeleteTrackTask.execute();        
     }
 }
