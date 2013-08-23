@@ -3,6 +3,7 @@ FrostWire 1.1.2 - AUG/22/2013
  - New: Audio Player menu now has "Delete this track" feature, get rid of songs
    you don't like on your device next time you come across them and keep playing.
  - Fixes issues parsing some YouTube urls.
+ - Fixes soundcloud search.
 
 FrostWire 1.1.1 - JUN/26/2013
  - Fixes "Error: Inconsistent download state" bug when connectivity is lost and resumed.
