@@ -25,6 +25,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -125,6 +126,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
         sourceLink.setText(sr.getSource() + license); // TODO: ask for design
         sourceLink.setTag(sr.getDetailsUrl());
+        sourceLink.setPaintFlags(sourceLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         sourceLink.setOnClickListener(linkListener);
     }
     
