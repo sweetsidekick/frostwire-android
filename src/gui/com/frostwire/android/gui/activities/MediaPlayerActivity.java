@@ -683,8 +683,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
             @Override
             public int getDrawableResId() {
-                // TODO Auto-generated method stub
-                return 0;
+                return R.drawable.contextmenu_icon_trash;
             }
 
             @Override
