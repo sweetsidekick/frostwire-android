@@ -19,7 +19,6 @@
  */
 -->
 <resources>
-
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Settings</string>
     <string name="activity_browse_peer_name">Browse Host</string>
@@ -422,4 +421,6 @@
     <string name="watch_tv">Watch TV</string>
     <string name="free_apps">Free Apps</string>
     <string name="use_frostclick">Use FrostClick</string>
+    <string name="delete_this_track">Delete this track</string>
+    <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
 </resources>

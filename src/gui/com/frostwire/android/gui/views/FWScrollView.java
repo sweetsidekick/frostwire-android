@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,42 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.core.player;
+package com.frostwire.android.gui.views;
 
-import com.frostwire.android.core.FileDescriptor;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.ScrollView;
 
 /**
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public interface CoreMediaPlayer {
+public class FWScrollView extends ScrollView {
 
-    public void play(Playlist playlist);
+    public FWScrollView(Context context, AttributeSet attrs, int defStyle) {
+        super(new FWContextWrapper(context), attrs, defStyle);
+    }
 
-    public void playPrevious();
+    public FWScrollView(Context context, AttributeSet attrs) {
+        super(new FWContextWrapper(context), attrs);
+    }
 
-    public void playNext();
-
-    public void togglePause();
-
-    public void stop();
-
-    public boolean isPlaying();
-    
-    public void seekTo(int position);
-    
-    /**
-     * Return -1 if player isn't ready or not playing.
-     */
-    public int getPosition();
-    
-    /**
-     * The current file the media player is playing.
-     * 
-     * @return
-     */
-    public FileDescriptor getCurrentFD();
-    
-    public Playlist getPlaylist();
+    public FWScrollView(Context context) {
+        super(new FWContextWrapper(context));
+    }
 }

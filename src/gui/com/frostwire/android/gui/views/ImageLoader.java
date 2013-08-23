@@ -30,13 +30,11 @@ import org.apache.commons.io.IOUtils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.widget.ImageView;
@@ -50,13 +48,13 @@ import com.frostwire.android.gui.util.DiskLruRawDataCache;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.util.FileUtils;
-import com.squareup.picasso.Loader;
+import com.squareup.picasso.Downloader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 import com.squareup.picasso.RequestBuilder;
 import com.squareup.picasso.Transformation;
-import com.squareup.picasso.UrlConnectionLoader;
+import com.squareup.picasso.UrlConnectionDownloader;
 
 /**
  * @author gubatron
@@ -64,10 +62,10 @@ import com.squareup.picasso.UrlConnectionLoader;
  * 
  */
 public final class ImageLoader {
-    
+
     private static final int MEMORY_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
-    
+
     public static final int OVERLAY_FLAG_PLAY = 1;
     public static final int DOWNSCALE_HUGE_BITMAPS = OVERLAY_FLAG_PLAY << 1;
 
@@ -92,7 +90,7 @@ public final class ImageLoader {
     public ImageLoader(Context context) {
         this.context = context;
         diskCache = diskCacheOpen();
-        picasso = new Builder(context).loader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
+        picasso = new Builder(context).downloader(new ThumbnailLoader()).memoryCache(new LruCache(MEMORY_CACHE_SIZE)).build();
         picasso.setDebugging(false);
     }
 
@@ -143,13 +141,13 @@ public final class ImageLoader {
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
         if (defaultDrawable != null) {
             imageView.setScaleType(ScaleType.FIT_CENTER);
-            
+
             RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
-            
+
             if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
-                requestBuilder.transform(new OverlayBitmapTransformation(imageView,imageSrc,R.drawable.play_icon_transparent,40,40));
+                requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
             }
-            
+
             requestBuilder.into(imageView);
         }
     }
@@ -169,7 +167,7 @@ public final class ImageLoader {
             } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
                 bmp = Video.Thumbnails.getThumbnail(cr, id, Video.Thumbnails.MICRO_KIND, null);
             } else if (fileType == Constants.FILE_TYPE_AUDIO) {
-                bmp = MusicUtils.getArtwork(context, id, -1,2);
+                bmp = MusicUtils.getArtwork(context, id, -1, 2);
             } else if (fileType == Constants.FILE_TYPE_APPLICATIONS) {
                 InputStream is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(id)));
                 bmp = BitmapFactory.decodeStream(is);
@@ -183,7 +181,7 @@ public final class ImageLoader {
         return bmp;
     }
 
-    private class RawDataResponse extends Loader.Response {
+    private class RawDataResponse extends Downloader.Response {
 
         private final byte[] data;
 
@@ -205,15 +203,15 @@ public final class ImageLoader {
      * @author gubatron
      *
      */
-    private class RawDataUrlConnectionLoader extends UrlConnectionLoader {
+    private class RawDataUrlConnectionLoader extends UrlConnectionDownloader {
 
         public RawDataUrlConnectionLoader(Context context) {
             super(context);
         }
 
         @Override
-        public RawDataResponse load(String url, boolean localCacheOnly) throws IOException {
-            HttpURLConnection connection = openConnection(url);
+        public RawDataResponse load(Uri uri, boolean localCacheOnly) throws IOException {
+            HttpURLConnection connection = openConnection(uri);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             IOUtils.copy(connection.getInputStream(), baos);
             connection.disconnect();
@@ -221,7 +219,7 @@ public final class ImageLoader {
         }
     }
 
-    private class ThumbnailLoader implements Loader {
+    private class ThumbnailLoader implements Downloader {
 
         private final RawDataUrlConnectionLoader fallback;
 
@@ -233,7 +231,8 @@ public final class ImageLoader {
          * @param itemIdentifier video:<videoId>, or image:<imageId>, audio:<audioId>, where the Id is an Integer.
          */
         @Override
-        public Response load(String itemIdentifier, boolean localCacheOnly) throws IOException {
+        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            String itemIdentifier = uri.toString();
             Response response = null;
             try {
                 byte fileType = getFileType(itemIdentifier);
@@ -243,7 +242,7 @@ public final class ImageLoader {
                 } else if (isKeyRemote(itemIdentifier)) {
                     response = fromRemote(itemIdentifier, localCacheOnly);
                 } else {
-                    response = fallback.load(itemIdentifier, localCacheOnly);
+                    response = fallback.load(uri, localCacheOnly);
                 }
             } catch (Throwable t) {
                 throw new IOException("load caught a non-IOException", t);
@@ -256,51 +255,36 @@ public final class ImageLoader {
             if (itemIdentifier != null) {
                 if (diskCache != null) {
                     if (!diskCache.containsKey(itemIdentifier)) {
-                        response = fallback.load(itemIdentifier, localCacheOnly);
+                        response = fallback.load(Uri.parse(itemIdentifier), localCacheOnly);
                         diskCache.put(itemIdentifier, response.getData());
                     } else {
                         byte[] data = diskCache.getBytes(itemIdentifier);
                         response = new RawDataResponse(data, localCacheOnly);
                     }
                 } else {
-                    response = fallback.load(itemIdentifier, false);
+                    response = fallback.load(Uri.parse(itemIdentifier), false);
                 }
             }
             return response;
         }
-        
+
         private Response fromFileType(String itemIdentifier, boolean localCacheOnly, byte fileType) throws IOException {
             Response response;
             long id = getFileId(itemIdentifier);
             Bitmap bitmap = null;
-            
+
             try {
                 bitmap = getBitmap(context, fileType, id);
-                response = new Response(convertToStream(bitmap), localCacheOnly);
+                response = new Response(bitmap, localCacheOnly);
             } catch (NullPointerException npe) {
                 throw new IOException("ThumbnailLoader - bitmap not found.");
             } catch (Throwable e) {
                 throw new IOException("ThumbnailLoader - bitmap might be too big.");
             }
-            
+
             return response;
         }
 
-        private InputStream convertToStream(Bitmap bitmap) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(getByteCount(bitmap));
-            bitmap.compress(CompressFormat.PNG, 100, baos);
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            return bais;
-        }
-        
-        private int getByteCount(final Bitmap bitmap) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-                return bitmap.getRowBytes() * bitmap.getHeight();
-            } else {
-                return bitmap.getByteCount();
-            }
-        }
-        
         private byte getFileType(String itemIdentifier) {
             byte fileType = -1;
 
@@ -317,17 +301,17 @@ public final class ImageLoader {
         }
 
         private long getFileId(String itemIdentifier) {
-            return Long.valueOf(itemIdentifier.substring(itemIdentifier.indexOf(':')+1));
+            return Long.valueOf(itemIdentifier.substring(itemIdentifier.indexOf(':') + 1));
         }
     }
-    
+
     private class OverlayBitmapTransformation implements Transformation {
         private final ImageView imageView;
         private final String keyPrefix;
         private final int overlayIconId;
         private final int overlayWidthPercentage;
         private final int overlayHeightPercentage;
-        
+
         public OverlayBitmapTransformation(ImageView imageView, String keyPrefix, int overlayIconId, int overlayWidthPercentage, int overlayHeightPercentage) {
             this.imageView = imageView;
             this.keyPrefix = keyPrefix;
@@ -335,7 +319,7 @@ public final class ImageLoader {
             this.overlayWidthPercentage = overlayWidthPercentage;
             this.overlayHeightPercentage = overlayHeightPercentage;
         }
-        
+
         @Override
         public Bitmap transform(Bitmap source) {
             Bitmap bmp = overlayIcon(source, overlayIconId, overlayWidthPercentage, overlayHeightPercentage);
@@ -347,13 +331,16 @@ public final class ImageLoader {
         public String key() {
             return keyPrefix + ":" + overlayIconId + ":" + imageView.getWidth() + "," + imageView.getHeight() + ":" + overlayWidthPercentage + "," + overlayHeightPercentage;
         }
-        
+
         private Bitmap overlayIcon(Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
             Bitmap result = backgroundBmp;
             if (imageView.getWidth() > 0 && imageView.getHeight() > 0) {
+
                 Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
-                Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap,backgroundBmp);
+                Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap, backgroundBmp);
                 paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
+
+                backgroundBmp.recycle();
                 result = canvasBitmap;
             }
             return result;
@@ -368,10 +355,11 @@ public final class ImageLoader {
             int top = (imageView.getHeight() - iconResizedHeight) >> 1;
             Rect iconDestRect = new Rect(left, top, left + iconResizedWidth, top + iconResizedHeight);
             canvas.drawBitmap(icon, iconSrcRect, iconDestRect, null);
+            icon.recycle();
         }
 
         private Canvas resizeBackgroundToFitImageView(Bitmap canvasBitmap, Bitmap backgroundBmp) {
-            Rect backgroundDestRect = new Rect(0,0,imageView.getWidth(), imageView.getHeight());
+            Rect backgroundDestRect = new Rect(0, 0, imageView.getWidth(), imageView.getHeight());
             Canvas canvas = new Canvas(canvasBitmap);
             canvas.drawBitmap(backgroundBmp, null, backgroundDestRect, null);
             return canvas;

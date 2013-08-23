@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <ListView
+    <com.frostwire.android.gui.views.FWListView
         android:id="@android:id/list"
         style="@style/SlideMenu.List"
         android:layout_width="fill_parent"

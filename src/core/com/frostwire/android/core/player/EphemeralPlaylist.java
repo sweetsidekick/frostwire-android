@@ -106,4 +106,16 @@ public final class EphemeralPlaylist implements Playlist {
     @Override
     public void setTitle(String s) {   
     }
+
+    @Override
+    public void removeItem(PlaylistItem item) {
+        if (items.size() > 0) {
+            items.remove(item);
+            currentIndex--;
+            
+            if (currentIndex < 0) {
+                currentIndex = 0;
+            }
+        }
+    }
 }
