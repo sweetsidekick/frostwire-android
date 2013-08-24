@@ -423,4 +423,6 @@
     <string name="use_frostclick">Use FrostClick</string>
     <string name="delete_this_track">Delete this track</string>
     <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
+    <string name="wifi_sharing_disabled">Wi-fi Sharing is off</string>
+    <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>
 </resources>

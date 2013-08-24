@@ -50,6 +50,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
@@ -93,6 +94,7 @@ public class MainActivity extends AbstractSlidingActivity {
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
     private BrowsePeersFragment peers;
+    private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
 
     // not sure about this variable, quick solution for now
@@ -221,7 +223,11 @@ public class MainActivity extends AbstractSlidingActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        try {
+            super.onSaveInstanceState(outState);
+        } catch (Throwable e) {
+            LOG.error("Could not save instance state!",e);
+        }
         saveLastFragment(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
@@ -347,6 +353,7 @@ public class MainActivity extends AbstractSlidingActivity {
         library = new BrowsePeerFragment();
         transfers = new TransfersFragment();
         peers = new BrowsePeersFragment();
+        peersDisabled = new BrowsePeersDisabledFragment();
         about = new AboutFragment();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
@@ -405,12 +412,20 @@ public class MainActivity extends AbstractSlidingActivity {
         case R.id.menu_main_transfers:
             return transfers;
         case R.id.menu_main_peers:
-            return peers;
+            return getWifiSharingFragment();
         case R.id.menu_main_about:
             return about;
         default:
             return null;
         }
+    }
+    
+    private Fragment getWifiSharingFragment() {
+        return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
+    }
+
+    private boolean isWifiSharingEnabled() {
+        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
     }
 
     private void syncSlideMenu() {
