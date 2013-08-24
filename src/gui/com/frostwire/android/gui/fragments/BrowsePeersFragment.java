@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,10 +106,24 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         return header;
     }
+    
+    private class SetupAdapterTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+        
+        @Override
+        protected void onPostExecute(Void result) {
+            adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
+            setListAdapter(adapter);
+            refresh();
+        }
+        
+    }
 
     private void setupAdapter() {
-        adapter = new PeerListAdapter(this.getActivity(), new ArrayList<Peer>());
-        setListAdapter(adapter);
-        refresh();
+        new SetupAdapterTask().execute();
     }
 }
