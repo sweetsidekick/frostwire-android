@@ -438,7 +438,8 @@ public class MainActivity extends AbstractSlidingActivity {
                 menuFragment.setSelectedItem(R.id.menu_main_library);
             } else if (fragment instanceof TransfersFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_transfers);
-            } else if (fragment instanceof BrowsePeersFragment) {
+            } else if (fragment instanceof BrowsePeersFragment ||
+                       fragment instanceof BrowsePeersDisabledFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_peers);
             } else if (fragment instanceof AboutFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_about);

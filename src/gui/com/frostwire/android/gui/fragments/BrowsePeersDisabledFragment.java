@@ -46,36 +46,34 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setRetainInstance(true);
+        //        setRetainInstance(true);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse_peers_disabled, container, false);
-        
-        if (!view.isInEditMode()) {
-            wifiEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
-            freeAppsButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_free_apps);
-            freeAppsButton.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
-            freeAppsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    OfferUtils.onFreeAppsClick(v.getContext());
-                }
-            });
-            
-            wifiEnableButton.setOnClickListener(new View.OnClickListener() {
-                
-                @Override
-                public void onClick(View v) {
-                    onWifiEnableButtonClick();
-                }
-            });
-        }
-        
+
+        wifiEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
+        freeAppsButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_free_apps);
+        freeAppsButton.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
+        freeAppsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OfferUtils.onFreeAppsClick(v.getContext());
+            }
+        });
+
+        wifiEnableButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                onWifiEnableButtonClick();
+            }
+        });
+
         return view;
     }
-    
+
     @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -85,7 +83,6 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
         return header;
     }
 
-
     private void onWifiEnableButtonClick() {
         if (getActivity() instanceof MainActivity) {
             ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
@@ -94,4 +91,4 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
             activity.switchFragment(R.id.menu_main_peers);
         }
     }
- }
+}
