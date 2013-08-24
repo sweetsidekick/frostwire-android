@@ -54,8 +54,8 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
         View view = inflater.inflate(R.layout.fragment_browse_peers_disabled, container, false);
         
         if (!view.isInEditMode()) {
-            wifiEnableButton = (Button) view.findViewById(R.id.view_wifi_sharing_disabled_button_enable_wifi_sharing);
-            freeAppsButton = (Button) view.findViewById(R.id.view_wifi_sharing_disabled_button_free_apps);
+            wifiEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
+            freeAppsButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_free_apps);
             freeAppsButton.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
             freeAppsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
