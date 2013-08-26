@@ -59,8 +59,7 @@ public class PromotionsAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(context);
-            int h = (int) context.getResources().getDimension(R.dimen.promotion_column_height);
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, h));
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             imageView.setAdjustViewBounds(true);
             imageView.setPadding(6, 6, 6, 6);
         } else {
