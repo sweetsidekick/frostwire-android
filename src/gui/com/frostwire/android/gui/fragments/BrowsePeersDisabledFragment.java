@@ -20,6 +20,7 @@ package com.frostwire.android.gui.fragments;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +86,24 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
 
     private void onWifiEnableButtonClick() {
         if (getActivity() instanceof MainActivity) {
-            ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
-            UPnPManager.instance().resume();
-            MainActivity activity = (MainActivity) getActivity();
-            activity.switchFragment(R.id.menu_main_peers);
+            
+            AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void,Void,Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
+                    UPnPManager.instance().resume();
+                    return null;
+                }
+                
+                @Override
+                protected void onPostExecute(Void result) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    activity.switchFragment(R.id.menu_main_peers);
+                }
+                
+            };
+            
+            enableWifiTask.execute();
         }
     }
 }
