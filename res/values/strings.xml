@@ -424,7 +424,6 @@
     <string name="delete_this_track">Delete this track</string>
     <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
     <string name="wifi_sharing_disabled">Wi-fi Sharing is off</string>
-    <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>
-    <string name="wifi_sharing_toggle_button_description">Touch this button to turn off Wi-Fi sharing. All locally shared files will be unavailable. Turning off Wi-Fi sharing extends battery life.</string>
+    <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>    
     <string name="are_you_sure_wifi_sharing_off">Turning off Wi-Fi sharing will make all your shared files unavailable to other users on the local Wi-Fi network.</string>
 </resources>

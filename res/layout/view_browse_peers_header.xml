@@ -42,9 +42,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:drawable="@drawable/wifi"
-        android:text="@null" android:contentDescription="@string/wifi_sharing_toggle_button_description"/>
-
+        android:src="@drawable/wifi"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:text="@null" />
 
 </RelativeLayout>
