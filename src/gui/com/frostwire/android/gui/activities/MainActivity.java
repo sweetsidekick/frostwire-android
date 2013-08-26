@@ -316,9 +316,7 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
-
         syncSlideMenu();
-
         updateHeader(fragment);
     }
 

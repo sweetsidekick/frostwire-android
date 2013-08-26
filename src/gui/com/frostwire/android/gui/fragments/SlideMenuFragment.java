@@ -132,7 +132,7 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
                 switchFragment(item.id);
             }
         } catch (Throwable e) { // protecting from weird android UI engine issues
-            LOG.warn("Error clicking slide menu item", e);
+            LOG.error("Error clicking slide menu item", e);
         }
     }
 

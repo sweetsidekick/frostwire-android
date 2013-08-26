@@ -20,14 +20,14 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class FWExpandableListView extends ListView {
+public class FWExpandableListView extends ExpandableListView {
 
     public FWExpandableListView(Context context, AttributeSet attrs, int defStyle) {
         super(new FWContextWrapper(context), attrs, defStyle);
