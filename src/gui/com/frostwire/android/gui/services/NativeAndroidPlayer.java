@@ -291,4 +291,9 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             }
         }
     }
+
+    @Override
+    public Playlist getPlaylist() {
+        return playlist;
+    }
 }

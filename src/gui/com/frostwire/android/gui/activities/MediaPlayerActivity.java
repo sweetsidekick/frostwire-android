@@ -18,16 +18,19 @@
 
 package com.frostwire.android.gui.activities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -46,6 +49,8 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.player.Playlist;
+import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Biller;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
@@ -204,6 +209,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     @Override
     protected void initComponents() {
+
         if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
             Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
             return;
@@ -250,6 +256,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (buttonPause != null) {
             buttonPause.requestFocus();
             buttonPause.setOnClickListener(pauseListener);
+            buttonPause.setOnLongClickListener(stopListener);
         }
 
         buttonNext = (ImageButton) findViewById(R.id.activity_mediaplayer_button_next);
@@ -401,6 +408,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             sync();
         }
     };
+    
+    private View.OnLongClickListener stopListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            stop();
+            return true;
+        }
+    };
+    
 
     private View.OnClickListener previousListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -642,7 +658,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         };
 
         ContextMenuItem stop = new ContextMenuItem() {
-
             @Override
             public void onClick() {
                 stop();
@@ -658,9 +673,58 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return R.drawable.contextmenu_icon_stop;
             }
         };
+        
+        ContextMenuItem delete = new ContextMenuItem() {
+
+            @Override
+            public int getTextResId() {
+                return R.string.delete_this_track;
+            }
+
+            @Override
+            public int getDrawableResId() {
+                return R.drawable.contextmenu_icon_trash;
+            }
+
+            @Override
+            public void onClick() {
+                UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        onDeleteCurrentTrack();
+                    }
+                });
+            }
+            
+        };
 
         ContextMenuDialog menu = new ContextMenuDialog();
-        menu.setItems(Arrays.asList(share, stop));
+        menu.setItems(Arrays.asList(share, stop, delete));
         menu.show(getSupportFragmentManager(), "playerContextMenu");
+    }
+    
+    private void onDeleteCurrentTrack() {
+        final FileDescriptor currentFD = Engine.instance().getMediaPlayer().getCurrentFD();
+        PlaylistItem currentPlaylistItem = new PlaylistItem(currentFD);
+        Playlist playlist = Engine.instance().getMediaPlayer().getPlaylist();
+        
+        AsyncTask<Void, Void, Void> asyncDeleteTrackTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                Librarian.instance().deleteFiles(Constants.FILE_TYPE_AUDIO, new ArrayList<FileDescriptor>(Arrays.asList(currentFD)));
+                return null;
+            }
+        };
+        
+        if (playlist != null) {
+            PlaylistItem nextItem = playlist.getNextItem();
+            if (nextItem == null || nextItem.equals(currentPlaylistItem)) {
+                asyncDeleteTrackTask.execute();
+                stop();
+                return;
+            }
+        }
+        
+        Engine.instance().getMediaPlayer().playNext();
+        asyncDeleteTrackTask.execute();        
     }
 }

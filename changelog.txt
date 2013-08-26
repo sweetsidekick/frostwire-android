@@ -1,4 +1,7 @@
-FrostWire 1.1.2 - AUG/07/2013
+FrostWire 1.1.2 - AUG/22/2013
+ - New: Stop music playback completely by long pressing the play/pause button.
+ - New: Audio Player menu now has "Delete this track" feature, get rid of songs
+   you don't like on your device next time you come across them and keep playing.
  - Fixes issues parsing some YouTube urls.
 
 FrostWire 1.1.1 - JUN/26/2013

@@ -31,4 +31,6 @@ public interface Playlist {
     public PlaylistItem getPreviousItem();
 
     public PlaylistItem getNextItem();
+    
+    public void removeItem(PlaylistItem item);
 }
