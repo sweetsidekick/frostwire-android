@@ -39,11 +39,14 @@
 
     <ImageButton
         android:id="@+id/view_browse_peers_header_image_button_toggle_wifi_sharing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="28dip"
+        android:layout_height="28dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="3dip"
         android:layout_alignParentRight="true"
         android:background="@null"
         android:contentDescription="@null"
+        android:scaleType="centerInside"
         android:src="@drawable/wifi_switch"
         android:text="@null" />
 

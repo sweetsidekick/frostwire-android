@@ -26,9 +26,11 @@
     android:orientation="vertical" >
     
     <TextView
-        android:id="@+id/view_wifi_sharing_disabled_text_title"
+        android:id="@+id/fragment_browse_peers_disabled_text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
         android:text="@string/wifi_sharing_disabled"
         android:textSize="18sp"
         android:visibility="visible" />
