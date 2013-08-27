@@ -1,4 +1,4 @@
-FrostWire 1.1.2 - AUG/26/2013
+FrostWire 1.1.2 - AUG/27/2013
  - New: Stop music playback completely by long pressing the play/pause button.
  - New: Audio Player menu now has "Delete this track" feature, get rid of songs
    you don't like on your device next time you come across them and keep playing.
@@ -8,6 +8,7 @@ FrostWire 1.1.2 - AUG/26/2013
  - Sources on search results are now underlined to hint user of sourc checking feature.
  - Fixes issues parsing some YouTube urls.
  - Fixes soundcloud search.
+ - Fixes multiple memory leaks.
 
 FrostWire 1.1.1 - JUN/26/2013
  - Fixes "Error: Inconsistent download state" bug when connectivity is lost and resumed.
