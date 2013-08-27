@@ -20,15 +20,12 @@ package com.frostwire.android.gui.adapters;
 
 import java.util.List;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.frostwire.android.R;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.frostclick.Slide;
 
@@ -44,12 +41,10 @@ public class PromotionsAdapter extends BaseAdapter {
 
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
-    private final Drawable defaultDrawable;
 
-    public PromotionsAdapter(Context context, List<Slide> slides) {
+    public PromotionsAdapter(List<Slide> slides) {
         this.slides = slides;
         this.imageLoader = ImageLoader.getDefault();
-        this.defaultDrawable = context.getResources().getDrawable(R.drawable.promotion_default);
     }
 
     @Override
@@ -65,7 +60,7 @@ public class PromotionsAdapter extends BaseAdapter {
         }
 
         try {
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable, 2);
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, 2);
         } catch (Throwable e) {
             // ignore
         }

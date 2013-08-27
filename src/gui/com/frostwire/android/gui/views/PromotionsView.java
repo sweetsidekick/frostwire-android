@@ -64,7 +64,7 @@ public class PromotionsView extends LinearLayout {
     public void setSlides(List<Slide> slides) {
         if (gridview != null && slides != null) {
             this.slides = slides;
-            gridview.setAdapter(new PromotionsAdapter(getContext(), slides));
+            gridview.setAdapter(new PromotionsAdapter(slides));
         }
     }
 

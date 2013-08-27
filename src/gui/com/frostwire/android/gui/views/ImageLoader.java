@@ -139,17 +139,15 @@ public final class ImageLoader {
     }
 
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
-        if (defaultDrawable != null) {
-            imageView.setScaleType(ScaleType.FIT_CENTER);
+        imageView.setScaleType(ScaleType.FIT_CENTER);
 
-            RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
+        RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
 
-            if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
-                requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
-            }
-
-            requestBuilder.into(imageView);
+        if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
+            requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
         }
+
+        requestBuilder.into(imageView);
     }
 
     private boolean isKeyRemote(String key) {
