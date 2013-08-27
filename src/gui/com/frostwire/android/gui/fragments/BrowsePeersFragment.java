@@ -152,23 +152,9 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         task.execute();
     }
     
-    private class SetupAdapterTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-        
-        @Override
-        protected void onPostExecute(Void result) {
-            adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
-            setListAdapter(adapter);
-            refresh();
-        }
-        
-    }
-
     private void setupAdapter() {
-        new SetupAdapterTask().execute();
+        adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
+        setListAdapter(adapter);
+        refresh();
     }
 }

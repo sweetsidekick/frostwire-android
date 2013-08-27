@@ -24,7 +24,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,26 +162,12 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
             UIUtils.supportFrostWire(donationsView);
         }
     }
-    
-    private class SetupAdapterTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-        
-        @Override
-        protected void onPostExecute(Void result) {
-            List<Transfer> transfers = TransferManager.instance().getTransfers();
-            Collections.sort(transfers, transferComparator);
-            adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
-            setListAdapter(adapter);
-        }
-        
-    }
 
     private void setupAdapter() {
-        new SetupAdapterTask().execute();
+        List<Transfer> transfers = TransferManager.instance().getTransfers();
+        Collections.sort(transfers, transferComparator);
+        adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
+        setListAdapter(adapter);
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {
