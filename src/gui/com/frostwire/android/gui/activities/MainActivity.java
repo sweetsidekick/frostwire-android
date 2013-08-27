@@ -67,7 +67,6 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
-import com.offercast.android.sdk.OffercastSDK;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -201,15 +200,16 @@ public class MainActivity extends AbstractSlidingActivity {
     }
 
     private void startOffercast() {
-        try {
-            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-            offercast.authorize();
-            offercastStarted = true;
-            LOG.info("Offercast started.");
-        } catch (Exception e) {
-            offercastStarted = false;
-            LOG.error("Offercast could not start.",e);
-        }
+// Disabled due to Google Play Developer Program Policy (“Content Policy”) Update - August 23, 2013 
+//        try {
+//            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
+//            offercast.authorize();
+//            offercastStarted = true;
+//            LOG.info("Offercast started.");
+//        } catch (Exception e) {
+//            offercastStarted = false;
+//            LOG.error("Offercast could not start.",e);
+//        }
     }
 
     @Override
