@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +94,9 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
         setupAdapter();
 
-        if (slides == null) {
+        if (slides != null) {
+            promotions.setSlides(slides);
+        } else {
             new LoadSlidesTask(this).execute();
         }
 
@@ -349,6 +351,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             SearchFragment f = fragment.get();
             if (f != null) {
                 f.slides = result;
+                f.promotions.setSlides(result);
             }
         }
     }

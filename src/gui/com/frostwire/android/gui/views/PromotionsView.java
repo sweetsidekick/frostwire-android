@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,7 @@ package com.frostwire.android.gui.views;
 import java.util.List;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,12 +29,8 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
 import com.frostwire.frostclick.Slide;
-import com.frostwire.frostclick.SlideList;
-import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron
@@ -46,9 +39,9 @@ import com.frostwire.util.JsonUtils;
  */
 public class PromotionsView extends LinearLayout {
 
-    private static final String TAG = "FW.PromotionsView";
-
     private GridView gridview;
+
+    private List<Slide> slides;
 
     private OnPromotionClickListener onPromotionClickListener;
 
@@ -64,6 +57,17 @@ public class PromotionsView extends LinearLayout {
         this.onPromotionClickListener = listener;
     }
 
+    public List<Slide> getSlides() {
+        return slides;
+    }
+
+    public void setSlides(List<Slide> slides) {
+        if (gridview != null && slides != null) {
+            this.slides = slides;
+            gridview.setAdapter(new PromotionsAdapter(getContext(), slides));
+        }
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -74,58 +78,18 @@ public class PromotionsView extends LinearLayout {
             return;
         }
 
-        try {
-            gridview = (GridView) findViewById(R.id.view_promotions_gridview);
-            gridview.setOnItemClickListener(new OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Slide slide = (Slide) gridview.getAdapter().getItem(position);
-                    if (onPromotionClickListener != null && slide != null) {
-                        onPromotionClickListener.onPromotionClick(PromotionsView.this, slide);
-                    }
-                }
-            });
-
-            loadSlidesAsync();
-        } catch (Throwable e) {
-            Log.e(TAG, "Error loading slides", e);
-        }
-    }
-
-    private void loadSlidesAsync() {
-        AsyncTask<Void, Void, List<Slide>> task = new AsyncTask<Void, Void, List<Slide>>() {
-
-            @Override
-            protected List<Slide> doInBackground(Void... params) {
-                try {
-                    return loadSlides();
-                } catch (Throwable e) {
-                    Log.e(TAG, "Error loading slides from server");
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(List<Slide> result) {
-                if (gridview != null && result != null) {
-                    gridview.setAdapter(new PromotionsAdapter(getContext(), result));
+        gridview = (GridView) findViewById(R.id.view_promotions_gridview);
+        gridview.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Slide slide = (Slide) gridview.getAdapter().getItem(position);
+                if (onPromotionClickListener != null && slide != null) {
+                    onPromotionClickListener.onPromotionClick(PromotionsView.this, slide);
                 }
             }
-        };
-
-        task.execute();
-    }
-
-    private List<Slide> loadSlides() {
-        byte[] jsonBytes = new HttpFetcher(buildUrl()).fetch();
-        SlideList slides = JsonUtils.toObject(new String(jsonBytes), SlideList.class);
-        return slides.slides;
-    }
-
-    private String buildUrl() {
-        return String.format("%s?from=android&fw=%s&sdk=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING, Build.VERSION.SDK_INT);
+        });
     }
 
     public static interface OnPromotionClickListener {
         public void onPromotionClick(PromotionsView v, Slide slide);
-    }    
+    }
 }
