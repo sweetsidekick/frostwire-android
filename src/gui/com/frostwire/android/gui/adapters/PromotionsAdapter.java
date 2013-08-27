@@ -42,13 +42,11 @@ import com.frostwire.frostclick.Slide;
  */
 public class PromotionsAdapter extends BaseAdapter {
 
-    private final Context context;
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
     private final Drawable defaultDrawable;
 
     public PromotionsAdapter(Context context, List<Slide> slides) {
-        this.context = context;
         this.slides = slides;
         this.imageLoader = ImageLoader.getDefault();
         this.defaultDrawable = context.getResources().getDrawable(R.drawable.promotion_default);
@@ -58,7 +56,7 @@ public class PromotionsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
-            imageView = new ImageView(context);
+            imageView = new ImageView(parent.getContext());
             imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             imageView.setAdjustViewBounds(true);
             imageView.setPadding(6, 6, 6, 6);
