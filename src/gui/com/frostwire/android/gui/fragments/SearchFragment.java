@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.fragments;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,11 +57,15 @@ import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
 import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.frostclick.Slide;
+import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.util.HttpClient;
+import com.frostwire.util.HttpClientFactory;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron
@@ -71,6 +77,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
+    private List<Slide> slides;
 
     private SearchInputView searchInput;
     private ProgressBar deepSearchProgress;
@@ -86,6 +93,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         super.onActivityCreated(savedInstanceState);
 
         setupAdapter();
+
+        if (slides == null) {
+            new LoadSlidesTask(this).execute();
+        }
+
         setRetainInstance(true);
     }
 
@@ -159,11 +171,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
                     @SuppressWarnings("unchecked")
                     final List<SearchResult> filteredList = adapter.filter((List<SearchResult>) results);
-                    
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.addResults(results,filteredList);
+                            adapter.addResults(results, filteredList);
                             showSearchView(getView());
                         }
                     });
@@ -308,5 +320,36 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             return;
         }
         startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
+    }
+
+    private static class LoadSlidesTask extends AsyncTask<Void, Void, List<Slide>> {
+
+        private final WeakReference<SearchFragment> fragment;
+
+        public LoadSlidesTask(SearchFragment fragment) {
+            this.fragment = new WeakReference<SearchFragment>(fragment);
+        }
+
+        @Override
+        protected List<Slide> doInBackground(Void... params) {
+            try {
+                HttpClient http = HttpClientFactory.newDefaultInstance();
+                String url = String.format("%s?from=android&fw=%s&sdk=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING, Build.VERSION.SDK_INT);
+                String json = http.get(url);
+                SlideList slides = JsonUtils.toObject(json, SlideList.class);
+                return slides.slides;
+            } catch (Throwable e) {
+                LOG.error("Error loading slides from url", e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Slide> result) {
+            SearchFragment f = fragment.get();
+            if (f != null) {
+                f.slides = result;
+            }
+        }
     }
 }
