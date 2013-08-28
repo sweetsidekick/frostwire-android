@@ -60,7 +60,7 @@ public class PromotionsAdapter extends BaseAdapter {
         }
 
         try {
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, 2);
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, ImageLoader.DOWNSCALE_HUGE_BITMAPS);
         } catch (Throwable e) {
             // ignore
         }

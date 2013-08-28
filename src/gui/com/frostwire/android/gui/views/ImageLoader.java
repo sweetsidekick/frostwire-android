@@ -32,11 +32,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -145,6 +148,8 @@ public final class ImageLoader {
 
         if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
             requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
+        } else if ((overlayFlags & DOWNSCALE_HUGE_BITMAPS) == DOWNSCALE_HUGE_BITMAPS) {
+            //requestBuilder.transform(new DownscaleTransformation(imageSrc, getDisplaySize()));
         }
 
         requestBuilder.into(imageView);
@@ -177,6 +182,14 @@ public final class ImageLoader {
         }
 
         return bmp;
+    }
+
+    private Point getDisplaySize() {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        return new Point(width, height);
     }
 
     private class RawDataResponse extends Downloader.Response {
@@ -361,6 +374,30 @@ public final class ImageLoader {
             Canvas canvas = new Canvas(canvasBitmap);
             canvas.drawBitmap(backgroundBmp, null, backgroundDestRect, null);
             return canvas;
+        }
+    }
+
+    private class DownscaleTransformation implements Transformation {
+
+        private final int width;
+        private final String key;
+
+        public DownscaleTransformation(String key, Point screenSize) {
+            this.width = Math.min(screenSize.x, screenSize.y);
+            this.key = key + ":" + width;
+        }
+
+        @Override
+        public Bitmap transform(Bitmap source) {
+            float factor = width / (float) source.getWidth();
+            Bitmap bmp = Bitmap.createScaledBitmap(source, width, (int) (source.getHeight() * factor), false);
+            source.recycle();
+            return bmp;
+        }
+
+        @Override
+        public String key() {
+            return key;
         }
     }
 }
