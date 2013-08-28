@@ -59,6 +59,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
@@ -181,7 +182,8 @@ public class MainActivity extends AbstractSlidingActivity {
         super.onResume();
         
         if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-            startOffercast();
+            OfferUtils.startOffercast();
+            offercastStarted = true;
         }
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
@@ -197,19 +199,6 @@ public class MainActivity extends AbstractSlidingActivity {
                 }
             }));
         }
-    }
-
-    private void startOffercast() {
-// Disabled due to Google Play Developer Program Policy (“Content Policy”) Update - August 23, 2013 
-//        try {
-//            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-//            offercast.authorize();
-//            offercastStarted = true;
-//            LOG.info("Offercast started.");
-//        } catch (Exception e) {
-//            offercastStarted = false;
-//            LOG.error("Offercast could not start.",e);
-//        }
     }
 
     @Override

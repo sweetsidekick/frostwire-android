@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 
 import com.frostwire.android.core.ConfigurationManager;
@@ -25,6 +28,8 @@ import com.frostwire.android.core.Constants;
 import com.offercast.android.sdk.OffercastSDK;
 
 public class OfferUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(OfferUtils.class);
+    
     public static boolean isfreeAppsEnabled() {
         ConfigurationManager config = null;
         boolean isFreeAppsEnabled = false;
@@ -35,6 +40,18 @@ public class OfferUtils {
         }
         return isFreeAppsEnabled;
     }
+    
+     public static void startOffercast() {
+// Disabled due to Google Play Developer Program Policy (“Content Policy”) Update - August 23, 2013 
+//        try {
+//            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
+//            offercast.authorize();
+//            LOG.info("Offercast started.");
+//        } catch (Exception e) {
+//            offercastStarted = false;
+//            LOG.error("Offercast could not start.",e);
+//        }
+    }
 
     public static void onFreeAppsClick(Context context) {
         if (isfreeAppsEnabled()) {
@@ -42,6 +59,8 @@ public class OfferUtils {
                 OffercastSDK instance = OffercastSDK.getInstance(context);
                 instance.showAppWallAd();
             } catch (Throwable t) {
+                LOG.error("can't show app wall",t);
+                t.printStackTrace();
             }
         }
     }
