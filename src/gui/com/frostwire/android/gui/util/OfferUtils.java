@@ -41,14 +41,13 @@ public class OfferUtils {
         return isFreeAppsEnabled;
     }
     
-     public static void startOffercast() {
+     public static void startOffercast() throws Exception {
 // Disabled due to Google Play Developer Program Policy (“Content Policy”) Update - August 23, 2013 
 //        try {
 //            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
 //            offercast.authorize();
 //            LOG.info("Offercast started.");
 //        } catch (Exception e) {
-//            offercastStarted = false;
 //            LOG.error("Offercast could not start.",e);
 //        }
     }

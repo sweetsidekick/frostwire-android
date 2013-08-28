@@ -182,8 +182,7 @@ public class MainActivity extends AbstractSlidingActivity {
         super.onResume();
         
         if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-            OfferUtils.startOffercast();
-            offercastStarted = true;
+            startOffercast();
         }
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
@@ -198,6 +197,15 @@ public class MainActivity extends AbstractSlidingActivity {
                     startWizardActivity();
                 }
             }));
+        }
+    }
+
+    private void startOffercast() {
+        try {
+            OfferUtils.startOffercast();
+            offercastStarted = true;
+        } catch (Throwable t) {
+            offercastStarted = false;
         }
     }
 
