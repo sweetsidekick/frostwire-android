@@ -1,4 +1,5 @@
-FrostWire 1.1.2 - AUG/27/2013
+FrostWire 1.1.2 - AUG/30/2013
+ - Removed offers during installation to comply with new Google Play guidelines.
  - New: Stop music playback completely by long pressing the play/pause button.
  - New: Audio Player menu now has "Delete this track" feature, get rid of songs
    you don't like on your device next time you come across them and keep playing.
