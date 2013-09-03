@@ -413,10 +413,14 @@ public final class UIUtils {
                 Field f = d.getClass().getDeclaredField("image");
                 f.setAccessible(true);
                 BitmapDrawable bd = (BitmapDrawable) f.get(d);
+                f.set(d, new DummyBitmapDrawable());
                 bd.getBitmap().recycle();
             }
         } catch (Throwable e) {
             // not really necessary (specially for newer devices)
         }
+    }
+
+    private static final class DummyBitmapDrawable extends BitmapDrawable {
     }
 }
