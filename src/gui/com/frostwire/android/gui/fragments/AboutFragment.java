@@ -69,7 +69,7 @@ public class AboutFragment extends Fragment implements MainFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView title = (TextView) view.findViewById(R.id.fragment_about_title);
-        title.setText("FrostWire v" + Constants.FROSTWIRE_VERSION_STRING);
+        title.setText("FrostWire v" + Constants.FROSTWIRE_VERSION_STRING + " build " + Constants.FROSTWIRE_BUILD);
 
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
