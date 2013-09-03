@@ -32,7 +32,6 @@ import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
-import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.frostclick.Slide;
 
 /**
@@ -116,7 +115,7 @@ public class PromotionsView extends LinearLayout {
             Drawable d = view.getDrawable();
             d.setCallback(null);
             view.setImageDrawable(null);
-            UIUtils.picassoRecycle(d);
+            //UIUtils.picassoRecycle(d);
         }
     }
 
