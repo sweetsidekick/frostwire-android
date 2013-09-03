@@ -55,7 +55,7 @@ import com.squareup.picasso.Downloader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
-import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 import com.squareup.picasso.UrlConnectionDownloader;
 
@@ -144,7 +144,7 @@ public final class ImageLoader {
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
         imageView.setScaleType(ScaleType.FIT_CENTER);
 
-        RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
+        RequestCreator requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
 
         if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
             requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
