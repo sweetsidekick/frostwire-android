@@ -149,7 +149,8 @@ public final class ImageLoader {
         if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
             requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
         } else if ((overlayFlags & DOWNSCALE_HUGE_BITMAPS) == DOWNSCALE_HUGE_BITMAPS) {
-            //requestBuilder.transform(new DownscaleTransformation(imageSrc, getDisplaySize()));
+            // hardcoded to 1/2 for now
+            requestBuilder.transform(new DownscaleTransformation(imageSrc, 0.5f));
         }
 
         requestBuilder.into(imageView);
@@ -182,14 +183,6 @@ public final class ImageLoader {
         }
 
         return bmp;
-    }
-
-    private Point getDisplaySize() {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        return new Point(width, height);
     }
 
     private class RawDataResponse extends Downloader.Response {
@@ -379,18 +372,19 @@ public final class ImageLoader {
 
     private class DownscaleTransformation implements Transformation {
 
-        private final int width;
+        private final float factor;
         private final String key;
 
-        public DownscaleTransformation(String key, Point screenSize) {
-            this.width = Math.min(screenSize.x, screenSize.y);
-            this.key = key + ":" + width;
+        public DownscaleTransformation(String key, float factor) {
+            this.factor = factor;
+            this.key = key + ":" + factor;
         }
 
         @Override
         public Bitmap transform(Bitmap source) {
-            float factor = width / (float) source.getWidth();
-            Bitmap bmp = Bitmap.createScaledBitmap(source, width, (int) (source.getHeight() * factor), false);
+            int width = (int) (source.getWidth() * factor);
+            int height = (int) (source.getHeight() * factor);
+            Bitmap bmp = Bitmap.createScaledBitmap(source, width, height, false);
             source.recycle();
             return bmp;
         }
