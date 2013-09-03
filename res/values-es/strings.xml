@@ -19,7 +19,6 @@
  */ 
 -->
 <resources>
-
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Configuración</string>
     <string name="activity_browse_peer_name">Explorar</string>
@@ -408,4 +407,10 @@
     <string name="twenty_five_dollars">$25</string>
     <string name="watch_tv">Ver TV</string>
     <string name="free_apps">Apps Gratis</string>
+    <string name="use_frostclick">Usa FrostClick.com</string>
+    <string name="delete_this_track">Eliminar esta canción</string>
+    <string name="are_you_sure_delete_current_track">¿Seguro que quieres eliminar esta canción?</string>
+    <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
+    <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>    
+    <string name="are_you_sure_wifi_sharing_off">Si apagas el compartimiento de archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
 </resources>

@@ -132,7 +132,7 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
                 switchFragment(item.id);
             }
         } catch (Throwable e) { // protecting from weird android UI engine issues
-            LOG.warn("Error clicking slide menu item", e);
+            LOG.error("Error clicking slide menu item", e);
         }
     }
 
@@ -319,6 +319,8 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
         
-        playerItem.unbindDrawables();
+        if (playerItem != null) {
+            playerItem.unbindDrawables();
+        }
     }
 }

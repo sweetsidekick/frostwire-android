@@ -19,7 +19,6 @@
  */
 -->
 <resources>
-
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Settings</string>
     <string name="activity_browse_peer_name">Browse Host</string>
@@ -421,6 +420,10 @@
     <string name="twenty_five_dollars">$25</string>
     <string name="watch_tv">Watch TV</string>
     <string name="free_apps">Free Apps</string>
+    <string name="use_frostclick">Use FrostClick</string>
     <string name="delete_this_track">Delete this track</string>
     <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
+    <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.</string>
+    <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>    
+    <string name="are_you_sure_wifi_sharing_off">Turning off Wi-Fi sharing will make all your locally shared files unavailable to other users on the nearby Wi-Fi network.</string>
 </resources>

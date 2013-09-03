@@ -35,6 +35,10 @@ public final class Constants {
     public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 2 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
+    
+    /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
+     * needing to pass the Android app context to obtain the PackageManager instance.  */
+    public static final String FROSTWIRE_BUILD = "98";
 
     /**
      * 65280 - Default LAN bound port
@@ -71,6 +75,7 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_USE_YOUTUBE = "frostwire.prefs.search.use_youtube";
     public static final String PREF_KEY_SEARCH_USE_SOUNDCLOUD = "frostwire.prefs.search.use_soundcloud";
     public static final String PREF_KEY_SEARCH_USE_ARCHIVEORG = "frostwire.prefs.search.use_archiveorg";
+    public static final String PREF_KEY_SEARCH_USE_FROSTCLICK = "frostwire.prefs.search.use_frostclick";
 
     public static final String PREF_KEY_SEARCH_PREFERENCE_CATEGORY = "frostwire.prefs.search.preference_category";
 

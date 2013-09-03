@@ -50,6 +50,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
@@ -58,6 +59,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
@@ -66,7 +68,6 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
-import com.offercast.android.sdk.OffercastSDK;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -93,6 +94,7 @@ public class MainActivity extends AbstractSlidingActivity {
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
     private BrowsePeersFragment peers;
+    private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
 
     // not sure about this variable, quick solution for now
@@ -200,13 +202,10 @@ public class MainActivity extends AbstractSlidingActivity {
 
     private void startOffercast() {
         try {
-            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-            offercast.authorize();
+            OfferUtils.startOffercast();
             offercastStarted = true;
-            LOG.info("Offercast started.");
-        } catch (Exception e) {
+        } catch (Throwable t) {
             offercastStarted = false;
-            LOG.error("Offercast could not start.",e);
         }
     }
 
@@ -314,9 +313,7 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
-
         syncSlideMenu();
-
         updateHeader(fragment);
     }
 
@@ -347,6 +344,7 @@ public class MainActivity extends AbstractSlidingActivity {
         library = new BrowsePeerFragment();
         transfers = new TransfersFragment();
         peers = new BrowsePeersFragment();
+        peersDisabled = new BrowsePeersDisabledFragment();
         about = new AboutFragment();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
@@ -405,12 +403,20 @@ public class MainActivity extends AbstractSlidingActivity {
         case R.id.menu_main_transfers:
             return transfers;
         case R.id.menu_main_peers:
-            return peers;
+            return getWifiSharingFragment();
         case R.id.menu_main_about:
             return about;
         default:
             return null;
         }
+    }
+    
+    private Fragment getWifiSharingFragment() {
+        return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
+    }
+
+    private boolean isWifiSharingEnabled() {
+        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
     }
 
     private void syncSlideMenu() {
@@ -423,7 +429,8 @@ public class MainActivity extends AbstractSlidingActivity {
                 menuFragment.setSelectedItem(R.id.menu_main_library);
             } else if (fragment instanceof TransfersFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_transfers);
-            } else if (fragment instanceof BrowsePeersFragment) {
+            } else if (fragment instanceof BrowsePeersFragment ||
+                       fragment instanceof BrowsePeersDisabledFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_peers);
             } else if (fragment instanceof AboutFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_about);

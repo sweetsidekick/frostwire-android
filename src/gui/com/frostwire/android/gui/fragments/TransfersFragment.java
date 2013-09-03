@@ -166,7 +166,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     private void setupAdapter() {
         List<Transfer> transfers = TransferManager.instance().getTransfers();
         Collections.sort(transfers, transferComparator);
-        adapter = new TransferListAdapter(this.getActivity(), transfers);
+        adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
         setListAdapter(adapter);
     }
 
