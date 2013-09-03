@@ -12,6 +12,10 @@ FrostWire 1.1.2 - SEP/03/2013
  - Improved memory usage and multiple memory leaks fixes will avoid a multiple
    number of crashes due to out of memory errors, specially on older devices
    with limited memory availability.
+ - Fixes issue with double memory allocation related to
+   first creen's grid view.
+ - Fixed some memory leaks related to picasso bitmap
+    allocations.
 
 FrostWire 1.1.1 - JUN/26/2013
  - Fixes "Error: Inconsistent download state" bug when connectivity is lost and resumed.
