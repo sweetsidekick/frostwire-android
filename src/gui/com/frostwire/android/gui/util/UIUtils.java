@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.util;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +35,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.InputType;
@@ -270,7 +272,7 @@ public final class UIUtils {
             return resources.getString(R.string.unknown);
         }
     }
-    
+
     public static int getFileTypeIconId(byte fileType) {
         switch (fileType) {
         case Constants.FILE_TYPE_APPLICATIONS:
@@ -307,7 +309,7 @@ public final class UIUtils {
             }
         } catch (Throwable e) {
             UIUtils.showShortMessage(context, R.string.cant_open_file);
-            Log.e(TAG, "Failed to open file: " + filePath,e);
+            Log.e(TAG, "Failed to open file: " + filePath, e);
         }
     }
 
@@ -335,7 +337,7 @@ public final class UIUtils {
     private static boolean openAudioInternal(String filePath) {
         try {
             List<FileDescriptor> fds = Librarian.instance().getFiles(filePath, true);
-            
+
             if (fds.size() == 1 && fds.get(0).fileType == Constants.FILE_TYPE_AUDIO) {
                 playEphemeralPlaylist(fds.get(0));
                 return true;
@@ -346,7 +348,7 @@ public final class UIUtils {
             return false;
         }
     }
-    
+
     /**
      * This method sets up the visibility of the support frostwire control (@see {@link DonationsView})
      * depending on remote configuration parameters and local configuration preferences.
@@ -356,16 +358,16 @@ public final class UIUtils {
         //remote kill switch
         if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD)) {
             supportFrostWireView.setVisibility(View.GONE);
-            Log.v(TAG,"Hiding support, above threshold.");
+            Log.v(TAG, "Hiding support, above threshold.");
         } else if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE)) {
             supportFrostWireView.setVisibility(View.VISIBLE);
-            
+
             if (supportFrostWireView.getLayoutParams() != null) {
                 supportFrostWireView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
             }
         }
     }
-    
+
     /**
      * Android devices with SDK below target=11 do not support textView.setAlpha().
      * This is a work around. 
@@ -376,17 +378,17 @@ public final class UIUtils {
         v.setTextColor(v.getTextColors().withAlpha(alpha));
         v.setHintTextColor(v.getHintTextColors().withAlpha(alpha));
         v.setLinkTextColor(v.getLinkTextColors().withAlpha(alpha));
-        
+
         Drawable[] compoundDrawables = v.getCompoundDrawables();
-        for (int i=0 ; i < compoundDrawables.length; i++) {
+        for (int i = 0; i < compoundDrawables.length; i++) {
             Drawable d = compoundDrawables[i];
             if (d != null) {
                 d.setAlpha(alpha);
             }
         }
-        
+
     }
-    
+
     /**
      * Checks setting to show or not the transfers window right after a download has started.
      * This should probably be moved elsewhere (similar to GUIMediator on the desktop)
@@ -400,8 +402,21 @@ public final class UIUtils {
             context.startActivity(i);
         }
     }
-    
+
     public static boolean isAmazonDevice() {
-        return android.os.Build.MANUFACTURER.toLowerCase().equals("amazon");
+        return android.os.Build.MANUFACTURER.toLowerCase(Locale.US).equals("amazon");
+    }
+
+    public static void picassoRecycle(Drawable d) {
+        try {
+            if (d != null && d.getClass().getName().contains("PicassoDrawable")) {
+                Field f = d.getClass().getDeclaredField("image");
+                f.setAccessible(true);
+                BitmapDrawable bd = (BitmapDrawable) f.get(d);
+                bd.getBitmap().recycle();
+            }
+        } catch (Throwable e) {
+            // not really necessary (specially for newer devices)
+        }
     }
 }

@@ -21,15 +21,18 @@ package com.frostwire.android.gui.views;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.frostclick.Slide;
 
 /**
@@ -87,6 +90,34 @@ public class PromotionsView extends LinearLayout {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        // aldenml: The need of this method is because don't have the best
+        // use of saved states for fragments starting from the top activity.
+        // When the activity configuration changes (for example, orientation)
+        // the gridview is kept in memory, then the need of this forced unbind.
+        //
+        // Additionally, I'm recycling the picasso drawables for older devices. 
+        unbindPromotionDrawables();
+    }
+
+    private void unbindPromotionDrawables() {
+        for (int i = 0; gridview != null && i < gridview.getChildCount(); i++) {
+            unbindPromotionDrawable((ImageView) gridview.getChildAt(i));
+        }
+    }
+
+    private void unbindPromotionDrawable(ImageView view) {
+        if (view.getDrawable() != null) {
+            Drawable d = view.getDrawable();
+            d.setCallback(null);
+            view.setImageDrawable(null);
+            UIUtils.picassoRecycle(d);
+        }
     }
 
     public static interface OnPromotionClickListener {
