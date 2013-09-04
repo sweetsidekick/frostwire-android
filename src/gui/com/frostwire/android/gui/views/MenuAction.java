@@ -30,12 +30,12 @@ import android.graphics.drawable.Drawable;
  */
 public abstract class MenuAction {
 
-    private final WeakReference<Context> context;
+    private final WeakReference<Context> contextRef;
     private final Drawable image;
     private final String text;
 
     public MenuAction(Context context, Drawable image, String text) {
-        this.context = new WeakReference<Context>(context);
+        this.contextRef = new WeakReference<Context>(context);
         this.image = image;
         this.text = text;
     }
@@ -61,8 +61,8 @@ public abstract class MenuAction {
     }
 
     public final void onClick() {
-        if (context.get() != null) {
-            onClick(context.get());
+        if (contextRef.get() != null) {
+            onClick(contextRef.get());
         }
     }
 
