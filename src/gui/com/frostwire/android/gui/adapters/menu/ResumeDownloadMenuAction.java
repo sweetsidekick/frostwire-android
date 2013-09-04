@@ -39,7 +39,7 @@ public final class ResumeDownloadMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         if (download.isResumable()) {
             download.resume();
         }

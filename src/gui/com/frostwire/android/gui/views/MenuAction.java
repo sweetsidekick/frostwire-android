@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -28,12 +30,12 @@ import android.graphics.drawable.Drawable;
  */
 public abstract class MenuAction {
 
-    private final Context context;
+    private final WeakReference<Context> context;
     private final Drawable image;
     private final String text;
 
     public MenuAction(Context context, Drawable image, String text) {
-        this.context = context;
+        this.context = new WeakReference<Context>(context);
         this.image = image;
         this.text = text;
     }
@@ -50,10 +52,6 @@ public abstract class MenuAction {
         this(context, imageId, context.getResources().getString(textId, formatArgs));
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public String getText() {
         return text;
     }
@@ -62,5 +60,11 @@ public abstract class MenuAction {
         return image;
     }
 
-    public abstract void onClick();
+    public final void onClick() {
+        if (context.get() != null) {
+            onClick(context.get());
+        }
+    }
+
+    protected abstract void onClick(Context context);
 }

@@ -52,7 +52,7 @@ public class SetSharedStateFileGrainedMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(final Context context) {
         //toggle everybody in memory (fast)
         int size = fds.size();
         if (size == 0) {
@@ -81,7 +81,7 @@ public class SetSharedStateFileGrainedMenuAction extends MenuAction {
                     if (shared) {
                         int numShared = Librarian.instance().getNumFiles(fileType, true);
                         if (numShared > 1) {
-                            UIUtils.showLongMessage(getContext(), getContext().getString(R.string.sharing_num_files, numShared, UIUtils.getFileTypeAsString(getContext().getResources(), fileType)));
+                            UIUtils.showLongMessage(context, context.getString(R.string.sharing_num_files, numShared, UIUtils.getFileTypeAsString(context.getResources(), fileType)));
                         }
                     }
                 } catch (Throwable e) {

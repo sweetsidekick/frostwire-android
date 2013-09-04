@@ -51,8 +51,8 @@ public class DeleteFileMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
-        UIUtils.showYesNoDialog(getContext(), R.string.are_you_sure_delete_files, R.string.application_label, new OnClickListener() {
+    protected void onClick(Context context) {
+        UIUtils.showYesNoDialog(context, R.string.are_you_sure_delete_files, R.string.application_label, new OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 deleteFiles();
             }

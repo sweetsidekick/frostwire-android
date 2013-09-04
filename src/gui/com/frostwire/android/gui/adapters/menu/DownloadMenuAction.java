@@ -48,10 +48,10 @@ public class DownloadMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         TransferManager.instance().download(peer, fd);
         adapter.notifyDataSetChanged();
-        UIUtils.showLongMessage(getContext(), R.string.download_added_to_queue);
-        UIUtils.showTransfersOnDownloadStart(getContext());
+        UIUtils.showLongMessage(context, R.string.download_added_to_queue);
+        UIUtils.showTransfersOnDownloadStart(context);
     }
 }

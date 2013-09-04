@@ -40,7 +40,7 @@ public class CancelTransferMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         transfer.cancel();
     }
 }

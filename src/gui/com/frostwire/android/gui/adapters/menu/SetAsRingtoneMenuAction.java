@@ -43,7 +43,7 @@ public class SetAsRingtoneMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         String uri = null;
 
         if (fd.fileType == Constants.FILE_TYPE_RINGTONES) {
@@ -53,7 +53,7 @@ public class SetAsRingtoneMenuAction extends MenuAction {
         }
 
         if (uri != null) {
-            Settings.System.putString(getContext().getContentResolver(), Settings.System.RINGTONE, uri);
+            Settings.System.putString(context.getContentResolver(), Settings.System.RINGTONE, uri);
         }
     }
 }
