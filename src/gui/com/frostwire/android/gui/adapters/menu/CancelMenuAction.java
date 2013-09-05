@@ -44,8 +44,8 @@ public class CancelMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
-        UIUtils.showYesNoDialog(getContext(), (deleteData) ? R.string.yes_no_cancel_delete_transfer_question : R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
+    protected void onClick(Context context) {
+        UIUtils.showYesNoDialog(context, (deleteData) ? R.string.yes_no_cancel_delete_transfer_question : R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (transfer instanceof DownloadTransfer) {
                     ((DownloadTransfer) transfer).cancel(deleteData);

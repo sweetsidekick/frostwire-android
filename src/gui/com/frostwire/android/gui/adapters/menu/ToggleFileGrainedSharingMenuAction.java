@@ -48,7 +48,7 @@ public class ToggleFileGrainedSharingMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(final Context context) {
         boolean sharing = false;
 
         //toggle everybody in memory (fast)
@@ -83,7 +83,7 @@ public class ToggleFileGrainedSharingMenuAction extends MenuAction {
                     if (showMessage) {
                         int numShared = Librarian.instance().getNumFiles(fileType, true);
                         if (numShared > 1) {
-                            UIUtils.showLongMessage(getContext(), getContext().getString(R.string.sharing_num_files, numShared, UIUtils.getFileTypeAsString(getContext().getResources(), fileType)));
+                            UIUtils.showLongMessage(context, context.getString(R.string.sharing_num_files, numShared, UIUtils.getFileTypeAsString(context.getResources(), fileType)));
                         }
                     }
                 } catch (Throwable e) {

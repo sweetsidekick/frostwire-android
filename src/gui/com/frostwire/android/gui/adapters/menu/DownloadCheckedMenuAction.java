@@ -52,7 +52,7 @@ public class DownloadCheckedMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         if (fds == null) {
             return;
         }
@@ -84,8 +84,8 @@ public class DownloadCheckedMenuAction extends MenuAction {
             }
         }.execute();
 
-        String message = (fds.size() > 1) ? String.format(getContext().getString(R.string.downloads_added_to_queue), String.valueOf(fds.size())) : getContext().getString(R.string.download_added_to_queue);
-        UIUtils.showLongMessage(getContext(), message);
-        UIUtils.showTransfersOnDownloadStart(getContext());
+        String message = (fds.size() > 1) ? String.format(context.getString(R.string.downloads_added_to_queue), String.valueOf(fds.size())) : context.getString(R.string.download_added_to_queue);
+        UIUtils.showLongMessage(context, message);
+        UIUtils.showTransfersOnDownloadStart(context);
     }
 }
