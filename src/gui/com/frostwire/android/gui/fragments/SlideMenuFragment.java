@@ -42,6 +42,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.appia.sdk.Appia;
+import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -157,9 +159,12 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
     
     private void showFreeApps() {
         try {
-            OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
-            offercast.showAppWallAd();
-        } catch (Exception e) {
+            //OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
+            //offercast.showAppWallAd();
+            Appia appia = Appia.getAppia();
+            appia.cacheAppWall(getActivity());
+            appia.displayWall(getActivity(), WallDisplayType.FULL_SCREEN);
+        } catch (Throwable e) {
             LOG.error("Can't show app wall", e);
         }
     }

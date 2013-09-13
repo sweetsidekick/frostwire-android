@@ -39,13 +39,6 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="com.android.vending.BILLING" />
 
-	<!-- offercast permissions -->
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
-	<uses-permission
-		android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS" />
-	<uses-permission
-		android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
 
 	<application android:name="com.frostwire.android.gui.MainApplication"
 		android:allowBackup="true" android:icon="@drawable/app_icon"
@@ -61,7 +54,7 @@
 				<category android:name="tv.ouya.intent.category.GAME"/>
 			</intent-filter>
 
-			<!-- handle .torrent urls, files and magets -->
+			<!-- handle .torrent urls, files and magnets -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -156,41 +149,36 @@
 			android:screenOrientation="portrait" />
 		<activity android:name="com.frostwire.android.gui.activities.AboutActivity"
 			android:label="@string/activity_about" />
-
-
-		<activity android:name="com.google.ads.AdActivity"
-			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-
-		<!-- offercast -->
-		<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
-			android:label="@string/application_label" android:screenOrientation="portrait" />
-	    <activity android:label="@string/application_label" android:name="com.offercast.android.sdk.AppWallAd"
-		    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-		    android:screenOrientation="sensor" />
-		<service android:name="com.offercast.android.sdk.OCService" />
-		<receiver android:name="com.offercast.android.sdk.OCBroadcastReceiver"
-			android:enabled="true" android:exported="false">
-			<intent-filter android:priority="1001">
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			
+			
+	    <!--  appia activities -->
+		<activity
+		    android:name="com.appia.sdk.DisplayAppWallActivity"
+		    android:configChanges="keyboard|keyboardHidden|orientation"
+		    android:theme="@android:style/Theme.Dialog" >
+		</activity>
+		<activity
+		    android:name="com.appia.sdk.DisplayBannerActivity"
+		    android:configChanges="keyboard|keyboardHidden|orientation"
+		    android:theme="@android:style/Theme.Dialog" >
+		</activity>
+		<service 
+		    android:name="com.appia.sdk.AppiaReferrerService"
+		    android:process=":com.appia.sdk.AppiaReferrerServiceProcess">
+		</service>
+		<service 
+		    android:name="org.openudid.OpenUDID_service">
+		    <intent-filter>
+		        <action android:name="org.OpenUDID.GETUDID" />
+		    </intent-filter>
+		</service>
+		<service android:name="org.openudid.OpenUDID_service">
+			<intent-filter>
+				<action android:name="com.mycompany.myapp.OPENUDIDOPTOUT" />
 			</intent-filter>
-		</receiver>
+		</service>
+	    <!--  eof appia activities -->
 
-		<!-- offercast metadata development -->
-		<!-- 
-		 <meta-data android:name="application-id" android:value="8"/> <meta-data 
-			android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/> 
-			<meta-data android:name="store-name" android:value="Google"/> <meta-data 
-			android:name="store-category" android:value="Media &amp; Video"/>
-		 -->
-
-		<!-- offercast metadata production -->
-		<!-- -->
-		<meta-data android:name="application-id" android:value="7" />
-		<meta-data android:name="access-token"
-			android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad" />
-		<meta-data android:name="store-name" android:value="Google" />
-		<meta-data android:name="store-category" android:value="Media &amp; Video" />
-	   <!-- -->
 
 		<!-- providers -->
 

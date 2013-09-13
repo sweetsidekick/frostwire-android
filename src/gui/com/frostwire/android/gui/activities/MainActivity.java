@@ -39,6 +39,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -84,7 +85,8 @@ public class MainActivity extends AbstractSlidingActivity {
     private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
-    private static final String OFFERCAST_STARTED_KEY = "offercast_started";
+    //private static final String OFFERCAST_STARTED_KEY = "offercast_started";
+    private static final String APPIA_STARTED_KEY = "appia_started";
 
     private static boolean firstTime = true;
 
@@ -100,7 +102,8 @@ public class MainActivity extends AbstractSlidingActivity {
     // not sure about this variable, quick solution for now
     private String durToken;
     
-    private boolean offercastStarted = false;
+    //private boolean offercastStarted = false;
+    private boolean appiaStarted = false;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -126,7 +129,8 @@ public class MainActivity extends AbstractSlidingActivity {
 
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
-            offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
+            //offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
+            appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
 
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
@@ -181,10 +185,14 @@ public class MainActivity extends AbstractSlidingActivity {
     protected void onResume() {
         super.onResume();
         
-        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-            startOffercast();
-        }
+//        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+//            startOffercast();
+//        }
 
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            startAppia();
+        }
+        
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
                 mainResume();
@@ -200,12 +208,21 @@ public class MainActivity extends AbstractSlidingActivity {
         }
     }
 
-    private void startOffercast() {
+//    private void startOffercast() {
+//        try {
+//            OfferUtils.startOffercast();
+//            offercastStarted = true;
+//        } catch (Throwable t) {
+//            offercastStarted = false;
+//        }
+//    }
+    
+    private void startAppia() {
         try {
-            OfferUtils.startOffercast();
-            offercastStarted = true;
-        } catch (Throwable t) {
-            offercastStarted = false;
+            Appia appia = Appia.getAppia();
+            appia.setSiteId(3867);
+        } catch(Throwable t) {
+            
         }
     }
 
@@ -224,7 +241,8 @@ public class MainActivity extends AbstractSlidingActivity {
         saveLastFragment(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
-        outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
+        //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
+        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
 
     @Override
