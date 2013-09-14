@@ -313,10 +313,10 @@ public final class SoftwareUpdater {
             }
         }
         
-        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM,update.config.tv);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, update.config.tv);
         //ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, update.config.freeApps);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
-        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM,update.config.freeApps);            
     }
     
     private void notifyConfigurationUpdateListeners() {

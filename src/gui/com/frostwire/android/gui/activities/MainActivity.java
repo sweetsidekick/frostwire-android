@@ -60,7 +60,6 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSlidingActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
@@ -221,8 +220,9 @@ public class MainActivity extends AbstractSlidingActivity {
         try {
             Appia appia = Appia.getAppia();
             appia.setSiteId(3867);
+            appiaStarted = true;
         } catch(Throwable t) {
-            
+            appiaStarted = false;
         }
     }
 

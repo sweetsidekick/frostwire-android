@@ -20,7 +20,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="preferExternal"
-	android:versionCode="101" android:versionName="1.1.2">
+	android:versionCode="102" android:versionName="1.1.2">
 
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="13" />
 
@@ -152,6 +152,11 @@
 			
 			
 	    <!--  appia activities -->
+		<activity
+		    android:name="com.appia.sdk.DisplayFullscreenAppWallActivity"
+		    android:configChanges="keyboard|keyboardHidden|orientation"
+		    android:theme="@android:style/Theme.Dialog" >
+		</activity>
 		<activity
 		    android:name="com.appia.sdk.DisplayAppWallActivity"
 		    android:configChanges="keyboard|keyboardHidden|orientation"

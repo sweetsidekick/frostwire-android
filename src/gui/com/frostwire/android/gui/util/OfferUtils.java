@@ -23,9 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 
+import com.appia.sdk.Appia;
+import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.offercast.android.sdk.OffercastSDK;
 
 public class OfferUtils {
     private static final Logger LOG = LoggerFactory.getLogger(OfferUtils.class);
@@ -35,7 +36,8 @@ public class OfferUtils {
         boolean isFreeAppsEnabled = false;
         try {
             config = ConfigurationManager.instance();
-            isFreeAppsEnabled = config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
+            isFreeAppsEnabled = config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA);
+            //config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
         } catch (Throwable t) {
         }
         return isFreeAppsEnabled;
@@ -55,8 +57,11 @@ public class OfferUtils {
     public static void onFreeAppsClick(Context context) {
         if (isfreeAppsEnabled()) {
             try {
-                OffercastSDK instance = OffercastSDK.getInstance(context);
-                instance.showAppWallAd();
+//                OffercastSDK instance = OffercastSDK.getInstance(context);
+//                instance.showAppWallAd();
+                Appia appia = Appia.getAppia();
+                appia.cacheAppWall(context);
+                appia.displayWall(context, WallDisplayType.FULL_SCREEN);
             } catch (Throwable t) {
                 LOG.error("can't show app wall",t);
                 t.printStackTrace();
