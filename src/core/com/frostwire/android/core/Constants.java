@@ -38,7 +38,7 @@ public final class Constants {
     
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "100";
+    public static final String FROSTWIRE_BUILD = "102";
 
     /**
      * 65280 - Default LAN bound port
@@ -91,7 +91,8 @@ public final class Constants {
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD = "frostwire.prefs.gui.support_frostwire_threshold";
     public static final String PREF_KEY_GUI_SHOW_TV_MENU_ITEM = "frostwire.prefs.gui.show_tv_menu_item";
     public static final String PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM = "frostwire.prefs.gui.show_free_apps_menu_item";
-    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
+    //public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
+    public static final String PREF_KEY_GUI_INITIALIZE_APPIA = "frostwire.prefs.gui.initialize_appia";
 
     public static final String PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED = "frostwire.prefs.torrent.max_download_speed";
     public static final String PREF_KEY_TORRENT_MAX_UPLOAD_SPEED = "frostwire.prefs.torrent.max_upload_speed";

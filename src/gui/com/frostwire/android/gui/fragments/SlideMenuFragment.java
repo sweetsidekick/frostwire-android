@@ -42,6 +42,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.appia.sdk.Appia;
+import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -52,7 +54,6 @@ import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
-import com.offercast.android.sdk.OffercastSDK;
 
 /**
  * @author gubatron
@@ -94,7 +95,7 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
             items = removeMenuItem(R.id.menu_launch_tv,items);
         }
         
-        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_free_apps,items);
         }
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
@@ -157,9 +158,12 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
     
     private void showFreeApps() {
         try {
-            OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
-            offercast.showAppWallAd();
-        } catch (Exception e) {
+            //OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
+            //offercast.showAppWallAd();
+            Appia appia = Appia.getAppia();
+            appia.cacheAppWall(getActivity());
+            appia.displayWall(getActivity(), WallDisplayType.FULL_SCREEN);
+        } catch (Throwable e) {
             LOG.error("Can't show app wall", e);
         }
     }
