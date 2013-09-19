@@ -18,8 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
-import com.frostwire.util.FileUtils;
 
 /**
  * @author gubatron
