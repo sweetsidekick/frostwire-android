@@ -1,3 +1,7 @@
+FrostWire 1.1.3 - SEP/30/2013
+ - Upgrades to SoundCloud meta search.
+ - Kindle Fire and OUYA users can now support FrostWire with donations. 
+
 FrostWire 1.1.2 - SEP/03/2013
  - Removed offers during installation to comply with new Google Play guidelines.
  - New: Stop music playback completely by long pressing the play/pause button.
