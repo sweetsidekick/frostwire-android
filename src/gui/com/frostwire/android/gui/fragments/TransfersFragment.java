@@ -77,6 +77,8 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         if (getActivity() instanceof AbstractActivity) {
             ((AbstractActivity) getActivity()).addRefreshable(this);
         }
+        
+        UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
     }
 
     @Override
@@ -145,8 +147,6 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
-
-        UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
     }
 
     private void setupAdapter() {
