@@ -15,15 +15,21 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.uxstats;
+
+import java.util.List;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface MagnetDownloader {
+public class UXData {
 
-    public byte[] download(String magnet, int timeout);
+    public String guid;
+    public String os;
+    public String fwversion;
+    public long time;
+
+    public List<UXAction> actions;
 }

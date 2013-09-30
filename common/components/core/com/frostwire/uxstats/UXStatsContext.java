@@ -15,15 +15,36 @@
  * limitations under the License.
  */
 
-package com.frostwire.search;
+package com.frostwire.uxstats;
+
+import java.util.UUID;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface MagnetDownloader {
+public final class UXStatsContext {
 
-    public byte[] download(String magnet, int timeout);
+    private final String guid;
+    private final String os;
+    private final String fwversion;
+
+    public UXStatsContext(String os, String fwversion) {
+        this.guid = UUID.randomUUID().toString();
+        this.os = os;
+        this.fwversion = fwversion;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public String getOS() {
+        return os;
+    }
+
+    public String getFwversion() {
+        return fwversion;
+    }
 }
