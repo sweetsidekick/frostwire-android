@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import org.apache.commons.io.FilenameUtils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -54,6 +55,8 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.util.MimeDetector;
@@ -348,6 +351,18 @@ public final class UIUtils {
             return false;
         }
     }
+    
+    public static void initSupportFrostWire(Activity activity, int resId) {
+        DonationsView donationsView = (DonationsView) activity.findViewById(resId);
+
+        Biller biller = BillerFactory.getInstance(activity);
+        donationsView.setBiller(biller);
+        donationsView.setVisibility(View.GONE);
+        
+        if (biller.isInAppBillingSupported()) {
+            UIUtils.supportFrostWire(donationsView);
+        }
+    }
 
     /**
      * This method sets up the visibility of the support frostwire control (@see {@link DonationsView})
@@ -401,10 +416,6 @@ public final class UIUtils {
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             context.startActivity(i);
         }
-    }
-
-    public static boolean isAmazonDevice() {
-        return android.os.Build.MANUFACTURER.toLowerCase(Locale.US).equals("amazon");
     }
 
     public static void picassoRecycle(Drawable d) {

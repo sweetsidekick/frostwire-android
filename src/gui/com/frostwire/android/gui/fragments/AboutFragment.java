@@ -37,9 +37,11 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.Biller;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
+import com.frostwire.android.gui.billing.DonationSkus;
+import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
 import com.frostwire.android.gui.views.DonateButtonListener;
-import com.frostwire.android.market.ResponseHandler;
 
 /**
  * @author gubatron
@@ -47,11 +49,6 @@ import com.frostwire.android.market.ResponseHandler;
  * 
  */
 public class AboutFragment extends Fragment implements MainFragment {
-
-    private static final String SKU_01_DOLLARS = "frostwire.donation.one";
-    private static final String SKU_05_DOLLARS = "frostwire.donation.five";
-    private static final String SKU_10_DOLLARS = "frostwire.donation.ten";
-    private static final String SKU_25_DOLLARS = "frostwire.donation.twentyfive";
 
     private Biller biller;
 
@@ -61,7 +58,7 @@ public class AboutFragment extends Fragment implements MainFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        biller = new Biller(getActivity());
+        biller = BillerFactory.getInstance(getActivity());
     }
 
     @Override
@@ -76,13 +73,15 @@ public class AboutFragment extends Fragment implements MainFragment {
         content.setMovementMethod(LinkMovementMethod.getInstance());
         
         if (biller == null) {
-            biller = new Biller(getActivity());
+            biller = BillerFactory.getInstance(getActivity());
         }
+        
+        DonationSkus skus = BillerFactory.getDonationSkus();
 
-        setupDonateButton(view, R.id.fragment_about_button_donate1, SKU_01_DOLLARS, "https://gumroad.com/l/pH", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate2, SKU_05_DOLLARS, "https://gumroad.com/l/oox", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate3, SKU_10_DOLLARS, "https://gumroad.com/l/rPl", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate4, SKU_25_DOLLARS, "https://gumroad.com/l/XQW", biller);
+        setupDonateButton(view, R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
+        setupDonateButton(view, R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
+        setupDonateButton(view, R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
+        setupDonateButton(view, R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
 
         return view;
     }
@@ -100,7 +99,7 @@ public class AboutFragment extends Fragment implements MainFragment {
     public void onStart() {
         super.onStart();
         if (biller != null) {
-            ResponseHandler.register(biller);
+            biller.onDestroy();
         }
     }
 
@@ -109,7 +108,7 @@ public class AboutFragment extends Fragment implements MainFragment {
         super.onStop();
         
         if (biller != null) {
-            ResponseHandler.unregister(biller);
+            biller.onDestroy();
         }
     }
 

@@ -1,10 +1,9 @@
-package com.frostwire.android.gui;
+package com.frostwire.android.gui.billing;
 
 import java.util.logging.Logger;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 
 import com.frostwire.android.R;
@@ -18,47 +17,40 @@ import com.frostwire.android.market.Consts.ResponseCode;
 import com.frostwire.android.market.PurchaseObserver;
 import com.frostwire.android.market.ResponseHandler;
 
-public class Biller extends PurchaseObserver {
-    private static final Logger LOG = Logger.getLogger(Biller.class.getName());
+class GooglePlayBiller extends PurchaseObserver implements Biller {
+    private static final Logger LOG = Logger.getLogger(GooglePlayBiller.class.getName());
     
-    private boolean inAppBillingSupported;
+    private boolean inAppBillingSupported = false;
     private final BillingService billingService;
     private final Context context;
 
-    public Biller(Activity activity) {
+    public GooglePlayBiller(Activity activity) {
         super(activity, new Handler());
         this.context = activity;
         billingService = new BillingService();
         billingService.setContext(context.getApplicationContext());
-
-        updateBillingSupportStatus(false);
-
         // Check if billing is supported.
         ResponseHandler.register(this);
 
         //        if (!billingService.checkBillingSupported()) {
         //            showDialog(DIALOG_CANNOT_CONNECT_ID);
         //        }
-        updateBillingSupportStatus(billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP));
+        inAppBillingSupported = billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP);
     }
 
-    public void updateBillingSupportStatus(boolean supported) {
-        inAppBillingSupported = supported;
-    }
-
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#isInAppBillingSupported()
+     */
+    @Override
     public boolean isInAppBillingSupported() {
         return inAppBillingSupported;
-    }
-
-    public BillingService getBillingService() {
-        return billingService;
     }
 
     @Override
     public void onBillingSupported(boolean supported, String type) {
         LOG.info("Market In-app billing support: " + supported);
         if (type == null || type.equals(Consts.ITEM_TYPE_INAPP)) {
-            updateBillingSupportStatus(supported);
+            inAppBillingSupported = supported;
         }
     }
 
@@ -90,13 +82,22 @@ public class Biller extends PurchaseObserver {
         LOG.info("onRestoreTransactionsResponse: " + responseCode);
     }
 
-    public void startActivity(Intent i) {
-        context.startActivity(i);
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#onDestroy()
+     */
+    @Override
+    public void onDestroy() {
+        if (billingService != null) {
+            ResponseHandler.unregister(this);
+            billingService.unbind();
+        }
     }
 
-    public void onDestroy() {
-        if (getBillingService() != null) {
-            getBillingService().unbind();
-        }
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#requestPurchase(java.lang.String)
+     */
+    @Override
+    public void requestPurchase(String sku) {
+        inAppBillingSupported = billingService.requestPurchase(sku, Consts.ITEM_TYPE_INAPP, null);
     }
 }

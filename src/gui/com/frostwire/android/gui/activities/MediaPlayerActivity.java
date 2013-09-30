@@ -51,7 +51,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
-import com.frostwire.android.gui.Biller;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
@@ -60,7 +59,6 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.ContextMenuDialog;
 import com.frostwire.android.gui.views.ContextMenuItem;
-import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
@@ -278,18 +276,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
 
-        initSupportFrostWire();
-    }
-
-    private void initSupportFrostWire() {
-        DonationsView donationsView = findView(R.id.activity_mediaplayer_donations_view_placeholder);
-        boolean isKindle = UIUtils.isAmazonDevice();
-        if (!isKindle) {
-            donationsView.setBiller(new Biller(this));
-        }
-        donationsView.setVisibility(View.GONE);
-        if (mediaFD != null && !isKindle) {
-            UIUtils.supportFrostWire(donationsView);
+        if (mediaFD != null) {
+            UIUtils.initSupportFrostWire(this, R.id.activity_mediaplayer_donations_view_placeholder);
         }
     }
 

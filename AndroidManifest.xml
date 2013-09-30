@@ -217,6 +217,11 @@
 				<action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
 			</intent-filter>
 		</receiver>
+		<receiver android:name = "com.amazon.inapp.purchasing.ResponseReceiver" >
+	        <intent-filter>
+            	<action android:name = "com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission = "com.amazon.inapp.purchasing.Permission.NOTIFY" />
+    	    </intent-filter>
+        </receiver>
 	</application>
-
 </manifest>

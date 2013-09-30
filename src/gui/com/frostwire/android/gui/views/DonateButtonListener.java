@@ -7,8 +7,7 @@ import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.frostwire.android.gui.Biller;
-import com.frostwire.android.market.Consts;
+import com.frostwire.android.gui.billing.Biller;
 
 public final class DonateButtonListener implements OnClickListener {
     private static final Logger LOG = Logger.getLogger(DonateButtonListener.class.getName());
@@ -28,10 +27,10 @@ public final class DonateButtonListener implements OnClickListener {
 
         if (biller.isInAppBillingSupported()) {
             // TODO: evaluate sending some value in the payload (last parameter)
-            biller.updateBillingSupportStatus(biller.getBillingService().requestPurchase(sku, Consts.ITEM_TYPE_INAPP, null));
+            biller.requestPurchase(sku);
         } else {
             Intent i = new Intent("android.intent.action.VIEW", Uri.parse(url));
-            biller.startActivity(i);
+            v.getContext().startActivity(i);
         }
     }
 }

@@ -25,14 +25,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.Biller;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
+import com.frostwire.android.gui.billing.DonationSkus;
+import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
 
 public class DonationsView extends LinearLayout {
     private Biller biller;
-    private static final String SKU_01_DOLLARS = "frostwire.donation.one";
-    private static final String SKU_05_DOLLARS = "frostwire.donation.five";
-    private static final String SKU_10_DOLLARS = "frostwire.donation.ten";
-    private static final String SKU_25_DOLLARS = "frostwire.donation.twentyfive";
 
     public DonationsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,10 +50,11 @@ public class DonationsView extends LinearLayout {
     }
 
     private void setupDonationButtons() {
-        setupDonateButton(R.id.fragment_about_button_donate1, SKU_01_DOLLARS, "https://gumroad.com/l/pH");
-        setupDonateButton(R.id.fragment_about_button_donate2, SKU_05_DOLLARS, "https://gumroad.com/l/oox");
-        setupDonateButton(R.id.fragment_about_button_donate3, SKU_10_DOLLARS, "https://gumroad.com/l/rPl");
-        setupDonateButton(R.id.fragment_about_button_donate4, SKU_25_DOLLARS, "https://gumroad.com/l/XQW");
+        DonationSkus skus = BillerFactory.getDonationSkus();
+        setupDonateButton(R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
+        setupDonateButton(R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox");
+        setupDonateButton(R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl");
+        setupDonateButton(R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW");
     }
 
     private void setupDonateButton(int id, String sku, String url) {
