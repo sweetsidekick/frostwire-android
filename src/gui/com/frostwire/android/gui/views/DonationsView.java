@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,18 +30,24 @@ import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
 
+/**
+ * @author guabtron
+ * @author aldenml
+ *
+ */
 public class DonationsView extends LinearLayout {
+
     private Biller biller;
 
     public DonationsView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    
+
     public void setBiller(Biller b) {
         biller = b;
         setupDonationButtons();
     }
-    
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
