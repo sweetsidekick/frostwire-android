@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,8 @@ import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -141,6 +143,9 @@ public final class TransferManager {
 
         downloads.add(download);
         download.start();
+
+        UXStats.instance().log(UXAction.WIFI_SHARING_DOWNLOAD);
+
         return download;
     }
 
