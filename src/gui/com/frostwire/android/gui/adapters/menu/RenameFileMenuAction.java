@@ -50,17 +50,17 @@ public class RenameFileMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         String filePath = fd.filePath;
 
         String name = FilenameUtils.getBaseName(filePath);
         final String ext = FilenameUtils.getExtension(filePath);
 
-        final EditText input = new EditText(getContext());
+        final EditText input = new EditText(context);
         input.setText(name);
         input.selectAll();
 
-        UIUtils.showOkCancelDialog(getContext(), input, R.string.rename, new OnClickListener() {
+        UIUtils.showOkCancelDialog(context, input, R.string.rename, new OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String newFileName = input.getText().toString() + "." + ext;
                 if (isValidFileName(newFileName)) {

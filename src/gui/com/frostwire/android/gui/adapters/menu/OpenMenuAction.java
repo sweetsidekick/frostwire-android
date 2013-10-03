@@ -48,7 +48,7 @@ public class OpenMenuAction extends MenuAction {
 
     
     @Override
-    public void onClick() {
-        UIUtils.openFile(getContext(), path, mime);
+    protected void onClick(Context context) {
+        UIUtils.openFile(context, path, mime);
     }
 }

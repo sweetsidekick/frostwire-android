@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
--->
-<resources>
-    <dimen name="promotion_column_width">480dp</dimen>
-    <dimen name="promotion_column_height">300dp</dimen>
-</resources>
+
+package com.frostwire.android.gui.views;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.GridView;
+
+/**
+ * @author gubatron
+ * @author aldenml
+ * 
+ */
+public class FWGridView extends GridView {
+
+    public FWGridView(Context context, AttributeSet attrs, int defStyle) {
+        super(new FWContextWrapper(context), attrs, defStyle);
+    }
+
+    public FWGridView(Context context, AttributeSet attrs) {
+        super(new FWContextWrapper(context), attrs);
+    }
+
+    public FWGridView(Context context) {
+        super(new FWContextWrapper(context));
+    }
+}

@@ -32,14 +32,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.Biller;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
-import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.android.gui.views.Refreshable;
 
 /**
@@ -79,6 +77,8 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         if (getActivity() instanceof AbstractActivity) {
             ((AbstractActivity) getActivity()).addRefreshable(this);
         }
+        
+        UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
     }
 
     @Override
@@ -147,26 +147,12 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
-        
-        initSupportFrostWire(v);
-    }
-    
-    private void initSupportFrostWire(View v) {
-        DonationsView donationsView = (DonationsView) findView(v, R.id.activity_mediaplayer_donations_view_placeholder);
-        boolean isKindle = UIUtils.isAmazonDevice();
-        if (!isKindle) {
-            donationsView.setBiller(new Biller(this.getActivity()));
-        }
-        donationsView.setVisibility(View.GONE);
-        if (!isKindle) {
-            UIUtils.supportFrostWire(donationsView);
-        }
     }
 
     private void setupAdapter() {
         List<Transfer> transfers = TransferManager.instance().getTransfers();
         Collections.sort(transfers, transferComparator);
-        adapter = new TransferListAdapter(this.getActivity(), transfers);
+        adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
         setListAdapter(adapter);
     }
 

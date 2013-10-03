@@ -45,14 +45,14 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.gui.util.DiskLruRawDataCache;
+import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.util.FileUtils;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
-import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 import com.squareup.picasso.UrlConnectionDownloader;
 
@@ -139,17 +139,18 @@ public final class ImageLoader {
     }
 
     public void displayImage(String imageSrc, ImageView imageView, Drawable defaultDrawable, int overlayFlags) {
-        if (defaultDrawable != null) {
-            imageView.setScaleType(ScaleType.FIT_CENTER);
+        imageView.setScaleType(ScaleType.FIT_CENTER);
 
-            RequestBuilder requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
+        RequestCreator requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
 
-            if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
-                requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
-            }
-
-            requestBuilder.into(imageView);
+        if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
+            requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
+        } else if ((overlayFlags & DOWNSCALE_HUGE_BITMAPS) == DOWNSCALE_HUGE_BITMAPS) {
+            // hardcoded to 1/2 for now
+            requestBuilder.transform(new DownscaleTransformation(imageSrc, 0.5f));
         }
+
+        requestBuilder.into(imageView);
     }
 
     private boolean isKeyRemote(String key) {
@@ -363,6 +364,31 @@ public final class ImageLoader {
             Canvas canvas = new Canvas(canvasBitmap);
             canvas.drawBitmap(backgroundBmp, null, backgroundDestRect, null);
             return canvas;
+        }
+    }
+
+    private class DownscaleTransformation implements Transformation {
+
+        private final float factor;
+        private final String key;
+
+        public DownscaleTransformation(String key, float factor) {
+            this.factor = factor;
+            this.key = key + ":" + factor;
+        }
+
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int width = (int) (source.getWidth() * factor);
+            int height = (int) (source.getHeight() * factor);
+            Bitmap bmp = Bitmap.createScaledBitmap(source, width, height, false);
+            source.recycle();
+            return bmp;
+        }
+
+        @Override
+        public String key() {
+            return key;
         }
     }
 }

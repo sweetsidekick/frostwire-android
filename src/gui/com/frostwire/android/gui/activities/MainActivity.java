@@ -39,6 +39,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -50,6 +51,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
@@ -66,7 +68,6 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
-import com.offercast.android.sdk.OffercastSDK;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -83,7 +84,8 @@ public class MainActivity extends AbstractSlidingActivity {
     private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
-    private static final String OFFERCAST_STARTED_KEY = "offercast_started";
+    //private static final String OFFERCAST_STARTED_KEY = "offercast_started";
+    private static final String APPIA_STARTED_KEY = "appia_started";
 
     private static boolean firstTime = true;
 
@@ -93,12 +95,14 @@ public class MainActivity extends AbstractSlidingActivity {
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
     private BrowsePeersFragment peers;
+    private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
 
     // not sure about this variable, quick solution for now
     private String durToken;
     
-    private boolean offercastStarted = false;
+    //private boolean offercastStarted = false;
+    private boolean appiaStarted = false;
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
@@ -124,7 +128,8 @@ public class MainActivity extends AbstractSlidingActivity {
 
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
-            offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
+            //offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
+            appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
 
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
@@ -179,10 +184,14 @@ public class MainActivity extends AbstractSlidingActivity {
     protected void onResume() {
         super.onResume();
         
-        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-            startOffercast();
-        }
+//        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+//            startOffercast();
+//        }
 
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            startAppia();
+        }
+        
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
                 mainResume();
@@ -198,15 +207,22 @@ public class MainActivity extends AbstractSlidingActivity {
         }
     }
 
-    private void startOffercast() {
+//    private void startOffercast() {
+//        try {
+//            OfferUtils.startOffercast();
+//            offercastStarted = true;
+//        } catch (Throwable t) {
+//            offercastStarted = false;
+//        }
+//    }
+    
+    private void startAppia() {
         try {
-            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-            offercast.authorize();
-            offercastStarted = true;
-            LOG.info("Offercast started.");
-        } catch (Exception e) {
-            offercastStarted = false;
-            LOG.error("Offercast could not start.",e);
+            Appia appia = Appia.getAppia();
+            appia.setSiteId(3867);
+            appiaStarted = true;
+        } catch(Throwable t) {
+            appiaStarted = false;
         }
     }
 
@@ -225,7 +241,8 @@ public class MainActivity extends AbstractSlidingActivity {
         saveLastFragment(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
-        outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
+        //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
+        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
 
     @Override
@@ -314,9 +331,7 @@ public class MainActivity extends AbstractSlidingActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         getSupportFragmentManager().executePendingTransactions();
         getSlidingMenu().showContent();
-
         syncSlideMenu();
-
         updateHeader(fragment);
     }
 
@@ -347,6 +362,7 @@ public class MainActivity extends AbstractSlidingActivity {
         library = new BrowsePeerFragment();
         transfers = new TransfersFragment();
         peers = new BrowsePeersFragment();
+        peersDisabled = new BrowsePeersDisabledFragment();
         about = new AboutFragment();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
@@ -405,12 +421,20 @@ public class MainActivity extends AbstractSlidingActivity {
         case R.id.menu_main_transfers:
             return transfers;
         case R.id.menu_main_peers:
-            return peers;
+            return getWifiSharingFragment();
         case R.id.menu_main_about:
             return about;
         default:
             return null;
         }
+    }
+    
+    private Fragment getWifiSharingFragment() {
+        return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
+    }
+
+    private boolean isWifiSharingEnabled() {
+        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
     }
 
     private void syncSlideMenu() {
@@ -423,7 +447,8 @@ public class MainActivity extends AbstractSlidingActivity {
                 menuFragment.setSelectedItem(R.id.menu_main_library);
             } else if (fragment instanceof TransfersFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_transfers);
-            } else if (fragment instanceof BrowsePeersFragment) {
+            } else if (fragment instanceof BrowsePeersFragment ||
+                       fragment instanceof BrowsePeersDisabledFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_peers);
             } else if (fragment instanceof AboutFragment) {
                 menuFragment.setSelectedItem(R.id.menu_main_about);

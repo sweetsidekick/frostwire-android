@@ -54,11 +54,11 @@ public class ChangeNicknameMenuAction extends MenuAction {
      * - Update the item on the PeerListAdapter.
      */
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
 
-        Builder builder = new AlertDialog.Builder(getContext());
+        Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(getText());
-        final EditText nickEdit = new EditText(getContext());
+        final EditText nickEdit = new EditText(context);
         nickEdit.setSingleLine();
 
         builder.setView(nickEdit);

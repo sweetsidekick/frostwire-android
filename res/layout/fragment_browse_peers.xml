@@ -22,9 +22,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ListView
+    <com.frostwire.android.gui.views.FWListView
         android:id="@id/android:list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
+        android:layout_height="fill_parent" 
+        android:visibility="visible"/>
+    
 </RelativeLayout>

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.frostwire.android.gui.views.FWScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff6f6f6"
@@ -99,4 +99,4 @@
             android:text="@string/dummy_title" />
     </LinearLayout>
 
-</ScrollView>
+</com.frostwire.android.gui.views.FWScrollView>

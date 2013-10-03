@@ -39,7 +39,7 @@ public final class PauseDownloadMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         if (download.isPausable()) {
             download.pause();
         }

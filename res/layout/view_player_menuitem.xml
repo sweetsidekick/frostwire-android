@@ -35,7 +35,7 @@
         android:contentDescription="@null"
         android:padding="1px"
         android:scaleType="fitCenter"
-        android:src="@drawable/artwork_default" />
+        android:src="@drawable/artwork_default_micro_kind" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

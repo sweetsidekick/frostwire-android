@@ -1098,7 +1098,7 @@ public class MusicUtils {
         opts.inPurgeable = true;
         
         return BitmapFactory.decodeStream(
-                context.getResources().openRawResource(R.drawable.artwork_default), null, opts);
+                context.getResources().openRawResource(R.drawable.artwork_default_micro_kind), null, opts);
     }
     
     static int getIntPref(Context context, String name, int def) {

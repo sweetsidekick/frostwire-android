@@ -52,4 +52,6 @@ public interface CoreMediaPlayer {
      * @return
      */
     public FileDescriptor getCurrentFD();
+    
+    public Playlist getPlaylist();
 }

@@ -97,14 +97,16 @@ public class PlayerMenuItemView extends LinearLayout {
     }
 
     private void setArtwork(FileDescriptor fd) {
-        Drawable defaultArtWork = getResources().getDrawable(R.drawable.artwork_default);
+        Drawable defaultArtWork = getResources().getDrawable(R.drawable.artwork_default_micro_kind);
         ImageLoader.getDefault().displayImage(fd, imageThumbnail, defaultArtWork);
     }
 
     public void unbindDrawables() {
-        Drawable drawable = imageThumbnail.getDrawable();
-        if (drawable != null) {
-            drawable.setCallback(null);
+        if (imageThumbnail != null) {
+            Drawable drawable = imageThumbnail.getDrawable();
+            if (drawable != null) {
+                drawable.setCallback(null);
+            }
         }
     }
 }

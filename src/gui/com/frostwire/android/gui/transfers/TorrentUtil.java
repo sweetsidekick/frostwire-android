@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.ui.UIFunctions;
 import com.aelitis.azureus.ui.UIFunctionsManager;
-import com.frostwire.util.FileUtils;
+import com.frostwire.android.gui.util.FileUtils;
 
 /**
  * @author gubatron

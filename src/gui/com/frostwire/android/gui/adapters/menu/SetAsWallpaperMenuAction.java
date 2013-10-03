@@ -45,16 +45,16 @@ public class SetAsWallpaperMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         if (fd.fileType != Constants.FILE_TYPE_PICTURES) {
             return;
         }
 
         try {
             Bitmap bitmap = BitmapFactory.decodeFile(fd.filePath);
-            WallpaperManager.getInstance(getContext()).setBitmap(bitmap);
+            WallpaperManager.getInstance(context).setBitmap(bitmap);
         } catch (Throwable e) {
-            UIUtils.showShortMessage(getContext(), R.string.failed_to_set_wallpaper);
+            UIUtils.showShortMessage(context, R.string.failed_to_set_wallpaper);
         }
     }
 }

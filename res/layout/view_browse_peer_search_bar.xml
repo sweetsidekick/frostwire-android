@@ -32,7 +32,8 @@
         android:layout_width="0px"
         android:layout_height="0px"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal" />
 
     <CheckBox
         android:id="@+id/view_files_bar_check_all"

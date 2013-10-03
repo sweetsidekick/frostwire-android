@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -32,8 +35,10 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.Refreshable;
@@ -49,7 +54,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
     private PeerListAdapter adapter;
 
-    private TextView header;
+    private View header;
 
     private int refreshUPnPCount;
 
@@ -97,17 +102,58 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         }
     }
 
+    
     @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
-        header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-        header.setText(R.string.wifi_sharing);
+        header = inflater.inflate(R.layout.view_browse_peers_header, null);
+
+        TextView title = (TextView) header.findViewById(R.id.view_browse_peers_header_text_title);
+        title.setText(R.string.wifi_sharing);
+        
+        ImageButton wifiSharingOffButton = (ImageButton) header.findViewById(R.id.view_browse_peers_header_image_button_toggle_wifi_sharing);
+        wifiSharingOffButton.setOnClickListener(new View.OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                onWifiSharingOffButtonClicked();
+            }
+        });
+        
 
         return header;
     }
+    
+    private void onWifiSharingOffButtonClicked() {
+        UIUtils.showYesNoDialog(getActivity(), R.string.are_you_sure_wifi_sharing_off, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                turnOffWifiSharingAndRefresh();
+            }
+        });
 
+    }
+    
+    private void turnOffWifiSharingAndRefresh() {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, false);
+                UPnPManager.instance().pause();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.switchFragment(R.id.menu_main_peers);
+            }
+        };
+
+        task.execute();
+    }
+    
     private void setupAdapter() {
-        adapter = new PeerListAdapter(this.getActivity(), new ArrayList<Peer>());
+        adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
         setListAdapter(adapter);
         refresh();
     }

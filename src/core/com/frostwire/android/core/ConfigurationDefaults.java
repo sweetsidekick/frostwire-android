@@ -67,7 +67,8 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM,true);
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM,true);
-        defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
+        //defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
+        defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA,true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);
@@ -88,9 +89,10 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_YOUTUBE, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_FROSTCLICK, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
-        defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
+        defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, false);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_MAX_CONCURRENT_UPLOADS, 3);
         defaultValues.put(Constants.PREF_KEY_NETWORK_PINGS_INTERVAL, 4000);

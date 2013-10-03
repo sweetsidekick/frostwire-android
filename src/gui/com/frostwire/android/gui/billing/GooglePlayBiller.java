@@ -1,10 +1,28 @@
-package com.frostwire.android.gui;
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-import java.util.logging.Logger;
+package com.frostwire.android.gui.billing;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 
 import com.frostwire.android.R;
@@ -18,47 +36,46 @@ import com.frostwire.android.market.Consts.ResponseCode;
 import com.frostwire.android.market.PurchaseObserver;
 import com.frostwire.android.market.ResponseHandler;
 
-public class Biller extends PurchaseObserver {
-    private static final Logger LOG = Logger.getLogger(Biller.class.getName());
-    
-    private boolean inAppBillingSupported;
+/**
+ * @author gubatron
+ * @author aldenml
+ *
+ */
+final class GooglePlayBiller extends PurchaseObserver implements Biller {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GooglePlayBiller.class);
+
+    private boolean inAppBillingSupported = false;
     private final BillingService billingService;
     private final Context context;
 
-    public Biller(Activity activity) {
+    public GooglePlayBiller(Activity activity) {
         super(activity, new Handler());
         this.context = activity;
         billingService = new BillingService();
         billingService.setContext(context.getApplicationContext());
-
-        updateBillingSupportStatus(false);
-
         // Check if billing is supported.
         ResponseHandler.register(this);
 
         //        if (!billingService.checkBillingSupported()) {
         //            showDialog(DIALOG_CANNOT_CONNECT_ID);
         //        }
-        updateBillingSupportStatus(billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP));
+        inAppBillingSupported = billingService.checkBillingSupported(Consts.ITEM_TYPE_INAPP);
     }
 
-    public void updateBillingSupportStatus(boolean supported) {
-        inAppBillingSupported = supported;
-    }
-
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#isInAppBillingSupported()
+     */
+    @Override
     public boolean isInAppBillingSupported() {
         return inAppBillingSupported;
-    }
-
-    public BillingService getBillingService() {
-        return billingService;
     }
 
     @Override
     public void onBillingSupported(boolean supported, String type) {
         LOG.info("Market In-app billing support: " + supported);
         if (type == null || type.equals(Consts.ITEM_TYPE_INAPP)) {
-            updateBillingSupportStatus(supported);
+            inAppBillingSupported = supported;
         }
     }
 
@@ -90,13 +107,22 @@ public class Biller extends PurchaseObserver {
         LOG.info("onRestoreTransactionsResponse: " + responseCode);
     }
 
-    public void startActivity(Intent i) {
-        context.startActivity(i);
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#onDestroy()
+     */
+    @Override
+    public void onDestroy() {
+        if (billingService != null) {
+            ResponseHandler.unregister(this);
+            billingService.unbind();
+        }
     }
 
-    public void onDestroy() {
-        if (getBillingService() != null) {
-            getBillingService().unbind();
-        }
+    /* (non-Javadoc)
+     * @see com.frostwire.android.gui.Biller#requestPurchase(java.lang.String)
+     */
+    @Override
+    public void requestPurchase(String sku) {
+        inAppBillingSupported = billingService.requestPurchase(sku, Consts.ITEM_TYPE_INAPP, null);
     }
 }

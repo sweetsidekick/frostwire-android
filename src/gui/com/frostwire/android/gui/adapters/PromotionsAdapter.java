@@ -20,15 +20,12 @@ package com.frostwire.android.gui.adapters;
 
 import java.util.List;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.frostwire.android.R;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.frostclick.Slide;
 
@@ -42,25 +39,20 @@ import com.frostwire.frostclick.Slide;
  */
 public class PromotionsAdapter extends BaseAdapter {
 
-    private final Context context;
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
-    private final Drawable defaultDrawable;
 
-    public PromotionsAdapter(Context context, List<Slide> slides) {
-        this.context = context;
+    public PromotionsAdapter(List<Slide> slides) {
         this.slides = slides;
         this.imageLoader = ImageLoader.getDefault();
-        this.defaultDrawable = context.getResources().getDrawable(R.drawable.promotion_default);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
-            imageView = new ImageView(context);
-            int h = (int) context.getResources().getDimension(R.dimen.promotion_column_height);
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, h));
+            imageView = new ImageView(parent.getContext());
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             imageView.setAdjustViewBounds(true);
             imageView.setPadding(6, 6, 6, 6);
         } else {
@@ -68,7 +60,7 @@ public class PromotionsAdapter extends BaseAdapter {
         }
 
         try {
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, defaultDrawable, 2);
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, 0);
         } catch (Throwable e) {
             // ignore
         }

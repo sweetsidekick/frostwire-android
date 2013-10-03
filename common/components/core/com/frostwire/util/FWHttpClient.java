@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package com.frostwire.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -29,6 +30,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.GZIPOutputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -66,13 +69,18 @@ final class FWHttpClient implements HttpClient {
     }
 
     public String get(String url, int timeout, String userAgent, String referrer, String cookie) {
+        return get(url, timeout, userAgent, referrer, cookie, null);
+    }
+
+    @Override
+    public String get(String url, int timeout, String userAgent, String referrer, String cookie, Map<String, String> customHeaders) {
         String result = null;
 
         ByteArrayOutputStream baos = null;
 
         try {
             baos = new ByteArrayOutputStream();
-            get(url, baos, timeout, userAgent, referrer, cookie, -1);
+            get(url, baos, timeout, userAgent, referrer, cookie, -1, -1, customHeaders);
 
             result = new String(baos.toByteArray(), "UTF-8");
         } catch (Throwable e) {
@@ -130,19 +138,83 @@ final class FWHttpClient implements HttpClient {
         }
     }
 
+    @Override
+    public void post(String url, int timeout, String userAgent, String content, boolean gzip) throws IOException {
+        canceled = false;
+        final URL u = new URL(url);
+        final HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setReadTimeout(timeout);
+        conn.setRequestProperty("User-Agent", userAgent);
+        conn.setInstanceFollowRedirects(false);
+
+        if (conn instanceof HttpsURLConnection) {
+            setHostnameVerifier((HttpsURLConnection) conn);
+        }
+
+        byte[] data = content.getBytes("UTF-8");
+
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "text/plain");
+        conn.setRequestProperty("charset", "utf-8");
+        conn.setRequestProperty("Content-Length", "" + data.length);
+        conn.setUseCaches(false);
+
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+
+        try {
+            OutputStream out = null;
+            if (gzip) {
+                out = new GZIPOutputStream(conn.getOutputStream());
+            } else {
+                out = conn.getOutputStream();
+            }
+
+            byte[] b = new byte[4096];
+            int n = 0;
+            while (!canceled && (n = in.read(b, 0, b.length)) != -1) {
+                if (!canceled) {
+                    out.write(b, 0, n);
+                    out.flush();
+                    onData(b, 0, n);
+                }
+            }
+
+            closeQuietly(out);
+
+            int httpResponseCode = getResponseCode(conn);
+
+            if (httpResponseCode != HttpURLConnection.HTTP_OK && httpResponseCode != HttpURLConnection.HTTP_PARTIAL) {
+                throw new ResponseCodeNotSupportedException(httpResponseCode);
+            }
+
+            if (canceled) {
+                onCancel();
+            } else {
+                onComplete();
+            }
+        } catch (Exception e) {
+            onError(e);
+        } finally {
+            closeQuietly(in);
+            closeQuietly(conn);
+        }
+    }
+
     private String buildRange(int rangeStart, int rangeLength) {
         String prefix = "bytes=" + rangeStart + "-";
         return prefix + ((rangeLength > -1) ? (rangeStart + rangeLength) : "");
     }
 
     private void get(String url, OutputStream out, int timeout, String userAgent, String referrer, String cookie, int rangeStart) throws IOException {
-        get(url, out, timeout, userAgent, referrer, cookie, rangeStart, -1);
+        get(url, out, timeout, userAgent, referrer, cookie, rangeStart, -1, null);
     }
 
-    private void get(String url, OutputStream out, int timeout, String userAgent, String referrer, String cookie, int rangeStart, int rangeLength) throws IOException {
+    private void get(String url, OutputStream out, int timeout, String userAgent, String referrer, String cookie, int rangeStart, int rangeLength, final Map<String, String> customHeaders) throws IOException {
         canceled = false;
-        URL u = new URL(url);
-        URLConnection conn = u.openConnection();
+        final URL u = new URL(url);
+        final URLConnection conn = u.openConnection();
 
         conn.setReadTimeout(timeout);
         conn.setRequestProperty("User-Agent", userAgent);
@@ -165,6 +237,11 @@ final class FWHttpClient implements HttpClient {
 
         if (rangeStart > 0) {
             conn.setRequestProperty("Range", buildRange(rangeStart, rangeLength));
+        }
+
+        if (customHeaders != null && customHeaders.size() > 0) {
+            //put down here so it can overwrite any of the previous headers.
+            setCustomHeaders(conn, customHeaders);
         }
 
         InputStream in = conn.getInputStream();
@@ -200,6 +277,12 @@ final class FWHttpClient implements HttpClient {
         } finally {
             closeQuietly(in);
             closeQuietly(conn);
+        }
+    }
+
+    private void setCustomHeaders(URLConnection conn, Map<String, String> headers) {
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.setRequestProperty(e.getKey(), e.getValue());
         }
     }
 

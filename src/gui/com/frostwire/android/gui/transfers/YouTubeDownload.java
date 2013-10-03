@@ -315,6 +315,10 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
         for (TrackBox trackBox : trackBoxes) {
             m.addTrack(new Mp4TrackImpl(trackBox));
         }
+        
+        // do not close this isoFile at this time, ignore eclipse warning for now
+        // NOT: IOUtils.closeQuietly(isoFile);
+        
         return m;
     }
     

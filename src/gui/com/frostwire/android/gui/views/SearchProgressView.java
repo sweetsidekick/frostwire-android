@@ -27,9 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
-import com.offercast.android.sdk.OffercastSDK;
+import com.frostwire.android.gui.util.OfferUtils;
 
 /**
  * @author gubatron
@@ -95,7 +93,7 @@ public class SearchProgressView extends LinearLayout {
             
             @Override
             public void onClick(View v) {
-                onFreeAppsClick();
+                OfferUtils.onFreeAppsClick(getContext());
             }
         });
     }
@@ -111,21 +109,7 @@ public class SearchProgressView extends LinearLayout {
         progressbar.setVisibility(View.GONE);
         buttonCancel.setText(R.string.retry_search);
         textNoResults.setVisibility(View.VISIBLE);
-        buttonFreeApps.setVisibility(isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
+        buttonFreeApps.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
     }
-    
-    private boolean isfreeAppsEnabled() {
-       ConfigurationManager config = ConfigurationManager.instance();
-       return config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
-    }
-    
-    private void onFreeAppsClick() {
-        if (isfreeAppsEnabled()) {
-            try {
-                OffercastSDK instance = OffercastSDK.getInstance(getContext());
-                instance.showAppWallAd();
-            } catch (Throwable t) {
-            }
-        }
-    }
+ 
 }

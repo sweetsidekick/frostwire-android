@@ -39,10 +39,10 @@ public class SwitchActivityMenuAction extends MenuAction {
     }
 
     @Override
-    public void onClick() {
+    protected void onClick(Context context) {
         Intent i = new Intent();
-        i.setClass(getContext(), clazz);
+        i.setClass(context, clazz);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        getContext().startActivity(i);
+        context.startActivity(i);
     }
 }
