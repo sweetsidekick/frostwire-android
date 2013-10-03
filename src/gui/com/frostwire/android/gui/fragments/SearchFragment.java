@@ -60,9 +60,12 @@ import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
@@ -166,7 +169,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
-                    UXStats.instance().log(UXAction.SEARCH_RESULT_CLICKED);
+                    uxLogAction(sr);
                 }
             };
             setListAdapter(adapter);
@@ -326,6 +329,20 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             return;
         }
         startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
+    }
+
+    private void uxLogAction(SearchResult sr) {
+        UXStats.instance().log(UXAction.SEARCH_RESULT_CLICKED);
+
+        if (sr instanceof HttpSearchResult) {
+            UXStats.instance().log(UXAction.DOWNLOAD_CLOUD_FILE);
+        } else if (sr instanceof TorrentSearchResult) {
+            if (sr instanceof TorrentCrawledSearchResult) {
+                UXStats.instance().log(UXAction.DOWNLOAD_PARTIAL_TORRENT_FILE);
+            } else {
+                UXStats.instance().log(UXAction.DOWNLOAD_FULL_TORRENT_FILE);
+            }
+        }
     }
 
     private static class LoadSlidesTask extends AsyncTask<Void, Void, List<Slide>> {
