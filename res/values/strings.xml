@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -170,7 +170,7 @@
     <string name="wants_to_share_a_file">wants to share a file</string>
     <string name="translators">Translators</string>
     <string name="tip_rename_your_files">Tip: Rename files so they can be found</string>
-    <string name="other_settings">Other settings</string>
+    <string name="other_settings">Other Settings</string>
     <string name="vibrate_on_finished_download">Vibrate when download finishes</string>
     <string name="use_mobile_data">Use 3G/4G for BitTorrent</string>
     <string name="use_mobile_data_summary">Use mobile network for BitTorrent downloads. Data Overage charges may apply. Use carefully.</string>
@@ -301,7 +301,7 @@
     <string name="download_type_not_supported">Download Type not supported</string>
     <string name="im_on_it">I\'m on it…</string>
     <string name="hint_transfers">Use "menu" for bulk actions</string>
-    <string name="torrent_settings">Torrent</string>
+    <string name="torrent_settings">Torrent Settings</string>
     <string name="torrent_max_download_speed_summary">Max Download Speed</string>
     <string name="torrent_max_download_speed">Max Download Speed</string>
     <string name="torrent_max_upload_speed_summary">Max Upload Speed</string>
@@ -426,4 +426,6 @@
     <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.</string>
     <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>    
     <string name="are_you_sure_wifi_sharing_off">Turning off Wi-Fi sharing will make all your locally shared files unavailable to other users on the nearby Wi-Fi network.</string>
+    <string name="anonymous_usage_statistics">Anonymous Usage Statistics</string>
+    <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
 </resources>
