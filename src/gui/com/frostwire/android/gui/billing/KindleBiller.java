@@ -27,6 +27,7 @@ import com.amazon.inapp.purchasing.PurchaseUpdatesResponse;
 import com.amazon.inapp.purchasing.PurchasingManager;
 import com.amazon.inapp.purchasing.PurchasingObserver;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.UIUtils;
 
 /**
@@ -46,7 +47,7 @@ final class KindleBiller extends PurchasingObserver implements Biller {
 
     @Override
     public boolean isInAppBillingSupported() {
-        return true;
+        return OSUtils.isKindleFire() && OSUtils.isAmazonDistribution();
     }
 
     @Override
