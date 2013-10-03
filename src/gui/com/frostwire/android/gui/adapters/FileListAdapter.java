@@ -205,6 +205,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 Engine.instance().getMediaPlayer().stop();
             } else {
                 UIUtils.playEphemeralPlaylist(fd);
+                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
             }
             notifyDataSetChanged();
         } else {

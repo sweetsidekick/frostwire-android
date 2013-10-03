@@ -53,8 +53,8 @@ public class CancelMenuAction extends MenuAction {
                     ((DownloadTransfer) transfer).cancel(deleteData);
                 } else {
                     transfer.cancel();
-                    UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
                 }
+                UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
             }
         });
     }
