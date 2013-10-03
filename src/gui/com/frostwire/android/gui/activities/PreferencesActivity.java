@@ -48,6 +48,7 @@ import com.frostwire.android.util.StorageMount;
 import com.frostwire.android.util.StorageUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
 /**
@@ -89,6 +90,9 @@ public class PreferencesActivity extends PreferenceActivity {
                     UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
                 }
                 preferenceSeedingWifiOnly.setEnabled(newVal);
+
+                UXStats.instance().log(newVal ? UXAction.SHARING_SEEDING_ENABLED : UXAction.SHARING_SEEDING_DISABLED);
+
                 return true;
             }
         });
