@@ -29,7 +29,7 @@
     <string name="activity_about">Acerca de</string>
     <string name="activity_debug_name">Depurar</string>
     <string name="disconnected">Desconectado</string>
-    <string name="all_transfers_will_stop_are_you_sure">Todas las transferencias de detendrán.\n¿Deseas continuar?</string>
+    <string name="all_transfers_will_stop_are_you_sure">Todas las transferencias se detendrán.\n¿Deseas continuar?</string>
     <string name="connect">Conectar</string>
     <string name="connecting">Conectar</string>
     <string name="disconnect">Desconectar</string>
@@ -183,7 +183,7 @@
     <string name="cant_open_file">Lo siento, no sé como abrir este archivo.</string>
     <string name="downloading_from_desktop">Descargando archivo(s) del escritorio</string>
     <string name="share_indication_dialog_title">Como Compartir/Dejar de Compartir Archivos</string>
-    <string name="dialog_share_indicator_text_text">Exploralo tú mismo, Compartir o Dejar de Compartir múltiples archivos usando las casillas y tocando un archivo marcado.\n\nUsa los iconos de cerradura para compartir o dejar de compartir los archivos individuales.</string>
+    <string name="dialog_share_indicator_text_text">Explóralo tú mismo, Compartir o Dejar de Compartir múltiples archivos usando las casillas y tocando un archivo marcado.\n\nUsa los iconos de cerradura para compartir o dejar de compartir los archivos individuales.</string>
     <string name="dialog_share_indicator_check_text">Mostrar esta ayuda la próxima vez</string>
     <string name="show_share_indication">Mostrar la Ayuda de Compartir</string>
     <string name="download_added_to_queue">1 archivo comenzará a descargarse</string>
@@ -250,7 +250,7 @@
     <string name="play_image_description">Reproducir</string>
     <string name="view_transfer_list_item_button_action_description">Acción</string>
     <string name="yes_no_cancel_transfer_question">¿Seguro que quieres parar y eliminar esta descarga de la lista (no se eliminará ningún dato)?</string>
-    <string name="yes_no_cancel_delete_transfer_question">¿Seguro que quieres cancelar esta descarga? (Los datos descargados hasta ahora se borrarán)?</string>
+    <string name="yes_no_cancel_delete_transfer_question">¿Seguro que quieres cancelar esta descarga? (Los datos descargados hasta ahora se borrarán)</string>
     <string name="cancel_transfer">Cancelar Transferencia</string>
     <string name="view_transfer_list_item_group_indicator_description">Más/Menos información</string>
     <string name="view_transfer_list_item_icon_description">Icono para el tipo de archivo</string>
@@ -330,7 +330,7 @@
     <string name="dialog_new_transfer_title">¿Deseas comenzar esta descarga?</string>
     <string name="dialog_new_transfer_text_text">¿Estás seguro de que quieres descargar %1$s (%2$s)?</string>
     <string name="dialog_new_transfer_check_text">Mostrar esto la próxima vez</string>
-    <string name="show_new_transfer_dialog">Mostrar el Diálogo Nuevo de Transferencias</string>
+    <string name="show_new_transfer_dialog">Mostrar el Diálogo de Nueva Transferencia</string>
     <string name="dummy_action">[Acción]</string>
     <string name="clear_torrent_index">Borrar el Índice del Torrente</string>
     <string name="clear_torrent_index_summary"> Borrar el Índice del Torrente </string>
@@ -348,7 +348,7 @@
     <string name="seeding_settings_explanation">Los usuarios de intenet de BitTorrent podrán descargar trozos del archivo de los datos que tus torrentes comparten.</string>
     <string name="seeding_wifi_settings_explanation">Comparte únicamente cuando uses una conexión de Wi-Fi. Así evitarás más cargos de la compañía telefónica. </string>
     <string name="intent_text">FrostWire es un programa de usuario a usuario para compartir archivos autorizados. La instalación y utilización del programa no constituye una licencia para la obtención y distribución del contenido no autorizado.</string>
-    <string name="accept_intent">No usaré FrostWire de manera que infrinja los derechos del autor.</string>
+    <string name="accept_intent">No usaré FrostWire de manera que infrinja derechos de autor.</string>
     <string name="toast_on_disconnect">Desconectado de BitTorrent. Todas las transferencias han parado.</string>
     <string name="toast_on_connect">BitTorrent ha comenzado.</string>
     <string name="seeds">Semilla</string>
@@ -391,7 +391,7 @@
 	<string name="upnp_discovery">Comparte en Wi-Fi</string>
     <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
 	<string name="youtube_download_status_verifying">Verificando</string>
-    <string name="donation_thanks">Muchas gracias por apoyar a FrostWire</string>
+    <string name="donation_thanks">Muchas gracias por apoyar FrostWire</string>
     <string name="torrent_scheme_download_not_supported">Descarga no suportada</string>
     <string name="retry_search">Reintentar</string>
     <string name="use_archiveorg">Usa Archive.org</string>
@@ -412,5 +412,5 @@
     <string name="are_you_sure_delete_current_track">¿Seguro que quieres eliminar esta canción?</string>
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>    
-    <string name="are_you_sure_wifi_sharing_off">Si apagas el compartimiento de archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
+    <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
 </resources>
