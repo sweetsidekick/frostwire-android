@@ -26,6 +26,8 @@ import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -51,6 +53,7 @@ public class CancelMenuAction extends MenuAction {
                     ((DownloadTransfer) transfer).cancel(deleteData);
                 } else {
                     transfer.cancel();
+                    UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
                 }
             }
         });

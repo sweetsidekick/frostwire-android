@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@ import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -79,11 +81,11 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         list.addAll(g);
         notifyDataSetChanged();
     }
-    
+
     public void addResults(List<? extends SearchResult> completeList, List<? extends SearchResult> filteredList) {
         visualList.addAll(filteredList); // java, java, and type erasure
         list.addAll(completeList);
-        notifyDataSetChanged();        
+        notifyDataSetChanged();
     }
 
     @Override
@@ -129,7 +131,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         sourceLink.setPaintFlags(sourceLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         sourceLink.setOnClickListener(linkListener);
     }
-    
+
     protected void populateYouTubePart(View view, YouTubeCrawledSearchResult sr) {
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(FilenameUtils.getExtension(sr.getFilename()) + " " + sr.getMediaQuality());
@@ -207,6 +209,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             v.getContext().startActivity(i);
+            UXStats.instance().log(UXAction.SEARCH_RESULT_SOURCE_VIEW);
         }
     }
 }

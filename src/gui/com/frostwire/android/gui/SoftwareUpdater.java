@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,11 +41,14 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.uxstats.UXStats;
+import com.frostwire.uxstats.UXStatsConf;
 
 /**
  * 
@@ -161,7 +164,7 @@ public final class SoftwareUpdater {
                 if (result && !isCancelled()) {
                     notifyUpdate(context);
                 }
-                
+
                 //nav menu always needs to be updated after we read the config.
                 notifyConfigurationUpdateListeners();
             }
@@ -169,12 +172,12 @@ public final class SoftwareUpdater {
 
         updateTask.execute();
     }
-    
+
     public void addConfigurationUpdateListener(ConfigurationUpdateListener listener) {
         try {
             configurationUpdateListeners.add(listener);
         } catch (Throwable t) {
-            
+
         }
     }
 
@@ -312,19 +315,31 @@ public final class SoftwareUpdater {
                 engine.setActive(update.config.activeSearchEngines.get(name));
             }
         }
-        
+
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, update.config.tv);
         //ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, update.config.freeApps);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
+
+        if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
+            String os = OSUtils.getOSVersionString();
+            String fwversion = Constants.FROSTWIRE_VERSION_STRING;
+            String fwbuild = Constants.FROSTWIRE_BUILD;
+            int period = update.config.uxPeriod;
+            int minEntries = update.config.uxMinEntries;
+            int maxEntries = update.config.uxMaxEntries;
+
+            UXStatsConf context = new UXStatsConf(os, fwversion, fwbuild, period, minEntries, maxEntries);
+            UXStats.instance().setContext(context);
+        }
     }
-    
+
     private void notifyConfigurationUpdateListeners() {
         for (ConfigurationUpdateListener listener : configurationUpdateListeners) {
             try {
                 listener.onConfigurationUpdate();
             } catch (Throwable t) {
-                
+
             }
         }
     }
@@ -358,6 +373,12 @@ public final class SoftwareUpdater {
         public boolean appia = true;
         //public boolean offercast = true;
         public boolean freeApps = true;
+
+        // ux stats
+        public boolean uxEnabled = false;
+        public int uxPeriod = 3600;
+        public int uxMinEntries = 10;
+        public int uxMaxEntries = 10000;
     }
 
     public void removeConfigurationUpdateListener(Object slideMenuFragment) {
