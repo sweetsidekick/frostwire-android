@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,8 @@ import com.frostwire.android.util.StorageMount;
 import com.frostwire.android.util.StorageUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * See {@link ConfigurationManager}
@@ -71,6 +73,7 @@ public class PreferencesActivity extends PreferenceActivity {
         setupSearchEngines();
         setupUPnPOption();
         setupStoragePathOption();
+        setupUXStatsOption();
     }
 
     private void setupSeedingOptions() {
@@ -87,6 +90,9 @@ public class PreferencesActivity extends PreferenceActivity {
                     UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
                 }
                 preferenceSeedingWifiOnly.setEnabled(newVal);
+
+                UXStats.instance().log(newVal ? UXAction.SHARING_SEEDING_ENABLED : UXAction.SHARING_SEEDING_DISABLED);
+
                 return true;
             }
         });
@@ -201,6 +207,20 @@ public class PreferencesActivity extends PreferenceActivity {
                 } else if (Engine.instance().isStopped()) {
                     connect();
                 }
+            }
+        });
+    }
+
+    private void setupUXStatsOption() {
+        final CheckBoxPreference checkPref = (CheckBoxPreference) findPreference(Constants.PREF_KEY_UXSTATS_ENABLED);
+
+        checkPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean newVal = (Boolean) newValue;
+                if (!newVal) { // not send ux stats
+                    UXStats.instance().setContext(null);
+                }
+                return true;
             }
         });
     }

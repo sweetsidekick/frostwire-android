@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import android.content.Context;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.views.MenuAction;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -42,5 +44,6 @@ public class CancelTransferMenuAction extends MenuAction {
     @Override
     protected void onClick(Context context) {
         transfer.cancel();
+        UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
     }
 }

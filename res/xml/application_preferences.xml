@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,6 +128,10 @@
             android:key="frostwire.prefs.gui.support_frostwire"
             android:summary="@string/support_frostwire_summary"
             android:title="@string/support_frostwire" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.uxstats.enabled"
+            android:summary="@string/anonymous_usage_statistics_summary"
+            android:title="@string/anonymous_usage_statistics" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/torrent_settings" >
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
