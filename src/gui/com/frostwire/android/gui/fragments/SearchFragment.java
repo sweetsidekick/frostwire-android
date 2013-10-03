@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,8 @@ import com.frostwire.search.SearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -164,6 +166,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
+                    UXStats.instance().log(UXAction.SEARCH_RESULT_CLICKED);
                 }
             };
             setListAdapter(adapter);
@@ -203,6 +206,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
+        UXStats.instance().log(UXAction.SEARCH_STARTED);
     }
 
     private void cancelSearch(View view) {
