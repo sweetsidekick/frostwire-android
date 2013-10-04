@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,8 @@ import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -229,7 +231,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             InputStream is = null;
 
             try {
-                thumbnailLoader.displayImage(fd,fileThumbnail,fileTypeDrawable);
+                thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
             } catch (Throwable e) {
                 fileThumbnail.setImageDrawable(fileTypeDrawable);
             } finally {
@@ -353,8 +355,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
     }
 
-
-
     private static class FileListFilter implements ListAdapterFilter<FileDescriptor> {
 
         private int visibleFiles;
@@ -399,6 +399,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             }
 
             fd.shared = !fd.shared;
+
+            UXStats.instance().log(fd.shared ? UXAction.WIFI_SHARING_SHARED : UXAction.WIFI_SHARING_UNSHARED);
 
             notifyDataSetChanged();
             Librarian.instance().updateSharedStates(fileType, Arrays.asList(fd));

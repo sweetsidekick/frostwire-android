@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
     private EditText inputNickname;
     private CheckBox checkSeedFinishedTorrents;
     private CheckBox checkSeedFinishedTorrentsWifiOnly;
+    private CheckBox checkUXStats;
 
     public GeneralWizardPage(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,7 +69,8 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
         checkSeedFinishedTorrents.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS));
         checkSeedFinishedTorrentsWifiOnly.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY));
         checkSeedFinishedTorrentsWifiOnly.setEnabled(checkSeedFinishedTorrents.isChecked());
-        checkSeedFinishedTorrentsWifiOnly.setTextColor((checkSeedFinishedTorrents.isChecked()) ? Color.WHITE : getContext().getResources().getColor(R.color.frostwire_gray_explanation_text) );
+        checkSeedFinishedTorrentsWifiOnly.setTextColor((checkSeedFinishedTorrents.isChecked()) ? Color.WHITE : getContext().getResources().getColor(R.color.frostwire_gray_explanation_text));
+        checkUXStats.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED));
         validate();
     }
 
@@ -77,6 +79,7 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
         ConfigurationManager.instance().setNickname(inputNickname.getText().toString());
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS, checkSeedFinishedTorrents.isChecked());
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY, checkSeedFinishedTorrentsWifiOnly.isChecked());
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_UXSTATS_ENABLED, checkUXStats.isChecked());
     }
 
     @Override
@@ -107,13 +110,20 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
         checkSeedFinishedTorrents.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 checkSeedFinishedTorrentsWifiOnly.setEnabled(isChecked);
-                checkSeedFinishedTorrentsWifiOnly.setTextColor((isChecked) ? Color.WHITE : getContext().getResources().getColor(R.color.frostwire_gray_explanation_text) );
+                checkSeedFinishedTorrentsWifiOnly.setTextColor((isChecked) ? Color.WHITE : getContext().getResources().getColor(R.color.frostwire_gray_explanation_text));
                 validate();
             }
         });
 
         checkSeedFinishedTorrentsWifiOnly = (CheckBox) findViewById(R.id.view_general_wizard_page_check_seed_finished_torrents_wifi_only);
         checkSeedFinishedTorrentsWifiOnly.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                validate();
+            }
+        });
+
+        checkUXStats = (CheckBox) findViewById(R.id.view_general_wizard_page_check_ux_stats);
+        checkUXStats.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }

@@ -60,6 +60,8 @@ import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.views.DonationsView;
 import com.frostwire.util.MimeDetector;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -309,6 +311,10 @@ public final class UIUtils {
                 i.setDataAndType(Uri.fromFile(new File(filePath)), mime);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
+
+                if ("video".equals(mime)) {
+                    UXStats.instance().log(UXAction.LIBRARY_VIDEO_PLAY);
+                }
             }
         } catch (Throwable e) {
             UIUtils.showShortMessage(context, R.string.cant_open_file);
@@ -339,6 +345,8 @@ public final class UIUtils {
 
     private static boolean openAudioInternal(String filePath) {
         try {
+            UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
+
             List<FileDescriptor> fds = Librarian.instance().getFiles(filePath, true);
 
             if (fds.size() == 1 && fds.get(0).fileType == Constants.FILE_TYPE_AUDIO) {
@@ -351,14 +359,14 @@ public final class UIUtils {
             return false;
         }
     }
-    
+
     public static void initSupportFrostWire(Activity activity, int resId) {
         DonationsView donationsView = (DonationsView) activity.findViewById(resId);
 
         Biller biller = BillerFactory.getInstance(activity);
         donationsView.setBiller(biller);
         donationsView.setVisibility(View.GONE);
-        
+
         if (biller.isInAppBillingSupported()) {
             UIUtils.supportFrostWire(donationsView);
         }
