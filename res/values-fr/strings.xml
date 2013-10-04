@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  */
 -->
 <resources>
-
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Paramètres</string>
     <string name="activity_browse_peer_name">Navigateur d\'accueil</string>
@@ -52,7 +51,6 @@
     <string name="type_to_filter_results">Tapez sur le résultat du filtre.</string>
     <string name="fetching_file_list">Récupération de la liste de partage</string>
     <string name="not_sharing_files">ne partage aucuns fichiers.</string>
-    <string name="tip_try_the_filter">Astuce: &lt; Essayez le “filtre” en bas de la page>.</string>
     <string name="browse_peer">Parcourir les pairs</string>
     <string name="peer">Pair</string>
     <string name="peers">Pairs</string>
@@ -261,6 +259,7 @@
     <string name="azureus_formats_units_alot">Beaucoup !!!</string>
     <string name="azureus_discarded">rejeté</string>
     <string name="azureus_manager_item_waiting">Initialisation </string>
+    <string name="azureus_manager_item_initializing">Initializing</string>
     <string name="azureus_manager_item_allocating">Attribution </string>
     <string name="azureus_manager_item_checking">Vérification</string>
     <string name="azureus_manager_item_finishing">Terminer </string>
@@ -285,6 +284,7 @@
     <string name="peer_http_download_status_waiting">En attente </string>
     <string name="peer_http_download_status_unknown">Inconnu </string>
     <string name="peer_http_upload_status_uploading">Transfert </string>
+    <string name="peer_http_upload_status_streaming">Streaming</string>
     <string name="peer_http_upload_status_complete">Terminer </string>
     <string name="peer_http_upload_status_error">Erreur</string>
     <string name="peer_http_upload_status_cancelled">Annuler </string>
@@ -369,12 +369,23 @@
     <string name="type_here_to_filter">Tapez ici pour filtrer </string>
     <string name="type_here_to_search">Tapez ici pour faire une recherche </string>
     <string name="hints_by_google">Suggestion de Google</string>
+    <string name="azureus_manager_not_created">Download can\'t be created with SD card shared</string>
+    <string name="http_download_status_uncompressing">Uncompressing</string>
+    <string name="dialog_desktop_upload_request_title">Upload Request</string>
+    <string name="dialog_desktop_upload_request_text_text">%1$s wants to send you %2$s totalling %3$s</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="block">Block</string>
+    <string name="block_computer">Block Computer</string>
+    <string name="desktop_transfer_status_transferring">Transferring</string>
+    <string name="desktop_transfer_status_complete">Complete</string>
+    <string name="desktop_transfer_status_cancelled">Cancelled</string>
+    <string name="desktop_transfer_status_unknown">Unknown</string>
     <string name="support_frostwire">Soutien FrostWire</string>
     <string name="support_frostwire_summary">Voir toutes les annonces de soutenir le développement de ce soft.</string>
-    <string name="storage_preference_title">Sélectionnez l\'emplacement de stockage</string>
-    <string name="storage_preference_summary">L\'emplacement de stockage par défaut où les fichiers seront sauvegardés.</string>
+    <string name="storage_preference_title">Sélectionnez l' emplacement de stockage</string>
+    <string name="storage_preference_summary">L' emplacement de stockage par défaut où les fichiers seront sauvegardés.</string>
     <string name="connectivity">Connectivité</string>
-
     <string name="loading">Chargement</string>
     <string name="wifi_sharing">Réseau Wi-Fi</string>
     <string name="activity_mediaplayer_name">Lecteur</string>
@@ -383,7 +394,7 @@
     <string name="donate_5">Don $5</string>
     <string name="donate_10">Don $10</string>
     <string name="donate_25">Don $25</string>
-    <string name="one_file_shared" >Un dossier a été partagé avec d\'autres appareils sur le même réseau Wi-Fi FrostWire.</string>
+	<string name="one_file_shared" >Un dossier a été partagé avec d\'autres appareils sur le même réseau Wi-Fi FrostWire.</string>
 	<string name="n_files_shared" >fichiers %D ont été partagés avec d\'autres appareils sur le même réseau Wi-Fi FrostWire.</string>
 	<string name="playing_now_colon">Jouer maintenant:</string>
 	<string name="my_filetype">Mon %s</string>
@@ -391,8 +402,8 @@
 	<string name="use_youtube">Utilisez YouTube.com</string>
 	<string name="use_soundcloud">Utilisez Soundcloud.com</string>
 	<string name="upnp_discovery">Partager en Wi-Fi</string>
-    <string name="upnp_discovery_summary">Partagez des fichiers avec d\'autres utilisateurs sur le même réseau Wi-Fi.</string>
-	<string name="youtube_download_status_verifying">Vérification</string>
+    <string name="upnp_discovery_summary">Share files with peers on the local Wi-Fi network.</string>
+    <string name="youtube_download_status_verifying">Vérification</string>
     <string name="donation_thanks">Merci beaucoup pour soutenir FrostWire</string>
     <string name="torrent_scheme_download_not_supported">Télécharger ne sont pas pris en charge</string>
     <string name="retry_search">Réessayez</string>
@@ -415,4 +426,6 @@
     <string name="wifi_sharing_disabled">Partager par Wi-Fi est éteint.\n\nCette fonction vous permet de partager des fichiers avec d\'autres appareils fonctionnant FrostWire connecté au même réseau Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Activer le partage Wi-Fi</string>    
     <string name="are_you_sure_wifi_sharing_off">Si vous désactivez le partage de fichiers sur le réseau Wi-Fi tous les fichiers que vous avez marqués comme non disponibles utilisateurs partagés localement connectés à ce réseau Wi-Fi gratuite.</string>    
+    <string name="anonymous_usage_statistics">Anonymous Usage Statistics</string>
+    <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
 </resources>
