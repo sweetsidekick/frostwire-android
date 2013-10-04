@@ -413,4 +413,5 @@
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>    
     <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
+    <string name="paused_song_name">Pausado %s</string>
 </resources>
