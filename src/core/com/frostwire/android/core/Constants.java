@@ -32,7 +32,7 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 3 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 4 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
 
@@ -123,6 +123,7 @@ public final class Constants {
 
     public static final int NOTIFICATION_MEDIA_PLAYING_ID = 1000;
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;
+    public static final int NOTIFICATION_MEDIA_PAUSED_ID = 1002;
 
     // generic file types
     public static final byte FILE_TYPE_AUDIO = CommonConstants.FILE_TYPE_AUDIO;

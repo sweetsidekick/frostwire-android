@@ -54,4 +54,10 @@ public interface CoreMediaPlayer {
     public FileDescriptor getCurrentFD();
     
     public Playlist getPlaylist();
+
+    public void start();
+
+    public int getDuration();
+
+    public int getCurrentPosition();
 }

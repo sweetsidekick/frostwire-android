@@ -29,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -49,6 +48,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Librarian;
@@ -73,7 +73,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private static final String TAG = "FW.MediaPlayerActivity";
 
-    private MediaPlayer mediaPlayer;
+    private CoreMediaPlayer mediaPlayer;
     private FileDescriptor mediaFD;
 
     private BroadcastReceiver broadcastReceiver;
@@ -120,13 +120,13 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     public void pause() {
         if (mediaPlayer != null) {
             try {
-                mediaPlayer.pause();
+                mediaPlayer.togglePause();
             } catch (Throwable e) {
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
     }
-
+    
     public void resume() {
         if (mediaPlayer != null) {
             try {
@@ -140,7 +140,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     public void stop() {
         if (mediaPlayer != null) {
             finish();
-            Engine.instance().getMediaPlayer().stop();
+            mediaPlayer.stop();
         }
     }
 
@@ -209,23 +209,23 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     protected void initComponents() {
 
         if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
-            Log.e(TAG, "Only media player of type NativeAndroidPlayer is supported");
+            Log.e(TAG, "Only media playerControl of type NativeAndroidPlayer is supported");
             return;
         }
 
         initGestures();
 
-        mediaPlayer = ((NativeAndroidPlayer) Engine.instance().getMediaPlayer()).getMediaPlayer();
-        mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
+        mediaPlayer = (NativeAndroidPlayer) Engine.instance().getMediaPlayer();
+        mediaFD = mediaPlayer.getCurrentFD();
 
         if (mediaPlayer != null) {
-            setMediaPlayer(this);
+            setMediaPlayerControl(this);
         }
 
         if (mediaFD != null) {
             refreshUIData();
         } else {
-            Engine.instance().getMediaPlayer().stop();
+            mediaPlayer.stop();
         }
 
         buttonBack = findView(R.id.activity_mediaplayer_button_back);
@@ -244,7 +244,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             }
         });
 
-        // media player controls
+        // media playerControl controls
         buttonPrevious = (ImageButton) findViewById(R.id.activity_mediaplayer_button_previous);
         if (buttonPrevious != null) {
             buttonPrevious.setOnClickListener(previousListener);
@@ -311,22 +311,45 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
             @Override
             public void onLeftToRightSwipe() {
-                Engine.instance().getMediaPlayer().playPrevious();
+                playPrevious();
             }
 
             @Override
             public void onRightToLeftSwipe() {
-                Engine.instance().getMediaPlayer().playNext();
+                playNext();
             }
 
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
-                Engine.instance().getMediaPlayer().togglePause();
+                pause();
                 sync();
                 return true;
             }
         });
     }
+
+    private void playNext() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.playNext();
+            } catch (Throwable e) {
+                Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
+            }
+        }
+        
+    }
+    
+    private void playPrevious() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.playPrevious();
+            } catch (Throwable e) {
+                Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
+            }
+        }
+        
+    }
+
 
     @Override
     protected void onResume() {
@@ -348,8 +371,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void refreshFD() {
-        if (Engine.instance().getMediaPlayer() != null) {
-            mediaFD = Engine.instance().getMediaPlayer().getCurrentFD();
+        if (mediaPlayer != null) {
+            mediaFD = mediaPlayer.getCurrentFD();
         }
 
         if (mediaFD != null) {
@@ -357,11 +380,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
     }
 
-    // media player controls
+    // media playerControl controls
 
     private static final int SHOW_PROGRESS = 1;
 
-    private MediaPlayerControl player;
+    private MediaPlayerControl playerControl;
     private ImageButton buttonPrevious;
     private ImageButton buttonPause;
     private ImageButton buttonNext;
@@ -381,7 +404,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             switch (msg.what) {
             case SHOW_PROGRESS:
                 pos = setProgress();
-                if (!dragging && player != null && player.isPlaying()) {
+                if (!dragging && playerControl != null && playerControl.isPlaying()) {
                     msg = obtainMessage(SHOW_PROGRESS);
                     sendMessageDelayed(msg, 1000 - (pos % 1000));
                 }
@@ -408,11 +431,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private View.OnClickListener previousListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (player != null) {
-                if (player.getCurrentPosition() < 5000) {
-                    Engine.instance().getMediaPlayer().playPrevious();
+            if (playerControl != null) {
+                if (playerControl.getCurrentPosition() < 5000) {
+                    mediaPlayer.playPrevious();
                 } else {
-                    player.seekTo(0);
+                    playerControl.seekTo(0);
                 }
             }
         }
@@ -420,8 +443,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private View.OnClickListener nextListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (player != null) {
-                Engine.instance().getMediaPlayer().playNext();
+            if (playerControl != null) {
+                mediaPlayer.playNext();
             }
         }
     };
@@ -458,10 +481,10 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return;
             }
 
-            if (player != null) {
-                long duration = player.getDuration();
+            if (playerControl != null) {
+                long duration = playerControl.getDuration();
                 long newposition = (duration * progress) / 1000L;
-                player.seekTo((int) newposition);
+                playerControl.seekTo((int) newposition);
                 if (currentTime != null)
                     currentTime.setText(stringForTime((int) newposition));
             }
@@ -480,8 +503,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
     };
 
-    public void setMediaPlayer(MediaPlayerControl player) {
-        this.player = player;
+    public void setMediaPlayerControl(MediaPlayerControl player) {
+        this.playerControl = player;
         updatePausePlay();
     }
 
@@ -514,10 +537,10 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             return true;
 
         } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP) {
-            if (uniqueDown && player.isPlaying()) {
+            if (uniqueDown && playerControl.isPlaying()) {
                 updatePausePlay();
                 sync();
-                player.stop();
+                playerControl.stop();
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
@@ -545,7 +568,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     private void disableUnsupportedButtons() {
         try {
-            if (buttonPause != null && !player.canPause()) {
+            if (buttonPause != null && !playerControl.canPause()) {
                 buttonPause.setEnabled(false);
             }
         } catch (Throwable e) {
@@ -570,18 +593,18 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private int setProgress() {
-        if (player == null || dragging) {
+        if (playerControl == null || dragging) {
             return 0;
         }
-        int position = player.getCurrentPosition();
-        int duration = player.getDuration();
+        int position = playerControl.getCurrentPosition();
+        int duration = playerControl.getDuration();
         if (progress != null) {
             if (duration > 0) {
                 // use long to avoid overflow
                 long pos = 1000L * position / duration;
                 progress.setProgress((int) pos);
             }
-            int percent = player.getBufferPercentage();
+            int percent = playerControl.getBufferPercentage();
             progress.setSecondaryProgress(percent * 10);
         }
 
@@ -596,11 +619,11 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void updatePausePlay() {
-        if (buttonPause == null || player == null) {
+        if (buttonPause == null || playerControl == null) {
             return;
         }
 
-        if (player.isPlaying()) {
+        if (playerControl.isPlaying()) {
             buttonPause.setImageResource(R.drawable.player_pause_icon);
         } else {
             buttonPause.setImageResource(R.drawable.player_play_icon);
@@ -608,14 +631,14 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void doPauseResume() {
-        if (player == null) {
+        if (playerControl == null) {
             return;
         }
 
-        if (player.isPlaying()) {
-            player.pause();
+        if (playerControl.isPlaying()) {
+            playerControl.pause();
         } else {
-            player.resume();
+            playerControl.resume();
         }
 
         updatePausePlay();
@@ -691,9 +714,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
     
     private void onDeleteCurrentTrack() {
-        final FileDescriptor currentFD = Engine.instance().getMediaPlayer().getCurrentFD();
+        final FileDescriptor currentFD = mediaPlayer.getCurrentFD();
         PlaylistItem currentPlaylistItem = new PlaylistItem(currentFD);
-        Playlist playlist = Engine.instance().getMediaPlayer().getPlaylist();
+        Playlist playlist = mediaPlayer.getPlaylist();
         
         AsyncTask<Void, Void, Void> asyncDeleteTrackTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -712,7 +735,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             }
         }
         
-        Engine.instance().getMediaPlayer().playNext();
+        mediaPlayer.playNext();
         asyncDeleteTrackTask.execute();        
     }
 }
