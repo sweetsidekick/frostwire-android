@@ -428,4 +428,5 @@
     <string name="are_you_sure_wifi_sharing_off">Si vous désactivez le partage de fichiers sur le réseau Wi-Fi tous les fichiers que vous avez marqués comme non disponibles utilisateurs partagés localement connectés à ce réseau Wi-Fi gratuite.</string>    
     <string name="anonymous_usage_statistics">Anonymous Usage Statistics</string>
     <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
+    <string name="paused_song_name">Paused %s</string>
 </resources>
