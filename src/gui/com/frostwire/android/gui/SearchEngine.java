@@ -165,5 +165,5 @@ public abstract class SearchEngine {
     };
     
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, VERTOR, YOUTUBE, SOUNCLOUD, ARCHIVE);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE);
 }

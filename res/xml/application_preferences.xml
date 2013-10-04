@@ -84,10 +84,10 @@
             android:key="frostwire.prefs.search.use_mininova"
             android:summary="@string/use_mininova"
             android:title="@string/use_mininova" />
-        <CheckBoxPreference
+<!--         <CheckBoxPreference
             android:key="frostwire.prefs.search.use_vertor"
             android:summary="@string/use_vertor"
-            android:title="@string/use_vertor" />
+            android:title="@string/use_vertor" /> -->
         <CheckBoxPreference
             android:key="frostwire.prefs.search.use_youtube"
             android:summary="@string/use_youtube"
