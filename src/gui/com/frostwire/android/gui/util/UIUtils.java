@@ -312,7 +312,7 @@ public final class UIUtils {
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
 
-                if ("video".equals(mime)) {
+                if (mime != null && mime.contains("video")) {
                     UXStats.instance().log(UXAction.LIBRARY_VIDEO_PLAY);
                 }
             }

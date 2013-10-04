@@ -129,6 +129,8 @@ public final class UXStats {
             new Thread(r, "UXStats-sendData").start();
         }
     }
+    
+    
 
     private UXData newData() {
         return new UXData(conf.getGuid(), conf.getOS(), conf.getFwversion(), conf.getFwbuild());

@@ -28,11 +28,11 @@ import android.app.Activity;
  *
  */
 public class BillerFactory {
-
+    
     public static Biller getInstance(Activity activity) {
         Biller billy = null;
 
-        if (OSUtils.isKindleFire()) {
+        if (OSUtils.isKindleFire() || OSUtils.isAmazonDistribution()) {
             billy = new KindleBiller(activity);
         } else if (OSUtils.isOUYA()) {
             billy = new OuyaBiller(activity);
