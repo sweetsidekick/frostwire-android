@@ -428,4 +428,5 @@
     <string name="are_you_sure_wifi_sharing_off">"Desligar o compartilhamento Wi-Fi vai tornar todos os seus arquivos localmente compartilhados indisponível para outros usuários na rede Wi-Fi nas proximidades".</string>
     <string name="anonymous_usage_statistics">"Estatísticas de utilização anônima"</string>
     <string name="anonymous_usage_statistics_summary">"Enviar estatísticas de utilização anônima. Nenhuma informação sobre o conteúdo pesquisado, compartilhado ou reproduzido nem qualquer informação que possa identificá-lo pessoalmente será armazenada em disco ou enviada através da rede".</string>
+    <string name="paused_song_name">Pausada %s</string>
 </resources>
