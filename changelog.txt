@@ -1,4 +1,5 @@
 FrostWire 1.1.4 - OCT/04/2013
+ - Audio player shows correct android notification when paused.
  - Removed Vertor meta search. No longer serving .torrents without captcha.
  - Updated spanish translation, thanks @muckachina.
  - Updated portuguese translation, thanks @tati110.
