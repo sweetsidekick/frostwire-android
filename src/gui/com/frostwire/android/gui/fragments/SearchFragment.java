@@ -209,7 +209,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
-        UXStats.instance().log(UXAction.SEARCH_STARTED);
+        UXStats.instance().log(UXAction.SEARCH_STARTED_ENTER_KEY);
     }
 
     private void cancelSearch(View view) {
