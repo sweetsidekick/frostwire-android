@@ -322,7 +322,7 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
 
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
-            String url = "uxstats.frostwire.com/aux";
+            String url = "http://ux.frostwire.com/aux";
             String os = OSUtils.getOSVersionString();
             String fwversion = Constants.FROSTWIRE_VERSION_STRING;
             String fwbuild = Constants.FROSTWIRE_BUILD;
