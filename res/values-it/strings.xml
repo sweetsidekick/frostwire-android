@@ -318,7 +318,7 @@
 	<string name="dummy_version">[Version]</string>
 	<string name="dummy_engine">[Engine]</string>
 	<string name="dummy_sources">[Sources]</string>
-	<string name="empty_string" xsi:nil="true"/>
+	<string name="empty_string"></string>
 	<string name="seed_finished_torrents">Seeda i Torrent completati</string>
 	<string name="seed_finished_torrents_summary">Condividi parti di download con chiunque su internet via BitTorrent</string>
 	<string name="seed_finished_torrents_wifi_only">Seeda solo su Wi-fi</string>
@@ -341,7 +341,7 @@
 	<string name="wizard_previous">Precedente</string>
 	<string name="wizard_next">Successivo</string>
 	<string name="wizard_finish">Fine</string>
-	<string name="dummy_content_description" xsi:nil="true"/>
+	<string name="dummy_content_description"></string>
 	<string name="welcome_to_frostwire">Benvenuto in FrostWire</string>
 	<string name="let_apos_s_set_you_up_before_we_begin_">Un aiuto per partire col piede giusto</string>
 	<string name="how_others_see_you_on_the_local_network_wifi_">Come ti vedranno gli altri nella rete locale (Wi-fi)</string>
