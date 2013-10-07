@@ -108,8 +108,10 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             if (mp != null) {
                 if (mp.isPlaying()) {
                     mp.pause();
+                    notifyMediaPaused(false);
                 } else {
                     mp.start();
+                    notifyMediaPlay(false);
                 }
                 
                 service.sendBroadcast(new Intent(mp.isPlaying() ? Constants.ACTION_MEDIA_PLAYER_PLAY : Constants.ACTION_MEDIA_PLAYER_PAUSED));
@@ -125,11 +127,12 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         }
 
         releaseMediaPlayer();
-        ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_MEDIA_PLAYING_ID);
+        int notificationId = isPlaying() ? Constants.NOTIFICATION_MEDIA_PLAYING_ID : Constants.NOTIFICATION_MEDIA_PAUSED_ID;
+        ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(notificationId);
         service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
 
     }
-
+    
     @Override
     public boolean isPlaying() {
         return (mp != null) ? mp.isPlaying() : false;
@@ -257,6 +260,8 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
             notification.icon = R.drawable.play_notification;
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
             notification.setLatestEventInfo(context, service.getString(R.string.application_label), service.getString(R.string.playing_song_name, currentFD.title), pi);
+
+            ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
             service.startForeground(Constants.NOTIFICATION_MEDIA_PLAYING_ID, notification);
 
             if (launchActivity) {
@@ -266,6 +271,32 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         } catch (Throwable e) {
             Log.e(TAG, "Error creating player notification", e);
         }
+    }
+    
+    private void notifyMediaPaused(boolean launchActivity) {
+        try {
+            Context context = service.getApplicationContext();
+
+            Intent i = new Intent(context, MediaPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            Notification notification = new Notification();
+            notification.tickerText = service.getString(R.string.paused_song_name, currentFD.title);
+            notification.icon = R.drawable.pause_notification;
+            notification.flags |= Notification.FLAG_ONGOING_EVENT;
+            notification.setLatestEventInfo(context, service.getString(R.string.application_label), service.getString(R.string.paused_song_name, currentFD.title), pi);
+
+            ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
+            service.startForeground(Constants.NOTIFICATION_MEDIA_PAUSED_ID, notification);
+
+            if (launchActivity) {
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+            }
+        } catch (Throwable e) {
+            Log.e(TAG, "Error creating player notification", e);
+        }        
     }
 
     private final class FocusListener implements OnAudioFocusChangeListener {
@@ -296,4 +327,27 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
     public Playlist getPlaylist() {
         return playlist;
     }
+
+    public void start() {
+        if (mp != null) {
+            mp.start();
+            notifyMediaPlay(false);
+        }
+    }
+
+    public int getDuration() {
+        int duration = 0;
+        if (mp != null) {
+            duration = mp.getDuration();
+        }
+        return duration;
+    }
+
+    public int getCurrentPosition() {
+        int currentPos = 0;
+        if (mp != null) {
+            currentPos = mp.getCurrentPosition();
+        }
+        return currentPos;   
+   }
 }

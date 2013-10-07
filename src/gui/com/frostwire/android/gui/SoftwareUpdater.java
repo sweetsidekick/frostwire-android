@@ -322,6 +322,7 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
 
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
+            String url = "http://ux.frostwire.com/aux";
             String os = OSUtils.getOSVersionString();
             String fwversion = Constants.FROSTWIRE_VERSION_STRING;
             String fwbuild = Constants.FROSTWIRE_BUILD;
@@ -329,7 +330,7 @@ public final class SoftwareUpdater {
             int minEntries = update.config.uxMinEntries;
             int maxEntries = update.config.uxMaxEntries;
 
-            UXStatsConf context = new UXStatsConf(os, fwversion, fwbuild, period, minEntries, maxEntries);
+            UXStatsConf context = new UXStatsConf(url, os, fwversion, fwbuild, period, minEntries, maxEntries);
             UXStats.instance().setContext(context);
         }
     }
