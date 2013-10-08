@@ -35,7 +35,7 @@ import android.os.Bundle;
  */
 final class OuyaBiller implements Biller, OuyaResponseListener<String> {
 
-    private static final String DEVELOPER_ID = "000";
+    private static final String DEVELOPER_ID = "4112997b-67db-4ce3-96f0-12b0373895db";
     
     private final Context context;
 
