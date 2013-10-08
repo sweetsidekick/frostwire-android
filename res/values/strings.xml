@@ -369,7 +369,7 @@
     <string name="type_here_to_filter">Type here to filter</string>
     <string name="type_here_to_search">Type here to Search</string>
     <string name="hints_by_google">Hints by Google</string>
-    <string name="azureus_manager_not_created">Download can\'t be created with SD card shared</string>
+    <string name="azureus_manager_not_created">Download can\'t be created with SD card mounted</string>
     <string name="http_download_status_uncompressing">Uncompressing</string>
     <string name="dialog_desktop_upload_request_title">Upload Request</string>
     <string name="dialog_desktop_upload_request_text_text">%1$s wants to send you %2$s totalling %3$s</string>
