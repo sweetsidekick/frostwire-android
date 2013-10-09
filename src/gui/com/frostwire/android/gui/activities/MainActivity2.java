@@ -1,12 +1,20 @@
 package com.frostwire.android.gui.activities;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xmlpull.v1.XmlPullParser;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.XmlResourceParser;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,23 +28,35 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.SoftwareUpdater;
+import com.frostwire.android.gui.fragments.SlideMenuFragment;
+import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.views.AbstractActivity;
 
-public class MainActivity2 extends FragmentActivity {
+public class MainActivity2 extends AbstractActivity {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MainActivity2.class);
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private String[] mPlanetTitles;
-    
-    private static final String[] titles = new String[]{"a1", "a2", "a3", "a4", "a5", "a6"};
+
+    private static final String[] titles = new String[] { "a1", "a2", "a3", "a4", "a5", "a6" };
+
+    public MainActivity2() {
+        super(R.layout.activity_main2, false, 2);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
 
         mPlanetTitles = titles;
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -44,8 +64,9 @@ public class MainActivity2 extends FragmentActivity {
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.slidemenu_listitem, R.id.slidemenu_listitem_label, mPlanetTitles));
+        setupMenuItems();
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -71,6 +92,30 @@ public class MainActivity2 extends FragmentActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+
+    private void setupMenuItems() {
+        MenuItem2[] items = parseXml(this, R.menu.main).toArray(new MenuItem2[0]);
+        ConfigurationManager config = ConfigurationManager.instance();
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
+            items = removeMenuItem(R.id.menu_launch_tv, items);
+        }
+
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+            items = removeMenuItem(R.id.menu_free_apps, items);
+        }
+        MenuAdapter adapter = new MenuAdapter(this, items);
+        mDrawerList.setAdapter(adapter);
+    }
+
+    private MenuItem2[] removeMenuItem(int idToRemove, MenuItem2[] originalItems) {
+        List<MenuItem2> items = new ArrayList<MenuItem2>();
+        for (MenuItem2 i : originalItems) {
+            if (i.id != idToRemove) {
+                items.add(i);
+            }
+        }
+        return items.toArray(new MenuItem2[0]);
     }
 
     @Override
@@ -134,7 +179,6 @@ public class MainActivity2 extends FragmentActivity {
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -177,6 +221,103 @@ public class MainActivity2 extends FragmentActivity {
             //((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
             getActivity().setTitle(planet);
             return rootView;
+        }
+    }
+
+    private static class MenuItem2 {
+        public int id;
+        public Drawable icon;
+        public String label;
+        public boolean selected;
+    }
+
+    private static class MenuAdapter extends ArrayAdapter<MenuItem2> {
+
+        private Activity activity;
+
+        public MenuAdapter(Activity activity, MenuItem2[] items) {
+            super(activity, R.id.slidemenu_listitem_label, items);
+            this.activity = activity;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View rowView = convertView;
+
+            if (rowView == null) {
+                LayoutInflater inflater = activity.getLayoutInflater();
+                rowView = inflater.inflate(R.layout.slidemenu_listitem, null);
+            }
+
+            TextView label = (TextView) rowView.findViewById(R.id.slidemenu_listitem_label);
+            ImageView icon = (ImageView) rowView.findViewById(R.id.slidemenu_listitem_icon);
+
+            MenuItem2 item = getItem(position);
+
+            label.setText(item.label);
+            icon.setImageDrawable(item.icon);
+
+            rowView.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
+
+            return rowView;
+        }
+
+        public void setSelectedItem(int id) {
+            for (int i = 0; i < getCount(); i++) {
+                MenuItem2 item = getItem(i);
+                item.selected = item.id == id;
+            }
+
+            notifyDataSetChanged();
+        }
+    }
+
+    private List<MenuItem2> parseXml(Context context, int menu) {
+
+        List<MenuItem2> list = new ArrayList<MenuItem2>();
+
+        try {
+            XmlResourceParser xpp = context.getResources().getXml(menu);
+
+            xpp.next();
+            int eventType = xpp.getEventType();
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+
+                if (eventType == XmlPullParser.START_TAG) {
+
+                    String elemName = xpp.getName();
+
+                    if (elemName.equals("item")) {
+
+                        String textId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "title");
+                        String iconId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "icon");
+                        String resId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "id");
+
+                        MenuItem2 item = new MenuItem2();
+                        item.id = Integer.valueOf(resId.replace("@", ""));
+                        item.icon = context.getResources().getDrawable(Integer.valueOf(iconId.replace("@", "")));
+                        item.label = resourceIdToString(context, textId);
+
+                        list.add(item);
+                    }
+                }
+
+                eventType = xpp.next();
+            }
+        } catch (Throwable e) {
+            LOG.error("Error loading menu items from resource", e);
+        }
+
+        return list;
+    }
+
+    private String resourceIdToString(Context context, String text) {
+        if (!text.contains("@")) {
+            return text;
+        } else {
+            String id = text.replace("@", "");
+            return context.getResources().getString(Integer.valueOf(id));
         }
     }
 }
