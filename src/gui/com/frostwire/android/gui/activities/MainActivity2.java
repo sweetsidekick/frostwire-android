@@ -18,25 +18,45 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.fragments.AboutFragment;
+import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersFragment;
+import com.frostwire.android.gui.fragments.MainFragment;
+import com.frostwire.android.gui.fragments.SearchFragment;
+import com.frostwire.android.gui.fragments.SlideMenuFragment;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 
 public class MainActivity2 extends AbstractActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity2.class);
+    
+    private static final String FRAGMENT_STACK_TAG = "fragment_stack";
+    private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    
+    private SearchFragment search;
+    private BrowsePeerFragment library;
+    private TransfersFragment transfers;
+    private BrowsePeersFragment peers;
+    private BrowsePeersDisabledFragment peersDisabled;
+    private AboutFragment about;
 
     public MainActivity2() {
         super(R.layout.activity_main2, false, 2);
@@ -49,8 +69,9 @@ public class MainActivity2 extends AbstractActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        setupFragments();
+        
+        setupInitialFragment(savedInstanceState);
 
         // set up the drawer's list view with items and click listener
         setupMenuItems();
@@ -60,7 +81,7 @@ public class MainActivity2 extends AbstractActivity {
         //mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            //selectItem(0);
         }
     }
 
@@ -224,6 +245,53 @@ public class MainActivity2 extends AbstractActivity {
         } else {
             String id = text.replace("@", "");
             return context.getResources().getString(Integer.valueOf(id));
+        }
+    }
+    
+    private void setupFragments() {
+        search = new SearchFragment();
+        library = new BrowsePeerFragment();
+        transfers = new TransfersFragment();
+        peers = new BrowsePeersFragment();
+        peersDisabled = new BrowsePeersDisabledFragment();
+        about = new AboutFragment();
+
+        library.setPeer(PeerManager.instance().getLocalPeer());
+    }
+    
+    private void setupInitialFragment(Bundle savedInstanceState) {
+        Fragment fragment = null;
+
+        if (savedInstanceState != null) {
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+        }
+        if (fragment == null) {
+            fragment = search;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).commit();
+
+        updateHeader(fragment);
+    }
+    
+    private void updateHeader(Fragment fragment) {
+        try {
+            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+            if (placeholder.getChildCount() > 0) {
+                placeholder.removeAllViews();
+            }
+
+            if (fragment instanceof MainFragment) {
+                View header = ((MainFragment) fragment).getHeader(this);
+                if (header != null) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    placeholder.addView(header, params);
+                }
+            }
+        } catch (Throwable e) {
+            LOG.error("Error updating main header", e);
         }
     }
 }
