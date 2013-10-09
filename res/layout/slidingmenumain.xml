@@ -23,4 +23,4 @@
     android:id="@+id/slidingmenumain"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/slidemenu_background" />
+    android:background="@color/slidemenu_background" />

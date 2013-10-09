@@ -63,7 +63,7 @@ public class MainActivity2 extends AbstractActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // set up the drawer's list view with items and click listener
         setupMenuItems();

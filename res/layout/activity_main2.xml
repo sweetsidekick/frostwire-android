@@ -25,12 +25,13 @@
     android:background="#fff6f6f6"
     android:orientation="vertical" >
 
-    <ListView
+    <com.frostwire.android.gui.views.FWListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        style="@style/SlideMenu.List"
+        android:layout_width="@dimen/mainmenu_width"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="#111"
+        android:background="@color/slidemenu_background"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
