@@ -95,7 +95,7 @@ public class MainActivity2 extends AbstractActivity {
     }
 
     private void setupMenuItems() {
-        MenuItem2[] items = parseXml(this, R.menu.main).toArray(new MenuItem2[0]);
+        XmlMenuItem[] items = parseXml(this, R.menu.main).toArray(new XmlMenuItem[0]);
         ConfigurationManager config = ConfigurationManager.instance();
         if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_launch_tv, items);
@@ -108,21 +108,14 @@ public class MainActivity2 extends AbstractActivity {
         mDrawerList.setAdapter(adapter);
     }
 
-    private MenuItem2[] removeMenuItem(int idToRemove, MenuItem2[] originalItems) {
-        List<MenuItem2> items = new ArrayList<MenuItem2>();
-        for (MenuItem2 i : originalItems) {
+    private XmlMenuItem[] removeMenuItem(int idToRemove, XmlMenuItem[] originalItems) {
+        List<XmlMenuItem> items = new ArrayList<XmlMenuItem>();
+        for (XmlMenuItem i : originalItems) {
             if (i.id != idToRemove) {
                 items.add(i);
             }
         }
-        return items.toArray(new MenuItem2[0]);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
+        return items.toArray(new XmlMenuItem[0]);
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
@@ -224,18 +217,18 @@ public class MainActivity2 extends AbstractActivity {
         }
     }
 
-    private static class MenuItem2 {
+    private static class XmlMenuItem {
         public int id;
-        public Drawable icon;
+        public int iconResId;
         public String label;
         public boolean selected;
     }
 
-    private static class MenuAdapter extends ArrayAdapter<MenuItem2> {
+    private static class MenuAdapter extends ArrayAdapter<XmlMenuItem> {
 
         private Activity activity;
 
-        public MenuAdapter(Activity activity, MenuItem2[] items) {
+        public MenuAdapter(Activity activity, XmlMenuItem[] items) {
             super(activity, R.id.slidemenu_listitem_label, items);
             this.activity = activity;
         }
@@ -252,10 +245,10 @@ public class MainActivity2 extends AbstractActivity {
             TextView label = (TextView) rowView.findViewById(R.id.slidemenu_listitem_label);
             ImageView icon = (ImageView) rowView.findViewById(R.id.slidemenu_listitem_icon);
 
-            MenuItem2 item = getItem(position);
+            XmlMenuItem item = getItem(position);
 
             label.setText(item.label);
-            icon.setImageDrawable(item.icon);
+            icon.setImageResource(item.iconResId);
 
             rowView.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
 
@@ -264,7 +257,7 @@ public class MainActivity2 extends AbstractActivity {
 
         public void setSelectedItem(int id) {
             for (int i = 0; i < getCount(); i++) {
-                MenuItem2 item = getItem(i);
+                XmlMenuItem item = getItem(i);
                 item.selected = item.id == id;
             }
 
@@ -272,9 +265,9 @@ public class MainActivity2 extends AbstractActivity {
         }
     }
 
-    private List<MenuItem2> parseXml(Context context, int menu) {
+    private List<XmlMenuItem> parseXml(Context context, int menu) {
 
-        List<MenuItem2> list = new ArrayList<MenuItem2>();
+        List<XmlMenuItem> list = new ArrayList<XmlMenuItem>();
 
         try {
             XmlResourceParser xpp = context.getResources().getXml(menu);
@@ -294,9 +287,9 @@ public class MainActivity2 extends AbstractActivity {
                         String iconId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "icon");
                         String resId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "id");
 
-                        MenuItem2 item = new MenuItem2();
+                        XmlMenuItem item = new XmlMenuItem();
                         item.id = Integer.valueOf(resId.replace("@", ""));
-                        item.icon = context.getResources().getDrawable(Integer.valueOf(iconId.replace("@", "")));
+                        item.iconResId = Integer.valueOf(iconId.replace("@", ""));
                         item.label = resourceIdToString(context, textId);
 
                         list.add(item);
