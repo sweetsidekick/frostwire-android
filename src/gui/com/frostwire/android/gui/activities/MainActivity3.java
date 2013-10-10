@@ -18,13 +18,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.PeerManager;
+import com.frostwire.android.gui.fragments.AboutFragment;
+import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
+import com.frostwire.android.gui.fragments.BrowsePeersFragment;
+import com.frostwire.android.gui.fragments.MainFragment;
+import com.frostwire.android.gui.fragments.SearchFragment;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListAdapter;
@@ -33,15 +43,19 @@ public class MainActivity3 extends AbstractActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity3.class);
 
+    private static final String FRAGMENT_STACK_TAG = "fragment_stack";
+    private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private String[] mPlanetTitles;
+    private SearchFragment search;
+    private BrowsePeerFragment library;
+    private TransfersFragment transfers;
+    private BrowsePeersFragment peers;
+    private BrowsePeersDisabledFragment peersDisabled;
+    private AboutFragment about;
 
-    private static final String[] titles = new String[] { "a", "b", "c" };
-    
     public MainActivity3() {
         super(R.layout.activity_main3, false, 2);
     }
@@ -49,11 +63,13 @@ public class MainActivity3 extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        mTitle = mDrawerTitle = getTitle();
-        mPlanetTitles = titles;
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        setupFragments();
+
+        setupInitialFragment(savedInstanceState);
 
         // set a custom shadow that overlays the main content when the drawer opens
         //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -93,24 +109,17 @@ public class MainActivity3 extends AbstractActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
+        Fragment fragment = new AboutFragment();
+        //        Bundle args = new Bundle();
+        //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+        //        fragment.setArguments(args);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        //getActionBar().setTitle(mTitle);
     }
 
     /**
@@ -157,7 +166,7 @@ public class MainActivity3 extends AbstractActivity {
         public boolean selected;
     }
 
-    private  class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
+    private class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
 
         public MenuAdapter2(Context context, XmlMenuItem[] items) {
             super(context, R.layout.slidemenu_listitem, Arrays.asList(items));
@@ -251,6 +260,53 @@ public class MainActivity3 extends AbstractActivity {
         } else {
             String id = text.replace("@", "");
             return context.getResources().getString(Integer.valueOf(id));
+        }
+    }
+
+    private void setupFragments() {
+        search = new SearchFragment();
+        library = new BrowsePeerFragment();
+        transfers = new TransfersFragment();
+        peers = new BrowsePeersFragment();
+        peersDisabled = new BrowsePeersDisabledFragment();
+        about = new AboutFragment();
+
+        library.setPeer(PeerManager.instance().getLocalPeer());
+    }
+
+    private void setupInitialFragment(Bundle savedInstanceState) {
+        Fragment fragment = null;
+
+        if (savedInstanceState != null) {
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+        }
+        if (fragment == null) {
+            fragment = search;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).commit();
+
+        updateHeader(fragment);
+    }
+
+    private void updateHeader(Fragment fragment) {
+        try {
+            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+            if (placeholder.getChildCount() > 0) {
+                placeholder.removeAllViews();
+            }
+
+            if (fragment instanceof MainFragment) {
+                View header = ((MainFragment) fragment).getHeader(this);
+                if (header != null) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    placeholder.addView(header, params);
+                }
+            }
+        } catch (Throwable e) {
+            LOG.error("Error updating main header", e);
         }
     }
 }
