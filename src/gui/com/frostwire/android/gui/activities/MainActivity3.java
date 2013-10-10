@@ -12,8 +12,8 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
@@ -32,6 +32,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.appia.sdk.Appia;
+import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -149,13 +151,13 @@ public class MainActivity3 extends AbstractActivity {
 
         onNewIntent(getIntent());
     }
-    
+
     private void showTransfers() {
         if (!(getCurrentFragment() instanceof TransfersFragment)) {
             switchFragment(R.id.menu_main_transfers);
         }
     }
-    
+
     @Override
     protected void onNewIntent(Intent intent) {
         String action = intent.getAction();
@@ -218,7 +220,7 @@ public class MainActivity3 extends AbstractActivity {
             }
         }
     }
-    
+
     private void handleSendAction(Intent intent) {
         String action = intent.getAction();
         if (action.equals(Intent.ACTION_SEND)) {
@@ -227,7 +229,7 @@ public class MainActivity3 extends AbstractActivity {
             handleSendMultipleFiles(intent);
         }
     }
-    
+
     private void handleSendMultipleFiles(Intent intent) {
         ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (fileUris != null) {
@@ -237,7 +239,7 @@ public class MainActivity3 extends AbstractActivity {
             UIUtils.showLongMessage(this, getString(R.string.n_files_shared, fileUris.size()));
         }
     }
-    
+
     private void handleSendSingleFile(Intent intent) {
         Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (uri == null) {
@@ -246,7 +248,7 @@ public class MainActivity3 extends AbstractActivity {
         shareFileByUri(uri);
         UIUtils.showLongMessage(this, R.string.one_file_shared);
     }
-    
+
     private void shareFileByUri(Uri uri) {
         if (uri == null) {
             return;
@@ -259,7 +261,7 @@ public class MainActivity3 extends AbstractActivity {
             Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
         }
     }
-    
+
     private void handleDesktopUploadRequest(Intent intent) {
         String action = intent.getAction();
 
@@ -336,14 +338,14 @@ public class MainActivity3 extends AbstractActivity {
 
         return true;
     }
-    
+
     public void switchFragment(int itemId) {
         Fragment fragment = getFragmentByMenuId(itemId);
         if (fragment != null) {
             switchContent(fragment);
         }
     }
-    
+
     private Fragment getFragmentByMenuId(int id) {
         switch (id) {
         case R.id.menu_main_search:
@@ -360,27 +362,26 @@ public class MainActivity3 extends AbstractActivity {
             return null;
         }
     }
-    
+
     private Fragment getWifiSharingFragment() {
         return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
     }
-    
+
     private boolean isWifiSharingEnabled() {
         return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
     }
-    
+
     private void switchContent(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        mDrawerLayout.openDrawer(mDrawerList);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
+        //mDrawerLayout.openDrawer(mDrawerList);
         syncSlideMenu();
         updateHeader(fragment);
     }
-    
+
     private Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
     }
-    
+
     private void handleLastBackPressed() {
         trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -388,24 +389,24 @@ public class MainActivity3 extends AbstractActivity {
             }
         }));
     }
-    
+
     private void syncSlideMenu() {
-//        if (menuFragment != null) {
-//            Fragment fragment = getCurrentFragment();
-//
-//            if (fragment instanceof SearchFragment) {
-//                menuFragment.setSelectedItem(R.id.menu_main_search);
-//            } else if (fragment instanceof BrowsePeerFragment) {
-//                menuFragment.setSelectedItem(R.id.menu_main_library);
-//            } else if (fragment instanceof TransfersFragment) {
-//                menuFragment.setSelectedItem(R.id.menu_main_transfers);
-//            } else if (fragment instanceof BrowsePeersFragment ||
-//                       fragment instanceof BrowsePeersDisabledFragment) {
-//                menuFragment.setSelectedItem(R.id.menu_main_peers);
-//            } else if (fragment instanceof AboutFragment) {
-//                menuFragment.setSelectedItem(R.id.menu_main_about);
-//            }
-//        }
+        //        if (menuFragment != null) {
+        //            Fragment fragment = getCurrentFragment();
+        //
+        //            if (fragment instanceof SearchFragment) {
+        //                menuFragment.setSelectedItem(R.id.menu_main_search);
+        //            } else if (fragment instanceof BrowsePeerFragment) {
+        //                menuFragment.setSelectedItem(R.id.menu_main_library);
+        //            } else if (fragment instanceof TransfersFragment) {
+        //                menuFragment.setSelectedItem(R.id.menu_main_transfers);
+        //            } else if (fragment instanceof BrowsePeersFragment ||
+        //                       fragment instanceof BrowsePeersDisabledFragment) {
+        //                menuFragment.setSelectedItem(R.id.menu_main_peers);
+        //            } else if (fragment instanceof AboutFragment) {
+        //                menuFragment.setSelectedItem(R.id.menu_main_about);
+        //            }
+        //        }
     }
 
     private void selectItem(int position) {
@@ -487,7 +488,59 @@ public class MainActivity3 extends AbstractActivity {
         @Override
         protected void onItemClicked(View v) {
             mDrawerLayout.closeDrawer(mDrawerList);
-            System.out.println("hello");
+
+            try {
+                int id = (Integer) ((XmlMenuItem) v.getTag()).id;
+                if (id == R.id.menu_main_preferences) {
+                    //adapter.notifyDataSetChanged();
+                    showPreferences(MainActivity3.this);
+                } else if (id == R.id.menu_launch_tv) {
+                    launchFrostWireTV();
+                } else if (id == R.id.menu_free_apps) {
+                    showFreeApps();
+                } else {
+                    //adapter.setSelectedItem(item.id);
+                    switchFragment(id);
+                }
+            } catch (Throwable e) { // protecting from weird android UI engine issues
+                LOG.error("Error clicking slide menu item", e);
+            }
+        }
+    }
+
+    /**
+     * Will try to launch the app, if it cannot find the launch intent, it'll take the user to the Android market.
+     */
+    private void launchFrostWireTV() {
+        Intent intent = null;
+        try {
+            intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.frostwire.android.tv");
+
+            //on the nexus it wasn't throwing the NameNotFoundException, it was just returning null
+            if (intent == null) {
+                throw new NullPointerException();
+            }
+        } catch (Throwable t) {
+            intent = new Intent();
+            intent.setData(Uri.parse("market://details?id=com.frostwire.android.tv"));
+        }
+        startActivity(intent);
+    }
+
+    private void showPreferences(Context context) {
+        Intent i = new Intent(context, PreferencesActivity.class);
+        context.startActivity(i);
+    }
+
+    private void showFreeApps() {
+        try {
+            //OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
+            //offercast.showAppWallAd();
+            Appia appia = Appia.getAppia();
+            appia.cacheAppWall(this);
+            appia.displayWall(this, WallDisplayType.FULL_SCREEN);
+        } catch (Throwable e) {
+            LOG.error("Can't show app wall", e);
         }
     }
 
