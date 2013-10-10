@@ -1,6 +1,7 @@
 package com.frostwire.android.gui.activities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -40,17 +41,18 @@ import com.frostwire.android.gui.fragments.SlideMenuFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractListAdapter;
 
 public class MainActivity2 extends AbstractActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity2.class);
-    
+
     private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    
+
     private SearchFragment search;
     private BrowsePeerFragment library;
     private TransfersFragment transfers;
@@ -70,7 +72,7 @@ public class MainActivity2 extends AbstractActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         setupFragments();
-        
+
         setupInitialFragment(savedInstanceState);
 
         // set up the drawer's list view with items and click listener
@@ -95,7 +97,7 @@ public class MainActivity2 extends AbstractActivity {
         if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_free_apps, items);
         }
-        MenuAdapter adapter = new MenuAdapter(this, items);
+        MenuAdapter2 adapter = new MenuAdapter2(this, items);
         mDrawerList.setAdapter(adapter);
     }
 
@@ -120,9 +122,9 @@ public class MainActivity2 extends AbstractActivity {
     private void selectItem(int position) {
         // update the main content by replacing fragments
         Fragment fragment = new AboutFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
+        //        Bundle args = new Bundle();
+        //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+        //        fragment.setArguments(args);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -156,6 +158,29 @@ public class MainActivity2 extends AbstractActivity {
         public int iconResId;
         public String label;
         public boolean selected;
+    }
+
+    private static class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
+
+        public MenuAdapter2(Context context, XmlMenuItem[] items) {
+            super(context, R.layout.slidemenu_listitem, Arrays.asList(items));
+        }
+
+        @Override
+        protected void populateView(View view, XmlMenuItem item) {
+            TextView label = (TextView) view.findViewById(R.id.slidemenu_listitem_label);
+            ImageView icon = (ImageView) view.findViewById(R.id.slidemenu_listitem_icon);
+
+            label.setText(item.label);
+            icon.setImageResource(item.iconResId);
+
+            view.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
+        }
+        
+        @Override
+        protected void onItemClicked(View v) {
+            //System.out.println("");
+        }
     }
 
     private static class MenuAdapter extends ArrayAdapter<XmlMenuItem> {
@@ -247,7 +272,7 @@ public class MainActivity2 extends AbstractActivity {
             return context.getResources().getString(Integer.valueOf(id));
         }
     }
-    
+
     private void setupFragments() {
         search = new SearchFragment();
         library = new BrowsePeerFragment();
@@ -258,7 +283,7 @@ public class MainActivity2 extends AbstractActivity {
 
         library.setPeer(PeerManager.instance().getLocalPeer());
     }
-    
+
     private void setupInitialFragment(Bundle savedInstanceState) {
         Fragment fragment = null;
 
@@ -274,7 +299,7 @@ public class MainActivity2 extends AbstractActivity {
 
         updateHeader(fragment);
     }
-    
+
     private void updateHeader(Fragment fragment) {
         try {
             RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
