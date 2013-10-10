@@ -13,14 +13,11 @@ import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,9 +26,10 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 
-public class MainActivity3 extends FragmentActivity {
+public class MainActivity3 extends AbstractActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity3.class);
 
@@ -43,12 +41,15 @@ public class MainActivity3 extends FragmentActivity {
     private String[] mPlanetTitles;
 
     private static final String[] titles = new String[] { "a", "b", "c" };
+    
+    public MainActivity3() {
+        super(R.layout.activity_main3, false, 2);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main3);
-
+        
         mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = titles;
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -87,14 +88,6 @@ public class MainActivity3 extends FragmentActivity {
 
         if (savedInstanceState == null) {
             selectItem(0);
-        }
-    }
-
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
         }
     }
 
@@ -164,7 +157,7 @@ public class MainActivity3 extends FragmentActivity {
         public boolean selected;
     }
 
-    private static class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
+    private  class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
 
         public MenuAdapter2(Context context, XmlMenuItem[] items) {
             super(context, R.layout.slidemenu_listitem, Arrays.asList(items));
@@ -183,7 +176,8 @@ public class MainActivity3 extends FragmentActivity {
 
         @Override
         protected void onItemClicked(View v) {
-            System.out.println("hello" + v.getTag());
+            mDrawerLayout.closeDrawer(mDrawerList);
+            System.out.println("hello");
         }
     }
 
