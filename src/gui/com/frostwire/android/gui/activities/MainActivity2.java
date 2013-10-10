@@ -61,7 +61,7 @@ public class MainActivity2 extends AbstractActivity {
     private AboutFragment about;
 
     public MainActivity2() {
-        super(R.layout.activity_main2, false, 2);
+        super(R.layout.activity_main3, false, 2);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MainActivity2 extends AbstractActivity {
 
         setupFragments();
 
-        setupInitialFragment(savedInstanceState);
+        //setupInitialFragment(savedInstanceState);
 
         // set up the drawer's list view with items and click listener
         setupMenuItems();
@@ -179,7 +179,7 @@ public class MainActivity2 extends AbstractActivity {
         
         @Override
         protected void onItemClicked(View v) {
-            //System.out.println("");
+            System.out.println("hello" + v.getTag());
         }
     }
 
