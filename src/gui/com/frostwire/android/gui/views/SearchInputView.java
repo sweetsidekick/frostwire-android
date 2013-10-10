@@ -278,6 +278,12 @@ public class SearchInputView extends LinearLayout {
 
     private void updateHint(int fileType) {
         String hint = getContext().getString(R.string.search_label) + " ";
+        
+        if (OSUtils.isOUYA()) {
+            String ouyaSearchHintPrefix =  getContext().getResources().getString(R.string.ouya_search_hint_prefix);
+            hint = ouyaSearchHintPrefix + " " + hint;
+        }
+        
         hint += UIUtils.getFileTypeAsString(getContext().getResources(), (byte) fileType);
         textInput.setHint(hint);
     }
