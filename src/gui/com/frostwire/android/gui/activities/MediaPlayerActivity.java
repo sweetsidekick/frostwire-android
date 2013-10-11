@@ -62,6 +62,8 @@ import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -312,17 +314,20 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             @Override
             public void onLeftToRightSwipe() {
                 playPrevious();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             }
 
             @Override
             public void onRightToLeftSwipe() {
                 playNext();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             }
 
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
                 pause();
                 sync();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_PAUSE_RESUME);
                 return true;
             }
         });
@@ -424,6 +429,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         @Override
         public boolean onLongClick(View v) {
             stop();
+            UXStats.instance().log(UXAction.PLAYER_STOP_ON_LONG_CLICK);
             return true;
         }
     };
@@ -655,6 +661,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             public void onClick() {
                 mediaFD.shared = !mediaFD.shared;
                 Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
+                UXStats.instance().log(mediaFD.shared ? UXAction.PLAYER_MENU_SHARE : UXAction.PLAYER_MENU_UNSHARE);
             }
 
             @Override
@@ -672,6 +679,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             @Override
             public void onClick() {
                 stop();
+                UXStats.instance().log(UXAction.PLAYER_MENU_STOP);
             }
 
             @Override
@@ -702,6 +710,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         onDeleteCurrentTrack();
+                        UXStats.instance().log(UXAction.PLAYER_MENU_DELETE_TRACK);
                     }
                 });
             }
