@@ -1,5 +1,6 @@
-FrostWire 1.1.4 - OCT/10/2013
+FrostWire 1.1.4 - OCT/11/2013
  - Audio player shows correct android notification when paused.
+ - Fixes ExtraTorrent meta search.
  - Removed Vertor meta search. No longer serving .torrents without captcha.
  - Updated arabic translation, thanks @nisrmasr.
  - Updated spanish translation, thanks @muckachina.
