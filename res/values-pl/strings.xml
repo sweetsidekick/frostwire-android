@@ -26,7 +26,7 @@
     <string name="activity_chat_name">Czat</string>
     <string name="activity_downloads_name">Aktywne Pobieranie</string>
     <string name="activity_uploads_name">Aktywne Wysyłanie</string>
-    <string name="activity_about">Informacje o</string>
+    <string name="activity_about">O nas</string>
     <string name="activity_debug_name">Debugować</string>
     <string name="disconnected">Rozłączony</string>
     <string name="all_transfers_will_stop_are_you_sure">Wszystkie transfery się zatrzymają.\nJesteś tego pewny?</string>
@@ -92,7 +92,7 @@
     <string name="go_to">Idź Do</string>
     <string name="done">Gotowe</string>
     <string name="home">Strona Główna</string>
-    <string name="about">Informacje o</string>
+    <string name="about">O nas</string>
     <string name="send_to_third_party">Wyślij/Prześlij</string>
     <string name="send_file_using">Wyślij plik za pomocą</string>
     <string name="my_files">Moje pliki</string>
