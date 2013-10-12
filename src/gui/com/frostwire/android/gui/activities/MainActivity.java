@@ -68,6 +68,8 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -204,6 +206,21 @@ public class MainActivity extends AbstractSlidingActivity {
                     startWizardActivity();
                 }
             }));
+        }
+        
+        checkLastSeenVersion();
+    }
+
+    private void checkLastSeenVersion() {
+        final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
+        if (lastSeenVersion == null || lastSeenVersion.equals("")) {
+            //fresh install
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
+        } else if (!Constants.FROSTWIRE_VERSION_STRING.equals(lastSeenVersion)) {
+            //just updated.
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
         }
     }
 

@@ -38,7 +38,7 @@ public final class Constants {
 
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "106";
+    public static final String FROSTWIRE_BUILD = "107";
     
     public static final boolean IS_AMAZON_DISTRIBUTION = false;
 
@@ -49,6 +49,7 @@ public final class Constants {
 
     // preference keys
     public static final String PREF_KEY_CORE_UUID = "frostwire.prefs.core.uuid";
+    public static final String PREF_KEY_CORE_LAST_SEEN_VERSION = "frostwire.prefs.core.last_seen_version";
 
     public static final String PREF_KEY_NETWORK_USE_UPNP = "froswire.prefs.network.use_upnp";
     public static final String PREF_KEY_NETWORK_USE_MOBILE_DATA = "frostwire.prefs.network.use_mobile_data";
