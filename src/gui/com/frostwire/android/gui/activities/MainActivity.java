@@ -32,7 +32,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
@@ -83,9 +82,16 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ *
+ */
 public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
@@ -97,9 +103,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private static boolean firstTime = true;
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private DrawerLayout drawerLayout;
     private View leftDrawer;
+    private ListView listMenu;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -107,6 +113,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private BrowsePeersFragment peers;
     private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
+
     private PlayerMenuItemView playerItem;
 
     // not sure about this variable, quick solution for now
@@ -123,28 +130,23 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        leftDrawer = findView(R.id.activity_main_left_drawer);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        playerItem = (PlayerMenuItemView) findViewById(R.id.slidemenu_player_menuitem);
-        playerItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchPlayerActivity();
-            }
-        });
-
-        setupFragments();
-
-        setupInitialFragment(savedInstanceState);
-
-        setupMenuItems();
-        mDrawerLayout.setDrawerListener(new SimpleDrawerListener() {
+        drawerLayout = findView(R.id.drawer_layout);
+        drawerLayout.setDrawerListener(new SimpleDrawerListener() {
             @Override
             public void onDrawerStateChanged(int newState) {
                 refreshPlayerItem();
                 syncSlideMenu();
+            }
+        });
+
+        leftDrawer = findView(R.id.activity_main_left_drawer);
+        listMenu = findView(R.id.left_drawer);
+
+        playerItem = findView(R.id.slidemenu_player_menuitem);
+        playerItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchPlayerActivity();
             }
         });
 
@@ -156,9 +158,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         });
 
+        setupFragments();
+
+        setupInitialFragment(savedInstanceState);
+
+        setupMenuItems();
+
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
-            //offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
             appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
 
@@ -206,7 +213,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         saveLastFragment(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
-        //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
 
@@ -236,7 +242,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void checkLastSeenVersion() {
         final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
-        if (lastSeenVersion == null || lastSeenVersion.equals("")) {
+        if (StringUtils.isNullOrEmpty(lastSeenVersion)) {
             //fresh install
             ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
             UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
@@ -413,10 +419,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void toggleDrawer() {
-        if (mDrawerLayout.isDrawerOpen(leftDrawer)) {
-            mDrawerLayout.closeDrawer(leftDrawer);
+        if (drawerLayout.isDrawerOpen(leftDrawer)) {
+            drawerLayout.closeDrawer(leftDrawer);
         } else {
-            mDrawerLayout.openDrawer(leftDrawer);
+            drawerLayout.openDrawer(leftDrawer);
         }
     }
 
@@ -530,47 +536,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public void setSelectedItem(int id) {
         try {
-            MenuAdapter2 adapter = (MenuAdapter2) mDrawerList.getAdapter();
+            MenuAdapter2 adapter = (MenuAdapter2) listMenu.getAdapter();
             adapter.setSelectedItem(id);
         } catch (Throwable e) { // protecting from weird android UI engine issues
             LOG.warn("Error setting slide menu item selected", e);
         }
-    }
-
-    private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = new AboutFragment();
-        //        Bundle args = new Bundle();
-        //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        //        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(leftDrawer);
-    }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        //mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        //mDrawerToggle.onConfigurationChanged(newConfig);
-
-        //initMenuItems();
     }
 
     @Override
@@ -615,7 +585,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         @Override
         protected void onItemClicked(View v) {
-            mDrawerLayout.closeDrawer(leftDrawer);
+            drawerLayout.closeDrawer(leftDrawer);
 
             try {
                 int id = (Integer) ((XmlMenuItem) v.getTag()).id;
@@ -664,14 +634,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void launchPlayerActivity() {
-        //        if (getActivity() == null) {
-        //            return;
-        //        }
-        //
-        //        if (getActivity() instanceof MainActivity) {
-        //            ((MainActivity) getActivity()).showContent();
-        //        }
-
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
             Intent i = new Intent(this, MediaPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -687,8 +649,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void showFreeApps() {
         try {
-            //OffercastSDK offercast = OffercastSDK.getInstance(getActivity());
-            //offercast.showAppWallAd();
             Appia appia = Appia.getAppia();
             appia.cacheAppWall(this);
             appia.displayWall(this, WallDisplayType.FULL_SCREEN);
@@ -713,7 +673,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         MenuAdapter2 adapter = new MenuAdapter2(this, items);
-        mDrawerList.setAdapter(adapter);
+        listMenu.setAdapter(adapter);
     }
 
     private XmlMenuItem[] removeMenuItem(int idToRemove, XmlMenuItem[] originalItems) {
