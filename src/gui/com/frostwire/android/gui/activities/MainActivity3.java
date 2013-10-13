@@ -60,6 +60,7 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
+import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
@@ -87,6 +88,7 @@ public class MainActivity3 extends AbstractActivity {
     private BrowsePeersFragment peers;
     private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
+    private PlayerMenuItemView playerItem;
 
     // not sure about this variable, quick solution for now
     private String durToken;
@@ -104,6 +106,14 @@ public class MainActivity3 extends AbstractActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        
+        playerItem = (PlayerMenuItemView) findViewById(R.id.slidemenu_player_menuitem);
+        playerItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchPlayerActivity();
+            }
+        });
 
         setupFragments();
 
@@ -567,9 +577,9 @@ public class MainActivity3 extends AbstractActivity {
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
         
-//        if (playerItem != null) {
-//            playerItem.unbindDrawables();
-//        }
+        if (playerItem != null) {
+            playerItem.unbindDrawables();
+        }
     }
     
 //    @Override
@@ -598,7 +608,7 @@ public class MainActivity3 extends AbstractActivity {
 //    }
     
     public void refreshPlayerItem() {
-        //playerItem.refresh();
+        playerItem.refresh();
     }
 
     /**
