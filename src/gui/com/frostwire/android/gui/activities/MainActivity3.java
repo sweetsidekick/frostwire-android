@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -120,6 +121,12 @@ public class MainActivity3 extends AbstractActivity {
         setupInitialFragment(savedInstanceState);
 
         setupMenuItems();
+        mDrawerLayout.setDrawerListener(new SimpleDrawerListener() {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                refreshPlayerItem();
+            }
+        });
 
         ImageButton buttonMenu = findView(R.id.activity_main_button_menu);
         buttonMenu.setOnClickListener(new View.OnClickListener() {
