@@ -117,6 +117,46 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         this.controller = new MainController(this);
     }
 
+    public void showMyFiles() {
+        controller.showMyFiles();
+    }
+
+    public void switchFragment(int itemId) {
+        controller.switchFragment(itemId);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+            if (!(getCurrentFragment() instanceof SearchFragment)) {
+                controller.switchFragment(R.id.menu_main_search);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            toggleDrawer();
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+        } else {
+            handleLastBackPressed();
+        }
+
+        syncSlideMenu();
+        updateHeader(getCurrentFragment());
+    }
+
+    @Override
+    public void onConfigurationUpdate() {
+        setupMenuItems();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,81 +205,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         onNewIntent(getIntent());
 
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
-            startAppia();
-        }
-
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
-            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
-                mainResume();
-            } else {
-                controller.startWizardActivity();
-            }
-        } else {
-            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
-                public void onAccept() {
-                    controller.startWizardActivity();
-                }
-            }));
-        }
-
-        checkLastSeenVersion();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        saveLastFragment(outState);
-
-        outState.putString(DUR_TOKEN_KEY, durToken);
-        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
-    }
-
-    private void saveLastFragment(Bundle outState) {
-        Fragment fragment = getCurrentFragment();
-        if (fragment != null) {
-            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
-        }
-    }
-
-    private void mainResume() {
-        syncSlideMenu();
-
-        if (firstTime) {
-            firstTime = false;
-            Engine.instance().startServices(); // it's necessary for the first time after wizard
-        }
-
-        SoftwareUpdater.instance().checkForUpdate(this);
-    }
-
-    private void checkLastSeenVersion() {
-        final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
-        if (StringUtils.isNullOrEmpty(lastSeenVersion)) {
-            //fresh install
-            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
-            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
-        } else if (!Constants.FROSTWIRE_VERSION_STRING.equals(lastSeenVersion)) {
-            //just updated.
-            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
-            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
-        }
-    }
-
-    private void startAppia() {
-        try {
-            Appia appia = Appia.getAppia();
-            appia.setSiteId(3867);
-            appiaStarted = true;
-        } catch (Throwable t) {
-            appiaStarted = false;
-        }
     }
 
     @Override
@@ -306,12 +271,99 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            startAppia();
+        }
+
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
+                mainResume();
+            } else {
+                controller.startWizardActivity();
+            }
+        } else {
+            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
+                public void onAccept() {
+                    controller.startWizardActivity();
+                }
+            }));
+        }
+
+        checkLastSeenVersion();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveLastFragment(outState);
+
+        outState.putString(DUR_TOKEN_KEY, durToken);
+        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
         search.dismissDialogs();
         library.dismissDialogs();
         peers.dismissDialogs();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //avoid memory leaks when the device is tilted and the menu gets recreated.
+        SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
+
+        if (playerItem != null) {
+            playerItem.unbindDrawables();
+        }
+    }
+
+    private void saveLastFragment(Bundle outState) {
+        Fragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+        }
+    }
+
+    private void mainResume() {
+        syncSlideMenu();
+
+        if (firstTime) {
+            firstTime = false;
+            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        }
+
+        SoftwareUpdater.instance().checkForUpdate(this);
+    }
+
+    private void checkLastSeenVersion() {
+        final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
+        if (StringUtils.isNullOrEmpty(lastSeenVersion)) {
+            //fresh install
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
+        } else if (!Constants.FROSTWIRE_VERSION_STRING.equals(lastSeenVersion)) {
+            //just updated.
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
+        }
+    }
+
+    private void startAppia() {
+        try {
+            Appia appia = Appia.getAppia();
+            appia.setSiteId(3867);
+            appiaStarted = true;
+        } catch (Throwable t) {
+            appiaStarted = false;
+        }
     }
 
     private void handleDesktopUploadRequest(Intent intent) {
@@ -364,69 +416,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            super.onBackPressed();
-        } else {
-            handleLastBackPressed();
-        }
-
-        syncSlideMenu();
-        updateHeader(getCurrentFragment());
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-            if (!(getCurrentFragment() instanceof SearchFragment)) {
-                controller.switchFragment(R.id.menu_main_search);
-            }
-        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-            toggleDrawer();
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-
-        return true;
-    }
-
-    public void showMyFiles() {
-        controller.showMyFiles();
-    }
-
-    public void switchFragment(int itemId) {
-        controller.switchFragment(itemId);
-    }
-
-    public Fragment getFragmentByMenuId(int id) {
-        switch (id) {
-        case R.id.menu_main_search:
-            return search;
-        case R.id.menu_main_library:
-            return library;
-        case R.id.menu_main_transfers:
-            return transfers;
-        case R.id.menu_main_peers:
-            return getWifiSharingFragment();
-        case R.id.menu_main_about:
-            return about;
-        default:
-            return null;
-        }
-    }
-
     private Fragment getWifiSharingFragment() {
         return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP) ? peers : peersDisabled;
-    }
-
-    public void switchContent(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
-        updateHeader(fragment);
-    }
-
-    public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
     }
 
     private void handleLastBackPressed() {
@@ -462,24 +453,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        //avoid memory leaks when the device is tilted and the menu gets recreated.
-        SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
-
+    private void refreshPlayerItem() {
         if (playerItem != null) {
-            playerItem.unbindDrawables();
+            playerItem.refresh();
         }
-    }
-
-    public void refreshPlayerItem() {
-        playerItem.refresh();
-    }
-
-    public void closeSlideMenu() {
-        drawerLayout.closeDrawer(leftDrawer);
     }
 
     private void setupMenuItems() {
@@ -536,8 +513,37 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    @Override
-    public void onConfigurationUpdate() {
-        setupMenuItems();
+    /*
+     * The following methods are only public to be able to use them from another package(internal).
+     */
+
+    public Fragment getFragmentByMenuId(int id) {
+        switch (id) {
+        case R.id.menu_main_search:
+            return search;
+        case R.id.menu_main_library:
+            return library;
+        case R.id.menu_main_transfers:
+            return transfers;
+        case R.id.menu_main_peers:
+            return getWifiSharingFragment();
+        case R.id.menu_main_about:
+            return about;
+        default:
+            return null;
+        }
+    }
+
+    public void switchContent(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
+        updateHeader(fragment);
+    }
+
+    public Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
+    }
+
+    public void closeSlideMenu() {
+        drawerLayout.closeDrawer(leftDrawer);
     }
 }
