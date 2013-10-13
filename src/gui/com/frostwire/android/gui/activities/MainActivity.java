@@ -19,8 +19,6 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,6 @@ import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,8 +45,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.DesktopUploadRequestStatus;
-import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
@@ -73,7 +68,6 @@ import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.android.gui.views.ShareIndicationDialog;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
 import com.frostwire.util.StringUtils;
@@ -143,7 +137,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         playerItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchPlayerActivity();
+                controller.launchPlayerActivity();
             }
         });
 
@@ -173,12 +167,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
     }
 
-    private void showTransfers() {
-        if (!(getCurrentFragment() instanceof TransfersFragment)) {
-            switchFragment(R.id.menu_main_transfers);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -191,12 +179,12 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
                 mainResume();
             } else {
-                startWizardActivity();
+                controller.startWizardActivity();
             }
         } else {
             trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
                 public void onAccept() {
-                    startWizardActivity();
+                    controller.startWizardActivity();
                 }
             }));
         }
@@ -231,12 +219,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         SoftwareUpdater.instance().checkForUpdate(this);
     }
 
-    private void startWizardActivity() {
-        Intent i = new Intent(this, WizardActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-    }
-
     private void checkLastSeenVersion() {
         final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
         if (StringUtils.isNullOrEmpty(lastSeenVersion)) {
@@ -266,7 +248,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         onResumeFragments();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            showTransfers();
+            controller.showTransfers();
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -302,11 +284,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         // When another application wants to "Share" a file and has chosen FrostWire to do so.
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
         else if (action != null && (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_SEND_MULTIPLE))) {
-            handleSendAction(intent);
+            controller.handleSendAction(intent);
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            showTransfers();
+            controller.showTransfers();
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
@@ -330,47 +312,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         search.dismissDialogs();
         library.dismissDialogs();
         peers.dismissDialogs();
-    }
-
-    private void handleSendAction(Intent intent) {
-        String action = intent.getAction();
-        if (action.equals(Intent.ACTION_SEND)) {
-            handleSendSingleFile(intent);
-        } else if (action.equals(Intent.ACTION_SEND_MULTIPLE)) {
-            handleSendMultipleFiles(intent);
-        }
-    }
-
-    private void handleSendMultipleFiles(Intent intent) {
-        ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (fileUris != null) {
-            for (Uri uri : fileUris) {
-                shareFileByUri(uri);
-            }
-            UIUtils.showLongMessage(this, getString(R.string.n_files_shared, fileUris.size()));
-        }
-    }
-
-    private void handleSendSingleFile(Intent intent) {
-        Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (uri == null) {
-            return;
-        }
-        shareFileByUri(uri);
-        UIUtils.showLongMessage(this, R.string.one_file_shared);
-    }
-
-    private void shareFileByUri(Uri uri) {
-        if (uri == null) {
-            return;
-        }
-
-        FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
-
-        if (fileDescriptor != null) {
-            fileDescriptor.shared = true;
-            Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
-        }
     }
 
     private void handleDesktopUploadRequest(Intent intent) {
@@ -439,7 +380,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             if (!(getCurrentFragment() instanceof SearchFragment)) {
-                switchFragment(R.id.menu_main_search);
+                controller.switchFragment(R.id.menu_main_search);
             }
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
             toggleDrawer();
@@ -450,25 +391,12 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         return true;
     }
 
-    public void switchFragment(int itemId) {
-        Fragment fragment = getFragmentByMenuId(itemId);
-        if (fragment != null) {
-            switchContent(fragment);
-        }
-    }
-
     public void showMyFiles() {
-        if (!(getCurrentFragment() instanceof BrowsePeerFragment)) {
-            switchFragment(R.id.menu_main_library);
-        }
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
-            showShareIndication();
-        }
+        controller.showMyFiles();
     }
 
-    private void showShareIndication() {
-        ShareIndicationDialog dlg = new ShareIndicationDialog();
-        dlg.show(getSupportFragmentManager());
+    public void switchFragment(int itemId) {
+        controller.switchFragment(itemId);
     }
 
     public Fragment getFragmentByMenuId(int id) {
@@ -489,21 +417,15 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private Fragment getWifiSharingFragment() {
-        return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
-    }
-
-    private boolean isWifiSharingEnabled() {
-        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
+        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP) ? peers : peersDisabled;
     }
 
     public void switchContent(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
-        //mDrawerLayout.openDrawer(mDrawerList);
-        //syncSlideMenu();
         updateHeader(fragment);
     }
 
-    private Fragment getCurrentFragment() {
+    public Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
     }
 
@@ -531,7 +453,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    public void setSelectedItem(int id) {
+    private void setSelectedItem(int id) {
         try {
             XmlMenuAdapter adapter = (XmlMenuAdapter) listMenu.getAdapter();
             adapter.setSelectedItem(id);
@@ -558,15 +480,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public void closeSlideMenu() {
         drawerLayout.closeDrawer(leftDrawer);
-    }
-
-    private void launchPlayerActivity() {
-        if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
-            Intent i = new Intent(this, MediaPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-        }
     }
 
     private void setupMenuItems() {

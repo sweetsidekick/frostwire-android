@@ -18,6 +18,9 @@
 
 package com.frostwire.android.gui.activities.internal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +30,20 @@ import android.support.v4.app.Fragment;
 
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
+import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
+import com.frostwire.android.gui.activities.WizardActivity;
+import com.frostwire.android.gui.fragments.BrowsePeerFragment;
+import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.ShareIndicationDialog;
 
 /**
  * 
@@ -92,6 +107,78 @@ public final class MainController {
             appia.displayWall(activity, WallDisplayType.FULL_SCREEN);
         } catch (Throwable e) {
             LOG.error("Can't show app wall", e);
+        }
+    }
+
+    public void showTransfers() {
+        if (!(activity.getCurrentFragment() instanceof TransfersFragment)) {
+            switchFragment(R.id.menu_main_transfers);
+        }
+    }
+
+    public void showMyFiles() {
+        if (!(activity.getCurrentFragment() instanceof BrowsePeerFragment)) {
+            switchFragment(R.id.menu_main_library);
+        }
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
+            ShareIndicationDialog dlg = new ShareIndicationDialog();
+            dlg.show(activity.getSupportFragmentManager());
+        }
+    }
+
+    public void startWizardActivity() {
+        Intent i = new Intent(activity, WizardActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(i);
+    }
+
+    public void launchPlayerActivity() {
+        if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
+            Intent i = new Intent(activity, MediaPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(i);
+        }
+    }
+
+    public void handleSendAction(Intent intent) {
+        String action = intent.getAction();
+        if (action.equals(Intent.ACTION_SEND)) {
+            handleSendSingleFile(intent);
+        } else if (action.equals(Intent.ACTION_SEND_MULTIPLE)) {
+            handleSendMultipleFiles(intent);
+        }
+    }
+
+    private void handleSendMultipleFiles(Intent intent) {
+        ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (fileUris != null) {
+            for (Uri uri : fileUris) {
+                shareFileByUri(uri);
+            }
+            UIUtils.showLongMessage(activity, activity.getString(R.string.n_files_shared, fileUris.size()));
+        }
+    }
+
+    private void handleSendSingleFile(Intent intent) {
+        Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (uri == null) {
+            return;
+        }
+        shareFileByUri(uri);
+        UIUtils.showLongMessage(activity, R.string.one_file_shared);
+    }
+
+    private void shareFileByUri(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+
+        FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
+
+        if (fileDescriptor != null) {
+            fileDescriptor.shared = true;
+            Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
         }
     }
 }
