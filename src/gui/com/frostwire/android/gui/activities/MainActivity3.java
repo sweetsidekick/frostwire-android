@@ -54,6 +54,7 @@ import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListAdapter;
@@ -556,6 +557,48 @@ public class MainActivity3 extends AbstractActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         //mDrawerToggle.onConfigurationChanged(newConfig);
+        
+        //initMenuItems();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        //avoid memory leaks when the device is tilted and the menu gets recreated.
+        SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
+        
+//        if (playerItem != null) {
+//            playerItem.unbindDrawables();
+//        }
+    }
+    
+//    @Override
+//    public void onListItemClick(ListView lv, View v, int position, long id) {
+//        if (getActivity() == null) {
+//            return;
+//        }
+//
+//        try {
+//            MenuAdapter adapter = (MenuAdapter) lv.getAdapter();
+//            MenuItem item = (MenuItem) adapter.getItem(position);
+//            if (item.id == R.id.menu_main_preferences) {
+//                adapter.notifyDataSetChanged();
+//                showPreferences(getActivity());
+//            } else if (item.id == R.id.menu_launch_tv) {
+//                launchFrostWireTV();
+//            } else if (item.id == R.id.menu_free_apps) {
+//                showFreeApps();
+//            } else {
+//                adapter.setSelectedItem(item.id);
+//                switchFragment(item.id);
+//            }
+//        } catch (Throwable e) { // protecting from weird android UI engine issues
+//            LOG.error("Error clicking slide menu item", e);
+//        }
+//    }
+    
+    public void refreshPlayerItem() {
+        //playerItem.refresh();
     }
 
     /**
@@ -641,6 +684,23 @@ public class MainActivity3 extends AbstractActivity {
         }
         startActivity(intent);
     }
+    
+    private void launchPlayerActivity() {
+//        if (getActivity() == null) {
+//            return;
+//        }
+//
+//        if (getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).showContent();
+//        }
+
+        if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
+            Intent i = new Intent(this, MediaPlayerActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+        }
+    }
 
     private void showPreferences(Context context) {
         Intent i = new Intent(context, PreferencesActivity.class);
@@ -669,6 +729,11 @@ public class MainActivity3 extends AbstractActivity {
         if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_free_apps, items);
         }
+        
+        if (!OfferUtils.isfreeAppsEnabled()) {
+            items = removeMenuItem(R.id.menu_free_apps,items);
+        }
+        
         MenuAdapter2 adapter = new MenuAdapter2(this, items);
         mDrawerList.setAdapter(adapter);
     }
