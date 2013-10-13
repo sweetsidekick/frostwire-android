@@ -1,3 +1,21 @@
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
@@ -477,7 +495,7 @@ public class MainActivity3 extends AbstractActivity implements ConfigurationUpda
     private void switchContent(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         //mDrawerLayout.openDrawer(mDrawerList);
-        syncSlideMenu();
+        //syncSlideMenu();
         updateHeader(fragment);
     }
 
@@ -494,22 +512,28 @@ public class MainActivity3 extends AbstractActivity implements ConfigurationUpda
     }
 
     private void syncSlideMenu() {
-        //        if (menuFragment != null) {
-        //            Fragment fragment = getCurrentFragment();
-        //
-        //            if (fragment instanceof SearchFragment) {
-        //                menuFragment.setSelectedItem(R.id.menu_main_search);
-        //            } else if (fragment instanceof BrowsePeerFragment) {
-        //                menuFragment.setSelectedItem(R.id.menu_main_library);
-        //            } else if (fragment instanceof TransfersFragment) {
-        //                menuFragment.setSelectedItem(R.id.menu_main_transfers);
-        //            } else if (fragment instanceof BrowsePeersFragment ||
-        //                       fragment instanceof BrowsePeersDisabledFragment) {
-        //                menuFragment.setSelectedItem(R.id.menu_main_peers);
-        //            } else if (fragment instanceof AboutFragment) {
-        //                menuFragment.setSelectedItem(R.id.menu_main_about);
-        //            }
-        //        }
+        Fragment fragment = getCurrentFragment();
+
+        if (fragment instanceof SearchFragment) {
+            setSelectedItem(R.id.menu_main_search);
+        } else if (fragment instanceof BrowsePeerFragment) {
+            setSelectedItem(R.id.menu_main_library);
+        } else if (fragment instanceof TransfersFragment) {
+            setSelectedItem(R.id.menu_main_transfers);
+        } else if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
+            setSelectedItem(R.id.menu_main_peers);
+        } else if (fragment instanceof AboutFragment) {
+            setSelectedItem(R.id.menu_main_about);
+        }
+    }
+
+    public void setSelectedItem(int id) {
+        try {
+            MenuAdapter2 adapter = (MenuAdapter2) mDrawerList.getAdapter();
+            adapter.setSelectedItem(id);
+        } catch (Throwable e) { // protecting from weird android UI engine issues
+            LOG.warn("Error setting slide menu item selected", e);
+        }
     }
 
     private void selectItem(int position) {
@@ -595,19 +619,27 @@ public class MainActivity3 extends AbstractActivity implements ConfigurationUpda
             try {
                 int id = (Integer) ((XmlMenuItem) v.getTag()).id;
                 if (id == R.id.menu_main_preferences) {
-                    //adapter.notifyDataSetChanged();
                     showPreferences(MainActivity3.this);
                 } else if (id == R.id.menu_launch_tv) {
                     launchFrostWireTV();
                 } else if (id == R.id.menu_free_apps) {
                     showFreeApps();
                 } else {
-                    //adapter.setSelectedItem(item.id);
+                    setSelectedItem(id);
                     switchFragment(id);
                 }
             } catch (Throwable e) { // protecting from weird android UI engine issues
                 LOG.error("Error clicking slide menu item", e);
             }
+        }
+
+        public void setSelectedItem(int id) {
+            for (int i = 0; i < getCount(); i++) {
+                XmlMenuItem item = getItem(i);
+                item.selected = item.id == id;
+            }
+
+            notifyDataSetChanged();
         }
     }
 
@@ -761,6 +793,7 @@ public class MainActivity3 extends AbstractActivity implements ConfigurationUpda
         }
         if (fragment == null) {
             fragment = search;
+            setSelectedItem(R.id.menu_main_search);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
