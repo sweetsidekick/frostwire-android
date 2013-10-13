@@ -43,13 +43,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.appia.sdk.Appia;
-import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -60,6 +57,9 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
+import com.frostwire.android.gui.activities.internal.MainController;
+import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
+import com.frostwire.android.gui.activities.internal.XmlMenuItem;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -74,7 +74,6 @@ import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
@@ -103,6 +102,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private static boolean firstTime = true;
 
+    private MainController controller;
+
     private DrawerLayout drawerLayout;
     private View leftDrawer;
     private ListView listMenu;
@@ -124,6 +125,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
+        this.controller = new MainController(this);
     }
 
     @Override
@@ -474,7 +476,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         dlg.show(getSupportFragmentManager());
     }
 
-    private Fragment getFragmentByMenuId(int id) {
+    public Fragment getFragmentByMenuId(int id) {
         switch (id) {
         case R.id.menu_main_search:
             return search;
@@ -499,7 +501,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
     }
 
-    private void switchContent(Fragment fragment) {
+    public void switchContent(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
         //mDrawerLayout.openDrawer(mDrawerList);
         //syncSlideMenu();
@@ -536,7 +538,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public void setSelectedItem(int id) {
         try {
-            MenuAdapter2 adapter = (MenuAdapter2) listMenu.getAdapter();
+            XmlMenuAdapter adapter = (XmlMenuAdapter) listMenu.getAdapter();
             adapter.setSelectedItem(id);
         } catch (Throwable e) { // protecting from weird android UI engine issues
             LOG.warn("Error setting slide menu item selected", e);
@@ -559,78 +561,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         playerItem.refresh();
     }
 
-    private static class XmlMenuItem {
-        public int id;
-        public int iconResId;
-        public String label;
-        public boolean selected;
-    }
-
-    private class MenuAdapter2 extends AbstractListAdapter<XmlMenuItem> {
-
-        public MenuAdapter2(Context context, XmlMenuItem[] items) {
-            super(context, R.layout.slidemenu_listitem, Arrays.asList(items));
-        }
-
-        @Override
-        protected void populateView(View view, XmlMenuItem item) {
-            TextView label = (TextView) view.findViewById(R.id.slidemenu_listitem_label);
-            ImageView icon = (ImageView) view.findViewById(R.id.slidemenu_listitem_icon);
-
-            label.setText(item.label);
-            icon.setImageResource(item.iconResId);
-
-            view.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
-        }
-
-        @Override
-        protected void onItemClicked(View v) {
-            drawerLayout.closeDrawer(leftDrawer);
-
-            try {
-                int id = (Integer) ((XmlMenuItem) v.getTag()).id;
-                if (id == R.id.menu_main_preferences) {
-                    showPreferences(MainActivity.this);
-                } else if (id == R.id.menu_launch_tv) {
-                    launchFrostWireTV();
-                } else if (id == R.id.menu_free_apps) {
-                    showFreeApps();
-                } else {
-                    setSelectedItem(id);
-                    switchFragment(id);
-                }
-            } catch (Throwable e) { // protecting from weird android UI engine issues
-                LOG.error("Error clicking slide menu item", e);
-            }
-        }
-
-        public void setSelectedItem(int id) {
-            for (int i = 0; i < getCount(); i++) {
-                XmlMenuItem item = getItem(i);
-                item.selected = item.id == id;
-            }
-
-            notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Will try to launch the app, if it cannot find the launch intent, it'll take the user to the Android market.
-     */
-    private void launchFrostWireTV() {
-        Intent intent = null;
-        try {
-            intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.frostwire.android.tv");
-
-            //on the nexus it wasn't throwing the NameNotFoundException, it was just returning null
-            if (intent == null) {
-                throw new NullPointerException();
-            }
-        } catch (Throwable t) {
-            intent = new Intent();
-            intent.setData(Uri.parse("market://details?id=com.frostwire.android.tv"));
-        }
-        startActivity(intent);
+    public void closeSlideMenu() {
+        drawerLayout.closeDrawer(leftDrawer);
     }
 
     private void launchPlayerActivity() {
@@ -639,21 +571,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-        }
-    }
-
-    private void showPreferences(Context context) {
-        Intent i = new Intent(context, PreferencesActivity.class);
-        context.startActivity(i);
-    }
-
-    private void showFreeApps() {
-        try {
-            Appia appia = Appia.getAppia();
-            appia.cacheAppWall(this);
-            appia.displayWall(this, WallDisplayType.FULL_SCREEN);
-        } catch (Throwable e) {
-            LOG.error("Can't show app wall", e);
         }
     }
 
@@ -672,7 +589,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             items = removeMenuItem(R.id.menu_free_apps, items);
         }
 
-        MenuAdapter2 adapter = new MenuAdapter2(this, items);
+        XmlMenuAdapter adapter = new XmlMenuAdapter(controller, items);
         listMenu.setAdapter(adapter);
     }
 
