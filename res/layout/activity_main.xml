@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/slidemenu_background"
+                android:background="@color/app_dark_blue"
                 android:choiceMode="singleChoice"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp" />
