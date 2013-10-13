@@ -42,6 +42,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
+import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -67,7 +68,7 @@ import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
-public class MainActivity3 extends AbstractActivity {
+public class MainActivity3 extends AbstractActivity implements ConfigurationUpdateListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity3.class);
 
@@ -145,6 +146,8 @@ public class MainActivity3 extends AbstractActivity {
         addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
 
         onNewIntent(getIntent());
+
+        SoftwareUpdater.instance().addConfigurationUpdateListener(this);
     }
 
     private void showTransfers() {
@@ -784,5 +787,10 @@ public class MainActivity3 extends AbstractActivity {
         } catch (Throwable e) {
             LOG.error("Error updating main header", e);
         }
+    }
+
+    @Override
+    public void onConfigurationUpdate() {
+        setupMenuItems();
     }
 }
