@@ -59,6 +59,7 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/activity_main_left_drawer"
             android:layout_width="@dimen/mainmenu_width"
             android:layout_height="match_parent"
             android:layout_gravity="left"
@@ -78,7 +79,8 @@
             <com.frostwire.android.gui.views.PlayerMenuItemView
                 android:id="@+id/slidemenu_player_menuitem"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 

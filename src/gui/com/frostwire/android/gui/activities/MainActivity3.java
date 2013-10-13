@@ -22,9 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -81,6 +79,7 @@ public class MainActivity3 extends AbstractActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private View leftDrawer;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -105,8 +104,9 @@ public class MainActivity3 extends AbstractActivity {
         super.onCreate(savedInstanceState);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        leftDrawer = findView(R.id.activity_main_left_drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        
+
         playerItem = (PlayerMenuItemView) findViewById(R.id.slidemenu_player_menuitem);
         playerItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,36 +119,7 @@ public class MainActivity3 extends AbstractActivity {
 
         setupInitialFragment(savedInstanceState);
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
-        //mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.slidemenu_listitem, R.id.slidemenu_listitem_label, mPlanetTitles));
         setupMenuItems();
-        //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-        //getActionBar().setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        //        mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-        //        mDrawerLayout, /* DrawerLayout object */
-        //        R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-        //        R.string.drawer_open, /* "open drawer" description for accessibility */
-        //        R.string.drawer_close /* "close drawer" description for accessibility */
-        //        ) {
-        //            public void onDrawerClosed(View view) {
-        //                getActionBar().setTitle(mTitle);
-        //                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-        //            }
-        //
-        //            public void onDrawerOpened(View drawerView) {
-        //                getActionBar().setTitle(mDrawerTitle);
-        //                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-        //            }
-        //        };
-        //        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         ImageButton buttonMenu = findView(R.id.activity_main_button_menu);
         buttonMenu.setOnClickListener(new View.OnClickListener() {
@@ -174,19 +145,15 @@ public class MainActivity3 extends AbstractActivity {
             switchFragment(R.id.menu_main_transfers);
         }
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
-        
-//        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-//            startOffercast();
-//        }
 
         if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
             startAppia();
         }
-        
+
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
                 mainResume();
@@ -200,10 +167,10 @@ public class MainActivity3 extends AbstractActivity {
                 }
             }));
         }
-        
+
         checkLastSeenVersion();
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -213,14 +180,14 @@ public class MainActivity3 extends AbstractActivity {
         //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
-    
+
     private void saveLastFragment(Bundle outState) {
         Fragment fragment = getCurrentFragment();
         if (fragment != null) {
             getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
         }
     }
-    
+
     private void mainResume() {
         syncSlideMenu();
 
@@ -231,13 +198,13 @@ public class MainActivity3 extends AbstractActivity {
 
         SoftwareUpdater.instance().checkForUpdate(this);
     }
-    
+
     private void startWizardActivity() {
         Intent i = new Intent(this, WizardActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
-    
+
     private void checkLastSeenVersion() {
         final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
         if (lastSeenVersion == null || lastSeenVersion.equals("")) {
@@ -250,13 +217,13 @@ public class MainActivity3 extends AbstractActivity {
             UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
         }
     }
-    
+
     private void startAppia() {
         try {
             Appia appia = Appia.getAppia();
             appia.setSiteId(3867);
             appiaStarted = true;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             appiaStarted = false;
         }
     }
@@ -323,7 +290,7 @@ public class MainActivity3 extends AbstractActivity {
             }
         }
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -417,10 +384,10 @@ public class MainActivity3 extends AbstractActivity {
     }
 
     private void toggleDrawer() {
-        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-            mDrawerLayout.closeDrawer(mDrawerList);
+        if (mDrawerLayout.isDrawerOpen(leftDrawer)) {
+            mDrawerLayout.closeDrawer(leftDrawer);
         } else {
-            mDrawerLayout.openDrawer(mDrawerList);
+            mDrawerLayout.openDrawer(leftDrawer);
         }
     }
 
@@ -457,7 +424,7 @@ public class MainActivity3 extends AbstractActivity {
             switchContent(fragment);
         }
     }
-    
+
     public void showMyFiles() {
         if (!(getCurrentFragment() instanceof BrowsePeerFragment)) {
             switchFragment(R.id.menu_main_library);
@@ -466,7 +433,7 @@ public class MainActivity3 extends AbstractActivity {
             showShareIndication();
         }
     }
-    
+
     private void showShareIndication() {
         ShareIndicationDialog dlg = new ShareIndicationDialog();
         dlg.show(getSupportFragmentManager());
@@ -547,7 +514,7 @@ public class MainActivity3 extends AbstractActivity {
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        mDrawerLayout.closeDrawer(leftDrawer);
     }
 
     /**
@@ -567,66 +534,24 @@ public class MainActivity3 extends AbstractActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         //mDrawerToggle.onConfigurationChanged(newConfig);
-        
+
         //initMenuItems();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        
+
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
-        
+
         if (playerItem != null) {
             playerItem.unbindDrawables();
         }
     }
-    
-//    @Override
-//    public void onListItemClick(ListView lv, View v, int position, long id) {
-//        if (getActivity() == null) {
-//            return;
-//        }
-//
-//        try {
-//            MenuAdapter adapter = (MenuAdapter) lv.getAdapter();
-//            MenuItem item = (MenuItem) adapter.getItem(position);
-//            if (item.id == R.id.menu_main_preferences) {
-//                adapter.notifyDataSetChanged();
-//                showPreferences(getActivity());
-//            } else if (item.id == R.id.menu_launch_tv) {
-//                launchFrostWireTV();
-//            } else if (item.id == R.id.menu_free_apps) {
-//                showFreeApps();
-//            } else {
-//                adapter.setSelectedItem(item.id);
-//                switchFragment(item.id);
-//            }
-//        } catch (Throwable e) { // protecting from weird android UI engine issues
-//            LOG.error("Error clicking slide menu item", e);
-//        }
-//    }
-    
+
     public void refreshPlayerItem() {
         playerItem.refresh();
-    }
-
-    /**
-     * Fragment that appears in the "content_frame", shows a planet
-     */
-    public static class PlanetFragment extends Fragment {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
-
-        public PlanetFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_about, container, false);
-
-            return rootView;
-        }
     }
 
     private static class XmlMenuItem {
@@ -655,7 +580,7 @@ public class MainActivity3 extends AbstractActivity {
 
         @Override
         protected void onItemClicked(View v) {
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(leftDrawer);
 
             try {
                 int id = (Integer) ((XmlMenuItem) v.getTag()).id;
@@ -694,15 +619,15 @@ public class MainActivity3 extends AbstractActivity {
         }
         startActivity(intent);
     }
-    
+
     private void launchPlayerActivity() {
-//        if (getActivity() == null) {
-//            return;
-//        }
-//
-//        if (getActivity() instanceof MainActivity) {
-//            ((MainActivity) getActivity()).showContent();
-//        }
+        //        if (getActivity() == null) {
+        //            return;
+        //        }
+        //
+        //        if (getActivity() instanceof MainActivity) {
+        //            ((MainActivity) getActivity()).showContent();
+        //        }
 
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
             Intent i = new Intent(this, MediaPlayerActivity.class);
@@ -739,11 +664,11 @@ public class MainActivity3 extends AbstractActivity {
         if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
             items = removeMenuItem(R.id.menu_free_apps, items);
         }
-        
+
         if (!OfferUtils.isfreeAppsEnabled()) {
-            items = removeMenuItem(R.id.menu_free_apps,items);
+            items = removeMenuItem(R.id.menu_free_apps, items);
         }
-        
+
         MenuAdapter2 adapter = new MenuAdapter2(this, items);
         mDrawerList.setAdapter(adapter);
     }
