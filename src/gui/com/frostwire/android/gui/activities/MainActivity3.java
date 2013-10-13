@@ -42,6 +42,7 @@ import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
+import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -59,6 +60,11 @@ import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.ShareIndicationDialog;
+import com.frostwire.android.gui.views.TOS;
+import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 public class MainActivity3 extends AbstractActivity {
 
@@ -157,6 +163,92 @@ public class MainActivity3 extends AbstractActivity {
             switchFragment(R.id.menu_main_transfers);
         }
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+//        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+//            startOffercast();
+//        }
+
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            startAppia();
+        }
+        
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
+                mainResume();
+            } else {
+                startWizardActivity();
+            }
+        } else {
+            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
+                public void onAccept() {
+                    startWizardActivity();
+                }
+            }));
+        }
+        
+        checkLastSeenVersion();
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveLastFragment(outState);
+
+        outState.putString(DUR_TOKEN_KEY, durToken);
+        //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
+        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
+    }
+    
+    private void saveLastFragment(Bundle outState) {
+        Fragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+        }
+    }
+    
+    private void mainResume() {
+        syncSlideMenu();
+
+        if (firstTime) {
+            firstTime = false;
+            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        }
+
+        SoftwareUpdater.instance().checkForUpdate(this);
+    }
+    
+    private void startWizardActivity() {
+        Intent i = new Intent(this, WizardActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+    }
+    
+    private void checkLastSeenVersion() {
+        final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
+        if (lastSeenVersion == null || lastSeenVersion.equals("")) {
+            //fresh install
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
+        } else if (!Constants.FROSTWIRE_VERSION_STRING.equals(lastSeenVersion)) {
+            //just updated.
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
+        }
+    }
+    
+    private void startAppia() {
+        try {
+            Appia appia = Appia.getAppia();
+            appia.setSiteId(3867);
+            appiaStarted = true;
+        } catch(Throwable t) {
+            appiaStarted = false;
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -219,6 +311,15 @@ public class MainActivity3 extends AbstractActivity {
                 LOG.warn("Error handling download complete notification", e);
             }
         }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        search.dismissDialogs();
+        library.dismissDialogs();
+        peers.dismissDialogs();
     }
 
     private void handleSendAction(Intent intent) {
@@ -344,6 +445,20 @@ public class MainActivity3 extends AbstractActivity {
         if (fragment != null) {
             switchContent(fragment);
         }
+    }
+    
+    public void showMyFiles() {
+        if (!(getCurrentFragment() instanceof BrowsePeerFragment)) {
+            switchFragment(R.id.menu_main_library);
+        }
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
+            showShareIndication();
+        }
+    }
+    
+    private void showShareIndication() {
+        ShareIndicationDialog dlg = new ShareIndicationDialog();
+        dlg.show(getSupportFragmentManager());
     }
 
     private Fragment getFragmentByMenuId(int id) {
