@@ -46,7 +46,7 @@
 
 		<!-- activities -->
 
-		<activity android:name="com.frostwire.android.gui.activities.MainActivity3"
+		<activity android:name="com.frostwire.android.gui.activities.MainActivity"
 			android:label="@string/application_label">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
