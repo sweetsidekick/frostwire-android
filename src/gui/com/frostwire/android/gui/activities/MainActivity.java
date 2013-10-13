@@ -116,7 +116,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private boolean appiaStarted = false;
 
     public MainActivity() {
-        super(R.layout.activity_main3, false, 2);
+        super(R.layout.activity_main, false, 2);
     }
 
     @Override
