@@ -21,18 +21,14 @@ package com.frostwire.android.gui.activities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xmlpull.v1.XmlPullParser;
 
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -60,6 +56,7 @@ import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
 import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
 import com.frostwire.android.gui.activities.internal.XmlMenuItem;
+import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -70,8 +67,6 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.util.OSUtils;
-import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
@@ -575,81 +570,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupMenuItems() {
-        XmlMenuItem[] items = parseXml(this, R.menu.main).toArray(new XmlMenuItem[0]);
-        ConfigurationManager config = ConfigurationManager.instance();
-        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
-            items = removeMenuItem(R.id.menu_launch_tv, items);
-        }
-
-        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
-            items = removeMenuItem(R.id.menu_free_apps, items);
-        }
-
-        if (!OfferUtils.isfreeAppsEnabled()) {
-            items = removeMenuItem(R.id.menu_free_apps, items);
-        }
-
+        XmlMenuItem[] items = new XmlMenuLoader().load(this);
         XmlMenuAdapter adapter = new XmlMenuAdapter(controller, items);
         listMenu.setAdapter(adapter);
-    }
-
-    private XmlMenuItem[] removeMenuItem(int idToRemove, XmlMenuItem[] originalItems) {
-        List<XmlMenuItem> items = new ArrayList<XmlMenuItem>();
-        for (XmlMenuItem i : originalItems) {
-            if (i.id != idToRemove) {
-                items.add(i);
-            }
-        }
-        return items.toArray(new XmlMenuItem[0]);
-    }
-
-    private List<XmlMenuItem> parseXml(Context context, int menu) {
-
-        List<XmlMenuItem> list = new ArrayList<XmlMenuItem>();
-
-        try {
-            XmlResourceParser xpp = context.getResources().getXml(menu);
-
-            xpp.next();
-            int eventType = xpp.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-
-                if (eventType == XmlPullParser.START_TAG) {
-
-                    String elemName = xpp.getName();
-
-                    if (elemName.equals("item")) {
-
-                        String textId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "title");
-                        String iconId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "icon");
-                        String resId = xpp.getAttributeValue("http://schemas.android.com/apk/res/android", "id");
-
-                        XmlMenuItem item = new XmlMenuItem();
-                        item.id = Integer.valueOf(resId.replace("@", ""));
-                        item.iconResId = Integer.valueOf(iconId.replace("@", ""));
-                        item.label = resourceIdToString(context, textId);
-
-                        list.add(item);
-                    }
-                }
-
-                eventType = xpp.next();
-            }
-        } catch (Throwable e) {
-            LOG.error("Error loading menu items from resource", e);
-        }
-
-        return list;
-    }
-
-    private String resourceIdToString(Context context, String text) {
-        if (!text.contains("@")) {
-            return text;
-        } else {
-            String id = text.replace("@", "");
-            return context.getResources().getString(Integer.valueOf(id));
-        }
     }
 
     private void setupFragments() {
