@@ -22,14 +22,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fff6f6f6"
+    android:background="@color/app_background"
     android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/activity_main_layout_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_header_background" >
+        android:background="@color/app_basic_blue" >
 
         <ImageButton
             android:id="@+id/activity_main_button_menu"

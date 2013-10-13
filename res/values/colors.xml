@@ -39,5 +39,14 @@
     <!-- SlideMenu -->
     <color name="slidemenu_background">#ff315776</color>
     <color name="slidemenu_list_background">#ff2c79a5</color>
+    <color name="app_basic_blue">#ff2f465a</color>
+    <color name="app_dark_blue">#ff263848</color>
+    <color name="app_dark_blue_highlight">#ff21313f</color>
+    <color name="app_ligh_background">#fff8f8f8</color>
+    <color name="app_background">#ffffffff</color>
+    <color name="app_dark_icons">#ff546676</color>
+    <color name="app_light_icons">#ffe7ebee</color>
+    <color name="app_highlight_icons">#ff6fd0ec</color>
+    <color name="app_highlight_text">#ff5ca8bf</color>
 
 </resources>
