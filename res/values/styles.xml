@@ -257,6 +257,13 @@
         <item name="android:padding">6dp</item>
         <item name="android:textSize">18sp</item>
     </style>
+    
+    <style name="DonationButton">
+        <item name="android:background">@drawable/donation_button_background_selector</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
     <style name="BrowsePeerActivityHeaderTitle" parent="@android:style/TextAppearance.Small">
         <item name="android:gravity">center</item>

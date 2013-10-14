@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,18 +21,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/searchbox_background"
+    android:background="@color/app_dark_blue"
     android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:paddingBottom="1dp"
-    android:paddingTop="1dp" >
- 
+    android:orientation="horizontal" >
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:paddingBottom="8sp"
         android:paddingLeft="8sp"
+        android:paddingRight="8sp"
         android:paddingTop="8sp" >
 
         <TextView
@@ -46,56 +45,67 @@
             style="@style/SlideMenu.Item.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="left"
             android:text="@string/donate" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="8sp"
-        android:paddingLeft="8sp"
-        android:paddingRight="8sp"
-        android:paddingTop="8sp" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#ff1d2934" />
 
         <Button
             android:id="@+id/fragment_about_button_donate1"
-            style="@style/BlueButton"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8sp"
+            style="@style/DonationButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:text="@string/one_dollar"
             android:textSize="16sp" />
 
         <Button
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#ff1d2934" />
+
+        <Button
             android:id="@+id/fragment_about_button_donate2"
-            style="@style/BlueButton"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8sp"
+            style="@style/DonationButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:text="@string/five_dollars"
             android:textSize="16sp" />
 
         <Button
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#ff1d2934" />
+
+        <Button
             android:id="@+id/fragment_about_button_donate3"
-            style="@style/BlueButton"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8sp"
+            style="@style/DonationButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:text="@string/ten_dollars"
             android:textSize="15sp" />
 
         <Button
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#ff1d2934" />
+
+        <Button
             android:id="@+id/fragment_about_button_donate4"
-            style="@style/BlueButton"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8sp"
+            style="@style/DonationButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:text="@string/twenty_five_dollars"
             android:textSize="15sp" />
-
     </LinearLayout>
- 
+
 </LinearLayout>
