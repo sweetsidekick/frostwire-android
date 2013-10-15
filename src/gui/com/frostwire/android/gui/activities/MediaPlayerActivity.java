@@ -91,7 +91,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     String action = intent.getAction();
-                    
+
                     if (action != null) {
                         if (action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
                             try {
@@ -99,8 +99,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                             } catch (Throwable e) {
                                 // ignore
                             }
-                        } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) ||
-                                   action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+                        } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                             try {
                                 initComponents();
                             } catch (Throwable e) {
@@ -128,7 +127,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             }
         }
     }
-    
+
     public void resume() {
         if (mediaPlayer != null) {
             try {
@@ -288,7 +287,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (mediaFD == null) {
             return;
         }
-        
+
         TextView artist = findView(R.id.activity_mediaplayer_artist);
         if (!StringUtils.isNullOrEmpty(mediaFD.artist, true)) {
             artist.setText(mediaFD.artist);
@@ -309,8 +308,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void initGestures() {
-        LinearLayout lowestLayout = findView(R.id.RootView);
-        lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
+        findView(R.id.activity_mediaplayer_artwork).setOnTouchListener(new AbstractSwipeDetector() {
             @Override
             public void onLeftToRightSwipe() {
                 playPrevious();
@@ -341,9 +339,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
-        
+
     }
-    
+
     private void playPrevious() {
         if (mediaPlayer != null) {
             try {
@@ -352,9 +350,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
-        
-    }
 
+    }
 
     @Override
     protected void onResume() {
@@ -424,7 +421,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             sync();
         }
     };
-    
+
     private View.OnLongClickListener stopListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -433,7 +430,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             return true;
         }
     };
-    
 
     private View.OnClickListener previousListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -482,7 +478,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
             if (!fromuser) {
-                // We're not interested in programmatically generated changes to
+                // We're not interested in programatically generated changes to
                 // the progress bar's position.
                 return;
             }
@@ -692,7 +688,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return R.drawable.contextmenu_icon_stop;
             }
         };
-        
+
         ContextMenuItem delete = new ContextMenuItem() {
 
             @Override
@@ -714,19 +710,19 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                     }
                 });
             }
-            
+
         };
 
         ContextMenuDialog menu = new ContextMenuDialog();
         menu.setItems(Arrays.asList(share, stop, delete));
         menu.show(getSupportFragmentManager(), "playerContextMenu");
     }
-    
+
     private void onDeleteCurrentTrack() {
         final FileDescriptor currentFD = mediaPlayer.getCurrentFD();
         PlaylistItem currentPlaylistItem = new PlaylistItem(currentFD);
         Playlist playlist = mediaPlayer.getPlaylist();
-        
+
         AsyncTask<Void, Void, Void> asyncDeleteTrackTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -734,7 +730,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return null;
             }
         };
-        
+
         if (playlist != null) {
             PlaylistItem nextItem = playlist.getNextItem();
             if (nextItem == null || nextItem.equals(currentPlaylistItem)) {
@@ -743,8 +739,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return;
             }
         }
-        
+
         mediaPlayer.playNext();
-        asyncDeleteTrackTask.execute();        
+        asyncDeleteTrackTask.execute();
     }
 }
