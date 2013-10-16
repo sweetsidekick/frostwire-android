@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,7 +162,7 @@ public final class ImageLoader {
             } else if (fileType == Constants.FILE_TYPE_VIDEOS) {
                 bmp = Video.Thumbnails.getThumbnail(cr, id, Video.Thumbnails.MICRO_KIND, null);
             } else if (fileType == Constants.FILE_TYPE_AUDIO) {
-                bmp = MusicUtils.getArtwork(context, id, -1, 2);
+                bmp = MusicUtils.getArtwork(context, id, -1, false, 2);
             } else if (fileType == Constants.FILE_TYPE_APPLICATIONS) {
                 InputStream is = cr.openInputStream(Uri.withAppendedPath(Applications.Media.CONTENT_URI_ITEM, String.valueOf(id)));
                 bmp = BitmapFactory.decodeStream(is);

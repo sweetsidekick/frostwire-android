@@ -34,16 +34,21 @@ import android.widget.ImageView;
  */
 public class BrowseThumbnailImageView extends ImageView {
 
-    private static final Paint paintCircle = new Paint();
+    private static final Paint paintCircleFill = new Paint();
+    private static final Paint paintCircleStroke = new Paint();
     private static final Paint paintTriangle = new Paint();
 
     static {
-        paintCircle.setColor(Color.BLACK);
-        paintCircle.setStrokeWidth(2);
-        paintCircle.setStyle(Paint.Style.STROKE);
-        paintCircle.setAntiAlias(true);
+        paintCircleFill.setColor(Color.parseColor("#c0ffffff"));
+        paintCircleFill.setStyle(Paint.Style.FILL);
+        paintCircleFill.setAntiAlias(true);
 
-        paintTriangle.setColor(Color.BLACK);
+        paintCircleStroke.setColor(Color.parseColor("#ff546676"));
+        paintCircleStroke.setStrokeWidth(2);
+        paintCircleStroke.setStyle(Paint.Style.STROKE);
+        paintCircleStroke.setAntiAlias(true);
+
+        paintTriangle.setColor(Color.parseColor("#ff546676"));
         paintTriangle.setStyle(Paint.Style.FILL);
         paintTriangle.setAntiAlias(true);
     }
@@ -67,16 +72,18 @@ public class BrowseThumbnailImageView extends ImageView {
         super.onDraw(canvas);
 
         if (playVisible) {
-            drawCricle(canvas);
+            drawCircle(canvas);
             drawTriangle(canvas);
         }
     }
 
-    private void drawCricle(Canvas canvas) {
+    private void drawCircle(Canvas canvas) {
         float x = getWidth() / 2.0f;
         float y = getHeight() / 2.0f;
         float r = getWidth() / 6.0f + 2;
-        canvas.drawCircle(x, y, r, paintCircle);
+
+        canvas.drawCircle(x, y, r, paintCircleFill);
+        canvas.drawCircle(x, y, r, paintCircleStroke);
     }
 
     private void drawTriangle(Canvas canvas) {
