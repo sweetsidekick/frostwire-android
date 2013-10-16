@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@
         android:id="@+id/view_browse_peer_list_item_file_thumbnail"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:background="@drawable/listview_item_thumbnail_background"
+        android:background="@drawable/browse_peer_list_item_download_button_background"
         android:contentDescription="@null"
-        android:padding="4px" />
+        android:padding="4dp" />
 
     <ImageButton
         android:id="@+id/view_browse_peer_list_item_lock_toggle"
