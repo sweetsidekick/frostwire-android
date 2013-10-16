@@ -19,38 +19,39 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.widget.ImageView;
 
 /**
- * This class is a workaround to an old android issue #6191:
- * http://code.google.com/p/android/issues/detail?id=6191 
- * 
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
-public class ViewFlipper extends android.widget.ViewFlipper {
+public class BrowseThumbnailImageView extends ImageView {
 
-    private static final String TAG = "FW.ViewFlipper";
+    private static final Paint paintCircle = new Paint();
 
-    public ViewFlipper(Context context) {
-        super(context);
+    static {
+        paintCircle.setColor(Color.BLACK);
+        paintCircle.setStrokeWidth(2);
+        paintCircle.setStyle(Paint.Style.STROKE);
+        paintCircle.setAntiAlias(true);
     }
 
-    public ViewFlipper(Context context, AttributeSet attrs) {
+    public BrowseThumbnailImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        try {
-            super.onDetachedFromWindow();
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, "Ignoring IllegalArgumentException");
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
 
-            // calling this to trigger updateRunning()
-            stopFlipping();
-        }
+        float x = getWidth() / 2.0f;
+        float y = getHeight() / 2.0f;
+        float r = getWidth() / 6.0f + 2;
+        canvas.drawCircle(x, y, r, paintCircle);
     }
 }
