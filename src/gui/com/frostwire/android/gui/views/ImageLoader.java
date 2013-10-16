@@ -31,8 +31,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
@@ -40,7 +38,6 @@ import android.provider.MediaStore.Video;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.providers.UniversalStore.Applications;
@@ -66,8 +63,7 @@ public final class ImageLoader {
     private static final int MEMORY_CACHE_SIZE = 1024 * 1024 * 2; // 2MB
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 
-    public static final int OVERLAY_FLAG_PLAY = 1;
-    public static final int DOWNSCALE_HUGE_BITMAPS = OVERLAY_FLAG_PLAY << 1;
+    public static final int DOWNSCALE_HUGE_BITMAPS = 1 << 1;
 
     private final DiskLruRawDataCache diskCache;
 
@@ -143,9 +139,7 @@ public final class ImageLoader {
 
         RequestCreator requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
 
-        if ((overlayFlags & OVERLAY_FLAG_PLAY) == OVERLAY_FLAG_PLAY) {
-            requestBuilder.transform(new OverlayBitmapTransformation(imageView, imageSrc, R.drawable.play_icon_transparent, 40, 40));
-        } else if ((overlayFlags & DOWNSCALE_HUGE_BITMAPS) == DOWNSCALE_HUGE_BITMAPS) {
+        if ((overlayFlags & DOWNSCALE_HUGE_BITMAPS) == DOWNSCALE_HUGE_BITMAPS) {
             // hardcoded to 1/2 for now
             requestBuilder.transform(new DownscaleTransformation(imageSrc, 0.5f));
         }
@@ -303,67 +297,6 @@ public final class ImageLoader {
 
         private long getFileId(String itemIdentifier) {
             return Long.valueOf(itemIdentifier.substring(itemIdentifier.indexOf(':') + 1));
-        }
-    }
-
-    private class OverlayBitmapTransformation implements Transformation {
-        private final ImageView imageView;
-        private final String keyPrefix;
-        private final int overlayIconId;
-        private final int overlayWidthPercentage;
-        private final int overlayHeightPercentage;
-
-        public OverlayBitmapTransformation(ImageView imageView, String keyPrefix, int overlayIconId, int overlayWidthPercentage, int overlayHeightPercentage) {
-            this.imageView = imageView;
-            this.keyPrefix = keyPrefix;
-            this.overlayIconId = overlayIconId;
-            this.overlayWidthPercentage = overlayWidthPercentage;
-            this.overlayHeightPercentage = overlayHeightPercentage;
-        }
-
-        @Override
-        public Bitmap transform(Bitmap source) {
-            Bitmap bmp = overlayIcon(source, overlayIconId, overlayWidthPercentage, overlayHeightPercentage);
-            source.recycle();
-            return bmp;
-        }
-
-        @Override
-        public String key() {
-            return keyPrefix + ":" + overlayIconId + ":" + imageView.getWidth() + "," + imageView.getHeight() + ":" + overlayWidthPercentage + "," + overlayHeightPercentage;
-        }
-
-        private Bitmap overlayIcon(Bitmap backgroundBmp, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
-            Bitmap result = backgroundBmp;
-            if (imageView.getWidth() > 0 && imageView.getHeight() > 0) {
-
-                Bitmap canvasBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), backgroundBmp.getConfig());
-                Canvas canvas = resizeBackgroundToFitImageView(canvasBitmap, backgroundBmp);
-                paintScaledIcon(canvas, iconResId, iconWidthPercentage, iconHeightPercentage);
-
-                backgroundBmp.recycle();
-                result = canvasBitmap;
-            }
-            return result;
-        }
-
-        private void paintScaledIcon(Canvas canvas, int iconResId, int iconWidthPercentage, int iconHeightPercentage) {
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(), iconResId);
-            Rect iconSrcRect = new Rect(0, 0, icon.getWidth(), icon.getHeight());
-            int iconResizedWidth = (int) ((imageView.getWidth() * iconWidthPercentage) / 100f);
-            int iconResizedHeight = (int) ((imageView.getHeight() * iconHeightPercentage) / 100f);
-            int left = (imageView.getWidth() - iconResizedWidth) >> 1;
-            int top = (imageView.getHeight() - iconResizedHeight) >> 1;
-            Rect iconDestRect = new Rect(left, top, left + iconResizedWidth, top + iconResizedHeight);
-            canvas.drawBitmap(icon, iconSrcRect, iconDestRect, null);
-            icon.recycle();
-        }
-
-        private Canvas resizeBackgroundToFitImageView(Bitmap canvasBitmap, Bitmap backgroundBmp) {
-            Rect backgroundDestRect = new Rect(0, 0, imageView.getWidth(), imageView.getHeight());
-            Canvas canvas = new Canvas(canvasBitmap);
-            canvas.drawBitmap(backgroundBmp, null, backgroundDestRect, null);
-            return canvas;
         }
     }
 

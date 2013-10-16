@@ -27,7 +27,6 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -55,6 +54,7 @@ import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.android.gui.views.BrowseThumbnailImageView;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
@@ -80,7 +80,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     private final boolean local;
     private final byte fileType;
     private final ImageLoader thumbnailLoader;
-    private final Drawable fileTypeDrawable;
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
@@ -103,7 +102,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.local = local;
         this.fileType = fileType;
         this.thumbnailLoader = ImageLoader.getDefault();
-        this.fileTypeDrawable = null;//getContext().getResources().getDrawable(UIUtils.getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -225,23 +223,22 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
-        ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
+        BrowseThumbnailImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
             InputStream is = null;
 
             try {
-                thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
+                thumbnailLoader.displayImage(fd, fileThumbnail, null);
             } catch (Throwable e) {
-                fileThumbnail.setImageDrawable(fileTypeDrawable);
+                fileThumbnail.setImageDrawable(null);
             } finally {
                 IOUtils.closeQuietly(is);
             }
-        } else if (local && (fileType == Constants.FILE_TYPE_AUDIO || fileType == Constants.FILE_TYPE_VIDEOS)) {
-            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable, ImageLoader.OVERLAY_FLAG_PLAY);
         } else {
-            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
+            fileThumbnail.setPlayVisible(true);
+            thumbnailLoader.displayImage(fd, fileThumbnail, null);
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
