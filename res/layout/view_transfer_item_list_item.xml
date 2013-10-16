@@ -70,9 +70,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/view_transfer_item_list_item_title"
-            android:layout_margin="2sp"
+            android:layout_margin="4sp"
             android:indeterminateOnly="false"
-            android:progressDrawable="@drawable/progress_horizontal" />
+            android:progressDrawable="@drawable/transfer_progress_horizontal" />
 
         <TextView
             android:id="@+id/view_transfer_item_list_item_size"

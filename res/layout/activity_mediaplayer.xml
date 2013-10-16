@@ -131,7 +131,7 @@
         android:id="@+id/view_media_controller_progress"
         android:layout_width="match_parent"
         android:layout_height="16dp"
-        android:progressDrawable="@drawable/progress_horizontal"
+        android:progressDrawable="@drawable/player_seek_progress_horizontal"
         android:thumb="@drawable/player_seekbar_thumb" />
 
     <LinearLayout
