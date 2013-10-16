@@ -149,7 +149,7 @@ public class SearchInputView extends LinearLayout {
     private void showPopup(View v) {
         hideSoftInput(v);
         popup = newPopup();
-        popup.showAsDropDown(this, 20, 0);
+        popup.showAsDropDown(this, 0, 0);
     }
 
     private void hidePopup() {
@@ -278,12 +278,12 @@ public class SearchInputView extends LinearLayout {
 
     private void updateHint(int fileType) {
         String hint = getContext().getString(R.string.search_label) + " ";
-        
+
         if (OSUtils.isOUYA()) {
-            String ouyaSearchHintPrefix =  getContext().getResources().getString(R.string.ouya_search_hint_prefix);
+            String ouyaSearchHintPrefix = getContext().getResources().getString(R.string.ouya_search_hint_prefix);
             hint = ouyaSearchHintPrefix + " " + hint;
         }
-        
+
         hint += UIUtils.getFileTypeAsString(getContext().getResources(), (byte) fileType);
         textInput.setHint(hint);
     }
