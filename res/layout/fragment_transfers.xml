@@ -106,4 +106,9 @@
             android:text="@string/dummy_uploads_indicator" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#ff1d2934" />
+
 </LinearLayout>

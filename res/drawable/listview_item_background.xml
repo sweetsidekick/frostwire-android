@@ -22,7 +22,7 @@
 
     <item>
         <shape>
-            <solid android:color="#ffdae2e9" />
+            <solid android:color="@color/app_list_cell_line" />
         </shape>
     </item>
     <item

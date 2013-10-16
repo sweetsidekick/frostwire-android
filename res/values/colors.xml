@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@
     <!-- SlideMenu -->
     <color name="slidemenu_background">#ff315776</color>
     <color name="slidemenu_list_background">#ff2c79a5</color>
+
+    <!-- General application colors -->
     <color name="app_basic_blue">#ff2f465a</color>
     <color name="app_dark_blue">#ff263848</color>
     <color name="app_dark_blue_highlight">#ff21313f</color>
@@ -48,5 +50,6 @@
     <color name="app_light_icons">#ffe7ebee</color>
     <color name="app_highlight_icons">#ff6fd0ec</color>
     <color name="app_highlight_text">#ff5ca8bf</color>
+    <color name="app_list_cell_line">#ffdae2e9</color>
 
 </resources>
