@@ -27,7 +27,7 @@
         android:id="@+id/view_browse_peer_list_item_download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ffe9eef3"
+        android:background="@drawable/browse_peer_list_item_download_button_background"
         android:contentDescription="@null"
         android:paddingBottom="16dip"
         android:paddingLeft="9dip"
