@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -33,7 +33,7 @@
         <View
             android:layout_width="1px"
             android:layout_height="match_parent"
-            android:background="@drawable/transfers_button_vertical_line_background" />
+            android:background="#ff1d2934" />
 
         <Button
             android:id="@+id/fragment_transfers_button_pauseall"
@@ -48,7 +48,7 @@
         <View
             android:layout_width="1px"
             android:layout_height="match_parent"
-            android:background="@drawable/transfers_button_vertical_line_background" />
+            android:background="#ff1d2934" />
 
         <Button
             android:id="@+id/fragment_transfers_button_clearcomplete"
@@ -64,8 +64,8 @@
     <com.frostwire.android.gui.views.FWExpandableListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_transfers_buttons"
+        android:layout_height="0px"
+        android:layout_weight="1"
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
@@ -73,15 +73,17 @@
         android:id="@+id/activity_mediaplayer_donations_view_placeholder"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_above="@+id/fragment_transfers_indicators"
         android:visibility="visible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#ff1d2934" />
 
     <LinearLayout
         android:id="@+id/fragment_transfers_indicators"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/transfers_indicators_background"
         android:gravity="right" >
 
@@ -104,4 +106,4 @@
             android:text="@string/dummy_uploads_indicator" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
