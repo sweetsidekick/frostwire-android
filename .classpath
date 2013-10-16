@@ -45,7 +45,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/logback-android-1.0.10-2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/slf4j-api-1.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mp4parser.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/picasso-2.0.1-SNAPSHOT.jar" sourcepath="/Users/aldenml/Development/sources/picasso"/>
 	<classpathentry exported="true" kind="lib" path="libs/AppiaSDK-2013-21.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/in-app-purchasing-1.0.3.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
