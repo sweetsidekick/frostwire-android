@@ -169,7 +169,6 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
-                    uxLogAction(sr);
                 }
             };
             setListAdapter(adapter);
@@ -251,6 +250,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         OnYesNoListener listener = new OnYesNoListener() {
             public void onYes(NewTransferDialog dialog) {
                 startDownload(sr, toastMessage);
+                uxLogAction(sr);
             }
 
             public void onNo(NewTransferDialog dialog) {
