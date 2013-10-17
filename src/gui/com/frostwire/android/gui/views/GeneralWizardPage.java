@@ -20,20 +20,16 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.util.StringUtils;
 
 /**
  * @author gubatron
@@ -44,7 +40,6 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
 
     private OnCompleteListener listener;
 
-    private EditText inputNickname;
     private CheckBox checkSeedFinishedTorrents;
     private CheckBox checkSeedFinishedTorrentsWifiOnly;
     private CheckBox checkUXStats;
@@ -65,7 +60,6 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
 
     @Override
     public void load() {
-        inputNickname.setText(ConfigurationManager.instance().getNickname());
         checkSeedFinishedTorrents.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS));
         checkSeedFinishedTorrentsWifiOnly.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY));
         checkSeedFinishedTorrentsWifiOnly.setEnabled(checkSeedFinishedTorrents.isChecked());
@@ -76,7 +70,6 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
 
     @Override
     public void finish() {
-        ConfigurationManager.instance().setNickname(inputNickname.getText().toString());
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS, checkSeedFinishedTorrents.isChecked());
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY, checkSeedFinishedTorrentsWifiOnly.isChecked());
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_UXSTATS_ENABLED, checkUXStats.isChecked());
@@ -92,19 +85,6 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
         super.onFinishInflate();
 
         View.inflate(getContext(), R.layout.view_general_wizard_page, this);
-
-        inputNickname = (EditText) findViewById(R.id.view_general_wizard_page_input_nickname);
-        inputNickname.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validate();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
 
         checkSeedFinishedTorrents = (CheckBox) findViewById(R.id.view_general_wizard_page_check_seed_finished_torrents);
         checkSeedFinishedTorrents.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -141,10 +121,6 @@ public class GeneralWizardPage extends RelativeLayout implements WizardPageView 
      */
     private void validate() {
         boolean complete = true;
-
-        if (StringUtils.isNullOrEmpty(inputNickname.getText().toString(), true)) {
-            complete = false;
-        }
 
         onComplete(complete);
     }
