@@ -23,7 +23,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/listview_item_press_background_selector" >
 
-    <ImageButton
+    <com.frostwire.android.gui.views.BrowseThumbnailImageButton
         android:id="@+id/view_browse_peer_list_item_download"
         android:layout_width="60dp"
         android:layout_height="72dp"
@@ -33,8 +33,7 @@
         android:paddingLeft="9dip"
         android:paddingRight="9dip"
         android:paddingTop="16dip"
-        android:scaleType="fitCenter"
-        android:src="@drawable/browse_peer_play_icon" />
+        android:scaleType="fitCenter" />
 
     <FrameLayout
         android:id="@+id/view_browse_peer_list_item_container_action"

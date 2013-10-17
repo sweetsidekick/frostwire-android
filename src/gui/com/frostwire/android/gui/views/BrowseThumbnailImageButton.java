@@ -36,7 +36,7 @@ public class BrowseThumbnailImageButton extends ImageButton {
 
     private static final Paint paintCircleFill = new Paint();
     private static final Paint paintCircleStroke = new Paint();
-    private static final Paint paintTriangle = new Paint();
+    private static final Paint paintShapeFill = new Paint();
 
     static {
         paintCircleFill.setColor(Color.parseColor("#c0ffffff"));
@@ -48,39 +48,43 @@ public class BrowseThumbnailImageButton extends ImageButton {
         paintCircleStroke.setStyle(Paint.Style.STROKE);
         paintCircleStroke.setAntiAlias(true);
 
-        paintTriangle.setColor(Color.parseColor("#ff546676"));
-        paintTriangle.setStyle(Paint.Style.FILL);
-        paintTriangle.setAntiAlias(true);
+        paintShapeFill.setColor(Color.parseColor("#ff546676"));
+        paintShapeFill.setStyle(Paint.Style.FILL);
+        paintShapeFill.setAntiAlias(true);
     }
 
-    private boolean playVisible;
+    private OverlayState state;
 
     public BrowseThumbnailImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.state = OverlayState.NONE;
     }
 
-    public boolean isPlayVisible() {
-        return playVisible;
+    public OverlayState getState() {
+        return state;
     }
 
-    public void setPlayVisible(boolean visible) {
-        this.playVisible = visible;
+    public void setOverlayState(OverlayState state) {
+        this.state = state;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (playVisible) {
+        if (state == OverlayState.PLAY) {
             drawCircle(canvas);
             drawTriangle(canvas);
+        } else if (state == OverlayState.STOP) {
+            drawCircle(canvas);
+            drawSquare(canvas);
         }
     }
 
     private void drawCircle(Canvas canvas) {
         float x = getWidth() / 2.0f;
         float y = getHeight() / 2.0f;
-        float r = getWidth() / 6.0f + 2;
+        float r = getHeight() / 6.0f + 2;
 
         canvas.drawCircle(x, y, r, paintCircleFill);
         canvas.drawCircle(x, y, r, paintCircleStroke);
@@ -89,9 +93,9 @@ public class BrowseThumbnailImageButton extends ImageButton {
     private void drawTriangle(Canvas canvas) {
         int x = getWidth() / 2;
         int y = getHeight() / 2;
-        int w = getWidth() / 7;
+        int w = getHeight() / 7;
         Path path = getTriangle(new Point(x - w / 2 + 3, y - w / 2), w);
-        canvas.drawPath(path, paintTriangle);
+        canvas.drawPath(path, paintShapeFill);
     }
 
     private Path getTriangle(Point p1, int width) {
@@ -106,5 +110,17 @@ public class BrowseThumbnailImageButton extends ImageButton {
         path.lineTo(p3.x, p3.y);
 
         return path;
+    }
+
+    private void drawSquare(Canvas canvas) {
+        float x = getWidth() / 2.0f;
+        float y = getHeight() / 2.0f;
+        int w = getHeight() / 7;
+
+        canvas.drawRect(x - w / 2, y - w / 2, x + w / 2, y + w / 2, paintShapeFill);
+    }
+
+    public static enum OverlayState {
+        NONE, PLAY, STOP
     }
 }

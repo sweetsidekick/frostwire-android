@@ -60,6 +60,7 @@ import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -237,7 +238,11 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 IOUtils.closeQuietly(is);
             }
         } else {
-            fileThumbnail.setPlayVisible(true);
+            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+                fileThumbnail.setOverlayState(OverlayState.STOP);
+            } else {
+                fileThumbnail.setOverlayState(OverlayState.PLAY);
+            }
             thumbnailLoader.displayImage(fd, fileThumbnail, null);
         }
 
@@ -308,13 +313,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         TextView fileSize = findView(view, R.id.view_browse_peer_list_item_file_size);
         fileSize.setText(UIUtils.getBytesInHuman(fd.fileSize));
 
-        ImageButton downloadButton = findView(view, R.id.view_browse_peer_list_item_download);
+        BrowseThumbnailImageButton downloadButton = findView(view, R.id.view_browse_peer_list_item_download);
 
         if (local) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-                downloadButton.setImageResource(R.drawable.browse_peer_stop_icon);
+                downloadButton.setOverlayState(OverlayState.STOP);
             } else {
-                downloadButton.setImageResource(R.drawable.browse_peer_play_icon);
+                downloadButton.setOverlayState(OverlayState.PLAY);
             }
         } else {
             downloadButton.setImageResource(R.drawable.download_icon);
