@@ -145,7 +145,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         }
 
         if (loader.getId() == LOADER_FINGER_ID) {
-            boolean firstCheck = finger == null;
+            boolean firstCheck = finger == null || (peer != null && peer.isLocalHost());
             finger = (Finger) data;
 
             if (firstCheck) {
@@ -458,8 +458,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             unshared.setText(String.valueOf(numTotal - numShared));
 
             updateFileVisiblityIndicatorsAlpha();
-
-            checkNoEmptyButton(finger);
         }
 
         if (adapter != null) {
