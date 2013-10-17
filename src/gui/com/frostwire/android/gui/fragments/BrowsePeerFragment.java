@@ -543,9 +543,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         @Override
         public void onClick(View v) {
             log.debug("clicked filter");
-
-            adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
-            adapter.getFilter().filter(filesBar.getText());
+            if (adapter != null) {
+                adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
+                adapter.getFilter().filter(filesBar.getText());
+            }
 
             updateFileVisiblityIndicatorsAlpha();
         }

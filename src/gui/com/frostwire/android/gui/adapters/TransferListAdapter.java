@@ -65,6 +65,8 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -660,6 +662,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 trackDialog(UIUtils.showYesNoDialog(context, R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         transfer.cancel();
+                        UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
                     }
                 }));
             }

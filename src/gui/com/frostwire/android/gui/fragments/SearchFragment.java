@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,12 +60,17 @@ import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
+import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -164,6 +169,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
+                    uxLogAction(sr);
                 }
             };
             setListAdapter(adapter);
@@ -203,6 +209,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
+        UXStats.instance().log(UXAction.SEARCH_STARTED_ENTER_KEY);
     }
 
     private void cancelSearch(View view) {
@@ -322,6 +329,20 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             return;
         }
         startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
+    }
+
+    private void uxLogAction(SearchResult sr) {
+        UXStats.instance().log(UXAction.SEARCH_RESULT_CLICKED);
+
+        if (sr instanceof HttpSearchResult) {
+            UXStats.instance().log(UXAction.DOWNLOAD_CLOUD_FILE);
+        } else if (sr instanceof TorrentSearchResult) {
+            if (sr instanceof TorrentCrawledSearchResult) {
+                UXStats.instance().log(UXAction.DOWNLOAD_PARTIAL_TORRENT_FILE);
+            } else {
+                UXStats.instance().log(UXAction.DOWNLOAD_FULL_TORRENT_FILE);
+            }
+        }
     }
 
     private static class LoadSlidesTask extends AsyncTask<Void, Void, List<Slide>> {

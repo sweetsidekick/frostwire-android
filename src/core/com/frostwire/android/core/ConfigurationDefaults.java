@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,10 +65,10 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, true);
-        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM,true);
-        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM,true);
+        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, true);
+        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, true);
         //defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
-        defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA,true);
+        defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);
@@ -110,6 +110,8 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS, Long.valueOf(50));
 
         defaultValues.put(Constants.PREF_KEY_STORAGE_PATH, Environment.getExternalStorageDirectory().getAbsolutePath()); // /mnt/sdcard
+
+        defaultValues.put(Constants.PREF_KEY_UXSTATS_ENABLED, true);
 
         resetValue(Constants.PREF_KEY_NETWORK_PINGS_INTERVAL);
 

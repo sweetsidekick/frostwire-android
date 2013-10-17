@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,13 +32,15 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 3 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 4 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
-    
+
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "103";
+    public static final String FROSTWIRE_BUILD = "104";
+    
+    public static final boolean IS_AMAZON_DISTRIBUTION = true;
 
     /**
      * 65280 - Default LAN bound port
@@ -105,6 +107,8 @@ public final class Constants {
 
     public static final String PREF_KEY_STORAGE_PATH = "frostwire.prefs.storage.path";
 
+    public static final String PREF_KEY_UXSTATS_ENABLED = "frostwire.prefs.uxstats.enabled";
+
     public static final String ACTION_OPEN_TORRENT_URL = "android.intent.action.VIEW";
     public static final String ACTION_SHOW_TRANSFERS = "com.frostwire.android.ACTION_SHOW_TRANSFERS";
     public static final String ACTION_MEDIA_PLAYER_PLAY = "com.frostwire.android.ACTION_MEDIA_PLAYER_PLAY";
@@ -119,6 +123,7 @@ public final class Constants {
 
     public static final int NOTIFICATION_MEDIA_PLAYING_ID = 1000;
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;
+    public static final int NOTIFICATION_MEDIA_PAUSED_ID = 1002;
 
     // generic file types
     public static final byte FILE_TYPE_AUDIO = CommonConstants.FILE_TYPE_AUDIO;

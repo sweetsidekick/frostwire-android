@@ -41,6 +41,7 @@ import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
+import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.views.DonateButtonListener;
 
 /**
@@ -59,8 +60,13 @@ public class AboutFragment extends Fragment implements MainFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         biller = BillerFactory.getInstance(getActivity());
+        DonationSkus skus = BillerFactory.getDonationSkus();
+        setupDonateButton(getActivity(), R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
+        setupDonateButton(getActivity(), R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
+        setupDonateButton(getActivity(), R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
+        setupDonateButton(getActivity(), R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
@@ -71,17 +77,6 @@ public class AboutFragment extends Fragment implements MainFragment {
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
-        
-        if (biller == null) {
-            biller = BillerFactory.getInstance(getActivity());
-        }
-        
-        DonationSkus skus = BillerFactory.getDonationSkus();
-
-        setupDonateButton(view, R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
-        setupDonateButton(view, R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
 
         return view;
     }
@@ -93,23 +88,6 @@ public class AboutFragment extends Fragment implements MainFragment {
         header.setText(R.string.about);
 
         return header;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (biller != null) {
-            biller.onDestroy();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        
-        if (biller != null) {
-            biller.onDestroy();
-        }
     }
 
     @Override
@@ -129,8 +107,9 @@ public class AboutFragment extends Fragment implements MainFragment {
         }
     }
 
-    private void setupDonateButton(View view, int id, String sku, String url, Biller biller) {
-        Button donate = (Button) view.findViewById(id);
+    private void setupDonateButton(Activity activity, int id, String sku, String url, Biller biller) {
+        Button donate = (Button) activity.findViewById(id);
         donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
+        donate.setVisibility(OSUtils.isAmazonDistribution() ? View.GONE : View.VISIBLE);
     }
 }
