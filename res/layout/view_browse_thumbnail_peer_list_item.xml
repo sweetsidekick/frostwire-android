@@ -23,7 +23,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/listview_item_press_background_selector" >
 
-    <com.frostwire.android.gui.views.BrowseThumbnailImageView
+    <com.frostwire.android.gui.views.BrowseThumbnailImageButton
         android:id="@+id/view_browse_peer_list_item_file_thumbnail"
         android:layout_width="72dp"
         android:layout_height="72dp"

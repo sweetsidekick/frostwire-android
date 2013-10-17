@@ -54,7 +54,7 @@ import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.android.gui.views.BrowseThumbnailImageView;
+import com.frostwire.android.gui.views.BrowseThumbnailImageButton;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
@@ -223,7 +223,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
-        BrowseThumbnailImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
+        BrowseThumbnailImageButton fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {

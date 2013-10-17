@@ -25,14 +25,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class BrowseThumbnailImageView extends ImageView {
+public class BrowseThumbnailImageButton extends ImageButton {
 
     private static final Paint paintCircleFill = new Paint();
     private static final Paint paintCircleStroke = new Paint();
@@ -55,7 +55,7 @@ public class BrowseThumbnailImageView extends ImageView {
 
     private boolean playVisible;
 
-    public BrowseThumbnailImageView(Context context, AttributeSet attrs) {
+    public BrowseThumbnailImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
