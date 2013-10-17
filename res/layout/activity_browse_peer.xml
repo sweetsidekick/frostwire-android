@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -28,7 +27,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_header_background" >
+        android:background="@color/app_basic_blue" >
 
         <ImageButton
             android:id="@+id/activity_browse_peer_button_back"
@@ -56,7 +55,6 @@
             android:text="@string/dummy_nickname" />
     </RelativeLayout>
 
-    
     <fragment
         android:id="@+id/activity_browse_peer_fragment"
         android:name="com.frostwire.android.gui.fragments.BrowsePeerFragment"
@@ -65,7 +63,6 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_browse_peer" />
 
-    
     <com.frostwire.android.gui.views.PlayerNotifierView
         android:id="@+id/activity_browse_peer_player_notifier"
         android:layout_width="match_parent"

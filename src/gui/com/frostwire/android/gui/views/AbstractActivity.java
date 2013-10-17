@@ -32,8 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.frostwire.android.R;
-
 /**
  * 
  * 
@@ -124,7 +122,7 @@ public abstract class AbstractActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         // read link: http://code.google.com/p/android/issues/detail?id=8488#c109
-        unbindDrawables(findViewById(R.id.RootView));
+        unbindDrawables(findViewById(android.R.id.content));
     }
 
     protected void onRefresh() {
