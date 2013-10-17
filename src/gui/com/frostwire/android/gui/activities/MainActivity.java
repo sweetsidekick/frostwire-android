@@ -414,6 +414,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         } else {
             drawerLayout.openDrawer(leftDrawer);
         }
+
+        updateHeader(getCurrentFragment());
     }
 
     private Fragment getWifiSharingFragment() {
@@ -442,6 +444,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         } else if (fragment instanceof AboutFragment) {
             setSelectedItem(R.id.menu_main_about);
         }
+
+        updateHeader(getCurrentFragment());
     }
 
     private void setSelectedItem(int id) {
