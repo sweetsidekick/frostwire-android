@@ -458,6 +458,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             unshared.setText(String.valueOf(numTotal - numShared));
 
             updateFileVisiblityIndicatorsAlpha();
+
+            checkNoEmptyButton(finger);
         }
 
         if (adapter != null) {
@@ -531,9 +533,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private final class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || 
-                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) ||
-                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
