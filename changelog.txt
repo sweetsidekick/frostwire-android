@@ -1,3 +1,6 @@
+FrostWire 1.1.5 - OCT/17/2013
+ - Updated turkish translation, thanks @Serrae.
+
 FrostWire 1.1.4 - OCT/11/2013
  - Audio player shows correct android notification when paused.
  - Fixes ExtraTorrent meta search.
