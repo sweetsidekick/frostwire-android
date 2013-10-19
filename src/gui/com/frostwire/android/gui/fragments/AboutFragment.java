@@ -110,6 +110,6 @@ public class AboutFragment extends Fragment implements MainFragment {
     private void setupDonateButton(Activity activity, int id, String sku, String url, Biller biller) {
         Button donate = (Button) activity.findViewById(id);
         donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
-        donate.setVisibility(OSUtils.isAmazonDistribution() ? View.GONE : View.VISIBLE);
+        //donate.setVisibility(OSUtils.isAmazonDistribution() ? View.GONE : View.VISIBLE);
     }
 }
