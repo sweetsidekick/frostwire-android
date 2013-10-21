@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class SetAsWallpaperMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public SetAsWallpaperMenuAction(Context context, FileDescriptor fd) {
-        super(context, R.drawable.contextmenu_icon_ringtone, R.string.set_as_wallpaper);
+        super(context, R.drawable.contextmenu_icon_picture, R.string.set_as_wallpaper);
 
         this.fd = fd;
     }
