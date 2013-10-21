@@ -223,17 +223,17 @@ public class SearchInputView extends LinearLayout {
 
     private int getDrawableId(int mediaTypeId) {
         if (MediaType.getApplicationsMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_application_icon_selector_on;
+            return R.drawable.browse_peer_application_icon_selector_off;
         } else if (MediaType.getAudioMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_audio_icon_selector_on;
+            return R.drawable.browse_peer_audio_icon_selector_off;
         } else if (MediaType.getDocumentMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_document_icon_selector_on;
+            return R.drawable.browse_peer_document_icon_selector_off;
         } else if (MediaType.getImageMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_picture_icon_selector_on;
+            return R.drawable.browse_peer_picture_icon_selector_off;
         } else if (MediaType.getVideoMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_video_icon_selector_on;
+            return R.drawable.browse_peer_video_icon_selector_off;
         } else if (MediaType.getTorrentMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_torrent_icon_selector_on;
+            return R.drawable.browse_peer_torrent_icon_selector_off;
         } else {
             return R.drawable.question_mark;
         }
