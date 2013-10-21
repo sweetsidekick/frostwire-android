@@ -165,7 +165,7 @@
     <string name="internet_discovery">Comparte en Internet</string>
     <string name="internet_discovery_summary">Conectar a ususarios remotos por Internet.</string>
     <string name="meter">m</string>
-    <string name="kilometer">Km</string>
+    <string name="kilometer">km</string>
     <string name="from">De</string>
     <string name="wants_to_share_a_file">quiere compartir un archivo</string>
     <string name="translators">Traductores</string>
@@ -426,7 +426,7 @@
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>
     <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
-    <string name="anonymous_usage_statistics">Estadiísticas de uso anónimo</string>
+    <string name="anonymous_usage_statistics">Estadísticas de uso anónimo</string>
     <string name="anonymous_usage_statistics_summary">Envía estadísticas de uso anónimo. Ninguna información sobre contenido buscado, compartido o reproducido será almacenada en disco ni enviada a través de la red así como ninguna información que pueda identificarte personalmente.</string>
     <string name="paused_song_name">Pausado %s</string>
     <string name="ouya_search_hint_prefix">Double tap con el Touchpad del control para</string>
