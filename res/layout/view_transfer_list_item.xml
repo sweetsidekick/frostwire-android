@@ -89,7 +89,7 @@
         <ProgressBar
             android:id="@+id/view_transfer_list_item_progress"
             android:layout_width="fill_parent"
-            android:layout_height="14dp"
+            android:layout_height="10dp"
             android:layout_below="@id/view_transfer_list_item_status"
             android:layout_margin="6dp"
             android:indeterminateOnly="false"

@@ -185,17 +185,17 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     private int getFileTypeIconId() {
         switch (fileType) {
         case Constants.FILE_TYPE_APPLICATIONS:
-            return R.drawable.browse_peer_application_icon_selector_off;
+            return R.drawable.browse_peer_application_icon_selector_menu;
         case Constants.FILE_TYPE_AUDIO:
-            return R.drawable.browse_peer_audio_icon_selector_off;
+            return R.drawable.browse_peer_audio_icon_selector_menu;
         case Constants.FILE_TYPE_DOCUMENTS:
-            return R.drawable.browse_peer_document_icon_selector_off;
+            return R.drawable.browse_peer_document_icon_selector_menu;
         case Constants.FILE_TYPE_PICTURES:
-            return R.drawable.browse_peer_picture_icon_selector_off;
+            return R.drawable.browse_peer_picture_icon_selector_menu;
         case Constants.FILE_TYPE_VIDEOS:
-            return R.drawable.browse_peer_video_icon_selector_off;
+            return R.drawable.browse_peer_video_icon_selector_menu;
         case Constants.FILE_TYPE_TORRENTS:
-            return R.drawable.browse_peer_torrent_icon_selector_off;
+            return R.drawable.browse_peer_torrent_icon_selector_menu;
         default:
             return R.drawable.question_mark;
         }

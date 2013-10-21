@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -363,9 +363,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                         //apk.getDrawable(id);
 
                         //in the meantime, just hardcode it
-                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_off);
+                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_menu);
                     } catch (Throwable e) {
-                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_off);
+                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_menu);
                     }
                 } else {
                     groupIndicator.setImageResource(getFileTypeIconId(extension));
@@ -607,17 +607,17 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             return R.drawable.question_mark;
         }
         if (mt.equals(MediaType.getApplicationsMediaType())) {
-            return R.drawable.browse_peer_application_icon_selector_off;
+            return R.drawable.browse_peer_application_icon_selector_menu;
         } else if (mt.equals(MediaType.getAudioMediaType())) {
-            return R.drawable.browse_peer_audio_icon_selector_off;
+            return R.drawable.browse_peer_audio_icon_selector_menu;
         } else if (mt.equals(MediaType.getDocumentMediaType())) {
-            return R.drawable.browse_peer_document_icon_selector_off;
+            return R.drawable.browse_peer_document_icon_selector_menu;
         } else if (mt.equals(MediaType.getImageMediaType())) {
-            return R.drawable.browse_peer_picture_icon_selector_off;
+            return R.drawable.browse_peer_picture_icon_selector_menu;
         } else if (mt.equals(MediaType.getVideoMediaType())) {
-            return R.drawable.browse_peer_video_icon_selector_off;
+            return R.drawable.browse_peer_video_icon_selector_menu;
         } else if (mt.equals(MediaType.getTorrentMediaType())) {
-            return R.drawable.browse_peer_torrent_icon_selector_off;
+            return R.drawable.browse_peer_torrent_icon_selector_menu;
         } else {
             return R.drawable.question_mark;
         }

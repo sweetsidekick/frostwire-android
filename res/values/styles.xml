@@ -164,14 +164,14 @@
 
     <style name="TransfersList.Item.Title">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ff3b3b3b</item>
     </style>
 
     <style name="TransfersList.Item.Status">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">#ff3b3b3b</item>
     </style>
 
@@ -179,7 +179,7 @@
 
     <style name="TransfersList.SubItem.Title">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textColor">#ff3b3b3b</item>
     </style>
 
