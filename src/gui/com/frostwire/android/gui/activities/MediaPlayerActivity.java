@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -630,6 +629,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         } else {
             buttonPause.setImageResource(R.drawable.player_play_icon);
         }
+        buttonPause.setBackgroundDrawable(null);
     }
 
     private void doPauseResume() {

@@ -39,7 +39,7 @@ public class BrowseThumbnailImageButton extends ImageButton {
     private static final Paint paintShapeFill = new Paint();
 
     static {
-        paintCircleFill.setColor(Color.parseColor("#c0ffffff"));
+        paintCircleFill.setColor(Color.parseColor("#b0ffffff"));
         paintCircleFill.setStyle(Paint.Style.FILL);
         paintCircleFill.setAntiAlias(true);
 
