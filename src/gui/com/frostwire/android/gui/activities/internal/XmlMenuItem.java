@@ -27,6 +27,7 @@ package com.frostwire.android.gui.activities.internal;
 public final class XmlMenuItem {
     public int id;
     public int iconResId;
+    public int iconOverResId;
     public String label;
     public boolean selected;
 }

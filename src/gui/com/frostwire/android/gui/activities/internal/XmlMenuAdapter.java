@@ -53,7 +53,7 @@ public final class XmlMenuAdapter extends AbstractListAdapter<XmlMenuItem> {
         ImageView icon = (ImageView) view.findViewById(R.id.slidemenu_listitem_icon);
 
         label.setText(item.label);
-        icon.setImageResource(item.iconResId);
+        icon.setImageResource(item.selected ? item.iconOverResId : item.iconResId);
 
         view.setBackgroundResource(item.selected ? R.drawable.slidemenu_listitem_background_selected : android.R.color.transparent);
     }

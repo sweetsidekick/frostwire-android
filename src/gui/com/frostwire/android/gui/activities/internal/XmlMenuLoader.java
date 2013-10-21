@@ -62,6 +62,8 @@ public final class XmlMenuLoader {
             items = removeMenuItem(R.id.menu_free_apps, items);
         }
 
+        fillOversIcons(items);
+
         return items;
     }
 
@@ -121,6 +123,39 @@ public final class XmlMenuLoader {
         } else {
             String id = text.replace("@", "");
             return context.getResources().getString(Integer.valueOf(id));
+        }
+    }
+
+    private void fillOversIcons(XmlMenuItem[] items) {
+        for (XmlMenuItem item : items) {
+            switch (item.id) {
+            case R.id.menu_main_search:
+                item.iconOverResId = R.drawable.menu_icon_search_over;
+                break;
+            case R.id.menu_main_library:
+                item.iconOverResId = R.drawable.menu_icon_library_over;
+                break;
+            case R.id.menu_main_transfers:
+                item.iconOverResId = R.drawable.menu_icon_transfers_over;
+                break;
+            case R.id.menu_main_peers:
+                item.iconOverResId = R.drawable.menu_icon_peers_over;
+                break;
+            case R.id.menu_free_apps:
+                item.iconOverResId = R.drawable.menu_icon_free_apps_over;
+                break;
+            case R.id.menu_launch_tv:
+                item.iconOverResId = item.iconResId; // missing icon // R.drawable.menu_icon_tv_over;
+                break;
+            case R.id.menu_main_preferences:
+                item.iconOverResId = R.drawable.menu_icon_preferences_over;
+                break;
+            case R.id.menu_main_about:
+                item.iconOverResId = R.drawable.menu_icon_about_over;
+                break;
+            default:
+                item.iconOverResId = item.iconResId;
+            }
         }
     }
 }
