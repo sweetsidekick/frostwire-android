@@ -96,6 +96,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private DrawerLayout drawerLayout;
     private View leftDrawer;
     private ListView listMenu;
+    private ImageButton buttonMainMenu;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -168,6 +169,25 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 refreshPlayerItem();
                 syncSlideMenu();
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (slideOffset > 0) {
+                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
+                } else {
+                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
+            }
         });
 
         leftDrawer = findView(R.id.activity_main_left_drawer);
@@ -181,8 +201,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         });
 
-        ImageButton buttonMenu = findView(R.id.activity_main_button_menu);
-        buttonMenu.setOnClickListener(new View.OnClickListener() {
+        buttonMainMenu = findView(R.id.activity_main_button_menu);
+        buttonMainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleDrawer();
