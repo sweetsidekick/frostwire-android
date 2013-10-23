@@ -30,7 +30,6 @@ import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
-import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.vertor.VertorSearchPerformer;
@@ -113,13 +112,6 @@ public abstract class SearchEngine {
         }
     };
 
-    public static final SearchEngine ISOHUNT = new SearchEngine("ISOHunt", Constants.PREF_KEY_SEARCH_USE_ISOHUNT) {
-        @Override
-        public SearchPerformer getPerformer(long token, String keywords) {
-            return new ISOHuntSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        }
-    };
-
     public static final SearchEngine MININOVA = new SearchEngine("Mininova", Constants.PREF_KEY_SEARCH_USE_MININOVA) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -165,5 +157,5 @@ public abstract class SearchEngine {
     };
     
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, ISOHUNT, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE);
 }

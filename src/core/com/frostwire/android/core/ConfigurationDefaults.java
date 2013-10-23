@@ -82,7 +82,6 @@ final class ConfigurationDefaults {
         //defaultValues.put(Constants.PREF_KEY_SEARCH_USE_BTJUNKIE, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_CLEARBITS, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT, true);
-        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_ISOHUNT, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MININOVA, true);
         //defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TPB, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_VERTOR, true);

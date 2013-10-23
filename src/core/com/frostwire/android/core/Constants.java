@@ -70,7 +70,6 @@ public final class Constants {
     //public static final String PREF_KEY_SEARCH_USE_BTJUNKIE = "frostwire.prefs.search.use_btjunkie";
     public static final String PREF_KEY_SEARCH_USE_CLEARBITS = "frostwire.prefs.search.use_clearbits";
     public static final String PREF_KEY_SEARCH_USE_EXTRATORRENT = "frostwire.prefs.search.use_extratorrent";
-    public static final String PREF_KEY_SEARCH_USE_ISOHUNT = "frostwire.prefs.search.use_isohunt";
     public static final String PREF_KEY_SEARCH_USE_MININOVA = "frostwire.prefs.search.use_mininova";
     //public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
     public static final String PREF_KEY_SEARCH_USE_VERTOR = "frostwire.prefs.search.use_vertor";
