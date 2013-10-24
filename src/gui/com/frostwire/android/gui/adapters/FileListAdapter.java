@@ -202,12 +202,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         if (fd == null) {
             return;
         }
+
+        saveListViewVisiblePosition();
         
         if (fd.mime != null && fd.mime.contains("audio")) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
                 Engine.instance().getMediaPlayer().stop();
             } else {
-                saveAudioListViewVisiblePosition();
                 UIUtils.playEphemeralPlaylist(fd);
                 UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
             }
@@ -219,14 +220,14 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
     }
 
-    public void saveAudioListViewVisiblePosition() {
+    public void saveListViewVisiblePosition() {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
-        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION, firstVisiblePosition);
+        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType, firstVisiblePosition);
     }
     
-    public int getSavedAudioListViewVisiblePosition() {
+    public int getSavedListViewVisiblePosition() {
         //will return 0 if not found.
-        return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION);
+        return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION  + fileType);
     }
 
     /**

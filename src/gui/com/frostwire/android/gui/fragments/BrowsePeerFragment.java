@@ -349,13 +349,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void browseFilesButtonClick(byte fileType) {
         if (adapter != null) {
-            
-            if (adapter.getFileType() == Constants.FILE_TYPE_AUDIO){
-                adapter.saveAudioListViewVisiblePosition();
-            }
-            
+            adapter.saveListViewVisiblePosition();
             adapter.clear();
-            //adapter = null;
         }
 
         filesBar.clearCheckAll();
@@ -471,15 +466,16 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
         if (adapter != null) {
             onRefreshShared(adapter.getFileType());
-            restoreAudioPlaylistScrollPosition();
         } else {
             browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
         }
+        
+        restoreListViewScrollPosition();
     }
 
-    private void restoreAudioPlaylistScrollPosition() {
-        if (adapter.getFileType() == Constants.FILE_TYPE_AUDIO) {
-            getListView().setSelection(adapter.getSavedAudioListViewVisiblePosition());
+    private void restoreListViewScrollPosition() {
+        if (adapter != null) {
+            getListView().setSelection(adapter.getSavedListViewVisiblePosition()+1);
         }
     }
 
