@@ -219,7 +219,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         }
     }
 
-    private void saveAudioListViewVisiblePosition() {
+    public void saveAudioListViewVisiblePosition() {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION, firstVisiblePosition);
     }

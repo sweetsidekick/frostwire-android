@@ -349,6 +349,11 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void browseFilesButtonClick(byte fileType) {
         if (adapter != null) {
+            
+            if (adapter.getFileType() == Constants.FILE_TYPE_AUDIO){
+                adapter.saveAudioListViewVisiblePosition();
+            }
+            
             adapter.clear();
             //adapter = null;
         }
