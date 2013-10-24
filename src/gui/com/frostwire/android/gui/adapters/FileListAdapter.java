@@ -31,9 +31,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
@@ -55,12 +57,12 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.BrowseThumbnailImageButton;
+import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
-import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -77,6 +79,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     @SuppressWarnings("unused")
     private static final String TAG = "FW.FileListAdapter";
 
+    private final ListView listView;
     private final Peer peer;
     private final boolean local;
     private final byte fileType;
@@ -91,9 +94,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
     private FileListFilter fileListFilter;
 
-    public FileListAdapter(Context context, List<FileDescriptor> files, Peer peer, boolean local, byte fileType) {
-        super(context, getViewItemId(local, fileType), files);
-
+    public FileListAdapter(ListView listView, List<FileDescriptor> files, Peer peer, boolean local, byte fileType) {
+        super(listView.getContext(), getViewItemId(local, fileType), files);
+        this.listView = listView;
+        
         setShowMenuOnClick(true);
 
         fileListFilter = new FileListFilter();
@@ -198,11 +202,12 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         if (fd == null) {
             return;
         }
-
+        
         if (fd.mime != null && fd.mime.contains("audio")) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
                 Engine.instance().getMediaPlayer().stop();
             } else {
+                saveAudioListViewVisiblePosition();
                 UIUtils.playEphemeralPlaylist(fd);
                 UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
             }
@@ -212,6 +217,16 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 UIUtils.openFile(getContext(), fd.filePath, fd.mime);
             }
         }
+    }
+
+    private void saveAudioListViewVisiblePosition() {
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION, firstVisiblePosition);
+    }
+    
+    public int getSavedAudioListViewVisiblePosition() {
+        //will return 0 if not found.
+        return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION);
     }
 
     /**

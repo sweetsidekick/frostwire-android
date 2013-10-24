@@ -121,6 +121,8 @@ public final class Constants {
     public static final String EXTRA_PEER_UUID = "com.frostwire.android.EXTRA_PEER_UUID";
     public static final String EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN = "com.frostwire.android.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN";
 
+    public static final String BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION = "com.frostwire.android.BROWSE_PEER_FRAGMENT_AUDIO_LISTVIEW_FIRST_VISIBLE_POSITION";
+    
     public static final int NOTIFICATION_MEDIA_PLAYING_ID = 1000;
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;
     public static final int NOTIFICATION_MEDIA_PAUSED_ID = 1002;
