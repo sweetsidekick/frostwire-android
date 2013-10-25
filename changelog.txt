@@ -1,12 +1,14 @@
-FrostWire 1.1.5 - OCT/22/2013
+FrostWire 1.1.5 - OCT/25/2013
  - New Flat Skin makes screens rendering faster.
  - New, more stable, slide in navigation menu.
  - Fixed skip-song gesture on top of player seek bar.
  - New icons.
+ - After opening one of My Files, FrostWire will now remember the position of the list of files, no more scrolling down to continue browsing your own files.
  - Current song being played now is displayed at the bottom of the navigation menu.
  - Current song being played now shows "Stop" icon when browsing your own audio files.
  - Updated turkish translation, thanks @Serrae.
  - Removed ISOHunt metasearch.
+ - Fixed Monova metasearch.
 
 FrostWire 1.1.4 - OCT/11/2013
  - Audio player shows correct android notification when paused.
