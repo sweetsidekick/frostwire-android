@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.util;
+package com.frostwire.search.torlock;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import com.frostwire.search.AbstractSearchResult;
+import com.frostwire.search.CrawlableSearchResult;
 
 /**
  * 
@@ -27,22 +27,37 @@ import java.net.URLEncoder;
  * @author aldenml
  *
  */
-public final class URLUtils {
+public class TorLockTempSearchResult extends AbstractSearchResult implements CrawlableSearchResult {
 
-    private URLUtils() {
+    private final String itemId;
+    private final String detailsUrl;
+
+    public TorLockTempSearchResult(String itemId) {
+        this.itemId = itemId;
+        this.detailsUrl = "http://www.torlock.com/torrent/" + itemId;
     }
 
-    public static String encode(String str) {
-        String enc = "";
+    public String getItemId() {
+        return itemId;
+    }
 
-        if (str != null) {
-            try {
-                enc = URLEncoder.encode(str, "UTF-8").replaceAll("\\+", "%20");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("Impossible to run in an environment with lack of UTF-8 support", e);
-            }
-        }
+    @Override
+    public String getDisplayName() {
+        return null;
+    }
 
-        return enc;
+    @Override
+    public String getDetailsUrl() {
+        return detailsUrl;
+    }
+
+    @Override
+    public String getSource() {
+        return null;
+    }
+
+    @Override
+    public boolean isComplete() {
+        return false;
     }
 }

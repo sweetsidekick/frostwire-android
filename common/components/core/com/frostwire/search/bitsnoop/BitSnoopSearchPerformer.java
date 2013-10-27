@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.search.monova;
+package com.frostwire.search.bitsnoop;
 
 import java.util.regex.Matcher;
 
@@ -29,30 +29,29 @@ import com.frostwire.search.torrent.TorrentRegexSearchPerformer;
  * @author aldenml
  *
  */
-public class MonovaSearchPerformer extends TorrentRegexSearchPerformer<MonovaSearchResult> {
+public class BitSnoopSearchPerformer extends TorrentRegexSearchPerformer<BitSnoopSearchResult> {
 
     private static final int MAX_RESULTS = 10;
-    private static final String REGEX = "(?is)<a href=\"http://www.monova.org/torrent/([0-9]*?)/(.*?).html";
-    private static final String HTML_REGEX = "(?is).*<div id=\"downloadbox\"><h2><a href=\"(.*)\" rel=\"nofollow\"><img src=\"http://www.monova.org/images/download.png\".*<a href=\"magnet:\\?xt=urn:btih:(.*)\"><b>Magnet</b></a>.*<font color=\"[A-Za-z]*\">(.*)</font> seeds,.*<strong>Total size:</strong>(.*)<br /><strong>Pieces:.*";
+    private static final String REGEX = "(?is)<span class=\"icon cat.*?</span> <a href=\"(.*?)\">.*?<div class=\"torInfo\"";
+    private static final String HTML_REGEX = "(?is).*?Help</a>, <a href=\"magnet:.*?urn:btih:(.*?)&dn=(.*?)\" onclick=\".*?Magnet</a>.*?<a href=\"(.*?)\" title=\".*?\" class=\"dlbtn.*?title=\"Torrent Size\"><strong>(.*?)</strong>.*?<span class=\"seeders\" title=\"Seeders\">(.*?)</span>.*?<li>Added to index &#8212; (.*?) \\(.*? ago\\)</li>.*?";
 
-    public MonovaSearchPerformer(long token, String keywords, int timeout) {
+    public BitSnoopSearchPerformer(long token, String keywords, int timeout) {
         super(token, keywords, timeout, 1, 2 * MAX_RESULTS, MAX_RESULTS, REGEX, HTML_REGEX);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://www.monova.org/search.php?sort=5&term=" + encodedKeywords;
+        return "http://bitsnoop.com/search/all/" + encodedKeywords + "/c/d/" + page + "/";
     }
 
     @Override
     public CrawlableSearchResult fromMatcher(Matcher matcher) {
         String itemId = matcher.group(1);
-        String fileName = matcher.group(2);
-        return new MonovaTempSearchResult(itemId, fileName);
+        return new BitSnoopTempSearchResult(itemId);
     }
 
     @Override
-    protected MonovaSearchResult fromHtmlMatcher(CrawlableSearchResult sr, Matcher matcher) {
-        return new MonovaSearchResult(sr.getDetailsUrl(), matcher);
+    protected BitSnoopSearchResult fromHtmlMatcher(CrawlableSearchResult sr, Matcher matcher) {
+        return new BitSnoopSearchResult(sr.getDetailsUrl(), matcher);
     }
 }
