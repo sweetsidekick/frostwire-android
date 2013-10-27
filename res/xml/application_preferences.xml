@@ -77,17 +77,9 @@
             android:summary="@string/use_extratorrent"
             android:title="@string/use_extratorrent" />
         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_isohunt"
-            android:summary="@string/use_isohunt"
-            android:title="@string/use_isohunt" />
-        <CheckBoxPreference
             android:key="frostwire.prefs.search.use_mininova"
             android:summary="@string/use_mininova"
             android:title="@string/use_mininova" />
-<!--         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_vertor"
-            android:summary="@string/use_vertor"
-            android:title="@string/use_vertor" /> -->
         <CheckBoxPreference
             android:key="frostwire.prefs.search.use_youtube"
             android:summary="@string/use_youtube"
@@ -104,6 +96,14 @@
             android:key="frostwire.prefs.search.use_frostclick"
             android:summary="@string/use_frostclick"
             android:title="@string/use_frostclick" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_bitsnoop"
+            android:summary="@string/use_bitsnoop"
+            android:title="@string/use_bitsnoop" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_torlock"
+            android:summary="@string/use_torlock"
+            android:title="@string/use_torlock" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference

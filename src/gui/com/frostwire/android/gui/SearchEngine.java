@@ -26,13 +26,14 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
+import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
-import com.frostwire.search.vertor.VertorSearchPerformer;
+import com.frostwire.search.torlock.TorLockSearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
@@ -119,13 +120,6 @@ public abstract class SearchEngine {
         }
     };
 
-    public static final SearchEngine VERTOR = new SearchEngine("Vertor", Constants.PREF_KEY_SEARCH_USE_VERTOR) {
-        @Override
-        public SearchPerformer getPerformer(long token, String keywords) {
-            return new VertorSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
-        }
-    };
-
     public static final SearchEngine YOUTUBE = new SearchEngine("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -146,16 +140,29 @@ public abstract class SearchEngine {
             return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
-    
+
     private static final UserAgent FROSTCLICK_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
-    
+
     public static final SearchEngine FROSTCLICK = new SearchEngine("FrostClick", Constants.PREF_KEY_SEARCH_USE_FROSTCLICK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             return new FrostClickSearchPerformer(token, keywords, DEFAULT_TIMEOUT, FROSTCLICK_ANDROID_USER_AGENT);
         }
     };
-    
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE);
+    public static final SearchEngine BITSNOOP = new SearchEngine("BitSnoop", Constants.PREF_KEY_SEARCH_USE_BITSNOOP) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new BitSnoopSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        }
+    };
+
+    public static final SearchEngine TORLOCK = new SearchEngine("TorLock", Constants.PREF_KEY_SEARCH_USE_TORLOCK) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new TorLockSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        }
+    };
+
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, BITSNOOP, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE, TORLOCK);
 }

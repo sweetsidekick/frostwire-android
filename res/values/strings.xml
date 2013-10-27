@@ -430,4 +430,6 @@
     <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
     <string name="paused_song_name">Paused %s</string>
     <string name="ouya_search_hint_prefix">Double tap here with the controller\'s Touchpad to</string>
+    <string name="use_bitsnoop">Use BitSnoop</string>
+    <string name="use_torlock">Use TorLock</string>
 </resources>
