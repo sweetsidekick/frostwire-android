@@ -35,6 +35,12 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.gui.upnp.UPnPManager;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ * 
+ */
 public class BrowsePeersDisabledFragment extends Fragment implements MainFragment {
 
     private TextView header;
@@ -42,12 +48,6 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
     private Button freeAppsButton;
 
     public BrowsePeersDisabledFragment() {
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //        setRetainInstance(true);
     }
 
     @Override
@@ -86,23 +86,23 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
 
     private void onWifiEnableButtonClick() {
         if (getActivity() instanceof MainActivity) {
-            
-            AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void,Void,Void>() {
+
+            AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
                     ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
                     UPnPManager.instance().resume();
                     return null;
                 }
-                
+
                 @Override
                 protected void onPostExecute(Void result) {
                     MainActivity activity = (MainActivity) getActivity();
                     activity.switchFragment(R.id.menu_main_peers);
                 }
-                
+
             };
-            
+
             enableWifiTask.execute();
         }
     }
