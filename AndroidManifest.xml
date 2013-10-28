@@ -149,7 +149,32 @@
 			android:screenOrientation="portrait" />
 		<activity android:name="com.frostwire.android.gui.activities.AboutActivity"
 			android:label="@string/activity_about" />
-			
+	
+		<!-- offercast -->
+		<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
+			android:label="@string/application_label" />
+		<service android:name="com.offercast.android.sdk.OCService" />
+		<receiver android:name="com.offercast.android.sdk.OCBroadcastReceiver"
+			android:enabled="true" android:exported="false">
+			<intent-filter android:priority="1001">
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+	
+		<!-- offercast metadata development -->
+		<!-- 
+		<meta-data android:name="application-id" android:value="8"/> <meta-data 
+			android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/> 
+			<meta-data android:name="store-name" android:value="Google"/> <meta-data 
+			android:name="store-category" android:value="Media &amp; Video"/>
+		-->
+	
+		<!-- offercast metadata production -->
+		<meta-data android:name="application-id" android:value="7" />
+		<meta-data android:name="access-token"
+			android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad" />
+		<meta-data android:name="store-name" android:value="Google" />
+		<meta-data android:name="store-category" android:value="Media &amp; Video" />
 			
 	    <!--  appia activities -->
 		<activity

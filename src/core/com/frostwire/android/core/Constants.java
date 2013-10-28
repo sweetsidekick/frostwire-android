@@ -95,7 +95,7 @@ public final class Constants {
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD = "frostwire.prefs.gui.support_frostwire_threshold";
     public static final String PREF_KEY_GUI_SHOW_TV_MENU_ITEM = "frostwire.prefs.gui.show_tv_menu_item";
     public static final String PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM = "frostwire.prefs.gui.show_free_apps_menu_item";
-    //public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
+    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
     public static final String PREF_KEY_GUI_INITIALIZE_APPIA = "frostwire.prefs.gui.initialize_appia";
 
     public static final String PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED = "frostwire.prefs.torrent.max_download_speed";

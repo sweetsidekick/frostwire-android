@@ -75,13 +75,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         filter();
     }
 
-    @SuppressWarnings("unchecked")
-    public void addResults(List<? extends SearchResult> g) {
-        visualList.addAll(filter((List<SearchResult>) g)); // java, java, and type erasure
-        list.addAll(g);
-        notifyDataSetChanged();
-    }
-
     public void addResults(List<? extends SearchResult> completeList, List<? extends SearchResult> filteredList) {
         visualList.addAll(filteredList); // java, java, and type erasure
         list.addAll(completeList);
@@ -156,23 +149,26 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     private void filter() {
-        this.visualList = filter(list);
+        this.visualList = filter(list).filtered;
         notifyDataSetInvalidated();
     }
 
-    public List<SearchResult> filter(List<SearchResult> results) {
+    public FilteredSearchResults filter(List<SearchResult> results) {
+        FilteredSearchResults fsr = new FilteredSearchResults();
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
-            if (accept(sr)) {
+            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
+            if (accept(sr,mt)) {
                 l.add(sr);
             }
+            fsr.increment(mt);
         }
-        return l;
+        fsr.filtered = l;
+        return fsr;
     }
 
-    private boolean accept(SearchResult sr) {
+    private boolean accept(SearchResult sr, MediaType mt) {
         if (sr instanceof FileSearchResult) {
-            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
             if (mt == null) {
                 return false;
             }
@@ -210,6 +206,41 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             i.setData(Uri.parse(url));
             v.getContext().startActivity(i);
             UXStats.instance().log(UXAction.SEARCH_RESULT_SOURCE_VIEW);
+        }
+    }
+    
+    public static class FilteredSearchResults {
+        public List<SearchResult> filtered;
+        public int numAudio;
+        public int numVideo;
+        public int numPictures;
+        public int numApplications;
+        public int numDocuments;
+        public int numTorrents;
+        
+        private void increment(MediaType mt) {
+            if (mt != null) {
+                switch (mt.getId()) {
+                case Constants.FILE_TYPE_AUDIO:
+                    numAudio++;
+                    break;
+                case Constants.FILE_TYPE_VIDEOS:
+                    numVideo++;
+                    break;
+                case Constants.FILE_TYPE_PICTURES:
+                    numPictures++;
+                    break;
+                case Constants.FILE_TYPE_APPLICATIONS:
+                    numApplications++;
+                    break;
+                case Constants.FILE_TYPE_DOCUMENTS:
+                    numDocuments++;
+                    break;
+                case Constants.FILE_TYPE_TORRENTS:
+                    numTorrents++;
+                    break;
+                }
+            }
         }
     }
 }

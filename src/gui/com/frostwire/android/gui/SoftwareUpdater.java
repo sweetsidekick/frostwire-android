@@ -317,8 +317,7 @@ public final class SoftwareUpdater {
         }
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, update.config.tv);
-        //ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
-        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, update.config.freeApps);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
 
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
@@ -372,8 +371,7 @@ public final class SoftwareUpdater {
         public Map<String, Boolean> activeSearchEngines;
         public boolean tv = true;
         public boolean appia = true;
-        //public boolean offercast = true;
-        public boolean freeApps = true;
+        public boolean offercast = true;
 
         // ux stats
         public boolean uxEnabled = false;

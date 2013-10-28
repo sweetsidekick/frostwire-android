@@ -62,6 +62,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
@@ -110,7 +111,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     // not sure about this variable, quick solution for now
     private String durToken;
 
-    //private boolean offercastStarted = false;
+    private boolean offercastStarted = false;
     private boolean appiaStarted = false;
 
     public MainActivity() {
@@ -296,9 +297,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         refreshPeersFragment();
 
-        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
-            startAppia();
-        }
+        initializeAppia();
+        initializeOffercast();
+        
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
@@ -315,6 +316,30 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         checkLastSeenVersion();
+    }
+
+    private void initializeAppia() {
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            try {
+                Appia appia = Appia.getAppia();
+                appia.setSiteId(3867);
+                appiaStarted = true;
+            } catch (Throwable t) {
+                appiaStarted = false;
+            }
+        }
+    }
+
+    private void initializeOffercast() {
+        if (!offercastStarted && 
+            ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)){
+            try {
+                OfferUtils.startOffercast(getApplicationContext());
+                offercastStarted = true;
+            } catch (Exception e) {
+                offercastStarted = false;
+            }
+        }
     }
 
     @Override
@@ -375,16 +400,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             //just updated.
             ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
             UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
-        }
-    }
-
-    private void startAppia() {
-        try {
-            Appia appia = Appia.getAppia();
-            appia.setSiteId(3867);
-            appiaStarted = true;
-        } catch (Throwable t) {
-            appiaStarted = false;
         }
     }
 

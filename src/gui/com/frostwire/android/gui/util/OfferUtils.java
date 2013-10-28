@@ -27,6 +27,7 @@ import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.offercast.android.sdk.OffercastSDK;
 
 public class OfferUtils {
     private static final Logger LOG = LoggerFactory.getLogger(OfferUtils.class);
@@ -44,22 +45,21 @@ public class OfferUtils {
         return isFreeAppsEnabled;
     }
     
-     public static void startOffercast() throws Exception {
-// Disabled due to Google Play Developer Program Policy (“Content Policy”) Update - August 23, 2013 
-//        try {
-//            OffercastSDK offercast = OffercastSDK.getInstance(getApplicationContext());
-//            offercast.authorize();
-//            LOG.info("Offercast started.");
-//        } catch (Exception e) {
-//            LOG.error("Offercast could not start.",e);
-//        }
+     public static void startOffercast(final Context context) throws Exception {
+        if (!OSUtils.isAmazonDistribution()) {
+            try {
+                OffercastSDK offercast = OffercastSDK.getInstance(context);
+                offercast.authorize();
+                LOG.info("Offercast started.");
+            } catch (Exception e) {
+                LOG.error("Offercast could not start.",e);
+            }
+        }
     }
 
     public static void onFreeAppsClick(Context context) {
         if (isfreeAppsEnabled()) {
             try {
-//                OffercastSDK instance = OffercastSDK.getInstance(context);
-//                instance.showAppWallAd();
                 Appia appia = Appia.getAppia();
                 appia.cacheAppWall(context);
                 appia.displayWall(context, WallDisplayType.FULL_SCREEN);
