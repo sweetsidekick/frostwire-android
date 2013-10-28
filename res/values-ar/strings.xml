@@ -408,7 +408,7 @@
     <string name="torrent_scheme_download_not_supported">هذا التنزيل غير مدعوم</string>
     <string name="retry_search">إعادة المحاولة</string>
     <string name="use_archiveorg">Archive.org استخدم</string>
-    <string name="crawl_cache_size">ذاكرة جمع البيانات %1$.2ف.م.ب</string>
+    <string name="crawl_cache_size">ذاكرة جمع البيانات %1$.2fMB ف.م.ب</string>
     <string name="deleted_crawl_cache">حذف ذاكرة جمع البيانات</string>
     <string name="clear_search_cache">حذف ذاكرة البحث</string>
     <string name="clear_search_cache_summary">حذف مدخلات ذاكرة البحث</string>
