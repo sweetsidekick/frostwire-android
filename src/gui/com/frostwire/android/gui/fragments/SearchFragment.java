@@ -42,6 +42,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
+import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearchResults;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
@@ -79,6 +80,28 @@ import com.frostwire.uxstats.UXStats;
  */
 public final class SearchFragment extends AbstractListFragment implements MainFragment {
 
+    private class FileTypeCounter {
+        private FilteredSearchResults fsr = new FilteredSearchResults();
+        
+        public void add(FilteredSearchResults fsr) {
+            this.fsr.numAudio += fsr.numAudio;
+            this.fsr.numApplications += fsr.numApplications;
+            this.fsr.numDocuments += fsr.numDocuments;
+            this.fsr.numPictures += fsr.numPictures;
+            this.fsr.numTorrents += fsr.numTorrents;
+            this.fsr.numVideo += fsr.numVideo;
+        }
+        
+        public void clear() {
+            this.fsr.numAudio = 0;
+            this.fsr.numApplications = 0;
+            this.fsr.numDocuments = 0;
+            this.fsr.numPictures = 0;
+            this.fsr.numTorrents = 0;
+            this.fsr.numVideo = 0;
+        }
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
@@ -88,9 +111,12 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private ProgressBar deepSearchProgress;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
+    
+    private final FileTypeCounter fileTypeCounter;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
+        fileTypeCounter = new FileTypeCounter();
     }
 
     @Override
@@ -177,13 +203,17 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
                     @SuppressWarnings("unchecked")
-                    final List<SearchResult> filteredList = adapter.filter((List<SearchResult>) results);
+                    FilteredSearchResults fsr = adapter.filter((List<SearchResult>) results);
+                    final List<SearchResult> filteredList = fsr.filtered;
 
+                    fileTypeCounter.add(fsr);
+                    
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             adapter.addResults(results, filteredList);
                             showSearchView(getView());
+                            refreshFileTypeCounters();
                         }
                     });
                 }
@@ -202,17 +232,25 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         }
     }
 
+    
+    private void refreshFileTypeCounters() {
+    }
+
+
     private void performSearch(String query, int mediaTypeId) {
         adapter.clear();
         adapter.setFileType(mediaTypeId);
+        fileTypeCounter.clear();
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
         UXStats.instance().log(UXAction.SEARCH_STARTED_ENTER_KEY);
+        
     }
 
     private void cancelSearch(View view) {
         adapter.clear();
+        fileTypeCounter.clear();
         LocalSearchEngine.instance().cancelSearch();
         searchProgress.setProgressEnabled(false);
         showSearchView(getView());
