@@ -294,6 +294,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onResume() {
         super.onResume();
 
+        refreshPeersFragment();
+
         if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
             startAppia();
         }
@@ -534,6 +536,13 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         } catch (Throwable e) {
             LOG.error("Error updating main header", e);
+        }
+    }
+
+    private void refreshPeersFragment() {
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
+            controller.switchFragment(R.id.menu_main_peers);
         }
     }
 

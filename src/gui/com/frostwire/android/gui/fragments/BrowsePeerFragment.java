@@ -42,6 +42,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Finger;
@@ -349,7 +350,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void browseFilesButtonClick(byte fileType) {
         if (adapter != null) {
-            adapter.saveListViewVisiblePosition();
+            saveListViewVisiblePosition(adapter.getFileType());
             adapter.clear();
         }
 
@@ -469,13 +470,13 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         } else {
             browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
         }
-        
+
         restoreListViewScrollPosition();
     }
 
     private void restoreListViewScrollPosition() {
         if (adapter != null) {
-            getListView().setSelection(adapter.getSavedListViewVisiblePosition()+1);
+            getListView().setSelection(getSavedListViewVisiblePosition(adapter.getFileType()) + 1);
         }
     }
 
@@ -492,13 +493,22 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
 
-            adapter = new FileListAdapter(getListView(), items, peer, local, fileType) {
+            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
+
+                @Override
                 protected void onItemChecked(View v, boolean isChecked) {
                     if (!isChecked) {
                         filesBar.clearCheckAll();
                     }
                 }
-};
+
+                @Override
+                protected void onLocalPlay() {
+                    if (adapter != null) {
+                        saveListViewVisiblePosition(adapter.getFileType());
+                    }
+                }
+            };
             adapter.setCheckboxesVisibility(true);
             setListAdapter(adapter);
         } catch (Throwable e) {
@@ -538,6 +548,16 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             }
             activity.finish();
         }
+    }
+
+    private void saveListViewVisiblePosition(byte fileType) {
+        int firstVisiblePosition = getListView().getFirstVisiblePosition();
+        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType, firstVisiblePosition);
+    }
+
+    private int getSavedListViewVisiblePosition(byte fileType) {
+        //will return 0 if not found.
+        return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
     }
 
     private final class LocalBroadcastReceiver extends BroadcastReceiver {
