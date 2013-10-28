@@ -1,4 +1,4 @@
-FrostWire 1.1.5 - OCT/25/2013
+FrostWire 1.1.5 - OCT/28/2013
  - New Flat Skin makes screens rendering faster.
  - New, more stable, slide in navigation menu.
  - Fixed skip-song gesture on top of player seek bar.
@@ -7,6 +7,8 @@ FrostWire 1.1.5 - OCT/25/2013
  - Current song being played now is displayed at the bottom of the navigation menu.
  - Current song being played now shows "Stop" icon when browsing your own audio files.
  - Updated turkish translation, thanks @Serrae.
+ - New BitSnoop metasearch.
+ - New TorLock metasearch.
  - Removed ISOHunt metasearch.
  - Fixed Monova metasearch.
 
