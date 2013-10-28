@@ -87,7 +87,7 @@ public final class LocalSearchEngine {
             return;
         }
 
-        manager.stop(currentSearchToken);
+        manager.stop();
 
         currentSearchToken = Math.abs(System.nanoTime());
         currentSearchTokens = tokenize(query);
@@ -102,7 +102,7 @@ public final class LocalSearchEngine {
     }
 
     public void cancelSearch() {
-        manager.stop(currentSearchToken);
+        manager.stop();
         currentSearchToken = 0;
         currentSearchTokens = null;
         searchFinished = true;
