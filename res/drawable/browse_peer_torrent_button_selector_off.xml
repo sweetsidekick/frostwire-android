@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,14 +21,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item>
-        <shape>
-            <solid android:color="#ffdbdee2" />
-        </shape>
-    </item>
-    <item android:bottom="1dp">
-        <shape>
-            <solid android:color="#fff0f0f0" />
-        </shape>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/browse_peer_torrent_icon_selector_off" />
     </item>
 
 </layer-list>
