@@ -213,7 +213,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                         public void run() {
                             adapter.addResults(results, filteredList);
                             showSearchView(getView());
-                            refreshFileTypeCounters();
+                            refreshFileTypeCounters(true);
                         }
                     });
                 }
@@ -233,7 +233,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     }
 
     
-    private void refreshFileTypeCounters() {
+    private void refreshFileTypeCounters(boolean fileTypeCountersVisible) {
         //view_search_input_radio_audio
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_APPLICATIONS, fileTypeCounter.fsr.numApplications);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_AUDIO, fileTypeCounter.fsr.numAudio);
@@ -241,6 +241,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_PICTURES, fileTypeCounter.fsr.numPictures);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_TORRENTS, fileTypeCounter.fsr.numTorrents);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_VIDEOS, fileTypeCounter.fsr.numVideo);
+        
+       searchInput.setFileTypeCountersVisible(fileTypeCountersVisible);
     }
 
 
@@ -248,7 +250,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         adapter.clear();
         adapter.setFileType(mediaTypeId);
         fileTypeCounter.clear();
-        refreshFileTypeCounters();
+        refreshFileTypeCounters(false);
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
@@ -259,7 +261,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private void cancelSearch(View view) {
         adapter.clear();
         fileTypeCounter.clear();
-        refreshFileTypeCounters();
+        refreshFileTypeCounters(false);
         LocalSearchEngine.instance().cancelSearch();
         searchProgress.setProgressEnabled(false);
         showSearchView(getView());

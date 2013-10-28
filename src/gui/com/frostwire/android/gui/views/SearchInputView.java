@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -124,6 +125,8 @@ public class SearchInputView extends LinearLayout {
         initRadioButton(R.id.view_search_input_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
         initRadioButton(R.id.view_search_input_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
         initRadioButton(R.id.view_search_input_radio_torrents, Constants.FILE_TYPE_TORRENTS);
+        
+        setFileTypeCountersVisible(false);
     }
 
     private void startSearch(View v) {
@@ -239,5 +242,10 @@ public class SearchInputView extends LinearLayout {
             numFilesStr = "+1k";
         }
         rButton.setText(numFilesStr);
+    }
+
+    public void setFileTypeCountersVisible(boolean fileTypeCountersVisible) {
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.view_search_input_radiogroup_file_type);
+        radioGroup.setVisibility(fileTypeCountersVisible ? View.VISIBLE : View.GONE);
     }
 }
