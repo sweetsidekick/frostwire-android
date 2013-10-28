@@ -55,7 +55,7 @@
         <RadioButton
             android:id="@+id/view_search_input_radio_audio"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_audio_button_selector" />
+            android:background="@drawable/browse_peer_audio_button_selector"/>
 
         <RadioButton
             android:id="@+id/view_search_input_radio_videos"

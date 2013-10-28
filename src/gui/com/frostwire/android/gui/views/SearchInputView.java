@@ -208,4 +208,36 @@ public class SearchInputView extends LinearLayout {
 
         public void onClear(View v);
     }
+
+    public void updateFileTypeCounter(byte fileType, int numFiles) {
+        int radioId = Constants.FILE_TYPE_AUDIO;
+        switch (fileType) {
+        case Constants.FILE_TYPE_AUDIO:
+            radioId = R.id.view_search_input_radio_audio;
+            break;
+        case Constants.FILE_TYPE_VIDEOS:
+            radioId = R.id.view_search_input_radio_videos;
+            break;
+        case Constants.FILE_TYPE_PICTURES:
+            radioId = R.id.view_search_input_radio_pictures;
+            break;
+        case Constants.FILE_TYPE_APPLICATIONS:
+            radioId = R.id.view_search_input_radio_applications;
+            break;
+        case Constants.FILE_TYPE_DOCUMENTS:
+            radioId = R.id.view_search_input_radio_documents;
+            break;
+        case Constants.FILE_TYPE_TORRENTS:
+            radioId = R.id.view_search_input_radio_torrents;
+            break;
+
+        }
+        
+        RadioButton rButton = (RadioButton) findViewById(radioId);
+        String numFilesStr = String.valueOf(numFiles);
+        if (numFiles > 9999) {
+            numFilesStr = "+1k";
+        }
+        rButton.setText(numFilesStr);
+    }
 }
