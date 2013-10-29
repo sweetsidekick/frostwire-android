@@ -55,32 +55,33 @@
         <RadioButton
             android:id="@+id/view_search_input_radio_audio"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_audio_button_selector"/>
+            android:drawableTop="@drawable/browse_peer_audio_button_selector"
+            />
 
         <RadioButton
             android:id="@+id/view_search_input_radio_videos"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_video_button_selector" />
+            android:drawableTop="@drawable/browse_peer_video_button_selector" />
 
         <RadioButton
             android:id="@+id/view_search_input_radio_pictures"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_picture_button_selector" />
+            android:drawableTop="@drawable/browse_peer_picture_button_selector" />
 
         <RadioButton
             android:id="@+id/view_search_input_radio_applications"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_application_button_selector" />
+            android:drawableTop="@drawable/browse_peer_application_button_selector" />
 
         <RadioButton
             android:id="@+id/view_search_input_radio_documents"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_document_button_selector" />
+            android:drawableTop="@drawable/browse_peer_document_button_selector" />
 
         <RadioButton
             android:id="@+id/view_search_input_radio_torrents"
             style="@style/BrowseFileTypeButton"
-            android:background="@drawable/browse_peer_torrent_button_selector" />
+            android:drawableTop="@drawable/browse_peer_torrent_button_selector" />
     </RadioGroup>
 
 </LinearLayout>

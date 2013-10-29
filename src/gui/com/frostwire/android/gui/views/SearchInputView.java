@@ -191,6 +191,8 @@ public class SearchInputView extends LinearLayout {
         if (mediaTypeId == fileType) {
             button.setChecked(true);
         }
+        
+        
 
         return button;
     }
