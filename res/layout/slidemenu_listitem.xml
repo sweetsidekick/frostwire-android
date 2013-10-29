@@ -45,6 +45,6 @@
         android:layout_height="1px"
         android:layout_alignParentRight="true"
         android:layout_below="@id/slidemenu_listitem_icon"
-        android:background="#ff1d2934" />
+        android:background="@color/app_menu_item_line" />
 
 </RelativeLayout>
