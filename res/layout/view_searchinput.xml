@@ -50,42 +50,6 @@
         android:layout_marginTop="6dp"
         frostwire:clearable_hint="@string/search_label" />
 
-    <RadioGroup
-        android:id="@+id/view_search_input_radiogroup_file_type"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/app_dark_blue"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_audio"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_audio_button_selector" />
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_videos"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_video_button_selector" />
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_pictures"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_picture_button_selector" />
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_applications"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_application_button_selector" />
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_documents"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_document_button_selector" />
-
-        <RadioButton
-            android:id="@+id/view_search_input_radio_torrents"
-            style="@style/SearchInputFileTypeButton"
-            android:background="@drawable/browse_peer_torrent_button_selector" />
-    </RadioGroup>
+    <include layout="@layout/view_searchinput_radiogroup" />
 
 </LinearLayout>

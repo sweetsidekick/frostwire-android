@@ -36,6 +36,13 @@
         <item name="android:paddingBottom">2dp</item>
     </style>
 
+    <style name="SearchInputFileTypeButtonLand" parent="SearchInputFileTypeButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">48dp</item>
+    </style>
+
     <style name="BrowseFileTypeButton" parent="android:Widget.CompoundButton.RadioButton">
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
