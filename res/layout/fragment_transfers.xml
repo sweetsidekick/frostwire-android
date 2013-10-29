@@ -27,7 +27,7 @@
         android:id="@+id/fragment_transfers_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/browse_peer_filetype_buttons_background"
+        android:background="@color/app_dark_blue"
         android:gravity="right" >
 
         <View
