@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.util.concurrent;
+package com.frostwire.concurrent;
 
 import java.util.concurrent.ThreadFactory;
 
@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadFactory;
  * @author aldenml
  *
  */
-final class DefaultThreadFactory implements ThreadFactory {
+public final class DefaultThreadFactory implements ThreadFactory {
 
     private final String name;
     private final boolean daemon;
