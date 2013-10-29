@@ -80,28 +80,6 @@ import com.frostwire.uxstats.UXStats;
  */
 public final class SearchFragment extends AbstractListFragment implements MainFragment {
 
-    private class FileTypeCounter {
-        private FilteredSearchResults fsr = new FilteredSearchResults();
-        
-        public void add(FilteredSearchResults fsr) {
-            this.fsr.numAudio += fsr.numAudio;
-            this.fsr.numApplications += fsr.numApplications;
-            this.fsr.numDocuments += fsr.numDocuments;
-            this.fsr.numPictures += fsr.numPictures;
-            this.fsr.numTorrents += fsr.numTorrents;
-            this.fsr.numVideo += fsr.numVideo;
-        }
-        
-        public void clear() {
-            this.fsr.numAudio = 0;
-            this.fsr.numApplications = 0;
-            this.fsr.numDocuments = 0;
-            this.fsr.numPictures = 0;
-            this.fsr.numTorrents = 0;
-            this.fsr.numVideo = 0;
-        }
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
@@ -111,7 +89,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private ProgressBar deepSearchProgress;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
-    
+
     private final FileTypeCounter fileTypeCounter;
 
     public SearchFragment() {
@@ -142,6 +120,15 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         header.setText(R.string.search);
 
         return header;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (adapter != null && adapter.getCount() > 0) {
+            refreshFileTypeCounters(true);
+        }
     }
 
     @Override
@@ -207,7 +194,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                     final List<SearchResult> filteredList = fsr.filtered;
 
                     fileTypeCounter.add(fsr);
-                    
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -232,19 +219,16 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         }
     }
 
-    
     private void refreshFileTypeCounters(boolean fileTypeCountersVisible) {
-        //view_search_input_radio_audio
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_APPLICATIONS, fileTypeCounter.fsr.numApplications);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_AUDIO, fileTypeCounter.fsr.numAudio);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_DOCUMENTS, fileTypeCounter.fsr.numDocuments);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_PICTURES, fileTypeCounter.fsr.numPictures);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_TORRENTS, fileTypeCounter.fsr.numTorrents);
         searchInput.updateFileTypeCounter(Constants.FILE_TYPE_VIDEOS, fileTypeCounter.fsr.numVideo);
-        
-       searchInput.setFileTypeCountersVisible(fileTypeCountersVisible);
-    }
 
+        searchInput.setFileTypeCountersVisible(fileTypeCountersVisible);
+    }
 
     private void performSearch(String query, int mediaTypeId) {
         adapter.clear();
@@ -255,7 +239,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
         UXStats.instance().log(UXAction.SEARCH_STARTED_ENTER_KEY);
-        
+
     }
 
     private void cancelSearch(View view) {
@@ -423,6 +407,29 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 f.slides = result;
                 f.promotions.setSlides(result);
             }
+        }
+    }
+
+    private static final class FileTypeCounter {
+
+        private final FilteredSearchResults fsr = new FilteredSearchResults();
+
+        public void add(FilteredSearchResults fsr) {
+            this.fsr.numAudio += fsr.numAudio;
+            this.fsr.numApplications += fsr.numApplications;
+            this.fsr.numDocuments += fsr.numDocuments;
+            this.fsr.numPictures += fsr.numPictures;
+            this.fsr.numTorrents += fsr.numTorrents;
+            this.fsr.numVideo += fsr.numVideo;
+        }
+
+        public void clear() {
+            this.fsr.numAudio = 0;
+            this.fsr.numApplications = 0;
+            this.fsr.numDocuments = 0;
+            this.fsr.numPictures = 0;
+            this.fsr.numTorrents = 0;
+            this.fsr.numVideo = 0;
         }
     }
 }
