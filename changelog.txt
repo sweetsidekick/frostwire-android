@@ -1,4 +1,4 @@
-FrostWire 1.1.5 - OCT/28/2013
+FrostWire 1.2.0 - OCT/30/2013
  - New Flat Skin makes screens rendering faster.
  - New, more stable, slide in navigation menu.
  - Fixed skip-song gesture on top of player seek bar.
