@@ -352,7 +352,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private static class StartDownloadAsyncTask extends AsyncTask<Void, Void, DownloadTransfer> {
         private final WeakReference<Activity> activity;
         private final SearchResult sr;
-        final String toastMessage;
+        private final String toastMessage;
         
         public StartDownloadAsyncTask(final Activity activity, final SearchResult sr, final String toastMessage) {
             this.activity = new WeakReference<Activity>(activity);
