@@ -303,40 +303,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     }
 
     private void startDownload(final SearchResult sr, final String toastMessage) {
-        AsyncTask<Void, Void, DownloadTransfer> task = new AsyncTask<Void, Void, DownloadTransfer>() {
-
-            @Override
-            protected DownloadTransfer doInBackground(Void... params) {
-                DownloadTransfer transfer = null;
-                try {
-                    transfer = TransferManager.instance().download(sr);
-                } catch (Throwable e) {
-                    LOG.warn("Error adding new download from result: " + sr, e);
-                }
-
-                return transfer;
-            }
-
-            @Override
-            protected void onPostExecute(DownloadTransfer transfer) {
-                if (!(transfer instanceof InvalidTransfer)) {
-                    UIUtils.showShortMessage(getActivity(), toastMessage);
-                } else {
-                    if (transfer instanceof ExistingDownload) {
-                        //nothing happens here, the user should just see the transfer
-                        //manager and we avoid adding the same transfer twice.
-                    } else {
-                        UIUtils.showShortMessage(getActivity(), ((InvalidTransfer) transfer).getReasonResId());
-                    }
-                }
-            }
-
-        };
-
+        AsyncTask<Void, Void, DownloadTransfer> task = new StartDownloadAsyncTask(getActivity(), sr, toastMessage);
         UIUtils.showTransfersOnDownloadStart(getActivity());
         task.execute();
     }
-
+    
     private void startPromotionDownload(Slide slide) {
         SearchResult sr = null;
 
@@ -377,6 +348,45 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         }
     }
+    
+    private static class StartDownloadAsyncTask extends AsyncTask<Void, Void, DownloadTransfer> {
+        private final WeakReference<Activity> activity;
+        private final SearchResult sr;
+        final String toastMessage;
+        
+        public StartDownloadAsyncTask(final Activity activity, final SearchResult sr, final String toastMessage) {
+            this.activity = new WeakReference<Activity>(activity);
+            this.sr = sr;
+            this.toastMessage = toastMessage;
+        }
+        
+        @Override
+        protected DownloadTransfer doInBackground(Void... params) {
+            DownloadTransfer transfer = null;
+            try {
+                transfer = TransferManager.instance().download(sr);
+            } catch (Throwable e) {
+                LOG.warn("Error adding new download from result: " + sr, e);
+            }
+
+            return transfer;
+        }
+
+        @Override
+        protected void onPostExecute(DownloadTransfer transfer) {
+            if (!(transfer instanceof InvalidTransfer)) {
+                UIUtils.showShortMessage(activity.get(), toastMessage);
+            } else {
+                if (transfer instanceof ExistingDownload) {
+                    //nothing happens here, the user should just see the transfer
+                    //manager and we avoid adding the same transfer twice.
+                } else {
+                    UIUtils.showShortMessage(activity.get(), ((InvalidTransfer) transfer).getReasonResId());
+                }
+            }
+        }
+
+    };
 
     private static class LoadSlidesTask extends AsyncTask<Void, Void, List<Slide>> {
 
