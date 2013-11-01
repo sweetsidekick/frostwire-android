@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
+import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
@@ -107,6 +107,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private AboutFragment about;
 
     private Fragment currentFragment;
+    private final Stack<Integer> fragmentsStack;
 
     private PlayerMenuItemView playerItem;
 
@@ -119,6 +120,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     public MainActivity() {
         super(R.layout.activity_main, false, 2);
         this.controller = new MainController(this);
+        this.fragmentsStack = new Stack<Integer>();
     }
 
     public void showMyFiles() {
@@ -146,8 +148,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            super.onBackPressed();
+        if (fragmentsStack.size() > 1) {
+            fragmentsStack.pop();
+            int id = fragmentsStack.peek();
+            Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+            switchContent(fragment, false);
         } else {
             handleLastBackPressed();
         }
@@ -534,11 +539,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             setSelectedItem(R.id.menu_main_search);
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().show(fragment).commit();
-        currentFragment = fragment;
-
-        updateHeader(fragment);
+        switchContent(fragment);
     }
 
     private void updateHeader(Fragment fragment) {
@@ -568,6 +569,15 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
+    private void switchContent(Fragment fragment, boolean addToStack) {
+        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commit();
+        if (addToStack && (fragmentsStack.isEmpty() || fragmentsStack.peek() != fragment.getId())) {
+            fragmentsStack.push(fragment.getId());
+        }
+        currentFragment = fragment;
+        updateHeader(fragment);
+    }
+
     /*
      * The following methods are only public to be able to use them from another package(internal).
      */
@@ -590,9 +600,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     public void switchContent(Fragment fragment) {
-        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commit();
-        currentFragment = fragment;
-        updateHeader(fragment);
+        switchContent(fragment, true);
     }
 
     public Fragment getCurrentFragment() {
