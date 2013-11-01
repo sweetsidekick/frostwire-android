@@ -1,6 +1,7 @@
-FrostWire 1.2.0 - OCT/30/2013
+FrostWire 1.2.0 - NOV/01/2013
  - New Flat Skin makes screens rendering faster.
  - New, more stable, slide in navigation menu.
+ - Considerable memory usage optimizations.
  - Fixed skip-song gesture on top of player seek bar.
  - New icons.
  - After opening one of My Files, FrostWire will now remember the position of the list of files, no more scrolling down to continue browsing your own files.
@@ -11,6 +12,7 @@ FrostWire 1.2.0 - OCT/30/2013
  - New TorLock metasearch.
  - Removed ISOHunt metasearch.
  - Fixed Monova metasearch.
+ - French translation updated.
 
 FrostWire 1.1.4 - OCT/11/2013
  - Audio player shows correct android notification when paused.
