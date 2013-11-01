@@ -86,6 +86,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
+    private static final String FRAGMENTS_STACK_KEY = "fragments_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
@@ -351,6 +352,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveLastFragment(outState);
+        saveFragmentsStack(outState);
 
         outState.putString(DUR_TOKEN_KEY, durToken);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
@@ -533,6 +535,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         if (savedInstanceState != null) {
             fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+            restoreFragmentsStack(savedInstanceState);
         }
         if (fragment == null) {
             fragment = search;
@@ -540,6 +543,25 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         switchContent(fragment);
+    }
+
+    private void saveFragmentsStack(Bundle outState) {
+        int[] stack = new int[fragmentsStack.size()];
+        for (int i = 0; i < stack.length; i++) {
+            stack[i] = fragmentsStack.get(i);
+        }
+        outState.putIntArray(FRAGMENTS_STACK_KEY, stack);
+    }
+
+    private void restoreFragmentsStack(Bundle savedInstanceState) {
+        try {
+            int[] stack = savedInstanceState.getIntArray(FRAGMENTS_STACK_KEY);
+            for (int id : stack) {
+                fragmentsStack.push(id);
+            }
+        } catch (Throwable e) {
+            // silent recovering, stack is't not really important
+        }
     }
 
     private void updateHeader(Fragment fragment) {
