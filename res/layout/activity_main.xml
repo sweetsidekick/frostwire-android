@@ -63,7 +63,44 @@
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1" >
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_search"
+                    android:name="com.frostwire.android.gui.fragments.SearchFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_browse_peer"
+                    android:name="com.frostwire.android.gui.fragments.BrowsePeerFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_transfers"
+                    android:name="com.frostwire.android.gui.fragments.TransfersFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_browse_peers"
+                    android:name="com.frostwire.android.gui.fragments.BrowsePeersFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_browse_peers_disabled"
+                    android:name="com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <fragment
+                    android:id="@+id/activity_main_fragment_about"
+                    android:name="com.frostwire.android.gui.fragments.AboutFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
 
             <com.frostwire.android.gui.views.PlayerNotifierView
                 android:id="@+id/activity_main_player_notifier"

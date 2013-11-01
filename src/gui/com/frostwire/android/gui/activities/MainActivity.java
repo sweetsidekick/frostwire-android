@@ -299,7 +299,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         initializeAppia();
         initializeOffercast();
-        
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
@@ -331,8 +330,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initializeOffercast() {
-        if (!offercastStarted && 
-            ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)){
+        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
             try {
                 OfferUtils.startOffercast(getApplicationContext());
                 offercastStarted = true;
@@ -507,12 +505,12 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupFragments() {
-        search = new SearchFragment();
-        library = new BrowsePeerFragment();
-        transfers = new TransfersFragment();
-        peers = new BrowsePeersFragment();
-        peersDisabled = new BrowsePeersDisabledFragment();
-        about = new AboutFragment();
+        search = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
+        library = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
+        transfers = (TransfersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
+        peers = (BrowsePeersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
+        peersDisabled = (BrowsePeersDisabledFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
+        about = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
 
         library.setPeer(PeerManager.instance().getLocalPeer());
     }
