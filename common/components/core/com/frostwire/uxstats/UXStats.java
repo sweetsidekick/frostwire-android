@@ -32,10 +32,10 @@ import com.frostwire.util.JsonUtils;
  *
  */
 public final class UXStats {
-
+    private static final boolean IS_TESTING = false;
+    
     private static final Logger LOG = LoggerFactory.getLogger(UXStats.class);
 
-    private static final String HTTP_SERVER = "http://ux.frostwire.com/ux";
     private static final int HTTP_TIMEOUT = 4000;
 
     private final HttpClient httpClient;
@@ -90,7 +90,7 @@ public final class UXStats {
         try {
             if (conf != null && data != null) {
                 //System.out.println(UXAction.getActionName(action));
-                
+
                 if (data.actions.size() < conf.getMaxEntries()) {
                     data.actions.add(new UXAction(action, System.currentTimeMillis()));
                 }
@@ -103,7 +103,7 @@ public final class UXStats {
             // ignore, not important
         }
     }
-    
+
     public void flush() {
         try {
             if (conf != null && data != null) {
@@ -117,7 +117,7 @@ public final class UXStats {
     private boolean isReadyToSend() {
         return data.actions.size() >= conf.getMinEntries() && (System.currentTimeMillis() - data.time > conf.getPeriod() * 1000);
     }
-    
+
     private void sendData() {
         SendDataRunnable r = new SendDataRunnable(data);
 
@@ -129,6 +129,8 @@ public final class UXStats {
             new Thread(r, "UXStats-sendData").start();
         }
     }
+    
+    
 
     private UXData newData() {
         return new UXData(conf.getGuid(), conf.getOS(), conf.getFwversion(), conf.getFwbuild());
@@ -146,7 +148,13 @@ public final class UXStats {
         public void run() {
             try {
                 String json = JsonUtils.toJson(data);
-                httpClient.post(HTTP_SERVER, HTTP_TIMEOUT, "FrostWire/UXStats", json, true);
+                String postURL = conf.getUrl();
+                
+                if (IS_TESTING) {
+                    postURL += "?test=1";
+                }
+                
+                httpClient.post(postURL, HTTP_TIMEOUT, "FrostWire/UXStats", json, true);
             } catch (Throwable e) {
                 LOG.error("Unable to send ux stats", e);
             }

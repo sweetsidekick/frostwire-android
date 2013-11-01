@@ -52,6 +52,8 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -251,21 +253,27 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 switch (fileType) {
                 case Constants.FILE_TYPE_APPLICATIONS:
                     numShared = finger.numSharedApplicationFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_APPLICATIONS);
                     break;
                 case Constants.FILE_TYPE_AUDIO:
                     numShared = finger.numSharedAudioFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_AUDIO);
                     break;
                 case Constants.FILE_TYPE_DOCUMENTS:
                     numShared = finger.numSharedDocumentFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_DOCUMENTS);
                     break;
                 case Constants.FILE_TYPE_PICTURES:
                     numShared = finger.numSharedPictureFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_PICTURES);
                     break;
                 case Constants.FILE_TYPE_RINGTONES:
                     numShared = finger.numSharedRingtoneFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_RINGTONES);
                     break;
                 case Constants.FILE_TYPE_VIDEOS:
                     numShared = finger.numSharedVideoFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_VIDEOS);
                     break;
                 }
 
@@ -543,9 +551,10 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         @Override
         public void onClick(View v) {
             log.debug("clicked filter");
-
-            adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
-            adapter.getFilter().filter(filesBar.getText());
+            if (adapter != null) {
+                adapter.setFileVisibilityBySharedState((adapter.getFileVisibilityBySharedState() + 1) % 3);
+                adapter.getFilter().filter(filesBar.getText());
+            }
 
             updateFileVisiblityIndicatorsAlpha();
         }

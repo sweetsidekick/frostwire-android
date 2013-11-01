@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  */
 -->
 <resources>
-
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Ayarlar</string>
     <string name="activity_browse_peer_name">Sunucu Tara</string>
@@ -52,7 +51,6 @@
     <string name="type_to_filter_results">Sonuçları filtrelemek için yazın.</string>
     <string name="fetching_file_list">Paylaşılanların listesi getiriliyor</string>
     <string name="not_sharing_files">hiçbir dosya paylaşmıyor.</string>
-    <string name="tip_try_the_filter">İpucu: &lt;Aşağıdaki "filtre"\'yi kullanın.</string>
     <string name="browse_peer">Akranları Tarayın</string>
     <string name="peer">Akran</string>
     <string name="peers">Akranlar</string>
@@ -371,8 +369,64 @@
     <string name="type_here_to_filter">Filtrelemek için Buraya Yazın</string>
     <string name="type_here_to_search">Aramak için Buraya Yazın</string>
     <string name="hints_by_google">Google\'dan İpuçları</string>
+    <string name="azureus_manager_not_created">İndirme paylaşılan SD kart ile oluşturulamaz</string>
+    <string name="http_download_status_uncompressing">Sıkıştırılmışı açma</string>
+    <string name="dialog_desktop_upload_request_title">Yükleme Talebi</string>
+    <string name="dialog_desktop_upload_request_text_text">%1$s toplam %3$s %2$s size göndermek istiyor</string>
+    <string name="accept">Kabul Et</string>
+    <string name="reject">Reddet</string>
+    <string name="block">Engelle</string>
+    <string name="block_computer">Bilgisayarı Engelle</string>
+    <string name="desktop_transfer_status_transferring">Aktarılıyor</string>
+    <string name="desktop_transfer_status_complete">Tamamla</string>
+    <string name="desktop_transfer_status_cancelled">İptal Edildi</string>
+    <string name="desktop_transfer_status_unknown">Bilinmeyen</string>
     <string name="support_frostwire">FrostWire Destek</string>
     <string name="support_frostwire_summary">Bu uygulama gelişimini desteklemek reklamları göster.</string>
     <string name="storage_preference_title">Saklama Yeri Seçin</string>
     <string name="storage_preference_summary">Dosyalarının kaydedileceği varsayılan depolama konumu.</string>
+    <string name="connectivity">Bağlantı</string>
+    <string name="loading">Yükleniyor</string>
+    <string name="wifi_sharing">Wi-Fi Paylaşımı</string>
+    <string name="activity_mediaplayer_name">Medya Oynatıcısı</string>
+    <string name="stop">Dur</string>
+    <string name="donate_1">1$ Bağışla</string>
+    <string name="donate_5">5$ Bağışla</string>
+    <string name="donate_10">10$ Bağışla</string>
+    <string name="donate_25">Donate $25</string>
+    <string name="one_file_shared" >Aynı Wi-Fi ağı üzerinden Frostwire cihazlarına sadece bir dosya paylaşıldı.</string>
+    <string name="n_files_shared" >%d dosyaları aynı Wi-Fi ağı üzerinden FrostWire cihazlarına paylaşıldı.</string>
+    <string name="playing_now_colon">Şimdi oynama:</string>
+    <string name="my_filetype">Bana ait %s</string>
+    <string name="paused">Durdu</string>
+    <string name="use_youtube">YouTube.com'u kullanın</string>
+    <string name="use_soundcloud">Soundcloud.com'u kullanın</string>
+    <string name="upnp_discovery">Wi-Fi Paylaşımı</string>
+    <string name="upnp_discovery_summary">Yerel Wireless ağındaki paylaşımcılarla dosyalarınızı paylaşın.</string>
+    <string name="youtube_download_status_verifying">Doğrulanıyor</string>
+    <string name="donation_thanks">FrostWire'ı desteklediğiniz için teşekkür ederiz</string>
+    <string name="torrent_scheme_download_not_supported">İndirme desteklenmiyor</string>
+    <string name="retry_search">Tekrar Deneyin</string>
+    <string name="use_archiveorg">Archive.org'u kullanın</string>
+    <string name="crawl_cache_size">%1$.2fMB Alt Önbellek</string>
+    <string name="deleted_crawl_cache">Silinmiş alt önbellek</string>
+    <string name="clear_search_cache">Arama Önbelleğini Temizle</string>
+    <string name="clear_search_cache_summary">Arama Önbelleği Girdilerini Temizle</string>
+    <string name="no_results_feedback">Hiç sonuç bulunamadı.\n\nİnternet bağlantınızı kontrol edin veya\nfarklı arama terimleri deneyin.</string>
+    <string name="donate">Bağış Yapın</string>
+    <string name="one_dollar">1$</string>
+    <string name="five_dollars">5$</string>
+    <string name="ten_dollars">10$</string>
+    <string name="twenty_five_dollars">25$</string>
+    <string name="watch_tv">TV İzleyin</string>
+    <string name="free_apps">Ücretsiz Uygulamalar</string>
+    <string name="use_frostclick">FrostClick'i Kullanın</string>
+    <string name="delete_this_track">Bu şarkıyı sil</string>
+    <string name="are_you_sure_delete_current_track">Bu mevcut şarkıyı silmek istediğinize emin misiniz?</string>
+    <string name="wifi_sharing_disabled">Wireless paylaşımı kapalı.\n\nWireless paylaşımı aynı Wireless ağına bağlanan FrostWire ile güçlendirilen cihazlar arasında yerel olarak dosya paylamakiçin kullanılır.</string>
+    <string name="turn_on_wifi_sharing">Wireless Paylaşımını Aç</string>    
+    <string name="are_you_sure_wifi_sharing_off">Wireless paylaşımını kapatmak, yakındaki Wireless ağındaki diğer kullanıcılara yerel olarak paylaştığınız tüm dosyalarınızı erişilmez yapacaktır.</string>
+    <string name="anonymous_usage_statistics">Anonim Kullanım İstatistikleri</string>
+    <string name="anonymous_usage_statistics_summary">Anonim kullanım istatistiklerini gönderin. Aranan, paylaşılan, yürütülen içeriğe dair herhangi bir bilgi veya kişisel bilgilerinizi açığa çıkaracak hiçbir bilgi ağ üzerinden gönderilen diskte saklanmayacaktır.</string>
+    <string name="paused_song_name">%s Durdu</string>
 </resources>

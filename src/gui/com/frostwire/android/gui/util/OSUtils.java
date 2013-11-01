@@ -19,14 +19,17 @@
 
 package com.frostwire.android.gui.util;
 
+import com.frostwire.android.core.Constants;
+
+import android.os.Build;
 import tv.ouya.console.api.OuyaFacade;
 
 public final class OSUtils {
     
     public static boolean isKindleFire() {
-        return android.os.Build.MANUFACTURER.equals("Amazon")
-                && (android.os.Build.MODEL.equals("Kindle Fire")
-                    || android.os.Build.MODEL.startsWith("KF"));
+        return Build.MANUFACTURER.equals("Amazon")
+                && (Build.MODEL.equals("Kindle Fire")
+                    || Build.MODEL.startsWith("KF"));
     }
     
     public static boolean isOUYA() {
@@ -44,10 +47,14 @@ public final class OSUtils {
     }
     
     public static String getOSVersionString() {
-        return android.os.Build.VERSION.CODENAME + "_" + android.os.Build.VERSION.INCREMENTAL + "_" + android.os.Build.VERSION.RELEASE + "_" + android.os.Build.VERSION.SDK_INT;
+        return Build.VERSION.CODENAME + "_" + Build.VERSION.INCREMENTAL + "_" + Build.VERSION.RELEASE + "_" + Build.VERSION.SDK_INT;
     }
     
     public static String getOSNameAndVersionString() {
         return OSUtils.getOSName()+"-v"+OSUtils.getOSVersionString();
+    }
+
+    public static boolean isAmazonDistribution() {
+        return Constants.IS_AMAZON_DISTRIBUTION;
     }
 }

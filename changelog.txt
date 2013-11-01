@@ -1,3 +1,16 @@
+FrostWire 1.1.4 - OCT/11/2013
+ - Audio player shows correct android notification when paused.
+ - Fixes ExtraTorrent meta search.
+ - Removed Vertor meta search. No longer serving .torrents without captcha.
+ - Updated arabic translation, thanks @nisrmasr.
+ - Updated spanish translation, thanks @muckachina.
+ - Updated portuguese translation, thanks @tati110.
+ - Updated french translation.
+ - Updated turkish translation.
+ - Updated polish translation.
+ - New anonymous usage stats.
+ - Fixed crashes and NPEs.
+
 FrostWire 1.1.3 - SEP/30/2013
  - Upgrades to SoundCloud meta search.
  - Kindle Fire and OUYA users can now support FrostWire with donations. 

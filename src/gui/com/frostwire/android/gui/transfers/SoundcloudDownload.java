@@ -168,9 +168,9 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
         if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
 
             byte[] coverArtBytes = downloadCoverArt();
-            Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
 
             if (coverArtBytes != null && coverArtBytes.length > 0) {
+//                Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
                 File finalFile = getFinalFile(tempFile, Constants.FILE_TYPE_AUDIO);
                 if (setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), finalFile.getAbsolutePath())) {
                     tempFile.delete();

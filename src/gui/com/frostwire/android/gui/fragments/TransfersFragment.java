@@ -39,6 +39,8 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
 import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -130,6 +132,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
                     public void onClick(DialogInterface dialog, int id) {
                         TransferManager.instance().stopHttpTransfers();
                         TransferManager.instance().pauseTorrents();
+                        UXStats.instance().log(UXAction.DOWNLOAD_PAUSE);
                     }
                 });
             }

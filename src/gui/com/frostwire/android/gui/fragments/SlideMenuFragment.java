@@ -53,6 +53,7 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 
 /**
@@ -95,9 +96,10 @@ public class SlideMenuFragment extends ListFragment implements ConfigurationUpda
             items = removeMenuItem(R.id.menu_launch_tv,items);
         }
         
-        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+        if (!OfferUtils.isfreeAppsEnabled()) {
             items = removeMenuItem(R.id.menu_free_apps,items);
         }
+        
         MenuAdapter adapter = new MenuAdapter(getActivity(), items);
         setListAdapter(adapter);
     }

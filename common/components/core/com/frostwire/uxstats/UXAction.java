@@ -25,19 +25,24 @@ import java.lang.reflect.Field;
  *
  */
 public final class UXAction {
+    public static final int CONFIGURATION_WIZARD_BASE = 0;
+    public static final int CONFIGURATION_WIZARD_FIRST_TIME = CONFIGURATION_WIZARD_BASE + 1;
+    public static final int CONFIGURATION_WIZARD_AFTER_UPDATE = CONFIGURATION_WIZARD_BASE + 2;
 
     public static final int SEARCH_BASE = 1000;
-    public static final int SEARCH_STARTED = SEARCH_BASE + 1;
-    public static final int SEARCH_RESULT_CLICK_DOWNLOAD = SEARCH_BASE + 2;
-    public static final int SEARCH_RESULT_ENTER_KEY_DOWNLOAD = SEARCH_BASE + 3;
-    public static final int SEARCH_RESULT_BIG_BUTTON_DOWNLOAD = SEARCH_BASE + 4;
-    public static final int SEARCH_RESULT_ROW_BUTTON_DOWNLOAD = SEARCH_BASE + 5;
-    public static final int SEARCH_RESULT_CLICKED = SEARCH_BASE + 6;
-    public static final int SEARCH_RESULT_AUDIO_PREVIEW = SEARCH_BASE + 7;
-    public static final int SEARCH_RESULT_VIDEO_PREVIEW = SEARCH_BASE + 8;
-    public static final int SEARCH_RESULT_DETAIL_VIEW = SEARCH_BASE + 9;
-    public static final int SEARCH_RESULT_SOURCE_VIEW = SEARCH_BASE + 10;
-    public static final int SEARCH_RESULT_FILE_TYPE_CLICK = SEARCH_BASE + 11;
+    public static final int SEARCH_STARTED_ENTER_KEY = SEARCH_BASE + 1;
+    public static final int SEARCH_STARTED_SMALL_SEARCH_ICON_CLICK = SEARCH_BASE + 2;
+    public static final int SEARCH_STARTED_SEARCH_TAB_BUTTON = SEARCH_BASE + 3;
+    public static final int SEARCH_RESULT_CLICK_DOWNLOAD = SEARCH_BASE + 4;
+    public static final int SEARCH_RESULT_ENTER_KEY_DOWNLOAD = SEARCH_BASE + 5;
+    public static final int SEARCH_RESULT_BIG_BUTTON_DOWNLOAD = SEARCH_BASE + 6;
+    public static final int SEARCH_RESULT_ROW_BUTTON_DOWNLOAD = SEARCH_BASE + 7;
+    public static final int SEARCH_RESULT_CLICKED = SEARCH_BASE + 8;
+    public static final int SEARCH_RESULT_AUDIO_PREVIEW = SEARCH_BASE + 9;
+    public static final int SEARCH_RESULT_VIDEO_PREVIEW = SEARCH_BASE + 10;
+    public static final int SEARCH_RESULT_DETAIL_VIEW = SEARCH_BASE + 11;
+    public static final int SEARCH_RESULT_SOURCE_VIEW = SEARCH_BASE + 12;
+    public static final int SEARCH_RESULT_FILE_TYPE_CLICK = SEARCH_BASE + 13;
 
     public static final int DOWNLOAD_BASE = 2000;
     public static final int DOWNLOAD_FULL_TORRENT_FILE = DOWNLOAD_BASE + 1;
@@ -68,14 +73,19 @@ public final class UXAction {
     public static final int LIBRARY_PLAY_AUDIO_FROM_FILE = LIBRARY_BASE + 1;
     public static final int LIBRARY_PLAY_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 2;
     public static final int LIBRARY_PLAY_AUDIO_FROM_STARRED_PLAYLIST = LIBRARY_BASE + 3;
-    public static final int LIBRARY_PLAY_AUDIO_FROM_RADIO = LIBRARY_BASE + 10;
-    public static final int LIBRARY_STARRED_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 4;
-    public static final int LIBRARY_PLAYLIST_CREATED = LIBRARY_BASE + 5;
-    public static final int LIBRARY_PLAYLIST_REMOVED = LIBRARY_BASE + 6;
-    public static final int LIBRARY_PLAYLIST_RENAMED = LIBRARY_BASE + 7;
-    public static final int LIBRARY_VIDEO_PLAY = LIBRARY_BASE + 8;
-    public static final int LIBRARY_VIDEO_TOGGLE_FULLSCREEN = LIBRARY_BASE + 9;
-    
+    public static final int LIBRARY_PLAY_AUDIO_FROM_RADIO = LIBRARY_BASE + 4;
+    public static final int LIBRARY_STARRED_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 5;
+    public static final int LIBRARY_PLAYLIST_CREATED = LIBRARY_BASE + 6;
+    public static final int LIBRARY_PLAYLIST_REMOVED = LIBRARY_BASE + 7;
+    public static final int LIBRARY_PLAYLIST_RENAMED = LIBRARY_BASE + 8;
+    public static final int LIBRARY_VIDEO_PLAY = LIBRARY_BASE + 9;
+    public static final int LIBRARY_VIDEO_TOGGLE_FULLSCREEN = LIBRARY_BASE + 10;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_AUDIO = LIBRARY_BASE + 11;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_RINGTONES = LIBRARY_BASE + 12;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_VIDEOS = LIBRARY_BASE + 13;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_PICTURES = LIBRARY_BASE + 14;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_APPLICATIONS = LIBRARY_BASE + 15;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_DOCUMENTS = LIBRARY_BASE + 16;    
     
     public static final int WIFI_SHARING_BASE = 5000;
     public static final int WIFI_SHARING_SHARED = WIFI_SHARING_BASE + 1;
@@ -84,6 +94,15 @@ public final class UXAction {
     public static final int WIFI_SHARING_DOWNLOAD = WIFI_SHARING_BASE + 4;
     public static final int WIFI_SHARING_DND_UPLOAD_TO_DEVICE = WIFI_SHARING_BASE + 5;
     //public static final int WIFI_SHARING_MENU_UPLOAD_TO_DEVICE = WIFI_SHARING_BASE + 6;
+    
+    public static final int PLAYER_BASE = 6000;
+    public static final int PLAYER_GESTURE_SWIPE_SONG = PLAYER_BASE + 1;
+    public static final int PLAYER_GESTURE_PAUSE_RESUME = PLAYER_BASE + 2;
+    public static final int PLAYER_MENU_SHARE = PLAYER_BASE + 3;
+    public static final int PLAYER_MENU_UNSHARE = PLAYER_BASE + 4;
+    public static final int PLAYER_MENU_STOP = PLAYER_BASE + 5;
+    public static final int PLAYER_MENU_DELETE_TRACK = PLAYER_BASE + 6;
+    public static final int PLAYER_STOP_ON_LONG_CLICK = PLAYER_BASE + 7;
 
     UXAction(int code, long time) {
         this.code = code;

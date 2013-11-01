@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@ import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -141,6 +143,7 @@ public class SearchInputView extends LinearLayout {
 
     protected void buttonMediaType_onClick(View v) {
         showPopup(v);
+        UXStats.instance().log(UXAction.SEARCH_RESULT_FILE_TYPE_CLICK);
     }
 
     private void showPopup(View v) {
@@ -275,6 +278,12 @@ public class SearchInputView extends LinearLayout {
 
     private void updateHint(int fileType) {
         String hint = getContext().getString(R.string.search_label) + " ";
+        
+        if (OSUtils.isOUYA()) {
+            String ouyaSearchHintPrefix =  getContext().getResources().getString(R.string.ouya_search_hint_prefix);
+            hint = ouyaSearchHintPrefix + " " + hint;
+        }
+        
         hint += UIUtils.getFileTypeAsString(getContext().getResources(), (byte) fileType);
         textInput.setHint(hint);
     }

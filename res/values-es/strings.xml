@@ -2,7 +2,7 @@
 <!--
 /* 
  * Creado por Angel Leon (@gubatron), Alden Torres (aldenml) 
- * Derechos de Autor (c) 2011, 2012, FrostWire(TM). Todos los derechos reservados. 
+ * Derechos de Autor (c) 2011, 2013, FrostWire(R). Todos los derechos reservados. 
  * 
  * Este programa es gratuito: puedes distribuirlo y/o modificarlo 
  * bajo los términos de la Licencia General Pública de GNU tal y como lo publica 
@@ -284,6 +284,7 @@
     <string name="peer_http_download_status_waiting">Esperando</string>
     <string name="peer_http_download_status_unknown">Desconocido</string>
     <string name="peer_http_upload_status_uploading">Cargando</string>
+    <string name="peer_http_upload_status_streaming">Streaming</string>
     <string name="peer_http_upload_status_complete">Completado</string>
     <string name="peer_http_upload_status_error">Error</string>
     <string name="peer_http_upload_status_cancelled">Cancelado</string>
@@ -368,6 +369,18 @@
     <string name="type_here_to_filter">Escribe aquí para filtrar</string>
     <string name="type_here_to_search">Escribe aquí para Buscar</string>
     <string name="hints_by_google">Consejos de Google</string>
+    <string name="azureus_manager_not_created">La descarga no se puede crear con una tarjeta SD compartida</string>
+    <string name="http_download_status_uncompressing">Descomprimiendo</string>
+    <string name="dialog_desktop_upload_request_title">Requerir subida</string>
+    <string name="dialog_desktop_upload_request_text_text">%1$s quiere enviarte %2$s total %3$s</string>
+    <string name="accept">Aceptar</string>
+    <string name="reject">Rechazar</string>
+    <string name="block">Bloquear</string>
+    <string name="block_computer">Bloquear Computadora</string>
+    <string name="desktop_transfer_status_transferring">Transfiriendo</string>
+    <string name="desktop_transfer_status_complete">Completo</string>
+    <string name="desktop_transfer_status_cancelled">Cancelado</string>
+    <string name="desktop_transfer_status_unknown">Desconocido</string>
     <string name="support_frostwire">Apoya a FrostWire</string>
     <string name="support_frostwire_summary">Muestra anuncios para respaldar el desarrollo de esta aplicación.</string>
     <string name="storage_preference_title">Seleccionar ubicación de almacenamiento</string>
@@ -390,7 +403,7 @@
 	<string name="use_soundcloud">Utilizar Soundcloud.com</string>
 	<string name="upnp_discovery">Comparte en Wi-Fi</string>
     <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
-	<string name="youtube_download_status_verifying">Verificando</string>
+    <string name="youtube_download_status_verifying">Verificando</string>
     <string name="donation_thanks">Muchas gracias por apoyar FrostWire</string>
     <string name="torrent_scheme_download_not_supported">Descarga no suportada</string>
     <string name="retry_search">Reintentar</string>
@@ -411,6 +424,10 @@
     <string name="delete_this_track">Eliminar esta canción</string>
     <string name="are_you_sure_delete_current_track">¿Seguro que quieres eliminar esta canción?</string>
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
-    <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>    
+    <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>
     <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
+    <string name="anonymous_usage_statistics">Estadiísticas de uso anónimo</string>
+    <string name="anonymous_usage_statistics_summary">Envía estadísticas de uso anónimo. Ninguna información sobre contenido buscado, compartido o reproducido será almacenada en disco ni enviada a través de la red así como ninguna información que pueda identificarte personalmente.</string>
+    <string name="paused_song_name">Pausado %s</string>
+    <string name="ouya_search_hint_prefix">Double tap con el Touchpad del control para</string>
 </resources>
