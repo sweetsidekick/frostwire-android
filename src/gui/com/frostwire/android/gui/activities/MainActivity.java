@@ -597,7 +597,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void switchContent(Fragment fragment, boolean addToStack) {
-        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commit();
+        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
         if (addToStack && (fragmentsStack.isEmpty() || fragmentsStack.peek() != fragment.getId())) {
             fragmentsStack.push(fragment.getId());
         }
