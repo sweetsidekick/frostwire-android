@@ -376,7 +376,7 @@
     <string name="accept">Accepter</string>
     <string name="reject">Rejeter</string>
     <string name="block">Bloquer</string>
-    <string name="block_computer">Bloquer l'ordinateur</string>
+    <string name="block_computer">Bloquer l\'ordinateur</string>
     <string name="desktop_transfer_status_transferring">Transfert</string>
     <string name="desktop_transfer_status_complete">Terminé</string>
     <string name="desktop_transfer_status_cancelled">Annulé</string>
@@ -426,8 +426,8 @@
     <string name="wifi_sharing_disabled">Le partage par Wi-Fi est inactif.\n\nCette fonction vous permet de partager des fichiers avec d\'autres appareils fonctionnant avec FrostWire connecté au même réseau Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Activer le partage Wi-Fi</string>    
     <string name="are_you_sure_wifi_sharing_off">Si vous désactivez le partage de fichiers sur le réseau Wi-Fi tous les fichiers que vous avez, seront marqués comme non disponibles aux utilisateurs connectés à ce réseau Wi-Fi gratuite.</string>    
-    <string name="anonymous_usage_statistics">Statistiques d'utilisation anonyme</string>
-    <string name="anonymous_usage_statistics_summary">Envoyez des statistiques d'utilisation anonyme. Aucune information en lien avec vos recherches, vos partages ou lectures ou aucune information permettant votre identification ne seront stockées sur le disque ou envoyées à travers le réseau.</string>
+    <string name="anonymous_usage_statistics">Statistiques d\'utilisation anonyme</string>
+    <string name="anonymous_usage_statistics_summary">Envoyez des statistiques d\'utilisation anonyme. Aucune information en lien avec vos recherches, vos partages ou lectures ou aucune information permettant votre identification ne seront stockées sur le disque ou envoyées à travers le réseau.</string>
     <string name="paused_song_name">%s en pause</string>
     <string name="ouya_search_hint_prefix">Tapez deux fois ici avec le touchpad du contrôleur</string>
 </resources>
