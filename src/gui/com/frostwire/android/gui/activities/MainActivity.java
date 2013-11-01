@@ -150,10 +150,15 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     @Override
     public void onBackPressed() {
         if (fragmentsStack.size() > 1) {
-            fragmentsStack.pop();
-            int id = fragmentsStack.peek();
-            Fragment fragment = getSupportFragmentManager().findFragmentById(id);
-            switchContent(fragment, false);
+            try {
+                fragmentsStack.pop();
+                int id = fragmentsStack.peek();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+                switchContent(fragment, false);
+            } catch (Throwable e) {
+                // don't break the app
+                handleLastBackPressed();
+            }
         } else {
             handleLastBackPressed();
         }
