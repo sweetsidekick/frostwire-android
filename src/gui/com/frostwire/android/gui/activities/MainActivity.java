@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
@@ -85,7 +86,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
-    private static final String FRAGMENT_STACK_TAG = "fragment_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
@@ -105,6 +105,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private BrowsePeersFragment peers;
     private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
+
+    private Fragment currentFragment;
 
     private PlayerMenuItemView playerItem;
 
@@ -512,7 +514,13 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         peersDisabled = (BrowsePeersDisabledFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
         about = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
 
+        hideFragments(getSupportFragmentManager().beginTransaction()).commit();
+
         library.setPeer(PeerManager.instance().getLocalPeer());
+    }
+
+    private FragmentTransaction hideFragments(FragmentTransaction ts) {
+        return ts.hide(search).hide(library).hide(transfers).hide(peers).hide(peersDisabled).hide(about);
     }
 
     private void setupInitialFragment(Bundle savedInstanceState) {
@@ -527,7 +535,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).commit();
+        fragmentManager.beginTransaction().show(fragment).commit();
+        currentFragment = fragment;
 
         updateHeader(fragment);
     }
@@ -581,12 +590,13 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     public void switchContent(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
+        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commit();
+        currentFragment = fragment;
         updateHeader(fragment);
     }
 
     public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
+        return currentFragment;
     }
 
     public void closeSlideMenu() {
