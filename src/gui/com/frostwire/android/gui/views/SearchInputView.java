@@ -124,7 +124,7 @@ public class SearchInputView extends LinearLayout {
         initRadioButton(R.id.view_search_input_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
         initRadioButton(R.id.view_search_input_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
         initRadioButton(R.id.view_search_input_radio_torrents, Constants.FILE_TYPE_TORRENTS);
-        
+
         setFileTypeCountersVisible(false);
     }
 
@@ -189,8 +189,6 @@ public class SearchInputView extends LinearLayout {
         if (mediaTypeId == fileType) {
             button.setChecked(true);
         }
-        
-        
 
         return button;
     }
@@ -213,35 +211,39 @@ public class SearchInputView extends LinearLayout {
     }
 
     public void updateFileTypeCounter(byte fileType, int numFiles) {
-        int radioId = Constants.FILE_TYPE_AUDIO;
-        switch (fileType) {
-        case Constants.FILE_TYPE_AUDIO:
-            radioId = R.id.view_search_input_radio_audio;
-            break;
-        case Constants.FILE_TYPE_VIDEOS:
-            radioId = R.id.view_search_input_radio_videos;
-            break;
-        case Constants.FILE_TYPE_PICTURES:
-            radioId = R.id.view_search_input_radio_pictures;
-            break;
-        case Constants.FILE_TYPE_APPLICATIONS:
-            radioId = R.id.view_search_input_radio_applications;
-            break;
-        case Constants.FILE_TYPE_DOCUMENTS:
-            radioId = R.id.view_search_input_radio_documents;
-            break;
-        case Constants.FILE_TYPE_TORRENTS:
-            radioId = R.id.view_search_input_radio_torrents;
-            break;
+        try {
+            int radioId = Constants.FILE_TYPE_AUDIO;
+            switch (fileType) {
+            case Constants.FILE_TYPE_AUDIO:
+                radioId = R.id.view_search_input_radio_audio;
+                break;
+            case Constants.FILE_TYPE_VIDEOS:
+                radioId = R.id.view_search_input_radio_videos;
+                break;
+            case Constants.FILE_TYPE_PICTURES:
+                radioId = R.id.view_search_input_radio_pictures;
+                break;
+            case Constants.FILE_TYPE_APPLICATIONS:
+                radioId = R.id.view_search_input_radio_applications;
+                break;
+            case Constants.FILE_TYPE_DOCUMENTS:
+                radioId = R.id.view_search_input_radio_documents;
+                break;
+            case Constants.FILE_TYPE_TORRENTS:
+                radioId = R.id.view_search_input_radio_torrents;
+                break;
 
+            }
+
+            RadioButton rButton = (RadioButton) findViewById(radioId);
+            String numFilesStr = String.valueOf(numFiles);
+            if (numFiles > 9999) {
+                numFilesStr = "+1k";
+            }
+            rButton.setText(numFilesStr);
+        } catch (Throwable e) {
+            // NPE
         }
-        
-        RadioButton rButton = (RadioButton) findViewById(radioId);
-        String numFilesStr = String.valueOf(numFiles);
-        if (numFiles > 9999) {
-            numFilesStr = "+1k";
-        }
-        rButton.setText(numFilesStr);
     }
 
     public void setFileTypeCountersVisible(boolean fileTypeCountersVisible) {
