@@ -47,6 +47,8 @@ public class SearchInputView extends LinearLayout {
     private final SuggestionsAdapter adapter;
 
     private ClearableEditTextView textInput;
+    
+    private View dummyFocusView;
 
     private OnSearchListener onSearchListener;
 
@@ -126,6 +128,8 @@ public class SearchInputView extends LinearLayout {
         initRadioButton(R.id.view_search_input_radio_torrents, Constants.FILE_TYPE_TORRENTS);
 
         setFileTypeCountersVisible(false);
+        
+        dummyFocusView = findViewById(R.id.view_search_input_linearlayout_dummy);
     }
 
     private void startSearch(View v) {
@@ -138,6 +142,8 @@ public class SearchInputView extends LinearLayout {
         if (query.length() > 0) {
             onSearch(query, mediaTypeId);
         }
+        
+        dummyFocusView.requestFocus();
     }
 
     private void onSearch(String query, int mediaTypeId) {

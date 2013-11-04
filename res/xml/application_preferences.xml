@@ -104,7 +104,11 @@
             android:key="frostwire.prefs.search.use_torlock"
             android:summary="@string/use_torlock"
             android:title="@string/use_torlock" />
-    </PreferenceCategory>
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_eztv"
+            android:summary="@string/use_eztv"
+            android:title="@string/use_eztv" />
+</PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference
             android:key="frostwire.prefs.gui.vibrate_on_finished_download"

@@ -432,4 +432,5 @@
     <string name="ouya_search_hint_prefix">Double tap here with the controller\'s Touchpad to</string>
     <string name="use_bitsnoop">Use BitSnoop</string>
     <string name="use_torlock">Use TorLock</string>
+    <string name="use_eztv">Use Eztv</string>
 </resources>

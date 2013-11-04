@@ -29,6 +29,7 @@ import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
+import com.frostwire.search.eztv.EztvSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
@@ -163,6 +164,13 @@ public abstract class SearchEngine {
             return new TorLockSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
         }
     };
+    
+    public static final SearchEngine EZTV = new SearchEngine("Eztv", Constants.PREF_KEY_SEARCH_USE_EZTV) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new EztvSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+        }
+    };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, BITSNOOP, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE, TORLOCK);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(FROSTCLICK, CLEARBITS, MININOVA, BITSNOOP, EXTRATORRENT, YOUTUBE, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);
 }
