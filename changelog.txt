@@ -1,3 +1,9 @@
+FrostWire 1.2.1 - NOV/04/2013
+ - Fixes focus annoyance on search box after orientation change.
+ - Fixes CPU usage issues with Monova search.
+ - New search engine Eztv.
+ - Fixed crashes and NPEs.
+
 FrostWire 1.2.0 - NOV/01/2013
  - New Flat Skin makes screens rendering faster.
  - New, more stable, slide in navigation menu.
