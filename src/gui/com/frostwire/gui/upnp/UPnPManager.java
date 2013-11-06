@@ -45,6 +45,7 @@ import org.fourthline.cling.model.types.UDN;
 import org.fourthline.cling.registry.Registry;
 import org.fourthline.cling.registry.RegistryListener;
 
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.gui.upnp.android.AndroidUPnPManager;
 import com.frostwire.util.JsonUtils;
 
@@ -89,12 +90,16 @@ public abstract class UPnPManager {
     public abstract void refreshPing();
 
     public void pause() {
-        getService().getRegistry().removeAllLocalDevices();
-        getService().getRegistry().pause();
-        getService().getRegistry().removeAllRemoteDevices();
+        if (getService() != null && getService().getRegistry() != null) {
+            getService().getRegistry().removeAllLocalDevices();
+            getService().getRegistry().pause();
+            getService().getRegistry().removeAllRemoteDevices();
+        }
     }
 
     public void resume() {
+        Engine.instance().startUPnPService(null);
+        
         if (getService() != null) {
             getService().getRegistry().resume();
             if (getService().getRegistry().getLocalDevices().size() == 0) {

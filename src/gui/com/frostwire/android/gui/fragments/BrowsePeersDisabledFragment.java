@@ -32,6 +32,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.gui.upnp.UPnPManager;
 
@@ -44,7 +45,7 @@ import com.frostwire.gui.upnp.UPnPManager;
 public class BrowsePeersDisabledFragment extends Fragment implements MainFragment {
 
     private TextView header;
-    private Button wifiEnableButton;
+    private Button wifiSharingEnableButton;
     private Button freeAppsButton;
 
     public BrowsePeersDisabledFragment() {
@@ -54,7 +55,7 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse_peers_disabled, container, false);
 
-        wifiEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
+        wifiSharingEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
         freeAppsButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_free_apps);
         freeAppsButton.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
         freeAppsButton.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +65,7 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
             }
         });
 
-        wifiEnableButton.setOnClickListener(new View.OnClickListener() {
+        wifiSharingEnableButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

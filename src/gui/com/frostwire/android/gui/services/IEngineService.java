@@ -20,6 +20,8 @@ package com.frostwire.android.gui.services;
 
 import java.io.File;
 
+import android.app.Application;
+
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.util.concurrent.ThreadPool;
 
@@ -60,4 +62,6 @@ public interface IEngineService {
     public void notifyDownloadFinished(String displayName, File file);
 
     public DesktopUploadManager getDesktopUploadManager();
+    
+    public Application getApplication();
 }
