@@ -462,6 +462,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     // case there WON'T BE onStartTrackingTouch/onStopTrackingTouch notifications,
     // we will simply apply the updated position without suspending regular updates.
     private OnSeekBarChangeListener seekListener = new OnSeekBarChangeListener() {
+        private long lastProgressChanged = 0;
+        
         public void onStartTrackingTouch(SeekBar bar) {
             sync();
 
@@ -481,13 +483,18 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 // the progress bar's position.
                 return;
             }
-
-            if (playerControl != null) {
-                long duration = playerControl.getDuration();
-                long newposition = (duration * progress) / 1000L;
-                playerControl.seekTo((int) newposition);
-                if (currentTime != null)
-                    currentTime.setText(stringForTime((int) newposition));
+            
+            long now = System.currentTimeMillis();
+            if (now - lastProgressChanged > 1000) {
+                if (playerControl != null) {
+                    long duration = playerControl.getDuration();
+                    long newposition = (duration * progress) / 1000L;
+                    playerControl.seekTo((int) newposition);
+                    if (currentTime != null) {
+                        currentTime.setText(stringForTime((int) newposition));
+                    }
+                }
+                lastProgressChanged = now;
             }
         }
 
