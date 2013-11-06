@@ -1,3 +1,8 @@
+FrostWire 1.2.2 - NOV/06/2013
+ - Throttles down CPU consumption when updating the audio player timers during playback.
+ - Fixes issue where search file type selector would hide after an orientation change
+   upon no results on the selected file type.
+
 FrostWire 1.2.1 - NOV/04/2013
  - Fixes focus annoyance on search box after orientation change.
  - Fixes CPU usage issues with Monova search.
