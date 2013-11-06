@@ -149,8 +149,14 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
         return context;
     }
 
+    /** This will return the count for the current file type */
     public int getCount() {
         return visualList == null ? 0 : visualList.size();
+    }
+    
+    /** Should return the total count for all file types. */
+    public int getTotalCount() {
+        return list == null ? 0 : list.size();
     }
 
     public T getItem(int position) {

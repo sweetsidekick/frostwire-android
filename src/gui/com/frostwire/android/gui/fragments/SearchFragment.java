@@ -126,7 +126,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     public void onResume() {
         super.onResume();
 
-        if (adapter != null && adapter.getCount() > 0) {
+        if (adapter != null && (adapter.getCount() > 0 || adapter.getTotalCount() > 0)) {
             refreshFileTypeCounters(true);
         }
     }
