@@ -52,7 +52,7 @@ import org.gudy.azureus2.core3.torrent.*;
 /**
  * @author Tobias Minich
  */
-public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader {
+public class TorrentDownloaderImpl extends AEThread2 implements TorrentDownloader {
 
   private String	original_url; 
   private String 	url_str;
@@ -82,7 +82,6 @@ public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader
 
   public TorrentDownloaderImpl() {
     super("Torrent Downloader");
-     setDaemon(true);
   }
 
   public void 
@@ -140,7 +139,7 @@ public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader
   }
 
   public void 
-  runSupport() {
+  run() {
 
   	try{
   		new URL( url_str );  //determine if this is already a proper URL
@@ -441,11 +440,11 @@ public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader
       
     	notifyListener();
   
-        Thread	status_reader = 
-        	new AEThread( "TorrentDownloader:statusreader" )
+        AEThread2 status_reader = 
+        	new AEThread2( "TorrentDownloader:statusreader" )
 			{
         		public void
-				runSupport()
+				run()
         		{
         			boolean changed_status	= false;
         			String	last_status		= "";
@@ -566,7 +565,7 @@ public class TorrentDownloaderImpl extends AEThread implements TorrentDownloader
         		}
 			};
 			
-		status_reader.setDaemon( true );
+		//status_reader.setDaemon( true );
 		
 		status_reader.start();
   
