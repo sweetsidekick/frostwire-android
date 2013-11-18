@@ -127,7 +127,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     protected void populateYouTubePart(View view, YouTubeCrawledSearchResult sr) {
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
-        extra.setText(FilenameUtils.getExtension(sr.getFilename()) + " " + sr.getMediaQuality());
+        extra.setText(FilenameUtils.getExtension(sr.getFilename()));
     }
 
     protected void populateTorrentPart(View view, TorrentSearchResult sr) {
