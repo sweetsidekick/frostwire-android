@@ -172,7 +172,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
     }
 
     public void start() {
-        
+        /*
         try {
             YouTubeDownloadLink ytLink = sr.getYouTubeDownloadLink();
             HttpDownloadLink link = new HttpDownloadLink(ytLink.getDownloadUrl(),ytLink.getFilename(),sr.getDisplayName(),ytLink.getSize(),false);
@@ -203,7 +203,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
             }
         } catch (Exception e) {
             Log.e(TAG, "Error starting youtube download", e);
-        }
+        }*/
     }
 
     protected void moveFile(File savePath, boolean video) {
