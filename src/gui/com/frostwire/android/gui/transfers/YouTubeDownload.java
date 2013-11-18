@@ -56,9 +56,7 @@ import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;
 import com.coremedia.iso.boxes.apple.AppleTrackTitleBox;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
-import com.frostwire.search.youtube.YouTubeDownloadLink;
 import com.googlecode.mp4parser.AbstractBox;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Mp4TrackImpl;
@@ -80,7 +78,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
     private int status;
 
     private final TransferManager manager;
-    
+
     public YouTubeDownload(TransferManager manager, YouTubeCrawledSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
@@ -295,7 +293,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
             status = STATUS_NONE;
         }
     }
-    
+
     public static Movie buildMovie(ReadableByteChannel channel) throws IOException {
         BoxParser parser = new PropertyBoxParserImpl() {
             @Override
@@ -315,13 +313,13 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
         for (TrackBox trackBox : trackBoxes) {
             m.addTrack(new Mp4TrackImpl(trackBox));
         }
-        
+
         // do not close this isoFile at this time, ignore eclipse warning for now
         // NOT: IOUtils.closeQuietly(isoFile);
-        
+
         return m;
     }
-    
+
     private static UserDataBox addUserDataBox(String title, String author, String jpgFilename) {
         File jpgFile = new File(jpgFilename);
         if (!jpgFile.exists()) {
@@ -372,7 +370,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
 
         return udta;
     }
-    
+
     private static void downloadThumbnail(HttpDownloadLink dl, String jpgFilename, String videoLink) {
         try {
             //http://www.youtube.com/watch?v=[id]
@@ -385,7 +383,7 @@ public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSea
             Log.e(TAG, "Unable to get youtube thumbnail - " + dl.getFileName());
         }
     }
-    
+
     private static byte[] toByteArray(File file) {
         InputStream in = null;
 

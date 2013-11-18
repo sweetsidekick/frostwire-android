@@ -85,7 +85,7 @@ public final class HttpDownload implements DownloadTransfer {
 
         this.status = STATUS_DOWNLOADING;
     }
-    
+
     HttpDownload(TransferManager manager, HttpDownloadLink link) {
         this(manager, SystemUtils.getTorrentDataDirectory(), link);
     }
@@ -105,7 +105,7 @@ public final class HttpDownload implements DownloadTransfer {
     public String getStatus() {
         return getStatusString(status);
     }
-    
+
     public int getProgress() {
         if (link.getSize() > 0) {
             return isComplete() ? 100 : (int) ((bytesReceived * 100) / link.getSize());
@@ -189,7 +189,6 @@ public final class HttpDownload implements DownloadTransfer {
         return status;
     }
 
-
     /**
      * 
      * @param delay in seconds.
@@ -204,7 +203,7 @@ public final class HttpDownload implements DownloadTransfer {
 
                     status = STATUS_DOWNLOADING;
                     String uri = link.getUrl();
-                    new HttpFetcher(uri,10000).save(savePath, new DownloadListener(retry));
+                    new HttpFetcher(uri, 10000).save(savePath, new DownloadListener(retry));
                     Librarian.instance().scan(savePath);
                 } catch (Throwable e) {
                     error(e);
@@ -243,7 +242,7 @@ public final class HttpDownload implements DownloadTransfer {
 
     private void updateAverageDownloadSpeed() {
         long now = System.currentTimeMillis();
-        
+
         if (isComplete()) {
             averageSpeed = 0;
             speedMarkTimestamp = now;
@@ -268,12 +267,12 @@ public final class HttpDownload implements DownloadTransfer {
             if (listener != null) {
                 listener.onComplete(this);
             }
-            
-            status = STATUS_COMPLETE;            
+
+            status = STATUS_COMPLETE;
 
             manager.incrementDownloadsToReview();
             Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
-            
+
             if (savePath.getAbsoluteFile().exists()) {
                 Librarian.instance().scan(link.isCompressed() ? new File(location) : getSavePath().getAbsoluteFile());
             }
@@ -338,11 +337,11 @@ public final class HttpDownload implements DownloadTransfer {
             }
         }
     }
-    
+
     static void simpleHTTP(String url, OutputStream out) throws Throwable {
-        simpleHTTP(url,out,1000);
+        simpleHTTP(url, out, 1000);
     }
-    
+
     static void simpleHTTP(String url, OutputStream out, int timeout) throws Throwable {
         URL u = new URL(url);
         URLConnection con = u.openConnection();
@@ -369,7 +368,7 @@ public final class HttpDownload implements DownloadTransfer {
             }
         }
     }
-    
+
     @Override
     public String getDetailsUrl() {
         return link.getUrl();
