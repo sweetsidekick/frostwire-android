@@ -106,6 +106,8 @@ public final class YouTubeDownload2 implements DownloadTransfer {
         httpClient.setListener(httpClientListener);
 
         this.status = STATUS_DOWNLOADING;
+        
+        start();
     }
 
     private static File buildFile(File savePath, String name) {
