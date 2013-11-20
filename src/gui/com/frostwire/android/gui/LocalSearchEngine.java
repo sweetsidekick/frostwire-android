@@ -156,7 +156,10 @@ public final class LocalSearchEngine {
 
                 if (sr instanceof CrawledSearchResult) {
                     if (sr instanceof YouTubeCrawledSearchResult) {
-                        list.add(sr);
+                        // special case for flv files
+                        if (!((YouTubeCrawledSearchResult) sr).getFilename().endsWith(".flv")) {
+                            list.add(sr);
+                        }
                     } else if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
                         list.add(sr);
                     }
@@ -186,7 +189,7 @@ public final class LocalSearchEngine {
 
         String str = sanitize(sb.toString());
         str = normalize(str);
-        
+
         Iterator<String> it = tokens.iterator();
         while (it.hasNext()) {
             String token = it.next();
