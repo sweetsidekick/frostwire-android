@@ -433,4 +433,5 @@
     <string name="use_bitsnoop">Use BitSnoop</string>
     <string name="use_torlock">Use TorLock</string>
     <string name="use_eztv">Use Eztv</string>
+    <string name="transfer_status_demuxing">Demuxing</string>
 </resources>

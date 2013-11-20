@@ -20,10 +20,6 @@ package com.frostwire.android.gui.transfers;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -55,12 +51,12 @@ public final class YouTubeDownload2 implements DownloadTransfer {
 
     private static final String TAG = "FW.HttpDownload";
 
-    static final int STATUS_DOWNLOADING = 1;
-    static final int STATUS_COMPLETE = 2;
-    static final int STATUS_ERROR = 3;
-    static final int STATUS_CANCELLED = 4;
-    static final int STATUS_WAITING = 5;
-    static final int STATUS_UNCOMPRESSING = 6;
+    private static final int STATUS_DOWNLOADING = 1;
+    private static final int STATUS_COMPLETE = 2;
+    private static final int STATUS_ERROR = 3;
+    private static final int STATUS_CANCELLED = 4;
+    private static final int STATUS_WAITING = 5;
+    private static final int STATUS_DEMUXING = 6;
 
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
@@ -105,8 +101,6 @@ public final class YouTubeDownload2 implements DownloadTransfer {
         httpClient = HttpClientFactory.newInstance(HttpClientType.PureJava);
         httpClient.setListener(httpClientListener);
 
-        this.status = STATUS_DOWNLOADING;
-        
         start();
     }
 
@@ -273,8 +267,8 @@ public final class YouTubeDownload2 implements DownloadTransfer {
         case STATUS_WAITING:
             resId = R.string.peer_http_download_status_waiting;
             break;
-        case STATUS_UNCOMPRESSING:
-            resId = R.string.http_download_status_uncompressing;
+        case STATUS_DEMUXING:
+            resId = R.string.transfer_status_demuxing;
             break;
         default:
             resId = R.string.peer_http_download_status_unknown;
@@ -298,22 +292,17 @@ public final class YouTubeDownload2 implements DownloadTransfer {
     }
 
     private void complete() {
-        boolean success = true;
 
-        if (success) {
-            status = STATUS_COMPLETE;
+        status = STATUS_COMPLETE;
 
-            manager.incrementDownloadsToReview();
-            Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
+        manager.incrementDownloadsToReview();
+        Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
 
-            if (completeFile.getAbsoluteFile().exists()) {
-                Librarian.instance().scan(getSavePath().getAbsoluteFile());
-            }
-
-            cleanupIncomplete();
-        } else {
-            error(new Exception("Error"));
+        if (completeFile.getAbsoluteFile().exists()) {
+            Librarian.instance().scan(getSavePath().getAbsoluteFile());
         }
+
+        cleanupIncomplete();
     }
 
     private void error(Throwable e) {
@@ -337,37 +326,6 @@ public final class YouTubeDownload2 implements DownloadTransfer {
         }
     }
 
-    static void simpleHTTP(String url, OutputStream out) throws Throwable {
-        simpleHTTP(url, out, 1000);
-    }
-
-    static void simpleHTTP(String url, OutputStream out, int timeout) throws Throwable {
-        URL u = new URL(url);
-        URLConnection con = u.openConnection();
-        con.setConnectTimeout(timeout);
-        con.setReadTimeout(timeout);
-        InputStream in = con.getInputStream();
-        try {
-
-            byte[] b = new byte[1024];
-            int n = 0;
-            while ((n = in.read(b, 0, b.length)) != -1) {
-                out.write(b, 0, n);
-            }
-        } finally {
-            try {
-                out.close();
-            } catch (Throwable e) {
-                // ignore   
-            }
-            try {
-                in.close();
-            } catch (Throwable e) {
-                // ignore   
-            }
-        }
-    }
-
     @Override
     public String getDetailsUrl() {
         return sr.getDetailsUrl();
@@ -378,14 +336,14 @@ public final class YouTubeDownload2 implements DownloadTransfer {
     }
 
     private final class HttpDownloadListenerImpl implements HttpClientListener {
-        @Override
+        @Override   
         public void onError(HttpClient client, Exception e) {
             error(e);
         }
 
         @Override
         public void onData(HttpClient client, byte[] buffer, int offset, int length) {
-            if (status != STATUS_COMPLETE && status != STATUS_CANCELLED) {
+            if (status != STATUS_COMPLETE && status != STATUS_CANCELLED && status != STATUS_DEMUXING) {
                 bytesReceived += length;
                 updateAverageDownloadSpeed();
                 status = STATUS_DOWNLOADING;
@@ -398,16 +356,17 @@ public final class YouTubeDownload2 implements DownloadTransfer {
                 boolean renameTo = tempVideo.renameTo(completeFile);
 
                 if (!renameTo) {
-                    error(null);
+                    //error(null);
                 } else {
                     complete();
                 }
             } else if (downloadType == DownloadType.DEMUX) {
                 try {
+                    status = STATUS_DEMUXING;
                     new MP4Muxer().demuxAudio(tempAudio.getAbsolutePath(), completeFile.getAbsolutePath(), buildMetadata());
 
                     if (!completeFile.exists()) {
-                        error(null);
+                        //error(null);
                     } else {
                         complete();
                     }
@@ -420,10 +379,11 @@ public final class YouTubeDownload2 implements DownloadTransfer {
                     start(sr.getAudio(), tempAudio);
                 } else if (tempVideo.exists() && tempAudio.exists()) {
                     try {
+                        status = STATUS_DEMUXING;
                         new MP4Muxer().mux(tempVideo.getAbsolutePath(), tempAudio.getAbsolutePath(), completeFile.getAbsolutePath(), buildMetadata());
 
                         if (!completeFile.exists()) {
-                            error(null);
+                            //error(null);
                         } else {
                             complete();
                         }
