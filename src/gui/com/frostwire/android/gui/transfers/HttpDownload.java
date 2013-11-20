@@ -68,7 +68,7 @@ public final class HttpDownload implements DownloadTransfer {
 
     private int status;
     private long bytesReceived;
-    public long averageSpeed; // in bytes
+    private long averageSpeed; // in bytes
 
     // variables to keep the download rate of file transfer
     private long speedMarkTimestamp;

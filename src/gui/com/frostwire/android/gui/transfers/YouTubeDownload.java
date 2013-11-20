@@ -75,7 +75,7 @@ public final class YouTubeDownload implements DownloadTransfer {
     private final long size;
     private int status;
     private long bytesReceived;
-    public long averageSpeed; // in bytes
+    private long averageSpeed; // in bytes
 
     // variables to keep the download rate of file transfer
     private long speedMarkTimestamp;
@@ -100,8 +100,6 @@ public final class YouTubeDownload implements DownloadTransfer {
 
         httpClient = HttpClientFactory.newInstance(HttpClientType.PureJava);
         httpClient.setListener(httpClientListener);
-
-        start();
     }
 
     private static File buildFile(File savePath, String name) {
