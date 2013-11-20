@@ -47,7 +47,7 @@ import com.frostwire.util.MP4Muxer.MP4Metadata;
  * @author aldenml
  *
  */
-public final class YouTubeDownload2 implements DownloadTransfer {
+public final class YouTubeDownload implements DownloadTransfer {
 
     private static final String TAG = "FW.HttpDownload";
 
@@ -81,7 +81,7 @@ public final class YouTubeDownload2 implements DownloadTransfer {
     private long speedMarkTimestamp;
     private long totalReceivedSinceLastSpeedStamp;
 
-    YouTubeDownload2(TransferManager manager, YouTubeCrawledSearchResult sr) {
+    YouTubeDownload(TransferManager manager, YouTubeCrawledSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
         this.downloadType = buildDownloadType(sr);
@@ -431,11 +431,11 @@ public final class YouTubeDownload2 implements DownloadTransfer {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof YouTubeDownload2)) {
+        if (!(obj instanceof YouTubeDownload)) {
             return false;
         }
 
-        return sr.getDownloadUrl().equals(((YouTubeDownload2) obj).sr.getDownloadUrl());
+        return sr.getDownloadUrl().equals(((YouTubeDownload) obj).sr.getDownloadUrl());
     }
 
     private MP4Metadata buildMetadata() {

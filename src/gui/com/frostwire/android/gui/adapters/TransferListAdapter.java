@@ -60,7 +60,7 @@ import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
-import com.frostwire.android.gui.transfers.YouTubeDownload2;
+import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
@@ -242,8 +242,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populateHttpDownload(view, (HttpDownload) transfer);
         } else if (transfer instanceof DesktopTransfer) {
             populateDesktopTransfer(view, (DesktopTransfer) transfer);
-        } else if (transfer instanceof YouTubeDownload2) {
-            populateYouTubeDownload(view, (YouTubeDownload2) transfer);
+        } else if (transfer instanceof YouTubeDownload) {
+            populateYouTubeDownload(view, (YouTubeDownload) transfer);
         } else if (transfer instanceof SoundcloudDownload) {
             populateSoundcloudDownload(view, (SoundcloudDownload) transfer);
         }
@@ -290,7 +290,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             boolean openMenu = false;
-            openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload2 || tag instanceof SoundcloudDownload);
+            openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
             openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 0;
 
             if (openMenu) {
@@ -547,7 +547,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonPlay.setOnClickListener(playOnClickListener);
     }
 
-    private void populateYouTubeDownload(View view, YouTubeDownload2 download) {
+    private void populateYouTubeDownload(View view, YouTubeDownload download) {
         TextView title = findView(view, R.id.view_transfer_list_item_title);
         ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
         TextView status = findView(view, R.id.view_transfer_list_item_status);

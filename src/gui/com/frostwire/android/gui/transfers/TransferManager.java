@@ -384,7 +384,7 @@ public final class TransferManager {
     }
 
     private DownloadTransfer newYouTubeDownload(YouTubeCrawledSearchResult sr) {
-        YouTubeDownload2 download = new YouTubeDownload2(this, sr);
+        YouTubeDownload download = new YouTubeDownload(this, sr);
 
         downloads.add(download);
         download.start();
