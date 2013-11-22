@@ -32,7 +32,6 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.gui.upnp.UPnPManager;
 
