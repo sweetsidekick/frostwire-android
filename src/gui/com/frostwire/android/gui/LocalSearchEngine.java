@@ -149,7 +149,13 @@ public final class LocalSearchEngine {
         try {
             for (SearchResult sr : results) {
                 if (sr instanceof TorrentSearchResult) {
-                    if (((TorrentSearchResult) sr).getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
+                    if (((TorrentSearchResult) sr).getSeeds() == TorrentSearchResult.UNKOWN_SEEDS) {
+                        long creationTime = ((TorrentSearchResult) sr).getCreationTime();
+                        long age = System.currentTimeMillis() - creationTime;
+                        if (age > 31536000000l) {
+                            continue;
+                        }
+                    } else if (((TorrentSearchResult) sr).getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
                         continue;
                     }
                 }
