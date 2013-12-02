@@ -1,4 +1,5 @@
-FrostWire 1.2.3 - NOV/20/2013
+FrostWire 1.2.3 - DEC/02/2013
+ - Significant memory optimizations on search result parsing and display.
  - Major update in cloud downloading architecture, Dynamic Adaptative Streaming over HTTP downloads supported.
  - Removed jDownloader libraries, less complexity, lighter app.
  - Fixes bug where transfer progress bar would fill up before download was complete.
