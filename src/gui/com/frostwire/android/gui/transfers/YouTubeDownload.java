@@ -186,7 +186,7 @@ public final class YouTubeDownload implements DownloadTransfer {
 
     public boolean isComplete() {
         if (bytesReceived > 0) {
-            return bytesReceived == size && status == STATUS_COMPLETE;
+            return bytesReceived == size || status == STATUS_COMPLETE;
         } else {
             return false;
         }
@@ -406,6 +406,7 @@ public final class YouTubeDownload implements DownloadTransfer {
 
         @Override
         public void onHeaders(HttpClient httpClient, Map<String, List<String>> headerFields) {
+            
         }
     }
 
