@@ -1,4 +1,5 @@
 FrostWire 1.2.3 - DEC/02/2013
+ - Insanely faster cloud search results.
  - Significant memory optimizations on search result parsing and display.
  - Major update in cloud downloading architecture, Dynamic Adaptative Streaming over HTTP downloads supported.
  - Removed jDownloader libraries, less complexity, lighter app.
