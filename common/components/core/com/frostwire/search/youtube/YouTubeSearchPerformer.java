@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.extractors.YouTubeExtractor;
 import com.frostwire.search.extractors.YouTubeExtractor.LinkInfo;
 import com.frostwire.util.JsonUtils;
@@ -38,8 +39,8 @@ public class YouTubeSearchPerformer extends CrawlPagedWebSearchPerformer<YouTube
 
     private static final int MAX_RESULTS = 15;
 
-    public YouTubeSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1, MAX_RESULTS);
+    public YouTubeSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout) {
+        super(domainAliasManager, token, keywords, timeout, 1, MAX_RESULTS);
     }
 
     @Override
