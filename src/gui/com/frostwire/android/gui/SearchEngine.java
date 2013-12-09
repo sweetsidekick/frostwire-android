@@ -103,42 +103,42 @@ public abstract class SearchEngine {
     public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ClearBitsSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new ClearBitsSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine EXTRATORRENT = new SearchEngine("Extratorrent", Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ExtratorrentSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new ExtratorrentSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine MININOVA = new SearchEngine("Mininova", Constants.PREF_KEY_SEARCH_USE_MININOVA) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new MininovaSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new MininovaSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine YOUTUBE = new SearchEngine("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new YouTubeSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new YouTubeSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine SOUNCLOUD = new SearchEngine("Soundcloud", Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new SoundcloudSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new SoundcloudSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine ARCHIVE = new SearchEngine("Archive.org", Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ArchiveorgSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new ArchiveorgSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
@@ -147,28 +147,28 @@ public abstract class SearchEngine {
     public static final SearchEngine FROSTCLICK = new SearchEngine("FrostClick", Constants.PREF_KEY_SEARCH_USE_FROSTCLICK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new FrostClickSearchPerformer(token, keywords, DEFAULT_TIMEOUT, FROSTCLICK_ANDROID_USER_AGENT);
+            return new FrostClickSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT, FROSTCLICK_ANDROID_USER_AGENT);
         }
     };
 
     public static final SearchEngine BITSNOOP = new SearchEngine("BitSnoop", Constants.PREF_KEY_SEARCH_USE_BITSNOOP) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new BitSnoopSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new BitSnoopSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine TORLOCK = new SearchEngine("TorLock", Constants.PREF_KEY_SEARCH_USE_TORLOCK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new TorLockSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new TorLockSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
     
     public static final SearchEngine EZTV = new SearchEngine("Eztv", Constants.PREF_KEY_SEARCH_USE_EZTV) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new EztvSearchPerformer(token, keywords, DEFAULT_TIMEOUT);
+            return new EztvSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
