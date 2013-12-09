@@ -107,7 +107,7 @@ public final class AzureusManager {
 
     public void pause() {
         try {
-            SimpleTimer.pause();
+            //SimpleTimer.pause();
             azureusCore.getGlobalManager().pauseDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to pause Azureus core", e);
@@ -119,7 +119,7 @@ public final class AzureusManager {
             COConfigurationManager.setParameter("UDP.Listen.Port.Enable", NetworkManager.instance().isDataWIFIUp());
             asyncSaveConfiguration();
 
-            SimpleTimer.resume();
+            //SimpleTimer.resume();
             azureusCore.getGlobalManager().resumeDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to resume Azureus core", e);
@@ -317,7 +317,7 @@ public final class AzureusManager {
         map.put("GeneralView.yes", context.getString(R.string.azureus_general_view_yes));
         map.put("GeneralView.no", context.getString(R.string.azureus_general_view_no));
 
-        DisplayFormatters.loadMessages(map);
+        //DisplayFormatters.loadMessages(map);
     }
 
     private static void asyncSaveConfiguration() {
