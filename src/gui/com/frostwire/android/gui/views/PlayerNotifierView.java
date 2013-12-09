@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -92,14 +93,12 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
         if (mediaPlayer == null) {
             return;
         }
-
-        TextView isPlayingText = (TextView) findViewById(R.id.view_player_notifier_playing);
-        
+        ImageView notifierIconImageView = (ImageView) findViewById(R.id.view_player_notifier_icon);
+        int notifierResourceId = R.drawable.playernotifier_icon_play; 
         if (!mediaPlayer.isPlaying()) {
-            isPlayingText.setText(R.string.paused);
-        } else {
-            isPlayingText.setText(R.string.playing);
+            notifierResourceId = R.drawable.playernotifier_icon_pause;
         }
+        notifierIconImageView.setBackgroundResource(notifierResourceId);
     }
 
     @Override

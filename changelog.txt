@@ -1,11 +1,9 @@
-FrostWire 1.2.3 - DEC/02/2013
+FrostWire 1.2.2 - DEC/02/2013
  - Insanely faster cloud search results.
  - Significant memory optimizations on search result parsing and display.
  - Major update in cloud downloading architecture, Dynamic Adaptative Streaming over HTTP downloads supported.
  - Removed jDownloader libraries, less complexity, lighter app.
  - Fixes bug where transfer progress bar would fill up before download was complete.
-
-FrostWire 1.2.2 - NOV/06/2013
  - Throttles down CPU consumption when updating the audio player timers during playback.
  - Fixes issue where search file type selector would hide after an orientation change
    upon no results on the selected file type.
