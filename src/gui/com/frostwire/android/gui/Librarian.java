@@ -69,7 +69,6 @@ import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
-import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * The Librarian is in charge of:
@@ -412,7 +411,7 @@ public final class Librarian {
 
     private void broadcastRefreshFinger() {
         context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
-        UPnPManager.instance().refreshPing();
+        //UPnPManager.instance().refreshPing();
     }
 
     private void syncApplicationsProviderSupport() {

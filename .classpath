@@ -15,11 +15,6 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="common/components/cling">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="common/components/apache">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
