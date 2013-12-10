@@ -5,23 +5,14 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="common/components/javax">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="common/components/seamless">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="common/components/apache">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="common/components/jdownloader"/>
-	<classpathentry excluding="**/DNSUtilsImpl.java|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/components/vuze/azureus2/src">
+	<classpathentry kind="src" path="common/components/minicastle"/>
+	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/components/vuze/azureus2/src">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
