@@ -1,3 +1,7 @@
+FrostWire 1.2.3 - DEC/10/2013
+ - Player status bar removes words 'Playing' and 'Paused' instead uses icons.
+ - Number of search results under file type is now the same color as the file type icon.
+
 FrostWire 1.2.2 - DEC/02/2013
  - Insanely faster cloud search results.
  - Significant memory optimizations on search result parsing and display.
