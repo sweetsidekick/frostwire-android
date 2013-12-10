@@ -332,6 +332,7 @@ public class NativeAndroidPlayer implements CoreMediaPlayer, MediaPlayer.OnPrepa
         if (mp != null) {
             mp.start();
             notifyMediaPlay(false);
+            service.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
         }
     }
 
