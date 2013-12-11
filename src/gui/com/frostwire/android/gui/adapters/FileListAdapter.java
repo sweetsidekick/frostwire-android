@@ -61,6 +61,7 @@ import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.util.Condition;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -240,11 +241,14 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 IOUtils.closeQuietly(is);
             }
         } else {
-            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-                fileThumbnail.setOverlayState(OverlayState.STOP);
-            } else {
-                fileThumbnail.setOverlayState(OverlayState.PLAY);
+            if (Condition.in(fileType, Constants.FILE_TYPE_AUDIO, Constants.FILE_TYPE_VIDEOS, Constants.FILE_TYPE_RINGTONES)) {
+                if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+                    fileThumbnail.setOverlayState(OverlayState.STOP);
+                } else {
+                    fileThumbnail.setOverlayState(OverlayState.PLAY);
+                }
             }
+            
             thumbnailLoader.displayImage(fd, fileThumbnail, null);
         }
 
