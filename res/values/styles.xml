@@ -30,7 +30,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
         <item name="android:background">@drawable/searchinput_button_selector</item>
-        <item name="android:textColor">#e7ebee</item>
+        <item name="android:textColor">@drawable/browse_peer_radio_button_textcolor_selector</item>
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">center</item>
         <item name="android:drawablePadding">-10dp</item>
@@ -42,6 +42,7 @@
         <item name="android:paddingBottom">0dp</item>
         <item name="android:paddingLeft">48dp</item>
         <item name="android:drawablePadding">0dp</item>
+        <item name="android:textColor">@drawable/browse_peer_radio_button_textcolor_selector</item>
     </style>
 
     <style name="BrowseFileTypeButton" parent="android:Widget.CompoundButton.RadioButton">

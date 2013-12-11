@@ -40,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
+        <!-- 
         <TextView
             android:id="@+id/view_player_notifier_playing"
             android:layout_width="wrap_content"
@@ -50,6 +51,7 @@
             android:text="@string/playing"
             android:textColor="#ffffffff"
             android:textSize="12dp" />
+             -->
 
         <TextView
             android:id="@+id/view_player_notifier_status"

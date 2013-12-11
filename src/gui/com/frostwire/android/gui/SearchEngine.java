@@ -28,6 +28,7 @@ import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.eztv.EztvSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
@@ -103,42 +104,42 @@ public abstract class SearchEngine {
     public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ClearBitsSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new ClearBitsSearchPerformer(new DomainAliasManager("www.clearbits.net"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine EXTRATORRENT = new SearchEngine("Extratorrent", Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ExtratorrentSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new ExtratorrentSearchPerformer(new DomainAliasManager("extratorrent.cc"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine MININOVA = new SearchEngine("Mininova", Constants.PREF_KEY_SEARCH_USE_MININOVA) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new MininovaSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new MininovaSearchPerformer(new DomainAliasManager("www.mininova.org"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine YOUTUBE = new SearchEngine("YouTube", Constants.PREF_KEY_SEARCH_USE_YOUTUBE) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new YouTubeSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new YouTubeSearchPerformer(new DomainAliasManager("gdata.youtube.com"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine SOUNCLOUD = new SearchEngine("Soundcloud", Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new SoundcloudSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new SoundcloudSearchPerformer(new DomainAliasManager("api.sndcdn.com"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine ARCHIVE = new SearchEngine("Archive.org", Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new ArchiveorgSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new ArchiveorgSearchPerformer(new DomainAliasManager("archive.org"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
@@ -147,28 +148,28 @@ public abstract class SearchEngine {
     public static final SearchEngine FROSTCLICK = new SearchEngine("FrostClick", Constants.PREF_KEY_SEARCH_USE_FROSTCLICK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new FrostClickSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT, FROSTCLICK_ANDROID_USER_AGENT);
+            return new FrostClickSearchPerformer(new DomainAliasManager("api.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTCLICK_ANDROID_USER_AGENT);
         }
     };
 
     public static final SearchEngine BITSNOOP = new SearchEngine("BitSnoop", Constants.PREF_KEY_SEARCH_USE_BITSNOOP) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new BitSnoopSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new BitSnoopSearchPerformer(new DomainAliasManager("bitsnoop.com"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
     public static final SearchEngine TORLOCK = new SearchEngine("TorLock", Constants.PREF_KEY_SEARCH_USE_TORLOCK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new TorLockSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new TorLockSearchPerformer(new DomainAliasManager("www.torlock.com"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
-    
+
     public static final SearchEngine EZTV = new SearchEngine("Eztv", Constants.PREF_KEY_SEARCH_USE_EZTV) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            return new EztvSearchPerformer(null, token, keywords, DEFAULT_TIMEOUT);
+            return new EztvSearchPerformer(new DomainAliasManager("eztv.it"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
 
