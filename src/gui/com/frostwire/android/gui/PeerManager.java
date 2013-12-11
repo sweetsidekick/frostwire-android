@@ -191,6 +191,9 @@ public final class PeerManager {
 
     private void refreshLocalPeer() {
         PingInfo p = new PingInfo();//UPnPManager.instance().getLocalPingInfo();
+        p.uuid = ConfigurationManager.instance().getUUIDString();
+        p.nickname = ConfigurationManager.instance().getNickname();
+        p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
 
         localPeer = new Peer(ConfigurationManager.instance().getUUIDString(), null, p);
     }
