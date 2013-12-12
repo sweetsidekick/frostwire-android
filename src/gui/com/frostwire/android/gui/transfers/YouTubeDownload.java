@@ -433,8 +433,8 @@ public final class YouTubeDownload implements DownloadTransfer {
         if (!(obj instanceof YouTubeDownload)) {
             return false;
         }
-
-        return sr.getDownloadUrl().equals(((YouTubeDownload) obj).sr.getDownloadUrl());
+        
+        return sr.getFilename().equals(((YouTubeDownload) obj).sr.getFilename());
     }
 
     private MP4Metadata buildMetadata() {
