@@ -26,8 +26,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-import org.gudy.azureus2.core3.util.SimpleTimer;
+import org.gudy.azureus2.core3.util.AERunStateHandler;
 import org.gudy.azureus2.core3.util.SystemProperties;
 
 import android.content.Context;
@@ -39,6 +38,8 @@ import com.aelitis.azureus.core.AzureusCore;
 import com.aelitis.azureus.core.AzureusCoreException;
 import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.core.AzureusCoreLifecycleAdapter;
+import com.aelitis.azureus.core.dht.DHT;
+import com.aelitis.azureus.plugins.dht.DHTPlugin;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -47,6 +48,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * Class to initialize the azureus core.
@@ -71,7 +73,9 @@ public final class AzureusManager {
     private OnSharedPreferenceChangeListener preferenceListener;
 
     private static final ExecutorService SAFE_CONFIG_EXECUTOR;
-
+    
+    private VuzeManager vuze;
+    
     static {
         SAFE_CONFIG_EXECUTOR = ExecutorsHelper.newFixedSizeThreadPool(1, "Vuze-Save-Config");
     }
@@ -107,7 +111,7 @@ public final class AzureusManager {
 
     public void pause() {
         try {
-            //SimpleTimer.pause();
+            vuze.setDHTSleeping(true);
             azureusCore.getGlobalManager().pauseDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to pause Azureus core", e);
@@ -119,7 +123,7 @@ public final class AzureusManager {
             COConfigurationManager.setParameter("UDP.Listen.Port.Enable", NetworkManager.instance().isDataWIFIUp());
             asyncSaveConfiguration();
 
-            //SimpleTimer.resume();
+            vuze.setDHTSleeping(false);
             azureusCore.getGlobalManager().resumeDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to resume Azureus core", e);
@@ -261,6 +265,9 @@ public final class AzureusManager {
             } catch (InterruptedException e) {
                 // ignore
             }
+            
+            vuze = new VuzeManager(azureusCore);
+            
         } catch (Throwable e) {
             Log.e(TAG, "Failed to start Azureus core started", e);
         }
