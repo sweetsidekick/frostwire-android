@@ -52,27 +52,27 @@ public final class SystemUtils {
         String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
         File externalStorageDirectory = new File(path);
 
-        return FileUtils.createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
+        return createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
     }
 
     public static File getAzureusDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), AZUREUS_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), AZUREUS_FOLDER_NAME);
     }
 
     public static File getTorrentsDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), TORRENTS_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), TORRENTS_FOLDER_NAME);
     }
 
     public static File getTorrentDataDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
     }
 
     public static File getDesktopFilesirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), DESKTOP_FILES_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), DESKTOP_FILES_FOLDER_NAME);
     }
 
     public static File getTempDirectory() {
-        File f = FileUtils.createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
+        File f = createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
 
         File nomedia = new File(f, ".nomedia");
         if (!nomedia.exists()) {
@@ -87,7 +87,7 @@ public final class SystemUtils {
     }
 
     public static File getDeepScanTorrentsDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), DEEPSCAN_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), DEEPSCAN_FOLDER_NAME);
     }
 
     public static File getSaveDirectory(byte fileType) {
@@ -118,7 +118,7 @@ public final class SystemUtils {
             folderName = DOCUMENTS_FOLDER_NAME;
         }
 
-        return FileUtils.createFolder(parentFolder, folderName);
+        return createFolder(parentFolder, folderName);
     }
 
     public static File getUpdateInstallerPath() {
@@ -126,6 +126,16 @@ public final class SystemUtils {
     }
 
     public static File getImageCacheDirectory() {
-        return FileUtils.createFolder(getApplicationStorageDirectory(), IMAGE_CACHE_FOLDER_NAME);
+        return createFolder(getApplicationStorageDirectory(), IMAGE_CACHE_FOLDER_NAME);
+    }
+
+    private static File createFolder(File parentDir, String folderName) {
+        try {
+            File f = new File(parentDir, folderName);
+            org.apache.commons.io.FileUtils.forceMkdir(f);
+            return f;
+        } catch (Throwable e) {
+            throw new RuntimeException("Unable to setup system folder", e);
+        }
     }
 }
