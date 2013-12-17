@@ -1,4 +1,5 @@
 FrostWire 1.2.3 - DEC/10/2013
+ - Fixes crash when stopping a 1080p video transfer from cloud service.
  - Player status bar removes words 'Playing' and 'Paused' instead uses icons.
  - Number of search results under file type is now the same color as the file type icon.
 
