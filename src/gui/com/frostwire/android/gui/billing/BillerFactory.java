@@ -35,7 +35,7 @@ public class BillerFactory {
         if (OSUtils.isKindleFire() || OSUtils.isAmazonDistribution()) {
             billy = new KindleBiller(activity);
         } else if (OSUtils.isOUYA()) {
-            billy = new OuyaBiller(activity);
+            billy = null;//new OuyaBiller(activity);
         } else {
             billy = new GooglePlayBiller(activity);
         }

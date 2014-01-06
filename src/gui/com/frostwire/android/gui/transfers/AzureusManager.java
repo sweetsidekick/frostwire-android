@@ -25,9 +25,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
+import org.gudy.azureus2.core3.config.impl.TransferSpeedValidator;
 import org.gudy.azureus2.core3.global.GlobalManager;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-import org.gudy.azureus2.core3.util.SimpleTimer;
 import org.gudy.azureus2.core3.util.SystemProperties;
 
 import android.content.Context;
@@ -47,6 +46,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * Class to initialize the azureus core.
@@ -71,7 +71,9 @@ public final class AzureusManager {
     private OnSharedPreferenceChangeListener preferenceListener;
 
     private static final ExecutorService SAFE_CONFIG_EXECUTOR;
-
+    
+    private VuzeManager vuze;
+    
     static {
         SAFE_CONFIG_EXECUTOR = ExecutorsHelper.newFixedSizeThreadPool(1, "Vuze-Save-Config");
     }
@@ -107,7 +109,7 @@ public final class AzureusManager {
 
     public void pause() {
         try {
-            SimpleTimer.pause();
+            vuze.setDHTSleeping(true);
             azureusCore.getGlobalManager().pauseDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to pause Azureus core", e);
@@ -119,7 +121,7 @@ public final class AzureusManager {
             COConfigurationManager.setParameter("UDP.Listen.Port.Enable", NetworkManager.instance().isDataWIFIUp());
             asyncSaveConfiguration();
 
-            SimpleTimer.resume();
+            vuze.setDHTSleeping(false);
             azureusCore.getGlobalManager().resumeDownloads();
         } catch (Throwable e) {
             Log.e(TAG, "Failed to resume Azureus core", e);
@@ -210,6 +212,8 @@ public final class AzureusManager {
 
         COConfigurationManager.setParameter("Auto Adjust Transfer Defaults", false);
         COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", SystemUtils.getTorrentsDirectory().getAbsolutePath());
+        
+        //COConfigurationManager.setParameter(TransferSpeedValidator.AUTO_UPLOAD_ENABLED_CONFIGKEY, false);
 
         // network parameters, fine tunning for android
         COConfigurationManager.setParameter("network.tcp.write.select.time", 1000);
@@ -261,6 +265,9 @@ public final class AzureusManager {
             } catch (InterruptedException e) {
                 // ignore
             }
+            
+            vuze = new VuzeManager(azureusCore);
+            
         } catch (Throwable e) {
             Log.e(TAG, "Failed to start Azureus core started", e);
         }
@@ -317,7 +324,7 @@ public final class AzureusManager {
         map.put("GeneralView.yes", context.getString(R.string.azureus_general_view_yes));
         map.put("GeneralView.no", context.getString(R.string.azureus_general_view_no));
 
-        DisplayFormatters.loadMessages(map);
+        //DisplayFormatters.loadMessages(map);
     }
 
     private static void asyncSaveConfiguration() {

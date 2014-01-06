@@ -314,8 +314,15 @@ final class BittorrentDownloadCreator {
             return globalManager.addDownloadManager(torrentFile, null, saveDir, DownloadManager.STATE_WAITING, true, false, null);
         } else {
             return globalManager.addDownloadManager(torrentFile, null, saveDir, null, DownloadManager.STATE_WAITING, true, false, new DownloadManagerInitialisationAdapter() {
-                public void initialised(DownloadManager dm) {
-                    setupPartialSelection(dm, fileSelection);
+
+                @Override
+                public void initialised(DownloadManager manager, boolean for_seeding) {
+                    setupPartialSelection(manager, fileSelection);
+                }
+
+                @Override
+                public int getActions() {
+                    return 0;
                 }
             });
         }

@@ -38,9 +38,6 @@ import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
 import com.frostwire.android.util.concurrent.ThreadPool;
-import com.frostwire.gui.upnp.UPnPManager;
-import com.frostwire.gui.upnp.android.AndroidUPnPManager;
-import com.frostwire.gui.upnp.android.UPnPService;
 
 /**
  * @author gubatron
@@ -156,8 +153,8 @@ public final class Engine implements IEngineService {
                 }
                 
                 if (context != null) {
-                    upnpServiceConnection = ((AndroidUPnPManager) UPnPManager.instance()).getServiceConnection();
-                    context.getApplicationContext().bindService(new Intent(context, UPnPService.class), upnpServiceConnection, Context.BIND_AUTO_CREATE);
+                    //upnpServiceConnection = ((AndroidUPnPManager) UPnPManager.instance()).getServiceConnection();
+                    //context.getApplicationContext().bindService(new Intent(context, UPnPService.class), upnpServiceConnection, Context.BIND_AUTO_CREATE);
                 }
             }
         }

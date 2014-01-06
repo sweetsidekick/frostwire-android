@@ -26,15 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fourthline.cling.model.types.UDN;
-
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.gui.upnp.PingInfo;
-import com.frostwire.gui.upnp.UPnPManager;
 
 /**
  * Keeps track of the Peers we know.
@@ -142,7 +139,7 @@ public final class PeerManager {
     public void removePeer(Peer p) {
         try {
             updatePeerCache2(p.getUdn(), p, true);
-            UPnPManager.instance().getService().getRegistry().removeDevice(UDN.valueOf(p.getUdn()));
+            //UPnPManager.instance().getService().getRegistry().removeDevice(UDN.valueOf(p.getUdn()));
         } catch (Throwable e) {
             Log.e(TAG, "Error removing peer from manager", e);
         }
@@ -193,7 +190,10 @@ public final class PeerManager {
     }
 
     private void refreshLocalPeer() {
-        PingInfo p = UPnPManager.instance().getLocalPingInfo();
+        PingInfo p = new PingInfo();//UPnPManager.instance().getLocalPingInfo();
+        p.uuid = ConfigurationManager.instance().getUUIDString();
+        p.nickname = ConfigurationManager.instance().getNickname();
+        p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
 
         localPeer = new Peer(ConfigurationManager.instance().getUUIDString(), null, p);
     }

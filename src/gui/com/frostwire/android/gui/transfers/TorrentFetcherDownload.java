@@ -26,8 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloader;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderCallBackInterface;
-import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderFactory;
-
+import org.gudy.azureus2.core3.torrentdownloader.impl.TorrentDownloaderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,15 +38,15 @@ import com.frostwire.android.R;
  *
  */
 public class TorrentFetcherDownload implements BittorrentDownload {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(TorrentFetcherDownload.class);
-            
+
     private final TransferManager manager;
     private final TorrentDownloadInfo info;
     private final Date dateCreated;
 
     private int statusResId;
-    private final TorrentDownloader torrentDownloader;
+    private final TorrentDownloaderImpl torrentDownloader;
 
     private BittorrentDownload delegate;
 
@@ -59,7 +58,9 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         this.dateCreated = new Date();
 
         this.statusResId = R.string.torrent_fetcher_download_status_downloading_torrent;
-        this.torrentDownloader = TorrentDownloaderFactory.create(new TorrentDownloaderListener(), info.getTorrentUrl(), info.getDetailsUrl(), null);
+
+        this.torrentDownloader = new TorrentDownloaderImpl();
+        this.torrentDownloader.init(new TorrentDownloaderListener(), info.getTorrentUrl(), info.getDetailsUrl(), null, null);
         this.torrentDownloader.start();
     }
 
@@ -179,13 +180,13 @@ public class TorrentFetcherDownload implements BittorrentDownload {
                 torrentDownloader.cancel();
             } catch (Throwable e) {
                 // ignore, I can't do anything
-                LOG.error("Error canceling torrent downloader",e);
+                LOG.error("Error canceling torrent downloader", e);
             }
             try {
                 torrentDownloader.getFile().delete();
             } catch (Throwable e) {
                 // ignore, I can't do anything
-                LOG.error("Error deleting file of torrent downloader",e);
+                LOG.error("Error deleting file of torrent downloader", e);
             }
         }
         manager.remove(this);

@@ -37,17 +37,6 @@ public final class FileUtils {
     private FileUtils() {
     }
 
-    /**
-     * @param parentDir
-     */
-    public static File createFolder(File parentDir, String folderName) {
-        File f = new File(parentDir, folderName);
-        if (!f.exists() || !f.isDirectory()) {
-            f.mkdir();
-        }
-        return f;
-    }
-
     public static void deleteFolderRecursively(File folder) {
         if (folder != null && folder.isDirectory() && folder.canWrite()) {
             //delete your contents and recursively delete sub-folders
@@ -128,7 +117,7 @@ public final class FileUtils {
                 fs = currentFolder.listFiles();
             } catch (SecurityException e) {
             }
-            
+
             if (fs != null && fs.length > 0) {
                 for (File f : fs) {
                     if (!f.isDirectory()) {
@@ -140,7 +129,7 @@ public final class FileUtils {
                     }
                 }
             }
-            
+
             if (!subFolders.isEmpty()) {
                 currentFolder = subFolders.pop();
             } else {
@@ -148,7 +137,7 @@ public final class FileUtils {
             }
         }
         return results;
-    }    
+    }
 
     public static boolean isValidDirectory(File dir) {
         return dir != null && dir.exists() && dir.isDirectory();

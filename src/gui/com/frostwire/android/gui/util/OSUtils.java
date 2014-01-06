@@ -22,7 +22,7 @@ package com.frostwire.android.gui.util;
 import com.frostwire.android.core.Constants;
 
 import android.os.Build;
-import tv.ouya.console.api.OuyaFacade;
+//import tv.ouya.console.api.OuyaFacade;
 
 public final class OSUtils {
     
@@ -33,7 +33,7 @@ public final class OSUtils {
     }
     
     public static boolean isOUYA() {
-        return OuyaFacade.getInstance().isRunningOnOUYAHardware();
+        return false;//OuyaFacade.getInstance().isRunningOnOUYAHardware();
     }
     
     public static String getOSName() {
