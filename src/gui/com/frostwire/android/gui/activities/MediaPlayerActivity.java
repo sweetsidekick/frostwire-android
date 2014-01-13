@@ -43,6 +43,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -121,6 +122,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.togglePause();
+                UIUtils.showShortMessage(this, getString(R.string.player_paused_press_and_hold_to_stop));
             } catch (Throwable e) {
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
