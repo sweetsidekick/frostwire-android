@@ -146,6 +146,16 @@ public final class ImageLoader {
 
         requestBuilder.into(imageView);
     }
+    
+    public void displayImage(String imageSrc,ImageView imageView, Drawable defaultDrawable, int targetWidth, int targetHeight) {
+        if (targetWidth > 0 &&  targetHeight > 0) {  
+            picasso.load(imageSrc).placeholder(defaultDrawable).resize(targetWidth, targetHeight).into(imageView);
+        }
+    }
+    
+    public Picasso getPicasso() {
+        return picasso;
+    }
 
     private boolean isKeyRemote(String key) {
         return key.startsWith("http://");

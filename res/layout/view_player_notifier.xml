@@ -40,19 +40,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <!-- 
-        <TextView
-            android:id="@+id/view_player_notifier_playing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginRight="5dp"
-            android:singleLine="true"
-            android:text="@string/playing"
-            android:textColor="#ffffffff"
-            android:textSize="12dp" />
-             -->
-
         <TextView
             android:id="@+id/view_player_notifier_status"
             android:layout_width="wrap_content"
@@ -61,7 +48,7 @@
             android:singleLine="true"
             android:text="@string/dummy_title"
             android:textColor="#ffffffff"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 
