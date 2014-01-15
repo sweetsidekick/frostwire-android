@@ -20,6 +20,7 @@ package com.frostwire.android.gui.adapters;
 
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -52,17 +53,30 @@ public class PromotionsAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            imageView.setPadding(0, 2, 0, 2);
             imageView.setAdjustViewBounds(true);
-            imageView.setPadding(6, 6, 6, 6);
+            
+            try {
+                final int fPosition = position;
+                final ImageView fImageView = imageView;
+                final int fWidth = parent.getWidth();
+                AsyncTask<Void, Void, Void> aTask = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        imageLoader.displayImageThisWide(getItem(fPosition).imageSrc, fImageView, null, fWidth);
+                        return null;
+                    }
+                };
+                aTask.execute(null);            
+
+            } catch (Throwable e) {
+                // ignore
+            }
+
         } else {
             imageView = (ImageView) convertView;
-        }
-
-        try {
             imageLoader.displayImage(getItem(position).imageSrc, imageView, null, 0);
-        } catch (Throwable e) {
-            // ignore
         }
 
         return imageView;
