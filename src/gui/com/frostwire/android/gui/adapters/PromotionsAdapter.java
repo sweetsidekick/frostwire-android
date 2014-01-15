@@ -25,9 +25,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
+import com.frostwire.android.gui.views.FWGridView;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.frostclick.Slide;
+import com.squareup.picasso.Callback;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -50,18 +53,21 @@ public class PromotionsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if (convertView == null || convertView.getDrawingCache()==null) {
-            imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            imageView.setPadding(0, 0, 0, 0);
-            imageView.setAdjustViewBounds(true);
-            int height = (int) (parent.getWidth() * PROMO_HEIGHT_TO_WIDTH_RATIO); //
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, parent.getWidth(),height);
-        } else {
-            imageView = (ImageView) convertView;
-            System.out.println("PromotionsAdapter.getView(): Reusing Image View");
+        if (convertView != null && convertView instanceof ImageView) {
+            return convertView;
         }
+        
+        FWGridView gridView = (FWGridView) parent;
+        int promoWidth = gridView.getColumnWidth(); //hack
+        int promoHeight = (int) (promoWidth * PROMO_HEIGHT_TO_WIDTH_RATIO);
+
+        ImageView imageView = new ImageView(parent.getContext());
+        imageView.setScaleType(ScaleType.MATRIX);
+        imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        imageView.setPadding(0, 0, 0, 0);
+        imageView.setAdjustViewBounds(true);
+        imageLoader.getPicasso().load(getItem(position).imageSrc).resize(promoWidth, promoHeight).into(imageView);
+        
         return imageView;
     }
 

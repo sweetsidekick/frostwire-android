@@ -17,19 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- android:background="#fff6f6f6" >
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff6f6f6" >
-
+    android:padding="0sp"
+    android:background="@color/app_background" >
     <com.frostwire.android.gui.views.FWGridView
         android:id="@+id/view_promotions_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:numColumns="2"
-        android:stretchMode="columnWidth" />
-
+        android:stretchMode="columnWidth" 
+        android:background="@color/app_background"/>
 </LinearLayout>

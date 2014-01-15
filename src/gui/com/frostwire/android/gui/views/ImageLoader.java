@@ -148,10 +148,13 @@ public final class ImageLoader {
     }
     
     public void displayImage(String imageSrc,ImageView imageView, Drawable defaultDrawable, int targetWidth, int targetHeight) {
-        if (targetWidth > 0) {
-            imageView.setScaleType(ScaleType.FIT_CENTER);
+        if (targetWidth > 0 &&  targetHeight > 0) {  
             picasso.load(imageSrc).placeholder(defaultDrawable).resize(targetWidth, targetHeight).into(imageView);
         }
+    }
+    
+    public Picasso getPicasso() {
+        return picasso;
     }
 
     private boolean isKeyRemote(String key) {

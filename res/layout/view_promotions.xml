@@ -23,7 +23,6 @@
     android:layout_height="match_parent"
     android:padding="0sp"
     android:background="@color/app_background" >
-
     <com.frostwire.android.gui.views.FWGridView
         android:id="@+id/view_promotions_gridview"
         android:layout_width="match_parent"
