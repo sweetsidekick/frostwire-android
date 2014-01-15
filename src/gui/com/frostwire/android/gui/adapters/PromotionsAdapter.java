@@ -51,10 +51,10 @@ public class PromotionsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) {
+        if (convertView == null || convertView.getDrawingCache()==null) {
             imageView = new ImageView(parent.getContext());
             imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            imageView.setPadding(0, 2, 0, 2);
+            imageView.setPadding(0, 0, 0, 0);
             imageView.setAdjustViewBounds(true);
             int height = (int) (parent.getWidth() * PROMO_HEIGHT_TO_WIDTH_RATIO); //
             imageLoader.displayImage(getItem(position).imageSrc, imageView, null, parent.getWidth(),height);
