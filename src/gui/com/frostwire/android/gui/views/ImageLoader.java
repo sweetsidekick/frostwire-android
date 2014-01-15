@@ -147,19 +147,10 @@ public final class ImageLoader {
         requestBuilder.into(imageView);
     }
     
-    public void displayImageThisWide(String imageSrc, ImageView imageView, Drawable defaultDrawable, int targetWidth) {
-        imageView.setScaleType(ScaleType.FIT_CENTER);
-        RequestCreator requestBuilder = picasso.load(imageSrc).placeholder(defaultDrawable);
-        try {
-            Bitmap bitmap = requestBuilder.get();
-            int originalImageWidth = bitmap.getWidth();
-            int originalImageHeight = bitmap.getHeight();
-            int targetHeight = (targetWidth * originalImageHeight) / originalImageWidth;
-            requestBuilder.resize(targetWidth, targetHeight);
-            requestBuilder.into(imageView);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void displayImage(String imageSrc,ImageView imageView, Drawable defaultDrawable, int targetWidth, int targetHeight) {
+        if (targetWidth > 0) {
+            imageView.setScaleType(ScaleType.FIT_CENTER);
+            picasso.load(imageSrc).placeholder(defaultDrawable).resize(targetWidth, targetHeight).into(imageView);
         }
     }
 

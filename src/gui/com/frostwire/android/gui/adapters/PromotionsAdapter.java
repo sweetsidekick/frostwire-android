@@ -20,7 +20,6 @@ package com.frostwire.android.gui.adapters;
 
 import java.util.List;
 
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -40,6 +39,7 @@ import com.frostwire.frostclick.Slide;
  */
 public class PromotionsAdapter extends BaseAdapter {
 
+    private static final double PROMO_HEIGHT_TO_WIDTH_RATIO = 0.52998;
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
 
@@ -53,32 +53,15 @@ public class PromotionsAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             imageView.setPadding(0, 2, 0, 2);
             imageView.setAdjustViewBounds(true);
-            
-            try {
-                final int fPosition = position;
-                final ImageView fImageView = imageView;
-                final int fWidth = parent.getWidth();
-                AsyncTask<Void, Void, Void> aTask = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        imageLoader.displayImageThisWide(getItem(fPosition).imageSrc, fImageView, null, fWidth);
-                        return null;
-                    }
-                };
-                aTask.execute(null);            
-
-            } catch (Throwable e) {
-                // ignore
-            }
-
+            int height = (int) (parent.getWidth() * PROMO_HEIGHT_TO_WIDTH_RATIO); //
+            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, parent.getWidth(),height);
         } else {
             imageView = (ImageView) convertView;
-            imageLoader.displayImage(getItem(position).imageSrc, imageView, null, 0);
+            System.out.println("PromotionsAdapter.getView(): Reusing Image View");
         }
-
         return imageView;
     }
 
