@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011 - 2013, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 
 package com.frostwire.android.gui.util;
 
-import com.frostwire.android.core.Constants;
-
+import tv.ouya.console.api.OuyaFacade;
 import android.os.Build;
-//import tv.ouya.console.api.OuyaFacade;
+
+import com.frostwire.android.core.Constants;
 
 public final class OSUtils {
     
@@ -33,7 +33,7 @@ public final class OSUtils {
     }
     
     public static boolean isOUYA() {
-        return false;//OuyaFacade.getInstance().isRunningOnOUYAHardware();
+        return OuyaFacade.getInstance().isRunningOnOUYAHardware();
     }
     
     public static String getOSName() {

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@ import android.app.Activity;
  *
  */
 public class BillerFactory {
-    
+
     public static Biller getInstance(Activity activity) {
         Biller billy = null;
 
         if (OSUtils.isKindleFire() || OSUtils.isAmazonDistribution()) {
             billy = new KindleBiller(activity);
         } else if (OSUtils.isOUYA()) {
-            billy = null;//new OuyaBiller(activity);
+            billy = new OuyaBiller(activity);
         } else {
             billy = new GooglePlayBiller(activity);
         }
