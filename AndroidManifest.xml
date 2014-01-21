@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 	package="com.frostwire.android" android:installLocation="preferExternal"
 	android:versionCode="117" android:versionName="1.2.2">
 
-	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="13" />
+	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="15" />
 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
