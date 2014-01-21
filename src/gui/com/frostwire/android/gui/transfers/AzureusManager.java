@@ -19,13 +19,16 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
+import org.gudy.azureus2.core3.internat.IntegratedResourceBundle;
+import org.gudy.azureus2.core3.internat.MessageText;
+import org.gudy.azureus2.core3.util.DisplayFormatters;
 import org.gudy.azureus2.core3.util.SystemProperties;
 
 import android.content.Context;
@@ -45,6 +48,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
+import com.frostwire.vuze.EmptyResourceBundle;
 import com.frostwire.vuze.VuzeManager;
 
 /**
@@ -70,9 +74,9 @@ public final class AzureusManager {
     private OnSharedPreferenceChangeListener preferenceListener;
 
     private static final ExecutorService SAFE_CONFIG_EXECUTOR;
-    
+
     private VuzeManager vuze;
-    
+
     static {
         SAFE_CONFIG_EXECUTOR = ExecutorsHelper.newFixedSizeThreadPool(1, "Vuze-Save-Config");
     }
@@ -209,7 +213,7 @@ public final class AzureusManager {
 
         COConfigurationManager.setParameter("Auto Adjust Transfer Defaults", false);
         COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", SystemUtils.getTorrentsDirectory().getAbsolutePath());
-        
+
         //COConfigurationManager.setParameter(TransferSpeedValidator.AUTO_UPLOAD_ENABLED_CONFIGKEY, false);
 
         // network parameters, fine tunning for android
@@ -262,9 +266,9 @@ public final class AzureusManager {
             } catch (InterruptedException e) {
                 // ignore
             }
-            
+
             vuze = new VuzeManager(azureusCore);
-            
+
         } catch (Throwable e) {
             Log.e(TAG, "Failed to start Azureus core started", e);
         }
@@ -297,31 +301,38 @@ public final class AzureusManager {
     }
 
     private void loadMessages(Context context) {
-        Map<String, String> map = new HashMap<String, String>();
+        IntegratedResourceBundle res = new IntegratedResourceBundle(new EmptyResourceBundle(), new HashMap<String, ClassLoader>());
 
-        map.put("PeerManager.status.finished", context.getString(R.string.azureus_peer_manager_status_finished));
-        map.put("PeerManager.status.finishedin", context.getString(R.string.azureus_peer_manager_status_finishedin));
-        map.put("Formats.units.alot", context.getString(R.string.azureus_formats_units_alot));
-        map.put("discarded", context.getString(R.string.azureus_discarded));
-        map.put("ManagerItem.waiting", context.getString(R.string.azureus_manager_item_waiting));
-        map.put("ManagerItem.initializing", context.getString(R.string.azureus_manager_item_initializing));
-        map.put("ManagerItem.allocating", context.getString(R.string.azureus_manager_item_allocating));
-        map.put("ManagerItem.checking", context.getString(R.string.azureus_manager_item_checking));
-        map.put("ManagerItem.finishing", context.getString(R.string.azureus_manager_item_finishing));
-        map.put("ManagerItem.ready", context.getString(R.string.azureus_manager_item_ready));
-        map.put("ManagerItem.downloading", context.getString(R.string.azureus_manager_item_downloading));
-        map.put("ManagerItem.seeding", context.getString(R.string.azureus_manager_item_seeding));
-        map.put("ManagerItem.superseeding", context.getString(R.string.azureus_manager_item_superseeding));
-        map.put("ManagerItem.stopping", context.getString(R.string.azureus_manager_item_stopping));
-        map.put("ManagerItem.stopped", context.getString(R.string.azureus_manager_item_stopped));
-        map.put("ManagerItem.paused", context.getString(R.string.azureus_manager_item_paused));
-        map.put("ManagerItem.queued", context.getString(R.string.azureus_manager_item_queued));
-        map.put("ManagerItem.error", context.getString(R.string.azureus_manager_item_error));
-        map.put("ManagerItem.forced", context.getString(R.string.azureus_manager_item_forced));
-        map.put("GeneralView.yes", context.getString(R.string.azureus_general_view_yes));
-        map.put("GeneralView.no", context.getString(R.string.azureus_general_view_no));
+        res.addString("PeerManager.status.finished", context.getString(R.string.azureus_peer_manager_status_finished));
+        res.addString("PeerManager.status.finishedin", context.getString(R.string.azureus_peer_manager_status_finishedin));
+        res.addString("Formats.units.alot", context.getString(R.string.azureus_formats_units_alot));
+        res.addString("discarded", context.getString(R.string.azureus_discarded));
+        res.addString("ManagerItem.waiting", context.getString(R.string.azureus_manager_item_waiting));
+        res.addString("ManagerItem.initializing", context.getString(R.string.azureus_manager_item_initializing));
+        res.addString("ManagerItem.allocating", context.getString(R.string.azureus_manager_item_allocating));
+        res.addString("ManagerItem.checking", context.getString(R.string.azureus_manager_item_checking));
+        res.addString("ManagerItem.finishing", context.getString(R.string.azureus_manager_item_finishing));
+        res.addString("ManagerItem.ready", context.getString(R.string.azureus_manager_item_ready));
+        res.addString("ManagerItem.downloading", context.getString(R.string.azureus_manager_item_downloading));
+        res.addString("ManagerItem.seeding", context.getString(R.string.azureus_manager_item_seeding));
+        res.addString("ManagerItem.superseeding", context.getString(R.string.azureus_manager_item_superseeding));
+        res.addString("ManagerItem.stopping", context.getString(R.string.azureus_manager_item_stopping));
+        res.addString("ManagerItem.stopped", context.getString(R.string.azureus_manager_item_stopped));
+        res.addString("ManagerItem.paused", context.getString(R.string.azureus_manager_item_paused));
+        res.addString("ManagerItem.queued", context.getString(R.string.azureus_manager_item_queued));
+        res.addString("ManagerItem.error", context.getString(R.string.azureus_manager_item_error));
+        res.addString("ManagerItem.forced", context.getString(R.string.azureus_manager_item_forced));
+        res.addString("GeneralView.yes", context.getString(R.string.azureus_general_view_yes));
+        res.addString("GeneralView.no", context.getString(R.string.azureus_general_view_no));
 
-        //DisplayFormatters.loadMessages(map);
+        try {
+            Field f = MessageText.class.getDeclaredField("DEFAULT_BUNDLE");
+            f.setAccessible(true);
+            f.set(null, res);
+        } catch (Throwable e) {
+            Log.e(TAG, "Unable to set vuze messages", e);
+        }
+        DisplayFormatters.loadMessages();
     }
 
     private static void asyncSaveConfiguration() {
