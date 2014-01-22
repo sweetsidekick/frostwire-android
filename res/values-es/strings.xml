@@ -432,5 +432,9 @@
     <string name="ouya_search_hint_prefix">Doble tap con el Touchpad del control para</string>
     <string name="use_bitsnoop">Utilize BitSnoop</string>
     <string name="use_torlock">Utilize TorLock</string>
-    <string name="use_eztv">Utilize Eztv</string>   
+    <string name="use_eztv">Utilize Eztv</string>
+    <string name="transfer_status_demuxing">Demuxing</string>
+    <string name="player_paused_press_and_hold_to_stop">Reproductor pausado. (Truco: Presiona por unos segundos para detener)</string>
+    <string name="btc">BTC</string>
+    <string name="you_need_a_bitcoin_wallet_app">Necesitas un app de Bitcoin instalado para enviar donaciones en BTC.</string>
 </resources>

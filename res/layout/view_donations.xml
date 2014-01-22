@@ -63,6 +63,19 @@
             android:background="#ff1d2934" />
 
         <Button
+            android:id="@+id/fragment_about_button_bitcoin"
+            style="@style/DonationButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:text="@string/btc"
+            android:textSize="16sp" />
+
+        <Button
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#ff1d2934" />
+        
+        <Button
             android:id="@+id/fragment_about_button_donate1"
             style="@style/DonationButton"
             android:layout_width="50dp"

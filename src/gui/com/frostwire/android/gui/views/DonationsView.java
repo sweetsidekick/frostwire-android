@@ -19,16 +19,20 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
+import com.frostwire.android.gui.util.UIUtils;
 
 /**
  * @author guabtron
@@ -57,10 +61,33 @@ public class DonationsView extends LinearLayout {
 
     private void setupDonationButtons() {
         DonationSkus skus = BillerFactory.getDonationSkus();
+        setupBitcoinDonateButton();
         setupDonateButton(R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
         setupDonateButton(R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox");
         setupDonateButton(R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl");
         setupDonateButton(R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW");
+    }
+
+    private void setupBitcoinDonateButton() {
+        Button btc = (Button) findViewById(R.id.fragment_about_button_bitcoin);
+        btc.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                onBTCDonationButtonClick();
+            }
+        });
+        
+    }
+
+    protected void onBTCDonationButtonClick() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("bitcoin:14F6JPXK2fR5b4gZp3134qLRGgYtvabMWL?amount=0.0052"));
+        try {
+            getContext().startActivity(intent);
+        } catch (Throwable t) {
+            UIUtils.showLongMessage(getContext(), R.string.you_need_a_bitcoin_wallet_app);
+        }
     }
 
     private void setupDonateButton(int id, String sku, String url) {
