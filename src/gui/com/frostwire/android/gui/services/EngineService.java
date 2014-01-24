@@ -43,7 +43,10 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.httpserver.HttpServerManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.localpeer.LocalPeerManager;
+import com.frostwire.localpeer.LocalPeerManagerImpl;
 
 /**
  * @author gubatron
@@ -61,6 +64,7 @@ public class EngineService extends Service implements IEngineService {
     private final ThreadPool threadPool;
 
     // services in background
+    private final LocalPeerManager peerManager;
     private final HttpServerManager httpServerManager;
     private final DesktopUploadManager desktopUploadManager;
 
@@ -75,6 +79,7 @@ public class EngineService extends Service implements IEngineService {
 
         threadPool = new ThreadPool("Engine");
 
+        peerManager = new LocalPeerManagerImpl(getListeningPort());
         httpServerManager = new HttpServerManager(threadPool);
         desktopUploadManager = new DesktopUploadManager(this, httpServerManager.getSessionManager());
 
@@ -160,7 +165,8 @@ public class EngineService extends Service implements IEngineService {
             AzureusManager.instance().resume();
         }
 
-        httpServerManager.start(NetworkManager.instance().getListeningPort());
+        peerManager.start(this);
+        httpServerManager.start(getListeningPort());
 
         PeerManager.instance().clear();
 
@@ -175,6 +181,7 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
+        peerManager.stop();
         httpServerManager.stop();
 
         AzureusManager.instance().pause();
@@ -238,6 +245,14 @@ public class EngineService extends Service implements IEngineService {
         long longPause = 180;
 
         return new long[] { 0, shortVibration, longPause, shortVibration, shortPause, shortVibration, shortPause, shortVibration, mediumPause, mediumVibration };
+    }
+
+    private int getListeningPort() {
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT)) {
+            return ByteUtils.randomInt(40000, 49999);
+        } else {
+            return Constants.GENERIC_LISTENING_PORT;
+        }
     }
 
     public class EngineServiceBinder extends Binder {
