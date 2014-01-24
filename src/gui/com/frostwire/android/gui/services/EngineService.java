@@ -19,7 +19,10 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -45,6 +49,7 @@ import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.localpeer.AndroidMulticastLock;
 import com.frostwire.localpeer.LocalPeerManager;
 import com.frostwire.localpeer.LocalPeerManagerImpl;
 
@@ -64,7 +69,7 @@ public class EngineService extends Service implements IEngineService {
     private final ThreadPool threadPool;
 
     // services in background
-    private final LocalPeerManager peerManager;
+    private LocalPeerManager peerManager;
     private final HttpServerManager httpServerManager;
     private final DesktopUploadManager desktopUploadManager;
 
@@ -79,7 +84,13 @@ public class EngineService extends Service implements IEngineService {
 
         threadPool = new ThreadPool("Engine");
 
-        peerManager = new LocalPeerManagerImpl(getListeningPort());
+        try {
+            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(this), getMulticastInetAddress(this), getListeningPort());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
         httpServerManager = new HttpServerManager(threadPool);
         desktopUploadManager = new DesktopUploadManager(this, httpServerManager.getSessionManager());
 
@@ -165,7 +176,9 @@ public class EngineService extends Service implements IEngineService {
             AzureusManager.instance().resume();
         }
 
-        peerManager.start(this);
+        if (peerManager != null) {
+            peerManager.start();
+        }
         httpServerManager.start(getListeningPort());
 
         PeerManager.instance().clear();
@@ -181,7 +194,9 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        peerManager.stop();
+        if (peerManager != null) {
+            peerManager.stop();
+        }
         httpServerManager.stop();
 
         AzureusManager.instance().pause();
@@ -253,6 +268,13 @@ public class EngineService extends Service implements IEngineService {
         } else {
             return Constants.GENERIC_LISTENING_PORT;
         }
+    }
+
+    private static InetAddress getMulticastInetAddress(Context ctx) throws IOException {
+        WifiManager wifi = (WifiManager) ctx.getSystemService(Application.WIFI_SERVICE);
+        int intaddr = wifi.getConnectionInfo().getIpAddress();
+        byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
+        return InetAddress.getByAddress(byteaddr);
     }
 
     public class EngineServiceBinder extends Binder {
