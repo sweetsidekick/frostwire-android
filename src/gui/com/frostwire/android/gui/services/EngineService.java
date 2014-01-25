@@ -20,9 +20,7 @@ package com.frostwire.android.gui.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -50,8 +47,10 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
 import com.frostwire.localpeer.AndroidMulticastLock;
+import com.frostwire.localpeer.LocalPeer;
 import com.frostwire.localpeer.LocalPeerManager;
 import com.frostwire.localpeer.LocalPeerManagerImpl;
+import com.frostwire.localpeer.LocalPeerManagerListener;
 
 /**
  * @author gubatron
@@ -85,7 +84,27 @@ public class EngineService extends Service implements IEngineService {
         threadPool = new ThreadPool("Engine");
 
         try {
-            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()), NetworkManager.instance().getMulticastInetAddress(), getListeningPort());
+            LocalPeer p = new LocalPeer();//UPnPManager.instance().getLocalPingInfo();
+            p.uuid = ConfigurationManager.instance().getUUIDString();
+            p.listeningPort = getListeningPort();
+            p.numSharedFiles = Librarian.instance().getNumFiles();
+            p.nickname = ConfigurationManager.instance().getNickname();
+            p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
+
+            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()), NetworkManager.instance().getMulticastInetAddress(), getListeningPort(), p);
+            peerManager.setListener(new LocalPeerManagerListener() {
+
+                @Override
+                public void peerResolved(LocalPeer peer) {
+                    System.out.println("Peer found: " + peer.nickname);
+                }
+
+                @Override
+                public void peerRemoved(LocalPeer peer) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
