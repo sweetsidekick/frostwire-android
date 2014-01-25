@@ -19,7 +19,6 @@ package com.frostwire.localpeer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import android.content.Context;
 import android.net.wifi.WifiManager;
 
 /**
@@ -35,9 +34,7 @@ public final class AndroidMulticastLock implements MulticastLock {
 
     private final android.net.wifi.WifiManager.MulticastLock lock;
 
-    public AndroidMulticastLock(Context ctx) {
-        WifiManager wifi = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-
+    public AndroidMulticastLock(WifiManager wifi) {
         lock = wifi.createMulticastLock(LOCK_NAME_PREFIX + lockCount.getAndIncrement());
         lock.setReferenceCounted(true);
     }

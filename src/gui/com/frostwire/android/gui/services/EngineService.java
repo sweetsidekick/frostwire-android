@@ -85,7 +85,7 @@ public class EngineService extends Service implements IEngineService {
         threadPool = new ThreadPool("Engine");
 
         try {
-            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(this), getMulticastInetAddress(this), getListeningPort());
+            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()), NetworkManager.instance().getMulticastInetAddress(), getListeningPort());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -268,13 +268,6 @@ public class EngineService extends Service implements IEngineService {
         } else {
             return Constants.GENERIC_LISTENING_PORT;
         }
-    }
-
-    private static InetAddress getMulticastInetAddress(Context ctx) throws IOException {
-        WifiManager wifi = (WifiManager) ctx.getSystemService(Application.WIFI_SERVICE);
-        int intaddr = wifi.getConnectionInfo().getIpAddress();
-        byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
-        return InetAddress.getByAddress(byteaddr);
     }
 
     public class EngineServiceBinder extends Binder {

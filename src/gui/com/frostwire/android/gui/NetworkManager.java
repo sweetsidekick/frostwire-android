@@ -18,12 +18,14 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 import android.app.Application;
+import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -223,8 +225,15 @@ public final class NetworkManager {
         Log.i(TAG, str);
     }
 
-    private WifiManager getWifiManager() {
+    public WifiManager getWifiManager() {
         return (WifiManager) context.getSystemService(Application.WIFI_SERVICE);
+    }
+
+    public InetAddress getMulticastInetAddress() throws IOException {
+        WifiManager wifi = getWifiManager();
+        int intaddr = wifi.getConnectionInfo().getIpAddress();
+        byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
+        return InetAddress.getByAddress(byteaddr);
     }
 
     private ConnectivityManager getConnectivityManager() {
