@@ -19,7 +19,6 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -87,11 +86,11 @@ public class EngineService extends Service implements IEngineService {
             LocalPeer p = new LocalPeer();//UPnPManager.instance().getLocalPingInfo();
             p.uuid = ConfigurationManager.instance().getUUIDString();
             p.listeningPort = getListeningPort();
-            p.numSharedFiles = Librarian.instance().getNumFiles();
+            p.numSharedFiles = 10;//Librarian.instance().getNumFiles();
             p.nickname = ConfigurationManager.instance().getNickname();
             p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
 
-            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()), NetworkManager.instance().getMulticastInetAddress(), getListeningPort(), p);
+            peerManager = new LocalPeerManagerImpl(p, new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
             peerManager.setListener(new LocalPeerManagerListener() {
 
                 @Override
@@ -101,11 +100,10 @@ public class EngineService extends Service implements IEngineService {
 
                 @Override
                 public void peerRemoved(LocalPeer peer) {
-                    // TODO Auto-generated method stub
-
+                    System.out.println("Peer removed: " + peer.nickname);
                 }
             });
-        } catch (IOException e) {
+        } catch (Throwable e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
 
