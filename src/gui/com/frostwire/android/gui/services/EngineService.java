@@ -257,6 +257,11 @@ public class EngineService extends Service implements IEngineService {
         return desktopUploadManager;
     }
 
+    @Override
+    public LocalPeerManager getLocalPeerManager() {
+        return peerManager;
+    }
+
     private void registerPreferencesChangeListener() {
         preferenceListener = new OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

@@ -24,6 +24,7 @@ import android.app.Application;
 
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.localpeer.LocalPeerManager;
 
 /**
  * @author gubatron
@@ -64,4 +65,6 @@ public interface IEngineService {
     public DesktopUploadManager getDesktopUploadManager();
     
     public Application getApplication();
+    
+    public LocalPeerManager getLocalPeerManager();
 }

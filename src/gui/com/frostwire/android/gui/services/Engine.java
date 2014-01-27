@@ -38,6 +38,7 @@ import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.localpeer.LocalPeerManager;
 
 /**
  * @author gubatron
@@ -123,6 +124,11 @@ public final class Engine implements IEngineService {
 
     public DesktopUploadManager getDesktopUploadManager() {
         return service != null ? service.getDesktopUploadManager() : null;
+    }
+    
+    @Override
+    public LocalPeerManager getLocalPeerManager() {
+        return service != null ? service.getLocalPeerManager() : null;
     }
 
     /**

@@ -64,11 +64,13 @@ import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.core.providers.UniversalStore.Applications.ApplicationsColumns;
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.localpeer.LocalPeerManager;
 
 /**
  * The Librarian is in charge of:
@@ -250,8 +252,7 @@ public final class Librarian {
                     cr.insert(Sharing.Media.CONTENT_URI, contentValues);
                 } else {
                     // everything else is an update
-                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?",
-                            new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
+                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?", new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
                 }
             }
 
@@ -377,7 +378,7 @@ public final class Librarian {
     }
 
     public EphemeralPlaylist createEphemeralPlaylist(FileDescriptor fd) {
-        List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO,FilenameUtils.getPath(fd.filePath), false);
+        List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, FilenameUtils.getPath(fd.filePath), false);
 
         if (fds.size() == 0) { // just in case
             Log.w(TAG, "Logic error creating ephemeral playlist");
@@ -411,7 +412,10 @@ public final class Librarian {
 
     private void broadcastRefreshFinger() {
         context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
-        //UPnPManager.instance().refreshPing();
+        LocalPeerManager pm = Engine.instance().getLocalPeerManager();
+        if (pm != null) {
+            pm.refresh();
+        }
     }
 
     private void syncApplicationsProviderSupport() {
@@ -759,8 +763,7 @@ public final class Librarian {
     private void deleteSharedState(byte fileType, int fileId) {
         try {
             ContentResolver cr = context.getContentResolver();
-            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?",
-                    new String[] { String.valueOf(fileId), String.valueOf(fileType) });
+            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?", new String[] { String.valueOf(fileId), String.valueOf(fileType) });
             Log.d(TAG, "deleteSharedState " + deleted + " rows  (fileType: " + fileType + ", fileId: " + fileId + " )");
         } catch (Throwable e) {
             Log.e(TAG, "Failed to delete shared state for fileType=" + fileType + ", fileId=" + fileId, e);
