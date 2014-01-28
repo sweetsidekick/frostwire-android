@@ -32,13 +32,10 @@ import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
 import com.frostwire.android.util.concurrent.ThreadPool;
-import com.frostwire.localpeer.LocalPeerManager;
 
 /**
  * @author gubatron
@@ -68,7 +65,6 @@ public final class Engine implements IEngineService {
 
     private Engine(Application context) {
         startEngineService(context);
-        startUPnPService(context);
     }
 
     @Override
@@ -144,21 +140,6 @@ public final class Engine implements IEngineService {
                 registerStatusReceiver(context);
             }
         }, Context.BIND_AUTO_CREATE);
-    }
-
-    public void startUPnPService(Application context) {
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
-            if (upnpServiceConnection == null) {
-                if (context == null) {
-                    context = this.getApplication();
-                }
-                
-                if (context != null) {
-                    //upnpServiceConnection = ((AndroidUPnPManager) UPnPManager.instance()).getServiceConnection();
-                    //context.getApplicationContext().bindService(new Intent(context, UPnPService.class), upnpServiceConnection, Context.BIND_AUTO_CREATE);
-                }
-            }
-        }
     }
 
     private void registerStatusReceiver(Context context) {

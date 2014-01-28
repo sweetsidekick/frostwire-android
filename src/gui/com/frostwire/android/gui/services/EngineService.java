@@ -67,7 +67,6 @@ public class EngineService extends Service implements IEngineService {
     private final ThreadPool threadPool;
 
     // services in background
-    
 
     private final CoreMediaPlayer mediaPlayer;
 
@@ -161,10 +160,12 @@ public class EngineService extends Service implements IEngineService {
         if (AzureusManager.isCreated()) { // safe move
             AzureusManager.instance().resume();
         }
-        
+
         PeerManager.instance().clear();
-        
-        PeerManager.instance().start();
+
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+            PeerManager.instance().start();
+        }
 
         state = STATE_STARTED;
         Log.v(TAG, "Engine started");
@@ -180,7 +181,7 @@ public class EngineService extends Service implements IEngineService {
         AzureusManager.instance().pause();
 
         PeerManager.instance().clear();
-        
+
         PeerManager.instance().stop();
 
         state = disconnected ? STATE_DISCONNECTED : STATE_STOPPED;

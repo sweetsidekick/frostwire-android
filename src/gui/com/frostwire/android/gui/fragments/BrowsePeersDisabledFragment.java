@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.util.OfferUtils;
 
@@ -90,7 +91,7 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
                 @Override
                 protected Void doInBackground(Void... params) {
                     ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
-                    //UPnPManager.instance().resume();
+                    PeerManager.instance().start();
                     return null;
                 }
 

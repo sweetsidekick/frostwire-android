@@ -39,6 +39,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.NetworkManager;
+import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SearchEngine;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
@@ -186,9 +187,9 @@ public class PreferencesActivity extends PreferenceActivity {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 boolean newVal = (Boolean) newValue;
                 if (newVal) {
-                    //UPnPManager.instance().resume();
+                    PeerManager.instance().start();
                 } else {
-                    //UPnPManager.instance().pause();
+                    PeerManager.instance().stop();
                 }
                 return true;
             }
@@ -230,7 +231,7 @@ public class PreferencesActivity extends PreferenceActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 Engine.instance().startServices();
-                //UPnPManager.instance().resume();
+                PeerManager.instance().start();
                 return null;
             }
 
@@ -254,7 +255,6 @@ public class PreferencesActivity extends PreferenceActivity {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                //UPnPManager.instance().pause();
                 Engine.instance().stopServices(false);
                 return null;
             }
