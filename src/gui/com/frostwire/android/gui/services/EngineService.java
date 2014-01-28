@@ -83,14 +83,7 @@ public class EngineService extends Service implements IEngineService {
         threadPool = new ThreadPool("Engine");
 
         try {
-            LocalPeer p = new LocalPeer();//UPnPManager.instance().getLocalPingInfo();
-            p.uuid = ConfigurationManager.instance().getUUIDString();
-            p.listeningPort = getListeningPort();
-            p.numSharedFiles = 10;//Librarian.instance().getNumFiles();
-            p.nickname = ConfigurationManager.instance().getNickname();
-            p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
-
-            peerManager = new LocalPeerManagerImpl(p, new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
+            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
             peerManager.setListener(new LocalPeerManagerListener() {
 
                 @Override
@@ -194,9 +187,18 @@ public class EngineService extends Service implements IEngineService {
         }
 
         if (peerManager != null) {
-            peerManager.start();
+            String address = "0.0.0.0";
+            int port = NetworkManager.instance().getListeningPort();
+            int numSharedFiles = Librarian.instance().getNumFiles();
+            String nickname = ConfigurationManager.instance().getNickname();
+            String clientVersion = Constants.FROSTWIRE_VERSION_STRING;
+            int deviceType = Constants.DEVICE_MAJOR_TYPE_PHONE;
+            
+            LocalPeer p = new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
+            
+            peerManager.start(p);
         }
-        httpServerManager.start(getListeningPort());
+        httpServerManager.start(NetworkManager.instance().getListeningPort());
 
         PeerManager.instance().clear();
 
@@ -282,14 +284,6 @@ public class EngineService extends Service implements IEngineService {
         long longPause = 180;
 
         return new long[] { 0, shortVibration, longPause, shortVibration, shortPause, shortVibration, shortPause, shortVibration, mediumPause, mediumVibration };
-    }
-
-    private int getListeningPort() {
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT)) {
-            return ByteUtils.randomInt(40000, 49999);
-        } else {
-            return Constants.GENERIC_LISTENING_PORT;
-        }
     }
 
     public class EngineServiceBinder extends Binder {

@@ -235,7 +235,7 @@ public final class NetworkManager {
         byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
         return InetAddress.getByAddress(byteaddr);
     }
-
+    
     private ConnectivityManager getConnectivityManager() {
         return (ConnectivityManager) context.getSystemService(Application.CONNECTIVITY_SERVICE);
     }
