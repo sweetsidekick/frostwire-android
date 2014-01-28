@@ -67,9 +67,7 @@ public class EngineService extends Service implements IEngineService {
     private final ThreadPool threadPool;
 
     // services in background
-    private LocalPeerManager peerManager;
-    private final HttpServerManager httpServerManager;
-    private final DesktopUploadManager desktopUploadManager;
+    
 
     private final CoreMediaPlayer mediaPlayer;
 
@@ -81,28 +79,6 @@ public class EngineService extends Service implements IEngineService {
         binder = new EngineServiceBinder();
 
         threadPool = new ThreadPool("Engine");
-
-        try {
-            peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
-            peerManager.setListener(new LocalPeerManagerListener() {
-
-                @Override
-                public void peerResolved(LocalPeer peer) {
-                    System.out.println("Peer found: " + peer.nickname);
-                }
-
-                @Override
-                public void peerRemoved(LocalPeer peer) {
-                    System.out.println("Peer removed: " + peer.nickname);
-                }
-            });
-        } catch (Throwable e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
-        httpServerManager = new HttpServerManager(threadPool);
-        desktopUploadManager = new DesktopUploadManager(this, httpServerManager.getSessionManager());
 
         mediaPlayer = new NativeAndroidPlayer(this);
 
@@ -185,22 +161,10 @@ public class EngineService extends Service implements IEngineService {
         if (AzureusManager.isCreated()) { // safe move
             AzureusManager.instance().resume();
         }
-
-        if (peerManager != null) {
-            String address = "0.0.0.0";
-            int port = NetworkManager.instance().getListeningPort();
-            int numSharedFiles = Librarian.instance().getNumFiles();
-            String nickname = ConfigurationManager.instance().getNickname();
-            String clientVersion = Constants.FROSTWIRE_VERSION_STRING;
-            int deviceType = Constants.DEVICE_MAJOR_TYPE_PHONE;
-            
-            LocalPeer p = new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
-            
-            peerManager.start(p);
-        }
-        httpServerManager.start(NetworkManager.instance().getListeningPort());
-
+        
         PeerManager.instance().clear();
+        
+        PeerManager.instance().start();
 
         state = STATE_STARTED;
         Log.v(TAG, "Engine started");
@@ -213,14 +177,11 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        if (peerManager != null) {
-            peerManager.stop();
-        }
-        httpServerManager.stop();
-
         AzureusManager.instance().pause();
 
         PeerManager.instance().clear();
+        
+        PeerManager.instance().stop();
 
         state = disconnected ? STATE_DISCONNECTED : STATE_STOPPED;
         Log.v(TAG, "Engine stopped, state: " + state);
@@ -256,12 +217,7 @@ public class EngineService extends Service implements IEngineService {
 
     @Override
     public DesktopUploadManager getDesktopUploadManager() {
-        return desktopUploadManager;
-    }
-
-    @Override
-    public LocalPeerManager getLocalPeerManager() {
-        return peerManager;
+        return null;
     }
 
     private void registerPreferencesChangeListener() {

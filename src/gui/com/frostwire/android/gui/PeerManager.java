@@ -31,6 +31,13 @@ import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.httpserver.HttpServerManager;
+import com.frostwire.android.gui.services.DesktopUploadManager;
+import com.frostwire.localpeer.AndroidMulticastLock;
+import com.frostwire.localpeer.LocalPeer;
+import com.frostwire.localpeer.LocalPeerManager;
+import com.frostwire.localpeer.LocalPeerManagerImpl;
+import com.frostwire.localpeer.LocalPeerManagerListener;
 
 /**
  * Keeps track of the Peers we know.
@@ -53,6 +60,10 @@ public final class PeerManager {
 
     private static PeerManager instance;
 
+    private final LocalPeerManager peerManager;
+    private final HttpServerManager httpServerManager;
+    private final DesktopUploadManager desktopUploadManager;
+
     public static PeerManager instance() {
         if (instance == null) {
             instance = new PeerManager();
@@ -69,6 +80,24 @@ public final class PeerManager {
         this.peerComparator = new PeerComparator();
 
         refreshLocalPeer();
+
+        this.peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
+        this.peerManager.setListener(new LocalPeerManagerListener() {
+
+            @Override
+            public void peerResolved(LocalPeer peer) {
+                System.out.println("Peer found: " + peer.nickname);
+            }
+
+            @Override
+            public void peerRemoved(LocalPeer peer) {
+                System.out.println("Peer removed: " + peer.nickname);
+            }
+        });
+
+        this.httpServerManager = new HttpServerManager();
+        this.desktopUploadManager = null;//new DesktopUploadManager(this, httpServerManager.getSessionManager());
+
     }
 
     public Peer getLocalPeer() {
@@ -138,10 +167,34 @@ public final class PeerManager {
     public void removePeer(Peer p) {
         try {
             updatePeerCache2(p.getUdn(), p, true);
-            //UPnPManager.instance().getService().getRegistry().removeDevice(UDN.valueOf(p.getUdn()));
         } catch (Throwable e) {
             Log.e(TAG, "Error removing peer from manager", e);
         }
+    }
+
+    public void start() {
+        httpServerManager.start(NetworkManager.instance().getListeningPort());
+        peerManager.start(createLocalPeer());
+    }
+
+    public void stop() {
+        httpServerManager.stop();
+        peerManager.stop();
+    }
+
+    public void updateLocalPeer() {
+        peerManager.update(createLocalPeer());
+    }
+
+    private LocalPeer createLocalPeer() {
+        String address = "0.0.0.0";
+        int port = NetworkManager.instance().getListeningPort();
+        int numSharedFiles = Librarian.instance().getNumFiles();
+        String nickname = ConfigurationManager.instance().getNickname();
+        String clientVersion = Constants.FROSTWIRE_VERSION_STRING;
+        int deviceType = Constants.DEVICE_MAJOR_TYPE_PHONE;
+
+        return new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
     }
 
     private void updatePeerCache2(String udn, Peer peer, boolean disconnected) {

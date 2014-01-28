@@ -65,6 +65,4 @@ public interface IEngineService {
     public DesktopUploadManager getDesktopUploadManager();
     
     public Application getApplication();
-    
-    public LocalPeerManager getLocalPeerManager();
 }

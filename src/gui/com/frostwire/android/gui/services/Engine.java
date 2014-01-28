@@ -125,11 +125,6 @@ public final class Engine implements IEngineService {
     public DesktopUploadManager getDesktopUploadManager() {
         return service != null ? service.getDesktopUploadManager() : null;
     }
-    
-    @Override
-    public LocalPeerManager getLocalPeerManager() {
-        return service != null ? service.getLocalPeerManager() : null;
-    }
 
     /**
      * 

@@ -64,15 +64,12 @@ import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.core.providers.UniversalStore.Applications.ApplicationsColumns;
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
-import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.localpeer.Finger;
-import com.frostwire.localpeer.LocalPeer;
-import com.frostwire.localpeer.LocalPeerManager;
 import com.frostwire.localpeer.ScreenMetrics;
 
 /**
@@ -415,19 +412,7 @@ public final class Librarian {
 
     private void broadcastRefreshFinger() {
         context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
-        LocalPeerManager pm = Engine.instance().getLocalPeerManager();
-        if (pm != null) {
-            String address = "0.0.0.0";
-            int port = NetworkManager.instance().getListeningPort();
-            int numSharedFiles = Librarian.instance().getNumFiles();
-            String nickname = ConfigurationManager.instance().getNickname();
-            String clientVersion = Constants.FROSTWIRE_VERSION_STRING;
-            int deviceType = Constants.DEVICE_MAJOR_TYPE_PHONE;
-            
-            LocalPeer p = new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
-            
-            pm.update(p);
-        }
+        PeerManager.instance().updateLocalPeer();
     }
 
     private void syncApplicationsProviderSupport() {

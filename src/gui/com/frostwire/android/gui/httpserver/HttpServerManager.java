@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.util.concurrent.ThreadPool;
 import com.sun.net.httpserver.HttpServer;
 
 /**
@@ -35,13 +34,11 @@ public class HttpServerManager {
 
     private static final Logger LOG = Logger.getLogger(HttpServerManager.class.getName());
 
-    private final ThreadPool threadPool;
     private final SessionManager sessionManager;
 
     private HttpServer httpServer;
 
-    public HttpServerManager(ThreadPool threadPool) {
-        this.threadPool = threadPool;
+    public HttpServerManager() {
         this.sessionManager = new SessionManager();
     }
 
@@ -68,7 +65,6 @@ public class HttpServerManager {
             httpServer.createContext("/dekstop-upload-request", new DesktopUploadRequestHandler(sessionManager));
             httpServer.createContext("/desktop-upload", new DesktopUploadHandler(sessionManager));
 
-            httpServer.setExecutor(threadPool);
             httpServer.start();
 
         } catch (Throwable e) {
