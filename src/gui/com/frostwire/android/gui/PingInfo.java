@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.gui.upnp;
+package com.frostwire.android.gui;
 
 /**
  * 
@@ -24,21 +24,12 @@ package com.frostwire.gui.upnp;
  * @author aldenml
  * 
  */
-public interface UPnPFWDeviceDesc {
+public class PingInfo {
 
-    public String getIdentitySalt();
-
-    public String getType();
-
-    public int getVersion();
-
-    public String getFriendlyName();
-
-    public String getManufacturer();
-
-    public String getModelName();
-
-    public String getModelDescription();
-
-    public String getModelNumber();
+    public String uuid;
+    public int listeningPort;
+    public int numSharedFiles;
+    public String nickname;
+    public int deviceMajorType;
+    public String clientVersion;
 }

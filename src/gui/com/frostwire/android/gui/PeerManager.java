@@ -31,7 +31,6 @@ import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.gui.upnp.PingInfo;
 
 /**
  * Keeps track of the Peers we know.

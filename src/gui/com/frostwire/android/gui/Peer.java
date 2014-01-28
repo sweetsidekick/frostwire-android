@@ -25,7 +25,6 @@ import java.util.List;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.gui.upnp.PingInfo;
 import com.frostwire.util.JsonUtils;
 
 /**
