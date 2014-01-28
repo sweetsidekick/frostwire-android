@@ -16,36 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.util;
+package com.frostwire.localpeer;
 
 /**
+ * A structure describing general information about the screen,
+ * such as its size and density.
  * 
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public final class Condition {
-
-    private Condition() {
-    }
+public class ScreenMetrics {
 
     /**
-     * Useful to shorten long "or" boolean expressions.
-     * @param needle
-     * @param args
-     * @return true if needle is in any of the args.
+     * The screen density expressed as dots-per-inch.
      */
-    public static <T> boolean in(T needle, @SuppressWarnings("unchecked") T... args) {
-        if (args == null) {
-            throw new IllegalArgumentException("args on in operation can't be null");
-        }
+    public int densityDpi;
 
-        for (T t : args) {
-            if (t != null && t.equals(needle)) {
-                return true;
-            }
-        }
+    /**
+     * The absolute height of the display in pixels.
+     */
+    public int heightPixels;
 
-        return false;
-    }
+    /**
+     * The absolute width of the display in pixels.
+     */
+    public int widthPixels;
+
+    /**
+     * The exact physical pixels per inch of the screen in the X dimension.
+     */
+    public float xdpi;
+
+    /**
+     * The exact physical pixels per inch of the screen in the Y dimension.
+     */
+    public float ydpi;
 }
