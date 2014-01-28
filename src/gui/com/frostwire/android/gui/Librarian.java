@@ -70,8 +70,10 @@ import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.LocalPeer;
 import com.frostwire.localpeer.LocalPeerManager;
+import com.frostwire.localpeer.ScreenMetrics;
 
 /**
  * The Librarian is in charge of:

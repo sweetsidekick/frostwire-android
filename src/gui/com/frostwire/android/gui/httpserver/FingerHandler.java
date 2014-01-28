@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 
 import sun.net.httpserver.Code;
 
-import com.frostwire.android.gui.Finger;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.localpeer.Finger;
 import com.frostwire.util.JsonUtils;
 import com.sun.net.httpserver.HttpExchange;
 

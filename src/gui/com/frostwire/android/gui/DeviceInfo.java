@@ -20,6 +20,8 @@ package com.frostwire.android.gui;
 
 import android.os.Build;
 
+import com.frostwire.localpeer.ScreenMetrics;
+
 /**
  * 
  * @author gubatron

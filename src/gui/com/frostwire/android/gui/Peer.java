@@ -25,6 +25,7 @@ import java.util.List;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
+import com.frostwire.localpeer.Finger;
 import com.frostwire.util.JsonUtils;
 
 /**
