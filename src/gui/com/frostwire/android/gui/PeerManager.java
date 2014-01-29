@@ -141,9 +141,7 @@ public final class PeerManager {
             return localPeer;
         }
 
-        Peer k = new Peer();
-
-        Peer p = peerCache.get(k);
+        Peer p = addressMap.get(key);
 
         return p;
     }
