@@ -18,13 +18,15 @@
 
 package com.frostwire.android.gui;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.List;
 
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.LocalPeer;
+import com.frostwire.util.HttpClient;
+import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -54,6 +56,8 @@ public final class Peer implements Cloneable {
 
     private String key;
     private final LocalPeer p;
+    
+    private final HttpClient httpClient;
 
     public Peer(LocalPeer p, boolean localhost) {
         this.p = p;
@@ -68,6 +72,8 @@ public final class Peer implements Cloneable {
         this.localhost = localhost;
 
         this.hashCode = key.hashCode();
+        
+        this.httpClient = HttpClientFactory.newDefaultInstance();
     }
 
     public String getUdn() {
@@ -133,14 +139,16 @@ public final class Peer implements Cloneable {
         if (localhost) {
             return Librarian.instance().getFiles(fileType, 0, Integer.MAX_VALUE, false);
         } else {
-            String uri = getBrowseUri(fileType);
-            byte[] data = new HttpFetcher(uri, BROWSE_HTTP_TIMEOUT).fetchGzip();
-            String json;
+            String url = getBrowseUri(fileType);
+            
+            String json = null;
             try {
-                json = new String(data, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                json = new String(data);
+                json = httpClient.get(url, BROWSE_HTTP_TIMEOUT);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+            
             return JsonUtils.toObject(json, FileDescriptorList.class).files;
         }
     }
