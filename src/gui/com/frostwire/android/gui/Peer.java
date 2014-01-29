@@ -55,7 +55,7 @@ public final class Peer implements Cloneable {
     private String key;
     private final LocalPeer p;
 
-    public Peer(LocalPeer p) {
+    public Peer(LocalPeer p, boolean localhost) {
         this.p = p;
         this.key = p.address + ":" + p.port;
         this.address = p.address;
@@ -65,7 +65,7 @@ public final class Peer implements Cloneable {
         this.numSharedFiles = p.numSharedFiles;
         this.deviceMajorType = p.deviceType;
         this.clientVersion = p.clientVersion;
-        this.localhost = p.address.equals("0.0.0.0");
+        this.localhost = localhost;
 
         this.hashCode = key.hashCode();
     }
@@ -166,7 +166,7 @@ public final class Peer implements Cloneable {
 
     @Override
     public Peer clone() {
-        return new Peer(p);
+        return new Peer(p, localhost);
     }
 
     public String getKey() {

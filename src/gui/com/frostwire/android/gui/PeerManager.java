@@ -54,8 +54,6 @@ public final class PeerManager {
 
     private final PeerComparator peerComparator;
 
-    private Peer localPeer;
-
     private static PeerManager instance;
 
     private final LocalPeerManager peerManager;
@@ -76,8 +74,6 @@ public final class PeerManager {
 
         this.peerComparator = new PeerComparator();
 
-        refreshLocalPeer();
-
         this.peerManager = new LocalPeerManagerImpl(new AndroidMulticastLock(NetworkManager.instance().getWifiManager()));
         this.peerManager.setListener(new LocalPeerManagerListener() {
 
@@ -96,16 +92,15 @@ public final class PeerManager {
     }
 
     public Peer getLocalPeer() {
-        return localPeer;
+        return new Peer(createLocalPeer(), true);
     }
 
     public void onMessageReceived(LocalPeer p, boolean added) {
         if (p != null) {
-            Peer peer = new Peer(p);
+            boolean localhost = p.address.equals(peerManager.getHostAddress());
+            Peer peer = new Peer(p, localhost);
 
-            if (!peer.isLocalHost()) {
-                updatePeerCache2(peer, !added);
-            }
+            updatePeerCache2(peer, !added);
         }
     }
 
@@ -115,7 +110,6 @@ public final class PeerManager {
      * @return
      */
     public List<Peer> getPeers() {
-        refreshLocalPeer();
         List<Peer> peers = new ArrayList<Peer>(1 + peerCache.size());
 
         for (Peer p : peerCache.snapshot().values()) {
@@ -123,7 +117,6 @@ public final class PeerManager {
         }
 
         Collections.sort(peers, peerComparator);
-        peers.add(0, localPeer);
 
         return peers;
     }
@@ -137,17 +130,12 @@ public final class PeerManager {
             return null;
         }
 
-        if (key.equals(localPeer.getKey())) {
-            return localPeer;
-        }
-
         Peer p = addressMap.get(key);
 
         return p;
     }
 
     public void clear() {
-        refreshLocalPeer();
         peerCache.evictAll();
     }
 
@@ -226,10 +214,6 @@ public final class PeerManager {
                 peerCache.remove(peer);
             }
         }
-    }
-
-    private void refreshLocalPeer() {
-        localPeer = new Peer(createLocalPeer());
     }
 
     private static final class PeerComparator implements Comparator<Peer> {
