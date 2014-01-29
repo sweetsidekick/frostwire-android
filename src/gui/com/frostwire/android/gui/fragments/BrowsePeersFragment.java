@@ -55,8 +55,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
     private View header;
 
-    private int refreshUPnPCount;
-
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
     }
@@ -82,14 +80,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
     public void refresh() {
         List<Peer> peers = PeerManager.instance().getPeers();
         adapter.updateList(peers);
-        
-        refreshUPnPCount++;
-
-        if (refreshUPnPCount % 10 == 0) {
-            if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
-                //UPnPManager.instance().refreshRemoteDevices();
-            }
-        }
     }
 
     @Override
@@ -101,7 +91,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         }
     }
 
-    
     @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -109,20 +98,19 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         TextView title = (TextView) header.findViewById(R.id.view_browse_peers_header_text_title);
         title.setText(R.string.wifi_sharing);
-        
+
         ImageButton wifiSharingOffButton = (ImageButton) header.findViewById(R.id.view_browse_peers_header_image_button_toggle_wifi_sharing);
         wifiSharingOffButton.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 onWifiSharingOffButtonClicked();
             }
         });
-        
 
         return header;
     }
-    
+
     private void onWifiSharingOffButtonClicked() {
         UIUtils.showYesNoDialog(getActivity(), R.string.are_you_sure_wifi_sharing_off, R.string.are_you_sure, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -131,7 +119,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         });
 
     }
-    
+
     private void turnOffWifiSharingAndRefresh() {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -150,7 +138,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         task.execute();
     }
-    
+
     private void setupAdapter() {
         adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
         setListAdapter(adapter);

@@ -89,6 +89,7 @@ public class ChangeNicknameMenuAction extends MenuAction {
                         }
                     }
                     PeerManager.instance().getLocalPeer().setNickname(newNick);
+                    PeerManager.instance().updateLocalPeer();
                     adapter.notifyDataSetChanged();
                 }
             }
