@@ -19,13 +19,12 @@
 package com.frostwire.android.gui;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.util.List;
 
-import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.localpeer.Finger;
+import com.frostwire.localpeer.LocalPeer;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -39,13 +38,12 @@ public final class Peer implements Cloneable {
     private static final int BROWSE_HTTP_TIMEOUT = 10000;
 
     private String udn;
-    private InetAddress address;
+    private String address;
     private int listeningPort;
 
     /**
      * 16 bytes (128bit - UUID identifier letting us know who is the sender)
      */
-    private String uuid;
     private String nickname;
     private int numSharedFiles;
     private String clientVersion;
@@ -54,43 +52,34 @@ public final class Peer implements Cloneable {
     private int hashCode = -1;
     private boolean localhost;
 
+    private String key;
+
     public Peer() {
     }
 
-    public Peer(String udn, InetAddress address, PingInfo p) {
-        this.udn = udn;
-        this.address = address;
-        this.listeningPort = p.listeningPort;
-
-        this.setUUID(p.uuid);
+    public Peer(LocalPeer p) {
+        this.key = p.getKey();
+        this.address = p.address;
+        this.listeningPort = p.port;
 
         this.nickname = p.nickname;
         this.numSharedFiles = p.numSharedFiles;
-        this.deviceMajorType = p.deviceMajorType;
+        this.deviceMajorType = p.deviceType;
         this.clientVersion = p.clientVersion;
+
+        this.hashCode = p.getKey().hashCode();
     }
 
     public String getUdn() {
         return udn;
     }
 
-    public InetAddress getAddress() {
+    public String getAddress() {
         return address;
     }
 
     public int getListeningPort() {
         return listeningPort;
-    }
-
-    public String getUUID() {
-        return uuid;
-    }
-
-    void setUUID(String uuid) {
-        this.uuid = uuid;
-
-        this.hashCode = this.uuid.hashCode();
-        this.localhost = this.uuid.equals(ConfigurationManager.instance().getUUIDString());
     }
 
     public String getNickname() {
@@ -118,15 +107,15 @@ public final class Peer implements Cloneable {
     }
 
     public String getFingerUri() {
-        return "http://" + address.getHostAddress() + ":" + listeningPort + "/finger";
+        return "http://" + address + ":" + listeningPort + "/finger";
     }
 
     public String getBrowseUri(byte fileType) {
-        return "http://" + address.getHostAddress() + ":" + listeningPort + "/browse?type=" + fileType;
+        return "http://" + address + ":" + listeningPort + "/browse?type=" + fileType;
     }
 
     public String getDownloadUri(FileDescriptor fd) {
-        return "http://" + address.getHostAddress() + ":" + listeningPort + "/download?type=" + fd.fileType + "&id=" + fd.id;
+        return "http://" + address + ":" + listeningPort + "/download?type=" + fd.fileType + "&id=" + fd.id;
     }
 
     public Finger finger() {
@@ -158,7 +147,7 @@ public final class Peer implements Cloneable {
 
     @Override
     public String toString() {
-        return "Peer(" + nickname + "@" + (address != null ? address.getHostAddress() : "unknown") + ", v:" + clientVersion + ")";
+        return "Peer(" + nickname + "@" + (address != null ? address : "unknown") + ", v:" + clientVersion + ")";
     }
 
     @Override
@@ -181,12 +170,16 @@ public final class Peer implements Cloneable {
 
         peer.address = this.address;
         peer.listeningPort = listeningPort;
-        peer.setUUID(this.uuid);
         peer.nickname = this.nickname;
         peer.numSharedFiles = this.numSharedFiles;
         peer.clientVersion = this.clientVersion;
+        peer.key = this.key;
 
         return peer;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     private static final class FileDescriptorList {

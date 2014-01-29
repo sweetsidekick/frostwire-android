@@ -297,7 +297,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             if (uuid != null) {
                 try {
-                    peer = PeerManager.instance().findPeerByUUID(uuid);
+                    peer = PeerManager.instance().findPeerByKey(uuid);
                     local = peer.isLocalHost();
                 } catch (Throwable e) {
                     peer = null; // weird situation reported by a strange bug.
@@ -318,7 +318,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             if (uuid != null) {
                 try {
-                    peer = PeerManager.instance().findPeerByUUID(uuid);
+                    peer = PeerManager.instance().findPeerByKey(uuid);
                     local = peer.isLocalHost();
                 } catch (Throwable e) {
                     peer = null; // weird situation reported by a strange bug.

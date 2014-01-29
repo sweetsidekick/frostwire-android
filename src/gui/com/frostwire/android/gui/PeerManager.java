@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +31,6 @@ import android.util.Log;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.httpserver.HttpServerManager;
-import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.localpeer.AndroidMulticastLock;
 import com.frostwire.localpeer.LocalPeer;
 import com.frostwire.localpeer.LocalPeerManager;
@@ -62,7 +60,6 @@ public final class PeerManager {
 
     private final LocalPeerManager peerManager;
     private final HttpServerManager httpServerManager;
-    private final DesktopUploadManager desktopUploadManager;
 
     public static PeerManager instance() {
         if (instance == null) {
@@ -86,35 +83,28 @@ public final class PeerManager {
 
             @Override
             public void peerResolved(LocalPeer peer) {
-                System.out.println("Peer found: " + peer.nickname);
+                onMessageReceived(peer, true);
             }
 
             @Override
             public void peerRemoved(LocalPeer peer) {
-                System.out.println("Peer removed: " + peer.nickname);
+                onMessageReceived(peer, false);
             }
         });
 
         this.httpServerManager = new HttpServerManager();
-        this.desktopUploadManager = null;//new DesktopUploadManager(this, httpServerManager.getSessionManager());
-
     }
 
     public Peer getLocalPeer() {
         return localPeer;
     }
 
-    public void onMessageReceived(String udn, InetAddress address, boolean added, PingInfo p) {
+    public void onMessageReceived(LocalPeer p, boolean added) {
         if (p != null) {
-            Peer peer = new Peer(udn, address, p);
+            Peer peer = new Peer(p);
 
             if (!peer.isLocalHost()) {
-                updatePeerCache2(udn, peer, !added);
-            }
-        } else {
-            Peer peer = addressMap.remove(udn);
-            if (peer != null) {
-                peerCache.remove(peer);
+                updatePeerCache2(peer, !added);
             }
         }
     }
@@ -142,17 +132,16 @@ public final class PeerManager {
      * @param uuid
      * @return
      */
-    public Peer findPeerByUUID(String uuid) {
-        if (uuid == null) {
+    public Peer findPeerByKey(String key) {
+        if (key == null) {
             return null;
         }
 
-        if (uuid.equals(ConfigurationManager.instance().getUUIDString())) {
+        if (key.equals(localPeer.getKey())) {
             return localPeer;
         }
 
         Peer k = new Peer();
-        k.setUUID(uuid);
 
         Peer p = peerCache.get(k);
 
@@ -166,7 +155,7 @@ public final class PeerManager {
 
     public void removePeer(Peer p) {
         try {
-            updatePeerCache2(p.getUdn(), p, true);
+            updatePeerCache2(p, true);
         } catch (Throwable e) {
             Log.e(TAG, "Error removing peer from manager", e);
         }
@@ -197,14 +186,14 @@ public final class PeerManager {
         return new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
     }
 
-    private void updatePeerCache2(String udn, Peer peer, boolean disconnected) {
+    private void updatePeerCache2(Peer peer, boolean disconnected) {
         if (disconnected) {
-            Peer p = addressMap.remove(udn);
+            Peer p = addressMap.remove(peer.getKey());
             if (p != null) {
                 peerCache.remove(p);
             }
         } else {
-            addressMap.put(udn, peer);
+            addressMap.put(peer.getKey(), peer);
             updatePeerCache(peer, disconnected);
         }
     }
@@ -242,12 +231,7 @@ public final class PeerManager {
     }
 
     private void refreshLocalPeer() {
-        PingInfo p = new PingInfo();//UPnPManager.instance().getLocalPingInfo();
-        p.uuid = ConfigurationManager.instance().getUUIDString();
-        p.nickname = ConfigurationManager.instance().getNickname();
-        p.clientVersion = Constants.FROSTWIRE_VERSION_STRING;
-
-        localPeer = new Peer(ConfigurationManager.instance().getUUIDString(), null, p);
+        localPeer = new Peer(createLocalPeer());
     }
 
     private static final class PeerComparator implements Comparator<Peer> {

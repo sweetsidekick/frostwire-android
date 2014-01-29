@@ -115,7 +115,7 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
             if (peer.getNumSharedFiles() > 0) {
                 Intent i = null;
                 i = new Intent(getContext(), BrowsePeerActivity.class);
-                i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
+                i.putExtra(Constants.EXTRA_PEER_UUID, peer.getKey());
                 getContext().startActivity(i);
             } else {
                 UIUtils.showShortMessage(getContext(), peer.getNickname() + " " +  getContext().getString(R.string.not_sharing_files));

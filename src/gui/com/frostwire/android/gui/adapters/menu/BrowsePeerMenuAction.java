@@ -49,7 +49,7 @@ public class BrowsePeerMenuAction extends MenuAction {
     protected void onClick(Context context) {
         if (peer != null) {
             Intent i = new Intent(context, BrowsePeerActivity.class);
-            i.putExtra(Constants.EXTRA_PEER_UUID, peer.getUUID());
+            i.putExtra(Constants.EXTRA_PEER_UUID, peer.getKey());
             context.startActivity(i);
         }
     }
