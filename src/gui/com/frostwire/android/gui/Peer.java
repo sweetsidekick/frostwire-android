@@ -57,7 +57,7 @@ public final class Peer implements Cloneable {
 
     public Peer(LocalPeer p) {
         this.p = p;
-        this.key = p.getKey();
+        this.key = p.address + ":" + p.port;
         this.address = p.address;
         this.listeningPort = p.port;
 
@@ -67,7 +67,7 @@ public final class Peer implements Cloneable {
         this.clientVersion = p.clientVersion;
         this.localhost = p.address.equals("0.0.0.0");
 
-        this.hashCode = p.getKey().hashCode();
+        this.hashCode = key.hashCode();
     }
 
     public String getUdn() {
