@@ -97,8 +97,7 @@ public final class PeerManager {
 
     public void onMessageReceived(LocalPeer p, boolean added) {
         if (p != null) {
-            boolean localhost = p.address.equals(peerManager.getHostAddress());
-            Peer peer = new Peer(p, localhost);
+            Peer peer = new Peer(p, p.local);
 
             updatePeerCache2(peer, !added);
         }
@@ -169,7 +168,7 @@ public final class PeerManager {
         String clientVersion = Constants.FROSTWIRE_VERSION_STRING;
         int deviceType = Constants.DEVICE_MAJOR_TYPE_PHONE;
 
-        return new LocalPeer(address, port, nickname, numSharedFiles, deviceType, clientVersion);
+        return new LocalPeer(address, port, true, nickname, numSharedFiles, deviceType, clientVersion);
     }
 
     private void updatePeerCache2(Peer peer, boolean disconnected) {
