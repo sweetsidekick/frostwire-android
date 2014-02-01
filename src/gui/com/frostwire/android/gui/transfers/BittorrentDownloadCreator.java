@@ -146,6 +146,8 @@ final class BittorrentDownloadCreator {
                 fileSelection = buildFileSelection(torrent, relativePartialPath);
             }
             dm = createDownloadManager(manager, torrentFile, fileSelection);
+            setup(dm, true);
+            
         } else { //the download manager was there...
 
             boolean[] fileSelection = null;
@@ -175,15 +177,17 @@ final class BittorrentDownloadCreator {
                 }
             }
 
-            BittorrentDownload oldDownload = findDownload(manager, dm);
-            if (oldDownload != null) {
-                oldDownload.cancel(false, false);
+//            BittorrentDownload oldDownload = findDownload(manager, dm);
+//            if (oldDownload != null) {
+//                oldDownload.cancel(false, false);
+//            }
+//
+//            dm = createDownloadManager(manager, dm.getTorrentFileName(), fileSelection);
+            setupPartialSelection(dm, fileSelection);
+            if (dm.getState() == DownloadManager.STATE_STOPPED) {
+                dm.initialize();
             }
-
-            dm = createDownloadManager(manager, dm.getTorrentFileName(), fileSelection);
         }
-
-        setup(dm, true);
 
         return new AzureusBittorrentDownload(manager, dm);
     }
@@ -230,23 +234,6 @@ final class BittorrentDownloadCreator {
         } finally {
             dm.getDownloadState().suppressStateSave(false);
         }
-    }
-
-    private static BittorrentDownload findDownload(TransferManager manager, DownloadManager dm) {
-        for (BittorrentDownload download : manager.getBittorrentDownloads()) {
-            BittorrentDownload btDownload = download;
-            if (download instanceof TorrentFetcherDownload) {
-                btDownload = ((TorrentFetcherDownload) download).getDelegate();
-            }
-            if (btDownload != null) {
-                if (btDownload instanceof AzureusBittorrentDownload) {
-                    if (((AzureusBittorrentDownload) btDownload).getDownloadManager().equals(dm)) {
-                        return download;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     private static void setup(DownloadManager dm, final boolean notifyFinished) {

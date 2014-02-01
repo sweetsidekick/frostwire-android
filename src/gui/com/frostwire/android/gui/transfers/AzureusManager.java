@@ -208,6 +208,8 @@ public final class AzureusManager {
         System.setProperty("azureus.install.path", azureusPath.getAbsolutePath());
         System.setProperty("azureus.loadplugins", "0"); // disable third party azureus plugins
 
+        VuzeManager.setupConfiguration();
+
         SystemProperties.APPLICATION_NAME = "azureus";
         SystemProperties.setUserPath(azureusPath.getAbsolutePath());
 
