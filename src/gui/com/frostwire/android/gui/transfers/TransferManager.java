@@ -349,7 +349,9 @@ public final class TransferManager {
             BittorrentDownload download = BittorrentDownloadCreator.create(this, new URI(uri));
 
             if (!(download instanceof InvalidBittorrentDownload)) {
-                bittorrentDownloads.add(download);
+                if (!bittorrentDownloads.contains(download)) {
+                    bittorrentDownloads.add(download);
+                }
             }
 
             return download;
@@ -364,7 +366,9 @@ public final class TransferManager {
             BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
 
             if (!(download instanceof InvalidBittorrentDownload)) {
-                bittorrentDownloads.add(download);
+                if (!bittorrentDownloads.contains(download)) {
+                    bittorrentDownloads.add(download);
+                }
             }
 
             return download;

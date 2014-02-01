@@ -57,22 +57,6 @@ final class BittorrentDownloadCreator {
     private BittorrentDownloadCreator() {
     }
 
-    public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr, String torrentFile) throws TOTorrentException {
-        byte[] hash = null;
-        try {
-            if (sr.getHash() != null) {
-                hash = ByteUtils.decodeHex(sr.getHash());
-            }
-        } catch (Throwable e) {
-            // ignore
-        }
-        if (sr instanceof TorrentCrawledSearchResult) {
-            return create(manager, torrentFile, hash, sr.getFilename());
-        } else {
-            return create(manager, torrentFile, hash, null);
-        }
-    }
-
     public static BittorrentDownload create(TransferManager manager, URI uri) throws TOTorrentException {
         if (uri.getScheme().equalsIgnoreCase("file")) {
             return create(manager, uri.getPath(), null, null);
@@ -147,7 +131,7 @@ final class BittorrentDownloadCreator {
             }
             dm = createDownloadManager(manager, torrentFile, fileSelection);
             setup(dm, true);
-            
+
         } else { //the download manager was there...
 
             boolean[] fileSelection = null;
@@ -177,16 +161,19 @@ final class BittorrentDownloadCreator {
                 }
             }
 
-//            BittorrentDownload oldDownload = findDownload(manager, dm);
-//            if (oldDownload != null) {
-//                oldDownload.cancel(false, false);
-//            }
-//
-//            dm = createDownloadManager(manager, dm.getTorrentFileName(), fileSelection);
-            setupPartialSelection(dm, fileSelection);
+            BittorrentDownload oldDownload = findDownload(manager, dm);
+            setupPartialSelection2(dm, fileSelection);
             if (dm.getState() == DownloadManager.STATE_STOPPED) {
                 dm.initialize();
             }
+
+            if (oldDownload instanceof TorrentFetcherDownload) {
+                oldDownload = ((TorrentFetcherDownload) oldDownload).getDelegate();
+            }
+            if (oldDownload instanceof AzureusBittorrentDownload) {
+                ((AzureusBittorrentDownload) oldDownload).refreshData();
+            }
+            return oldDownload;
         }
 
         return new AzureusBittorrentDownload(manager, dm);
@@ -312,6 +299,45 @@ final class BittorrentDownloadCreator {
                     return 0;
                 }
             });
+        }
+    }
+
+    private static BittorrentDownload findDownload(TransferManager manager, DownloadManager dm) {
+        for (BittorrentDownload download : manager.getBittorrentDownloads()) {
+            BittorrentDownload btDownload = download;
+            if (download instanceof TorrentFetcherDownload) {
+                btDownload = ((TorrentFetcherDownload) download).getDelegate();
+            }
+            if (btDownload != null) {
+                if (btDownload instanceof AzureusBittorrentDownload) {
+                    if (((AzureusBittorrentDownload) btDownload).getDownloadManager().equals(dm)) {
+                        return download;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void setupPartialSelection2(DownloadManager dm, boolean[] fileSelection) {
+        DiskManagerFileInfo[] fileInfos = dm.getDiskManagerFileInfoSet().getFiles();
+
+        try {
+            dm.getDownloadState().suppressStateSave(true);
+
+            if (fileSelection == null || fileSelection.length == 0) {
+                for (DiskManagerFileInfo fileInfo : fileInfos) {
+                    fileInfo.setSkipped(false);
+                }
+            } else {
+                for (int i = 0; i < fileSelection.length; i++) {
+                    if (fileSelection[i]) {
+                        dm.getDiskManagerFileInfoSet().getFiles()[i].setSkipped(false);
+                    }
+                }
+            }
+        } finally {
+            dm.getDownloadState().suppressStateSave(false);
         }
     }
 }

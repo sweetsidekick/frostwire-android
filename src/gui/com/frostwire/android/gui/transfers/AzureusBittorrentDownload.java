@@ -64,32 +64,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
             hash = "";
         }
 
-        fileInfoSet = TorrentUtil.getNoSkippedFileInfoSet(downloadManager);
-        partialDownload = !TorrentUtil.getSkippedFiles(downloadManager).isEmpty();
-
-        if (partialDownload) {
-            if (fileInfoSet.isEmpty()) {
-                size = downloadManager.getSize();
-            } else {
-                size = 0;
-                for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-                    size += fileInfo.getLength();
-                }
-            }
-        } else {
-            size = downloadManager.getSize();
-        }
-
-        if (fileInfoSet.size() == 1) {
-            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new DiskManagerFileInfo[0])[0].getFile(false).getName());
-        } else {
-            displayName = downloadManager.getDisplayName();
-        }
-
-        items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
-        for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-            items.add(new AzureusBittorrentDownloadItem(fileInfo));
-        }
+        refreshData(); // super mutable
     }
 
     public String getDisplayName() {
@@ -374,9 +349,47 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     public List<? extends BittorrentDownloadItem> getBittorrentItems() {
         return items;
     }
-    
+
     @Override
     public String getDetailsUrl() {
         return null;
+    }
+
+    public void refreshData() {
+        fileInfoSet = TorrentUtil.getNoSkippedFileInfoSet(downloadManager);
+        partialDownload = !TorrentUtil.getSkippedFiles(downloadManager).isEmpty();
+
+        if (partialDownload) {
+            if (fileInfoSet.isEmpty()) {
+                size = downloadManager.getSize();
+            } else {
+                size = 0;
+                for (DiskManagerFileInfo fileInfo : fileInfoSet) {
+                    size += fileInfo.getLength();
+                }
+            }
+        } else {
+            size = downloadManager.getSize();
+        }
+
+        if (fileInfoSet.size() == 1) {
+            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new DiskManagerFileInfo[0])[0].getFile(false).getName());
+        } else {
+            displayName = downloadManager.getDisplayName();
+        }
+
+        items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
+        for (DiskManagerFileInfo fileInfo : fileInfoSet) {
+            items.add(new AzureusBittorrentDownloadItem(fileInfo));
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BittorrentDownload)) {
+            return false;
+        }
+
+        return getHash().equals(((BittorrentDownload) o).getHash());
     }
 }
