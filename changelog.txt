@@ -1,3 +1,11 @@
+FrostWire 1.3.0 - JAN/27/2013
+ - Upgraded BitTorrent engine with latest code from Azureus project.
+ - Upgraded Android SDK target to Ice Cream Sandwich's API (15 - Android 4.0.3).
+   Users on Android devices running older versions will have to use FrostWire 1.2.3
+   or upgrade their operating system to +4.0.3 to receive further updates.
+ - Removed cling library for Local peer discovery, switched to JmDNS.
+ - Minor upgrades to audio player and Frostclick.com's free promotional downloads.
+
 FrostWire 1.2.3 - DEC/10/2013
  - Fixes crash when stopping a 1080p video transfer from cloud service.
  - Player status bar removes words 'Playing' and 'Paused' instead uses icons.
