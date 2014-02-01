@@ -37,19 +37,11 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.httpserver.HttpServerManager;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.concurrent.ThreadPool;
-import com.frostwire.localpeer.AndroidMulticastLock;
-import com.frostwire.localpeer.LocalPeer;
-import com.frostwire.localpeer.LocalPeerManager;
-import com.frostwire.localpeer.LocalPeerManagerImpl;
-import com.frostwire.localpeer.LocalPeerManagerListener;
 
 /**
  * @author gubatron

@@ -148,8 +148,6 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                     }
                 });
             }
-
-            NetworkManager.instance().printNetworkInfo();
         }
     }
 }

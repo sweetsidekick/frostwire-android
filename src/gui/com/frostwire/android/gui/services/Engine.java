@@ -45,7 +45,6 @@ import com.frostwire.android.util.concurrent.ThreadPool;
 public final class Engine implements IEngineService {
 
     private IEngineService service;
-    private ServiceConnection upnpServiceConnection;
 
     private static Engine instance;
 

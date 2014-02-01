@@ -25,7 +25,6 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 import android.app.Application;
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -157,72 +156,6 @@ public final class NetworkManager {
         ConnectivityManager connectivityManager = getConnectivityManager();
         NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         return networkInfo != null && networkInfo.isAvailable() && (networkInfo.getSubtype() == NETWORK_TYPE_4G_LTE || networkInfo.getSubtype() == NETWORK_TYPE_4G_EHRPD) && networkInfo.isConnected();
-    }
-
-    /**
-     * This method returns the current active network interface that it's not the loop back.
-     * Until now, there is no evidence that at any given time, could be more than one (no loop back)
-     * interfaces up.
-     * 
-     * @return
-     */
-    public NetworkInterface getNetworkInterface() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-
-                while (addresses.hasMoreElements()) {
-                    InetAddress address = addresses.nextElement();
-                    if (!address.isLoopbackAddress()) {
-                        return networkInterface;
-                    }
-                }
-            }
-
-            return null;
-        } catch (Throwable e) {
-            return null;
-        }
-    }
-
-    public void printNetworkInfo() {
-        String str = "";
-
-        try {
-            if (!isDataUp()) {
-                str = context.getString(R.string.not_connected);
-            } else if (isDataMobileUp()) {
-                str = context.getString(R.string.mobile_data);
-            } else if (isDataWIFIUp()) {
-                String ipPortInfo = "";
-                NetworkInterface ni = getNetworkInterface();
-
-                if (ni != null) {
-                    ipPortInfo = getNetworkInterface().getInetAddresses().nextElement().getHostAddress() + ":" + getListeningPort();
-                }
-
-                WifiManager wifi = getWifiManager();
-                WifiInfo wifiInfo = wifi != null ? wifi.getConnectionInfo() : null;
-                String ssid = wifiInfo != null ? wifiInfo.getSSID() : null;
-                String wifiNameInfo = "";
-
-                if (ssid != null) {
-                    wifiNameInfo += "WiFi: " + ssid;
-                }
-
-                str = wifiNameInfo + ", Addr: " + ipPortInfo;
-            } else {
-                str = "";
-            }
-        } catch (Throwable e) {
-            // ignore, not a problem, only for debugging
-        }
-
-        Log.i(TAG, str);
     }
 
     public WifiManager getWifiManager() {
