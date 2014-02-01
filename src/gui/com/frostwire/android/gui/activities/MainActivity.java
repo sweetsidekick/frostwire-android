@@ -594,6 +594,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
             controller.switchFragment(R.id.menu_main_peers);
         }
+        PeerManager.instance().updateLocalPeer();
     }
 
     private void switchContent(Fragment fragment, boolean addToStack) {
