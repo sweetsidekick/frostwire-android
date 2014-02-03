@@ -24,12 +24,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloader;
-import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderCallBackInterface;
-import org.gudy.azureus2.core3.torrentdownloader.impl.TorrentDownloaderImpl;
-
 import com.frostwire.android.R;
 import com.frostwire.logging.Logger;
+import com.frostwire.vuze.VuzeTorrentDownloadListener;
+import com.frostwire.vuze.VuzeTorrentDownloader;
 
 /**
  * @author gubatron
@@ -45,7 +43,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     private final Date dateCreated;
 
     private int statusResId;
-    private final TorrentDownloaderImpl torrentDownloader;
+    private final VuzeTorrentDownloader torrentDownloader;
 
     private BittorrentDownload delegate;
 
@@ -58,8 +56,8 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
         this.statusResId = R.string.torrent_fetcher_download_status_downloading_torrent;
 
-        this.torrentDownloader = new TorrentDownloaderImpl();
-        this.torrentDownloader.init(new TorrentDownloaderListener(), info.getTorrentUrl(), info.getDetailsUrl(), null, null);
+        this.torrentDownloader = new VuzeTorrentDownloader(info.getTorrentUrl(), info.getDetailsUrl());
+        this.torrentDownloader.setListener(new TorrentDownloaderListener());
         this.torrentDownloader.start();
     }
 
@@ -203,18 +201,19 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         }
     }
 
-    private final class TorrentDownloaderListener implements TorrentDownloaderCallBackInterface {
+    private final class TorrentDownloaderListener implements VuzeTorrentDownloadListener {
 
         private AtomicBoolean finished = new AtomicBoolean(false);
 
-        public void TorrentDownloaderEvent(int state, final TorrentDownloader inf) {
+        @Override
+        public void onFinished(VuzeTorrentDownloader dl) {
             if (removed) {
                 return;
             }
-            if (state == TorrentDownloader.STATE_FINISHED && finished.compareAndSet(false, true)) {
+            if (finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = BittorrentDownloadCreator.create(manager, inf.getFile().getAbsolutePath(), null, info.getRelativePath());
+                    delegate = BittorrentDownloadCreator.create(manager, dl.getFile().getAbsolutePath(), null, info.getRelativePath());
 
                     if (delegate instanceof InvalidBittorrentDownload) {
                         cancel();
@@ -228,9 +227,15 @@ public class TorrentFetcherDownload implements BittorrentDownload {
                     statusResId = R.string.torrent_fetcher_download_status_error;
                     LOG.error("Error creating the actual torrent download", e);
                 }
-            } else if (state == TorrentDownloader.STATE_ERROR) {
-                statusResId = R.string.torrent_fetcher_download_status_error;
             }
+        }
+
+        @Override
+        public void onError(VuzeTorrentDownloader dl) {
+            if (removed) {
+                return;
+            }
+            statusResId = R.string.torrent_fetcher_download_status_error;
         }
     }
 
