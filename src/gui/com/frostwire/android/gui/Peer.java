@@ -73,7 +73,7 @@ public final class Peer implements Cloneable {
 
         this.hashCode = key.hashCode();
         
-        this.httpClient = HttpClientFactory.newDefaultInstance();
+        this.httpClient = HttpClientFactory.newInstance();
     }
 
     public String getUdn() {

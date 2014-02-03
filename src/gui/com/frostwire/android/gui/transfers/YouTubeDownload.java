@@ -38,7 +38,6 @@ import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClient.HttpClientListener;
 import com.frostwire.util.HttpClientFactory;
-import com.frostwire.util.HttpClientType;
 import com.frostwire.util.MP4Muxer;
 import com.frostwire.util.MP4Muxer.MP4Metadata;
 
@@ -98,7 +97,7 @@ public final class YouTubeDownload implements DownloadTransfer {
 
         httpClientListener = new HttpDownloadListenerImpl();
 
-        httpClient = HttpClientFactory.newInstance(HttpClientType.PureJava);
+        httpClient = HttpClientFactory.newInstance();
         httpClient.setListener(httpClientListener);
     }
 
@@ -447,7 +446,7 @@ public final class YouTubeDownload implements DownloadTransfer {
             jpgUrl = sr.getAudio() != null ? sr.getAudio().thumbnails.normal : null;
         }
 
-        byte[] jpg = jpgUrl != null ? HttpClientFactory.newDefaultInstance().getBytes(jpgUrl) : null;
+        byte[] jpg = jpgUrl != null ? HttpClientFactory.newInstance().getBytes(jpgUrl) : null;
 
         return new MP4Metadata(title, author, source, jpg);
     }
