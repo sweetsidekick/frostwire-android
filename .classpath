@@ -21,16 +21,6 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**|**/util/protocol/http/**" kind="src" path="common/vuze/azureus2/src">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/vuze/azureus3/src">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="common/components/core"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
