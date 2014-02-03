@@ -20,9 +20,6 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -53,6 +50,7 @@ import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
 import com.frostwire.localpeer.Finger;
+import com.frostwire.logging.Logger;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -63,7 +61,8 @@ import com.frostwire.uxstats.UXStats;
  */
 public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object>, MainFragment {
 
-    private static final Logger log = LoggerFactory.getLogger(BrowsePeerFragment.class);
+    private static final Logger log = Logger.getLogger(BrowsePeerFragment.class);
+
     private static final int LOADER_FINGER_ID = 0;
     private static final int LOADER_FILES_ID = 1;
 

@@ -42,13 +42,12 @@ import org.gudy.azureus2.plugins.sharing.ShareResourceFile;
 import org.gudy.azureus2.plugins.tracker.Tracker;
 import org.gudy.azureus2.plugins.tracker.TrackerTorrent;
 import org.gudy.azureus2.pluginsimpl.local.PluginCoreUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.ui.UIFunctions;
 import com.aelitis.azureus.ui.UIFunctionsManager;
 import com.frostwire.android.gui.util.FileUtils;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -57,7 +56,7 @@ import com.frostwire.android.gui.util.FileUtils;
  */
 public class TorrentUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TorrentUtil.class);
+    private static final Logger LOG = Logger.getLogger(TorrentUtil.class);
     
     private static AsyncDispatcher async = new AsyncDispatcher(2000);
 

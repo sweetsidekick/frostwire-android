@@ -21,8 +21,6 @@ package com.frostwire.android.gui.activities.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
@@ -33,6 +31,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.OfferUtils;
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -42,7 +41,7 @@ import com.frostwire.android.gui.util.OfferUtils;
  */
 public final class XmlMenuLoader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlMenuLoader.class);
+    private static final Logger LOG = Logger.getLogger(XmlMenuLoader.class);
 
     public XmlMenuLoader() {
     }

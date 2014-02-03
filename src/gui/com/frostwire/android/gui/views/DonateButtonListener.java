@@ -18,15 +18,13 @@
 
 package com.frostwire.android.gui.views;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -35,7 +33,7 @@ import com.frostwire.android.gui.billing.Biller;
  */
 public final class DonateButtonListener implements OnClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DonateButtonListener.class);
+    private static final Logger LOG = Logger.getLogger(DonateButtonListener.class);
 
     private final String sku;
     private final String url;

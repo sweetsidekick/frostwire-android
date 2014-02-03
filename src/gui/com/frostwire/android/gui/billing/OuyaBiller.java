@@ -30,8 +30,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import tv.ouya.console.api.OuyaFacade;
 import tv.ouya.console.api.OuyaResponseListener;
@@ -43,6 +41,7 @@ import android.util.Base64;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -50,7 +49,8 @@ import com.frostwire.android.gui.util.UIUtils;
  *
  */
 final class OuyaBiller implements Biller, OuyaResponseListener<String> {
-    private static final Logger LOG = LoggerFactory.getLogger(OuyaBiller.class);
+
+    private static final Logger LOG = Logger.getLogger(OuyaBiller.class);
 
     //private final String TESTING = "true";
     private final String TESTING = "false";
@@ -108,11 +108,7 @@ final class OuyaBiller implements Biller, OuyaResponseListener<String> {
             cipher.init(Cipher.ENCRYPT_MODE, mPublicKey);
             byte[] encryptedKey = cipher.doFinal(keyBytes);
 
-            Purchasable purchasable = new Purchasable(sku, 
-                    Base64.encodeToString(encryptedKey, Base64.NO_WRAP), 
-                    Base64.encodeToString(ivBytes, Base64.NO_WRAP), 
-                    Base64.encodeToString(payload,
-                    Base64.NO_WRAP));
+            Purchasable purchasable = new Purchasable(sku, Base64.encodeToString(encryptedKey, Base64.NO_WRAP), Base64.encodeToString(ivBytes, Base64.NO_WRAP), Base64.encodeToString(payload, Base64.NO_WRAP));
 
             //            synchronized (mOutstandingPurchaseRequests) {
             //                mOutstandingPurchaseRequests.put(uniqueId, product);

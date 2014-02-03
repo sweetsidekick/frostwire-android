@@ -21,9 +21,6 @@ package com.frostwire.android.gui.fragments;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,6 +57,7 @@ import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchManagerListener;
@@ -80,7 +78,7 @@ import com.frostwire.uxstats.UXStats;
  */
 public final class SearchFragment extends AbstractListFragment implements MainFragment {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
+    private static final Logger LOG = Logger.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
     private List<Slide> slides;

@@ -21,9 +21,6 @@ package com.frostwire.android.gui.activities.internal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -44,6 +41,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ShareIndicationDialog;
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -53,7 +51,7 @@ import com.frostwire.android.gui.views.ShareIndicationDialog;
  */
 public final class MainController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOG = Logger.getLogger(MainController.class);
 
     private final MainActivity activity;
 

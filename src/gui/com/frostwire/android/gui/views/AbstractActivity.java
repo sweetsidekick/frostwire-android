@@ -21,9 +21,6 @@ package com.frostwire.android.gui.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +28,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -41,7 +40,7 @@ import android.view.Window;
  */
 public abstract class AbstractActivity extends FragmentActivity {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractActivity.class);
+    private static final Logger LOG = Logger.getLogger(AbstractActivity.class);
 
     private final int layoutResId;
     private final boolean title;

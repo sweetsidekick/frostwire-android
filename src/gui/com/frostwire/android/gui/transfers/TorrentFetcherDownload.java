@@ -27,10 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloader;
 import org.gudy.azureus2.core3.torrentdownloader.TorrentDownloaderCallBackInterface;
 import org.gudy.azureus2.core3.torrentdownloader.impl.TorrentDownloaderImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.frostwire.android.R;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -39,7 +38,7 @@ import com.frostwire.android.R;
  */
 public class TorrentFetcherDownload implements BittorrentDownload {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TorrentFetcherDownload.class);
+    private static final Logger LOG = Logger.getLogger(TorrentFetcherDownload.class);
 
     private final TransferManager manager;
     private final TorrentDownloadInfo info;

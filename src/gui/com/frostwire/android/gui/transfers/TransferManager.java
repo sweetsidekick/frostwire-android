@@ -25,8 +25,6 @@ import java.util.List;
 
 import org.gudy.azureus2.core3.download.DownloadManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aelitis.azureus.core.AzureusCore;
 import com.aelitis.azureus.core.AzureusCoreFactory;
@@ -39,6 +37,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.util.ByteUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
@@ -54,7 +53,7 @@ import com.frostwire.uxstats.UXStats;
  */
 public final class TransferManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransferManager.class);
+    private static final Logger LOG = Logger.getLogger(TransferManager.class);
 
     private final List<DownloadTransfer> downloads;
     private final List<UploadTransfer> uploads;

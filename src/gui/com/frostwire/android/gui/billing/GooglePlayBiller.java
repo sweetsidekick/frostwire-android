@@ -18,9 +18,6 @@
 
 package com.frostwire.android.gui.billing;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -35,6 +32,7 @@ import com.frostwire.android.market.Consts.PurchaseState;
 import com.frostwire.android.market.Consts.ResponseCode;
 import com.frostwire.android.market.PurchaseObserver;
 import com.frostwire.android.market.ResponseHandler;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -43,7 +41,7 @@ import com.frostwire.android.market.ResponseHandler;
  */
 final class GooglePlayBiller extends PurchaseObserver implements Biller {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GooglePlayBiller.class);
+    private static final Logger LOG = Logger.getLogger(GooglePlayBiller.class);
 
     private boolean inAppBillingSupported = false;
     private final BillingService billingService;

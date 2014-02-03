@@ -21,9 +21,6 @@ package com.frostwire.android.gui.activities;
 import java.io.File;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -72,6 +69,7 @@ import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -84,7 +82,7 @@ import com.frostwire.uxstats.UXStats;
  */
 public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
+    private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
     private static final String FRAGMENTS_STACK_KEY = "fragments_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";

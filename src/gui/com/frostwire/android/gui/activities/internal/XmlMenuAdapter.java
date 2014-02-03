@@ -20,15 +20,13 @@ package com.frostwire.android.gui.activities.internal;
 
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -38,7 +36,7 @@ import com.frostwire.android.gui.views.AbstractListAdapter;
  */
 public final class XmlMenuAdapter extends AbstractListAdapter<XmlMenuItem> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlMenuAdapter.class);
+    private static final Logger LOG = Logger.getLogger(XmlMenuAdapter.class);
 
     private MainController controller;
 

@@ -18,41 +18,39 @@
 
 package com.frostwire.android.gui.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Context;
 
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.logging.Logger;
 import com.offercast.android.sdk.OffercastSDK;
 
 public class OfferUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(OfferUtils.class);
-    
+
+    private static final Logger LOG = Logger.getLogger(OfferUtils.class);
+
     public static boolean isfreeAppsEnabled() {
         ConfigurationManager config = null;
         boolean isFreeAppsEnabled = false;
         try {
             config = ConfigurationManager.instance();
-            isFreeAppsEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) && !OSUtils.isAmazonDistribution()
-                    && !OSUtils.isOUYA();
+            isFreeAppsEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) && !OSUtils.isAmazonDistribution() && !OSUtils.isOUYA();
             //config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
         } catch (Throwable t) {
         }
         return isFreeAppsEnabled;
     }
-    
-     public static void startOffercast(final Context context) throws Exception {
+
+    public static void startOffercast(final Context context) throws Exception {
         if (!OSUtils.isAmazonDistribution()) {
             try {
                 OffercastSDK offercast = OffercastSDK.getInstance(context);
                 offercast.authorize();
                 LOG.info("Offercast started.");
             } catch (Exception e) {
-                LOG.error("Offercast could not start.",e);
+                LOG.error("Offercast could not start.", e);
             }
         }
     }
@@ -64,7 +62,7 @@ public class OfferUtils {
                 appia.cacheAppWall(context);
                 appia.displayWall(context, WallDisplayType.FULL_SCREEN);
             } catch (Throwable t) {
-                LOG.error("can't show app wall",t);
+                LOG.error("can't show app wall", t);
                 t.printStackTrace();
             }
         }
