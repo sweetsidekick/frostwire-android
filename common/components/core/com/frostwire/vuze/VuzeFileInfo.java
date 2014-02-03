@@ -16,51 +16,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.transfers;
+package com.frostwire.vuze;
 
 import java.io.File;
 
-import org.apache.commons.io.FilenameUtils;
-
-import com.frostwire.vuze.VuzeFileInfo;
+import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
  *
  */
-final class AzureusBittorrentDownloadItem implements BittorrentDownloadItem {
+public final class VuzeFileInfo {
 
-    private final VuzeFileInfo info;
-    private final String displayName;
+    private final DiskManagerFileInfo info;
+    private final File file;
+    private final String filename;
+    private final long length;
 
-    public AzureusBittorrentDownloadItem(VuzeFileInfo info) {
+    public VuzeFileInfo(DiskManagerFileInfo info) {
         this.info = info;
-        this.displayName = FilenameUtils.getBaseName(info.getFilename());
+
+        this.file = info.getFile(false);
+        this.filename = file.getName();
+        this.length = info.getLength();
     }
 
-    @Override
-    public String getDisplayName() {
-        return displayName;
+    public File getFile() {
+        return file;
     }
 
-    @Override
-    public File getSavePath() {
-        return info.getFile();
+    public String getFilename() {
+        return filename;
     }
 
-    @Override
-    public int getProgress() {
-        return isComplete() ? 100 : (int) ((info.getDownloaded() * 100) / info.getLength());
+    public long getLength() {
+        return length;
     }
 
-    @Override
-    public long getSize() {
-        return info.getLength();
-    }
-
-    @Override
-    public boolean isComplete() {
-        return info.getDownloaded() == info.getLength();
+    public long getDownloaded() {
+        return info.getDownloaded();
     }
 }

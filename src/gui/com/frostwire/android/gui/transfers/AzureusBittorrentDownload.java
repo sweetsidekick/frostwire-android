@@ -32,6 +32,8 @@ import org.gudy.azureus2.core3.tracker.client.TRTrackerScraperResponse;
 import org.gudy.azureus2.core3.util.Constants;
 import org.gudy.azureus2.core3.util.DisplayFormatters;
 
+import com.frostwire.vuze.VuzeFileInfo;
+
 import android.util.Log;
 
 /**
@@ -380,7 +382,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
         items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
         for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-            items.add(new AzureusBittorrentDownloadItem(fileInfo));
+            items.add(new AzureusBittorrentDownloadItem(new VuzeFileInfo(fileInfo)));
         }
     }
 
