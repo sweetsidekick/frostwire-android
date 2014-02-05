@@ -149,9 +149,7 @@ public class EngineService extends Service implements IEngineService {
         AzureusManager.create(this);
         //TransferManager.instance().loadTorrents();
 
-        if (AzureusManager.isCreated()) { // safe move
-            AzureusManager.instance().resume();
-        }
+        AzureusManager.instance().resume();
 
         PeerManager.instance().clear();
 

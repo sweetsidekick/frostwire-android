@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.frostwire.android.R;
 import com.frostwire.logging.Logger;
+import com.frostwire.vuze.VuzeDownloadFactory;
 import com.frostwire.vuze.VuzeTorrentDownloadListener;
 import com.frostwire.vuze.VuzeTorrentDownloader;
 
@@ -213,7 +214,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = BittorrentDownloadCreator.create(manager, dl.getFile().getAbsolutePath(), null, info.getRelativePath());
+                    delegate = VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath());
 
                     if (delegate instanceof InvalidBittorrentDownload) {
                         cancel();

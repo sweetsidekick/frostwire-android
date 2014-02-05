@@ -38,6 +38,7 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.frostwire.vuze.VuzeDownloadFactory;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeManager;
 import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
@@ -313,7 +314,7 @@ public final class TransferManager {
 
     public BittorrentDownload downloadTorrent(String uri) {
         try {
-            BittorrentDownload download = BittorrentDownloadCreator.create(this, new URI(uri));
+            BittorrentDownload download = VuzeDownloadFactory.create(new URI(uri));
 
             if (!(download instanceof InvalidBittorrentDownload)) {
                 if (!bittorrentDownloads.contains(download)) {
@@ -330,7 +331,7 @@ public final class TransferManager {
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
+            BittorrentDownload download = VuzeDownloadFactory.create(sr);
 
             if (!(download instanceof InvalidBittorrentDownload)) {
                 if (!bittorrentDownloads.contains(download)) {

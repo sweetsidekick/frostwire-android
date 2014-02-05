@@ -95,7 +95,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 // no sure about this case
             }
 
-            if (!Librarian.instance().isExternalStorageMounted() && AzureusManager.isCreated()) {
+            if (!Librarian.instance().isExternalStorageMounted()) {
                 Log.v(TAG, "Halting process due to lack of external storage");
                 Librarian.instance().halt();
             }
