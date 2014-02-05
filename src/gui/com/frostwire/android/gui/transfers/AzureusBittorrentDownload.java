@@ -26,18 +26,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.tracker.client.TRTrackerScraperResponse;
-import org.gudy.azureus2.core3.util.Constants;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
 
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
 import com.frostwire.vuze.VuzeFormatter;
 import com.frostwire.vuze.VuzeUtils;
-
-import android.util.Log;
+import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
 
 /**
  * @author gubatron
@@ -46,15 +40,13 @@ import android.util.Log;
  */
 final class AzureusBittorrentDownload implements BittorrentDownload {
 
-    private static final String TAG = "FW.AzureusBittorrentDownload";
-
     private final TransferManager manager;
     private VuzeDownloadManager downloadManager;
 
     private List<BittorrentDownloadItem> items;
     private String hash;
     private boolean partialDownload;
-    private Set<DiskManagerFileInfo> fileInfoSet;
+    private Set<VuzeFileInfo> fileInfoSet;
     private long size;
     private String displayName;
 
@@ -81,7 +73,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
         if (partialDownload) {
             long downloaded = 0;
-            for (DiskManagerFileInfo fileInfo : fileInfoSet) {
+            for (VuzeFileInfo fileInfo : fileInfoSet) {
                 downloaded += fileInfo.getDownloaded();
             }
             return (int) ((downloaded * 100) / size);
@@ -192,11 +184,11 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
     public void cancel(boolean deleteData, boolean async) {
         manager.remove(this);
-        TorrentUtil.removeDownload(downloadManager.getDM(), deleteData, deleteData, async);
+        VuzeUtils.removeDownload(downloadManager, deleteData, deleteData, async);
     }
 
-    DownloadManager getDownloadManager() {
-        return downloadManager.getDM();
+    VuzeDownloadManager getDownloadManager() {
+        return downloadManager;
     }
 
     @Override
@@ -210,15 +202,15 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public void refreshData() {
-        fileInfoSet = TorrentUtil.getNoSkippedFileInfoSet(downloadManager);
-        partialDownload = !TorrentUtil.getSkippedFiles(downloadManager).isEmpty();
+        fileInfoSet = VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
+        partialDownload = !VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
 
         if (partialDownload) {
             if (fileInfoSet.isEmpty()) {
                 size = downloadManager.getSize();
             } else {
                 size = 0;
-                for (DiskManagerFileInfo fileInfo : fileInfoSet) {
+                for (VuzeFileInfo fileInfo : fileInfoSet) {
                     size += fileInfo.getLength();
                 }
             }
@@ -227,14 +219,14 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         }
 
         if (fileInfoSet.size() == 1) {
-            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new DiskManagerFileInfo[0])[0].getFile(false).getName());
+            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new VuzeFileInfo[0])[0].getFilename());
         } else {
             displayName = downloadManager.getDisplayName();
         }
 
         items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
-        for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-            items.add(new AzureusBittorrentDownloadItem(new VuzeFileInfo(fileInfo)));
+        for (VuzeFileInfo fileInfo : fileInfoSet) {
+            items.add(new AzureusBittorrentDownloadItem(fileInfo));
         }
     }
 
