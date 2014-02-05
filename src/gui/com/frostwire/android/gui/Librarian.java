@@ -64,7 +64,6 @@ import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.core.providers.UniversalStore.Applications.ApplicationsColumns;
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
-import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
