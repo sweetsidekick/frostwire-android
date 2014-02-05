@@ -34,6 +34,8 @@ import org.gudy.azureus2.core3.util.DisplayFormatters;
 
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
+import com.frostwire.vuze.VuzeFormatter;
+import com.frostwire.vuze.VuzeUtils;
 
 import android.util.Log;
 
@@ -59,7 +61,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     public AzureusBittorrentDownload(TransferManager manager, VuzeDownloadManager downloadManager) {
         this.manager = manager;
         this.downloadManager = downloadManager;
-        this.hash = downloadManager.getHash();
+        this.hash = VuzeFormatter.formatHash(downloadManager.getHash());
 
         refreshData(); // super mutable
     }
@@ -93,15 +95,15 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public boolean isResumable() {
-        return TorrentUtil.isStartable(downloadManager);
+        return downloadManager.isResumable();
     }
 
     public boolean isPausable() {
-        return TorrentUtil.isStopable(downloadManager);
+        return downloadManager.isPausable();
     }
 
     public boolean isComplete() {
-        return TorrentUtil.isComplete(downloadManager);
+        return downloadManager.isComplete();
     }
 
     public boolean isDownloading() {
@@ -121,13 +123,13 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
     public void pause() {
         if (isPausable()) {
-            TorrentUtil.stop(downloadManager);
+            downloadManager.stop();
         }
     }
 
     public void resume() {
         if (isResumable()) {
-            TorrentUtil.start(downloadManager);
+            downloadManager.start();
         }
     }
 
@@ -160,92 +162,11 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public String getPeers() {
-        long lTotalPeers = -1;
-        long lConnectedPeers = 0;
-        if (downloadManager != null) {
-            lConnectedPeers = downloadManager.getNbPeers();
-
-            if (lTotalPeers == -1) {
-                TRTrackerScraperResponse response = downloadManager.getTrackerScrapeResponse();
-                if (response != null && response.isValid()) {
-                    lTotalPeers = response.getPeers();
-                }
-            }
-        }
-
-        long totalPeers = lTotalPeers;
-        if (totalPeers <= 0) {
-            DownloadManager dm = downloadManager;
-            if (dm != null) {
-                totalPeers = dm.getActivationCount();
-            }
-        }
-
-        //        long value = lConnectedPeers * 10000000;
-        //        if (totalPeers > 0)
-        //            value = value + totalPeers;
-
-        int state = downloadManager.getState();
-        boolean started = state == DownloadManager.STATE_SEEDING || state == DownloadManager.STATE_DOWNLOADING;
-        boolean hasScrape = lTotalPeers >= 0;
-
-        String tmp;
-        if (started) {
-            tmp = hasScrape ? (lConnectedPeers > lTotalPeers ? "%1" : "%1 " + "/" + " %2") : "%1";
-        } else {
-            tmp = hasScrape ? "%2" : "";
-        }
-
-        tmp = tmp.replaceAll("%1", String.valueOf(lConnectedPeers));
-        tmp = tmp.replaceAll("%2", String.valueOf(totalPeers));
-
-        return tmp;
+        return VuzeFormatter.formatPeers(downloadManager.getPeers(), downloadManager.getConnectedPeers(), downloadManager.hasStarted(), downloadManager.hasScrape());
     }
 
     public String getSeeds() {
-        long lTotalSeeds = -1;
-        //long lTotalPeers = 0;
-        long lConnectedSeeds = 0;
-        DownloadManager dm = downloadManager;
-        if (dm != null) {
-            lConnectedSeeds = dm.getNbSeeds();
-
-            if (lTotalSeeds == -1) {
-                TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-                if (response != null && response.isValid()) {
-                    lTotalSeeds = response.getSeeds();
-                    //lTotalPeers = response.getPeers();
-                }
-            }
-        }
-
-        //        // Allows for 2097151 of each type (connected seeds, seeds, peers)
-        //        long value = (lConnectedSeeds << 42);
-        //        if (lTotalSeeds > 0)
-        //            value += (lTotalSeeds << 21);
-        //        if (lTotalPeers > 0)
-        //            value += lTotalPeers;
-
-        //boolean bCompleteTorrent = dm == null ? false : dm.getAssumedComplete();
-
-        int state = dm.getState();
-        boolean started = (state == DownloadManager.STATE_SEEDING || state == DownloadManager.STATE_DOWNLOADING);
-        boolean hasScrape = lTotalSeeds >= 0;
-        String tmp;
-
-        if (started) {
-            tmp = hasScrape ? (lConnectedSeeds > lTotalSeeds ? "%1" : "%1 " + "/" + " %2") : "%1";
-        } else {
-            tmp = hasScrape ? "%2" : "";
-        }
-        tmp = tmp.replaceAll("%1", String.valueOf(lConnectedSeeds));
-        String param2 = "?";
-        if (lTotalSeeds != -1) {
-            param2 = String.valueOf(lTotalSeeds);
-        }
-        tmp = tmp.replaceAll("%2", param2);
-
-        return tmp;
+        return VuzeFormatter.formatSeeds(downloadManager.getSeeds(), downloadManager.getConnectedSeeds(), downloadManager.hasStarted(), downloadManager.hasScrape());
     }
 
     public String getHash() {
@@ -253,75 +174,11 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public String getSeedToPeerRatio() {
-        float ratio = -1;
-
-        DownloadManager dm = downloadManager;
-        if (dm != null) {
-            TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-            int seeds;
-            int peers;
-
-            if (response != null && response.isValid()) {
-                seeds = Math.max(dm.getNbSeeds(), response.getSeeds());
-
-                int trackerPeerCount = response.getPeers();
-                peers = dm.getNbPeers();
-                if (peers == 0 || trackerPeerCount > peers) {
-                    if (trackerPeerCount <= 0) {
-                        peers = dm.getActivationCount();
-                    } else {
-                        peers = trackerPeerCount;
-                    }
-                }
-            } else {
-                seeds = dm.getNbSeeds();
-                peers = dm.getNbPeers();
-            }
-
-            if (peers < 0 || seeds < 0) {
-                ratio = 0;
-            } else {
-                if (peers == 0) {
-                    if (seeds == 0)
-                        ratio = 0;
-                    else
-                        ratio = Float.POSITIVE_INFINITY;
-                } else {
-                    ratio = (float) seeds / peers;
-                }
-            }
-        }
-
-        if (ratio == -1) {
-            return "";
-        } else if (ratio == 0) {
-            return "??";
-        } else {
-            return DisplayFormatters.formatDecimal(ratio, 3);
-        }
+        return VuzeFormatter.formatSeedToPeerRatio(downloadManager.getConnectedSeeds(), downloadManager.getConnectedPeers());
     }
 
     public String getShareRatio() {
-        DownloadManager dm = downloadManager;
-
-        int sr = (dm == null) ? 0 : dm.getStats().getShareRatio();
-
-        if (sr == Integer.MAX_VALUE) {
-            sr = Integer.MAX_VALUE - 1;
-        }
-        if (sr == -1) {
-            sr = Integer.MAX_VALUE;
-        }
-
-        String shareRatio = "";
-
-        if (sr == Integer.MAX_VALUE) {
-            shareRatio = Constants.INFINITY_STRING;
-        } else {
-            shareRatio = DisplayFormatters.formatDecimal((double) sr / 1000, 3);
-        }
-
-        return shareRatio;
+        return VuzeFormatter.formatShareRatio(downloadManager.getShareRatio());
     }
 
     @Override
@@ -335,11 +192,11 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
 
     public void cancel(boolean deleteData, boolean async) {
         manager.remove(this);
-        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, async);
+        TorrentUtil.removeDownload(downloadManager.getDM(), deleteData, deleteData, async);
     }
 
     DownloadManager getDownloadManager() {
-        return downloadManager;
+        return downloadManager.getDM();
     }
 
     @Override
