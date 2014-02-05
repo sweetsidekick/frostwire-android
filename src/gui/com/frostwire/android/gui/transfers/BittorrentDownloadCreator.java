@@ -70,10 +70,6 @@ final class BittorrentDownloadCreator {
     }
 
     public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr) throws TOTorrentException {
-        if (!AzureusManager.isCreated()) {
-            return new InvalidBittorrentDownload(R.string.azureus_manager_not_created);
-        }
-
         GlobalManager gm = AzureusManager.instance().getGlobalManager();
 
         if (StringUtils.isNullOrEmpty(sr.getHash())) {

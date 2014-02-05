@@ -23,12 +23,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.global.GlobalManager;
-
-import com.aelitis.azureus.core.AzureusCore;
-import com.aelitis.azureus.core.AzureusCoreFactory;
-import com.aelitis.azureus.core.AzureusCoreRunningListener;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -36,7 +30,6 @@ import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
-import com.frostwire.android.util.ByteUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
@@ -45,7 +38,9 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.frostwire.vuze.VuzeUtils;
+import com.frostwire.vuze.VuzeDownloadManager;
+import com.frostwire.vuze.VuzeManager;
+import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
 
 /**
  * @author gubatron
@@ -232,7 +227,7 @@ public final class TransferManager {
     }
 
     public long getDownloadsBandwidth() {
-        long torrenDownloadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataReceiveRate() / 1000 : 0;
+        long torrenDownloadsBandwidth = VuzeManager.getInstance().getDataReceiveRate();
 
         long peerDownloadsBandwidth = 0;
         for (DownloadTransfer d : downloads) {
@@ -243,7 +238,7 @@ public final class TransferManager {
     }
 
     public double getUploadsBandwidth() {
-        long torrenUploadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataSendRate() / 1000 : 0;
+        long torrenUploadsBandwidth = VuzeManager.getInstance().getDataSendRate();
 
         long peerUploadsBandwidth = 0;
         for (UploadTransfer u : uploads) {
@@ -276,48 +271,20 @@ public final class TransferManager {
     public void loadTorrents() {
         bittorrentDownloads.clear();
 
-        if (!AzureusManager.isCreated()) {
-            return;
+        boolean stop = false;
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
+            stop = true;
+        } else {
+            if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
+                stop = true;
+            }
         }
 
-        AzureusCoreFactory.addCoreRunningListener(new AzureusCoreRunningListener() {
+        VuzeManager.getInstance().loadTorrents(stop, new LoadTorrentsListener() {
 
             @Override
-            public void azureusCoreRunning(AzureusCore core) {
-                GlobalManager globalManager = AzureusManager.instance().getAzureusCore().getGlobalManager();
-                List<?> downloadManagers = globalManager.getDownloadManagers();
-
-                List<DownloadManager> downloads = new ArrayList<DownloadManager>();
-                for (Object obj : downloadManagers) {
-                    if (obj instanceof DownloadManager) {
-                        try {
-                            if (((DownloadManager) obj).getTorrent() != null && ((DownloadManager) obj).getTorrent().getHash() != null) {
-                                LOG.debug("Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
-                                downloads.add((DownloadManager) obj);
-                            }
-                        } catch (Throwable e) {
-                            // ignore
-                            LOG.debug("error loading torrent (not the end of the world, keep going)");
-                        }
-                    }
-                }
-
-                boolean stop = false;
-                if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
-                    stop = true;
-                } else {
-                    if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                        stop = true;
-                    }
-                }
-
-                for (DownloadManager dm : downloads) {
-                    if (stop && VuzeUtils.isComplete(dm)) {
-                        VuzeUtils.stop(dm);
-                    }
-
-                    bittorrentDownloads.add(BittorrentDownloadCreator.create(TransferManager.this, dm));
-                }
+            public void onLoad(List<VuzeDownloadManager> dms) {
+                //bittorrentDownloads.addAll(dms).add(BittorrentDownloadCreator.create(TransferManager.this, dm));
             }
         });
     }
