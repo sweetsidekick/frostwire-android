@@ -45,6 +45,7 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.frostwire.vuze.VuzeUtils;
 
 /**
  * @author gubatron
@@ -311,8 +312,8 @@ public final class TransferManager {
                 }
 
                 for (DownloadManager dm : downloads) {
-                    if (stop && TorrentUtil.isComplete(dm)) {
-                        TorrentUtil.stop(dm);
+                    if (stop && VuzeUtils.isComplete(dm)) {
+                        VuzeUtils.stop(dm);
                     }
 
                     bittorrentDownloads.add(BittorrentDownloadCreator.create(TransferManager.this, dm));

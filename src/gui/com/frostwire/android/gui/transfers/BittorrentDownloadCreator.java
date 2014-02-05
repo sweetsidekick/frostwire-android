@@ -44,6 +44,8 @@ import com.frostwire.android.util.ByteUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
+import com.frostwire.vuze.VuzeDownloadManager;
+import com.frostwire.vuze.VuzeUtils;
 
 /**
  * @author gubatron
@@ -95,7 +97,7 @@ final class BittorrentDownloadCreator {
     static BittorrentDownload create(TransferManager manager, DownloadManager dm) {
         setup(dm, false);
 
-        return new AzureusBittorrentDownload(manager, dm);
+        return new AzureusBittorrentDownload(manager, new VuzeDownloadManager(dm));
     }
 
     /**
@@ -176,7 +178,7 @@ final class BittorrentDownloadCreator {
             return oldDownload;
         }
 
-        return new AzureusBittorrentDownload(manager, dm);
+        return new AzureusBittorrentDownload(manager, new VuzeDownloadManager(dm));
     }
 
     private static boolean isDownloadingAll(boolean[] fileSelection) {
@@ -234,9 +236,9 @@ final class BittorrentDownloadCreator {
                     manager.startDownload();
                 }
 
-                if (TorrentUtil.isComplete(manager) && finished.compareAndSet(false, true)) {
+                if (VuzeUtils.isComplete(manager) && finished.compareAndSet(false, true)) {
                     if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
-                        TorrentUtil.stop(manager);
+                        VuzeUtils.stop(manager);
                     }
 
                     if (notifyFinished) {

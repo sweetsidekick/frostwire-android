@@ -71,6 +71,7 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.ScreenMetrics;
+import com.frostwire.vuze.VuzeUtils;
 
 /**
  * The Librarian is in charge of:
@@ -285,7 +286,7 @@ public final class Librarian {
     }
 
     public void scan(File file) {
-        scan(file, TorrentUtil.getIgnorableFiles());
+        scan(file, VuzeUtils.getIgnorableFiles());
     }
 
     public Finger finger(boolean local) {
@@ -531,7 +532,7 @@ public final class Librarian {
     }
 
     private void syncMediaStoreSupport() {
-        Set<File> ignorableFiles = TorrentUtil.getIgnorableFiles();
+        Set<File> ignorableFiles = VuzeUtils.getIgnorableFiles();
 
         syncMediaStore(Constants.FILE_TYPE_AUDIO, ignorableFiles);
         syncMediaStore(Constants.FILE_TYPE_PICTURES, ignorableFiles);
