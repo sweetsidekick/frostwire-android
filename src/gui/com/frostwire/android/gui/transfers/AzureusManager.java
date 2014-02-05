@@ -75,8 +75,6 @@ public final class AzureusManager {
 
     private static final ExecutorService SAFE_CONFIG_EXECUTOR;
 
-    private VuzeManager vuze;
-
     static {
         SAFE_CONFIG_EXECUTOR = ExecutorsHelper.newFixedSizeThreadPool(1, "Vuze-Save-Config");
     }
@@ -106,6 +104,7 @@ public final class AzureusManager {
         asyncSaveConfiguration();
 
         loadMessages(context);
+        azureusCore = VuzeManager.getInstance().getCore();
         azureusInit();
         azureusStart();
     }
@@ -228,15 +227,6 @@ public final class AzureusManager {
     }
 
     private void azureusInit() {
-        try {
-            azureusCore = AzureusCoreFactory.create();
-        } catch (AzureusCoreException coreException) {
-            //so we already had one ...
-            if (azureusCore == null) {
-                azureusCore = AzureusCoreFactory.getSingleton();
-            }
-        }
-
         registerPreferencesChangeListener();
     }
 
@@ -268,8 +258,6 @@ public final class AzureusManager {
             } catch (InterruptedException e) {
                 // ignore
             }
-
-            vuze = new VuzeManager(azureusCore);
 
         } catch (Throwable e) {
             Log.e(TAG, "Failed to start Azureus core started", e);
