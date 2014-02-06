@@ -21,7 +21,7 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**|**/util/protocol/http/**" kind="src" path="common/vuze/azureus2/src">
+	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/vuze/azureus2/src">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
