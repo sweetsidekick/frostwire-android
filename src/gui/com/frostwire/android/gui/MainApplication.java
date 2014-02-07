@@ -18,10 +18,6 @@
 
 package com.frostwire.android.gui;
 
-import java.io.File;
-
-import org.gudy.azureus2.core3.util.SystemProperties;
-
 import android.app.Application;
 import android.util.Log;
 
@@ -48,9 +44,9 @@ public class MainApplication extends Application {
             // important initial setup here
             ConfigurationManager.create(this);
 
+            // important setup at very begining
             String azureusPath = SystemUtils.getAzureusDirectory().getAbsolutePath();
-            VuzeManager.setApplicationPath(azureusPath);
-            SystemProperties.setUserPath(azureusPath);
+            VuzeManager.setConfigPath(azureusPath);
 
             NetworkManager.create(this);
             Librarian.create(this);
