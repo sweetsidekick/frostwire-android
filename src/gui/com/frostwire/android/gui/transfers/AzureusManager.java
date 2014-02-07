@@ -37,8 +37,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.util.Log;
 
 import com.aelitis.azureus.core.AzureusCore;
-import com.aelitis.azureus.core.AzureusCoreException;
-import com.aelitis.azureus.core.AzureusCoreFactory;
 import com.aelitis.azureus.core.AzureusCoreLifecycleAdapter;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -100,7 +98,7 @@ public final class AzureusManager {
         asyncSaveConfiguration();
 
         loadMessages(context);
-        azureusCore = VuzeManager.getInstance().getCore();
+        
         azureusInit();
         azureusStart();
     }
@@ -206,6 +204,7 @@ public final class AzureusManager {
         VuzeManager.setupConfiguration();
 
         SystemProperties.APPLICATION_NAME = "azureus";
+        setApplicationPath(azureusPath.getAbsolutePath());
         SystemProperties.setUserPath(azureusPath.getAbsolutePath());
 
         COConfigurationManager.setParameter("Auto Adjust Transfer Defaults", false);
@@ -228,6 +227,8 @@ public final class AzureusManager {
 
     private void azureusStart() {
         try {
+            azureusCore = VuzeManager.getInstance().getCore();
+            
             if (azureusCore.isStarted()) {
                 Log.w(TAG, "Azureus core already started. skipping.");
                 return;
@@ -286,7 +287,7 @@ public final class AzureusManager {
         asyncSaveConfiguration();
     }
 
-    private void loadMessages(Context context) {
+    private static void loadMessages(Context context) {
         IntegratedResourceBundle res = new IntegratedResourceBundle(new EmptyResourceBundle(), new HashMap<String, ClassLoader>());
 
         res.addString("PeerManager.status.finished", context.getString(R.string.azureus_peer_manager_status_finished));
@@ -319,6 +320,16 @@ public final class AzureusManager {
             Log.e(TAG, "Unable to set vuze messages", e);
         }
         DisplayFormatters.loadMessages();
+    }
+    
+    private static void setApplicationPath(String path) {
+        try {
+            Field f = SystemProperties.class.getDeclaredField("app_path");
+            f.setAccessible(true);
+            f.set(null, path);
+        } catch (Throwable e) {
+            Log.e(TAG, "Unable to set vuze application path", e);
+        }
     }
 
     private static void asyncSaveConfiguration() {

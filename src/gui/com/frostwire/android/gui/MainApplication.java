@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui;
 
+import java.io.File;
+
 import android.app.Application;
 import android.util.Log;
 
@@ -26,6 +28,7 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * 
@@ -42,12 +45,16 @@ public class MainApplication extends Application {
         try {
             // important initial setup here
             ConfigurationManager.create(this);
+
+            File azureusPath = SystemUtils.getAzureusDirectory();
+            VuzeManager.setApplicationPath(azureusPath.getAbsolutePath());
+
             NetworkManager.create(this);
             Librarian.create(this);
             Engine.create(this);
 
             ImageLoader.createDefaultInstance(this);
-            
+
             FileUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
 
             Librarian.instance().syncMediaStore();
