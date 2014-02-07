@@ -199,7 +199,7 @@
     <string name="files_shared">Udostępnione pliki</string>
     <string name="share_finished_downloads">Udostępnij zakończone pobierania przez WiFi</string>
     <string name="share_finished_downloads_summary">Pobrane pliki będą dostępne dla innych użytkowników FrostWire w sieci WiFi.</string>
-    <string name="are_you_sure_delete_files">Czy na pewno chcesz CAŁKOWICE USUNĄĆ wybrane pliki?</string>
+    <string name="are_you_sure_delete_files">Czy na pewno chcesz CAŁKOWICE USUNĄĆ wybrane pliki z twojego urządzenia?</string>
     <string name="searchable_activity_label">Aktywność Przeszukiwania</string>
     <string name="search_hint">Szukaj Zawartości</string>
     <string name="search_settings_description">Szukaj Torrentów</string>

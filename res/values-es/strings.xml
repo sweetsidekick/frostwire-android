@@ -199,7 +199,7 @@
     <string name="files_shared">archivos compartidos</string>
     <string name="share_finished_downloads">Compartir las descargas terminadas en Wi-Fi</string>
     <string name="share_finished_downloads_summary">Las descargas compartidas estarán disponibles para otros usuarios de FrostWire en tu red de Wi-Fi.</string>
-    <string name="are_you_sure_delete_files">¿Estás seguro de que quieres borrar los archivos seleccionados?</string>
+    <string name="are_you_sure_delete_files">¿Estás seguro de que quieres borrar los archivos seleccionados de tu dispositivo?</string>
     <string name="searchable_activity_label">Actividad de Búsqueda</string>
     <string name="search_hint">Contenido de Búsqueda</string>
     <string name="search_settings_description">Búsqueda para Torrentes</string>
