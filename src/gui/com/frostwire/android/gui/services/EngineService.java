@@ -42,6 +42,7 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * @author gubatron
@@ -149,7 +150,7 @@ public class EngineService extends Service implements IEngineService {
         AzureusManager.create();
         //TransferManager.instance().loadTorrents();
 
-        AzureusManager.instance().resume();
+        VuzeManager.getInstance().resume();
 
         PeerManager.instance().clear();
 
@@ -168,7 +169,7 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        AzureusManager.instance().pause();
+        VuzeManager.getInstance().pause();
 
         PeerManager.instance().clear();
 

@@ -50,7 +50,6 @@ public final class AzureusManager implements VuzeKeys {
 
     private static final String TAG = "FW.AzureusManager";
 
-    
     private AzureusCore azureusCore;
 
     private OnSharedPreferenceChangeListener preferenceListener;
@@ -78,29 +77,8 @@ public final class AzureusManager implements VuzeKeys {
     }
 
     private AzureusManager() {
-        asyncSaveConfiguration();
-        
+
         azureusInit();
-        azureusStart();
-    }
-
-    public void pause() {
-        try {
-            azureusCore.getGlobalManager().pauseDownloads();
-        } catch (Throwable e) {
-            Log.e(TAG, "Failed to pause Azureus core", e);
-        }
-    }
-
-    public void resume() {
-        try {
-            COConfigurationManager.setParameter("UDP.Listen.Port.Enable", NetworkManager.instance().isDataWIFIUp());
-            asyncSaveConfiguration();
-
-            azureusCore.getGlobalManager().resumeDownloads();
-        } catch (Throwable e) {
-            Log.e(TAG, "Failed to resume Azureus core", e);
-        }
     }
 
     public static void revertToDefaultConfiguration() {
@@ -167,52 +145,8 @@ public final class AzureusManager implements VuzeKeys {
         }
     }
 
-    AzureusCore getAzureusCore() {
-        return azureusCore;
-    }
-
-    GlobalManager getGlobalManager() {
-        return getAzureusCore().getGlobalManager();
-    }
-
     private void azureusInit() {
         registerPreferencesChangeListener();
-    }
-
-    private void azureusStart() {
-        try {
-            azureusCore = VuzeManager.getInstance().getCore();
-            
-            if (azureusCore.isStarted()) {
-                Log.w(TAG, "Azureus core already started. skipping.");
-                return;
-            }
-
-            final CountDownLatch signal = new CountDownLatch(1);
-            azureusCore.addLifecycleListener(new AzureusCoreLifecycleAdapter() {
-                @Override
-                public void started(AzureusCore core) {
-                    if (signal != null) {
-                        signal.countDown();
-                    }
-                }
-            });
-
-            azureusCore.start();
-
-            azureusCore.getGlobalManager().resumeDownloads();
-
-            Log.d(TAG, "Azureus core starting...");
-            try {
-                signal.await();
-                Log.d(TAG, "Azureus core started");
-            } catch (InterruptedException e) {
-                // ignore
-            }
-
-        } catch (Throwable e) {
-            Log.e(TAG, "Failed to start Azureus core started", e);
-        }
     }
 
     private void registerPreferencesChangeListener() {
@@ -240,7 +174,7 @@ public final class AzureusManager implements VuzeKeys {
         COConfigurationManager.setParameter(key, ConfigurationManager.instance().getLong(key));
         asyncSaveConfiguration();
     }
-    
+
     private static void asyncSaveConfiguration() {
         SAFE_CONFIG_EXECUTOR.execute(new Runnable() {
             @Override
