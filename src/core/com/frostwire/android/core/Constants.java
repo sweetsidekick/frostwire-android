@@ -148,13 +148,6 @@ public final class Constants {
 
     public static final String SERVER_PROMOTIONS_URL = "http://update.frostwire.com/o.php";
 
-    /**
-     * Maximum number of peers the PeerManager should hold
-     */
-    public static final int PEER_MANAGER_MAX_PEERS = 15;
-
-    public static final int PEER_MANAGER_CACHE_TIMEOUT = 5000;
-
     public static final long LIBRARIAN_FILE_COUNT_CACHE_TIMEOUT = 2 * 60 * 1000; // 2 minutes
 
     public static final int MAX_NUM_DOWNLOAD_CHECKED = 5;
@@ -168,6 +161,5 @@ public final class Constants {
     public static final int DEVICE_MAJOR_TYPE_DESKTOP = CommonConstants.DEVICE_MAJOR_TYPE_DESKTOP;
     public static final int DEVICE_MAJOR_TYPE_PHONE = CommonConstants.DEVICE_MAJOR_TYPE_PHONE;
     public static final int DEVICE_MAJOR_TYPE_TABLET = CommonConstants.DEVICE_MAJOR_TYPE_TABLET;
-
 
 }

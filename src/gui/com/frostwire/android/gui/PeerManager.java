@@ -18,14 +18,14 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
@@ -48,8 +48,6 @@ public final class PeerManager {
 
     private static final String TAG = "FW.PeerManager";
 
-    private final int maxPeers;
-    private final LruCache<Peer, Peer> peerCache;
     private final Map<String, Peer> addressMap;
 
     private final PeerComparator peerComparator;
@@ -67,10 +65,7 @@ public final class PeerManager {
     }
 
     private PeerManager() {
-        this.maxPeers = Constants.PEER_MANAGER_MAX_PEERS;
-        //this.cacheTimeout = Constants.PEER_MANAGER_CACHE_TIMEOUT;
-        this.peerCache = new LruCache<Peer, Peer>(maxPeers);
-        this.addressMap = new HashMap<String, Peer>();
+        this.addressMap = new ConcurrentHashMap<String, Peer>();
 
         this.peerComparator = new PeerComparator();
 
@@ -109,11 +104,9 @@ public final class PeerManager {
      * @return
      */
     public List<Peer> getPeers() {
-        List<Peer> peers = new ArrayList<Peer>(1 + peerCache.size());
+        List<Peer> peers = new ArrayList<Peer>();
 
-        for (Peer p : peerCache.snapshot().values()) {
-            peers.add(p);
-        }
+        peers.addAll(addressMap.values());
 
         Collections.sort(peers, peerComparator);
 
@@ -135,7 +128,7 @@ public final class PeerManager {
     }
 
     public void clear() {
-        peerCache.evictAll();
+        addressMap.clear();
     }
 
     public void removePeer(Peer p) {
@@ -148,7 +141,11 @@ public final class PeerManager {
 
     public void start() {
         httpServerManager.start(NetworkManager.instance().getListeningPort());
-        peerManager.start(createLocalPeer());
+        try {
+            peerManager.start(NetworkManager.instance().getMulticastInetAddress(), createLocalPeer());
+        } catch (IOException e) {
+            peerManager.start(null, createLocalPeer());
+        }
     }
 
     public void stop() {
@@ -173,10 +170,7 @@ public final class PeerManager {
 
     private void updatePeerCache2(Peer peer, boolean disconnected) {
         if (disconnected) {
-            Peer p = addressMap.remove(peer.getKey());
-            if (p != null) {
-                peerCache.remove(p);
-            }
+            addressMap.remove(peer.getKey());
         } else {
             addressMap.put(peer.getKey(), peer);
             updatePeerCache(peer, disconnected);
@@ -192,36 +186,32 @@ public final class PeerManager {
      */
     private void updatePeerCache(Peer peer, boolean disconnected) {
         // first time we hear from a peer
-        if (peerCache.get(peer) == null) {
+        if (!addressMap.containsKey(peer.getKey())) {
             // no more ghosts...
             if (disconnected) {
                 return;
             }
 
-            // there's no room
-            boolean cacheFull = peerCache.size() >= maxPeers;
-
-            // add it to the peer cache
-            if (!cacheFull) {
-                peerCache.put(peer, peer);
-                Log.v(TAG, String.format("Adding new peer, total=%s: %s", peerCache.size(), peer));
-            }
+            addressMap.put(peer.getKey(), peer);
+            Log.v(TAG, String.format("Adding new peer, total=%s: %s", addressMap.size(), peer));
         } else {
             if (!disconnected) {
-                peerCache.put(peer, peer); // touch the element and updates the properties
+                addressMap.put(peer.getKey(), peer); // touch the element and updates the properties
             } else {
-                peerCache.remove(peer);
+                addressMap.remove(peer.getKey());
             }
         }
     }
 
     private static final class PeerComparator implements Comparator<Peer> {
         public int compare(Peer lhs, Peer rhs) {
-            int c = lhs.getNickname().compareTo(rhs.getNickname());
-            if (c == 0) {
-                c = rhs.hashCode() - lhs.hashCode();
+            if (lhs.isLocalHost()) {
+                return -1;
             }
-            return c;
+            if (rhs.isLocalHost()) {
+                return 1;
+            }
+            return lhs.getNickname().compareTo(rhs.getNickname());
         }
     }
 }
