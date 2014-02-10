@@ -35,7 +35,7 @@ import com.frostwire.util.JsonUtils;
  * @author aldenml
  * 
  */
-public final class Peer implements Cloneable {
+public final class Peer {
 
     private static final int BROWSE_HTTP_TIMEOUT = 10000;
 
@@ -52,11 +52,11 @@ public final class Peer implements Cloneable {
     private int deviceMajorType;
 
     private int hashCode = -1;
-    private boolean localhost;
+    private final boolean localhost;
 
     private String key;
     private final LocalPeer p;
-    
+
     private final HttpClient httpClient;
 
     public Peer(LocalPeer p, boolean localhost) {
@@ -72,7 +72,7 @@ public final class Peer implements Cloneable {
         this.localhost = localhost;
 
         this.hashCode = key.hashCode();
-        
+
         this.httpClient = HttpClientFactory.newDefaultInstance();
     }
 
@@ -140,7 +140,7 @@ public final class Peer implements Cloneable {
             return Librarian.instance().getFiles(fileType, 0, Integer.MAX_VALUE, false);
         } else {
             String url = getBrowseUri(fileType);
-            
+
             String json = null;
             try {
                 json = httpClient.get(url, BROWSE_HTTP_TIMEOUT);
@@ -148,7 +148,7 @@ public final class Peer implements Cloneable {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
             return JsonUtils.toObject(json, FileDescriptorList.class).files;
         }
     }
@@ -170,11 +170,6 @@ public final class Peer implements Cloneable {
     @Override
     public int hashCode() {
         return this.hashCode != -1 ? this.hashCode : super.hashCode();
-    }
-
-    @Override
-    public Peer clone() {
-        return new Peer(p, localhost);
     }
 
     public String getKey() {
