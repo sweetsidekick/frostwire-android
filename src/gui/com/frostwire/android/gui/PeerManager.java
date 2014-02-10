@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -148,7 +149,11 @@ public final class PeerManager {
 
     public void start() {
         httpServerManager.start(NetworkManager.instance().getListeningPort());
-        peerManager.start(createLocalPeer());
+        try {
+            peerManager.start(NetworkManager.instance().getMulticastInetAddress(), createLocalPeer());
+        } catch (IOException e) {
+            peerManager.start(null, createLocalPeer());
+        }
     }
 
     public void stop() {
