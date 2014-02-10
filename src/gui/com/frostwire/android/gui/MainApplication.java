@@ -31,6 +31,7 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
 
 /**
@@ -51,9 +52,11 @@ public class MainApplication extends Application {
 
             // important setup at very begining
             String azureusPath = SystemUtils.getAzureusDirectory().getAbsolutePath();
-            VuzeManager.setConfigPath(azureusPath);
-            VuzeManager.setMessages(getVuzeMessages(this));
-
+            String torrentsPath  = SystemUtils.getTorrentsDirectory().getAbsolutePath();
+            Map<String, String> messages = getVuzeMessages(this);
+            VuzeConfiguration conf = new VuzeConfiguration(azureusPath, torrentsPath, messages);
+            VuzeManager.setConfiguration(conf);
+            
             NetworkManager.create(this);
             Librarian.create(this);
             Engine.create(this);
