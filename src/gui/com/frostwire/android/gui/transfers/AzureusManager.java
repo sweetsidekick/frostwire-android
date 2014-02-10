@@ -18,35 +18,25 @@
 
 package com.frostwire.android.gui.transfers;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 import org.gudy.azureus2.core3.config.COConfigurationManager;
 import org.gudy.azureus2.core3.global.GlobalManager;
-import org.gudy.azureus2.core3.internat.IntegratedResourceBundle;
-import org.gudy.azureus2.core3.internat.MessageText;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-import org.gudy.azureus2.core3.util.SystemProperties;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.util.Log;
 
 import com.aelitis.azureus.core.AzureusCore;
 import com.aelitis.azureus.core.AzureusCoreLifecycleAdapter;
-import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
-import com.frostwire.vuze.EmptyResourceBundle;
+import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
 
 /**
@@ -56,17 +46,11 @@ import com.frostwire.vuze.VuzeManager;
  * @author aldenml
  *
  */
-public final class AzureusManager {
+public final class AzureusManager implements VuzeKeys {
 
     private static final String TAG = "FW.AzureusManager";
 
-    private static final String AZUREUS_CONFIG_KEY_MAX_DOWNLOAD_SPEED = "Max Download Speed KBs";
-    private static final String AZUREUS_CONFIG_KEY_MAX_UPLOAD_SPEED = "Max Upload Speed KBs";
-    private static final String AZUREUS_CONFIG_KEY_MAX_DOWNLOADS = "max downloads";
-    private static final String AZUREUS_CONFIG_KEY_MAX_UPLOADS = "Max Uploads";
-    private static final String AZUREUS_CONFIG_KEY_MAX_TOTAL_CONNECTIONS = "Max.Peer.Connections.Total";
-    private static final String AZUREUS_CONFIG_KEY_MAX_TORRENT_CONNECTIONS = "Max.Peer.Connections.Per.Torrent";
-
+    
     private AzureusCore azureusCore;
 
     private OnSharedPreferenceChangeListener preferenceListener;
@@ -79,11 +63,11 @@ public final class AzureusManager {
 
     private static AzureusManager instance;
 
-    public synchronized static void create(Context context) {
+    public synchronized static void create() {
         if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
             return;
         }
-        instance = new AzureusManager(context);
+        instance = new AzureusManager();
     }
 
     public static AzureusManager instance() {
@@ -93,11 +77,8 @@ public final class AzureusManager {
         return instance;
     }
 
-    private AzureusManager(Context context) {
-        initConfiguration();
+    private AzureusManager() {
         asyncSaveConfiguration();
-
-        loadMessages(context);
         
         azureusInit();
         azureusStart();
@@ -194,33 +175,6 @@ public final class AzureusManager {
         return getAzureusCore().getGlobalManager();
     }
 
-    public static void initConfiguration() {
-        File azureusPath = SystemUtils.getAzureusDirectory();
-
-        System.setProperty("azureus.config.path", azureusPath.getAbsolutePath());
-        System.setProperty("azureus.install.path", azureusPath.getAbsolutePath());
-        System.setProperty("azureus.loadplugins", "0"); // disable third party azureus plugins
-
-        VuzeManager.setupConfiguration();
-
-        SystemProperties.APPLICATION_NAME = "azureus";
-        setApplicationPath(azureusPath.getAbsolutePath());
-        SystemProperties.setUserPath(azureusPath.getAbsolutePath());
-
-        COConfigurationManager.setParameter("Auto Adjust Transfer Defaults", false);
-        COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", SystemUtils.getTorrentsDirectory().getAbsolutePath());
-
-        //COConfigurationManager.setParameter(TransferSpeedValidator.AUTO_UPLOAD_ENABLED_CONFIGKEY, false);
-
-        // network parameters, fine tunning for android
-        COConfigurationManager.setParameter("network.tcp.write.select.time", 1000);
-        COConfigurationManager.setParameter("network.tcp.write.select.min.time", 1000);
-        COConfigurationManager.setParameter("network.tcp.read.select.time", 1000);
-        COConfigurationManager.setParameter("network.tcp.read.select.min.time", 1000);
-        COConfigurationManager.setParameter("network.control.write.idle.time", 1000);
-        COConfigurationManager.setParameter("network.control.read.idle.time", 1000);
-    }
-
     private void azureusInit() {
         registerPreferencesChangeListener();
     }
@@ -265,17 +219,17 @@ public final class AzureusManager {
         preferenceListener = new OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_DOWNLOAD_SPEED);
+                    setAzureusParameter(MAX_DOWNLOAD_SPEED);
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_UPLOAD_SPEED);
+                    setAzureusParameter(MAX_UPLOAD_SPEED);
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_DOWNLOADS);
+                    setAzureusParameter(MAX_DOWNLOADS);
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOADS)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_UPLOADS);
+                    setAzureusParameter(MAX_UPLOADS);
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_TOTAL_CONNECTIONS);
+                    setAzureusParameter(MAX_TOTAL_CONNECTIONS);
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS)) {
-                    setAzureusParameter(AZUREUS_CONFIG_KEY_MAX_TORRENT_CONNECTIONS);
+                    setAzureusParameter(MAX_TORRENT_CONNECTIONS);
                 }
             }
         };
@@ -286,52 +240,7 @@ public final class AzureusManager {
         COConfigurationManager.setParameter(key, ConfigurationManager.instance().getLong(key));
         asyncSaveConfiguration();
     }
-
-    private static void loadMessages(Context context) {
-        IntegratedResourceBundle res = new IntegratedResourceBundle(new EmptyResourceBundle(), new HashMap<String, ClassLoader>());
-
-        res.addString("PeerManager.status.finished", context.getString(R.string.azureus_peer_manager_status_finished));
-        res.addString("PeerManager.status.finishedin", context.getString(R.string.azureus_peer_manager_status_finishedin));
-        res.addString("Formats.units.alot", context.getString(R.string.azureus_formats_units_alot));
-        res.addString("discarded", context.getString(R.string.azureus_discarded));
-        res.addString("ManagerItem.waiting", context.getString(R.string.azureus_manager_item_waiting));
-        res.addString("ManagerItem.initializing", context.getString(R.string.azureus_manager_item_initializing));
-        res.addString("ManagerItem.allocating", context.getString(R.string.azureus_manager_item_allocating));
-        res.addString("ManagerItem.checking", context.getString(R.string.azureus_manager_item_checking));
-        res.addString("ManagerItem.finishing", context.getString(R.string.azureus_manager_item_finishing));
-        res.addString("ManagerItem.ready", context.getString(R.string.azureus_manager_item_ready));
-        res.addString("ManagerItem.downloading", context.getString(R.string.azureus_manager_item_downloading));
-        res.addString("ManagerItem.seeding", context.getString(R.string.azureus_manager_item_seeding));
-        res.addString("ManagerItem.superseeding", context.getString(R.string.azureus_manager_item_superseeding));
-        res.addString("ManagerItem.stopping", context.getString(R.string.azureus_manager_item_stopping));
-        res.addString("ManagerItem.stopped", context.getString(R.string.azureus_manager_item_stopped));
-        res.addString("ManagerItem.paused", context.getString(R.string.azureus_manager_item_paused));
-        res.addString("ManagerItem.queued", context.getString(R.string.azureus_manager_item_queued));
-        res.addString("ManagerItem.error", context.getString(R.string.azureus_manager_item_error));
-        res.addString("ManagerItem.forced", context.getString(R.string.azureus_manager_item_forced));
-        res.addString("GeneralView.yes", context.getString(R.string.azureus_general_view_yes));
-        res.addString("GeneralView.no", context.getString(R.string.azureus_general_view_no));
-
-        try {
-            Field f = MessageText.class.getDeclaredField("DEFAULT_BUNDLE");
-            f.setAccessible(true);
-            f.set(null, res);
-        } catch (Throwable e) {
-            Log.e(TAG, "Unable to set vuze messages", e);
-        }
-        DisplayFormatters.loadMessages();
-    }
     
-    private static void setApplicationPath(String path) {
-        try {
-            Field f = SystemProperties.class.getDeclaredField("app_path");
-            f.setAccessible(true);
-            f.set(null, path);
-        } catch (Throwable e) {
-            Log.e(TAG, "Unable to set vuze application path", e);
-        }
-    }
-
     private static void asyncSaveConfiguration() {
         SAFE_CONFIG_EXECUTOR.execute(new Runnable() {
             @Override
