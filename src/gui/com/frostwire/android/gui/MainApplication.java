@@ -47,6 +47,11 @@ public class MainApplication extends Application {
         super.onCreate();
 
         try {
+            
+//            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
+//                return;
+//            }
+            
             // important initial setup here
             ConfigurationManager.create(this);
 

@@ -39,7 +39,6 @@ import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.concurrent.ThreadPool;
 import com.frostwire.vuze.VuzeManager;
@@ -147,7 +146,6 @@ public class EngineService extends Service implements IEngineService {
 
         Librarian.instance().invalidateCountCache();
 
-        AzureusManager.create();
         //TransferManager.instance().loadTorrents();
 
         VuzeManager.getInstance().resume();

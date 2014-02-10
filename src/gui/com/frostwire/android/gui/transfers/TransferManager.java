@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -40,6 +43,7 @@ import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 import com.frostwire.vuze.VuzeDownloadFactory;
 import com.frostwire.vuze.VuzeDownloadManager;
+import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
 import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
 
@@ -48,7 +52,7 @@ import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
  * @author aldenml
  *
  */
-public final class TransferManager {
+public final class TransferManager implements VuzeKeys {
 
     private static final Logger LOG = Logger.getLogger(TransferManager.class);
 
@@ -61,6 +65,8 @@ public final class TransferManager {
     private final Object alreadyDownloadingMonitor = new Object();
 
     private static TransferManager instance;
+    
+    private OnSharedPreferenceChangeListener preferenceListener;
 
     public static TransferManager instance() {
         if (instance == null) {
@@ -70,6 +76,8 @@ public final class TransferManager {
     }
 
     private TransferManager() {
+        registerPreferencesChangeListener();
+
         this.downloads = new LinkedList<DownloadTransfer>();
         this.uploads = new LinkedList<UploadTransfer>();
         this.bittorrentDownloads = new LinkedList<BittorrentDownload>();
@@ -404,4 +412,28 @@ public final class TransferManager {
         }
     }
 
+    private void registerPreferencesChangeListener() {
+        preferenceListener = new OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED)) {
+                    setAzureusParameter(MAX_DOWNLOAD_SPEED);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED)) {
+                    setAzureusParameter(MAX_UPLOAD_SPEED);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS)) {
+                    setAzureusParameter(MAX_DOWNLOADS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOADS)) {
+                    setAzureusParameter(MAX_UPLOADS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS)) {
+                    setAzureusParameter(MAX_TOTAL_CONNECTIONS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS)) {
+                    setAzureusParameter(MAX_TORRENT_CONNECTIONS);
+                }
+            }
+        };
+        ConfigurationManager.instance().registerOnPreferenceChange(preferenceListener);
+    }
+
+    private void setAzureusParameter(String key) {
+        VuzeManager.getInstance().setParameter(key, ConfigurationManager.instance().getLong(key));
+    }
 }

@@ -35,7 +35,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
