@@ -22,12 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.frostwire.android.core.ConfigurationManager;
@@ -172,7 +170,7 @@ public final class PeerManager {
 
     private void updatePeerCache2(Peer peer, boolean disconnected) {
         if (disconnected) {
-            Peer p = addressMap.remove(peer.getKey());
+            addressMap.remove(peer.getKey());
         } else {
             addressMap.put(peer.getKey(), peer);
             updatePeerCache(peer, disconnected);
@@ -210,11 +208,10 @@ public final class PeerManager {
             if (lhs.isLocalHost()) {
                 return -1;
             }
-            int c = lhs.getNickname().compareTo(rhs.getNickname());
-            if (c == 0) {
-                c = rhs.hashCode() - lhs.hashCode();
+            if (rhs.isLocalHost()) {
+                return 1;
             }
-            return c;
+            return lhs.getNickname().compareTo(rhs.getNickname());
         }
     }
 }
