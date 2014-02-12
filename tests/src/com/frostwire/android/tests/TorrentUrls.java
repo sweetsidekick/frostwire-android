@@ -27,5 +27,5 @@ package com.frostwire.android.tests;
 public final class TorrentUrls {
 
     // Brandon Hines - In Search Of [FrostClick.com 2010]
-    public static final String MININOVA_BRANDON_HINES_2010 = "http://www.mininova.org/tor/3191902/0";
+    public static final String FROSTCLICK_BRANDON_HINES_2010 = "http://dl.frostwire.com/torrents/audio/music/Brandon_Hines__In_Search_Of__frostclick.com_frostwire.com_MP3_320k_20100408.torrent";
 }

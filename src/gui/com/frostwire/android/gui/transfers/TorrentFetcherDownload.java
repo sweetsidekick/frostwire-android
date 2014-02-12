@@ -214,7 +214,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = new AzureusBittorrentDownload(manager, VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath()));
+                    delegate = new AzureusBittorrentDownload(manager, VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath(), null));
 
                     if (delegate instanceof InvalidBittorrentDownload) {
                         cancel();
