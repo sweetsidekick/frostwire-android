@@ -322,7 +322,7 @@ public final class TransferManager implements VuzeKeys {
 
     public BittorrentDownload downloadTorrent(String uri) {
         try {
-            BittorrentDownload download = VuzeDownloadFactory.create(new URI(uri));
+            BittorrentDownload download = new AzureusBittorrentDownload(this, VuzeDownloadFactory.create(new URI(uri)));
 
             if (!(download instanceof InvalidBittorrentDownload)) {
                 if (!bittorrentDownloads.contains(download)) {
@@ -339,7 +339,7 @@ public final class TransferManager implements VuzeKeys {
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload download = VuzeDownloadFactory.create(sr);
+            BittorrentDownload download = new AzureusBittorrentDownload(this, VuzeDownloadFactory.create(sr));
 
             if (!(download instanceof InvalidBittorrentDownload)) {
                 if (!bittorrentDownloads.contains(download)) {
