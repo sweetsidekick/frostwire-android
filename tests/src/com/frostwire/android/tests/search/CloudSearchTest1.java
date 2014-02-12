@@ -31,10 +31,8 @@ import com.frostwire.search.SearchResult;
 import com.frostwire.search.WebSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
-import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
-import com.frostwire.search.vertor.VertorSearchPerformer;
 
 /**
  * 
@@ -46,32 +44,22 @@ public class CloudSearchTest1 extends TestCase {
 
     @MediumTest
     public void testSoundcloud() {
-        testPerformer(new SoundcloudSearchPerformer(0, "frostclick", 5000));
-    }
-
-    @MediumTest
-    public void testISOHunt() {
-        testPerformer(new ISOHuntSearchPerformer(0, "frostclick", 5000));
-    }
-
-    @MediumTest
-    public void testVertor() {
-        testPerformer(new VertorSearchPerformer(0, "frostclick", 5000));
+        testPerformer(new SoundcloudSearchPerformer(null, 0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testMininova() {
-        testPerformer(new MininovaSearchPerformer(0, "frostclick", 5000));
+        testPerformer(new MininovaSearchPerformer(null, 0, "frostclick", 5000));
     }
 
     @MediumTest
     public void testClearBits() {
-        testPerformer(new ClearBitsSearchPerformer(0, "Big Buck Bunny", 5000));
+        testPerformer(new ClearBitsSearchPerformer(null, 0, "Big Buck Bunny", 5000));
     }
 
     @MediumTest
     public void testExtratorrent() {
-        testPerformer(new ExtratorrentSearchPerformer(0, "frostclick", 5000));
+        testPerformer(new ExtratorrentSearchPerformer(null, 0, "frostclick", 5000));
     }
 
     private void testPerformer(WebSearchPerformer performer) {

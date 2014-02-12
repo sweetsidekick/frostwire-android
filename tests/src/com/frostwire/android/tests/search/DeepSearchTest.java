@@ -26,7 +26,7 @@ import android.test.mock.MockApplication;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.gui.transfers.AzureusManager;
+import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.tests.TestUtils;
 import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
@@ -34,8 +34,8 @@ import com.frostwire.search.SearchResult;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
-import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
-import com.frostwire.search.vertor.VertorSearchPerformer;
+import com.frostwire.vuze.VuzeConfiguration;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * 
@@ -58,35 +58,28 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
         super.setUp();
 
         ConfigurationManager.create(getApplication());
-        AzureusManager.initConfiguration();
-    }
 
-    @LargeTest
-    public void testDeepSearchISOHunt() {
-        deepSearch(new ISOHuntSearchPerformer(0, "frostclick", 5000));
-    }
-
-    @LargeTest
-    public void testDeepSearchVertor() {
-        deepSearch(new VertorSearchPerformer(0, "frostclick", 5000));
+        String azureusPath = SystemUtils.getAzureusDirectory().getAbsolutePath();
+        String torrentsPath = SystemUtils.getTorrentsDirectory().getAbsolutePath();
+        VuzeConfiguration conf = new VuzeConfiguration(azureusPath, torrentsPath, null);
+        VuzeManager.setConfiguration(conf);
     }
 
     @LargeTest
     public void testDeepSearchExtratorrent() {
-        deepSearch(new ExtratorrentSearchPerformer(0, "frostclick", 5000));
+        deepSearch(new ExtratorrentSearchPerformer(null, 0, "frostclick", 5000));
     }
 
     @LargeTest
     public void testDeepSearchClearBits() {
-        deepSearch(new ClearBitsSearchPerformer(0, "Big Buck Bunny", 5000));
+        deepSearch(new ClearBitsSearchPerformer(null, 0, "Big Buck Bunny", 5000));
     }
 
     @LargeTest
     public void testDeepSearchArchiveorg() {
-        deepSearch(new ArchiveorgSearchPerformer(0, "Big Buck Bunny", 5000));
+        deepSearch(new ArchiveorgSearchPerformer(null, 0, "Big Buck Bunny", 5000));
     }
 
-    
     private void deepSearch(SearchPerformer performer) {
         final CountDownLatch signal = new CountDownLatch(1);
 
