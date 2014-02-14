@@ -51,4 +51,11 @@ public final class TestUtils {
             throw new RuntimeException("Unable to run test on this device", e);
         }
     }
+
+    public static void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+        }
+    }
 }
