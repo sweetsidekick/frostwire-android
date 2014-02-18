@@ -21,12 +21,18 @@ package com.frostwire.android.gui.transfers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.vuze.VuzeDownloadFactory;
+import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeTorrentDownloadListener;
 import com.frostwire.vuze.VuzeTorrentDownloader;
@@ -215,7 +221,23 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (finished.compareAndSet(false, true)) {
                 try {
 
-                    VuzeDownloadManager dm = VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath(), null);
+                    Set<String> selection = new HashSet<String>();
+                    selection.add(info.getRelativePath());
+                    VuzeDownloadManager dm = VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new VuzeDownloadListener() {
+
+                        @Override
+                        public void stateChanged(VuzeDownloadManager dm, int state) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        @Override
+                        public void downloadComplete(VuzeDownloadManager dm) {
+                            TransferManager.instance().incrementDownloadsToReview();
+                            Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
+                            Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
+                        }
+                    });
 
                     delegate = new AzureusBittorrentDownload(manager, dm);
 

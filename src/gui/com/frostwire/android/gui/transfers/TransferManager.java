@@ -342,15 +342,13 @@ public final class TransferManager implements VuzeKeys {
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload download = new AzureusBittorrentDownload(this, VuzeDownloadFactory.create(sr));
+            BittorrentDownload dl = new TorrentFetcherDownload(this, new TorrentSearchResultInfo(sr));
 
-            if (!(download instanceof InvalidBittorrentDownload)) {
-                if (!bittorrentDownloads.contains(download)) {
-                    bittorrentDownloads.add(download);
-                }
+            if (!bittorrentDownloads.contains(dl)) {
+                bittorrentDownloads.add(dl);
             }
 
-            return download;
+            return dl;
         } catch (Throwable e) {
             LOG.warn("Error creating download from search result: " + sr);
             return new InvalidBittorrentDownload(R.string.empty_string);
