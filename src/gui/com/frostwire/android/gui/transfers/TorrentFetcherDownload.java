@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.frostwire.android.R;
 import com.frostwire.logging.Logger;
 import com.frostwire.vuze.VuzeDownloadFactory;
+import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeTorrentDownloadListener;
 import com.frostwire.vuze.VuzeTorrentDownloader;
 
@@ -214,15 +215,9 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             if (finished.compareAndSet(false, true)) {
                 try {
 
-                    delegate = new AzureusBittorrentDownload(manager, VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath(), null));
+                    VuzeDownloadManager dm = VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), null, info.getRelativePath(), null);
 
-                    if (delegate instanceof InvalidBittorrentDownload) {
-                        cancel();
-                    }
-
-                    if (delegate == null) {
-                        LOG.error("Error creating the actual torrent download, delegate after creation is null");
-                    }
+                    delegate = new AzureusBittorrentDownload(manager, dm);
 
                 } catch (Throwable e) {
                     statusResId = R.string.torrent_fetcher_download_status_error;

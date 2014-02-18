@@ -65,7 +65,7 @@ public final class TransferManager implements VuzeKeys {
     private final Object alreadyDownloadingMonitor = new Object();
 
     private static TransferManager instance;
-    
+
     private OnSharedPreferenceChangeListener preferenceListener;
 
     public static TransferManager instance() {
@@ -294,6 +294,9 @@ public final class TransferManager implements VuzeKeys {
             @Override
             public void onLoad(List<VuzeDownloadManager> dms) {
                 //bittorrentDownloads.addAll(dms).add(BittorrentDownloadCreator.create(TransferManager.this, dm));
+                for (VuzeDownloadManager dm : dms) {
+                    bittorrentDownloads.add(new AzureusBittorrentDownload(TransferManager.this, dm));
+                }
             }
         });
     }
