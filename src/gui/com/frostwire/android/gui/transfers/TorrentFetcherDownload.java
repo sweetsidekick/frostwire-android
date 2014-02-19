@@ -275,6 +275,10 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             return false;
         }
 
-        return info.getDetailsUrl().equals(((TorrentFetcherDownload) o).info.getTorrentUrl());
+        String u1 = info.getTorrentUrl();
+        String u2 = ((TorrentFetcherDownload) o).info.getTorrentUrl();
+
+        return u1.equalsIgnoreCase(u2);
     }
+
 }
