@@ -25,8 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
 import com.frostwire.vuze.VuzeFormatter;
@@ -41,14 +39,14 @@ import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
 final class AzureusBittorrentDownload implements BittorrentDownload {
 
     private final TransferManager manager;
-    private VuzeDownloadManager downloadManager;
+    private final VuzeDownloadManager downloadManager;
+    private final String hash;
 
     private List<BittorrentDownloadItem> items;
-    private String hash;
+
     private boolean partialDownload;
     private Set<VuzeFileInfo> fileInfoSet;
-    private long size;
-    private String displayName;
+    private long lastChangedTime;
 
     public AzureusBittorrentDownload(TransferManager manager, VuzeDownloadManager downloadManager) {
         this.manager = manager;
@@ -59,7 +57,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return downloadManager.getDisplayName();
     }
 
     public String getStatus() {
@@ -67,6 +65,8 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public int getProgress() {
+        refreshData();
+
         if (isComplete()) {
             return 100;
         }
@@ -76,14 +76,14 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
             for (VuzeFileInfo fileInfo : fileInfoSet) {
                 downloaded += fileInfo.getDownloaded();
             }
-            return (int) ((downloaded * 100) / size);
+            return (int) ((downloaded * 100) / getSize());
         } else {
             return downloadManager.getDownloadCompleted();
         }
     }
 
     public long getSize() {
-        return size;
+        return downloadManager.getSize();
     }
 
     public boolean isResumable() {
@@ -201,32 +201,16 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         return null;
     }
 
-    public void refreshData() {
-        fileInfoSet = VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
-        partialDownload = !VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
+    private void refreshData() {
+        if (lastChangedTime < downloadManager.getChangedTime()) {
+            lastChangedTime = downloadManager.getChangedTime();
+            fileInfoSet = VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
+            partialDownload = !VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
 
-        if (partialDownload) {
-            if (fileInfoSet.isEmpty()) {
-                size = downloadManager.getSize();
-            } else {
-                size = 0;
-                for (VuzeFileInfo fileInfo : fileInfoSet) {
-                    size += fileInfo.getLength();
-                }
+            items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
+            for (VuzeFileInfo fileInfo : fileInfoSet) {
+                items.add(new AzureusBittorrentDownloadItem(fileInfo));
             }
-        } else {
-            size = downloadManager.getSize();
-        }
-
-        if (fileInfoSet.size() == 1) {
-            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new VuzeFileInfo[0])[0].getFilename());
-        } else {
-            displayName = downloadManager.getDisplayName();
-        }
-
-        items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
-        for (VuzeFileInfo fileInfo : fileInfoSet) {
-            items.add(new AzureusBittorrentDownloadItem(fileInfo));
         }
     }
 
