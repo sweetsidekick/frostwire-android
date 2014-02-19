@@ -268,4 +268,13 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     public String getDetailsUrl() {
         return info.getDetailsUrl();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TorrentFetcherDownload)) {
+            return false;
+        }
+
+        return info.getDetailsUrl().equals(((TorrentFetcherDownload) o).info.getTorrentUrl());
+    }
 }
