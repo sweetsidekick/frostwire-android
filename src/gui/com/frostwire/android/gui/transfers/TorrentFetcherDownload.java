@@ -222,7 +222,9 @@ public class TorrentFetcherDownload implements BittorrentDownload {
                 try {
 
                     Set<String> selection = new HashSet<String>();
-                    selection.add(info.getRelativePath());
+                    if (info.getRelativePath() != null) {
+                        selection.add(info.getRelativePath());
+                    }
                     VuzeDownloadManager dm = VuzeDownloadFactory.create(dl.getFile().getAbsolutePath(), selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new VuzeDownloadListener() {
 
                         @Override
