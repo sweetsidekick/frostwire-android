@@ -168,7 +168,7 @@ public abstract class AbstractActivity extends FragmentActivity {
                 for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                     unbindDrawables(((ViewGroup) view).getChildAt(i));
                 }
-                ((ViewGroup) view).removeAllViews();
+                //((ViewGroup) view).removeAllViews();
             }
         } catch (Throwable e) {
             LOG.warn("Failed to unbind drawables and remove views", e);
