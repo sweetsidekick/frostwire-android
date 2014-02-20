@@ -63,7 +63,6 @@ public class HttpServerManager {
             httpServer.createContext("/browse", new BrowseHandler());
             httpServer.createContext("/download", new DownloadHandler());
             httpServer.createContext("/dekstop-upload-request", new DesktopUploadRequestHandler(sessionManager));
-            httpServer.createContext("/desktop-upload", new DesktopUploadHandler(sessionManager));
 
             httpServer.start();
 

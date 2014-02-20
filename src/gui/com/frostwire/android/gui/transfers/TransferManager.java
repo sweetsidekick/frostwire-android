@@ -29,7 +29,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
@@ -41,7 +40,6 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.frostwire.vuze.VuzeDownloadFactory;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
@@ -159,29 +157,6 @@ public final class TransferManager implements VuzeKeys {
         return upload;
     }
 
-    public DesktopTransfer desktopTransfer(DesktopUploadRequest dur, FileDescriptor fd) {
-        DesktopTransfer transfer = null;
-
-        for (DownloadTransfer downloadTransfer : downloads) {
-            if (downloadTransfer instanceof DesktopTransfer) {
-                DesktopTransfer desktopTransfer = (DesktopTransfer) downloadTransfer;
-                if (desktopTransfer.getDUR().equals(dur)) {
-                    transfer = desktopTransfer;
-                    break;
-                }
-            }
-        }
-
-        if (transfer == null) {
-            transfer = new DesktopTransfer(this, dur, fd);
-            downloads.add(transfer);
-        } else {
-            transfer.addFileDescriptor(fd);
-        }
-
-        return transfer;
-    }
-
     public void clearComplete() {
         List<Transfer> transfers = getTransfers();
 
@@ -293,16 +268,11 @@ public final class TransferManager implements VuzeKeys {
 
             @Override
             public void onLoad(List<VuzeDownloadManager> dms) {
-                //bittorrentDownloads.addAll(dms).add(BittorrentDownloadCreator.create(TransferManager.this, dm));
                 for (VuzeDownloadManager dm : dms) {
                     bittorrentDownloads.add(new AzureusBittorrentDownload(TransferManager.this, dm));
                 }
             }
         });
-    }
-
-    List<BittorrentDownload> getBittorrentDownloads() {
-        return new LinkedList<BittorrentDownload>(bittorrentDownloads);
     }
 
     boolean remove(Transfer transfer) {
@@ -322,7 +292,7 @@ public final class TransferManager implements VuzeKeys {
             d.pause();
         }
     }
-    
+
     /*
 
     public static BittorrentDownload create(TransferManager manager, URI uri) throws TOTorrentException {
@@ -359,8 +329,17 @@ public final class TransferManager implements VuzeKeys {
 
     public BittorrentDownload downloadTorrent(String uri) {
         try {
-            BittorrentDownload download = null;//new AzureusBittorrentDownload(this, VuzeDownloadFactory.create(new URI(uri)));
+            URI u = URI.create(uri);
 
+            BittorrentDownload download = null;
+
+            if (u.getScheme().equalsIgnoreCase("file")) {
+                download = null;//create(manager, uri.getPath(), null, null);
+            } else if (u.getScheme().equalsIgnoreCase("http")) {
+                download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
+            } else {
+                download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
+            }
             if (!(download instanceof InvalidBittorrentDownload)) {
                 if (!bittorrentDownloads.contains(download)) {
                     bittorrentDownloads.add(download);
