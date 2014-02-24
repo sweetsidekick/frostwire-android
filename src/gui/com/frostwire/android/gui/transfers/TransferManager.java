@@ -18,10 +18,12 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -30,8 +32,11 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
@@ -40,6 +45,8 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.frostwire.vuze.VuzeDownloadFactory;
+import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
@@ -295,16 +302,6 @@ public final class TransferManager implements VuzeKeys {
 
     /*
 
-    public static BittorrentDownload create(TransferManager manager, URI uri) throws TOTorrentException {
-        if (uri.getScheme().equalsIgnoreCase("file")) {
-            return create(manager, uri.getPath(), null, null);
-        } else if (uri.getScheme().equalsIgnoreCase("http")) {
-            return new TorrentFetcherDownload(manager, new TorrentUrlInfo(uri.toString()));
-        } else {
-            return new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
-        }
-    }
-
     public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr) throws TOTorrentException {
         GlobalManager gm = AzureusManager.instance().getGlobalManager();
 
@@ -334,7 +331,7 @@ public final class TransferManager implements VuzeKeys {
             BittorrentDownload download = null;
 
             if (u.getScheme().equalsIgnoreCase("file")) {
-                download = null;//create(manager, uri.getPath(), null, null);
+                download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
             } else if (u.getScheme().equalsIgnoreCase("http")) {
                 download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
             } else {
@@ -449,5 +446,23 @@ public final class TransferManager implements VuzeKeys {
 
     private void setAzureusParameter(String key) {
         VuzeManager.getInstance().setParameter(key, ConfigurationManager.instance().getLong(key));
+    }
+
+    VuzeDownloadManager createVDM(String path, Set<String> selection) throws IOException {
+        VuzeDownloadManager dm = VuzeDownloadFactory.create(path, selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new VuzeDownloadListener() {
+
+            @Override
+            public void stateChanged(VuzeDownloadManager dm, int state) {
+            }
+
+            @Override
+            public void downloadComplete(VuzeDownloadManager dm) {
+                TransferManager.instance().incrementDownloadsToReview();
+                Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
+                Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
+            }
+        });
+
+        return dm;
     }
 }
