@@ -21,21 +21,17 @@ package com.frostwire.android.gui;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 
 import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.util.ByteUtils;
+import com.frostwire.util.ByteUtils;
 
 /**
  * @author gubatron

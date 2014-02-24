@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.frostwire.android.util.ByteUtils;
-
 import android.os.Environment;
+
+import com.frostwire.util.ByteUtils;
 
 /**
  * 
