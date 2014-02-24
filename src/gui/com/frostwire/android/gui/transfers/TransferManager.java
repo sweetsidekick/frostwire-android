@@ -43,6 +43,7 @@ import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
+import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 import com.frostwire.vuze.VuzeDownloadFactory;
@@ -300,30 +301,6 @@ public final class TransferManager implements VuzeKeys {
         }
     }
 
-    /*
-
-    public static BittorrentDownload create(TransferManager manager, TorrentSearchResult sr) throws TOTorrentException {
-        GlobalManager gm = AzureusManager.instance().getGlobalManager();
-
-        if (StringUtils.isNullOrEmpty(sr.getHash())) {
-            return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
-        } else {
-            Log.d(TAG, "About to create download for hash: " + sr.getHash());
-            DownloadManager dm = gm.getDownloadManager(new HashWrapper(ByteUtils.decodeHex(sr.getHash())));
-            if (dm == null) {// new download, I need to download the torrent
-                Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
-                return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
-            } else {
-                if (sr instanceof TorrentCrawledSearchResult) {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
-                } else {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
-                }
-            }
-        }
-    }
-     */
-
     public BittorrentDownload downloadTorrent(String uri) {
         try {
             URI u = URI.create(uri);
@@ -349,6 +326,25 @@ public final class TransferManager implements VuzeKeys {
             return new InvalidBittorrentDownload(R.string.empty_string);
         }
     }
+    /*
+    private static BittorrentDownload createBittorrentDownload(TransferManager manager, TorrentSearchResult sr) {
+        if (StringUtils.isNullOrEmpty(sr.getHash())) {
+            return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
+        } else {
+            Log.d(TAG, "About to create download for hash: " + sr.getHash());
+            DownloadManager dm = gm.getDownloadManager(new HashWrapper(ByteUtils.decodeHex(sr.getHash())));
+            if (dm == null) {// new download, I need to download the torrent
+                Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
+                return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
+            } else {
+                if (sr instanceof TorrentCrawledSearchResult) {
+                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
+                } else {
+                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
+                }
+            }
+        }
+    }*/
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
