@@ -39,9 +39,9 @@ import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.core.HttpFetcherListener;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.SimpleZip;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.concurrent.AbstractRunnable;
+import com.frostwire.util.ZipUtils;
 
 /**
  * @author gubatron
@@ -260,7 +260,7 @@ public final class HttpDownload implements DownloadTransfer {
         if (link.isCompressed()) {
             status = STATUS_UNCOMPRESSING;
             location = FilenameUtils.removeExtension(savePath.getAbsolutePath());
-            success = SimpleZip.uncompress(savePath.getAbsolutePath(), location);
+            success = ZipUtils.unzip(savePath, new File(location));
         }
 
         if (success) {
