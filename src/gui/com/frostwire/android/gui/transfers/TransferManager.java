@@ -283,7 +283,7 @@ public final class TransferManager implements VuzeKeys {
                     bittorrentDownloads.add(new AzureusBittorrentDownload(TransferManager.this, dm));
                 }
             }
-        });
+        }, new DownloadListener());
     }
 
     boolean remove(Transfer transfer) {
@@ -449,20 +449,22 @@ public final class TransferManager implements VuzeKeys {
     }
 
     VuzeDownloadManager createVDM(String path, Set<String> selection) throws IOException {
-        VuzeDownloadManager dm = VuzeDownloadFactory.create(path, selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new VuzeDownloadListener() {
-
-            @Override
-            public void stateChanged(VuzeDownloadManager dm, int state) {
-            }
-
-            @Override
-            public void downloadComplete(VuzeDownloadManager dm) {
-                TransferManager.instance().incrementDownloadsToReview();
-                Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
-                Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
-            }
-        });
+        VuzeDownloadManager dm = VuzeDownloadFactory.create(path, selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new DownloadListener());
 
         return dm;
+    }
+
+    private static class DownloadListener implements VuzeDownloadListener {
+
+        @Override
+        public void stateChanged(VuzeDownloadManager dm, int state) {
+        }
+
+        @Override
+        public void downloadComplete(VuzeDownloadManager dm) {
+            TransferManager.instance().incrementDownloadsToReview();
+            Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
+            Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
+        }
     }
 }
