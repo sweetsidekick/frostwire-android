@@ -21,6 +21,7 @@ package com.frostwire.android.gui.transfers;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +38,12 @@ import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.android.util.ByteUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.util.StringUtils;
@@ -326,29 +329,30 @@ public final class TransferManager implements VuzeKeys {
             return new InvalidBittorrentDownload(R.string.empty_string);
         }
     }
-    /*
+
     private static BittorrentDownload createBittorrentDownload(TransferManager manager, TorrentSearchResult sr) {
         if (StringUtils.isNullOrEmpty(sr.getHash())) {
             return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
         } else {
-            Log.d(TAG, "About to create download for hash: " + sr.getHash());
-            DownloadManager dm = gm.getDownloadManager(new HashWrapper(ByteUtils.decodeHex(sr.getHash())));
+            VuzeDownloadManager dm = VuzeManager.getInstance().find(ByteUtils.decodeHex(sr.getHash()));
             if (dm == null) {// new download, I need to download the torrent
-                Log.d(TAG, "Creating new TorrentFetcherDownload for hash: " + sr.getHash());
                 return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
             } else {
                 if (sr instanceof TorrentCrawledSearchResult) {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), sr.getFilename());
+                    Set<String> paths = new HashSet<String>();
+                    paths.add(sr.getFilename());
+                    dm.setSkipped(paths, true);
                 } else {
-                    return create(manager, dm.getTorrentFileName(), dm.getTorrent().getHash(), null);
+                    dm.setSkipped(null, false);
                 }
             }
+            return new AzureusBittorrentDownload(manager, dm);
         }
-    }*/
+    }
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload dl = new TorrentFetcherDownload(this, new TorrentSearchResultInfo(sr));
+            BittorrentDownload dl = createBittorrentDownload(this, sr);
 
             if (!bittorrentDownloads.contains(dl)) {
                 bittorrentDownloads.add(dl);
