@@ -44,7 +44,6 @@ import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeDownloadFactory;
 import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
-import com.frostwire.vuze.VuzeFormatter;
 import com.frostwire.vuze.VuzeManager;
 import com.frostwire.vuze.VuzeUtils;
 
@@ -98,7 +97,7 @@ public class VuzeDownloadTest extends ApplicationTestCase<MockApplication> {
 
             @Override
             public void stateChanged(VuzeDownloadManager dm, int state) {
-                LOG.info("testDownload1-stateChanged:" + VuzeFormatter.formatDownloadState(state));
+                LOG.info("testDownload1-stateChanged:" + formatDownloadState(state));
             }
 
             @Override
@@ -124,6 +123,41 @@ public class VuzeDownloadTest extends ApplicationTestCase<MockApplication> {
             throw new IOException("Unable to read the torrent", e);
         } finally {
             IOUtils.closeQuietly(is);
+        }
+    }
+
+    private static String formatDownloadState(int state) {
+        switch (state) {
+        case VuzeDownloadManager.STATE_WAITING:
+            return "Waiting";
+        case VuzeDownloadManager.STATE_INITIALIZING:
+            return "Initializing";
+        case VuzeDownloadManager.STATE_INITIALIZED:
+            return "Initialized";
+        case VuzeDownloadManager.STATE_ALLOCATING:
+            return "Allocating";
+        case VuzeDownloadManager.STATE_CHECKING:
+            return "Checking";
+        case VuzeDownloadManager.STATE_READY:
+            return "Ready";
+        case VuzeDownloadManager.STATE_DOWNLOADING:
+            return "Downloading";
+        case VuzeDownloadManager.STATE_FINISHING:
+            return "Finishing";
+        case VuzeDownloadManager.STATE_SEEDING:
+            return "Seeding";
+        case VuzeDownloadManager.STATE_STOPPING:
+            return "Stopping";
+        case VuzeDownloadManager.STATE_STOPPED:
+            return "Stopped";
+        case VuzeDownloadManager.STATE_CLOSED:
+            return "Closed";
+        case VuzeDownloadManager.STATE_QUEUED:
+            return "Queued";
+        case VuzeDownloadManager.STATE_ERROR:
+            return "Error";
+        default:
+            return "Unknown";
         }
     }
 }

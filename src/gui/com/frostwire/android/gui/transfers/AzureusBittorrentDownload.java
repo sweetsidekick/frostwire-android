@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.frostwire.util.ByteUtils;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
 import com.frostwire.vuze.VuzeFormatter;
@@ -51,7 +52,7 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     public AzureusBittorrentDownload(TransferManager manager, VuzeDownloadManager downloadManager) {
         this.manager = manager;
         this.downloadManager = downloadManager;
-        this.hash = VuzeFormatter.formatHash(downloadManager.getHash());
+        this.hash = ByteUtils.encodeHex(downloadManager.getHash());
 
         refreshData(); // super mutable
     }
