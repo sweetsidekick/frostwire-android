@@ -179,11 +179,8 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         cancel(false);
     }
 
+    @Override
     public void cancel(boolean deleteData) {
-        cancel(deleteData, true);
-    }
-
-    public void cancel(boolean deleteData, boolean async) {
         manager.remove(this);
         VuzeUtils.removeDownload(downloadManager, deleteData, deleteData);
     }

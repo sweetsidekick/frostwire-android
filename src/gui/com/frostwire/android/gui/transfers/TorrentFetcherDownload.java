@@ -165,15 +165,10 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     @Override
     public void cancel(boolean deleteData) {
-        cancel(false, true);
-    }
-
-    @Override
-    public void cancel(boolean deleteData, boolean async) {
         statusResId = R.string.torrent_fetcher_download_status_canceled;
 
         if (delegate != null) {
-            delegate.cancel(deleteData, async);
+            delegate.cancel(deleteData);
         } else {
             removed = true;
             try {

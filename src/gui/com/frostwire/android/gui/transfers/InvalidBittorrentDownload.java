@@ -166,10 +166,6 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     }
 
     @Override
-    public void cancel(boolean deleteData, boolean async) {
-    }
-
-    @Override
     public List<? extends BittorrentDownloadItem> getBittorrentItems() {
         return null;
     }
