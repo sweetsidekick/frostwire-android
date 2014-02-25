@@ -41,6 +41,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.BaseColumns;
@@ -296,14 +297,13 @@ public final class Librarian {
         finger.frostwireVersion = Constants.FROSTWIRE_VERSION_STRING;
         finger.totalShared = getNumFiles();
 
-        DeviceInfo di = new DeviceInfo();
-        finger.deviceVersion = di.getVersion();
-        finger.deviceModel = di.getModel();
-        finger.deviceProduct = di.getProduct();
-        finger.deviceName = di.getName();
-        finger.deviceManufacturer = di.getManufacturer();
-        finger.deviceBrand = di.getBrand();
-        finger.deviceScreen = di.getScreenMetrics();
+        finger.deviceVersion = Build.VERSION.RELEASE;
+        finger.deviceModel = Build.MODEL;
+        finger.deviceProduct = Build.PRODUCT;
+        finger.deviceName = Build.DEVICE;
+        finger.deviceManufacturer = Build.MANUFACTURER;
+        finger.deviceBrand = Build.BRAND;
+        finger.deviceScreen = readScreenMetrics();
 
         finger.numSharedAudioFiles = getNumFiles(Constants.FILE_TYPE_AUDIO, true);
         finger.numSharedVideoFiles = getNumFiles(Constants.FILE_TYPE_VIDEOS, true);
