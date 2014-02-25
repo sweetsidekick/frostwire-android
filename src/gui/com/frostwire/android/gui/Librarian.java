@@ -65,11 +65,11 @@ import com.frostwire.android.core.providers.UniversalStore.Applications.Applicat
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
 import com.frostwire.android.gui.util.Apk;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.ScreenMetrics;
+import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeUtils;
 
 /**
@@ -851,7 +851,7 @@ public final class Librarian {
 
             new UniversalScanner(context).scan(file.getAbsolutePath());
         } else if (file.isDirectory() && file.canRead()) {
-            Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file, null);
+            Collection<File> flattenedFiles = DirectoryUtils.getAllFolderFiles(file, null);
 
             if (ignorableFiles != null && !ignorableFiles.isEmpty()) {
                 flattenedFiles.removeAll(ignorableFiles);

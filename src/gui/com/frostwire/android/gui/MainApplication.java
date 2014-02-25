@@ -28,9 +28,9 @@ import android.util.Log;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
 
@@ -68,7 +68,7 @@ public class MainApplication extends Application {
 
             ImageLoader.createDefaultInstance(this);
 
-            FileUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
+            DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
 
             Librarian.instance().syncMediaStore();
             Librarian.instance().syncApplicationsProvider();

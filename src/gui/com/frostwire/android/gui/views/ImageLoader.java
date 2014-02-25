@@ -42,9 +42,9 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.gui.util.DiskLruRawDataCache;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.MusicUtils;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.util.DirectoryUtils;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
@@ -93,7 +93,7 @@ public final class ImageLoader {
     private DiskLruRawDataCache diskCacheOpen() {
         DiskLruRawDataCache cache = null;
         File imgCacheDir = SystemUtils.getImageCacheDirectory();
-        cache = (FileUtils.isValidDirectory(imgCacheDir)) ? new DiskLruRawDataCache(imgCacheDir, DISK_CACHE_SIZE) : null;
+        cache = DirectoryUtils.isValidDirectory(imgCacheDir) ? new DiskLruRawDataCache(imgCacheDir, DISK_CACHE_SIZE) : null;
         return cache;
     }
 

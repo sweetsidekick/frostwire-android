@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.search.HttpSearchResult;
 
 /**
@@ -31,7 +30,7 @@ public final class HttpSearchResultDownloadLink extends HttpDownloadLink {
     private final HttpSearchResult sr;
 
     public HttpSearchResultDownloadLink(HttpSearchResult sr) {
-        super(sr.getDownloadUrl(), FileUtils.getValidFileName(sr.getFilename()), sr.getDisplayName(), sr.getSize(), false);
+        super(sr.getDownloadUrl(), getValidFileName(sr.getFilename()), sr.getDisplayName(), sr.getSize(), false);
         this.sr = sr;
     }
 

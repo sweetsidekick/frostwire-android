@@ -27,11 +27,11 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 
 import com.frostwire.android.BuildConfig;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.CrawlCache;
 import com.frostwire.util.ByteUtils;
+import com.frostwire.util.DirectoryUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
 import com.jakewharton.disklrucache.DiskLruCache.Editor;
 import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
@@ -150,7 +150,7 @@ public class DiskCrawlCache implements CrawlCache {
                 cache.close();
             } catch (Exception e) { }
             
-            FileUtils.deleteFolderRecursively(cache.getDirectory());
+            DirectoryUtils.deleteFolderRecursively(cache.getDirectory());
             
             createCache();
         }

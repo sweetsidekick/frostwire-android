@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.util;
+package com.frostwire.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +28,14 @@ import java.util.Stack;
 import org.apache.commons.io.FilenameUtils;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
  *
  */
-public final class FileUtils {
+public final class DirectoryUtils {
 
-    private FileUtils() {
+    private DirectoryUtils() {
     }
 
     public static void deleteFolderRecursively(File folder) {
@@ -89,11 +90,6 @@ public final class FileUtils {
         }
 
         return canDelete ? directory.delete() : false;
-    }
-
-    public static String getValidFileName(String fileName) {
-        String newFileName = fileName.replaceAll("[\\\\/:*?\"<>|\\[\\]]+", "_");
-        return newFileName;
     }
 
     /** Given a folder path it'll return all the files contained within it and it's subfolders
