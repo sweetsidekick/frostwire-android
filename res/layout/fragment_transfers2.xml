@@ -23,43 +23,33 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RadioGroup
         android:id="@+id/fragment_transfers_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_dark_blue"
-        android:gravity="right" >
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="#ff1d2934" />
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/fragment_transfers_button_pauseall"
             style="@style/TransfersButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@null"
             android:drawableLeft="@drawable/stop_transfer"
             android:paddingRight="10dp"
             android:text="@string/stop" />
 
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="#ff1d2934" />
-
         <Button
             android:id="@+id/fragment_transfers_button_clearcomplete"
             style="@style/TransfersButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@null"
             android:drawableLeft="@drawable/remove_transfer"
             android:paddingRight="10dp"
             android:text="@string/clear" />
-    </LinearLayout>
+    </RadioGroup>
 
     <com.frostwire.android.gui.views.FWExpandableListView
         android:id="@id/android:list"
