@@ -196,6 +196,9 @@
 
     <style name="TransfersButton">
         <item name="android:textColor">#ffbfcfdc</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
     <!-- Transfers indicator begin -->
@@ -209,7 +212,7 @@
 
     <style name="ListItemTitle">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ff3b3b3b</item>
     </style>

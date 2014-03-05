@@ -50,13 +50,11 @@ import com.frostwire.uxstats.UXStats;
  */
 public class TransfersFragment2 extends AbstractExpandableListFragment implements Refreshable, MainFragment {
 
-    @SuppressWarnings("unused")
-    private static final String TAG = "FW.TransfersFragment";
-
     private final Comparator<Transfer> transferComparator;
 
-    private Button buttonPauseAll;
-    private Button buttonClearComplete;
+    private Button buttonSelectAll;
+    private Button buttonSelectDownloading;
+    private Button buttonSelectCompleted;
     private TextView textDownloads;
     private TextView textUploads;
 
@@ -79,7 +77,7 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
         if (getActivity() instanceof AbstractActivity) {
             ((AbstractActivity) getActivity()).addRefreshable(this);
         }
-        
+
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
     }
 
@@ -125,28 +123,29 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
 
     @Override
     protected void initComponents(View v) {
-        buttonPauseAll = findView(v, R.id.fragment_transfers_button_pauseall);
-        buttonPauseAll.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                UIUtils.showYesNoDialog(getActivity(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        TransferManager.instance().stopHttpTransfers();
-                        TransferManager.instance().pauseTorrents();
-                        UXStats.instance().log(UXAction.DOWNLOAD_PAUSE);
-                    }
-                });
-            }
-        });
-        buttonClearComplete = findView(v, R.id.fragment_transfers_button_clearcomplete);
-        buttonClearComplete.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                UIUtils.showYesNoDialog(getActivity(), R.string.clear_complete_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        TransferManager.instance().clearComplete();
-                    }
-                });
-            }
-        });
+        buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
+        //        buttonSelectAll.setOnClickListener(new OnClickListener() {
+        //            public void onClick(View v) {
+        //                UIUtils.showYesNoDialog(getActivity(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+        //                    public void onClick(DialogInterface dialog, int id) {
+        //                        TransferManager.instance().stopHttpTransfers();
+        //                        TransferManager.instance().pauseTorrents();
+        //                        UXStats.instance().log(UXAction.DOWNLOAD_PAUSE);
+        //                    }
+        //                });
+        //            }
+        //        });
+        buttonSelectDownloading = findView(v, R.id.fragment_transfers_button_select_downloading);
+        buttonSelectCompleted = findView(v, R.id.fragment_transfers_button_select_completed);
+        //        buttonClearComplete.setOnClickListener(new OnClickListener() {
+        //            public void onClick(View v) {
+        //                UIUtils.showYesNoDialog(getActivity(), R.string.clear_complete_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+        //                    public void onClick(DialogInterface dialog, int id) {
+        //                        TransferManager.instance().clearComplete();
+        //                    }
+        //                });
+        //            }
+        //        });
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);

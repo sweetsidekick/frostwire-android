@@ -31,24 +31,28 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/fragment_transfers_button_pauseall"
+            android:id="@+id/fragment_transfers_button_select_all"
             style="@style/TransfersButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:drawableLeft="@drawable/stop_transfer"
-            android:paddingRight="10dp"
-            android:text="@string/stop" />
+            android:text="@string/transfers_select_all" />
 
         <Button
-            android:id="@+id/fragment_transfers_button_clearcomplete"
+            android:id="@+id/fragment_transfers_button_select_downloading"
             style="@style/TransfersButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:drawableLeft="@drawable/remove_transfer"
-            android:paddingRight="10dp"
-            android:text="@string/clear" />
+            android:text="@string/transfers_select_downloading" />
+
+        <Button
+            android:id="@+id/fragment_transfers_button_select_completed"
+            style="@style/TransfersButton"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/transfers_select_completed" />
     </RadioGroup>
 
     <com.frostwire.android.gui.views.FWExpandableListView
