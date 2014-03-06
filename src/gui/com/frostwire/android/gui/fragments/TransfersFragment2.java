@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.fragments;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -38,6 +40,8 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
+import com.frostwire.android.gui.views.ContextMenuDialog;
+import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.Refreshable;
 
 /**
@@ -59,8 +63,6 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     private TextView textUploads;
 
     private TransferListAdapter adapter;
-
-    private TextView header;
 
     private TransferStatus selectedStatus;
 
@@ -127,8 +129,19 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
-        header = (TextView) inflater.inflate(R.layout.view_main_fragment_simple_header, null);
-        header.setText(R.string.transfers);
+
+        View header = inflater.inflate(R.layout.view_transfers_header, null);
+
+        TextView text = (TextView) header.findViewById(R.id.view_transfers_header_text_title);
+        text.setText(R.string.transfers);
+
+        ImageButton buttonMenu = (ImageButton) header.findViewById(R.id.view_transfers_header_button_menu);
+        buttonMenu.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContextMenu();
+            }
+        });
 
         return header;
     }
@@ -168,17 +181,6 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
         setListAdapter(adapter);
     }
 
-    private static final class TransferComparator implements Comparator<Transfer> {
-        public int compare(Transfer lhs, Transfer rhs) {
-            try {
-                return -lhs.getDateCreated().compareTo(rhs.getDateCreated());
-            } catch (Throwable e) {
-                // ignore, not really super important
-            }
-            return 0;
-        }
-    }
-
     private List<Transfer> filter(List<Transfer> transfers, TransferStatus status) {
         Iterator<Transfer> it;
 
@@ -201,6 +203,58 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
             return transfers;
         default:
             return transfers;
+        }
+    }
+
+    private void showContextMenu() {
+
+        ContextMenuItem share = new ContextMenuItem() {
+
+            @Override
+            public void onClick() {
+            }
+
+            @Override
+            public int getTextResId() {
+                return R.string.share;
+            }
+
+            @Override
+            public int getDrawableResId() {
+                return R.drawable.remove_transfer;
+            }
+        };
+
+        ContextMenuItem stop = new ContextMenuItem() {
+            @Override
+            public void onClick() {
+
+            }
+
+            @Override
+            public int getTextResId() {
+                return R.string.stop;
+            }
+
+            @Override
+            public int getDrawableResId() {
+                return R.drawable.stop_transfer;
+            }
+        };
+
+        ContextMenuDialog menu = new ContextMenuDialog();
+        menu.setItems(Arrays.asList(share, stop));
+        menu.show(getChildFragmentManager(), "transfersContextMenu");
+    }
+
+    private static final class TransferComparator implements Comparator<Transfer> {
+        public int compare(Transfer lhs, Transfer rhs) {
+            try {
+                return -lhs.getDateCreated().compareTo(rhs.getDateCreated());
+            } catch (Throwable e) {
+                // ignore, not really super important
+            }
+            return 0;
         }
     }
 
