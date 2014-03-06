@@ -50,6 +50,8 @@ import com.frostwire.uxstats.UXStats;
  */
 public class TransfersFragment2 extends AbstractExpandableListFragment implements Refreshable, MainFragment {
 
+    private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
+
     private final Comparator<Transfer> transferComparator;
 
     private Button buttonSelectAll;
@@ -62,23 +64,35 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
 
     private TextView header;
 
+    private TransferStatus selectedStatus;
+
     public TransfersFragment2() {
         super(R.layout.fragment_transfers2);
 
         this.transferComparator = new TransferComparator();
+
+        selectedStatus = TransferStatus.ALL;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setRetainInstance(true);
-
         if (getActivity() instanceof AbstractActivity) {
             ((AbstractActivity) getActivity()).addRefreshable(this);
         }
 
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
+
+        if (savedInstanceState != null) {
+            selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SELECTED_STATUS_STATE_KEY, selectedStatus.name());
     }
 
     @Override
@@ -93,7 +107,7 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     @Override
     public void refresh() {
         if (adapter != null) {
-            List<Transfer> transfers = TransferManager.instance().getTransfers();
+            List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
             Collections.sort(transfers, transferComparator);
             adapter.updateList(transfers);
         } else if (this.getActivity() != null) {
@@ -124,35 +138,33 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     @Override
     protected void initComponents(View v) {
         buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
-        //        buttonSelectAll.setOnClickListener(new OnClickListener() {
-        //            public void onClick(View v) {
-        //                UIUtils.showYesNoDialog(getActivity(), R.string.stop_all_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
-        //                    public void onClick(DialogInterface dialog, int id) {
-        //                        TransferManager.instance().stopHttpTransfers();
-        //                        TransferManager.instance().pauseTorrents();
-        //                        UXStats.instance().log(UXAction.DOWNLOAD_PAUSE);
-        //                    }
-        //                });
-        //            }
-        //        });
+        buttonSelectAll.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                selectedStatus = TransferStatus.ALL;
+                refresh();
+            }
+        });
         buttonSelectDownloading = findView(v, R.id.fragment_transfers_button_select_downloading);
+        buttonSelectDownloading.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                selectedStatus = TransferStatus.DOWNLOADING;
+                refresh();
+            }
+        });
         buttonSelectCompleted = findView(v, R.id.fragment_transfers_button_select_completed);
-        //        buttonClearComplete.setOnClickListener(new OnClickListener() {
-        //            public void onClick(View v) {
-        //                UIUtils.showYesNoDialog(getActivity(), R.string.clear_complete_transfers, R.string.are_you_sure, new DialogInterface.OnClickListener() {
-        //                    public void onClick(DialogInterface dialog, int id) {
-        //                        TransferManager.instance().clearComplete();
-        //                    }
-        //                });
-        //            }
-        //        });
+        buttonSelectCompleted.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                selectedStatus = TransferStatus.COMPLETED;
+                refresh();
+            }
+        });
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
     }
 
     private void setupAdapter() {
-        List<Transfer> transfers = TransferManager.instance().getTransfers();
+        List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
         Collections.sort(transfers, transferComparator);
         adapter = new TransferListAdapter(TransfersFragment2.this.getActivity(), transfers);
         setListAdapter(adapter);
@@ -167,5 +179,20 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
             }
             return 0;
         }
+    }
+
+    private List<Transfer> filter(List<Transfer> transfers, TransferStatus status) {
+        switch (status) {
+        case DOWNLOADING:
+            return Collections.emptyList();// transfers;
+        case COMPLETED:
+            return transfers;
+        default:
+            return transfers;
+        }
+    }
+
+    private static enum TransferStatus {
+        ALL, DOWNLOADING, COMPLETED
     }
 }
