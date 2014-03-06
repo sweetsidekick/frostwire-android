@@ -20,10 +20,10 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +39,6 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
 import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.uxstats.UXAction;
-import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -182,10 +180,24 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     }
 
     private List<Transfer> filter(List<Transfer> transfers, TransferStatus status) {
-        switch (status) {
+        Iterator<Transfer> it;
+
+        switch (status) { // replace this filter by a more functional style
         case DOWNLOADING:
-            return Collections.emptyList();// transfers;
+            it = transfers.iterator();
+            while (it.hasNext()) {
+                if (it.next().isComplete()) {
+                    it.remove();
+                }
+            }
+            return transfers;
         case COMPLETED:
+            it = transfers.iterator();
+            while (it.hasNext()) {
+                if (!it.next().isComplete()) {
+                    it.remove();
+                }
+            }
             return transfers;
         default:
             return transfers;
