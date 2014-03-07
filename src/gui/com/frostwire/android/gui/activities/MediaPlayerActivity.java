@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -660,56 +659,24 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             return;
         }
 
-        ContextMenuItem share = new ContextMenuItem() {
-
+        ContextMenuItem share = new ContextMenuItem(mediaFD.shared ? R.string.unshare : R.string.share, mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share) {
             @Override
             public void onClick() {
                 mediaFD.shared = !mediaFD.shared;
                 Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
                 UXStats.instance().log(mediaFD.shared ? UXAction.PLAYER_MENU_SHARE : UXAction.PLAYER_MENU_UNSHARE);
             }
-
-            @Override
-            public int getTextResId() {
-                return mediaFD.shared ? R.string.unshare : R.string.share;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share;
-            }
         };
 
-        ContextMenuItem stop = new ContextMenuItem() {
+        ContextMenuItem stop = new ContextMenuItem(R.string.stop, R.drawable.contextmenu_icon_stop) {
             @Override
             public void onClick() {
                 stop();
                 UXStats.instance().log(UXAction.PLAYER_MENU_STOP);
             }
-
-            @Override
-            public int getTextResId() {
-                return R.string.stop;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return R.drawable.contextmenu_icon_stop;
-            }
         };
 
-        ContextMenuItem delete = new ContextMenuItem() {
-
-            @Override
-            public int getTextResId() {
-                return R.string.delete_this_track;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return R.drawable.contextmenu_icon_trash;
-            }
-
+        ContextMenuItem delete = new ContextMenuItem(R.string.delete_this_track, R.drawable.contextmenu_icon_trash) {
             @Override
             public void onClick() {
                 UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {

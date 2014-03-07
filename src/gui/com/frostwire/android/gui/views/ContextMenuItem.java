@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,23 @@ package com.frostwire.android.gui.views;
  * @author aldenml
  *
  */
-public interface ContextMenuItem {
+public abstract class ContextMenuItem {
 
-    public int getTextResId();
+    private final int textRestId;
+    private final int drawableResId;
 
-    public int getDrawableResId();
+    public ContextMenuItem(int textRestId, int drawableResId) {
+        this.textRestId = textRestId;
+        this.drawableResId = drawableResId;
+    }
 
-    public void onClick();
+    public int getTextResId() {
+        return textRestId;
+    }
+
+    public int getDrawableResId() {
+        return drawableResId;
+    }
+
+    public abstract void onClick();
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import com.frostwire.android.R;
  * @author aldenml
  *
  */
-public class ContextMenuAdapter extends BaseAdapter {
+public final class ContextMenuAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final List<ContextMenuItem> items;
