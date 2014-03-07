@@ -28,30 +28,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_dark_blue"
+        android:checkedButton="@+id/fragment_transfers_button_select_all"
         android:orientation="horizontal" >
 
-        <Button
+        <RadioButton
             android:id="@+id/fragment_transfers_button_select_all"
             style="@style/TransfersButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@null"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
             android:text="@string/transfers_select_all" />
 
-        <Button
+        <RadioButton
             android:id="@+id/fragment_transfers_button_select_downloading"
             style="@style/TransfersButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@null"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
             android:text="@string/transfers_select_downloading" />
 
-        <Button
+        <RadioButton
             android:id="@+id/fragment_transfers_button_select_completed"
             style="@style/TransfersButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@null"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
             android:text="@string/transfers_select_completed" />
     </RadioGroup>
 
