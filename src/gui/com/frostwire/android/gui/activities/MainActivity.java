@@ -56,7 +56,6 @@ import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
-import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment2;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
@@ -485,7 +484,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             setSelectedItem(R.id.menu_main_search);
         } else if (fragment instanceof BrowsePeerFragment) {
             setSelectedItem(R.id.menu_main_library);
-        } else if (fragment instanceof TransfersFragment) {
+        } else if (fragment instanceof TransfersFragment2) {
             setSelectedItem(R.id.menu_main_transfers);
         } else if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
             setSelectedItem(R.id.menu_main_peers);
