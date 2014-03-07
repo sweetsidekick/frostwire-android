@@ -212,11 +212,12 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
 
             @Override
             public void onClick() {
+                TransferManager.instance().clearComplete();
             }
 
             @Override
             public int getTextResId() {
-                return R.string.share;
+                return R.string.transfers_context_menu_clear_finished;
             }
 
             @Override
@@ -226,14 +227,16 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
         };
 
         ContextMenuItem stop = new ContextMenuItem() {
+
             @Override
             public void onClick() {
-
+                TransferManager.instance().stopHttpTransfers();
+                TransferManager.instance().pauseTorrents();
             }
 
             @Override
             public int getTextResId() {
-                return R.string.stop;
+                return R.string.transfers_context_menu_stop_delete_data;
             }
 
             @Override
