@@ -50,7 +50,7 @@ import com.frostwire.android.gui.views.Refreshable;
  * @author aldenml
  * 
  */
-public class TransfersFragment2 extends AbstractExpandableListFragment implements Refreshable, MainFragment {
+public class TransfersFragment extends AbstractExpandableListFragment implements Refreshable, MainFragment {
 
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
@@ -66,8 +66,8 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
 
     private TransferStatus selectedStatus;
 
-    public TransfersFragment2() {
-        super(R.layout.fragment_transfers2);
+    public TransfersFragment() {
+        super(R.layout.fragment_transfers);
 
         this.transferComparator = new TransferComparator();
 
@@ -177,7 +177,7 @@ public class TransfersFragment2 extends AbstractExpandableListFragment implement
     private void setupAdapter() {
         List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
         Collections.sort(transfers, transferComparator);
-        adapter = new TransferListAdapter(TransfersFragment2.this.getActivity(), transfers);
+        adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
         setListAdapter(adapter);
     }
 

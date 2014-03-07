@@ -56,7 +56,7 @@ import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
-import com.frostwire.android.gui.fragments.TransfersFragment2;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
@@ -100,7 +100,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private SearchFragment search;
     private BrowsePeerFragment library;
-    private TransfersFragment2 transfers;
+    private TransfersFragment transfers;
     private BrowsePeersFragment peers;
     private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
@@ -484,7 +484,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             setSelectedItem(R.id.menu_main_search);
         } else if (fragment instanceof BrowsePeerFragment) {
             setSelectedItem(R.id.menu_main_library);
-        } else if (fragment instanceof TransfersFragment2) {
+        } else if (fragment instanceof TransfersFragment) {
             setSelectedItem(R.id.menu_main_transfers);
         } else if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
             setSelectedItem(R.id.menu_main_peers);
@@ -519,7 +519,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void setupFragments() {
         search = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
         library = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
-        transfers = (TransfersFragment2) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
+        transfers = (TransfersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
         peers = (BrowsePeersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
         peersDisabled = (BrowsePeersDisabledFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
         about = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
