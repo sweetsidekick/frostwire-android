@@ -341,7 +341,7 @@ public final class TransferManager implements VuzeKeys {
                 if (sr instanceof TorrentCrawledSearchResult) {
                     Set<String> paths = new HashSet<String>();
                     paths.add(sr.getFilename());
-                    dm.setSkipped(paths, true);
+                    dm.setSkipped(paths, false);
                 } else {
                     dm.setSkipped(null, false);
                 }
