@@ -140,11 +140,13 @@ public final class PeerManager {
     }
 
     public void start() {
-        httpServerManager.start(NetworkManager.instance().getListeningPort());
-        try {
-            peerManager.start(NetworkManager.instance().getMulticastInetAddress(), createLocalPeer());
-        } catch (IOException e) {
-            peerManager.start(null, createLocalPeer());
+        if (!peerManager.isRunning()) {
+            httpServerManager.start(NetworkManager.instance().getListeningPort());
+            try {
+                peerManager.start(NetworkManager.instance().getMulticastInetAddress(), createLocalPeer());
+            } catch (IOException e) {
+                peerManager.start(null, createLocalPeer());
+            }
         }
     }
 
