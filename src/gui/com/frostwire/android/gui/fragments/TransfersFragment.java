@@ -208,14 +208,14 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
     private void showContextMenu() {
 
-        ContextMenuItem share = new ContextMenuItem(R.string.transfers_context_menu_clear_finished, R.drawable.remove_transfer) {
+        ContextMenuItem share = new ContextMenuItem(R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer) {
             @Override
             public void onClick() {
                 TransferManager.instance().clearComplete();
             }
         };
 
-        ContextMenuItem stop = new ContextMenuItem(R.string.transfers_context_menu_stop_delete_data, R.drawable.stop_transfer) {
+        ContextMenuItem stop = new ContextMenuItem(R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer) {
             @Override
             public void onClick() {
                 TransferManager.instance().stopHttpTransfers();
