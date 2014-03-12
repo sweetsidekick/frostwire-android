@@ -81,11 +81,18 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         if (getActivity() instanceof AbstractActivity) {
             ((AbstractActivity) getActivity()).addRefreshable(this);
         }
-
+        
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
 
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
+        }
+    }
+    
+    @Override
+    public void onResume() {
+        if (hasTransfersDownloading()) {
+            buttonSelectDownloading.performClick();
         }
     }
 
@@ -172,6 +179,11 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
+    }
+    
+    private boolean hasTransfersDownloading() {
+        List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), TransferStatus.DOWNLOADING);
+        return transfers != null && !transfers.isEmpty();
     }
 
     private void setupAdapter() {

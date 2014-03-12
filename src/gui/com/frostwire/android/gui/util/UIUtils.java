@@ -424,7 +424,6 @@ public final class UIUtils {
             Intent i = new Intent(context, MainActivity.class);
             i.setAction(Constants.ACTION_SHOW_TRANSFERS);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            i.putExtra("selected_status", "DOWNLOADING");
             context.startActivity(i);
         }
     }
