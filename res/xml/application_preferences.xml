@@ -69,10 +69,6 @@
         android:key="frostwire.prefs.search.preference_category"
         android:title="@string/search_settings" >
         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_clearbits"
-            android:summary="@string/use_clearbits"
-            android:title="@string/use_clearbits" />
-        <CheckBoxPreference
             android:key="frostwire.prefs.search.use_extratorrent"
             android:summary="@string/use_extratorrent"
             android:title="@string/use_extratorrent" />

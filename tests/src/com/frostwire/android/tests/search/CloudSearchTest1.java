@@ -29,7 +29,6 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.WebSearchPerformer;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
@@ -50,11 +49,6 @@ public class CloudSearchTest1 extends TestCase {
     @MediumTest
     public void testMininova() {
         testPerformer(new MininovaSearchPerformer(null, 0, "frostclick", 5000));
-    }
-
-    @MediumTest
-    public void testClearBits() {
-        testPerformer(new ClearBitsSearchPerformer(null, 0, "Big Buck Bunny", 5000));
     }
 
     @MediumTest

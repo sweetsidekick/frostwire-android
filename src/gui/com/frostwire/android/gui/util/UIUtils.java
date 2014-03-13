@@ -72,8 +72,6 @@ public final class UIUtils {
 
     private static final String TAG = "FW.UIUtils";
 
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm:ss aa", Locale.US);
-
     /**
      * Localizable Number Format constant for the current default locale.
      */
@@ -230,8 +228,12 @@ public final class UIUtils {
         }, text);
     }
 
+    public static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("hh:mm:ss aa", Locale.US);
+    }
+    
     public static String formatDate(Date date) {
-        return DATE_FORMAT.format(date);
+        return getDateFormat().format(date);
     }
 
     public static String getBytesInHuman(float size) {
@@ -440,6 +442,7 @@ public final class UIUtils {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static final class DummyBitmapDrawable extends BitmapDrawable {
     }
 }

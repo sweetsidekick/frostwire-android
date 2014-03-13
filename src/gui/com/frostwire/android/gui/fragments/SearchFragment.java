@@ -372,14 +372,16 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
         @Override
         protected void onPostExecute(DownloadTransfer transfer) {
-            if (!(transfer instanceof InvalidTransfer)) {
-                UIUtils.showShortMessage(activity.get(), toastMessage);
-            } else {
-                if (transfer instanceof ExistingDownload) {
-                    //nothing happens here, the user should just see the transfer
-                    //manager and we avoid adding the same transfer twice.
+            if (transfer != null) {
+                if (!(transfer instanceof InvalidTransfer)) {
+                    UIUtils.showShortMessage(activity.get(), toastMessage);
                 } else {
-                    UIUtils.showShortMessage(activity.get(), ((InvalidTransfer) transfer).getReasonResId());
+                    if (transfer instanceof ExistingDownload) {
+                        //nothing happens here, the user should just see the transfer
+                        //manager and we avoid adding the same transfer twice.
+                    } else {
+                        UIUtils.showShortMessage(activity.get(), ((InvalidTransfer) transfer).getReasonResId());
+                    }
                 }
             }
         }
