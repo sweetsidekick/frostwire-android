@@ -19,9 +19,7 @@
 
 package com.frostwire.android.gui.util;
 
-import tv.ouya.console.api.OuyaFacade;
 import android.os.Build;
-
 import com.frostwire.android.core.Constants;
 
 public final class OSUtils {
@@ -32,16 +30,10 @@ public final class OSUtils {
                     || Build.MODEL.startsWith("KF"));
     }
     
-    public static boolean isOUYA() {
-        return OuyaFacade.getInstance().isRunningOnOUYAHardware();
-    }
-    
     public static String getOSName() {
         String osName = "Android";
         if (OSUtils.isKindleFire()) {
             osName = "Kindle Fire";
-        } else if (OSUtils.isOUYA()) {
-            osName = "OUYA";
         }
         return osName;
     }
