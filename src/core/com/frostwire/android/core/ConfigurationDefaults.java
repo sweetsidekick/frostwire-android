@@ -79,7 +79,6 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX, 100); // no ultra big torrents here
         defaultValues.put(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT, 256);
 
-        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_CLEARBITS, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MININOVA, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_VERTOR, true);

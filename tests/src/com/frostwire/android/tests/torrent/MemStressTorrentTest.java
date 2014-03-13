@@ -27,7 +27,6 @@ import com.frostwire.android.tests.TestUtils;
 import com.frostwire.search.SearchListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.kat.KATSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
@@ -66,7 +65,6 @@ public class MemStressTorrentTest extends TestCase {
     private long trackMemoryAllocation() {
         long m1 = TestUtils.getPss();
 
-        downloadFromClearBits();
         downloadFromExtratorrent();
         downloadFromKAT();
         downloadFromMininova();
@@ -74,11 +72,6 @@ public class MemStressTorrentTest extends TestCase {
         long m2 = TestUtils.getPss();
 
         return m2 - m1;
-    }
-
-    private void downloadFromClearBits() {
-        ClearBitsSearchPerformer p = new ClearBitsSearchPerformer(null, System.currentTimeMillis(), "mp3", 10000);
-        downloadFrom(p);
     }
 
     private void downloadFromExtratorrent() {

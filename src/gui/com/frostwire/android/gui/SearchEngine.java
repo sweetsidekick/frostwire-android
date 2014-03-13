@@ -27,7 +27,6 @@ import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.eztv.EztvSearchPerformer;
@@ -101,13 +100,6 @@ public abstract class SearchEngine {
         return null;
     }
 
-    public static final SearchEngine CLEARBITS = new SearchEngine("ClearBits", Constants.PREF_KEY_SEARCH_USE_CLEARBITS) {
-        @Override
-        public SearchPerformer getPerformer(long token, String keywords) {
-            return new ClearBitsSearchPerformer(new DomainAliasManager("www.clearbits.net"), token, keywords, DEFAULT_TIMEOUT);
-        }
-    };
-
     public static final SearchEngine EXTRATORRENT = new SearchEngine("Extratorrent", Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -173,5 +165,5 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, CLEARBITS, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);
 }

@@ -67,13 +67,9 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX = "frostwire.prefs.search.max_torrent_files_to_index";
     public static final String PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT = "frostwire.prefs.search.fulltext_search_results_limit";
 
-    //public static final String PREF_KEY_SEARCH_USE_BTJUNKIE = "frostwire.prefs.search.use_btjunkie";
-    public static final String PREF_KEY_SEARCH_USE_CLEARBITS = "frostwire.prefs.search.use_clearbits";
     public static final String PREF_KEY_SEARCH_USE_EXTRATORRENT = "frostwire.prefs.search.use_extratorrent";
     public static final String PREF_KEY_SEARCH_USE_MININOVA = "frostwire.prefs.search.use_mininova";
-    //public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
     public static final String PREF_KEY_SEARCH_USE_VERTOR = "frostwire.prefs.search.use_vertor";
-    //public static final String PREF_KEY_SEARCH_USE_KAT = "frostwire.prefs.search.use_kat";
     public static final String PREF_KEY_SEARCH_USE_YOUTUBE = "frostwire.prefs.search.use_youtube";
     public static final String PREF_KEY_SEARCH_USE_SOUNDCLOUD = "frostwire.prefs.search.use_soundcloud";
     public static final String PREF_KEY_SEARCH_USE_ARCHIVEORG = "frostwire.prefs.search.use_archiveorg";
