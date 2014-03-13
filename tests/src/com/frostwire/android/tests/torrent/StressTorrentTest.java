@@ -26,7 +26,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.frostwire.search.SearchListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.kat.KATSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
@@ -43,12 +42,6 @@ import com.frostwire.torrent.TorrentUtils;
  *
  */
 public class StressTorrentTest extends TestCase {
-
-    @LargeTest
-    public void testDownloadFromClearBits() {
-        ClearBitsSearchPerformer p = new ClearBitsSearchPerformer(null, System.currentTimeMillis(), "mp3", 10000);
-        testDownloadFrom(p);
-    }
 
     @LargeTest
     public void testDownloadFromExtratorrent() {

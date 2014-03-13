@@ -32,7 +32,6 @@ import com.frostwire.search.SearchManagerImpl;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
@@ -68,11 +67,6 @@ public class DeepSearchTest extends ApplicationTestCase<MockApplication> {
     @LargeTest
     public void testDeepSearchExtratorrent() {
         deepSearch(new ExtratorrentSearchPerformer(null, 0, "frostclick", 5000));
-    }
-
-    @LargeTest
-    public void testDeepSearchClearBits() {
-        deepSearch(new ClearBitsSearchPerformer(null, 0, "Big Buck Bunny", 5000));
     }
 
     @LargeTest
