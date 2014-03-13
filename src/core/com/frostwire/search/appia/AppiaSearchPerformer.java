@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.frostwire.android.gui.MainApplication;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -42,21 +44,23 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     private static final int MAX_RESULTS = 1;
 
     private final Map<String, String> customHeaders;
+    
 
-    public AppiaSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, UserAgent userAgent) {
+    public AppiaSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, UserAgent userAgent, String androidId) {
         super(domainAliasManager ,token, keywords, timeout, MAX_RESULTS);
-        this.customHeaders = buildCustomHeaders(userAgent);
+        this.customHeaders = buildCustomHeaders(userAgent, androidId);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://api.frostclick.com/q?page=" + page + "&q=" + encodedKeywords;
+        return "http://appia.frostclick.com/q?page=" + page + "&q=" + encodedKeywords;
     }
 
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
         String url = getUrl(page, getEncodedKeywords());
         String text = null;
+        List<? extends SearchResult> result = Collections.emptyList();
         try {
             text = fetch(url, null, customHeaders);
         } catch (IOException e) {
@@ -65,11 +69,12 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         }
         
         if (text != null) {
-            return searchPage(text);
+            result = searchPage(text);
         } else {
             LOG.warn("Page content empty for url: " + url);
-            return Collections.emptyList();
         }
+        
+        return result;
     }
 
     @Override
@@ -78,12 +83,12 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         return Collections.emptyList();
     }
 
-    private Map<String, String> buildCustomHeaders(UserAgent userAgent) {
+    private Map<String, String> buildCustomHeaders(UserAgent userAgent, String androidId) {
         Map<String, String> map = new HashMap<String, String>();
         map.putAll(userAgent.getHeadersMap());
         map.put("User-Agent", userAgent.toString());
         map.put("sessionId", userAgent.getUUID());
-
+        map.put("androidId", androidId);
         return map;
     }
 }
