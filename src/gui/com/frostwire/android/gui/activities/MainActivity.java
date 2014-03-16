@@ -38,7 +38,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -103,7 +102,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private ActionBarDrawerToggle drawerToggle;
     private View leftDrawer;
     private ListView listMenu;
-    private ImageButton buttonMainMenu;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -191,21 +189,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (slideOffset > 0) {
-                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
-                } else {
-                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
-                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
             }
         });
 
@@ -217,14 +208,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             @Override
             public void onClick(View v) {
                 controller.launchPlayerActivity();
-            }
-        });
-
-        buttonMainMenu = findView(R.id.activity_main_button_menu);
-        buttonMainMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleDrawer();
             }
         });
 
