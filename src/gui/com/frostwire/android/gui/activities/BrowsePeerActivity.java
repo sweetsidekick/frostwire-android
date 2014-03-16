@@ -21,6 +21,7 @@ package com.frostwire.android.gui.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -48,6 +49,13 @@ public class BrowsePeerActivity extends AbstractActivity {
 
     public BrowsePeerActivity() {
         super(R.layout.activity_browse_peer, 1);
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
+        addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
     }
 
     @Override
@@ -85,13 +93,7 @@ public class BrowsePeerActivity extends AbstractActivity {
             }
         });
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
-        addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
-    }
-
+    
     private void updateTitle(byte fileType, int numShared) {
         String title = UIUtils.getFileTypeAsString(getResources(), fileType);
         title += " (" + numShared + ")";

@@ -18,7 +18,9 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ViewFlipper;
@@ -64,6 +66,12 @@ public class WizardActivity extends AbstractActivity {
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
         return viewFlipper.getCurrentView().getTag();
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
     }
 
     @Override
