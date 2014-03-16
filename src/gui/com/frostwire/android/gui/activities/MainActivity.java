@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -45,8 +46,6 @@ import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.DesktopUploadRequest;
-import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
@@ -61,18 +60,15 @@ import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
-import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
-import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.android.gui.views.TOS.TOSActivity;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
@@ -85,7 +81,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -268,8 +264,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
             //go!
             TransferManager.instance().downloadTorrent(intent.getDataString());
-        } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
-            handleDesktopUploadRequest(intent);
         }
         // When another application wants to "Share" a file and has chosen FrostWire to do so.
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
@@ -311,14 +305,16 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 controller.startWizardActivity();
             }
         } else {
-            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
-                public void onAccept() {
-                    controller.startWizardActivity();
-                }
-            }));
+            DialogFragment f = TOS.newInstance();
+            f.show(getSupportFragmentManager(), "tos_dialog");
         }
 
         checkLastSeenVersion();
+    }
+    
+    @Override
+    public void onTOSAccept() {
+        controller.startWizardActivity();
     }
 
     private void initializeAppia() {
@@ -403,48 +399,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             //just updated.
             ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
             UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
-        }
-    }
-
-    private void handleDesktopUploadRequest(Intent intent) {
-        String action = intent.getAction();
-
-        if (durToken == null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
-            durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
-        }
-
-        final DesktopUploadManager dum = Engine.instance().getDesktopUploadManager();
-
-        if (dum == null) {
-            return;
-        }
-
-        DesktopUploadRequest dur = dum.getRequest(durToken);
-
-        if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
-            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, dur, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
-                @Override
-                public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
-                    switch (result) {
-                    case ACCEPT:
-                        dum.authorizeRequest(durToken);
-                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                            Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
-                            MainActivity.this.startActivity(i.setClass(MainActivity.this, MainActivity.class));
-                        }
-                        break;
-                    case REJECT:
-                        dum.rejectRequest(durToken);
-                        break;
-                    case BLOCK:
-                        dum.blockComputer(durToken);
-                        break;
-                    }
-                    durToken = null;
-                }
-            });
-
-            trackDialog(dlg).show();
         }
     }
 

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ package com.frostwire.android.gui.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -43,8 +42,6 @@ public abstract class AbstractActivity extends FragmentActivity {
 
     private final int layoutResId;
 
-    private final List<Dialog> dialogs;
-
     private final long refreshInterval;
     private final List<Refreshable> refreshables;
 
@@ -52,9 +49,11 @@ public abstract class AbstractActivity extends FragmentActivity {
     private Runnable refreshTask;
 
     public AbstractActivity(int layoutResId, int refreshIntervalSec) {
+        if (layoutResId == 0) {
+            throw new RuntimeException("Resource id can't be 0");
+        }
+        
         this.layoutResId = layoutResId;
-
-        this.dialogs = new ArrayList<Dialog>();
 
         this.refreshInterval = refreshIntervalSec * 1000;
         this.refreshables = new ArrayList<Refreshable>();
@@ -106,8 +105,6 @@ public abstract class AbstractActivity extends FragmentActivity {
         if (refreshHandler != null) {
             refreshHandler.removeCallbacks(refreshTask);
         }
-
-        dismissDialogs();
     }
 
     @Override
@@ -133,23 +130,6 @@ public abstract class AbstractActivity extends FragmentActivity {
     }
 
     protected void initComponents() {
-    }
-
-    protected Dialog trackDialog(Dialog dialog) {
-        if (!dialogs.contains(dialog)) {
-            dialogs.add(dialog);
-        }
-        return dialog;
-    }
-
-    private void dismissDialogs() {
-        for (Dialog dialog : dialogs) {
-            try {
-                dialog.dismiss();
-            } catch (Throwable e) {
-                LOG.warn("Error dismissing dialog", e);
-            }
-        }
     }
 
     private void unbindDrawables(View view) {
