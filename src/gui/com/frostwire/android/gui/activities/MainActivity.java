@@ -680,15 +680,26 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             this.activityRef = Ref.weak(activity);
         }
 
+        @Override
         public void onDrawerClosed(View view) {
             if (Ref.alive(activityRef)) {
                 activityRef.get().invalidateOptionsMenu();
             }
         }
 
+        @Override
         public void onDrawerOpened(View drawerView) {
             if (Ref.alive(activityRef)) {
                 activityRef.get().invalidateOptionsMenu();
+            }
+        }
+        
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            if (Ref.alive(activityRef)) {
+                MainActivity activity = activityRef.get();
+                activity.refreshPlayerItem();
+                activity.syncSlideMenu();
             }
         }
     }
