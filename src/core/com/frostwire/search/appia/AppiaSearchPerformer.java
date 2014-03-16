@@ -53,7 +53,8 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://api.frostclick.com/appia?q=" + encodedKeywords;
+        //return "http://api.frostclick.com/appia?q=" + encodedKeywords;
+        return "http://10.240.118.146:8080/frostclick-search-api/appia?q=" + encodedKeywords;
     }
 
     @Override
