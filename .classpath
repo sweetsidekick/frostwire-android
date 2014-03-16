@@ -21,10 +21,20 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/vuze/azureus2/src">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/vuze/azureus3/src">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="common/components/core"/>
+	<classpathentry kind="src" path="common/components/vuze"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
-	<classpathentry kind="src" path="src/vuze_stub"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="libs/gson-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mp4parser.jar"/>
