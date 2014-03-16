@@ -117,7 +117,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private boolean appiaStarted = false;
 
     public MainActivity() {
-        super(R.layout.activity_main, false, 2);
+        super(R.layout.activity_main, 2);
         this.controller = new MainController(this);
         this.fragmentsStack = new Stack<Integer>();
     }

@@ -83,7 +83,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private ImageButton buttonMenu;
 
     public MediaPlayerActivity() {
-        super(R.layout.activity_mediaplayer, false, 0);
+        super(R.layout.activity_mediaplayer, 0);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override

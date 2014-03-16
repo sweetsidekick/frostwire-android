@@ -47,7 +47,7 @@ public class BrowsePeerActivity extends AbstractActivity {
     private Peer peer;
 
     public BrowsePeerActivity() {
-        super(R.layout.activity_browse_peer, false, 1);
+        super(R.layout.activity_browse_peer, 1);
     }
 
     @Override

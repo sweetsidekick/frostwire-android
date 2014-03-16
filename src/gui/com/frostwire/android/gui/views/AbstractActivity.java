@@ -27,7 +27,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import com.frostwire.logging.Logger;
 
@@ -43,7 +42,6 @@ public abstract class AbstractActivity extends FragmentActivity {
     private static final Logger LOG = Logger.getLogger(AbstractActivity.class);
 
     private final int layoutResId;
-    private final boolean title;
 
     private final List<Dialog> dialogs;
 
@@ -53,9 +51,8 @@ public abstract class AbstractActivity extends FragmentActivity {
     private Handler refreshHandler;
     private Runnable refreshTask;
 
-    public AbstractActivity(int layoutResId, boolean title, int refreshIntervalSec) {
+    public AbstractActivity(int layoutResId, int refreshIntervalSec) {
         this.layoutResId = layoutResId;
-        this.title = title;
 
         this.dialogs = new ArrayList<Dialog>();
 
@@ -74,7 +71,7 @@ public abstract class AbstractActivity extends FragmentActivity {
     }
 
     public AbstractActivity(int layoutResID) {
-        this(layoutResID, true, 0);
+        this(layoutResID, 0);
     }
 
     public void addRefreshable(Refreshable refreshable) {
@@ -86,10 +83,6 @@ public abstract class AbstractActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-
-        if (!title) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
 
         if (layoutResId != 0) {
             setContentView(layoutResId);
