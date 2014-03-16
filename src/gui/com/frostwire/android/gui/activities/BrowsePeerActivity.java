@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -64,7 +64,7 @@ public class BrowsePeerActivity extends AbstractActivity {
         textNickname.setText("");
         textTitle = findView(R.id.activity_browse_peer_text_title);
         textTitle.setText("");
-        browsePeerFragment = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_browse_peer_fragment);
+        browsePeerFragment = (BrowsePeerFragment) getFragmentManager().findFragmentById(R.id.activity_browse_peer_fragment);
 
         peer = browsePeerFragment.getPeer();
         if (peer == null) { // save move

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@ import java.lang.ref.WeakReference;
 import java.util.Stack;
 
 import android.app.ActionBar;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
@@ -154,7 +154,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             try {
                 fragmentsStack.pop();
                 int id = fragmentsStack.peek();
-                Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+                Fragment fragment = getFragmentManager().findFragmentById(id);
                 switchContent(fragment, false);
             } catch (Throwable e) {
                 // don't break the app
@@ -233,7 +233,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     @Override
     protected void onNewIntent(Intent intent) {
         String action = intent.getAction();
-        onResumeFragments();
+        //onResumeFragments();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
             controller.showTransfers();
@@ -308,7 +308,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         } else {
             DialogFragment f = TOS.newInstance();
-            f.show(getSupportFragmentManager(), "tos_dialog");
+            f.show(getFragmentManager(), "tos_dialog");
         }
 
         checkLastSeenVersion();
@@ -376,7 +376,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void saveLastFragment(Bundle outState) {
         Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+            getFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
         }
     }
 
@@ -420,7 +420,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void handleLastBackPressed() {
         DialogFragment f = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
-        f.show(getSupportFragmentManager(), LAST_BACK_DIALOG_ID);
+        f.show(getFragmentManager(), LAST_BACK_DIALOG_ID);
     }
     
     @Override
@@ -474,14 +474,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupFragments() {
-        search = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
-        library = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
-        transfers = (TransfersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
-        peers = (BrowsePeersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
-        peersDisabled = (BrowsePeersDisabledFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
-        about = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
+        search = (SearchFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
+        library = (BrowsePeerFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
+        transfers = (TransfersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
+        peers = (BrowsePeersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
+        peersDisabled = (BrowsePeersDisabledFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
+        about = (AboutFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
 
-        hideFragments(getSupportFragmentManager().beginTransaction()).commit();
+        hideFragments(getFragmentManager().beginTransaction()).commit();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
     }
@@ -494,7 +494,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         Fragment fragment = null;
 
         if (savedInstanceState != null) {
-            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+            fragment = getFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
             restoreFragmentsStack(savedInstanceState);
         }
         if (fragment == null) {
@@ -553,7 +553,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void switchContent(Fragment fragment, boolean addToStack) {
-        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
+        hideFragments(getFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
         if (addToStack && (fragmentsStack.isEmpty() || fragmentsStack.peek() != fragment.getId())) {
             fragmentsStack.push(fragment.getId());
         }

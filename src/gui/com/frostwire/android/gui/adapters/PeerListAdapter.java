@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@ package com.frostwire.android.gui.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -53,13 +53,13 @@ public class PeerListAdapter extends AbstractListAdapter<Peer> {
 
     private final OnClickListener howtoShareClickListener;
 
-    public PeerListAdapter(final FragmentActivity activity, List<Peer> peers) {
+    public PeerListAdapter(final Activity activity, List<Peer> peers) {
         super(activity, R.layout.view_peer_list_item, peers);
 
         howtoShareClickListener = new OnClickListener() {
             public void onClick(View v) {
                 ShareIndicationDialog dlg = new ShareIndicationDialog();
-                dlg.show(activity.getSupportFragmentManager());
+                dlg.show(activity.getFragmentManager());
             }
         };
     }

@@ -21,9 +21,9 @@ package com.frostwire.android.gui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,7 +36,7 @@ import com.frostwire.logging.Logger;
  * @author aldenml
  * 
  */
-public abstract class AbstractActivity extends FragmentActivity {
+public abstract class AbstractActivity extends Activity {
 
     private static final Logger LOG = Logger.getLogger(AbstractActivity.class);
 

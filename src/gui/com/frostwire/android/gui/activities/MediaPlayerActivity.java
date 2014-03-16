@@ -699,7 +699,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         ContextMenuDialog menu = new ContextMenuDialog();
         menu.setItems(Arrays.asList(share, stop, delete));
-        menu.show(getSupportFragmentManager(), "playerContextMenu");
+        menu.show(getFragmentManager(), "playerContextMenu");
     }
 
     private void onDeleteCurrentTrack() {
