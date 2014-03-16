@@ -5,15 +5,42 @@ import com.frostwire.search.torrent.ComparableTorrentJsonItem;
 
 public class AppiaSearchResult extends AbstractFileSearchResult implements ComparableTorrentJsonItem {
 
-    public String clickProxyUrl;
+    public String clickProxyURL;
     public String impressionTrackingURL;
-    public String productName;
-    public String productDescription;
-    public String productThumbnail;
+    public String displayName;
+    public String description;
+    public String thumbnailURL;
+    public String appId;
+    public String categoryName;
     
+    public AppiaSearchResult(AppiaServletResponseItem item) {
+        clickProxyURL = item.clickProxyURL;
+        impressionTrackingURL = item.impressionTrackingURL;
+        displayName = item.displayName;
+        description = item.description;
+        thumbnailURL = item.thumbnailURL;
+        appId = item.appId;
+        categoryName = item.categoryName;
+    }
     
-    public AppiaSearchResult() {
-        
+    public String getImpressionTrackingURL() {
+        return impressionTrackingURL;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
+    
+    public String getAppId() {
+        return appId;
+    }
+    
+    public String getCategoryName() {
+        return categoryName;
     }
     
     @Override
@@ -23,7 +50,7 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
 
     @Override
     public String getFilename() {
-        return null;
+        return displayName;
     }
 
     @Override
@@ -33,12 +60,12 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
 
     @Override
     public String getDisplayName() {
-        return null;
+        return displayName;
     }
 
     @Override
     public String getDetailsUrl() {
-        return null;
+        return clickProxyURL;
     }
 
     @Override

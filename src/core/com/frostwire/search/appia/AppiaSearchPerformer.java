@@ -19,18 +19,18 @@
 package com.frostwire.search.appia;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.frostwire.android.gui.MainApplication;
-import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.frostclick.UserAgent;
+import com.frostwire.util.JsonUtils;
 
 /**
  * @author gubatron
@@ -53,12 +53,12 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://appia.frostclick.com/q?page=" + page + "&q=" + encodedKeywords;
+        return "http://api.frostclick.com/appia?q=" + encodedKeywords;
     }
 
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
-        String url = getUrl(page, getEncodedKeywords());
+        String url = getUrl(-1, getEncodedKeywords());
         String text = null;
         List<? extends SearchResult> result = Collections.emptyList();
         try {
@@ -79,8 +79,19 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
 
     @Override
     protected List<? extends SearchResult> searchPage(String page) {
-        // unused for this implementation since we still don't have search responses ready.
-        return Collections.emptyList();
+        List<AppiaSearchResult> results = new ArrayList<AppiaSearchResult>();
+        AppiaServletResponse appiaServletResponse = JsonUtils.toObject(page, AppiaServletResponse.class);
+        List<AppiaServletResponseItem> responseItems = appiaServletResponse.results;
+        for (AppiaServletResponseItem item : responseItems) {
+            AppiaSearchResult sr = new AppiaSearchResult(item);
+            results.add(sr);
+        }
+        
+        if (results.isEmpty()) {
+            results = Collections.emptyList();
+        }
+        
+        return results;
     }
 
     private Map<String, String> buildCustomHeaders(UserAgent userAgent, String androidId) {
