@@ -91,6 +91,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     
     @Override
     public void onResume() {
+        super.onResume();
         if (hasTransfersDownloading()) {
             buttonSelectDownloading.performClick();
         }

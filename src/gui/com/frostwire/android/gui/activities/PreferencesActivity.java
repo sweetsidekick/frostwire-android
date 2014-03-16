@@ -31,6 +31,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceGroup;
 import android.view.View;
 import android.view.View.OnClickListener;
 
