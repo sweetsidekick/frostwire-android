@@ -19,18 +19,22 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.Stack;
 
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -70,6 +74,7 @@ import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
 import com.frostwire.logging.Logger;
+import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -94,6 +99,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private MainController controller;
 
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
     private View leftDrawer;
     private ListView listMenu;
     private ImageButton buttonMainMenu;
@@ -237,6 +243,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         onNewIntent(getIntent());
 
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
+        
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        setupDrawer();
     }
 
     @Override
@@ -635,5 +646,58 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public void closeSlideMenu() {
         drawerLayout.closeDrawer(leftDrawer);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+    
+    private void setupDrawer() {
+        drawerToggle = new MenuDrawerToggle(this, drawerLayout);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+    
+    private static final class MenuDrawerToggle extends ActionBarDrawerToggle {
+
+        private final WeakReference<MainActivity> activityRef;
+
+        public MenuDrawerToggle(MainActivity activity, DrawerLayout drawerLayout) {
+            super(activity, drawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+
+            // aldenml: even if the parent class hold a strong reference, I decided to keep a weak one
+            this.activityRef = Ref.weak(activity);
+        }
+
+        public void onDrawerClosed(View view) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
+            }
+        }
+
+        public void onDrawerOpened(View drawerView) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
+            }
+        }
     }
 }

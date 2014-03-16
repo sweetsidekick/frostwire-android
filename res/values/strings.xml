@@ -442,4 +442,6 @@
     <string name="transfers_select_completed">completed</string>
     <string name="transfers_context_menu_clear_finished">Clear all Finished Transfers</string>
     <string name="transfers_context_menu_stop_delete_data">Stop and Delete Data</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>
