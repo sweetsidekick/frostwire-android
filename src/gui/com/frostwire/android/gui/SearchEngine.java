@@ -172,7 +172,7 @@ public abstract class SearchEngine {
             //        Secure.getString(getContext().getContentResolver(),
             //        Secure.ANDROID_ID)
             //return new AppiaSearchPerformer(new DomainAliasManager("appia.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "mockAndroidId");
-            return new AppiaSearchPerformer(new DomainAliasManager("10.240.118.146"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "mockAndroidId");
+            return new AppiaSearchPerformer(new DomainAliasManager("10.240.118.146"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "2345");
         }
     };
     

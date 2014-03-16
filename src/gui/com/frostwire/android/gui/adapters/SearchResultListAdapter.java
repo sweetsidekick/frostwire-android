@@ -40,6 +40,7 @@ import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.appia.AppiaSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
@@ -157,11 +158,16 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         FilteredSearchResults fsr = new FilteredSearchResults();
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
-            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
-            if (accept(sr,mt)) {
+            if (sr instanceof AppiaSearchResult) {
+                //TODO: Map search result to media type for proper filtering.
                 l.add(sr);
+            } else {
+                MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
+                if (accept(sr,mt)) {
+                    l.add(sr);
+                }
+                fsr.increment(mt);
             }
-            fsr.increment(mt);
         }
         fsr.filtered = l;
         return fsr;
