@@ -24,8 +24,6 @@ import java.util.Stack;
 
 import android.app.ActionBar;
 import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -69,6 +67,8 @@ import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.TOSActivity;
+import com.frostwire.android.gui.views.YesNoDialog;
+import com.frostwire.android.gui.views.YesNoDialog.YesNoDialogListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
@@ -81,7 +81,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, YesNoDialogListener {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -89,6 +89,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
+    
+    private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
 
     private static boolean firstTime = true;
 
@@ -417,11 +419,19 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void handleLastBackPressed() {
-        trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }));
+        DialogFragment f = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
+        f.show(getSupportFragmentManager(), LAST_BACK_DIALOG_ID);
+    }
+    
+    @Override
+    public void onPositiveClick(String id) {
+        if (id.equals(LAST_BACK_DIALOG_ID)) {
+            finish();
+        }
+    }
+    
+    @Override
+    public void onNegativeClick(String id) {
     }
 
     private void syncSlideMenu() {

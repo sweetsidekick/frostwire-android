@@ -44,25 +44,6 @@ import com.frostwire.util.Ref;
  */
 public class TOS extends DialogFragment {
 
-    public static TOS newInstance() {
-        TOS f = new TOS();
-
-        f.setCancelable(true);
-
-        return f;
-    }
-
-    private static String readTOS(Context context) {
-        InputStream in = context.getResources().openRawResource(R.raw.tos);
-        try {
-            return IOUtils.toString(in);
-        } catch (IOException e) {
-            throw new RuntimeException("Missing TOS resource", e);
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context ctx = getActivity();
@@ -83,6 +64,25 @@ public class TOS extends DialogFragment {
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
         exit();
+    }
+
+    public static TOS newInstance() {
+        TOS f = new TOS();
+
+        f.setCancelable(true);
+
+        return f;
+    }
+
+    private static String readTOS(Context context) {
+        InputStream in = context.getResources().openRawResource(R.raw.tos);
+        try {
+            return IOUtils.toString(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Missing TOS resource", e);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
     }
 
     private static void exit() {
