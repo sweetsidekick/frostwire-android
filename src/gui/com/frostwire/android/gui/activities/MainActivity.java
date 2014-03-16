@@ -22,6 +22,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Stack;
 
+import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -244,9 +245,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
         
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
+        setupActionBar();
         setupDrawer();
     }
 
@@ -580,7 +579,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void updateHeader(Fragment fragment) {
         try {
-            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+            RelativeLayout placeholder = (RelativeLayout) getActionBar().getCustomView();//findView(R.id.activity_main_layout_header_placeholder);
             if (placeholder.getChildCount() > 0) {
                 placeholder.removeAllViews();
             }
@@ -670,6 +669,16 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+    }
+    
+    private void setupActionBar() {
+        ActionBar bar = getActionBar();
+
+        bar.setCustomView(R.layout.view_custom_actionbar);
+        
+        bar.setDisplayShowCustomEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setHomeButtonEnabled(true);
     }
     
     private void setupDrawer() {
