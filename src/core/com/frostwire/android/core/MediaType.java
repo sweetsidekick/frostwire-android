@@ -51,7 +51,7 @@ public class MediaType implements Serializable {
     public static final String SCHEMA_TORRENTS = "torrent"; //possibly magnet might be added in the future
     public static final String SCHEMA_OTHER = "other";
 
-    // These are used as resource keys to retreive descriptions in the GUI 
+    // These are used as resource keys to retrieve descriptions in the GUI 
     public static final int DOCUMENTS_STRING_RESOURCE_ID = R.string.media_type_documents;
     public static final int APPLICATIONS_STRING_RESOURCE_ID = R.string.media_type_applications;
     public static final int AUDIO_STRING_RESOURCE_ID = R.string.media_type_audio;
