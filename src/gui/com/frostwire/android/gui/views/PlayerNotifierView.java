@@ -41,7 +41,7 @@ import com.frostwire.android.gui.services.Engine;
  * @author aldenml
  *
  */
-public class PlayerNotifierView extends LinearLayout implements Refreshable {
+public class PlayerNotifierView extends LinearLayout implements TimerObserver {
 
     private String lastStatusShown;
     private TextView statusText;
@@ -102,7 +102,7 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
     }
 
     @Override
-    public void refresh() {
+    public void onTime() {
         FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
         String status = "";
         

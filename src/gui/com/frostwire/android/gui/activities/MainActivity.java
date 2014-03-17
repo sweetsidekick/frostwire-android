@@ -64,9 +64,11 @@ import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
-import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.TOSActivity;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 import com.frostwire.android.gui.views.YesNoDialog;
 import com.frostwire.android.gui.views.YesNoDialog.YesNoDialogListener;
 import com.frostwire.logging.Logger;
@@ -118,6 +120,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private boolean offercastStarted = false;
     private boolean appiaStarted = false;
+    
+    private TimerSubscription playerSubscription;
 
     public MainActivity() {
         super(R.layout.activity_main, 2);
@@ -219,8 +223,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
             appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
-
-        addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
+        
+        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_main_player_notifier), 1);
 
         onNewIntent(getIntent());
 
@@ -364,6 +368,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        
+        playerSubscription.unsubscribe();
 
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
