@@ -39,9 +39,10 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractListFragment;
-import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * 
@@ -49,11 +50,13 @@ import com.frostwire.android.gui.views.Refreshable;
  * @author aldenml
  * 
  */
-public class BrowsePeersFragment extends AbstractListFragment implements Refreshable, MainFragment {
+public class BrowsePeersFragment extends AbstractListFragment implements TimerObserver, MainFragment {
 
     private PeerListAdapter adapter;
 
     private View header;
+    
+    private TimerSubscription subscription;
 
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
@@ -70,14 +73,24 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         }
 
         setupAdapter();
-
-        if (getActivity() instanceof AbstractActivity) {
-            ((AbstractActivity) getActivity()).addRefreshable(this);
-        }
+    }
+    
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        subscription = TimerService.subscribe(this, 2);
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        
+        subscription.unsubscribe();
     }
 
     @Override
-    public void refresh() {
+    public void onTime() {
         List<Peer> peers = PeerManager.instance().getPeers();
         adapter.updateList(peers);
     }
@@ -142,6 +155,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
     private void setupAdapter() {
         adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
         setListAdapter(adapter);
-        refresh();
+        onTime();
     }
 }

@@ -38,11 +38,12 @@ import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
 import com.frostwire.android.gui.views.ContextMenuDialog;
 import com.frostwire.android.gui.views.ContextMenuItem;
-import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * 
@@ -50,7 +51,7 @@ import com.frostwire.android.gui.views.Refreshable;
  * @author aldenml
  * 
  */
-public class TransfersFragment extends AbstractExpandableListFragment implements Refreshable, MainFragment {
+public class TransfersFragment extends AbstractExpandableListFragment implements TimerObserver, MainFragment {
 
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
@@ -65,6 +66,8 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     private TransferListAdapter adapter;
 
     private TransferStatus selectedStatus;
+    
+    private TimerSubscription subscription;
 
     public TransfersFragment() {
         super(R.layout.fragment_transfers);
@@ -77,10 +80,6 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (getActivity() instanceof AbstractActivity) {
-            ((AbstractActivity) getActivity()).addRefreshable(this);
-        }
         
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
 
@@ -95,6 +94,20 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         if (hasTransfersDownloading()) {
             buttonSelectDownloading.performClick();
         }
+    }
+    
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        subscription = TimerService.subscribe(this, 2);
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        
+        subscription.unsubscribe();
     }
 
     @Override
@@ -113,7 +126,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     }
 
     @Override
-    public void refresh() {
+    public void onTime() {
         if (adapter != null) {
             List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
             Collections.sort(transfers, transferComparator);
@@ -160,21 +173,21 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         buttonSelectAll.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.ALL;
-                refresh();
+                onTime();
             }
         });
         buttonSelectDownloading = findView(v, R.id.fragment_transfers_button_select_downloading);
         buttonSelectDownloading.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.DOWNLOADING;
-                refresh();
+                onTime();
             }
         });
         buttonSelectCompleted = findView(v, R.id.fragment_transfers_button_select_completed);
         buttonSelectCompleted.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.COMPLETED;
-                refresh();
+                onTime();
             }
         });
 

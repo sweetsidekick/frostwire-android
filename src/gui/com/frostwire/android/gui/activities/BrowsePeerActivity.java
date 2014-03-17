@@ -32,7 +32,9 @@ import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment.OnRefreshSharedListener;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * @author gubatron
@@ -46,6 +48,8 @@ public class BrowsePeerActivity extends AbstractActivity {
     private BrowsePeerFragment browsePeerFragment;
 
     private Peer peer;
+    
+    private TimerSubscription playerSubscription;
 
     public BrowsePeerActivity() {
         super(R.layout.activity_browse_peer, 1);
@@ -55,7 +59,8 @@ public class BrowsePeerActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstance) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstance);
-        addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
+        
+        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_browse_peer_player_notifier), 1);
     }
 
     @Override
@@ -98,5 +103,11 @@ public class BrowsePeerActivity extends AbstractActivity {
         String title = UIUtils.getFileTypeAsString(getResources(), fileType);
         title += " (" + numShared + ")";
         textTitle.setText(title);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        playerSubscription.unsubscribe();
     }
 }
