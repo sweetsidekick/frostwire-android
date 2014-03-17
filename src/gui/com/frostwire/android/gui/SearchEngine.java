@@ -26,6 +26,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer;
+import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.domainalias.DomainAliasManager;
@@ -46,7 +47,7 @@ import com.frostwire.search.youtube.YouTubeSearchPerformer;
  */
 public abstract class SearchEngine {
 
-    private static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
+    public static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
     private static final int DEFAULT_TIMEOUT = 5000;
 
     private final String name;
@@ -165,6 +166,8 @@ public abstract class SearchEngine {
     };
     
     public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
+        private AppiaSearchThrottle throttle = new AppiaSearchThrottle();
+        
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
             //TODO: Pass the real android id here, which must be obtained somewhere
@@ -172,7 +175,7 @@ public abstract class SearchEngine {
             //        Secure.getString(getContext().getContentResolver(),
             //        Secure.ANDROID_ID)
             //return new AppiaSearchPerformer(new DomainAliasManager("appia.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "mockAndroidId");
-            return new AppiaSearchPerformer(new DomainAliasManager("10.240.118.146"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "2345");
+            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "2345", throttle);
         }
     };
     
