@@ -29,6 +29,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.ClickAdapter;
 
 /**
  * @author gubatron
@@ -78,7 +79,7 @@ public class ShareIndicationDialog extends AbstractDialog2 {
         buttonDone.setOnClickListener(new DoneListener(this));
     }
 
-    private static final class DoneListener extends OnViewClickListener<ShareIndicationDialog> {
+    private static final class DoneListener extends ClickAdapter<ShareIndicationDialog> {
 
         public DoneListener(ShareIndicationDialog dlg) {
             super(dlg);
@@ -87,6 +88,7 @@ public class ShareIndicationDialog extends AbstractDialog2 {
         @Override
         public void onClick(ShareIndicationDialog dlg, View v) {
             ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, dlg.checkShow.isChecked());
+            dlg.dismiss();
         }
     }
 }

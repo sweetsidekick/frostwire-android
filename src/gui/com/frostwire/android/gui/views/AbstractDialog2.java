@@ -38,6 +38,16 @@ import com.frostwire.util.Ref;
  */
 public abstract class AbstractDialog2 extends DialogFragment {
 
+    /**
+     * The identifier for the positive button.
+     */
+    public static final int BUTTON_POSITIVE = -1;
+
+    /**
+     * The identifier for the negative button. 
+     */
+    public static final int BUTTON_NEGATIVE = -2;
+
     private final String tag;
     private final int layoutResId;
 
@@ -77,16 +87,18 @@ public abstract class AbstractDialog2 extends DialogFragment {
         super.show(manager, tag);
     }
 
-    public void performPositiveClick() {
+    public void performDialogClick(int which) {
         if (Ref.alive(listenerRef)) {
-            listenerRef.get().onPositiveClick(tag);
+            listenerRef.get().onDialogClick(tag, which);
         }
     }
 
+    public void performPositiveClick() {
+        performDialogClick(BUTTON_POSITIVE);
+    }
+
     public void performNegativeClick() {
-        if (Ref.alive(listenerRef)) {
-            listenerRef.get().onNegativeClick(tag);
-        }
+        performDialogClick(BUTTON_NEGATIVE);
     }
 
     protected void setContentView(Dialog dlg, int layoutResId) {
@@ -103,29 +115,6 @@ public abstract class AbstractDialog2 extends DialogFragment {
 
     public interface OnDialogClickListener {
 
-        public void onPositiveClick(String tag);
-
-        public void onNegativeClick(String tag);
-    }
-
-    public static class OnViewClickListener<T extends AbstractDialog2> implements View.OnClickListener {
-
-        private final WeakReference<T> dlgRef;
-
-        public OnViewClickListener(T dlg) {
-            this.dlgRef = Ref.weak(dlg);
-        }
-
-        @Override
-        public final void onClick(View v) {
-            if (Ref.alive(dlgRef)) {
-                T dlg = dlgRef.get();
-                onClick(dlg, v);
-                dlg.dismiss();
-            }
-        }
-
-        public void onClick(T dlg, View v) {
-        }
+        public void onDialogClick(String tag, int which);
     }
 }
