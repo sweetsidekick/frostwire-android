@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.views;
 
+import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +31,7 @@ import android.view.View;
  * @author aldenml
  * 
  */
-public abstract class AbstractActivity extends Activity {
+public abstract class AbstractActivity extends Activity implements OnDialogClickListener {
 
     private final int layoutResId;
 
@@ -39,6 +41,10 @@ public abstract class AbstractActivity extends Activity {
         }
 
         this.layoutResId = layoutResId;
+    }
+
+    @Override
+    public void onDialogClick(String tag, int which) {
     }
 
     @Override
