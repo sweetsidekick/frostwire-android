@@ -18,6 +18,11 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
+
+import com.frostwire.util.Ref;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -36,6 +41,8 @@ public abstract class AbstractDialog2 extends DialogFragment {
     private final String tag;
     private final int layoutResId;
 
+    private WeakReference<OnDialogClickListener> listenerRef;
+
     public AbstractDialog2(String tag, int layoutResId) {
         if (layoutResId == 0) {
             throw new RuntimeException("Resource id can't be 0");
@@ -43,6 +50,17 @@ public abstract class AbstractDialog2 extends DialogFragment {
 
         this.tag = tag;
         this.layoutResId = layoutResId;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            listenerRef = Ref.weak((OnDialogClickListener) activity);
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnDialogClickListener");
+        }
     }
 
     @Override
@@ -59,6 +77,18 @@ public abstract class AbstractDialog2 extends DialogFragment {
         super.show(manager, tag);
     }
 
+    public void performPositiveClick() {
+        if (Ref.alive(listenerRef)) {
+            listenerRef.get().onPositiveClick(tag);
+        }
+    }
+
+    public void performNegativeClick() {
+        if (Ref.alive(listenerRef)) {
+            listenerRef.get().onNegativeClick(tag);
+        }
+    }
+
     protected void setContentView(Dialog dlg, int layoutResId) {
         dlg.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         dlg.setContentView(layoutResId);
@@ -69,5 +99,12 @@ public abstract class AbstractDialog2 extends DialogFragment {
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(Dialog dlg, int id) {
         return (T) dlg.findViewById(id);
+    }
+
+    public interface OnDialogClickListener {
+
+        public void onPositiveClick(String tag);
+
+        public void onNegativeClick(String tag);
     }
 }

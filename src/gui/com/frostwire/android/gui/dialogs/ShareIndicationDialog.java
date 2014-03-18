@@ -41,13 +41,15 @@ import com.frostwire.util.Ref;
  */
 public class ShareIndicationDialog extends AbstractDialog2 {
 
+    public static final String TAG = "share_indication";
+
     private static final String CHECK_SHOW_STATE_KEY = "check_show_state";
 
     private CheckBox checkShow;
     private Button buttonDone;
 
     public ShareIndicationDialog() {
-        super("share_indication", R.layout.dialog_share_indication);
+        super(TAG, R.layout.dialog_share_indication);
     }
 
     @Override
