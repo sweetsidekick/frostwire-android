@@ -52,7 +52,7 @@ public class BrowsePeerActivity extends AbstractActivity {
     private TimerSubscription playerSubscription;
 
     public BrowsePeerActivity() {
-        super(R.layout.activity_browse_peer, 1);
+        super(R.layout.activity_browse_peer);
     }
     
     @Override
@@ -64,7 +64,7 @@ public class BrowsePeerActivity extends AbstractActivity {
     }
 
     @Override
-    protected void initComponents() {
+    protected void initComponents(Bundle savedInstanceState) {
         textNickname = findView(R.id.activity_browse_peer_text_nickname);
         textNickname.setText("");
         textTitle = findView(R.id.activity_browse_peer_text_title);

@@ -18,16 +18,9 @@
 
 package com.frostwire.android.gui.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -38,113 +31,28 @@ import com.frostwire.logging.Logger;
  */
 public abstract class AbstractActivity extends Activity {
 
-    private static final Logger LOG = Logger.getLogger(AbstractActivity.class);
-
     private final int layoutResId;
 
-    private final long refreshInterval;
-    private final List<Refreshable> refreshables;
-
-    private Handler refreshHandler;
-    private Runnable refreshTask;
-
-    public AbstractActivity(int layoutResId, int refreshIntervalSec) {
+    public AbstractActivity(int layoutResId) {
         if (layoutResId == 0) {
             throw new RuntimeException("Resource id can't be 0");
         }
-        
+
         this.layoutResId = layoutResId;
-
-        this.refreshInterval = refreshIntervalSec * 1000;
-        this.refreshables = new ArrayList<Refreshable>();
-
-        if (refreshInterval > 0) {
-            refreshHandler = new Handler();
-            refreshTask = new Runnable() {
-                public void run() {
-                    onRefresh();
-                    refreshHandler.postDelayed(refreshTask, refreshInterval);
-                }
-            };
-        }
-    }
-
-    public AbstractActivity(int layoutResID) {
-        this(layoutResID, 0);
-    }
-
-    public void addRefreshable(Refreshable refreshable) {
-        if (!refreshables.contains(refreshable)) {
-            refreshables.add(refreshable);
-        }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        if (layoutResId != 0) {
-            setContentView(layoutResId);
-            initComponents();
-        }
+        setContentView(layoutResId);
+        initComponents(savedInstanceState);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (refreshHandler != null) {
-            refreshHandler.postDelayed(refreshTask, refreshInterval);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (refreshHandler != null) {
-            refreshHandler.removeCallbacks(refreshTask);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // read link: http://code.google.com/p/android/issues/detail?id=8488#c109
-        unbindDrawables(findViewById(android.R.id.content));
-    }
-
-    protected void onRefresh() {
-        for (Refreshable refreshable : refreshables) {
-            try {
-                refreshable.refresh();
-            } catch (Throwable e) {
-                LOG.error("Error refreshing component", e);
-            }
-        }
-    }
+    protected abstract void initComponents(Bundle savedInstanceState);
 
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(int id) {
         return (T) super.findViewById(id);
-    }
-
-    protected void initComponents() {
-    }
-
-    private void unbindDrawables(View view) {
-        try {
-            if (view.getBackground() != null) {
-                view.getBackground().setCallback(null);
-            }
-            if (view instanceof ViewGroup) {
-                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                    unbindDrawables(((ViewGroup) view).getChildAt(i));
-                }
-                //((ViewGroup) view).removeAllViews();
-            }
-        } catch (Throwable e) {
-            LOG.warn("Failed to unbind drawables and remove views", e);
-        }
     }
 }

@@ -85,7 +85,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private ImageButton buttonMenu;
 
     public MediaPlayerActivity() {
-        super(R.layout.activity_mediaplayer, 0);
+        super(R.layout.activity_mediaplayer);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -102,7 +102,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                             }
                         } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                             try {
-                                initComponents();
+                                initComponents(null);
                             } catch (Throwable e) {
                                 // ignore
                             }
@@ -215,7 +215,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     @Override
-    protected void initComponents() {
+    protected void initComponents(Bundle savedInstanceState) {
 
         if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
             Log.e(TAG, "Only media playerControl of type NativeAndroidPlayer is supported");

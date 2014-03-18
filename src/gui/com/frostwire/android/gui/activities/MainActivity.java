@@ -124,7 +124,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private TimerSubscription playerSubscription;
 
     public MainActivity() {
-        super(R.layout.activity_main, 2);
+        super(R.layout.activity_main);
         this.controller = new MainController(this);
         this.fragmentsStack = new Stack<Integer>();
     }
@@ -178,8 +178,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initComponents(Bundle savedInstanceState) {
 
         drawerLayout = findView(R.id.drawer_layout);
         drawerLayout.setDrawerListener(new SimpleDrawerListener() {
