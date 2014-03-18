@@ -18,13 +18,10 @@
 
 package com.frostwire.android.gui.dialogs;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 
@@ -32,7 +29,6 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.AbstractDialog2;
-import com.frostwire.util.Ref;
 
 /**
  * @author gubatron
@@ -82,23 +78,15 @@ public class ShareIndicationDialog extends AbstractDialog2 {
         buttonDone.setOnClickListener(new DoneListener(this));
     }
 
-    private static final class DoneListener implements OnClickListener {
-
-        private final WeakReference<ShareIndicationDialog> dlgRef;
+    private static final class DoneListener extends OnViewClickListener<ShareIndicationDialog> {
 
         public DoneListener(ShareIndicationDialog dlg) {
-            this.dlgRef = Ref.weak(dlg);
+            super(dlg);
         }
 
         @Override
-        public void onClick(View v) {
-            if (Ref.alive(dlgRef)) {
-                ShareIndicationDialog dlg = dlgRef.get();
-
-                ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, dlg.checkShow.isChecked());
-
-                dlg.dismiss();
-            }
+        public void onClick(ShareIndicationDialog dlg, View v) {
+            ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION, dlg.checkShow.isChecked());
         }
     }
 }

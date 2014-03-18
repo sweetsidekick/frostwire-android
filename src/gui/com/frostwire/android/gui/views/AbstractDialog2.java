@@ -20,8 +20,6 @@ package com.frostwire.android.gui.views;
 
 import java.lang.ref.WeakReference;
 
-import com.frostwire.util.Ref;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -29,6 +27,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+
+import com.frostwire.util.Ref;
 
 /**
  * 
@@ -106,5 +106,26 @@ public abstract class AbstractDialog2 extends DialogFragment {
         public void onPositiveClick(String tag);
 
         public void onNegativeClick(String tag);
+    }
+
+    public static class OnViewClickListener<T extends AbstractDialog2> implements View.OnClickListener {
+
+        private final WeakReference<T> dlgRef;
+
+        public OnViewClickListener(T dlg) {
+            this.dlgRef = Ref.weak(dlg);
+        }
+
+        @Override
+        public final void onClick(View v) {
+            if (Ref.alive(dlgRef)) {
+                T dlg = dlgRef.get();
+                onClick(dlg, v);
+                dlg.dismiss();
+            }
+        }
+
+        public void onClick(T dlg, View v) {
+        }
     }
 }
