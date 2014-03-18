@@ -19,10 +19,12 @@
 package com.frostwire.android.gui.views;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
@@ -51,7 +53,7 @@ public abstract class AbstractDialog2 extends DialogFragment {
     private final String tag;
     private final int layoutResId;
 
-    private WeakReference<OnDialogClickListener> listenerRef;
+    private WeakReference<Activity> activityRef;
 
     public AbstractDialog2(String tag, int layoutResId) {
         if (layoutResId == 0) {
@@ -66,11 +68,7 @@ public abstract class AbstractDialog2 extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
-            listenerRef = Ref.weak((OnDialogClickListener) activity);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnDialogClickListener");
-        }
+        activityRef = Ref.weak(activity);
     }
 
     @Override
@@ -88,8 +86,8 @@ public abstract class AbstractDialog2 extends DialogFragment {
     }
 
     public void performDialogClick(int which) {
-        if (Ref.alive(listenerRef)) {
-            listenerRef.get().onDialogClick(tag, which);
+        if (Ref.alive(activityRef)) {
+            dispatchDialogClick(activityRef.get(), tag, which);
         }
     }
 
@@ -111,6 +109,24 @@ public abstract class AbstractDialog2 extends DialogFragment {
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(Dialog dlg, int id) {
         return (T) dlg.findViewById(id);
+    }
+
+    private void dispatchDialogClick(Activity activity, String tag, int which) {
+        dispatchDialogClickSafe(activity, tag, which);
+
+        if (activity instanceof AbstractActivity) {
+            List<Fragment> fragments = ((AbstractActivity) activity).getVisibleFragments();
+
+            for (Fragment f : fragments) {
+                dispatchDialogClickSafe(f, tag, which);
+            }
+        }
+    }
+
+    private void dispatchDialogClickSafe(Object obj, String tag, int which) {
+        if (obj instanceof OnDialogClickListener) {
+            ((OnDialogClickListener) obj).onDialogClick(tag, which);
+        }
     }
 
     public interface OnDialogClickListener {

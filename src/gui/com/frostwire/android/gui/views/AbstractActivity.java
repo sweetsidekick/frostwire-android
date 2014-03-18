@@ -18,9 +18,13 @@
 
 package com.frostwire.android.gui.views;
 
-import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -31,9 +35,10 @@ import android.view.View;
  * @author aldenml
  * 
  */
-public abstract class AbstractActivity extends Activity implements OnDialogClickListener {
+public abstract class AbstractActivity extends Activity {
 
     private final int layoutResId;
+    private final ArrayList<String> fragmentTags;
 
     public AbstractActivity(int layoutResId) {
         if (layoutResId == 0) {
@@ -41,10 +46,31 @@ public abstract class AbstractActivity extends Activity implements OnDialogClick
         }
 
         this.layoutResId = layoutResId;
+        this.fragmentTags = new ArrayList<String>();
     }
 
     @Override
-    public void onDialogClick(String tag, int which) {
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+        String tag = fragment.getTag();
+        if (tag != null && !fragmentTags.contains(tag)) {
+            fragmentTags.add(tag);
+        }
+    }
+
+    List<Fragment> getVisibleFragments() {
+        List<Fragment> result = new LinkedList<Fragment>();
+
+        FragmentManager fm = getFragmentManager();
+        for (String tag : fragmentTags) {
+            Fragment f = fm.findFragmentByTag(tag);
+            if (f.isVisible()) {
+                result.add(f);
+            }
+        }
+
+        return result;
     }
 
     @Override
