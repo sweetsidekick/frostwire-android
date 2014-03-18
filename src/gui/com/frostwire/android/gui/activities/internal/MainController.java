@@ -40,7 +40,7 @@ import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.ShareIndicationDialog;
+import com.frostwire.android.gui.dialogs.ShareIndicationDialog;
 import com.frostwire.logging.Logger;
 
 /**
