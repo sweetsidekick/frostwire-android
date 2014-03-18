@@ -30,7 +30,6 @@ import android.view.View;
 
 /**
  * 
- * 
  * @author gubatron
  * @author aldenml
  * 
@@ -41,10 +40,6 @@ public abstract class AbstractActivity extends Activity {
     private final ArrayList<String> fragmentTags;
 
     public AbstractActivity(int layoutResId) {
-        if (layoutResId == 0) {
-            throw new RuntimeException("Resource id can't be 0");
-        }
-
         this.layoutResId = layoutResId;
         this.fragmentTags = new ArrayList<String>();
     }

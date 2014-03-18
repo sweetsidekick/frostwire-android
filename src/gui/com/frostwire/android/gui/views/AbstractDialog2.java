@@ -43,12 +43,12 @@ public abstract class AbstractDialog2 extends DialogFragment {
     /**
      * The identifier for the positive button.
      */
-    public static final int BUTTON_POSITIVE = -1;
+    public static final int BUTTON_POSITIVE = Dialog.BUTTON_POSITIVE;
 
     /**
      * The identifier for the negative button. 
      */
-    public static final int BUTTON_NEGATIVE = -2;
+    public static final int BUTTON_NEGATIVE = Dialog.BUTTON_NEGATIVE;
 
     private final String tag;
     private final int layoutResId;
@@ -56,10 +56,6 @@ public abstract class AbstractDialog2 extends DialogFragment {
     private WeakReference<Activity> activityRef;
 
     public AbstractDialog2(String tag, int layoutResId) {
-        if (layoutResId == 0) {
-            throw new RuntimeException("Resource id can't be 0");
-        }
-
         this.tag = tag;
         this.layoutResId = layoutResId;
     }
@@ -81,27 +77,23 @@ public abstract class AbstractDialog2 extends DialogFragment {
         return dlg;
     }
 
-    public void show(FragmentManager manager) {
+    public final void show(FragmentManager manager) {
         super.show(manager, tag);
     }
 
-    public void performDialogClick(int which) {
-        if (Ref.alive(activityRef)) {
-            dispatchDialogClick(activityRef.get(), tag, which);
-        }
-    }
-
-    public void performPositiveClick() {
-        performDialogClick(BUTTON_POSITIVE);
-    }
-
-    public void performNegativeClick() {
-        performDialogClick(BUTTON_NEGATIVE);
+    public final void performDialogClick(int which) {
+        performDialogClick(tag, which);
     }
 
     protected void setContentView(Dialog dlg, int layoutResId) {
         dlg.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         dlg.setContentView(layoutResId);
+    }
+
+    protected void performDialogClick(String tag, int which) {
+        if (Ref.alive(activityRef)) {
+            dispatchDialogClick(activityRef.get(), tag, which);
+        }
     }
 
     protected abstract void initComponents(Dialog dlg, Bundle savedInstanceState);

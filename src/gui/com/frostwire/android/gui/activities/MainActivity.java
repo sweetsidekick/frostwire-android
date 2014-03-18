@@ -51,6 +51,7 @@ import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
 import com.frostwire.android.gui.activities.internal.XmlMenuItem;
 import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
+import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -63,14 +64,14 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.TOSActivity;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
-import com.frostwire.android.gui.views.YesNoDialog;
-import com.frostwire.android.gui.views.YesNoDialog.YesNoDialogListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
@@ -83,7 +84,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, YesNoDialogListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -429,16 +430,12 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
     
     @Override
-    public void onPositiveClick(String id) {
-        if (id.equals(LAST_BACK_DIALOG_ID)) {
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog2.BUTTON_POSITIVE) {
             finish();
         }
     }
     
-    @Override
-    public void onNegativeClick(String id) {
-    }
-
     private void syncSlideMenu() {
         Fragment fragment = getCurrentFragment();
 
