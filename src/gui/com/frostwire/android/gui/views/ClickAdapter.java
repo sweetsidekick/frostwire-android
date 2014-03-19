@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.frostwire.util.Ref;
 
@@ -31,7 +32,7 @@ import com.frostwire.util.Ref;
  * @author aldenml
  * 
  */
-public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInterface.OnClickListener {
+public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private final WeakReference<T> ownerRef;
 
@@ -53,9 +54,19 @@ public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInt
         }
     }
 
+    @Override
+    public final void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (Ref.alive(ownerRef)) {
+            onCheckedChanged(ownerRef.get(), buttonView, isChecked);
+        }
+    }
+
     public void onClick(T owner, View v) {
     }
 
     public void onClick(T owner, DialogInterface dialog, int which) {
+    }
+
+    public void onCheckedChanged(T owner, CompoundButton buttonView, boolean isChecked) {
     }
 }

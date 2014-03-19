@@ -47,8 +47,9 @@ import com.frostwire.android.gui.transfers.InvalidTransfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
-import com.frostwire.android.gui.views.NewTransferDialog;
-import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
+import com.frostwire.android.gui.dialogs.NewTransferDialog;
+import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -76,7 +77,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public final class SearchFragment extends AbstractListFragment implements MainFragment {
+public final class SearchFragment extends AbstractListFragment implements MainFragment, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(SearchFragment.class);
 
@@ -277,26 +278,24 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         }
     }
 
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog2.BUTTON_POSITIVE) {
+//            getFragmentManager().findFragmentByTag(tag);
+//            startDownload(sr, toastMessage);
+//            uxLogAction(sr);
+        }
+    }
+
     private void startTransfer(final SearchResult sr, final String toastMessage) {
-        OnYesNoListener listener = new OnYesNoListener() {
-            public void onYes(NewTransferDialog dialog) {
-                startDownload(sr, toastMessage);
-                uxLogAction(sr);
-            }
-
-            public void onNo(NewTransferDialog dialog) {
-            }
-        };
-
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG)) {
             if (sr instanceof FileSearchResult) {
-                NewTransferDialog dlg = new NewTransferDialog();
-                dlg.setSearchResult((FileSearchResult) sr);
-                dlg.setListener(listener);
+                NewTransferDialog dlg = NewTransferDialog.newInstance((FileSearchResult) sr, false);
                 dlg.show(getFragmentManager());
             }
         } else {
-            listener.onYes(null);
+            startDownload(sr, toastMessage);
+            uxLogAction(sr);
         }
     }
 
@@ -305,7 +304,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         UIUtils.showTransfersOnDownloadStart(getActivity());
         task.execute();
     }
-    
+
     private void startPromotionDownload(Slide slide) {
         SearchResult sr = null;
 
@@ -346,18 +345,18 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         }
     }
-    
+
     private static class StartDownloadAsyncTask extends AsyncTask<Void, Void, DownloadTransfer> {
         private final WeakReference<Activity> activity;
         private final SearchResult sr;
         private final String toastMessage;
-        
+
         public StartDownloadAsyncTask(final Activity activity, final SearchResult sr, final String toastMessage) {
             this.activity = new WeakReference<Activity>(activity);
             this.sr = sr;
             this.toastMessage = toastMessage;
         }
-        
+
         @Override
         protected DownloadTransfer doInBackground(Void... params) {
             DownloadTransfer transfer = null;
