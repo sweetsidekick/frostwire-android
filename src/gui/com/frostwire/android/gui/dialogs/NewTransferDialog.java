@@ -33,7 +33,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.search.FileSearchResult;
 
@@ -42,7 +42,7 @@ import com.frostwire.search.FileSearchResult;
  * @author aldenml
  *
  */
-public class NewTransferDialog extends AbstractDialog2 {
+public class NewTransferDialog extends AbstractDialog {
 
     public static final String TAG = "new_transfer";
 

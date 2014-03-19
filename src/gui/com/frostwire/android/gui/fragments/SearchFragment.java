@@ -48,8 +48,8 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.dialogs.NewTransferDialog;
-import com.frostwire.android.gui.views.AbstractDialog2;
-import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -280,7 +280,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
     @Override
     public void onDialogClick(String tag, int which) {
-        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog2.BUTTON_POSITIVE) {
+        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog.BUTTON_POSITIVE) {
 //            getFragmentManager().findFragmentByTag(tag);
 //            startDownload(sr, toastMessage);
 //            uxLogAction(sr);

@@ -38,7 +38,7 @@ import com.frostwire.util.Ref;
  * @author aldenml
  * 
  */
-public abstract class AbstractDialog2 extends DialogFragment {
+public abstract class AbstractDialog extends DialogFragment {
 
     /**
      * The identifier for the positive button.
@@ -55,7 +55,7 @@ public abstract class AbstractDialog2 extends DialogFragment {
 
     private WeakReference<Activity> activityRef;
 
-    public AbstractDialog2(String tag, int layoutResId) {
+    public AbstractDialog(String tag, int layoutResId) {
         this.tag = tag;
         this.layoutResId = layoutResId;
     }

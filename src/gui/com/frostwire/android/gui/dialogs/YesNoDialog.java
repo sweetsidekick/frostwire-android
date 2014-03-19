@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.ClickAdapter;
 
 /**
@@ -32,7 +32,7 @@ import com.frostwire.android.gui.views.ClickAdapter;
  * @author aldenml
  *
  */
-public class YesNoDialog extends AbstractDialog2 {
+public class YesNoDialog extends AbstractDialog {
 
     public static final String TAG = "yesno";
 

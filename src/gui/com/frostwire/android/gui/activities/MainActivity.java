@@ -64,8 +64,8 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.AbstractDialog2;
-import com.frostwire.android.gui.views.AbstractDialog2.OnDialogClickListener;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.TOS;
 import com.frostwire.android.gui.views.TOS.TOSActivity;
@@ -431,7 +431,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     
     @Override
     public void onDialogClick(String tag, int which) {
-        if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog2.BUTTON_POSITIVE) {
+        if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
             finish();
         }
     }

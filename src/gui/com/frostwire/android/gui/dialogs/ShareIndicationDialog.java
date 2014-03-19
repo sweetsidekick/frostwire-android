@@ -28,7 +28,7 @@ import android.widget.CheckBox;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.views.AbstractDialog2;
+import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.ClickAdapter;
 
 /**
@@ -36,7 +36,7 @@ import com.frostwire.android.gui.views.ClickAdapter;
  * @author aldenml
  *
  */
-public class ShareIndicationDialog extends AbstractDialog2 {
+public class ShareIndicationDialog extends AbstractDialog {
 
     public static final String TAG = "share_indication";
 
