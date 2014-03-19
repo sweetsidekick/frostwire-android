@@ -49,7 +49,7 @@ public final class TimerSubscription {
 
     public void unsubscribe() {
         unsubscribed = true;
-        observerRef.clear();
+        Ref.free(observerRef);
     }
 
     public void onTime() {
