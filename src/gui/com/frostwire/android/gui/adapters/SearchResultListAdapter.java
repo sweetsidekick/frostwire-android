@@ -151,7 +151,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     
     protected void populateAppiaPart(View view, AppiaSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        fileTypeIcon.setMinimumWidth(64);
         Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
         thumbLoader.displayImage(sr.getThumbnailURL(), fileTypeIcon, defaultDrawable, 0);
 

@@ -170,12 +170,7 @@ public abstract class SearchEngine {
         
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
-            //TODO: Pass the real android id here, which must be obtained somewhere
-            //else where we have access to a Context object,
-            //        Secure.getString(getContext().getContentResolver(),
-            //        Secure.ANDROID_ID)
-            //return new AppiaSearchPerformer(new DomainAliasManager("appia.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "mockAndroidId");
-            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, "2345", throttle);
+            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, LocalSearchEngine.instance().getAndroidId(), throttle);
         }
     };
     

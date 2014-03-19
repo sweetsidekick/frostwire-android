@@ -28,6 +28,7 @@ import java.util.Map;
 import android.os.AsyncTask;
 
 import com.frostwire.android.gui.SearchEngine;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.PagedWebSearchPerformer;
@@ -71,7 +72,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     protected List<? extends SearchResult> searchPage(int page) {
         List<? extends SearchResult> result = Collections.emptyList();
 
-        if (throttle.canSearchAgain()) {
+        if (OfferUtils.isfreeAppsEnabled() && throttle.canSearchAgain()) {
             String url = getUrl(-1, getEncodedKeywords());
             String text = null;
             
