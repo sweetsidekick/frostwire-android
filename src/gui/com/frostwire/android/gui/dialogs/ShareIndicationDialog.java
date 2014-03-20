@@ -38,7 +38,7 @@ import com.frostwire.android.gui.views.ClickAdapter;
  */
 public class ShareIndicationDialog extends AbstractDialog {
 
-    public static final String TAG = "share_indication";
+    public static final String TAG = "share_indication_dialog";
 
     private static final String CHECK_SHOW_STATE_KEY = "check_show_state";
 

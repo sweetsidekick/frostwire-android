@@ -16,42 +16,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.views;
+package com.frostwire.android.gui.dialogs;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 
 import org.apache.commons.io.IOUtils;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.util.Ref;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.ClickAdapter;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class TOS extends DialogFragment {
+public class TermsUseDialog extends AbstractDialog {
+
+    public static final String TAG = "terms_use_dialog";
+
+    public TermsUseDialog() {
+        super(TAG, 0);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context ctx = getActivity();
 
-        DialogListener yes = new DialogListener(ctx instanceof TOSActivity ? (TOSActivity) ctx : null);
-        DialogListener cancel = new DialogListener(null);
+        ButtonListener click = new ButtonListener(this);
 
-        return new AlertDialog.Builder(ctx).setTitle(R.string.tos_title).setMessage(readTOS(ctx)).setPositiveButton(R.string.tos_accept, yes).setNegativeButton(R.string.tos_refuse, cancel).create();
+        return new AlertDialog.Builder(ctx).setTitle(R.string.tos_title).setMessage(readText(ctx)).setPositiveButton(R.string.tos_accept, click).setNegativeButton(R.string.tos_refuse, click).create();
     }
 
     @Override
@@ -66,15 +69,12 @@ public class TOS extends DialogFragment {
         exit();
     }
 
-    public static TOS newInstance() {
-        TOS f = new TOS();
-
-        f.setCancelable(true);
-
-        return f;
+    @Override
+    protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
+        dlg.setCanceledOnTouchOutside(true);
     }
 
-    private static String readTOS(Context context) {
+    private static String readText(Context context) {
         InputStream in = context.getResources().openRawResource(R.raw.tos);
         try {
             return IOUtils.toString(in);
@@ -89,23 +89,17 @@ public class TOS extends DialogFragment {
         System.exit(1); // drastic action
     }
 
-    public interface TOSActivity {
-        public void onTOSAccept();
-    }
+    private static final class ButtonListener extends ClickAdapter<TermsUseDialog> {
 
-    private static final class DialogListener implements OnClickListener {
-
-        private final WeakReference<TOSActivity> activityRef;
-
-        public DialogListener(TOSActivity activity) {
-            this.activityRef = Ref.weak(activity);
+        public ButtonListener(TermsUseDialog owner) {
+            super(owner);
         }
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
-            if (Ref.alive(activityRef)) {
+        public void onClick(TermsUseDialog owner, DialogInterface dialog, int which) {
+            if (which == BUTTON_POSITIVE) {
                 ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED, true);
-                activityRef.get().onTOSAccept();
+                owner.performDialogClick(which);
             } else {
                 exit();
             }

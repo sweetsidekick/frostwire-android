@@ -51,6 +51,7 @@ import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
 import com.frostwire.android.gui.activities.internal.XmlMenuItem;
 import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
+import com.frostwire.android.gui.dialogs.TermsUseDialog;
 import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
@@ -67,8 +68,6 @@ import com.frostwire.android.gui.views.AbstractActivity;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
-import com.frostwire.android.gui.views.TOS;
-import com.frostwire.android.gui.views.TOS.TOSActivity;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -84,7 +83,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, OnDialogClickListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -311,16 +310,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 controller.startWizardActivity();
             }
         } else {
-            DialogFragment f = TOS.newInstance();
-            f.show(getFragmentManager(), "tos_dialog");
+            TermsUseDialog dlg = new TermsUseDialog();
+            dlg.show(getFragmentManager());
         }
 
         checkLastSeenVersion();
-    }
-    
-    @Override
-    public void onTOSAccept() {
-        controller.startWizardActivity();
     }
 
     private void initializeAppia() {
@@ -433,6 +427,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     public void onDialogClick(String tag, int which) {
         if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
             finish();
+        } else if (tag.equals(TermsUseDialog.TAG)) {
+            controller.startWizardActivity();
         }
     }
     
