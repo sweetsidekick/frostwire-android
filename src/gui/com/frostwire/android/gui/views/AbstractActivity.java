@@ -60,7 +60,7 @@ public abstract class AbstractActivity extends Activity {
         FragmentManager fm = getFragmentManager();
         for (String tag : fragmentTags) {
             Fragment f = fm.findFragmentByTag(tag);
-            if (f.isVisible()) {
+            if (f != null && f.isVisible()) {
                 result.add(f);
             }
         }

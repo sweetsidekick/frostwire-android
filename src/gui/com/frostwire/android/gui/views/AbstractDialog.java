@@ -53,7 +53,7 @@ public abstract class AbstractDialog extends DialogFragment {
     private final String tag;
     private final int layoutResId;
 
-    protected WeakReference<Activity> activityRef; // it's protected to use only in edge cases
+    private WeakReference<Activity> activityRef;
 
     public AbstractDialog(String tag, int layoutResId) {
         this.tag = tag;

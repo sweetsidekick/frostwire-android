@@ -48,12 +48,6 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
         this.message = message;
     }
 
-    public static void download(Context ctx, SearchResult sr, String message) {
-        StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
-        UIUtils.showTransfersOnDownloadStart(ctx);
-        task.execute();
-    }
-
     @Override
     protected DownloadTransfer doInBackground() {
         DownloadTransfer transfer = null;

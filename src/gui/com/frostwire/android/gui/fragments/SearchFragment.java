@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,6 +44,8 @@ import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearch
 import com.frostwire.android.gui.dialogs.NewTransferDialog;
 import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
+import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.PromotionsView;
@@ -64,6 +67,7 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -275,6 +279,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
     @Override
     public void onDialogClick(String tag, int which) {
+        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog.BUTTON_POSITIVE) {
+            if (Ref.alive(NewTransferDialog.srRef)) {
+                startDownload(this.getActivity(), NewTransferDialog.srRef.get(), getString(R.string.download_added_to_queue));
+            }
+        }
     }
 
     private void startTransfer(final SearchResult sr, final String toastMessage) {
@@ -285,10 +294,16 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         } else {
             if (isVisible()) {
-                StartDownloadTask.download(getActivity(), sr, toastMessage);
+                startDownload(getActivity(), sr, toastMessage);
             }
         }
         uxLogAction(sr);
+    }
+    
+    private static void startDownload(Context ctx, SearchResult sr, String message) {
+        StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
+        UIUtils.showTransfersOnDownloadStart(ctx);
+        task.execute();
     }
 
     private void startPromotionDownload(Slide slide) {

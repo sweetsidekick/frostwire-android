@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.dialogs;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -32,13 +33,10 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.search.FileSearchResult;
-import com.frostwire.search.SearchResult;
-import com.frostwire.util.JsonUtils;
 import com.frostwire.util.Ref;
 
 /**
@@ -61,10 +59,13 @@ public class NewTransferDialog extends AbstractDialog {
         super(TAG, R.layout.dialog_new_transfer);
     }
 
+    public static WeakReference<FileSearchResult> srRef;
+
     public static NewTransferDialog newInstance(FileSearchResult sr, boolean hideCheckShow) {
         NewTransferDialog f = new NewTransferDialog();
 
         Bundle args = new Bundle();
+        srRef = Ref.weak(sr);
         args.putSerializable(SEARCH_RESULT_DATA_KEY, new SearchResultData(sr));
         args.putBoolean(HIDE_CHECK_SHOW_KEY, hideCheckShow);
         f.setArguments(args);
@@ -82,16 +83,15 @@ public class NewTransferDialog extends AbstractDialog {
         dlg.setTitle(R.string.dialog_new_transfer_title);
 
         Context ctx = dlg.getContext();
-        FileSearchResult sr = data.getSearchResult();
 
-        String sizeStr = sr.getSize() > 0 ? UIUtils.getBytesInHuman(sr.getSize()) : ctx.getString(R.string.size_unknown);
+        String sizeStr = data.getSize() > 0 ? UIUtils.getBytesInHuman(data.getSize()) : ctx.getString(R.string.size_unknown);
 
         TextView textQuestion = findView(dlg, R.id.dialog_new_transfer_text);
 
-        textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, sr.getDisplayName(), sizeStr));
+        textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, data.getDisplayName(), sizeStr));
 
-        DialogListener yes = new DialogListener(this, sr, true);
-        DialogListener no = new DialogListener(this, sr, false);
+        DialogListener yes = new DialogListener(this, true);
+        DialogListener no = new DialogListener(this, false);
 
         buttonYes = findView(dlg, R.id.dialog_new_transfer_button_yes);
         buttonYes.setOnClickListener(yes);
@@ -110,19 +110,17 @@ public class NewTransferDialog extends AbstractDialog {
 
     private static final class DialogListener extends ClickAdapter<NewTransferDialog> {
 
-        private final SearchResult sr;
         private final boolean positive;
 
-        public DialogListener(NewTransferDialog owner, SearchResult sr, boolean positive) {
+        public DialogListener(NewTransferDialog owner, boolean positive) {
             super(owner);
-            this.sr = sr;
             this.positive = positive;
         }
 
         @Override
         public void onClick(NewTransferDialog owner, View v) {
-            if (positive && Ref.alive(owner.activityRef)) {
-                StartDownloadTask.download(owner.activityRef.get(), sr, owner.getString(R.string.download_added_to_queue));
+            if (positive) {
+                owner.performDialogClick(BUTTON_POSITIVE);
             }
             owner.dismiss();
         }
@@ -133,21 +131,22 @@ public class NewTransferDialog extends AbstractDialog {
         }
     }
 
-    /*
-     * This is a very dangerous way to serialize the search result.
-     */
     private static final class SearchResultData implements Serializable {
 
-        private final String json;
-        private final Class<? extends FileSearchResult> clazz;
+        private final String displayName;
+        private final long size;
 
         public SearchResultData(FileSearchResult sr) {
-            this.json = JsonUtils.toJson(sr);
-            this.clazz = sr.getClass();
+            this.displayName = sr.getDisplayName();
+            this.size = sr.getSize();
         }
 
-        public FileSearchResult getSearchResult() {
-            return JsonUtils.toObject(json, clazz);
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public long getSize() {
+            return size;
         }
     }
 }
