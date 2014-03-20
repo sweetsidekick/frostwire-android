@@ -72,12 +72,6 @@ public class NewTransferDialog extends AbstractDialog {
         return f;
     }
 
-    public static void startDownload(Context ctx, SearchResult sr, String message) {
-        StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
-        UIUtils.showTransfersOnDownloadStart(ctx);
-        task.execute();
-    }
-
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
         Bundle args = getArguments();
@@ -128,7 +122,7 @@ public class NewTransferDialog extends AbstractDialog {
         @Override
         public void onClick(NewTransferDialog owner, View v) {
             if (positive && Ref.alive(owner.activityRef)) {
-                startDownload(owner.getActivity(), sr, owner.getString(R.string.download_added_to_queue));
+                StartDownloadTask.download(owner.activityRef.get(), sr, owner.getString(R.string.download_added_to_queue));
             }
             owner.dismiss();
         }

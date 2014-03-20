@@ -41,6 +41,7 @@ import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearchResults;
 import com.frostwire.android.gui.dialogs.NewTransferDialog;
+import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractListFragment;
@@ -284,7 +285,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         } else {
             if (isVisible()) {
-                NewTransferDialog.startDownload(getActivity(), sr, toastMessage);
+                StartDownloadTask.download(getActivity(), sr, toastMessage);
             }
         }
         uxLogAction(sr);
