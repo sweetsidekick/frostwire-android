@@ -392,7 +392,7 @@ public final class UIUtils {
      * @param activity
      */
     public static void showTransfersOnDownloadStart(Context context) {
-        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+        if (ConfigurationManager.instance().showTransfersOnDownloadStart() && context != null) {
             Intent i = new Intent(context, MainActivity.class);
             i.setAction(Constants.ACTION_SHOW_TRANSFERS);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

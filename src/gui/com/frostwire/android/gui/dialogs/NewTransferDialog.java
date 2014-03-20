@@ -32,10 +32,14 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.search.FileSearchResult;
+import com.frostwire.search.SearchResult;
+import com.frostwire.util.JsonUtils;
+import com.frostwire.util.Ref;
 
 /**
  * @author gubatron
@@ -68,32 +72,42 @@ public class NewTransferDialog extends AbstractDialog {
         return f;
     }
 
+    public static void startDownload(Context ctx, SearchResult sr, String message) {
+        StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
+        UIUtils.showTransfersOnDownloadStart(ctx);
+        task.execute();
+    }
+
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
         Bundle args = getArguments();
 
-        SearchResultData sr = (SearchResultData) args.getSerializable(SEARCH_RESULT_DATA_KEY);
+        SearchResultData data = (SearchResultData) args.getSerializable(SEARCH_RESULT_DATA_KEY);
         boolean hideCheckShow = args.getBoolean(HIDE_CHECK_SHOW_KEY);
 
         dlg.setTitle(R.string.dialog_new_transfer_title);
 
         Context ctx = dlg.getContext();
+        FileSearchResult sr = data.getSearchResult();
 
-        String sizeStr = sr.size > 0 ? UIUtils.getBytesInHuman(sr.size) : ctx.getString(R.string.size_unknown);
+        String sizeStr = sr.getSize() > 0 ? UIUtils.getBytesInHuman(sr.getSize()) : ctx.getString(R.string.size_unknown);
 
         TextView textQuestion = findView(dlg, R.id.dialog_new_transfer_text);
 
-        textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, sr.displayName, sizeStr));
+        textQuestion.setText(dlg.getContext().getString(R.string.dialog_new_transfer_text_text, sr.getDisplayName(), sizeStr));
+
+        DialogListener yes = new DialogListener(this, sr, true);
+        DialogListener no = new DialogListener(this, sr, false);
 
         buttonYes = findView(dlg, R.id.dialog_new_transfer_button_yes);
-        buttonYes.setOnClickListener(new DialogListener(this, true));
+        buttonYes.setOnClickListener(yes);
 
         buttonNo = findView(dlg, R.id.dialog_new_transfer_button_no);
-        buttonNo.setOnClickListener(new DialogListener(this, false));
+        buttonNo.setOnClickListener(no);
 
         checkShow = findView(dlg, R.id.dialog_new_transfer_check_show);
         checkShow.setChecked(ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG));
-        checkShow.setOnCheckedChangeListener(new DialogListener(this, true));
+        checkShow.setOnCheckedChangeListener(yes);
 
         if (hideCheckShow) {
             checkShow.setVisibility(View.GONE);
@@ -102,17 +116,21 @@ public class NewTransferDialog extends AbstractDialog {
 
     private static final class DialogListener extends ClickAdapter<NewTransferDialog> {
 
+        private final SearchResult sr;
         private final boolean positive;
 
-        public DialogListener(NewTransferDialog owner, boolean positive) {
+        public DialogListener(NewTransferDialog owner, SearchResult sr, boolean positive) {
             super(owner);
+            this.sr = sr;
             this.positive = positive;
         }
 
         @Override
         public void onClick(NewTransferDialog owner, View v) {
+            if (positive && Ref.alive(owner.activityRef)) {
+                startDownload(owner.getActivity(), sr, owner.getString(R.string.download_added_to_queue));
+            }
             owner.dismiss();
-            owner.performDialogClick(positive ? BUTTON_POSITIVE : BUTTON_NEGATIVE);
         }
 
         @Override
@@ -121,22 +139,21 @@ public class NewTransferDialog extends AbstractDialog {
         }
     }
 
-    public static final class SearchResultData implements Serializable {
+    /*
+     * This is a very dangerous way to serialize the search result.
+     */
+    private static final class SearchResultData implements Serializable {
+
+        private final String json;
+        private final Class<? extends FileSearchResult> clazz;
 
         public SearchResultData(FileSearchResult sr) {
-            this.displayName = sr.getDisplayName();
-            this.detailsUrl = sr.getDetailsUrl();
-            this.creationTime = sr.getCreationTime();
-            this.source = sr.getSource();
-            this.filename = sr.getFilename();
-            this.size = sr.getSize();
+            this.json = JsonUtils.toJson(sr);
+            this.clazz = sr.getClass();
         }
 
-        public final String displayName;
-        public final String detailsUrl;
-        public final long creationTime;
-        public final String source;
-        public final String filename;
-        public final long size;
+        public FileSearchResult getSearchResult() {
+            return JsonUtils.toObject(json, clazz);
+        }
     }
 }

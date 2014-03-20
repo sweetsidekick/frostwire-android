@@ -40,16 +40,10 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearchResults;
-import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.transfers.ExistingDownload;
-import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
-import com.frostwire.android.gui.transfers.InvalidTransfer;
-import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.dialogs.NewTransferDialog;
-import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
+import com.frostwire.android.gui.views.AbstractListFragment;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -280,11 +274,6 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
     @Override
     public void onDialogClick(String tag, int which) {
-        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog.BUTTON_POSITIVE) {
-//            getFragmentManager().findFragmentByTag(tag);
-//            startDownload(sr, toastMessage);
-//            uxLogAction(sr);
-        }
     }
 
     private void startTransfer(final SearchResult sr, final String toastMessage) {
@@ -294,15 +283,11 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 dlg.show(getFragmentManager());
             }
         } else {
-            startDownload(sr, toastMessage);
-            uxLogAction(sr);
+            if (isVisible()) {
+                NewTransferDialog.startDownload(getActivity(), sr, toastMessage);
+            }
         }
-    }
-
-    private void startDownload(final SearchResult sr, final String toastMessage) {
-        AsyncTask<Void, Void, DownloadTransfer> task = new StartDownloadAsyncTask(getActivity(), sr, toastMessage);
-        UIUtils.showTransfersOnDownloadStart(getActivity());
-        task.execute();
+        uxLogAction(sr);
     }
 
     private void startPromotionDownload(Slide slide) {
@@ -345,47 +330,6 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             }
         }
     }
-
-    private static class StartDownloadAsyncTask extends AsyncTask<Void, Void, DownloadTransfer> {
-        private final WeakReference<Activity> activity;
-        private final SearchResult sr;
-        private final String toastMessage;
-
-        public StartDownloadAsyncTask(final Activity activity, final SearchResult sr, final String toastMessage) {
-            this.activity = new WeakReference<Activity>(activity);
-            this.sr = sr;
-            this.toastMessage = toastMessage;
-        }
-
-        @Override
-        protected DownloadTransfer doInBackground(Void... params) {
-            DownloadTransfer transfer = null;
-            try {
-                transfer = TransferManager.instance().download(sr);
-            } catch (Throwable e) {
-                LOG.warn("Error adding new download from result: " + sr, e);
-            }
-
-            return transfer;
-        }
-
-        @Override
-        protected void onPostExecute(DownloadTransfer transfer) {
-            if (transfer != null) {
-                if (!(transfer instanceof InvalidTransfer)) {
-                    UIUtils.showShortMessage(activity.get(), toastMessage);
-                } else {
-                    if (transfer instanceof ExistingDownload) {
-                        //nothing happens here, the user should just see the transfer
-                        //manager and we avoid adding the same transfer twice.
-                    } else {
-                        UIUtils.showShortMessage(activity.get(), ((InvalidTransfer) transfer).getReasonResId());
-                    }
-                }
-            }
-        }
-
-    };
 
     private static class LoadSlidesTask extends AsyncTask<Void, Void, List<Slide>> {
 

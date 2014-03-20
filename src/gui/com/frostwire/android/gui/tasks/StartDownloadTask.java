@@ -40,12 +40,12 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
     private static final Logger LOG = Logger.getLogger(StartDownloadTask.class);
 
     private final SearchResult sr;
-    private final String toastMessage;
+    private final String message;
 
-    public StartDownloadTask(Context ctx, SearchResult sr, String toastMessage) {
+    public StartDownloadTask(Context ctx, SearchResult sr, String message) {
         super(ctx);
         this.sr = sr;
-        this.toastMessage = toastMessage;
+        this.message = message;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
     protected void onPostExecute(Context ctx, DownloadTransfer transfer) {
         if (transfer != null) {
             if (!(transfer instanceof InvalidTransfer)) {
-                UIUtils.showShortMessage(ctx, toastMessage);
+                UIUtils.showShortMessage(ctx, message);
             } else {
                 if (transfer instanceof ExistingDownload) {
                     //nothing happens here, the user should just see the transfer
