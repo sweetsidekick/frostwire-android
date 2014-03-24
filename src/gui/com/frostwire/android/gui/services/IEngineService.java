@@ -60,8 +60,6 @@ public interface IEngineService {
     public ThreadPool getThreadPool();
 
     public void notifyDownloadFinished(String displayName, File file);
-
-    public DesktopUploadManager getDesktopUploadManager();
     
     public Application getApplication();
 }
