@@ -419,8 +419,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void handleLastBackPressed() {
-        DialogFragment f = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
-        f.show(getFragmentManager(), LAST_BACK_DIALOG_ID);
+        YesNoDialog dlg = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
+        dlg.show(getFragmentManager());
     }
     
     @Override

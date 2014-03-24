@@ -35,12 +35,13 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
+import com.frostwire.android.gui.dialogs.MenuDialog;
+import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractExpandableListFragment;
-import com.frostwire.android.gui.views.ContextMenuDialog;
-import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -51,7 +52,7 @@ import com.frostwire.android.gui.views.TimerSubscription;
  * @author aldenml
  * 
  */
-public class TransfersFragment extends AbstractExpandableListFragment implements TimerObserver, MainFragment {
+public class TransfersFragment extends AbstractExpandableListFragment implements TimerObserver, MainFragment, OnDialogClickListener {
 
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
@@ -231,27 +232,32 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
             return transfers;
         }
     }
+    
+    private static final int CLEAR_MENU_DIALOG_ID = 0;
+    private static final int STOP_MENU_DIALOG_ID = 1;
+    
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(MenuDialog.TAG)) {
+            switch (which) {
+            case CLEAR_MENU_DIALOG_ID:
+                TransferManager.instance().clearComplete();
+                break;
+            case STOP_MENU_DIALOG_ID:
+                TransferManager.instance().stopHttpTransfers();
+                TransferManager.instance().pauseTorrents();
+                break;
+            }
+        }
+    }
 
     private void showContextMenu() {
 
-        ContextMenuItem share = new ContextMenuItem(R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer) {
-            @Override
-            public void onClick() {
-                TransferManager.instance().clearComplete();
-            }
-        };
+        MenuItem clear = new MenuItem(CLEAR_MENU_DIALOG_ID, R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer);
+        MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer);
 
-        ContextMenuItem stop = new ContextMenuItem(R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer) {
-            @Override
-            public void onClick() {
-                TransferManager.instance().stopHttpTransfers();
-                TransferManager.instance().pauseTorrents();
-            }
-        };
-
-        ContextMenuDialog menu = new ContextMenuDialog();
-        menu.setItems(Arrays.asList(share, stop));
-        menu.show(getFragmentManager(), "transfersContextMenu");
+        MenuDialog dlg = MenuDialog.newInstance(Arrays.asList(clear, stop));
+        dlg.show(getFragmentManager());
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {
