@@ -353,7 +353,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onPause() {
         super.onPause();
 
-        search.dismissDialogs();
         library.dismissDialogs();
         peers.dismissDialogs();
     }

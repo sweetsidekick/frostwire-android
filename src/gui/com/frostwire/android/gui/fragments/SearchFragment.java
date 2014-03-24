@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
-import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -76,7 +77,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public final class SearchFragment extends AbstractListFragment implements MainFragment, OnDialogClickListener {
+public final class SearchFragment extends AbstractFragment implements MainFragment, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(SearchFragment.class);
 
@@ -87,6 +88,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private ProgressBar deepSearchProgress;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
+    private ListView list;
 
     private final FileTypeCounter fileTypeCounter;
 
@@ -170,6 +172,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
             }
         });
+        
+        list = findView(view, R.id.fragment_search_list);
 
         showSearchView(view);
     }
@@ -182,7 +186,6 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                     startTransfer(sr, getString(R.string.download_added_to_queue));
                 }
             };
-            setListAdapter(adapter);
 
             LocalSearchEngine.instance().registerListener(new SearchManagerListener() {
                 @Override
@@ -215,6 +218,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
             });
         }
+        
+        list.setAdapter(adapter);
     }
 
     private void refreshFileTypeCounters(boolean fileTypeCountersVisible) {
@@ -255,7 +260,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             deepSearchProgress.setVisibility(View.GONE);
         } else {
             if (adapter != null && adapter.getCount() > 0) {
-                switchView(view, android.R.id.list);
+                switchView(view, R.id.fragment_search_list);
                 deepSearchProgress.setVisibility(LocalSearchEngine.instance().isSearchFinished() ? View.GONE : View.VISIBLE);
             } else {
                 switchView(view, R.id.fragment_search_search_progress);
