@@ -18,13 +18,8 @@
 
 package com.frostwire.android.gui.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +31,10 @@ import android.view.ViewGroup;
  */
 public abstract class AbstractExpandableListFragment extends ExpandableListFragment {
 
-    private static String TAG = "FW.AbstractExpandableListFragment";
-
     private final int resource;
-    private final List<Dialog> dialogs;
 
     public AbstractExpandableListFragment(int resource) {
         this.resource = resource;
-        this.dialogs = new ArrayList<Dialog>();
     }
 
     @Override
@@ -51,12 +42,6 @@ public abstract class AbstractExpandableListFragment extends ExpandableListFragm
         View v = inflater.inflate(resource, container, false);
         initComponents(v);
         return v;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        dismissDialogs();
     }
 
     protected void initComponents(View v) {
@@ -73,20 +58,5 @@ public abstract class AbstractExpandableListFragment extends ExpandableListFragm
     @SuppressWarnings("unchecked")
     protected final <T extends Fragment> T findFragment(int id) {
         return (T) getFragmentManager().findFragmentById(id);
-    }
-
-    protected Dialog trackDialog(Dialog dialog) {
-        dialogs.add(dialog);
-        return dialog;
-    }
-
-    protected void dismissDialogs() {
-        for (Dialog dialog : dialogs) {
-            try {
-                dialog.dismiss();
-            } catch (Throwable e) {
-                Log.w(TAG, "Error dismissing dialog", e);
-            }
-        }
     }
 }
