@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.views;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -101,6 +102,11 @@ public abstract class AbstractDialog extends DialogFragment {
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(Dialog dlg, int id) {
         return (T) dlg.findViewById(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final <T extends Serializable> T getArgument(String key) {
+        return (T) getArguments().getSerializable(key);
     }
 
     private void dispatchDialogClick(Activity activity, String tag, int which) {
