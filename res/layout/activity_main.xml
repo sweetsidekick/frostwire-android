@@ -57,7 +57,7 @@
 
                 <fragment
                     android:id="@+id/activity_main_fragment_transfers"
-                    android:name="com.frostwire.android.gui.fragments.TransfersFragment2"
+                    android:name="com.frostwire.android.gui.fragments.TransfersFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:tag="transfers_fragment" />

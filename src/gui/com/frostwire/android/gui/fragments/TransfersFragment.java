@@ -53,7 +53,7 @@ import com.frostwire.android.gui.views.TimerSubscription;
  * @author aldenml
  * 
  */
-public class TransfersFragment2 extends AbstractFragment implements TimerObserver, MainFragment, OnDialogClickListener {
+public class TransfersFragment extends AbstractFragment implements TimerObserver, MainFragment, OnDialogClickListener {
 
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
@@ -72,8 +72,8 @@ public class TransfersFragment2 extends AbstractFragment implements TimerObserve
     
     private TimerSubscription subscription;
 
-    public TransfersFragment2() {
-        super(R.layout.fragment_transfers2);
+    public TransfersFragment() {
+        super(R.layout.fragment_transfers);
 
         this.transferComparator = new TransferComparator();
 
@@ -208,7 +208,7 @@ public class TransfersFragment2 extends AbstractFragment implements TimerObserve
     private void setupAdapter() {
         List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
         Collections.sort(transfers, transferComparator);
-        adapter = new TransferListAdapter(TransfersFragment2.this.getActivity(), transfers);
+        adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
         list.setAdapter(adapter);
     }
 

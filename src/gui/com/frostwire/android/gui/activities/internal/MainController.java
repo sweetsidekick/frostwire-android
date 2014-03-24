@@ -38,7 +38,7 @@ import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.activities.WizardActivity;
 import com.frostwire.android.gui.dialogs.ShareIndicationDialog;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
-import com.frostwire.android.gui.fragments.TransfersFragment2;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
@@ -109,7 +109,7 @@ public final class MainController {
     }
 
     public void showTransfers() {
-        if (!(activity.getCurrentFragment() instanceof TransfersFragment2)) {
+        if (!(activity.getCurrentFragment() instanceof TransfersFragment)) {
             switchFragment(R.id.menu_main_transfers);
         }
     }
