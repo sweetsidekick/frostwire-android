@@ -26,9 +26,7 @@ import java.util.Set;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -55,7 +53,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
     private final int viewItemId;
 
     private final ViewOnClickListener viewOnClickListener;
-    private final ViewOnKeyListener viewOnKeyListener;
     private final CheckboxOnCheckedChangeListener checkboxOnCheckedChangeListener;
 
     private ListAdapterFilter<T> filter;
@@ -70,7 +67,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         this.viewItemId = viewItemId;
 
         this.viewOnClickListener = new ViewOnClickListener(ctx);
-        this.viewOnKeyListener = new ViewOnKeyListener();
         this.checkboxOnCheckedChangeListener = new CheckboxOnCheckedChangeListener();
 
         this.list = list.equals(Collections.emptyList()) ? new ArrayList<T>() : list;
@@ -285,20 +281,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
     protected abstract void populateView(View view, T data);
 
     /**
-     * Override this method if you want to do something when the DPAD or ENTER key is pressed and released.
-     * This is some sort of master click.
-     * 
-     * @param v
-     * @return if handled
-     */
-    protected boolean onItemKeyMaster(View v) {
-        return false;
-    }
-
-    protected void onItemChecked(View v, boolean isChecked) {
-    }
-
-    /**
      * Helper function.
      * 
      * @param <TView>
@@ -354,7 +336,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
 
         v.setOnClickListener(viewOnClickListener);
         v.setOnLongClickListener(viewOnClickListener);
-        v.setOnKeyListener(viewOnKeyListener);
         v.setTag(item);
 
         if (v instanceof ViewGroup) {
@@ -386,22 +367,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         }
     }
 
-    private final class ViewOnKeyListener implements OnKeyListener {
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            boolean handled = false;
-
-            switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_ENTER:
-                if (event.getAction() == KeyEvent.ACTION_UP) {
-                    handled = onItemKeyMaster(v);
-                }
-            }
-
-            return handled;
-        }
-    }
-
     private final class CheckboxOnCheckedChangeListener implements OnCheckedChangeListener {
         @SuppressWarnings("unchecked")
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -413,8 +378,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
             } else {
                 checked.remove(item);
             }
-
-            onItemChecked(buttonView, isChecked);
         }
     }
 
