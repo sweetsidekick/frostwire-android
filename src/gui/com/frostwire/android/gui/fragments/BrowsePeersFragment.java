@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -39,7 +40,7 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -50,11 +51,12 @@ import com.frostwire.android.gui.views.TimerSubscription;
  * @author aldenml
  * 
  */
-public class BrowsePeersFragment extends AbstractListFragment implements TimerObserver, MainFragment {
+public class BrowsePeersFragment extends AbstractFragment implements TimerObserver, MainFragment {
 
     private PeerListAdapter adapter;
 
     private View header;
+    private ListView list;
     
     private TimerSubscription subscription;
 
@@ -96,15 +98,6 @@ public class BrowsePeersFragment extends AbstractListFragment implements TimerOb
     }
 
     @Override
-    public void dismissDialogs() {
-        super.dismissDialogs();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
-        }
-    }
-
-    @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         header = inflater.inflate(R.layout.view_browse_peers_header, null);
@@ -122,6 +115,11 @@ public class BrowsePeersFragment extends AbstractListFragment implements TimerOb
         });
 
         return header;
+    }
+    
+    @Override
+    protected void initComponents(View rootView) {
+        list = findView(rootView, R.id.fragment_browse_peers_list);
     }
 
     private void onWifiSharingOffButtonClicked() {
@@ -154,7 +152,7 @@ public class BrowsePeersFragment extends AbstractListFragment implements TimerOb
 
     private void setupAdapter() {
         adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
-        setListAdapter(adapter);
+        list.setAdapter(adapter);
         onTime();
     }
 }

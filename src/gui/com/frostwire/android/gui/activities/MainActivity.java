@@ -350,13 +350,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        peers.dismissDialogs();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         
