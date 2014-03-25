@@ -32,7 +32,7 @@ import com.frostwire.util.Ref;
  * @author aldenml
  * 
  */
-public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public abstract class ClickAdapter<T> implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private final WeakReference<T> ownerRef;
 
@@ -45,6 +45,15 @@ public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInt
         if (Ref.alive(ownerRef)) {
             onClick(ownerRef.get(), v);
         }
+    }
+
+    @Override
+    public final boolean onLongClick(View v) {
+        if (Ref.alive(ownerRef)) {
+            return onLongClick(ownerRef.get(), v);
+        }
+
+        return false;
     }
 
     @Override
@@ -62,6 +71,10 @@ public abstract class ClickAdapter<T> implements View.OnClickListener, DialogInt
     }
 
     public void onClick(T owner, View v) {
+    }
+
+    public boolean onLongClick(T owner, View v) {
+        return false;
     }
 
     public void onClick(T owner, DialogInterface dialog, int which) {
