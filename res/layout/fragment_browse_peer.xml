@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <RadioGroup
         android:id="@+id/fragment_browse_peer_radiogroup_browse_type"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_dark_blue"
         android:orientation="horizontal" >
@@ -96,9 +96,9 @@
         android:layout_height="0dip"
         android:layout_weight="1" >
 
-        <com.frostwire.android.gui.views.FWListView
-            android:id="@id/android:list"
-            android:layout_width="fill_parent"
+        <com.frostwire.android.gui.views.ListView
+            android:id="@+id/fragment_browse_peer_list"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
             android:fastScrollEnabled="true"
