@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
@@ -53,7 +52,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
     private final int viewItemId;
 
     private final ViewOnClickListener viewOnClickListener;
-    private final CheckboxOnCheckedChangeListener checkboxOnCheckedChangeListener;
+    private final CheckboxOnCheckedChangeListener<T> checkboxOnCheckedChangeListener;
 
     private ListAdapterFilter<T> filter;
     private boolean checkboxesVisibility;
@@ -67,7 +66,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         this.viewItemId = viewItemId;
 
         this.viewOnClickListener = new ViewOnClickListener(ctx);
-        this.checkboxOnCheckedChangeListener = new CheckboxOnCheckedChangeListener();
+        this.checkboxOnCheckedChangeListener = new CheckboxOnCheckedChangeListener<T>(this);
 
         this.list = list.equals(Collections.emptyList()) ? new ArrayList<T>() : list;
         this.checked = checked;
@@ -367,16 +366,21 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         }
     }
 
-    private final class CheckboxOnCheckedChangeListener implements OnCheckedChangeListener {
+    private static final class CheckboxOnCheckedChangeListener<T> extends ClickAdapter<AbstractAdapter<T>> {
+        
+        public CheckboxOnCheckedChangeListener(AbstractAdapter<T> adapter) {
+            super(adapter);
+        }
+        
         @SuppressWarnings("unchecked")
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+        @Override
+        public void onCheckedChanged(AbstractAdapter<T> adapter, CompoundButton buttonView, boolean isChecked) {
             T item = (T) buttonView.getTag();
 
-            if (isChecked && !checked.contains(item)) {
-                checked.add(item);
+            if (isChecked && !adapter.checked.contains(item)) {
+                adapter.checked.add(item);
             } else {
-                checked.remove(item);
+                adapter.checked.remove(item);
             }
         }
     }
