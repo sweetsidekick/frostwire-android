@@ -362,16 +362,20 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
 
         @Override
         public boolean onLongClick(Context ctx, View v) {
-            return ctx instanceof OnAdapterClickListener ? ((OnAdapterClickListener) ctx).onLongClick(v) : false;
+            if (ctx instanceof OnAdapterClickListener) {
+                return ((OnAdapterClickListener) ctx).onLongClick(v);
+            } else {
+                return false;
+            }
         }
     }
 
     private static final class CheckboxOnCheckedChangeListener<T> extends ClickAdapter<AbstractAdapter<T>> {
-        
+
         public CheckboxOnCheckedChangeListener(AbstractAdapter<T> adapter) {
             super(adapter);
         }
-        
+
         @SuppressWarnings("unchecked")
         @Override
         public void onCheckedChanged(AbstractAdapter<T> adapter, CompoundButton buttonView, boolean isChecked) {
