@@ -252,7 +252,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
     }
 
     public Filter getFilter() {
-        return new AbstractListAdapterFilter(this, filter);
+        return new AbstractListAdapterFilter<T>(this, filter);
     }
 
     /**
@@ -389,7 +389,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         }
     }
 
-    private final class AbstractListAdapterFilter extends Filter {
+    private static final class AbstractListAdapterFilter<T> extends Filter {
 
         private final AbstractAdapter<T> adapter;
         private final ListAdapterFilter<T> filter;
@@ -429,7 +429,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.visualList = (List<T>) results.values;
-            notifyDataSetInvalidated();
+            adapter.notifyDataSetInvalidated();
         }
 
     }
