@@ -279,10 +279,10 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
      */
     protected abstract void populateView(View view, T data);
 
-    protected void onItemClicked(View v) {
+    protected void onItemClick(View v) {
     }
 
-    protected boolean onItemLongClicked(View v) {
+    protected boolean onItemLongClick(View v) {
         return false;
     }
 
@@ -297,14 +297,6 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
     @SuppressWarnings("unchecked")
     protected static <TView extends View> TView findView(View view, int id) {
         return (TView) view.findViewById(id);
-    }
-
-    /**
-     * If you want to create a menu per item, return here the menu adapter.
-     * The menu will be created automatically and the vent long click will be eaten.
-     */
-    protected MenuAdapter getMenuAdapter(View view) {
-        return null;
     }
 
     /**
@@ -362,12 +354,12 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
 
         @Override
         public void onClick(AbstractAdapter<T> adapter, View v) {
-            adapter.onItemClicked(v);
+            adapter.onItemClick(v);
         }
 
         @Override
         public boolean onLongClick(AbstractAdapter<T> adapter, View v) {
-            return adapter.onItemLongClicked(v);
+            return adapter.onItemLongClick(v);
         }
     }
 
