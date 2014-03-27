@@ -78,7 +78,7 @@ public final class MenuDialog extends AbstractDialog {
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
     }
 
-    public static final class MenuItem implements Serializable {
+    public static class MenuItem implements Serializable {
 
         private final int id;
         private final int textRestId;

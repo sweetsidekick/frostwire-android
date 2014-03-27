@@ -51,7 +51,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
 
     private final int viewItemId;
 
-    private final ViewOnClickListener viewOnClickListener;
+    private final ViewOnClickListener<T> viewOnClickListener;
     private final CheckboxOnCheckedChangeListener<T> checkboxOnCheckedChangeListener;
 
     private ListAdapterFilter<T> filter;
@@ -65,7 +65,7 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         super(ctx);
         this.viewItemId = viewItemId;
 
-        this.viewOnClickListener = new ViewOnClickListener(ctx);
+        this.viewOnClickListener = new ViewOnClickListener<T>(this);
         this.checkboxOnCheckedChangeListener = new CheckboxOnCheckedChangeListener<T>(this);
 
         this.list = list.equals(Collections.emptyList()) ? new ArrayList<T>() : list;
@@ -279,6 +279,13 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
      */
     protected abstract void populateView(View view, T data);
 
+    protected void onItemClicked(View v) {
+    }
+
+    protected boolean onItemLongClicked(View v) {
+        return false;
+    }
+
     /**
      * Helper function.
      * 
@@ -347,26 +354,20 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
         }
     }
 
-    private static final class ViewOnClickListener extends ClickAdapter<Context> {
+    private static final class ViewOnClickListener<T> extends ClickAdapter<AbstractAdapter<T>> {
 
-        public ViewOnClickListener(Context ctx) {
-            super(ctx);
+        public ViewOnClickListener(AbstractAdapter<T> adapter) {
+            super(adapter);
         }
 
         @Override
-        public void onClick(Context ctx, View v) {
-            if (ctx instanceof OnAdapterClickListener) {
-                ((OnAdapterClickListener) ctx).onClick(v);
-            }
+        public void onClick(AbstractAdapter<T> adapter, View v) {
+            adapter.onItemClicked(v);
         }
 
         @Override
-        public boolean onLongClick(Context ctx, View v) {
-            if (ctx instanceof OnAdapterClickListener) {
-                return ((OnAdapterClickListener) ctx).onLongClick(v);
-            } else {
-                return false;
-            }
+        public boolean onLongClick(AbstractAdapter<T> adapter, View v) {
+            return adapter.onItemLongClicked(v);
         }
     }
 
@@ -432,12 +433,5 @@ public abstract class AbstractAdapter<T> extends ContextAdapter implements Filte
             adapter.notifyDataSetInvalidated();
         }
 
-    }
-
-    public static interface OnAdapterClickListener {
-
-        public void onClick(View v);
-
-        public boolean onLongClick(View v);
     }
 }
