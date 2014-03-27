@@ -43,10 +43,12 @@ import com.frostwire.android.gui.views.ContextAdapter;
  */
 public final class MenuDialog extends AbstractDialog {
 
-    public static final String TAG = "menu_dialog";
+    private static final String TAG = "menu_dialog";
 
+    private static final String ID_KEY = "id";
     private static final String ITEMS_KEY = "items";
 
+    private String id;
     private ArrayList<MenuItem> items;
 
     public MenuDialog() {
@@ -55,6 +57,10 @@ public final class MenuDialog extends AbstractDialog {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle args = getArguments();
+
+        id = args.getString(ID_KEY);
+
         items = getArgument(ITEMS_KEY);
 
         Context ctx = getActivity();
@@ -64,10 +70,11 @@ public final class MenuDialog extends AbstractDialog {
         return new AlertDialog.Builder(ctx).setAdapter(adapter, new AdapterListener(this)).create();
     }
 
-    public static MenuDialog newInstance(List<MenuItem> items) {
+    public static MenuDialog newInstance(String id, List<MenuItem> items) {
         MenuDialog f = new MenuDialog();
 
         Bundle args = new Bundle();
+        args.putString(ID_KEY, id);
         args.putSerializable(ITEMS_KEY, new ArrayList<MenuItem>(items));
         f.setArguments(args);
 
@@ -76,6 +83,11 @@ public final class MenuDialog extends AbstractDialog {
 
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
+    }
+
+    @Override
+    protected void performDialogClick(String tag, int which) {
+        super.performDialogClick(id, which);
     }
 
     public static class MenuItem implements Serializable {

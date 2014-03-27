@@ -663,6 +663,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         updatePausePlay();
     }
     
+    private static final String MEDIA_PLAYER_DIALOG_ID = "media_player_dialog";
+    
     private static final int SHARE_MENU_DIALOG_ID = 0;
     private static final int STOP_MENU_DIALOG_ID = 1;
     private static final int DELETE_MENU_DIALOG_ID = 2;
@@ -673,7 +675,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             return;
         }
         
-        if (tag.equals(MenuDialog.TAG)) {
+        if (tag.equals(MEDIA_PLAYER_DIALOG_ID)) {
             switch (which) {
             case SHARE_MENU_DIALOG_ID:
                 mediaFD.shared = !mediaFD.shared;
@@ -705,7 +707,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.stop, R.drawable.contextmenu_icon_stop);
         MenuItem delete = new MenuItem(DELETE_MENU_DIALOG_ID, R.string.delete_this_track, R.drawable.contextmenu_icon_trash);
 
-        MenuDialog dlg = MenuDialog.newInstance(Arrays.asList(share, stop, delete));
+        MenuDialog dlg = MenuDialog.newInstance(MEDIA_PLAYER_DIALOG_ID, Arrays.asList(share, stop, delete));
         dlg.show(getFragmentManager());
     }
 

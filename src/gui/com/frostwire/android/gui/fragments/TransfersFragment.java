@@ -237,12 +237,14 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
     }
     
+    private static final String TRANSFERS_DIALOG_ID = "transfers_dialog";
+    
     private static final int CLEAR_MENU_DIALOG_ID = 0;
     private static final int STOP_MENU_DIALOG_ID = 1;
     
     @Override
     public void onDialogClick(String tag, int which) {
-        if (tag.equals(MenuDialog.TAG)) {
+        if (tag.equals(TRANSFERS_DIALOG_ID)) {
             switch (which) {
             case CLEAR_MENU_DIALOG_ID:
                 TransferManager.instance().clearComplete();
@@ -260,7 +262,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         MenuItem clear = new MenuItem(CLEAR_MENU_DIALOG_ID, R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer);
         MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer);
 
-        MenuDialog dlg = MenuDialog.newInstance(Arrays.asList(clear, stop));
+        MenuDialog dlg = MenuDialog.newInstance(TRANSFERS_DIALOG_ID, Arrays.asList(clear, stop));
         dlg.show(getFragmentManager());
     }
 
