@@ -34,7 +34,7 @@ import com.frostwire.android.gui.views.ClickAdapter;
  */
 public class YesNoDialog extends AbstractDialog {
 
-    public static final String TAG = "yesno_dialog";
+    private static final String TAG = "yesno_dialog";
 
     private static final String ID_KEY = "id";
     private static final String TITLE_KEY = "title";
