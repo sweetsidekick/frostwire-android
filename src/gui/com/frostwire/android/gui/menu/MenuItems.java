@@ -35,7 +35,11 @@ public enum MenuItems {
 
     private static final MenuItems values[] = values();
 
-    public static MenuItems fromInt(int ordinal) {
-        return values[ordinal];
+    public int id() {
+        return ordinal();
+    }
+
+    public static MenuItems fromId(int id) { // id equals ordinal
+        return values[id];
     }
 }
