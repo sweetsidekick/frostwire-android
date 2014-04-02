@@ -93,7 +93,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     
     @Override
     public void onResume() {
-        super.onResume(); // this is fixed in appia-search
+        super.onResume();
         if (hasTransfersDownloading()) {
             buttonSelectDownloading.performClick();
         }

@@ -25,7 +25,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.search.SearchPerformer;
-//import com.frostwire.search.appia.AppiaSearchPerformer;
+import com.frostwire.search.appia.AppiaSearchPerformer;
+import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.domainalias.DomainAliasManager;
@@ -166,12 +167,14 @@ public abstract class SearchEngine {
         }
     };
     
-//    public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
-//        @Override
-//        public SearchPerformer getPerformer(long token, String keywords) {
-//            return new AppiaSearchPerformer(new DomainAliasManager("appia.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT);
-//        }
-//    };
+    public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
+        private AppiaSearchThrottle throttle = new AppiaSearchThrottle();
+        
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, LocalSearchEngine.instance().getAndroidId(), throttle);
+        }
+    };
     
     private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);//, APPIA);
 }
