@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 
 import com.frostwire.android.R;
@@ -35,12 +34,16 @@ import com.frostwire.android.R;
  */
 public class IntentWizardPage extends RelativeLayout implements WizardPageView {
 
+    private final CheckAcceptListener checkAcceptListener;
+
     private OnCompleteListener listener;
 
     private CheckBox checkAccept;
 
     public IntentWizardPage(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.checkAcceptListener = new CheckAcceptListener(this);
     }
 
     @Override
@@ -74,11 +77,7 @@ public class IntentWizardPage extends RelativeLayout implements WizardPageView {
         View.inflate(getContext(), R.layout.view_intent_wizard_page, this);
 
         checkAccept = (CheckBox) findViewById(R.id.view_intent_wizard_page_check_accept);
-        checkAccept.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
+        checkAccept.setOnCheckedChangeListener(checkAcceptListener);
     }
 
     protected void onComplete(boolean complete) {
@@ -98,5 +97,17 @@ public class IntentWizardPage extends RelativeLayout implements WizardPageView {
         }
 
         onComplete(complete);
+    }
+
+    private static final class CheckAcceptListener extends ClickAdapter<IntentWizardPage> {
+
+        public CheckAcceptListener(IntentWizardPage owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onCheckedChanged(IntentWizardPage owner, CompoundButton buttonView, boolean isChecked) {
+            owner.validate();
+        }
     }
 }
