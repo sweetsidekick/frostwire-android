@@ -26,6 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,9 +38,11 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.appia.AppiaSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
@@ -57,6 +60,8 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     private final OnLinkClickListener linkListener;
 
     private int fileType;
+    
+    private ImageLoader thumbLoader;
 
     public SearchResultListAdapter(Context context) {
         super(context, R.layout.view_bittorrent_search_result_list_item);
@@ -64,6 +69,8 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         this.linkListener = new OnLinkClickListener();
 
         this.fileType = NO_FILE_TYPE;
+        
+        this.thumbLoader = ImageLoader.getDefault();
     }
 
     public int getFileType() {
@@ -91,6 +98,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         }
         if (sr instanceof YouTubeCrawledSearchResult) {
             populateYouTubePart(view, (YouTubeCrawledSearchResult) sr);
+        }
+        if (sr instanceof AppiaSearchResult) {
+            populateAppiaPart(view, (AppiaSearchResult) sr);
         }
     }
 
@@ -138,7 +148,25 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             seeds.setText("");
         }
     }
+    
+    protected void populateAppiaPart(View view, AppiaSearchResult sr) {
+        ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
+        Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
+        thumbLoader.displayImage(sr.getThumbnailURL(), fileTypeIcon, defaultDrawable, 0);
 
+        TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
+        extra.setText(sr.getCategoryName() + " : " + sr.getDescription());
+
+        //TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
+        //String license = sr.getLicense().equals(License.UNKNOWN) ? "" : " - " + sr.getLicense();
+
+        TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
+        sourceLink.setText(sr.getSource());
+        sourceLink.setTag(sr.getDetailsUrl());
+        sourceLink.setPaintFlags(sourceLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        sourceLink.setOnClickListener(linkListener);
+    }
+    
     @Override
     protected void onItemClicked(View v) {
         SearchResult sr = (SearchResult) v.getTag();
@@ -157,11 +185,16 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         FilteredSearchResults fsr = new FilteredSearchResults();
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
-            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
-            if (accept(sr,mt)) {
+            if (sr instanceof AppiaSearchResult) {
+                //TODO: Map search result to media type for proper filtering.
                 l.add(sr);
+            } else {
+                MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
+                if (accept(sr,mt)) {
+                    l.add(sr);
+                }
+                fsr.increment(mt);
             }
-            fsr.increment(mt);
         }
         fsr.filtered = l;
         return fsr;

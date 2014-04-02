@@ -34,8 +34,6 @@ public class BillerFactory {
 
         if (OSUtils.isKindleFire() || OSUtils.isAmazonDistribution()) {
             billy = new KindleBiller(activity);
-        } else if (OSUtils.isOUYA()) {
-            billy = new OuyaBiller(activity);
         } else {
             billy = new GooglePlayBiller(activity);
         }
@@ -44,10 +42,6 @@ public class BillerFactory {
     }
 
     public static DonationSkus getDonationSkus() {
-        if (OSUtils.isOUYA()) {
-            return new DonationSkus.OuyaDonationSkus();
-        } else {
-            return new DonationSkus.DefaultDonationSkus();
-        }
+        return new DonationSkus.DefaultDonationSkus();
     }
 }

@@ -64,18 +64,31 @@ public final class LocalSearchEngine {
 
     private boolean searchFinished;
 
-    private static LocalSearchEngine instance = new LocalSearchEngine();
+    private String androidId;
 
+    private static LocalSearchEngine instance;
+
+    public synchronized static void create(String androidId) {
+        if (instance != null) {
+            return;
+        }
+        instance = new LocalSearchEngine(androidId);
+    }
+    
     public static LocalSearchEngine instance() {
         return instance;
     }
 
-    private LocalSearchEngine() {
+    private LocalSearchEngine(String androidId) {
         CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache());
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new ManagerListener());
-
         this.MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
+        this.androidId = androidId;
+    }
+    
+    public String getAndroidId() {
+        return androidId;
     }
 
     public void registerListener(SearchManagerListener listener) {

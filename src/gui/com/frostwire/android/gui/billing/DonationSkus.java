@@ -49,22 +49,4 @@ public interface DonationSkus {
             }
         }
     }
-
-    static final class OuyaDonationSkus implements DonationSkus {
-        @Override
-        public String getSku(DonationSkuType type) {
-            switch (type) {
-            case SKU_01_DOLLARS:
-                return "ouya-donation-1";
-            case SKU_05_DOLLARS:
-                return "ouya-donation-5";
-            case SKU_10_DOLLARS:
-                return "ouya-donation-10";
-            case SKU_25_DOLLARS:
-                return "ouya-donation-25";
-            default:
-                return "ouya-donation-25";
-            }
-        }
-    }
 }
