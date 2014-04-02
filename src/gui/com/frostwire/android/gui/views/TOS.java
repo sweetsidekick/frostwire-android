@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,92 +18,97 @@
 
 package com.frostwire.android.gui.views;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+
+import org.apache.commons.io.IOUtils;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.util.Ref;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class TOS {
+public class TOS extends DialogFragment {
 
-    private static String NL = System.getProperty("line.separator");
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Context ctx = getActivity();
 
-    /**
-     * Displays the TOS if necessary. This method should be called from the onCreate()
-     * method of your main Activity.
-     */
-    public static AlertDialog showEula(Context context, final OnTOSAcceptListener listener) {
-        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
+        DialogListener yes = new DialogListener(ctx instanceof TOSActivity ? (TOSActivity) ctx : null);
+        DialogListener cancel = new DialogListener(null);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.tos_title);
-            builder.setCancelable(true);
-            builder.setPositiveButton(R.string.tos_accept, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED, true);
-                    listener.onAccept();
-                    dialog.dismiss();
-                }
-            });
-            builder.setNegativeButton(R.string.tos_refuse, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    System.exit(1);
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    System.exit(1);
-                }
-            });
-
-            builder.setMessage(readFile(context, R.raw.tos));
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return dialog;
-        } else {
-            return null;
-        }
+        return new AlertDialog.Builder(ctx).setTitle(R.string.tos_title).setMessage(readTOS(ctx)).setPositiveButton(R.string.tos_accept, yes).setNegativeButton(R.string.tos_refuse, cancel).create();
     }
 
-    private static String readFile(Context context, int id) {
-        BufferedReader in = null;
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
+    }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        exit();
+    }
+
+    public static TOS newInstance() {
+        TOS f = new TOS();
+
+        f.setCancelable(true);
+
+        return f;
+    }
+
+    private static String readTOS(Context context) {
+        InputStream in = context.getResources().openRawResource(R.raw.tos);
         try {
-            in = new BufferedReader(new InputStreamReader(context.getResources().openRawResource(id)));
-
-            String line;
-            StringBuilder buffer = new StringBuilder();
-
-            while ((line = in.readLine()) != null) {
-                buffer.append(line).append(NL);
-            }
-
-            return buffer.toString();
-
-        } catch (Throwable e) {
-            return "";
+            return IOUtils.toString(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Missing TOS resource", e);
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                }
-            }
+            IOUtils.closeQuietly(in);
         }
     }
 
-    public interface OnTOSAcceptListener {
-        public void onAccept();
+    private static void exit() {
+        System.exit(1); // drastic action
+    }
+
+    public interface TOSActivity {
+        public void onTOSAccept();
+    }
+
+    private static final class DialogListener implements OnClickListener {
+
+        private final WeakReference<TOSActivity> activityRef;
+
+        public DialogListener(TOSActivity activity) {
+            this.activityRef = Ref.weak(activity);
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (Ref.alive(activityRef)) {
+                ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED, true);
+                activityRef.get().onTOSAccept();
+            } else {
+                exit();
+            }
+        }
     }
 }

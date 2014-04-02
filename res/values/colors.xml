@@ -20,26 +20,10 @@
 -->
 <resources>
 
-    <color name="frostwire_dark_blue">#ff2c7fb0</color>
     <color name="frostwire_light_blue">#ff7adafa</color>
-    <color name="frostwire_lighter_blue">#ffc4eefe</color>
     <color name="frostwire_orange">#ffe9a54c</color>
-    <color name="tab_text_view">#ff5a7e9c</color>
     <color name="frostwire_gray_explanation_text">#ff99aabb</color>
-    <color name="frostwire_quickaction_separator">#ff839fb3</color>
-
-    <!-- colors for tab gradients, start is bottom, end is top (90 degrees) -->
-    <color name="tab_gradient_start_on">#ffd3e5ed</color>
-    <color name="tab_gradient_end_on">#ffffffff</color>
-    <color name="tab_gradient_start_off">#ff264c6b</color>
-    <color name="tab_gradient_end_off">#ff1b3e5a</color>
-    <color name="tab_background_on">#ffd3e5ed</color>
-    <color name="tab_background_off">#ff264c6b</color>
-
-    <!-- SlideMenu -->
-    <color name="slidemenu_background">#ff315776</color>
-    <color name="slidemenu_list_background">#ff2c79a5</color>
-
+    
     <!-- General application colors -->
     <color name="app_basic_blue">#ff38536a</color>
     <color name="app_search_blue">#ff375065</color>

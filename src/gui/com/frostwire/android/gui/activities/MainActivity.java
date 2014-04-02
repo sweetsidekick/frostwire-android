@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,21 +19,24 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.Stack;
 
+import android.app.ActionBar;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -41,8 +44,6 @@ import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.DesktopUploadRequest;
-import com.frostwire.android.core.DesktopUploadRequestStatus;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
@@ -57,19 +58,19 @@ import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
-import com.frostwire.android.gui.services.DesktopUploadManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
 import com.frostwire.android.gui.views.Refreshable;
 import com.frostwire.android.gui.views.TOS;
-import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
+import com.frostwire.android.gui.views.TOS.TOSActivity;
+import com.frostwire.android.gui.views.YesNoDialog;
+import com.frostwire.android.gui.views.YesNoDialog.YesNoDialogListener;
 import com.frostwire.logging.Logger;
+import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -80,7 +81,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, YesNoDialogListener {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -88,15 +89,17 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
+    
+    private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
 
     private static boolean firstTime = true;
 
     private MainController controller;
 
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
     private View leftDrawer;
     private ListView listMenu;
-    private ImageButton buttonMainMenu;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -117,7 +120,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private boolean appiaStarted = false;
 
     public MainActivity() {
-        super(R.layout.activity_main, false, 2);
+        super(R.layout.activity_main, 2);
         this.controller = new MainController(this);
         this.fragmentsStack = new Stack<Integer>();
     }
@@ -151,7 +154,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             try {
                 fragmentsStack.pop();
                 int id = fragmentsStack.peek();
-                Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+                Fragment fragment = getFragmentManager().findFragmentById(id);
                 switchContent(fragment, false);
             } catch (Throwable e) {
                 // don't break the app
@@ -184,21 +187,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (slideOffset > 0) {
-                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
-                } else {
-                    buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
-                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon_selected);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                buttonMainMenu.setImageResource(R.drawable.main_menu_button_icon);
             }
         });
 
@@ -210,14 +206,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             @Override
             public void onClick(View v) {
                 controller.launchPlayerActivity();
-            }
-        });
-
-        buttonMainMenu = findView(R.id.activity_main_button_menu);
-        buttonMainMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleDrawer();
             }
         });
 
@@ -237,13 +225,16 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         onNewIntent(getIntent());
 
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
+        
+        setupActionBar();
+        setupDrawer();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String action = intent.getAction();
-        onResumeFragments();
+        //onResumeFragments();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
             controller.showTransfers();
@@ -276,8 +267,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
             //go!
             TransferManager.instance().downloadTorrent(intent.getDataString());
-        } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
-            handleDesktopUploadRequest(intent);
         }
         // When another application wants to "Share" a file and has chosen FrostWire to do so.
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
@@ -319,14 +308,16 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 controller.startWizardActivity();
             }
         } else {
-            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
-                public void onAccept() {
-                    controller.startWizardActivity();
-                }
-            }));
+            DialogFragment f = TOS.newInstance();
+            f.show(getFragmentManager(), "tos_dialog");
         }
 
         checkLastSeenVersion();
+    }
+    
+    @Override
+    public void onTOSAccept() {
+        controller.startWizardActivity();
     }
 
     private void initializeAppia() {
@@ -386,7 +377,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void saveLastFragment(Bundle outState) {
         Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+            getFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
         }
     }
 
@@ -414,48 +405,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    private void handleDesktopUploadRequest(Intent intent) {
-        String action = intent.getAction();
-
-        if (durToken == null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
-            durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
-        }
-
-        final DesktopUploadManager dum = Engine.instance().getDesktopUploadManager();
-
-        if (dum == null) {
-            return;
-        }
-
-        DesktopUploadRequest dur = dum.getRequest(durToken);
-
-        if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
-            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, dur, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
-                @Override
-                public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
-                    switch (result) {
-                    case ACCEPT:
-                        dum.authorizeRequest(durToken);
-                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                            Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
-                            MainActivity.this.startActivity(i.setClass(MainActivity.this, MainActivity.class));
-                        }
-                        break;
-                    case REJECT:
-                        dum.rejectRequest(durToken);
-                        break;
-                    case BLOCK:
-                        dum.blockComputer(durToken);
-                        break;
-                    }
-                    durToken = null;
-                }
-            });
-
-            trackDialog(dlg).show();
-        }
-    }
-
     private void toggleDrawer() {
         if (drawerLayout.isDrawerOpen(leftDrawer)) {
             drawerLayout.closeDrawer(leftDrawer);
@@ -471,11 +420,19 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void handleLastBackPressed() {
-        trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }));
+        DialogFragment f = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
+        f.show(getFragmentManager(), LAST_BACK_DIALOG_ID);
+    }
+    
+    @Override
+    public void onPositiveClick(String id) {
+        if (id.equals(LAST_BACK_DIALOG_ID)) {
+            finish();
+        }
+    }
+    
+    @Override
+    public void onNegativeClick(String id) {
     }
 
     private void syncSlideMenu() {
@@ -518,14 +475,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupFragments() {
-        search = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
-        library = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
-        transfers = (TransfersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
-        peers = (BrowsePeersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
-        peersDisabled = (BrowsePeersDisabledFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
-        about = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
+        search = (SearchFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
+        library = (BrowsePeerFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
+        transfers = (TransfersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
+        peers = (BrowsePeersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
+        peersDisabled = (BrowsePeersDisabledFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
+        about = (AboutFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
 
-        hideFragments(getSupportFragmentManager().beginTransaction()).commit();
+        hideFragments(getFragmentManager().beginTransaction()).commit();
 
         library.setPeer(PeerManager.instance().getLocalPeer());
     }
@@ -538,7 +495,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         Fragment fragment = null;
 
         if (savedInstanceState != null) {
-            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+            fragment = getFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
             restoreFragmentsStack(savedInstanceState);
         }
         if (fragment == null) {
@@ -570,7 +527,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void updateHeader(Fragment fragment) {
         try {
-            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
+            RelativeLayout placeholder = (RelativeLayout) getActionBar().getCustomView();//findView(R.id.activity_main_layout_header_placeholder);
             if (placeholder.getChildCount() > 0) {
                 placeholder.removeAllViews();
             }
@@ -597,7 +554,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void switchContent(Fragment fragment, boolean addToStack) {
-        hideFragments(getSupportFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
+        hideFragments(getFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
         if (addToStack && (fragmentsStack.isEmpty() || fragmentsStack.peek() != fragment.getId())) {
             fragmentsStack.push(fragment.getId());
         }
@@ -636,5 +593,79 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     public void closeSlideMenu() {
         drawerLayout.closeDrawer(leftDrawer);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+    
+    private void setupActionBar() {
+        ActionBar bar = getActionBar();
+
+        bar.setCustomView(R.layout.view_custom_actionbar);
+        
+        bar.setDisplayShowCustomEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setHomeButtonEnabled(true);
+    }
+    
+    private void setupDrawer() {
+        drawerToggle = new MenuDrawerToggle(this, drawerLayout);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+    
+    private static final class MenuDrawerToggle extends ActionBarDrawerToggle {
+
+        private final WeakReference<MainActivity> activityRef;
+
+        public MenuDrawerToggle(MainActivity activity, DrawerLayout drawerLayout) {
+            super(activity, drawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+
+            // aldenml: even if the parent class hold a strong reference, I decided to keep a weak one
+            this.activityRef = Ref.weak(activity);
+        }
+
+        @Override
+        public void onDrawerClosed(View view) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
+            }
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
+            }
+        }
+        
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            if (Ref.alive(activityRef)) {
+                MainActivity activity = activityRef.get();
+                activity.refreshPlayerItem();
+                activity.syncSlideMenu();
+            }
+        }
     }
 }

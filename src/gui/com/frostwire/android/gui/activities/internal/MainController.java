@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ package com.frostwire.android.gui.activities.internal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
@@ -120,7 +120,7 @@ public final class MainController {
         }
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
             ShareIndicationDialog dlg = new ShareIndicationDialog();
-            dlg.show(activity.getSupportFragmentManager());
+            dlg.show(activity.getFragmentManager());
         }
     }
 

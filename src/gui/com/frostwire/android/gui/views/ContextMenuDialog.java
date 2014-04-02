@@ -22,11 +22,11 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 
 /**
@@ -47,6 +47,12 @@ public final class ContextMenuDialog extends DialogFragment {
 
     public void setItems(List<ContextMenuItem> items) {
         this.items = items;
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
     }
 
     @Override

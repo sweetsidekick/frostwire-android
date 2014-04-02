@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +34,7 @@ import android.view.ViewGroup;
  * @author aldenml
  *
  */
-public class AbstractExpandableListFragment extends ExpandableListFragment {
+public abstract class AbstractExpandableListFragment extends ExpandableListFragment {
 
     private static String TAG = "FW.AbstractExpandableListFragment";
 

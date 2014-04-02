@@ -30,12 +30,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -83,7 +85,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private ImageButton buttonMenu;
 
     public MediaPlayerActivity() {
-        super(R.layout.activity_mediaplayer, false, 0);
+        super(R.layout.activity_mediaplayer, 0);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -204,6 +206,12 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     public boolean canStop() {
         return true;
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
     }
 
     @Override
@@ -691,7 +699,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         ContextMenuDialog menu = new ContextMenuDialog();
         menu.setItems(Arrays.asList(share, stop, delete));
-        menu.show(getSupportFragmentManager(), "playerContextMenu");
+        menu.show(getFragmentManager(), "playerContextMenu");
     }
 
     private void onDeleteCurrentTrack() {

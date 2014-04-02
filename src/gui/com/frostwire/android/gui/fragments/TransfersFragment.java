@@ -238,7 +238,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
 
         ContextMenuDialog menu = new ContextMenuDialog();
         menu.setItems(Arrays.asList(share, stop));
-        menu.show(getChildFragmentManager(), "transfersContextMenu");
+        menu.show(getFragmentManager(), "transfersContextMenu");
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {

@@ -31,7 +31,9 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="common/vuze/plugins"/>
 	<classpathentry kind="src" path="common/components/core"/>
+	<classpathentry kind="src" path="common/components/vuze"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>

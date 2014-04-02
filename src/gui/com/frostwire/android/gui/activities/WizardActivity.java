@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ViewFlipper;
@@ -46,7 +48,7 @@ public class WizardActivity extends AbstractActivity {
     private View currentPageView;
 
     public WizardActivity() {
-        super(R.layout.activity_wizard, false, 0);
+        super(R.layout.activity_wizard, 0);
 
         completeListener = new OnCompleteListener() {
             public void onComplete(WizardPageView pageView, boolean complete) {
@@ -61,9 +63,15 @@ public class WizardActivity extends AbstractActivity {
      * Note: This is supposed to be deprecated, but for some reason, the new Fragment api way doesn't
      * work well with the compatibility library.
      */
+//    @Override
+//    public Object onRetainCustomNonConfigurationInstance() {
+//        return viewFlipper.getCurrentView().getTag();
+//    }
+    
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return viewFlipper.getCurrentView().getTag();
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
     }
 
     @Override
@@ -92,15 +100,15 @@ public class WizardActivity extends AbstractActivity {
             view.setTag(i);
         }
 
-        try {
-            Integer currentIndex = (Integer) getLastCustomNonConfigurationInstance();
-            if (currentIndex != null) {
-                viewFlipper.setDisplayedChild(currentIndex);
-            }
-        } catch (NoSuchMethodError e) {
-            // why? I don't know, reported by a few android devices
-            // ignore
-        }
+//        try {
+//            Integer currentIndex = (Integer) getLastCustomNonConfigurationInstance();
+//            if (currentIndex != null) {
+//                viewFlipper.setDisplayedChild(currentIndex);
+//            }
+//        } catch (NoSuchMethodError e) {
+//            // why? I don't know, reported by a few android devices
+//            // ignore
+//        }
 
         setupViewPage();
     }
