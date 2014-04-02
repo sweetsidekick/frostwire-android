@@ -166,12 +166,14 @@ public abstract class SearchEngine {
         }
     };
     
-//    public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
-//        @Override
-//        public SearchPerformer getPerformer(long token, String keywords) {
-//            return new AppiaSearchPerformer(new DomainAliasManager("appia.frostclick.com"), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT);
-//        }
-//    };
+    public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
+        private AppiaSearchThrottle throttle = new AppiaSearchThrottle();
+        
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, LocalSearchEngine.instance().getAndroidId(), throttle);
+        }
+    };
     
     private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);//, APPIA);
 }

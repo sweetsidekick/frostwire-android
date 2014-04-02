@@ -91,7 +91,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     
     @Override
     public void onResume() {
-        super.onResume(); // this is fixed in appia-search
+        super.onResume();
         if (hasTransfersDownloading()) {
             buttonSelectDownloading.performClick();
         }
