@@ -20,7 +20,6 @@ package com.frostwire.android.gui.fragments;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 
@@ -100,7 +99,7 @@ public class AboutFragment extends Fragment implements MainFragment {
     private String getAboutText() {
         try {
             InputStream raw = getResources().openRawResource(R.raw.about);
-            return IOUtils.toString(raw, Charset.forName("UTF-8"));
+            return IOUtils.toString(raw, "UTF-8");
         } catch (IOException e) {
             return "";
         }
@@ -108,7 +107,6 @@ public class AboutFragment extends Fragment implements MainFragment {
 
     private void setupDonateButton(Activity activity, int id, String sku, String url, Biller biller) {
         Button donate = (Button) activity.findViewById(id);
-        donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
-        //donate.setVisibility(OSUtils.isAmazonDistribution() ? View.GONE : View.VISIBLE);
+        donate.setOnClickListener(new DonateButtonListener(biller, sku, url));
     }
 }

@@ -88,7 +88,7 @@ public class DonationsView extends LinearLayout {
 
     private void setupDonateButton(int id, String sku, String url) {
         Button donate = (Button) findViewById(id);
-        donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
+        donate.setOnClickListener(new DonateButtonListener(biller, sku, url));
     }
 
     private static final class BitcoinButtonListener extends ClickAdapter<DonationsView> {
