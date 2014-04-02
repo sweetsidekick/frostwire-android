@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.billing.Biller;
@@ -41,10 +40,14 @@ import com.frostwire.android.gui.util.UIUtils;
  */
 public class DonationsView extends LinearLayout {
 
+    private final BitcoinButtonListener bitcoinButtonListener;
+
     private Biller biller;
 
     public DonationsView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.bitcoinButtonListener = new BitcoinButtonListener(this);
     }
 
     public void setBiller(Biller b) {
@@ -70,14 +73,7 @@ public class DonationsView extends LinearLayout {
 
     private void setupBitcoinDonateButton() {
         Button btc = (Button) findViewById(R.id.fragment_about_button_bitcoin);
-        btc.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                onBTCDonationButtonClick();
-            }
-        });
-        
+        btc.setOnClickListener(bitcoinButtonListener);
     }
 
     protected void onBTCDonationButtonClick() {
@@ -93,5 +89,17 @@ public class DonationsView extends LinearLayout {
     private void setupDonateButton(int id, String sku, String url) {
         Button donate = (Button) findViewById(id);
         donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
+    }
+
+    private static final class BitcoinButtonListener extends ClickAdapter<DonationsView> {
+
+        public BitcoinButtonListener(DonationsView owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(DonationsView owner, View v) {
+            owner.onBTCDonationButtonClick();
+        }
     }
 }
