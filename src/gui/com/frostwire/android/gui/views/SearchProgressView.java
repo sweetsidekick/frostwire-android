@@ -36,6 +36,8 @@ import com.frostwire.android.gui.util.OfferUtils;
  */
 public class SearchProgressView extends LinearLayout {
 
+    private final FreeAppsListener freeAppsListener;
+
     private ProgressBar progressbar;
     private Button buttonCancel;
     private Button buttonFreeApps;
@@ -45,6 +47,8 @@ public class SearchProgressView extends LinearLayout {
 
     public SearchProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.freeAppsListener = new FreeAppsListener(this);
 
         this.progressEnabled = true;
     }
@@ -89,7 +93,7 @@ public class SearchProgressView extends LinearLayout {
 
     private void initButtonFreeApps() {
         buttonFreeApps.setVisibility(View.GONE);
-        buttonFreeApps.setOnClickListener(new FreeAppsListener(this));
+        buttonFreeApps.setOnClickListener(freeAppsListener);
     }
 
     private void startProgress() {
