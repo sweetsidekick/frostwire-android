@@ -47,7 +47,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     
     private final AppiaSearchThrottle throttle;
     
-    public static final String HTTP_SERVER_NAME = "192.168.1.16";
+    public static final String HTTP_SERVER_NAME = "10.240.118.144";
 
     private static final Logger LOG = Logger.getLogger(AppiaSearchPerformer.class);
 
@@ -151,6 +151,10 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         }
         
         public boolean canSearchAgain() {
+            if (true) {
+                return true;
+            }
+            
             searchAttempts++;
             long timeSince = System.currentTimeMillis() - lastTimeSearchPerformed;
             boolean enoughTimePassed = timeSince >= TIME_INTERVAL;
