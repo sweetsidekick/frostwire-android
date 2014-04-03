@@ -174,5 +174,5 @@ public abstract class SearchEngine {
         }
     };
     
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);//, APPIA);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }
