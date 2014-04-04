@@ -185,23 +185,24 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         FilteredSearchResults fsr = new FilteredSearchResults();
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
+            MediaType mt = null;
             if (sr instanceof AppiaSearchResult) {
-                //TODO: Map search result to media type for proper filtering.
-                l.add(sr);
+                mt = ((AppiaSearchResult) sr).getMediaType();
             } else {
-                MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
-                if (accept(sr,mt)) {
-                    l.add(sr);
-                }
-                fsr.increment(mt);
+                mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
             }
+
+            if (accept(sr,mt)) {
+                l.add(sr);
+            }
+            fsr.increment(mt);
         }
         fsr.filtered = l;
         return fsr;
     }
 
     private boolean accept(SearchResult sr, MediaType mt) {
-        if (sr instanceof FileSearchResult) {
+        if (sr instanceof FileSearchResult || sr instanceof AppiaSearchResult) {
             if (mt == null) {
                 return false;
             }

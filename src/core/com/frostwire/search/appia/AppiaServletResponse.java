@@ -1,6 +1,7 @@
 package com.frostwire.search.appia;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Modeled after the client's search response object, but no need to implement any interfaces (at least for now)
@@ -8,5 +9,5 @@ import java.util.List;
  *
  */
 public class AppiaServletResponse {
-    public List<AppiaServletResponseItem> results;
+    public Map<String,List<AppiaServletResponseItem>> results;
 }

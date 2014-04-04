@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.os.AsyncTask;
 
@@ -47,7 +48,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     
     private final AppiaSearchThrottle throttle;
     
-    public static final String HTTP_SERVER_NAME = "10.240.118.144";
+    public static final String HTTP_SERVER_NAME = "192.168.1.14";
 
     private static final Logger LOG = Logger.getLogger(AppiaSearchPerformer.class);
 
@@ -77,6 +78,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
             String text = null;
             
             try {
+                LOG.info("AppiaSearchPerformer.searchPage -> " + url);
                 text = fetch(url, null, customHeaders);
             } catch (IOException e) {
                 checkAccesibleDomains();
@@ -96,11 +98,17 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     protected List<? extends SearchResult> searchPage(String page) {
         List<AppiaSearchResult> results = new ArrayList<AppiaSearchResult>();
         AppiaServletResponse appiaServletResponse = JsonUtils.toObject(page, AppiaServletResponse.class);
-        List<AppiaServletResponseItem> responseItems = appiaServletResponse.results;
-        for (AppiaServletResponseItem item : responseItems) {
-            AppiaSearchResult sr = new AppiaSearchResult(item);
-            results.add(sr);
-            AppiaSearchPerformer.asyncHttpGet(sr.getImpressionTrackingURL());
+        
+        Set<String> keySet = appiaServletResponse.results.keySet();
+        
+        for (String categoryId : keySet) {
+            List<AppiaServletResponseItem> responseItems = appiaServletResponse.results.get(categoryId);
+            for (AppiaServletResponseItem item : responseItems) {
+                AppiaSearchResult sr = new AppiaSearchResult(item, categoryId);
+                results.add(sr);
+                AppiaSearchPerformer.asyncHttpGet(sr.getImpressionTrackingURL());
+            }
+        
         }
         
         if (results.isEmpty()) {
