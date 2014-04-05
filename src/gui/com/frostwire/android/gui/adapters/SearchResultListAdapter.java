@@ -107,6 +107,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     protected void populateFilePart(View view, FileSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
         fileTypeIcon.setImageResource(getFileTypeIconId());
+        
+        TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
+        adIndicator.setVisibility(View.GONE);
 
         TextView title = findView(view, R.id.view_bittorrent_search_result_list_item_title);
         title.setText(sr.getDisplayName());
@@ -150,6 +153,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
     
     protected void populateAppiaPart(View view, AppiaSearchResult sr) {
+        TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
+        adIndicator.setVisibility(View.VISIBLE);
+
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
         Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
         thumbLoader.displayImage(sr.getThumbnailURL(), fileTypeIcon, defaultDrawable, 0);
@@ -170,10 +176,18 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     @Override
     protected void onItemClicked(View v) {
         SearchResult sr = (SearchResult) v.getTag();
-        searchResultClicked(sr);
+        if (sr instanceof AppiaSearchResult) {
+            onAppiaSearchResultClicked((AppiaSearchResult) sr);
+        } else {
+            searchResultClicked(sr);
+        }
     }
 
     protected void searchResultClicked(SearchResult sr) {
+    }
+    
+    protected void onAppiaSearchResultClicked(AppiaSearchResult sr) {
+        openURL(this.getContext(),sr.getDetailsUrl());
     }
 
     private void filter() {
@@ -230,15 +244,19 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             return R.drawable.question_mark;
         }
     }
+    
+    private static void openURL(Context context, String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        context.startActivity(i);
+    }
 
     private static class OnLinkClickListener implements OnClickListener {
 
         @Override
         public void onClick(View v) {
             String url = (String) v.getTag();
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            v.getContext().startActivity(i);
+            openURL(v.getContext(), url);
             UXStats.instance().log(UXAction.SEARCH_RESULT_SOURCE_VIEW);
         }
     }

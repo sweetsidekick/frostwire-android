@@ -242,6 +242,14 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/app_highlight_text</item>
     </style>
+    
+    <style name="ListItemAd">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:background">#ffedb802</item>
+        <item name="android:padding">2sp</item>
+    </style>
 
     <style name="ListItemExt">
         <item name="android:singleLine">true</item>

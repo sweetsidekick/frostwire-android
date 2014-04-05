@@ -65,20 +65,20 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        //return "http://api.frostclick.com/appia";
-        return "http://" + HTTP_SERVER_NAME + ":8080/frostclick-search-api/appia";
+        return "http://api.frostclick.com/appia";
+        // for local debugging.
+        //return "http://" + HTTP_SERVER_NAME + ":8080/frostclick-search-api/appia";
     }
 
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
         List<? extends SearchResult> result = Collections.emptyList();
-
-        if (OfferUtils.isfreeAppsEnabled() && throttle.canSearchAgain()) {
+        if (OfferUtils.isfreeAppsEnabled() &&
+            throttle.canSearchAgain()) {
             String url = getUrl(-1, getEncodedKeywords());
             String text = null;
             
             try {
-                LOG.info("AppiaSearchPerformer.searchPage -> " + url);
                 text = fetch(url, null, customHeaders);
             } catch (IOException e) {
                 checkAccesibleDomains();
@@ -149,7 +149,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     
     public final static class AppiaSearchThrottle {
         private final int MAX_SEARCHES_WITHIN_TIME_INTERVAL = 10;
-        private final int TIME_INTERVAL = 1 * 60 * 1000;
+        private final int TIME_INTERVAL = 1 * 60 * 1000; //TODO: Raise interval
         private int searchAttempts;
         private long lastTimeSearchPerformed;
         
@@ -159,10 +159,6 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         }
         
         public boolean canSearchAgain() {
-            if (true) {
-                return true;
-            }
-            
             searchAttempts++;
             long timeSince = System.currentTimeMillis() - lastTimeSearchPerformed;
             boolean enoughTimePassed = timeSince >= TIME_INTERVAL;

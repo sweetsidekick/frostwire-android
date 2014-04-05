@@ -31,6 +31,10 @@ public class OfferUtils {
 
     private static final Logger LOG = Logger.getLogger(OfferUtils.class);
 
+    /**
+     * True if user has enabled support for frostwire, Appia is enabled and it's not an Amazon distribution build. 
+     * @return
+     */
     public static boolean isfreeAppsEnabled() {
         ConfigurationManager config = null;
         boolean isFreeAppsEnabled = false;
