@@ -37,8 +37,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -53,13 +53,14 @@ import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.dialogs.MenuDialog;
+import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
-import com.frostwire.android.gui.views.ContextMenuDialog;
-import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
@@ -72,7 +73,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  * 
  */
-public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl {
+public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl, OnDialogClickListener {
 
     private static final String TAG = "FW.MediaPlayerActivity";
 
@@ -85,7 +86,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private ImageButton buttonMenu;
 
     public MediaPlayerActivity() {
-        super(R.layout.activity_mediaplayer, 0);
+        super(R.layout.activity_mediaplayer);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -102,7 +103,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                             }
                         } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                             try {
-                                initComponents();
+                                initComponents(null);
                             } catch (Throwable e) {
                                 // ignore
                             }
@@ -215,7 +216,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     @Override
-    protected void initComponents() {
+    protected void initComponents(Bundle savedInstanceState) {
 
         if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
             Log.e(TAG, "Only media playerControl of type NativeAndroidPlayer is supported");
@@ -661,45 +662,53 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         updatePausePlay();
     }
-
-    private void showPlayerContextMenu() {
+    
+    private static final String MEDIA_PLAYER_DIALOG_ID = "media_player_dialog";
+    
+    private static final int SHARE_MENU_DIALOG_ID = 0;
+    private static final int STOP_MENU_DIALOG_ID = 1;
+    private static final int DELETE_MENU_DIALOG_ID = 2;
+    
+    @Override
+    public void onDialogClick(String tag, int which) {
         if (mediaFD == null) {
             return;
         }
-
-        ContextMenuItem share = new ContextMenuItem(mediaFD.shared ? R.string.unshare : R.string.share, mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share) {
-            @Override
-            public void onClick() {
+        
+        if (tag.equals(MEDIA_PLAYER_DIALOG_ID)) {
+            switch (which) {
+            case SHARE_MENU_DIALOG_ID:
                 mediaFD.shared = !mediaFD.shared;
                 Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
                 UXStats.instance().log(mediaFD.shared ? UXAction.PLAYER_MENU_SHARE : UXAction.PLAYER_MENU_UNSHARE);
-            }
-        };
-
-        ContextMenuItem stop = new ContextMenuItem(R.string.stop, R.drawable.contextmenu_icon_stop) {
-            @Override
-            public void onClick() {
+                break;
+            case STOP_MENU_DIALOG_ID:
                 stop();
                 UXStats.instance().log(UXAction.PLAYER_MENU_STOP);
-            }
-        };
-
-        ContextMenuItem delete = new ContextMenuItem(R.string.delete_this_track, R.drawable.contextmenu_icon_trash) {
-            @Override
-            public void onClick() {
+                break;
+            case DELETE_MENU_DIALOG_ID:
                 UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         onDeleteCurrentTrack();
                         UXStats.instance().log(UXAction.PLAYER_MENU_DELETE_TRACK);
                     }
                 });
+                break;
             }
+        }
+    }
 
-        };
+    private void showPlayerContextMenu() {
+        if (mediaFD == null) {
+            return;
+        }
 
-        ContextMenuDialog menu = new ContextMenuDialog();
-        menu.setItems(Arrays.asList(share, stop, delete));
-        menu.show(getFragmentManager(), "playerContextMenu");
+        MenuItem share = new MenuItem(SHARE_MENU_DIALOG_ID, mediaFD.shared ? R.string.unshare : R.string.share, mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share);
+        MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.stop, R.drawable.contextmenu_icon_stop);
+        MenuItem delete = new MenuItem(DELETE_MENU_DIALOG_ID, R.string.delete_this_track, R.drawable.contextmenu_icon_trash);
+
+        MenuDialog dlg = MenuDialog.newInstance(MEDIA_PLAYER_DIALOG_ID, Arrays.asList(share, stop, delete));
+        dlg.show(getFragmentManager());
     }
 
     private void onDeleteCurrentTrack() {

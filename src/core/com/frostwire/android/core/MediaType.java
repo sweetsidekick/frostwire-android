@@ -51,7 +51,7 @@ public class MediaType implements Serializable {
     public static final String SCHEMA_TORRENTS = "torrent"; //possibly magnet might be added in the future
     public static final String SCHEMA_OTHER = "other";
 
-    // These are used as resource keys to retreive descriptions in the GUI 
+    // These are used as resource keys to retrieve descriptions in the GUI 
     public static final int DOCUMENTS_STRING_RESOURCE_ID = R.string.media_type_documents;
     public static final int APPLICATIONS_STRING_RESOURCE_ID = R.string.media_type_applications;
     public static final int AUDIO_STRING_RESOURCE_ID = R.string.media_type_audio;
@@ -271,9 +271,13 @@ public class MediaType implements Serializable {
         }
         return false;
     }
+    
+    public int hashCode() {
+        return 31 * (1+this.id) * (11*getExtensions().hashCode()); 
+    }
 
     /*
-     * We canoncialize the default mediatypes, but since MediaType has
+     * We canonicalize the default mediatypes, but since MediaType has
      * a public constructor only 'equals' comparisons should be used.
      */
     Object readResolve() throws ObjectStreamException {

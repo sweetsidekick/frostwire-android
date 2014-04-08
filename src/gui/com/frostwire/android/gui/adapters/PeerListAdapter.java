@@ -42,7 +42,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
-import com.frostwire.android.gui.views.ShareIndicationDialog;
+import com.frostwire.android.gui.dialogs.ShareIndicationDialog;
 
 /**
  * @author gubatron

@@ -19,60 +19,33 @@
 package com.frostwire.android.gui.views;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.frostwire.android.R;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public abstract class AbstractListFragment extends ListFragment {
+public abstract class AbstractFragment extends Fragment {
 
-    private static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
-    private static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
+    private final int layoutResId;
 
-    private final int resource;
-
-    public AbstractListFragment(int resource) {
-        this.resource = resource;
+    public AbstractFragment(int layoutResId) {
+        this.layoutResId = layoutResId;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(resource, container, false);
+        View rootView = inflater.inflate(layoutResId, container, false);
 
-        View progressContainer = v.findViewById(R.id.progressContainer);
-        if (progressContainer != null) {
-            progressContainer.setId(INTERNAL_PROGRESS_CONTAINER_ID);
-        }
-        View listContainer = v.findViewById(R.id.listContainer);
-        if (listContainer != null) {
-            listContainer.setId(INTERNAL_LIST_CONTAINER_ID);
+        if (!rootView.isInEditMode()) {
+            initComponents(rootView);
         }
 
-        if (!v.isInEditMode()) {
-            initComponents(v);
-        }
-
-        return v;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        dismissDialogs();
-    }
-
-    public void dismissDialogs() {
-    }
-
-    protected void initComponents(View v) {
+        return rootView;
     }
 
     @SuppressWarnings("unchecked")
@@ -80,8 +53,5 @@ public abstract class AbstractListFragment extends ListFragment {
         return (T) v.findViewById(id);
     }
 
-    @SuppressWarnings("unchecked")
-    protected final <T extends Fragment> T findFragment(int id) {
-        return (T) getFragmentManager().findFragmentById(id);
-    }
+    protected abstract void initComponents(View rootView);
 }

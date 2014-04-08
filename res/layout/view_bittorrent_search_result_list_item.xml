@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|center_vertical"
-        android:background="@null"
+        android:background="@drawable/browse_peer_audio_icon_selector_off"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/browse_peer_audio_icon_selector_off" />
@@ -61,12 +61,23 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:text="@string/dummy_title" />
+        
+        <TextView
+            android:id="@+id/view_bittorrent_search_result_list_item_ad_indicator"
+            style="@style/ListItemAd"
+            android:layout_below="@id/view_bittorrent_search_result_list_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Ad" 
+         />
 
         <TextView
             android:id="@+id/view_bittorrent_search_result_list_item_file_size"
             style="@style/ListItemSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/view_bittorrent_search_result_list_item_ad_indicator"
             android:layout_below="@id/view_bittorrent_search_result_list_item_title"
             android:layout_marginBottom="4dp"
             android:layout_marginRight="6dp"

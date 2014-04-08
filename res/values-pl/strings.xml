@@ -429,5 +429,4 @@
     <string name="anonymous_usage_statistics">Anonimowe Statystyki Użytkowania</string>
     <string name="anonymous_usage_statistics_summary">Wysyłaj anonimowe statystyki użytkowania. Żadna informacja dotycząca treści wyszukiwania, dzielenia się, oddwarzania lub jakakolwiek informacja która mogłaby ciebie zidentyfikowac, nie będzie zachowana na dysku lub przesłana przez sieć.</string>
     <string name="paused_song_name">Wstrzymano %s</string>
-    <string name="ouya_search_hint_prefix">Podwójnie dotknij tutaj na panelu dotykowym twojego kontrolera aby</string>
 </resources>

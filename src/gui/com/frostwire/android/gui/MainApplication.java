@@ -23,6 +23,8 @@ import java.util.Map;
 
 import android.app.Application;
 import android.content.Context;
+import android.provider.Settings.Secure;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.frostwire.android.R;
@@ -65,6 +67,8 @@ public class MainApplication extends Application {
             NetworkManager.create(this);
             Librarian.create(this);
             Engine.create(this);
+            
+            LocalSearchEngine.create(getDeviceId());//getAndroidId());
 
             ImageLoader.createDefaultInstance(this);
 
@@ -76,6 +80,15 @@ public class MainApplication extends Application {
             String stacktrace = Log.getStackTraceString(e);
             throw new RuntimeException("MainApplication Create exception: " + stacktrace, e);
         }
+    }
+
+    private String getAndroidId() {
+        return Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+    }
+    
+    private String getDeviceId() {
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getDeviceId();
     }
 
     private Map<String, String> getVuzeMessages(Context context) {

@@ -117,10 +117,6 @@ public final class Engine implements IEngineService {
         }
     }
 
-    public DesktopUploadManager getDesktopUploadManager() {
-        return service != null ? service.getDesktopUploadManager() : null;
-    }
-
     /**
      * 
      * @param context This must be the application context, otherwise there will be a leak.

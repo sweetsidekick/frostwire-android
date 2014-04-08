@@ -47,6 +47,7 @@ import com.frostwire.search.youtube.YouTubeSearchPerformer;
  */
 public abstract class SearchEngine {
 
+    public static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
     private static final int DEFAULT_TIMEOUT = 5000;
 
     private final String name;
@@ -57,7 +58,6 @@ public abstract class SearchEngine {
     private SearchEngine(String name, String preferenceKey) {
         this.name = name;
         this.preferenceKey = preferenceKey;
-
         this.active = true;
     }
 
@@ -137,8 +137,6 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
-
     public static final SearchEngine FROSTCLICK = new SearchEngine("FrostClick", Constants.PREF_KEY_SEARCH_USE_FROSTCLICK) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -176,5 +174,5 @@ public abstract class SearchEngine {
         }
     };
     
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);//, APPIA);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }

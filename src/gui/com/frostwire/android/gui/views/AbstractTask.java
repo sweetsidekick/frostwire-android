@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.core;
+package com.frostwire.android.gui.views;
 
-import java.util.List;
+import android.os.AsyncTask;
 
 /**
  * 
@@ -26,33 +26,15 @@ import java.util.List;
  * @author aldenml
  * 
  */
-public class DesktopUploadRequest {
+public abstract class AbstractTask<Result> extends AsyncTask<Void, Void, Result> {
 
-    /**
-     * IP address string representation
-     */
-    public String address;
-    public String computerName;
-
-    public List<FileDescriptor> files;
-
-    public String token;
-    public DesktopUploadRequestStatus status;
-    public long updateTimestamp;
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof DesktopUploadRequest)) {
-            return false;
-        }
-
-        DesktopUploadRequest dur = (DesktopUploadRequest) o;
-
-        return this.token.equals(dur.token);
+    public AbstractTask() {
     }
 
     @Override
-    public int hashCode() {
-        return token != null ? token.hashCode() : super.hashCode();
+    protected final Result doInBackground(Void... params) {
+        return doInBackground();
     }
+
+    protected abstract Result doInBackground();
 }

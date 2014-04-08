@@ -18,28 +18,33 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
+
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
+import com.frostwire.util.Ref;
+
 /**
+ * 
  * @author gubatron
  * @author aldenml
- *
+ * 
  */
-public abstract class ContextMenuItem {
+public abstract class ContextAdapter extends BaseAdapter {
 
-    private final int textRestId;
-    private final int drawableResId;
+    private final WeakReference<Context> ctxRef;
 
-    public ContextMenuItem(int textRestId, int drawableResId) {
-        this.textRestId = textRestId;
-        this.drawableResId = drawableResId;
+    public ContextAdapter(Context ctx) {
+        this.ctxRef = Ref.weak(ctx);
     }
 
-    public int getTextResId() {
-        return textRestId;
+    @Override
+    public final View getView(int position, View convertView, ViewGroup parent) {
+        return Ref.alive(ctxRef) ? getView(ctxRef.get(), position, convertView, parent) : null;
     }
 
-    public int getDrawableResId() {
-        return drawableResId;
-    }
-
-    public abstract void onClick();
+    public abstract View getView(Context ctx, int position, View convertView, ViewGroup parent);
 }

@@ -23,7 +23,6 @@ import java.lang.ref.WeakReference;
 import java.util.Stack;
 
 import android.app.ActionBar;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
@@ -51,6 +50,8 @@ import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
 import com.frostwire.android.gui.activities.internal.XmlMenuItem;
 import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
+import com.frostwire.android.gui.dialogs.TermsUseDialog;
+import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
@@ -63,12 +64,12 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.PlayerMenuItemView;
-import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.android.gui.views.TOS;
-import com.frostwire.android.gui.views.TOS.TOSActivity;
-import com.frostwire.android.gui.views.YesNoDialog;
-import com.frostwire.android.gui.views.YesNoDialog.YesNoDialogListener;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
@@ -81,7 +82,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, TOSActivity, YesNoDialogListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -118,9 +119,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private boolean offercastStarted = false;
     private boolean appiaStarted = false;
+    
+    private TimerSubscription playerSubscription;
 
     public MainActivity() {
-        super(R.layout.activity_main, 2);
+        super(R.layout.activity_main);
         this.controller = new MainController(this);
         this.fragmentsStack = new Stack<Integer>();
     }
@@ -174,8 +177,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initComponents(Bundle savedInstanceState) {
 
         drawerLayout = findView(R.id.drawer_layout);
         drawerLayout.setDrawerListener(new SimpleDrawerListener() {
@@ -219,8 +221,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
             appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
-
-        addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
+        
+        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_main_player_notifier), 1);
 
         onNewIntent(getIntent());
 
@@ -232,6 +234,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         String action = intent.getAction();
         //onResumeFragments();
 
@@ -307,16 +310,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 controller.startWizardActivity();
             }
         } else {
-            DialogFragment f = TOS.newInstance();
-            f.show(getFragmentManager(), "tos_dialog");
+            TermsUseDialog dlg = new TermsUseDialog();
+            dlg.show(getFragmentManager());
         }
 
         checkLastSeenVersion();
-    }
-    
-    @Override
-    public void onTOSAccept() {
-        controller.startWizardActivity();
     }
 
     private void initializeAppia() {
@@ -353,17 +351,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        search.dismissDialogs();
-        library.dismissDialogs();
-        peers.dismissDialogs();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
+        
+        playerSubscription.unsubscribe();
 
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
@@ -419,21 +410,19 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void handleLastBackPressed() {
-        DialogFragment f = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
-        f.show(getFragmentManager(), LAST_BACK_DIALOG_ID);
+        YesNoDialog dlg = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
+        dlg.show(getFragmentManager());
     }
     
     @Override
-    public void onPositiveClick(String id) {
-        if (id.equals(LAST_BACK_DIALOG_ID)) {
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
             finish();
+        } else if (tag.equals(TermsUseDialog.TAG)) {
+            controller.startWizardActivity();
         }
     }
     
-    @Override
-    public void onNegativeClick(String id) {
-    }
-
     private void syncSlideMenu() {
         Fragment fragment = getCurrentFragment();
 

@@ -30,19 +30,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
+import com.frostwire.android.gui.dialogs.MenuDialog;
+import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.AbstractExpandableListFragment;
-import com.frostwire.android.gui.views.ContextMenuDialog;
-import com.frostwire.android.gui.views.ContextMenuItem;
-import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
+import com.frostwire.android.gui.views.AbstractFragment;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * 
@@ -50,7 +53,7 @@ import com.frostwire.android.gui.views.Refreshable;
  * @author aldenml
  * 
  */
-public class TransfersFragment extends AbstractExpandableListFragment implements Refreshable, MainFragment {
+public class TransfersFragment extends AbstractFragment implements TimerObserver, MainFragment, OnDialogClickListener {
 
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
@@ -59,12 +62,15 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     private Button buttonSelectAll;
     private Button buttonSelectDownloading;
     private Button buttonSelectCompleted;
+    private ExpandableListView list;
     private TextView textDownloads;
     private TextView textUploads;
 
     private TransferListAdapter adapter;
 
     private TransferStatus selectedStatus;
+    
+    private TimerSubscription subscription;
 
     public TransfersFragment() {
         super(R.layout.fragment_transfers);
@@ -77,10 +83,6 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (getActivity() instanceof AbstractActivity) {
-            ((AbstractActivity) getActivity()).addRefreshable(this);
-        }
         
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
 
@@ -95,6 +97,20 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         if (hasTransfersDownloading()) {
             buttonSelectDownloading.performClick();
         }
+    }
+    
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        subscription = TimerService.subscribe(this, 2);
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        
+        subscription.unsubscribe();
     }
 
     @Override
@@ -113,7 +129,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
     }
 
     @Override
-    public void refresh() {
+    public void onTime() {
         if (adapter != null) {
             List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
             Collections.sort(transfers, transferComparator);
@@ -160,23 +176,25 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         buttonSelectAll.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.ALL;
-                refresh();
+                onTime();
             }
         });
         buttonSelectDownloading = findView(v, R.id.fragment_transfers_button_select_downloading);
         buttonSelectDownloading.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.DOWNLOADING;
-                refresh();
+                onTime();
             }
         });
         buttonSelectCompleted = findView(v, R.id.fragment_transfers_button_select_completed);
         buttonSelectCompleted.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 selectedStatus = TransferStatus.COMPLETED;
-                refresh();
+                onTime();
             }
         });
+        
+        list = findView(v, R.id.fragment_transfers_list);
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
@@ -191,7 +209,7 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
         List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);
         Collections.sort(transfers, transferComparator);
         adapter = new TransferListAdapter(TransfersFragment.this.getActivity(), transfers);
-        setListAdapter(adapter);
+        list.setAdapter(adapter);
     }
 
     private List<Transfer> filter(List<Transfer> transfers, TransferStatus status) {
@@ -218,27 +236,34 @@ public class TransfersFragment extends AbstractExpandableListFragment implements
             return transfers;
         }
     }
+    
+    private static final String TRANSFERS_DIALOG_ID = "transfers_dialog";
+    
+    private static final int CLEAR_MENU_DIALOG_ID = 0;
+    private static final int STOP_MENU_DIALOG_ID = 1;
+    
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(TRANSFERS_DIALOG_ID)) {
+            switch (which) {
+            case CLEAR_MENU_DIALOG_ID:
+                TransferManager.instance().clearComplete();
+                break;
+            case STOP_MENU_DIALOG_ID:
+                TransferManager.instance().stopHttpTransfers();
+                TransferManager.instance().pauseTorrents();
+                break;
+            }
+        }
+    }
 
     private void showContextMenu() {
 
-        ContextMenuItem share = new ContextMenuItem(R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer) {
-            @Override
-            public void onClick() {
-                TransferManager.instance().clearComplete();
-            }
-        };
+        MenuItem clear = new MenuItem(CLEAR_MENU_DIALOG_ID, R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer);
+        MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer);
 
-        ContextMenuItem stop = new ContextMenuItem(R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer) {
-            @Override
-            public void onClick() {
-                TransferManager.instance().stopHttpTransfers();
-                TransferManager.instance().pauseTorrents();
-            }
-        };
-
-        ContextMenuDialog menu = new ContextMenuDialog();
-        menu.setItems(Arrays.asList(share, stop));
-        menu.show(getFragmentManager(), "transfersContextMenu");
+        MenuDialog dlg = MenuDialog.newInstance(TRANSFERS_DIALOG_ID, Arrays.asList(clear, stop));
+        dlg.show(getFragmentManager());
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {

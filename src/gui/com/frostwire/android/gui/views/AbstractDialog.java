@@ -18,14 +18,22 @@
 
 package com.frostwire.android.gui.views;
 
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
+
+import com.frostwire.util.Ref;
 
 /**
- * 
  * 
  * @author gubatron
  * @author aldenml
@@ -33,39 +41,94 @@ import android.view.View;
  */
 public abstract class AbstractDialog extends DialogFragment {
 
+    /**
+     * The identifier for the positive button.
+     */
+    public static final int BUTTON_POSITIVE = Dialog.BUTTON_POSITIVE;
+
+    /**
+     * The identifier for the negative button. 
+     */
+    public static final int BUTTON_NEGATIVE = Dialog.BUTTON_NEGATIVE;
+
     private final String tag;
+    private final int layoutResId;
 
-    public AbstractDialog(String tag) {
+    private WeakReference<Activity> activityRef;
+
+    public AbstractDialog(String tag, int layoutResId) {
         this.tag = tag;
+        this.layoutResId = layoutResId;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-        setRetainInstance(true);
+        activityRef = Ref.weak(activity);
     }
 
     @Override
-    public void onDestroyView() {
-        // android bug: http://code.google.com/p/android/issues/detail?id=17423
-        Dialog dialog = getDialog();
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dlg = super.onCreateDialog(savedInstanceState);
 
-        if (dialog != null && getRetainInstance()) {
-            dialog.setDismissMessage(null);
-        }
+        setContentView(dlg, layoutResId);
+        initComponents(dlg, savedInstanceState);
 
-        super.onDestroyView();
+        return dlg;
     }
 
-    public void show(FragmentManager manager) {
-        if (manager.findFragmentByTag(tag) == null) {
-            super.show(manager, tag);
+    public final void show(FragmentManager manager) {
+        super.show(manager, tag);
+    }
+
+    public final void performDialogClick(int which) {
+        performDialogClick(tag, which);
+    }
+
+    protected void setContentView(Dialog dlg, int layoutResId) {
+        dlg.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        dlg.setContentView(layoutResId);
+    }
+
+    protected void performDialogClick(String tag, int which) {
+        if (Ref.alive(activityRef)) {
+            dispatchDialogClick(activityRef.get(), tag, which);
         }
     }
+
+    protected abstract void initComponents(Dialog dlg, Bundle savedInstanceState);
 
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(Dialog dlg, int id) {
         return (T) dlg.findViewById(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final <T extends Serializable> T getArgument(String key) {
+        return (T) getArguments().getSerializable(key);
+    }
+
+    private void dispatchDialogClick(Activity activity, String tag, int which) {
+        dispatchDialogClickSafe(activity, tag, which);
+
+        if (activity instanceof AbstractActivity) {
+            List<Fragment> fragments = ((AbstractActivity) activity).getVisibleFragments();
+
+            for (Fragment f : fragments) {
+                dispatchDialogClickSafe(f, tag, which);
+            }
+        }
+    }
+
+    private void dispatchDialogClickSafe(Object obj, String tag, int which) {
+        if (obj instanceof OnDialogClickListener) {
+            ((OnDialogClickListener) obj).onDialogClick(tag, which);
+        }
+    }
+
+    public interface OnDialogClickListener {
+
+        public void onDialogClick(String tag, int which);
     }
 }

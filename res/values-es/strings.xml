@@ -429,7 +429,6 @@
     <string name="anonymous_usage_statistics">Estadísticas de uso anónimo</string>
     <string name="anonymous_usage_statistics_summary">Envía estadísticas de uso anónimo. Ninguna información sobre contenido buscado, compartido o reproducido será almacenada en disco ni enviada a través de la red así como ninguna información que pueda identificarte personalmente.</string>
     <string name="paused_song_name">Pausado %s</string>
-    <string name="ouya_search_hint_prefix">Doble tap con el Touchpad del control para</string>
     <string name="use_bitsnoop">Utilize BitSnoop</string>
     <string name="use_torlock">Utilize TorLock</string>
     <string name="use_eztv">Utilize Eztv</string>

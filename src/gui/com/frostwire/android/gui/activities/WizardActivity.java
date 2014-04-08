@@ -48,7 +48,7 @@ public class WizardActivity extends AbstractActivity {
     private View currentPageView;
 
     public WizardActivity() {
-        super(R.layout.activity_wizard, 0);
+        super(R.layout.activity_wizard);
 
         completeListener = new OnCompleteListener() {
             public void onComplete(WizardPageView pageView, boolean complete) {
@@ -75,7 +75,7 @@ public class WizardActivity extends AbstractActivity {
     }
 
     @Override
-    protected void initComponents() {
+    protected void initComponents(Bundle savedInstanceState) {
         buttonPrevious = findView(R.id.activity_wizard_button_previous);
         buttonPrevious.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

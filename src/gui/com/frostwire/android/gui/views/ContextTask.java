@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,32 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.ExpandableListView;
+
+import com.frostwire.util.Ref;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
  * 
  */
-public class FWExpandableListView extends ExpandableListView {
+public abstract class ContextTask<Result> extends AbstractTask<Result> {
 
-    public FWExpandableListView(Context context, AttributeSet attrs, int defStyle) {
-        super(new FWContextWrapper(context), attrs, defStyle);
+    private final WeakReference<Context> ctxRef;
+
+    public ContextTask(Context ctx) {
+        this.ctxRef = Ref.weak(ctx);
     }
 
-    public FWExpandableListView(Context context, AttributeSet attrs) {
-        super(new FWContextWrapper(context), attrs);
+    @Override
+    protected final void onPostExecute(Result result) {
+        if (Ref.alive(ctxRef)) {
+            onPostExecute(ctxRef.get(), result);
+        }
     }
 
-    public FWExpandableListView(Context context) {
-        super(new FWContextWrapper(context));
-    }
+    protected abstract void onPostExecute(Context ctx, Result result);
 }

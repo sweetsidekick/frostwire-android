@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.adapters.FileListAdapter;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
 import com.frostwire.localpeer.Finger;
@@ -59,7 +60,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  * 
  */
-public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object>, MainFragment {
+public class BrowsePeerFragment extends AbstractFragment implements LoaderCallbacks<Object>, MainFragment {
 
     private static final Logger log = Logger.getLogger(BrowsePeerFragment.class);
 
@@ -76,6 +77,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private RadioButton buttonDocuments;
 
     private BrowsePeerSearchBarView filesBar;
+    private ListView list;
 
     private FileListAdapter adapter;
 
@@ -190,15 +192,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     @Override
-    public void dismissDialogs() {
-        super.dismissDialogs();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
-        }
-    }
-
-    @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         header = inflater.inflate(R.layout.view_browse_peer_header, null);
@@ -243,6 +236,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 }
             }
         });
+        
+        list = findView(v, R.id.fragment_browse_peer_list);
     }
 
     protected void onRefreshShared(byte fileType) {
@@ -475,7 +470,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void restoreListViewScrollPosition() {
         if (adapter != null) {
-            getListView().setSelection(getSavedListViewVisiblePosition(adapter.getFileType()) + 1);
+            list.setSelection(getSavedListViewVisiblePosition(adapter.getFileType()) + 1);
         }
     }
 
@@ -492,7 +487,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
 
-            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
+            adapter = new FileListAdapter(list.getContext(), items, peer, local, fileType) {
 
                 @Override
                 protected void onItemChecked(View v, boolean isChecked) {
@@ -509,7 +504,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 }
             };
             adapter.setCheckboxesVisibility(true);
-            setListAdapter(adapter);
+            list.setAdapter(adapter);
         } catch (Throwable e) {
             log.error("Error updating files in list", e);
         }
@@ -550,7 +545,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     private void saveListViewVisiblePosition(byte fileType) {
-        int firstVisiblePosition = getListView().getFirstVisiblePosition();
+        int firstVisiblePosition = list.getFirstVisiblePosition();
         ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType, firstVisiblePosition);
     }
 

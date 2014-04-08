@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.views;
+package com.frostwire.android.gui.menu;
 
 /**
- * @author gubatron
+ * Class to ensure uniqueness of menu items ids.
+ * 
  * @author aldenml
  *
  */
-public enum DesktopUploadRequestDialogResult {
-    ACCEPT, REJECT, BLOCK
+/*
+ * aldenml: I'm well aware of the bad patterns that could arise with the direct use
+ * of the orginal, but the root of this problem is the way android link the dialog with the
+ * activity/fragment.
+ */
+public enum MenuItems {
+
+    CHANGE_NICKNAME, BROWSE_PEER;
+
+    private static final MenuItems values[] = values();
+
+    public int id() {
+        return ordinal();
+    }
+
+    public static MenuItems fromId(int id) { // id equals ordinal
+        return values[id];
+    }
 }
