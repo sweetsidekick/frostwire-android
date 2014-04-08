@@ -10,6 +10,7 @@ FrostWire 1.3.0 - APR/04/2014
    to very little out of memory errors from crashing the app.
  - Added optional sponsored search results by Appia.
  - Minor upgrades to audio player and Frostclick.com's free promotional downloads.
+ - Multiple bug fixes.
 
 FrostWire 1.2.3 - DEC/10/2013
  - Fixes crash when stopping a 1080p video transfer from cloud service.

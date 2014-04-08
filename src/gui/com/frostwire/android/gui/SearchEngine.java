@@ -36,6 +36,7 @@ import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
+import com.frostwire.search.tbp.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
@@ -174,5 +175,17 @@ public abstract class SearchEngine {
         }
     };
     
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
+    public static final SearchEngine TPB = new SearchEngine("TPB", Constants.PREF_KEY_SEARCH_USE_TPB) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            TPBSearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new TPBSearchPerformer(new DomainAliasManager("thepiratebay.se"), token, keywords, DEFAULT_TIMEOUT);
+            }
+            return performer;
+        }
+    };
+    
+    
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }
