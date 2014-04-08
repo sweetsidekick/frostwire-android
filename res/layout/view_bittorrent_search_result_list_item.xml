@@ -65,12 +65,11 @@
         <TextView
             android:id="@+id/view_bittorrent_search_result_list_item_ad_indicator"
             style="@style/ListItemAd"
-            android:layout_below="@id/view_bittorrent_search_result_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/view_bittorrent_search_result_list_item_title"
             android:layout_marginBottom="4dp"
-            android:text="Ad" 
-         />
+            android:text="Ad" />
 
         <TextView
             android:id="@+id/view_bittorrent_search_result_list_item_file_size"
