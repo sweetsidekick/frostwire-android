@@ -24,6 +24,7 @@ import java.util.List;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
@@ -47,7 +48,7 @@ import com.frostwire.search.youtube.YouTubeSearchPerformer;
  *
  */
 public abstract class SearchEngine {
-
+    private static final Logger LOG = Logger.getLogger(SearchEngine.class);
     public static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
     private static final int DEFAULT_TIMEOUT = 5000;
 
@@ -181,6 +182,8 @@ public abstract class SearchEngine {
             TPBSearchPerformer performer = null;
             if (NetworkManager.instance().isDataWIFIUp()) {
                 performer = new TPBSearchPerformer(new DomainAliasManager("thepiratebay.se"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No TPBSearchPerformer, WiFi not up");
             }
             return performer;
         }
