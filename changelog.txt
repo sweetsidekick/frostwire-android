@@ -1,4 +1,4 @@
-FrostWire 1.3.0 - APR/04/2014
+FrostWire 1.3.0 - APR/09/2014
  - Upgraded BitTorrent engine with latest code from Azureus project.
  - Added uTP packet congestion support.
  - Upgraded Android SDK target to Ice Cream Sandwich's API (15 - Android 4.0.3).
@@ -10,6 +10,8 @@ FrostWire 1.3.0 - APR/04/2014
    to very little out of memory errors from crashing the app.
  - Added optional sponsored search results by Appia.
  - Minor upgrades to audio player and Frostclick.com's free promotional downloads.
+ - Added TPB search, search results available only when on a Wi-Fi connection.
+ - Added Monova search, search results available only when on a Wi-Fi connection.
  - Multiple bug fixes.
 
 FrostWire 1.2.3 - DEC/10/2013
