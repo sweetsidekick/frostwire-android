@@ -46,6 +46,17 @@ public class OfferUtils {
         }
         return isFreeAppsEnabled;
     }
+    
+    public static boolean isAppiaSearchEnabled() {
+        ConfigurationManager config = null;
+        boolean isAppiaSearchEnabled = false;
+        try {
+            config = ConfigurationManager.instance();
+            isAppiaSearchEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH)) && !OSUtils.isAmazonDistribution();
+        } catch (Throwable t) {
+        }
+        return isAppiaSearchEnabled;
+    }
 
     public static void startOffercast(final Context context) throws Exception {
         if (!OSUtils.isAmazonDistribution()) {

@@ -67,9 +67,9 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, true);
-        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, true);
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, true);
+        defaultValues.put(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);

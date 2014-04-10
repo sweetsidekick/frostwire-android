@@ -73,7 +73,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
         List<? extends SearchResult> result = Collections.emptyList();
-        if (OfferUtils.isfreeAppsEnabled() &&
+        if (OfferUtils.isAppiaSearchEnabled() &&
             throttle.canSearchAgain()) {
             String url = getUrl(-1, getEncodedKeywords());
             String text = null;
