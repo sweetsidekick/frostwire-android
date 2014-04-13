@@ -114,6 +114,8 @@ public final class SystemUtils {
         case Constants.FILE_TYPE_RINGTONES:
             folderName = RINGTONES_FOLDER_NAME;
             break;
+        case Constants.FILE_TYPE_TORRENTS:
+            folderName = TORRENTS_FOLDER_NAME;
         default: // We will treat anything else like documents (unknown types)
             folderName = DOCUMENTS_FOLDER_NAME;
         }

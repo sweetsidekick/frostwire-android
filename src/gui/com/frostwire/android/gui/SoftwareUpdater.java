@@ -309,16 +309,19 @@ public final class SoftwareUpdater {
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, ByteUtils.randomInt(0, 100) < update.config.supportThreshold);
 
-        for (String name : update.config.activeSearchEngines.keySet()) {
-            SearchEngine engine = SearchEngine.forName(name);
-            if (engine != null) {
-                engine.setActive(update.config.activeSearchEngines.get(name));
+        if (update.config.activeSearchEngines != null && update.config.activeSearchEngines.keySet() != null) {
+            for (String name : update.config.activeSearchEngines.keySet()) {
+                SearchEngine engine = SearchEngine.forName(name);
+                if (engine != null) {
+                    engine.setActive(update.config.activeSearchEngines.get(name));
+                }
             }
         }
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, update.config.tv);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, update.config.appiaSearch);
 
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
             String url = "http://ux.frostwire.com/aux";
@@ -371,6 +374,7 @@ public final class SoftwareUpdater {
         public Map<String, Boolean> activeSearchEngines;
         public boolean tv = true;
         public boolean appia = true;
+        public boolean appiaSearch = true;
         public boolean offercast = true;
 
         // ux stats

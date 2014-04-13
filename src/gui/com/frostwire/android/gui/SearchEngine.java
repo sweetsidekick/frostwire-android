@@ -24,6 +24,7 @@ import java.util.List;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
@@ -35,7 +36,9 @@ import com.frostwire.search.eztv.EztvSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
+import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
+import com.frostwire.search.tbp.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
@@ -46,7 +49,7 @@ import com.frostwire.search.youtube.YouTubeSearchPerformer;
  *
  */
 public abstract class SearchEngine {
-
+    private static final Logger LOG = Logger.getLogger(SearchEngine.class);
     public static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
     private static final int DEFAULT_TIMEOUT = 5000;
 
@@ -174,5 +177,31 @@ public abstract class SearchEngine {
         }
     };
     
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YOUTUBE, FROSTCLICK, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
+    public static final SearchEngine TPB = new SearchEngine("TPB", Constants.PREF_KEY_SEARCH_USE_TPB) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            TPBSearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new TPBSearchPerformer(new DomainAliasManager("thepiratebay.se"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No TPBSearchPerformer, WiFi not up");
+            }
+            return performer;
+        }
+    };
+    
+    public static final SearchEngine MONOVA = new SearchEngine("Monova", Constants.PREF_KEY_SEARCH_USE_MONOVA) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            MonovaSearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new MonovaSearchPerformer(new DomainAliasManager("www.monova.org"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No MonovaSearchPerformer, WiFi not up");
+            }
+            return performer;
+        }
+    };
+    
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }

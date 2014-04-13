@@ -271,9 +271,13 @@ public class MediaType implements Serializable {
         }
         return false;
     }
+    
+    public int hashCode() {
+        return 31 * (1+this.id) * (11*getExtensions().hashCode()); 
+    }
 
     /*
-     * We canoncialize the default mediatypes, but since MediaType has
+     * We canonicalize the default mediatypes, but since MediaType has
      * a public constructor only 'equals' comparisons should be used.
      */
     Object readResolve() throws ObjectStreamException {

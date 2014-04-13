@@ -67,9 +67,9 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, true);
-        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, true);
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, true);
+        defaultValues.put(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);
@@ -90,6 +90,8 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TORLOCK, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_EZTV, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_APPIA, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TPB, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MONOVA, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, false);

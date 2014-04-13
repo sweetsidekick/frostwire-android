@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.os.AsyncTask;
 
@@ -47,7 +48,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     
     private final AppiaSearchThrottle throttle;
     
-    public static final String HTTP_SERVER_NAME = "10.240.118.144";
+    public static final String HTTP_SERVER_NAME = "192.168.1.14";
 
     private static final Logger LOG = Logger.getLogger(AppiaSearchPerformer.class);
 
@@ -64,15 +65,16 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        //return "http://api.frostclick.com/appia";
-        return "http://" + HTTP_SERVER_NAME + ":8080/frostclick-search-api/appia";
+        return "http://api.frostclick.com/appia";
+        // for local debugging.
+        //return "http://" + HTTP_SERVER_NAME + ":8080/frostclick-search-api/appia";
     }
 
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
         List<? extends SearchResult> result = Collections.emptyList();
-
-        if (OfferUtils.isfreeAppsEnabled() && throttle.canSearchAgain()) {
+        if (OfferUtils.isAppiaSearchEnabled() &&
+            throttle.canSearchAgain()) {
             String url = getUrl(-1, getEncodedKeywords());
             String text = null;
             
@@ -96,11 +98,17 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     protected List<? extends SearchResult> searchPage(String page) {
         List<AppiaSearchResult> results = new ArrayList<AppiaSearchResult>();
         AppiaServletResponse appiaServletResponse = JsonUtils.toObject(page, AppiaServletResponse.class);
-        List<AppiaServletResponseItem> responseItems = appiaServletResponse.results;
-        for (AppiaServletResponseItem item : responseItems) {
-            AppiaSearchResult sr = new AppiaSearchResult(item);
-            results.add(sr);
-            AppiaSearchPerformer.asyncHttpGet(sr.getImpressionTrackingURL());
+        
+        Set<String> keySet = appiaServletResponse.results.keySet();
+        
+        for (String categoryId : keySet) {
+            List<AppiaServletResponseItem> responseItems = appiaServletResponse.results.get(categoryId);
+            for (AppiaServletResponseItem item : responseItems) {
+                AppiaSearchResult sr = new AppiaSearchResult(item, categoryId);
+                results.add(sr);
+                AppiaSearchPerformer.asyncHttpGet(sr.getImpressionTrackingURL());
+            }
+        
         }
         
         if (results.isEmpty()) {
@@ -140,8 +148,8 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     }
     
     public final static class AppiaSearchThrottle {
-        private final int MAX_SEARCHES_WITHIN_TIME_INTERVAL = 10;
-        private final int TIME_INTERVAL = 1 * 60 * 1000;
+        private final int MAX_SEARCHES_WITHIN_TIME_INTERVAL = 4;
+        private final int TIME_INTERVAL = 2 * 60 * 1000;
         private int searchAttempts;
         private long lastTimeSearchPerformed;
         
@@ -151,10 +159,6 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         }
         
         public boolean canSearchAgain() {
-            if (true) {
-                return true;
-            }
-            
             searchAttempts++;
             long timeSince = System.currentTimeMillis() - lastTimeSearchPerformed;
             boolean enoughTimePassed = timeSince >= TIME_INTERVAL;

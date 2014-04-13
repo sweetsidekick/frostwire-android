@@ -245,7 +245,7 @@ public final class TableFetchers {
         }
 
         public byte getFileType() {
-            return Constants.FILE_TYPE_VIDEOS;
+            return Constants.FILE_TYPE_DOCUMENTS;
         }
 
         public String getSortByExpression() {
