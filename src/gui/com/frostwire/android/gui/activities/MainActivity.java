@@ -516,7 +516,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void updateHeader(Fragment fragment) {
         try {
             RelativeLayout placeholder = (RelativeLayout) getActionBar().getCustomView();//findView(R.id.activity_main_layout_header_placeholder);
-            if (placeholder.getChildCount() > 0) {
+            if (placeholder!=null && placeholder.getChildCount() > 0) {
                 placeholder.removeAllViews();
             }
 
