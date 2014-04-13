@@ -86,6 +86,9 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
 
     private void onWifiEnableButtonClick() {
         if (getActivity() instanceof MainActivity) {
+            
+            final CharSequence buttonCaption = wifiSharingEnableButton.getText();
+            wifiSharingEnableButton.setText("...");
 
             AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -99,6 +102,7 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
                 protected void onPostExecute(Void result) {
                     MainActivity activity = (MainActivity) getActivity();
                     activity.switchFragment(R.id.menu_main_peers);
+                    wifiSharingEnableButton.setText(buttonCaption);
                 }
 
             };
