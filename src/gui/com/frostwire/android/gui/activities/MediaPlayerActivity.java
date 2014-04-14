@@ -217,15 +217,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
     @Override
     protected void initComponents(Bundle savedInstanceState) {
-
-        if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
+        CoreMediaPlayer mp = Engine.instance().getMediaPlayer();
+        if (mp == null || !(mp instanceof NativeAndroidPlayer)) {
             Log.e(TAG, "Only media playerControl of type NativeAndroidPlayer is supported");
             return;
         }
 
         initGestures();
 
-        mediaPlayer = (NativeAndroidPlayer) Engine.instance().getMediaPlayer();
+        mediaPlayer = (NativeAndroidPlayer) mp;
         mediaFD = mediaPlayer.getCurrentFD();
 
         if (mediaPlayer != null) {
