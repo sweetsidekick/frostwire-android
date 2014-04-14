@@ -470,7 +470,9 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
     private void restoreListViewScrollPosition() {
         if (adapter != null) {
-            list.setSelection(getSavedListViewVisiblePosition(adapter.getFileType()) + 1);
+            int savedListViewVisiblePosition = getSavedListViewVisiblePosition(adapter.getFileType());
+            savedListViewVisiblePosition = (savedListViewVisiblePosition > 0) ? savedListViewVisiblePosition + 1 : 0;
+            list.setSelection(savedListViewVisiblePosition);
         }
     }
 
@@ -551,6 +553,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
     private int getSavedListViewVisiblePosition(byte fileType) {
         //will return 0 if not found.
+        int savedPosition = ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
         return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
     }
 
