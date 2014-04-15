@@ -31,7 +31,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textColor="@android:color/black"
         android:text="@string/dialog_new_transfer_text_text"
         android:textSize="18sp" />
 
