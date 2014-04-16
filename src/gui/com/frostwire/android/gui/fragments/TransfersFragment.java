@@ -69,7 +69,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private TransferListAdapter adapter;
 
     private TransferStatus selectedStatus;
-    
+
     private TimerSubscription subscription;
 
     public TransfersFragment() {
@@ -83,33 +83,25 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
 
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
     }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (hasTransfersDownloading()) {
-            buttonSelectDownloading.performClick();
-        }
-    }
-    
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         subscription = TimerService.subscribe(this, 2);
     }
-    
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        
+
         subscription.unsubscribe();
     }
 
@@ -193,16 +185,11 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 onTime();
             }
         });
-        
+
         list = findView(v, R.id.fragment_transfers_list);
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
-    }
-    
-    private boolean hasTransfersDownloading() {
-        List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), TransferStatus.DOWNLOADING);
-        return transfers != null && !transfers.isEmpty();
     }
 
     private void setupAdapter() {
@@ -236,12 +223,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             return transfers;
         }
     }
-    
+
     private static final String TRANSFERS_DIALOG_ID = "transfers_dialog";
-    
+
     private static final int CLEAR_MENU_DIALOG_ID = 0;
     private static final int STOP_MENU_DIALOG_ID = 1;
-    
+
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(TRANSFERS_DIALOG_ID)) {
