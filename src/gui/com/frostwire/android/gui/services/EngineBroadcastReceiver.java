@@ -141,7 +141,8 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                     public void run() {
                         Engine.instance().startServices();
 
-                        if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
+                        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS) ||
+                            (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY))) {
                             TransferManager.instance().stopSeedingTorrents();
                         }
                     }

@@ -458,13 +458,26 @@ public final class TransferManager implements VuzeKeys {
 
         @Override
         public void stateChanged(VuzeDownloadManager dm, int state) {
+            if (state == VuzeDownloadManager.STATE_SEEDING) {
+                stopSeedingIfNecessary(dm);
+            }
         }
 
         @Override
         public void downloadComplete(VuzeDownloadManager dm) {
+            stopSeedingIfNecessary(dm);
             TransferManager.instance().incrementDownloadsToReview();
             Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
             Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
+        }
+
+        private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
+            boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
+            boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
+            boolean isDataWIFIUp = NetworkManager.instance().isDataWIFIUp();
+            if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
+                dm.stop();
+            }
         }
     }
 }
