@@ -112,7 +112,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
             //Suggestion: maybe look at the Content-length HTTP header for a size
             //if sound cloud sends this when the download starts and update the
             //link.getSize() value with this number as it becomes known.
-            return delegate.getStatusCode() == HttpDownload.STATUS_COMPLETE;
+            return delegate.getStatusCode() == HttpDownload.STATUS_COMPLETE || delegate.getStatusCode() == HttpDownload.STATUS_ERROR;
         } else {
             return false;
         }

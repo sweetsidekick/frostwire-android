@@ -185,7 +185,7 @@ public final class YouTubeDownload implements DownloadTransfer {
 
     public boolean isComplete() {
         if (bytesReceived > 0) {
-            return bytesReceived == size || status == STATUS_COMPLETE;
+            return bytesReceived == size || status == STATUS_COMPLETE || status == STATUS_ERROR;
         } else {
             return false;
         }

@@ -149,7 +149,7 @@ public final class HttpDownload implements DownloadTransfer {
 
     public boolean isComplete() {
         if (bytesReceived > 0) {
-            return bytesReceived == link.getSize() && status == STATUS_COMPLETE;
+            return (bytesReceived == link.getSize() && status == STATUS_COMPLETE) || status == STATUS_ERROR;
         } else {
             return false;
         }
