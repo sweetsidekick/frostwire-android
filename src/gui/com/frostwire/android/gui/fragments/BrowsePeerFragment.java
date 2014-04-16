@@ -553,7 +553,6 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
     private int getSavedListViewVisiblePosition(byte fileType) {
         //will return 0 if not found.
-        int savedPosition = ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
         return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
     }
 

@@ -28,7 +28,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -43,6 +42,7 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
+import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -59,6 +59,8 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private final Comparator<Transfer> transferComparator;
 
+    private final ButtonMenuListener buttonMenuListener;
+
     private Button buttonSelectAll;
     private Button buttonSelectDownloading;
     private Button buttonSelectCompleted;
@@ -69,7 +71,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private TransferListAdapter adapter;
 
     private TransferStatus selectedStatus;
-    
+
     private TimerSubscription subscription;
 
     public TransfersFragment() {
@@ -77,39 +79,33 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         this.transferComparator = new TransferComparator();
 
+        this.buttonMenuListener = new ButtonMenuListener(this);
+
         selectedStatus = TransferStatus.ALL;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
         UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
 
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
     }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (hasTransfersDownloading()) {
-            buttonSelectDownloading.performClick();
-        }
-    }
-    
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         subscription = TimerService.subscribe(this, 2);
     }
-    
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        
+
         subscription.unsubscribe();
     }
 
@@ -160,12 +156,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         text.setText(R.string.transfers);
 
         ImageButton buttonMenu = (ImageButton) header.findViewById(R.id.view_transfers_header_button_menu);
-        buttonMenu.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showContextMenu();
-            }
-        });
+        buttonMenu.setOnClickListener(buttonMenuListener);
 
         return header;
     }
@@ -173,36 +164,18 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     @Override
     protected void initComponents(View v) {
         buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
-        buttonSelectAll.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectedStatus = TransferStatus.ALL;
-                onTime();
-            }
-        });
+        buttonSelectAll.setOnClickListener(new ButtonTabListener(this, TransferStatus.ALL));
+
         buttonSelectDownloading = findView(v, R.id.fragment_transfers_button_select_downloading);
-        buttonSelectDownloading.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectedStatus = TransferStatus.DOWNLOADING;
-                onTime();
-            }
-        });
+        buttonSelectDownloading.setOnClickListener(new ButtonTabListener(this, TransferStatus.DOWNLOADING));
+
         buttonSelectCompleted = findView(v, R.id.fragment_transfers_button_select_completed);
-        buttonSelectCompleted.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectedStatus = TransferStatus.COMPLETED;
-                onTime();
-            }
-        });
-        
+        buttonSelectCompleted.setOnClickListener(new ButtonTabListener(this, TransferStatus.COMPLETED));
+
         list = findView(v, R.id.fragment_transfers_list);
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
-    }
-    
-    private boolean hasTransfersDownloading() {
-        List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), TransferStatus.DOWNLOADING);
-        return transfers != null && !transfers.isEmpty();
     }
 
     private void setupAdapter() {
@@ -236,12 +209,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             return transfers;
         }
     }
-    
+
     private static final String TRANSFERS_DIALOG_ID = "transfers_dialog";
-    
+
     private static final int CLEAR_MENU_DIALOG_ID = 0;
     private static final int STOP_MENU_DIALOG_ID = 1;
-    
+
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(TRANSFERS_DIALOG_ID)) {
@@ -279,5 +252,33 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private static enum TransferStatus {
         ALL, DOWNLOADING, COMPLETED
+    }
+
+    private static final class ButtonMenuListener extends ClickAdapter<TransfersFragment> {
+
+        public ButtonMenuListener(TransfersFragment f) {
+            super(f);
+        }
+
+        @Override
+        public void onClick(TransfersFragment f, View v) {
+            f.showContextMenu();
+        }
+    }
+
+    private static final class ButtonTabListener extends ClickAdapter<TransfersFragment> {
+
+        private final TransferStatus status;
+
+        public ButtonTabListener(TransfersFragment f, TransferStatus status) {
+            super(f);
+            this.status = status;
+        }
+
+        @Override
+        public void onClick(TransfersFragment f, View v) {
+            f.selectedStatus = status;
+            f.onTime();
+        }
     }
 }
