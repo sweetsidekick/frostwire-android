@@ -25,7 +25,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.billing.Biller;
