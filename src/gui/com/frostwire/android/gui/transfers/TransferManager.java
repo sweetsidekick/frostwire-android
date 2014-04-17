@@ -73,7 +73,7 @@ public final class TransferManager implements VuzeKeys {
 
     private final Object alreadyDownloadingMonitor = new Object();
 
-    private static TransferManager instance;
+    private volatile static TransferManager instance;
 
     private OnSharedPreferenceChangeListener preferenceListener;
 
@@ -399,6 +399,19 @@ public final class TransferManager implements VuzeKeys {
         download.start();
 
         return download;
+    }
+    
+    public void resumeResumableTransfers() {
+        List<Transfer> transfers = getTransfers();
+
+        for (Transfer t : transfers) {
+            if (t instanceof BittorrentDownload) {
+                BittorrentDownload bt = (BittorrentDownload) t;
+                if (bt.isResumable()) {
+                    bt.resume();
+                }
+            } 
+        }        
     }
 
     /** Stops all HttpDownloads (Cloud and Wi-Fi) */

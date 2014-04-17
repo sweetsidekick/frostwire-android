@@ -18,7 +18,7 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -37,8 +37,12 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.dialogs.MenuDialog;
 import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
+import com.frostwire.android.gui.transfers.BittorrentDownload;
+import com.frostwire.android.gui.transfers.HttpDownload;
+import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
@@ -213,7 +217,8 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private static final String TRANSFERS_DIALOG_ID = "transfers_dialog";
 
     private static final int CLEAR_MENU_DIALOG_ID = 0;
-    private static final int STOP_MENU_DIALOG_ID = 1;
+    private static final int PAUSE_MENU_DIALOG_ID = 1;
+    private static final int RESUME_MENU_DIALOG_ID = 2;
 
     @Override
     public void onDialogClick(String tag, int which) {
@@ -222,21 +227,109 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             case CLEAR_MENU_DIALOG_ID:
                 TransferManager.instance().clearComplete();
                 break;
-            case STOP_MENU_DIALOG_ID:
+            case PAUSE_MENU_DIALOG_ID:
                 TransferManager.instance().stopHttpTransfers();
                 TransferManager.instance().pauseTorrents();
                 break;
+            case RESUME_MENU_DIALOG_ID:
+                TransferManager.instance().resumeResumableTransfers();
+                break;
             }
+            setupAdapter();
         }
     }
 
     private void showContextMenu() {
-
         MenuItem clear = new MenuItem(CLEAR_MENU_DIALOG_ID, R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer);
-        MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.transfers_context_menu_stop_delete_data, R.drawable.contextmenu_icon_stop_transfer);
+        MenuItem pause = new MenuItem(PAUSE_MENU_DIALOG_ID, R.string.transfers_context_menu_pause_stop_all_transfers, R.drawable.contextmenu_icon_pause_transfer);
+        MenuItem resume = new MenuItem(RESUME_MENU_DIALOG_ID, R.string.transfers_context_resume_all_torrent_transfers, R.drawable.contextmenu_icon_play);
+        
+        List<MenuItem> dlgActions = new ArrayList<MenuItem>();
+        
+        final List<Transfer> transfers = TransferManager.instance().getTransfers();
+        
+        if (transfers != null && transfers.size() > 0) {
+            if (someTransfersComplete(transfers)) {
+                dlgActions.add(clear);
+            }
+            
+            if (someTransfersActive(transfers)) {
+                dlgActions.add(pause);
+            }
+            
+            if (someTransfersInactive(transfers)) {
+                dlgActions.add(resume);
+            }
+        }
+        
+        if (dlgActions.size() > 0) {
+            MenuDialog dlg = MenuDialog.newInstance(TRANSFERS_DIALOG_ID, dlgActions);
+            dlg.show(getFragmentManager());
+        }
+    }
 
-        MenuDialog dlg = MenuDialog.newInstance(TRANSFERS_DIALOG_ID, Arrays.asList(clear, stop));
-        dlg.show(getFragmentManager());
+    private boolean someTransfersInactive(List<Transfer> transfers) {
+        for (Transfer t : transfers) {
+            if (t instanceof BittorrentDownload) {
+                BittorrentDownload bt = (BittorrentDownload) t;
+                if (!bt.isDownloading() && !bt.isSeeding()) {
+                    return true;
+                }
+            } else if (t instanceof HttpDownload) {
+                HttpDownload ht = (HttpDownload) t;
+                if (ht.isComplete() || !ht.isDownloading()) {
+                    return true;
+                }
+            } else if (t instanceof YouTubeDownload) {
+                YouTubeDownload yt = (YouTubeDownload) t;
+                if (yt.isComplete() || !yt.isDownloading()) {
+                    return true;
+                }
+                
+            } else if (t instanceof SoundcloudDownload) {
+                SoundcloudDownload sd = (SoundcloudDownload) t;
+                if (sd.isComplete() || !sd.isDownloading()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean someTransfersComplete(List<Transfer> transfers) {
+        for (Transfer t : transfers) {
+            if (t.isComplete()) {
+                return true; 
+            }
+        }
+        return false;
+    }
+    
+    private boolean someTransfersActive(List<Transfer> transfers) {
+        for (Transfer t : transfers) {
+            if (t instanceof BittorrentDownload) {
+                BittorrentDownload bt = (BittorrentDownload) t;
+                if (bt.isDownloading() || bt.isSeeding()) {
+                    return true;
+                }
+            } else if (t instanceof HttpDownload) {
+                HttpDownload ht = (HttpDownload) t;
+                if (ht.isDownloading()) {
+                    return true;
+                }
+            } else if (t instanceof YouTubeDownload) {
+                YouTubeDownload yt = (YouTubeDownload) t;
+                if (yt.isDownloading()) {
+                    return true;
+                }
+            } else if (t instanceof SoundcloudDownload) {
+                SoundcloudDownload sd = (SoundcloudDownload) t;
+                if (sd.isDownloading()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {
