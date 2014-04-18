@@ -40,7 +40,7 @@ import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.tbp.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
-import com.frostwire.search.yifi.YifySearchPerformer;
+import com.frostwire.search.yify.YifySearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
@@ -58,7 +58,7 @@ public abstract class SearchEngine {
     private final String preferenceKey;
 
     private boolean active;
-
+    
     private SearchEngine(String name, String preferenceKey) {
         this.name = name;
         this.preferenceKey = preferenceKey;
@@ -217,5 +217,5 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA, YIFY);
 }

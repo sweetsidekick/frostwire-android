@@ -57,7 +57,8 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
         return description;
     }
     
-    public String getThumbnailURL() {
+    @Override
+    public String getThumbnailUrl() {
         return thumbnailURL;
     }
     

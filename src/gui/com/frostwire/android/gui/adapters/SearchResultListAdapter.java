@@ -102,6 +102,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         if (sr instanceof AppiaSearchResult) {
             populateAppiaPart(view, (AppiaSearchResult) sr);
         }
+        populateThumbnail(view, sr);
     }
 
     protected void populateFilePart(View view, FileSearchResult sr) {
@@ -138,6 +139,14 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         sourceLink.setOnClickListener(linkListener);
     }
 
+    private void populateThumbnail(View view, SearchResult sr) {
+         if (sr.getThumbnailUrl() != null) {
+             ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
+             Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
+             thumbLoader.displayImage(sr.getThumbnailUrl(), fileTypeIcon, defaultDrawable, ImageLoader.DOWNSCALE_HUGE_BITMAPS);
+         }
+    }
+    
     protected void populateYouTubePart(View view, YouTubeCrawledSearchResult sr) {
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(FilenameUtils.getExtension(sr.getFilename()));
@@ -155,10 +164,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     protected void populateAppiaPart(View view, AppiaSearchResult sr) {
         TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
         adIndicator.setVisibility(View.VISIBLE);
-
-        ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-        Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
-        thumbLoader.displayImage(sr.getThumbnailURL(), fileTypeIcon, defaultDrawable, 0);
 
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(sr.getCategoryName() + " : " + sr.getDescription());
