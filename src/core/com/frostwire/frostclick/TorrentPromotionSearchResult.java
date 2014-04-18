@@ -88,4 +88,9 @@ public class TorrentPromotionSearchResult implements TorrentSearchResult {
     public License getLicense() {
         return License.UNKNOWN;
     }
+
+    @Override
+    public String getThumbnailUrl() {
+        return null;
+    }
 }

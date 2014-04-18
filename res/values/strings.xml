@@ -237,6 +237,8 @@
     <string name="use_isohunt">Use ISOHunt.com</string>
     <string name="use_mininova">Use Mininova.org</string>
     <string name="use_vertor">Use Vertor.com</string>
+    <string name="use_yify">Use Yify</string>
+    <string name="use_yify_summary">Yify is magnet based, works only on Wi-Fi</string>
     <string name="activity_media_player_image_description">Media image</string>
     <string name="ringtone_set">Ringtone Set</string>
     <string name="search">Search</string>

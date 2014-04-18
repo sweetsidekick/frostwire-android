@@ -40,6 +40,7 @@ import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.tbp.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
+import com.frostwire.search.yifi.YifySearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
 /**
@@ -203,5 +204,18 @@ public abstract class SearchEngine {
         }
     };
     
+    public static final SearchEngine YIFY = new SearchEngine("Yify", Constants.PREF_KEY_SEARCH_USE_YIFY) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            YifySearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new YifySearchPerformer(new DomainAliasManager("www.yify-torrent.org"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No YifySearchPerformer, WiFi not up");
+            }
+            return performer;
+        }
+    };
+
     private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }
