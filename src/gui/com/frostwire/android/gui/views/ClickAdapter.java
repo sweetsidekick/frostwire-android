@@ -21,6 +21,7 @@ package com.frostwire.android.gui.views;
 import java.lang.ref.WeakReference;
 
 import android.content.DialogInterface;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 
@@ -32,9 +33,9 @@ import com.frostwire.util.Ref;
  * @author aldenml
  * 
  */
-public abstract class ClickAdapter<T> implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public abstract class ClickAdapter<T> implements View.OnClickListener, View.OnLongClickListener, View.OnKeyListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private final WeakReference<T> ownerRef;
+    protected final WeakReference<T> ownerRef;
 
     public ClickAdapter(T owner) {
         this.ownerRef = Ref.weak(owner);
@@ -51,6 +52,15 @@ public abstract class ClickAdapter<T> implements View.OnClickListener, View.OnLo
     public final boolean onLongClick(View v) {
         if (Ref.alive(ownerRef)) {
             return onLongClick(ownerRef.get(), v);
+        }
+
+        return false;
+    }
+
+    @Override
+    public final boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (Ref.alive(ownerRef)) {
+            return onKey(ownerRef.get(), v, keyCode, event);
         }
 
         return false;
@@ -74,6 +84,10 @@ public abstract class ClickAdapter<T> implements View.OnClickListener, View.OnLo
     }
 
     public boolean onLongClick(T owner, View v) {
+        return false;
+    }
+
+    public boolean onKey(T owner, View v, int keyCode, KeyEvent event) {
         return false;
     }
 
