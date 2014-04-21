@@ -37,6 +37,14 @@
     <style name="Widget.CompoundButton.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_button_selector</item>
     </style>
+    
+    <style name="Widget.Button" parent="android:Widget.Holo.Light.Button">
+		<item name="android:background">@android:drawable/btn_default</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
+        <item name="android:textColor">@android:color/primary_text_holo_light</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+    </style>
 
     <!-- styles for elements -->
 

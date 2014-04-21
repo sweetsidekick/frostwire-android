@@ -27,6 +27,7 @@
         <item name="android:listViewStyle">@style/TransparentListView</item>
         <item name="android:expandableListViewStyle">@style/TransparentExpandableListView</item>
         <item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item>
+        <item name="android:buttonStyle">@style/Widget.Button</item>
     </style>
 
 </resources>
