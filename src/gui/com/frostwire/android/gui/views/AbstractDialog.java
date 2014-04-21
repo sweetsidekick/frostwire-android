@@ -28,7 +28,9 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 
 import com.frostwire.util.Ref;
@@ -95,6 +97,15 @@ public abstract class AbstractDialog extends DialogFragment {
         if (Ref.alive(activityRef)) {
             dispatchDialogClick(activityRef.get(), tag, which);
         }
+    }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Dialog d = getDialog();
+        if (d != null) {
+            d.setCanceledOnTouchOutside(true);
+        }
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     protected abstract void initComponents(Dialog dlg, Bundle savedInstanceState);

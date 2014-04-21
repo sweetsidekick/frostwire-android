@@ -84,7 +84,7 @@ public final class MenuDialog extends AbstractDialog {
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
     }
-
+    
     @Override
     protected void performDialogClick(String tag, int which) {
         super.performDialogClick(id, which);
