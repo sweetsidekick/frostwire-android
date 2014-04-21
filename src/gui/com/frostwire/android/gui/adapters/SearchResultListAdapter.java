@@ -143,7 +143,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
          if (sr.getThumbnailUrl() != null) {
              ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
              Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
-             thumbLoader.displayImage(sr.getThumbnailUrl(), fileTypeIcon, defaultDrawable, ImageLoader.DOWNSCALE_HUGE_BITMAPS);
+             thumbLoader.displayImage(sr.getThumbnailUrl(), fileTypeIcon, defaultDrawable, 0);
          }
     }
     

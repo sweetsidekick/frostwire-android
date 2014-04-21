@@ -26,13 +26,11 @@
 
     <ImageView
         android:id="@+id/view_bittorrent_search_result_list_item_filetype_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center|center_vertical"
-        android:background="@drawable/browse_peer_audio_icon_selector_off"
         android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/browse_peer_audio_icon_selector_off" />
+         />
 
     <ImageView
         android:id="@+id/view_bittorrent_search_result_list_item_download_icon"
