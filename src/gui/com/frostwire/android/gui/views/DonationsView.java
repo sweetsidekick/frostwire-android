@@ -78,7 +78,7 @@ public class DonationsView extends LinearLayout {
 
     protected void onBTCDonationButtonClick() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("bitcoin:14F6JPXK2fR5b4gZp3134qLRGgYtvabMWL?amount=0.0052"));
+        intent.setData(Uri.parse("bitcoin:14F6JPXK2fR5b4gZp3134qLRGgYtvabMWL?amount=0.0104"));
         try {
             getContext().startActivity(intent);
         } catch (Throwable t) {
