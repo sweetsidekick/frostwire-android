@@ -59,6 +59,7 @@ import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.gui.fragments.TransfersFragment.TransferStatus;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
@@ -239,7 +240,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         //onResumeFragments();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            controller.showTransfers();
+            controller.showTransfers(TransferStatus.ALL);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -277,7 +278,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            controller.showTransfers();
+            controller.showTransfers(TransferStatus.COMPLETED);
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);

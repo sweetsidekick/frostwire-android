@@ -164,6 +164,21 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         return header;
     }
+    
+    public void setStatus(TransferStatus status) {
+        selectedStatus = status;
+        switch (selectedStatus) {
+        case ALL:
+            buttonSelectAll.performClick();
+            break;
+        case DOWNLOADING:
+            buttonSelectDownloading.performClick();
+            break;
+        case COMPLETED:
+            buttonSelectCompleted.performClick();
+            break;
+        }
+    }
 
     @Override
     protected void initComponents(View v) {
@@ -343,7 +358,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
     }
 
-    private static enum TransferStatus {
+    public static enum TransferStatus {
         ALL, DOWNLOADING, COMPLETED
     }
 
