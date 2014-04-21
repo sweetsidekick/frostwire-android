@@ -450,4 +450,5 @@
     <string name="transfers_context_resume_all_torrent_transfers">Resume all Torrent Transfers</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="please_check_connection_status_before_resuming_download">Please check the status of your internet connection before resuming.</string>
 </resources>

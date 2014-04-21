@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.dialogs.MenuDialog;
 import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
@@ -247,7 +248,11 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 TransferManager.instance().pauseTorrents();
                 break;
             case RESUME_MENU_DIALOG_ID:
-                TransferManager.instance().resumeResumableTransfers();
+                if (NetworkManager.instance().isDataUp()) {
+                    TransferManager.instance().resumeResumableTransfers();
+                } else {
+                    UIUtils.showShortMessage(getActivity(), R.string.please_check_connection_status_before_resuming_download);
+                }
                 break;
             }
             setupAdapter();
