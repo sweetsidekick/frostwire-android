@@ -209,7 +209,7 @@
     <!-- Transfers list end -->
 
     <style name="TransfersButton">
-        <item name="android:textColor">#ffbfcfdc</item>
+        <item name="android:textColor">@color/transfers_top_button_selector</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
@@ -219,7 +219,7 @@
 
     <style name="TransfersIndicator">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">#ffbfcfdc</item>
+        <item name="android:textColor">@color/app_light_gray_text</item>
     </style>
 
     <!-- Transfers indicator end -->
