@@ -21,9 +21,9 @@ import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.NumberPicker;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.views.NumberPicker;
 
 public class NumberPickerPreference extends DialogPreference {
     private NumberPicker mPicker;
@@ -60,14 +60,14 @@ public class NumberPickerPreference extends DialogPreference {
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
         mPicker = (NumberPicker) view.findViewById(R.id.pref_num_picker);
-        mPicker.setRange(mStartRange, mEndRange);
-        mPicker.setCurrent((int) getValue());
+        setRange(mStartRange, mEndRange);
+        mPicker.setValue((int) getValue());
     }
 
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
-            saveValue(mPicker.getCurrent());
+            saveValue(mPicker.getValue());
             break;
         default:
             break;
@@ -75,7 +75,8 @@ public class NumberPickerPreference extends DialogPreference {
     }
 
     public void setRange(int start, int end) {
-        mPicker.setRange(start, end);
+        mPicker.setMinValue(start);
+        mPicker.setMaxValue(end);
     }
 
     private void saveValue(long val) {

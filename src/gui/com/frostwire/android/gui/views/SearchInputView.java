@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
+import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -43,10 +44,11 @@ import com.frostwire.uxstats.UXStats;
  */
 public class SearchInputView extends LinearLayout {
 
+    private final TextInputClickListener textInputListener;
     private final SuggestionsAdapter adapter;
 
     private ClearableEditTextView textInput;
-    
+
     private View dummyFocusView;
 
     private OnSearchListener onSearchListener;
@@ -56,6 +58,7 @@ public class SearchInputView extends LinearLayout {
     public SearchInputView(Context context, AttributeSet set) {
         super(context, set);
 
+        this.textInputListener = new TextInputClickListener(this);
         this.adapter = new SuggestionsAdapter(context);
     }
 
@@ -92,29 +95,10 @@ public class SearchInputView extends LinearLayout {
         mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
 
         textInput = (ClearableEditTextView) findViewById(R.id.view_search_input_text_input);
-        textInput.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    startSearch(v);
-                    return true;
-                }
-                return false;
-            }
-        });
-        textInput.setOnActionListener(new OnActionListener() {
-            public void onTextChanged(View v, String str) {
-            }
 
-            public void onClear(View v) {
-                SearchInputView.this.onClear();
-            }
-        });
-        textInput.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startSearch(textInput);
-            }
-        });
+        textInput.setOnKeyListener(textInputListener);
+        textInput.setOnActionListener(textInputListener);
+        textInput.setOnItemClickListener(textInputListener);
         textInput.setAdapter(adapter);
 
         updateHint(mediaTypeId);
@@ -127,7 +111,7 @@ public class SearchInputView extends LinearLayout {
         initRadioButton(R.id.view_search_input_radio_torrents, Constants.FILE_TYPE_TORRENTS);
 
         setFileTypeCountersVisible(false);
-        
+
         dummyFocusView = findViewById(R.id.view_search_input_linearlayout_dummy);
     }
 
@@ -141,7 +125,7 @@ public class SearchInputView extends LinearLayout {
         if (query.length() > 0) {
             onSearch(query, mediaTypeId);
         }
-        
+
         dummyFocusView.requestFocus();
     }
 
@@ -174,15 +158,9 @@ public class SearchInputView extends LinearLayout {
         textInput.setHint(getContext().getString(R.string.search_label) + " " + getContext().getString(R.string.files));
     }
 
-    private RadioButton initRadioButton(int viewId, final byte fileType) {
+    private RadioButton initRadioButton(int viewId, byte fileType) {
         final RadioButton button = (RadioButton) findViewById(viewId);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                radioButtonFileTypeClick(fileType);
-                UXStats.instance().log(UXAction.SEARCH_RESULT_FILE_TYPE_CLICK);
-            }
-        });
+        button.setOnClickListener(new RadioButtonListener(this, fileType));
 
         if (mediaTypeId == fileType) {
             button.setChecked(true);
@@ -247,5 +225,56 @@ public class SearchInputView extends LinearLayout {
     public void setFileTypeCountersVisible(boolean fileTypeCountersVisible) {
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.view_search_input_radiogroup_file_type);
         radioGroup.setVisibility(fileTypeCountersVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private static final class TextInputClickListener extends ClickAdapter<SearchInputView> implements OnItemClickListener, OnActionListener {
+
+        public TextInputClickListener(SearchInputView owner) {
+            super(owner);
+        }
+
+        @Override
+        public boolean onKey(SearchInputView owner, View v, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                owner.startSearch(v);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (Ref.alive(ownerRef)) {
+                SearchInputView owner = ownerRef.get();
+                owner.startSearch(owner.textInput);
+            }
+        }
+
+        @Override
+        public void onTextChanged(View v, String str) {
+        }
+
+        @Override
+        public void onClear(View v) {
+            if (Ref.alive(ownerRef)) {
+                ownerRef.get().onClear();
+            }
+        }
+    }
+
+    private static final class RadioButtonListener extends ClickAdapter<SearchInputView> {
+
+        private final byte fileType;
+
+        public RadioButtonListener(SearchInputView owner, byte fileType) {
+            super(owner);
+            this.fileType = fileType;
+        }
+
+        @Override
+        public void onClick(SearchInputView owner, View v) {
+            owner.radioButtonFileTypeClick(fileType);
+            UXStats.instance().log(UXAction.SEARCH_RESULT_FILE_TYPE_CLICK);
+        }
     }
 }

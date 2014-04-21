@@ -29,4 +29,9 @@ public class MockSearchResult implements SearchResult {
     public License getLicense() {
         return License.UNKNOWN;
     }
+
+    @Override
+    public String getThumbnailUrl() {
+        return null;
+    }
 }
