@@ -112,7 +112,7 @@ public final class MainController {
     public void showTransfers(TransferStatus status) {
         if (!(activity.getCurrentFragment() instanceof TransfersFragment)) {
             TransfersFragment fragment = (TransfersFragment) activity.getFragmentByMenuId(R.id.menu_main_transfers);
-            fragment.setStatus(status);
+            fragment.selectStatusTab(status);
             switchFragment(R.id.menu_main_transfers);
         }
     }

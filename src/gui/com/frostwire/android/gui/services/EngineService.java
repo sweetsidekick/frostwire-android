@@ -167,7 +167,7 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        VuzeManager.getInstance().pause();
+        VuzeManager.getInstance().pause(disconnected);
 
         PeerManager.instance().clear();
 

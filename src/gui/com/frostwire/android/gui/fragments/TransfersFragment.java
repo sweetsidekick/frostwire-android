@@ -166,7 +166,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         return header;
     }
     
-    public void setStatus(TransferStatus status) {
+    public void selectStatusTab(TransferStatus status) {
         selectedStatus = status;
         switch (selectedStatus) {
         case ALL:
