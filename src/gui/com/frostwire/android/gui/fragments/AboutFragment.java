@@ -60,12 +60,6 @@ public class AboutFragment extends Fragment implements MainFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         biller = BillerFactory.getInstance(getActivity());
-        setupBitcoinDonateButton();
-        DonationSkus skus = BillerFactory.getDonationSkus();
-        setupDonateButton(getButton(R.id.fragment_about_button_donate1), skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
-        setupDonateButton(getButton(R.id.fragment_about_button_donate2), skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
-        setupDonateButton(getButton(R.id.fragment_about_button_donate3), skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
-        setupDonateButton(getButton(R.id.fragment_about_button_donate4), skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
     }
     
     @Override
@@ -78,6 +72,13 @@ public class AboutFragment extends Fragment implements MainFragment {
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        setupBitcoinDonateButton(view);
+        DonationSkus skus = BillerFactory.getDonationSkus();
+        setupDonateButton(getButton(view, R.id.fragment_about_button_donate1), skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
+        setupDonateButton(getButton(view, R.id.fragment_about_button_donate2), skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
+        setupDonateButton(getButton(view, R.id.fragment_about_button_donate3), skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
+        setupDonateButton(getButton(view, R.id.fragment_about_button_donate4), skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
 
         return view;
     }
@@ -108,20 +109,16 @@ public class AboutFragment extends Fragment implements MainFragment {
         }
     }
     
-    private Button getButton(int buttonId) {
-        return (Button) getActivity().findViewById(buttonId);
+    private Button getButton(View v, int buttonId) {
+        return (Button) v.findViewById(buttonId);
     }
 
     private void setupDonateButton(Button donateButton, String sku, String url, Biller biller) {
-        donateButton.setOnClickListener(new DonateButtonListener(biller, sku, url));
+        donateButton.setOnClickListener(new DonateButtonListener2(this, sku, url));
     }
     
-    private void onBTCDonationButtonClick() {
-        OfferUtils.onBTCDonationButtonClick(getActivity());
-    }
-    
-    private void setupBitcoinDonateButton() {
-        Button btc = (Button) getActivity().findViewById(R.id.fragment_about_button_bitcoin);
+    private void setupBitcoinDonateButton(View v) {
+        Button btc = (Button) v.findViewById(R.id.fragment_about_button_bitcoin);
         btc.setOnClickListener(new BitcoinButtonListener(this));
     }
     
@@ -133,7 +130,24 @@ public class AboutFragment extends Fragment implements MainFragment {
 
         @Override
         public void onClick(AboutFragment owner, View v) {
-            owner.onBTCDonationButtonClick();
+            OfferUtils.onBTCDonationButtonClick(owner.getActivity());
+        }
+    }
+    
+    private static final class DonateButtonListener2 extends ClickAdapter<AboutFragment> {
+
+        private final DonateButtonListener delegate;
+
+        public DonateButtonListener2(AboutFragment owner, String sku, String url) {
+            super(owner);
+            this.delegate = new DonateButtonListener(null, sku, url);
+        }
+
+        @Override
+        public void onClick(AboutFragment owner, View v) {
+            if (owner.biller != null) {
+                delegate.onClick(owner.biller, v);
+            }
         }
     }
 }
