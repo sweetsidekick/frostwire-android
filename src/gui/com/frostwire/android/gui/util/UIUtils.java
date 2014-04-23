@@ -338,11 +338,14 @@ public final class UIUtils {
         DonationsView donationsView = (DonationsView) activity.findViewById(resId);
 
         Biller biller = BillerFactory.getInstance(activity);
-        donationsView.setBiller(biller);
-        donationsView.setVisibility(View.GONE);
-
-        if (biller.isInAppBillingSupported()) {
-            UIUtils.supportFrostWire(donationsView);
+        
+        if (biller != null) {
+            donationsView.setBiller(biller);
+            donationsView.setVisibility(View.GONE);
+    
+            if (biller.isInAppBillingSupported()) {
+                UIUtils.supportFrostWire(donationsView);
+            }
         }
     }
 

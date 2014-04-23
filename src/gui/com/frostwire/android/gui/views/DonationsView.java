@@ -19,8 +19,6 @@
 package com.frostwire.android.gui.views;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +29,7 @@ import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
-import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.util.OfferUtils;
 
 /**
  * @author guabtron
@@ -71,24 +69,18 @@ public class DonationsView extends LinearLayout {
         setupDonateButton(R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW");
     }
 
-    private void setupBitcoinDonateButton() {
-        Button btc = (Button) findViewById(R.id.fragment_about_button_bitcoin);
-        btc.setOnClickListener(bitcoinButtonListener);
-    }
-
-    protected void onBTCDonationButtonClick() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("bitcoin:14F6JPXK2fR5b4gZp3134qLRGgYtvabMWL?amount=0.0104"));
-        try {
-            getContext().startActivity(intent);
-        } catch (Throwable t) {
-            UIUtils.showLongMessage(getContext(), R.string.you_need_a_bitcoin_wallet_app);
-        }
-    }
-
     private void setupDonateButton(int id, String sku, String url) {
         Button donate = (Button) findViewById(id);
         donate.setOnClickListener(new DonateButtonListener(biller, sku, url));
+    }
+    
+    private void onBTCDonationButtonClick() {
+        OfferUtils.onBTCDonationButtonClick(getContext());
+    }
+
+    private void setupBitcoinDonateButton() {
+        Button btc = (Button) findViewById(R.id.fragment_about_button_bitcoin);
+        btc.setOnClickListener(bitcoinButtonListener);
     }
 
     private static final class BitcoinButtonListener extends ClickAdapter<DonationsView> {

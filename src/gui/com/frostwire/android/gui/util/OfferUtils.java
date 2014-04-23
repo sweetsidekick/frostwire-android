@@ -19,9 +19,12 @@
 package com.frostwire.android.gui.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
+import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
@@ -80,6 +83,16 @@ public class OfferUtils {
                 LOG.error("can't show app wall", t);
                 t.printStackTrace();
             }
+        }
+    }
+    
+    public static void onBTCDonationButtonClick(Context context) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(Constants.BITCOIN_DONATION_URI));
+        try {
+            context.startActivity(intent);
+        } catch (Throwable t) {
+            UIUtils.showLongMessage(context, R.string.you_need_a_bitcoin_wallet_app);
         }
     }
 }

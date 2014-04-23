@@ -40,6 +40,8 @@ import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
+import com.frostwire.android.gui.util.OfferUtils;
+import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.DonateButtonListener;
 
 /**
@@ -58,11 +60,12 @@ public class AboutFragment extends Fragment implements MainFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         biller = BillerFactory.getInstance(getActivity());
+        setupBitcoinDonateButton();
         DonationSkus skus = BillerFactory.getDonationSkus();
-        setupDonateButton(getActivity(), R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
-        setupDonateButton(getActivity(), R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
-        setupDonateButton(getActivity(), R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
-        setupDonateButton(getActivity(), R.id.fragment_about_button_donate4, skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
+        setupDonateButton(getButton(R.id.fragment_about_button_donate1), skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH", biller);
+        setupDonateButton(getButton(R.id.fragment_about_button_donate2), skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox", biller);
+        setupDonateButton(getButton(R.id.fragment_about_button_donate3), skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl", biller);
+        setupDonateButton(getButton(R.id.fragment_about_button_donate4), skus.getSku(DonationSkuType.SKU_25_DOLLARS), "https://gumroad.com/l/XQW", biller);
     }
     
     @Override
@@ -104,9 +107,33 @@ public class AboutFragment extends Fragment implements MainFragment {
             return "";
         }
     }
+    
+    private Button getButton(int buttonId) {
+        return (Button) getActivity().findViewById(buttonId);
+    }
 
-    private void setupDonateButton(Activity activity, int id, String sku, String url, Biller biller) {
-        Button donate = (Button) activity.findViewById(id);
-        donate.setOnClickListener(new DonateButtonListener(biller, sku, url));
+    private void setupDonateButton(Button donateButton, String sku, String url, Biller biller) {
+        donateButton.setOnClickListener(new DonateButtonListener(biller, sku, url));
+    }
+    
+    private void onBTCDonationButtonClick() {
+        OfferUtils.onBTCDonationButtonClick(getActivity());
+    }
+    
+    private void setupBitcoinDonateButton() {
+        Button btc = (Button) getActivity().findViewById(R.id.fragment_about_button_bitcoin);
+        btc.setOnClickListener(new BitcoinButtonListener(this));
+    }
+    
+    private static final class BitcoinButtonListener extends ClickAdapter<AboutFragment> {
+
+        public BitcoinButtonListener(AboutFragment owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(AboutFragment owner, View v) {
+            owner.onBTCDonationButtonClick();
+        }
     }
 }
