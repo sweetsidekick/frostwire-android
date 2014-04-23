@@ -81,6 +81,7 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
     public static final String PREF_KEY_SEARCH_USE_MONOVA = "frostwire.prefs.search.use_monova";
     public static final String PREF_KEY_SEARCH_USE_YIFY = "frostwire.prefs.search.use_yify";
+    public static final String PREF_KEY_SEARCH_USE_TORRENTSFM = "frostwire.prefs.search.use_torrentsfm";
 
     public static final String PREF_KEY_SEARCH_PREFERENCE_CATEGORY = "frostwire.prefs.search.preference_category";
 
@@ -156,10 +157,9 @@ public final class Constants {
 
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
 
-    public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
-
     public static final int DEVICE_MAJOR_TYPE_DESKTOP = CommonConstants.DEVICE_MAJOR_TYPE_DESKTOP;
     public static final int DEVICE_MAJOR_TYPE_PHONE = CommonConstants.DEVICE_MAJOR_TYPE_PHONE;
     public static final int DEVICE_MAJOR_TYPE_TABLET = CommonConstants.DEVICE_MAJOR_TYPE_TABLET;
 
+    public static final String BITCOIN_DONATION_URI = "bitcoin:19NzEEocAWydbkm3xEEVu43Ho2JFEYf5Vr?amount=0.0104";
 }
