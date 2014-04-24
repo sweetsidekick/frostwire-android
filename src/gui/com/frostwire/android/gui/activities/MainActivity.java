@@ -523,7 +523,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
             if (fragment instanceof MainFragment) {
                 View header = ((MainFragment) fragment).getHeader(this);
-                if (header != null) {
+                if (placeholder != null && header != null) {
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
                     placeholder.addView(header, params);
