@@ -151,6 +151,10 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     @Override
     public void pause() {
     }
+    
+    @Override
+    public void enqueue() {
+    }
 
     @Override
     public void resume() {

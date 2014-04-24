@@ -37,7 +37,7 @@ import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
  * @author aldenml
  *
  */
-final class AzureusBittorrentDownload implements BittorrentDownload {
+public final class AzureusBittorrentDownload implements BittorrentDownload {
 
     private final TransferManager manager;
     private final VuzeDownloadManager downloadManager;
@@ -112,6 +112,12 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
             return Collections.emptyList();
         }
         return items;
+    }
+    
+    public void enqueue() {
+        if (isPausable()) {
+            downloadManager.enqueue();
+        }
     }
 
     public void pause() {

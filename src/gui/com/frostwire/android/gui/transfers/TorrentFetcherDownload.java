@@ -192,6 +192,13 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             delegate.pause();
         }
     }
+    
+    @Override
+    public void enqueue() {
+        if (delegate != null) {
+            delegate.enqueue();
+        }
+    }
 
     public void resume() {
         if (delegate != null) {

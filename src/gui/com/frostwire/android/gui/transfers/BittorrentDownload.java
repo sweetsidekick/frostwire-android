@@ -42,6 +42,8 @@ public interface BittorrentDownload extends DownloadTransfer {
     public boolean isPausable();
 
     public boolean isSeeding();
+    
+    public void enqueue();
 
     public void pause();
 
