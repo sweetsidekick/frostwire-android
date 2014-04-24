@@ -134,6 +134,7 @@
         android:contentDescription="@null"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+        android:scaleType="center"
         android:src="@drawable/contextmenu_icon" />
 
 </LinearLayout>
