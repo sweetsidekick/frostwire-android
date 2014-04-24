@@ -242,7 +242,6 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
         UXStats.instance().log(UXAction.SEARCH_STARTED_ENTER_KEY);
-
     }
 
     private void cancelSearch(View view) {

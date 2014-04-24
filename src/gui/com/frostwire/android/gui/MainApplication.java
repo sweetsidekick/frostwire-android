@@ -88,7 +88,13 @@ public class MainApplication extends Application {
     
     private String getDeviceId() {
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getDeviceId();
+        String deviceId=tm.getDeviceId();
+        
+        //probably it's a tablet... Sony's tablet returns null here.
+        if (deviceId == null) {
+            deviceId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID); 
+        }
+        return deviceId;
     }
 
     private Map<String, String> getVuzeMessages(Context context) {
