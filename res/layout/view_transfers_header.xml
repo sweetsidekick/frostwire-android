@@ -22,24 +22,37 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false" >
-
+    
     <ImageButton
         android:id="@+id/view_transfers_header_button_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:background="@null"
         android:contentDescription="@null"
         android:src="@drawable/transfers_menu_icon" />
 
-    <TextView
+	<ImageButton
+        android:id="@+id/view_transfers_header_button_add_transfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/view_transfers_header_button_menu"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/add_transfer" />
+
+	<TextView
         android:id="@+id/view_transfers_header_text_title"
         style="@style/MainFragmentSimpleHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:paddingRight="40dp"
+        android:layout_centerInParent="true"
         android:text="@null" />
-
 </RelativeLayout>
