@@ -445,7 +445,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void setSelectedItem(int id) {
         try {
             XmlMenuAdapter adapter = (XmlMenuAdapter) listMenu.getAdapter();
-            adapter.setSelectedItem(id);
+            if (adapter != null) {
+                adapter.setSelectedItem(id);
+            }
         } catch (Throwable e) { // protecting from weird android UI engine issues
             LOG.warn("Error setting slide menu item selected", e);
         }
