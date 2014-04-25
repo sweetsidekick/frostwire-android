@@ -103,29 +103,30 @@ public class PlayerNotifierView extends LinearLayout implements TimerObserver {
 
     @Override
     public void onTime() {
-        FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
-        String status = "";
-        
-        refreshPlayerStateIndicator();
+        CoreMediaPlayer mp = Engine.instance().getMediaPlayer();
+        if (mp != null) {
+            FileDescriptor fd = mp.getCurrentFD();
 
-        if (fd != null) {
-            status = fd.artist + " - " + fd.title;
-
-            if (getVisibility() == View.GONE) {
-                setVisibility(View.VISIBLE);
-                startAnimation(showNotifierAnimation);
+            String status = "";
+            refreshPlayerStateIndicator();
+            if (fd != null) {
+                status = fd.artist + " - " + fd.title;
+                if (getVisibility() == View.GONE) {
+                    setVisibility(View.VISIBLE);
+                    startAnimation(showNotifierAnimation);
+                }
+            } else {
+                if (getVisibility() == View.VISIBLE) {
+                    startAnimation(hideNotifierAnimation);
+                    setVisibility(View.GONE);
+                }
             }
-        } else {
-            if (getVisibility() == View.VISIBLE) {
-                startAnimation(hideNotifierAnimation);
-                setVisibility(View.GONE);
+            if (!status.equals(lastStatusShown)) {
+                statusText.setText(status);
+                lastStatusShown = status;
+                statusContainer.startAnimation(fromRightAnimation);
             }
-        }
 
-        if (!status.equals(lastStatusShown)) {
-            statusText.setText(status);
-            lastStatusShown = status;
-            statusContainer.startAnimation(fromRightAnimation);
         }
     }
 
