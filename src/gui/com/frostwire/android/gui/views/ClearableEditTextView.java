@@ -119,6 +119,13 @@ public class ClearableEditTextView extends RelativeLayout {
     public void setHint(String hint) {
         input.setHint(hint);
     }
+    
+    /** 
+     * This textview comes by default with a magnifier "search" icon.
+     * Use this after only after the view has been inflated. */
+    public void replaceSearchIconDrawable(int drawableId) {
+        imageSearch.setImageResource(drawableId);
+    }
 
     @Override
     protected void onFinishInflate() {
