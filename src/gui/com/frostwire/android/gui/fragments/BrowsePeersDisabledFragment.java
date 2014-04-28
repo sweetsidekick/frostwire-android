@@ -22,6 +22,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +73,11 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
                 onWifiEnableButtonClick();
             }
         });
-
+        
+        TextView disabledTextView = (TextView) view.findViewById(R.id.fragment_browse_peers_disabled_text_title);
+        disabledTextView.setText(Html.fromHtml(getString(R.string.wifi_sharing_disabled)));
+        disabledTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        
         return view;
     }
 

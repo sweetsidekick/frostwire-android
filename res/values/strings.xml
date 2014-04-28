@@ -430,7 +430,7 @@
     <string name="use_frostclick">Use FrostClick</string>
     <string name="delete_this_track">Delete this track</string>
     <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
-    <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.</string>
+    <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.\n\n&lt;a href=\"http://bit.ly/1tVReSt\"&gt;Learn more.&lt;/a&gt;</string>
     <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>    
     <string name="are_you_sure_wifi_sharing_off">Turning off Wi-Fi sharing will make all your locally shared files unavailable to other users on the nearby Wi-Fi network.</string>
     <string name="anonymous_usage_statistics">Anonymous Usage Statistics</string>
