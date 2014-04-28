@@ -126,7 +126,7 @@ public class ClearableEditTextView extends RelativeLayout {
     public void replaceSearchIconDrawable(int drawableId) {
         imageSearch.setImageResource(drawableId);
     }
-
+    
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();

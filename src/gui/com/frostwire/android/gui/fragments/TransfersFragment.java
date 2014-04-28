@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -216,6 +217,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
         
         addTransferUrlTextView = findView(v, R.id.fragment_transfers_add_transfer_text_input);
+        addTransferUrlTextView.setFocusable(true);
         addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
@@ -377,10 +379,15 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     public void startTransferFromURL() {
         String text = addTransferUrlTextView.getText();
         if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {
-            LOG.debug("startTransferFromURL("+text+")!");
             toggleAddTransferControls();
+            if (text.startsWith("http") && text.contains("youtube") || text.contains("soundcloud")) {
+                UIUtils.showLongMessage(getActivity(), R.string.cloud_downloads_coming);
+                //TODO!
+            } else if (text.startsWith("http")) { //magnets are automatically started if found on the clipboard by autoPasteMagnetOrURL
+                TransferManager.instance().downloadTorrent(text.trim());
+                UIUtils.showLongMessage(getActivity(), R.string.torrent_url_added);
+            }
             addTransferUrlTextView.setText("");
-            
         } else {
             UIUtils.showLongMessage(getActivity(), R.string.please_enter_valid_url);
         }
@@ -392,8 +399,16 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         if (primaryClip != null) {
             Item itemAt = primaryClip.getItemAt(0);
             String text = (String) itemAt.getText();
-            if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {      
-                addTransferUrlTextView.setText(text);
+            if (!StringUtils.isNullOrEmpty(text)) {
+                if (text.startsWith("http")) {
+                    addTransferUrlTextView.requestFocus();
+                    addTransferUrlTextView.setText(text.trim());
+                } else if (text.startsWith("magnet")) {
+                    addTransferUrlTextView.setText(text.trim());
+                    TransferManager.instance().downloadTorrent(text.trim());
+                    toggleAddTransferControls();
+                    UIUtils.showLongMessage(getActivity(), R.string.magnet_url_added);
+                }
             }
         }
     }
@@ -403,10 +418,26 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.action_button);
             addTransferUrlTextView.setVisibility(View.VISIBLE);
             autoPasteMagnetOrURL();
+            showAddTransfersKeyboard();
         } else {
             addTransferUrlTextView.setVisibility(View.GONE);
             addTransferUrlTextView.setText("");
+            hideAddTransfersKeyboard();
         }
+    }
+
+    private void showAddTransfersKeyboard() {
+        if (addTransferUrlTextView.getText().startsWith("http")) {
+            LOG.debug("addTransferUrlTextView is focusable? " + addTransferUrlTextView.isFocusable());
+            LOG.debug("addTransferUrlTextView is focused? " + addTransferUrlTextView.isFocused());
+            InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addTransferUrlTextView, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+    
+    private void hideAddTransfersKeyboard() {
+        InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(addTransferUrlTextView.getWindowToken(), 0);
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {
