@@ -374,17 +374,13 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         return false;
     }
     
-    public void toggleAddTransferControls() {
-        autoPasteMagnetOrURL();
-        toggleAddTransferControlsVisibility();
-    }
-
     public void startTransferFromURL() {
         String text = addTransferUrlTextView.getText();
         if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {
             LOG.debug("startTransferFromURL("+text+")!");
-            toggleAddTransferControlsVisibility();
+            toggleAddTransferControls();
             addTransferUrlTextView.setText("");
+            
         } else {
             UIUtils.showLongMessage(getActivity(), R.string.please_enter_valid_url);
         }
@@ -402,10 +398,11 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
     }
 
-    private void toggleAddTransferControlsVisibility() {
+    private void toggleAddTransferControls() {
         if (addTransferUrlTextView.getVisibility() == View.GONE) {
             addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.action_button);
             addTransferUrlTextView.setVisibility(View.VISIBLE);
+            autoPasteMagnetOrURL();
         } else {
             addTransferUrlTextView.setVisibility(View.GONE);
             addTransferUrlTextView.setText("");
