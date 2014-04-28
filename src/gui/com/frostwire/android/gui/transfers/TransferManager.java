@@ -312,7 +312,7 @@ public final class TransferManager implements VuzeKeys {
 
             if (u.getScheme().equalsIgnoreCase("file")) {
                 download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
-            } else if (u.getScheme().equalsIgnoreCase("http")) {
+            } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
                 download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
             } else {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
