@@ -217,7 +217,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
         
         addTransferUrlTextView = findView(v, R.id.fragment_transfers_add_transfer_text_input);
+        addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
         addTransferUrlTextView.setFocusable(true);
+        addTransferUrlTextView.setFocusableInTouchMode(true);
         addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
@@ -415,7 +417,6 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private void toggleAddTransferControls() {
         if (addTransferUrlTextView.getVisibility() == View.GONE) {
-            addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.action_button);
             addTransferUrlTextView.setVisibility(View.VISIBLE);
             autoPasteMagnetOrURL();
             showAddTransfersKeyboard();
