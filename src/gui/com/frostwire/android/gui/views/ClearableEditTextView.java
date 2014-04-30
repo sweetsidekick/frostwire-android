@@ -112,6 +112,22 @@ public class ClearableEditTextView extends RelativeLayout {
         input.selectAll();
     }
     
+    @Override
+    public void setFocusableInTouchMode(boolean focusableInTouchMode) {
+        super.setFocusable(focusableInTouchMode);
+        input.setFocusableInTouchMode(focusableInTouchMode);
+    }
+    
+    @Override
+    public void setFocusable(boolean focusable) {
+        super.setFocusable(focusable);
+        input.setFocusable(focusable);
+    }
+    
+    public AutoCompleteTextView getAutoCompleteTextView() {
+        return input;
+    }
+    
     public String getHint() {
         return (String) input.getHint();
     }

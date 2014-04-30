@@ -34,6 +34,7 @@
         android:layout_marginRight="6dp"
         android:layout_marginTop="6dp"
         android:visibility="gone"
+        android:focusableInTouchMode="true"
         frostwire:clearable_hint="@string/add_transfer_label" />
 
     <RadioGroup

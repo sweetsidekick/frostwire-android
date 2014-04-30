@@ -114,6 +114,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
+        
+        addTransferUrlTextView = findView(getView(), R.id.fragment_transfers_add_transfer_text_input);
+        addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
+        addTransferUrlTextView.setFocusable(true);
+        addTransferUrlTextView.setFocusableInTouchMode(true);
+        addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
     @Override
@@ -215,12 +221,6 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
-        
-        addTransferUrlTextView = findView(v, R.id.fragment_transfers_add_transfer_text_input);
-        addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
-        addTransferUrlTextView.setFocusable(true);
-        addTransferUrlTextView.setFocusableInTouchMode(true);
-        addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
     private void setupAdapter() {
@@ -384,7 +384,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             toggleAddTransferControls();
             if (text.startsWith("http") && text.contains("youtube") || text.contains("soundcloud")) {
                 UIUtils.showLongMessage(getActivity(), R.string.cloud_downloads_coming);
-                //TODO!
+                //TODO: Cloud downloads from URLS.
             } else if (text.startsWith("http")) { //magnets are automatically started if found on the clipboard by autoPasteMagnetOrURL
                 TransferManager.instance().downloadTorrent(text.trim());
                 UIUtils.showLongMessage(getActivity(), R.string.torrent_url_added);
@@ -403,7 +403,6 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             String text = (String) itemAt.getText();
             if (!StringUtils.isNullOrEmpty(text)) {
                 if (text.startsWith("http")) {
-                    addTransferUrlTextView.requestFocus();
                     addTransferUrlTextView.setText(text.trim());
                 } else if (text.startsWith("magnet")) {
                     addTransferUrlTextView.setText(text.trim());
@@ -428,11 +427,10 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     }
 
     private void showAddTransfersKeyboard() {
-        if (addTransferUrlTextView.getText().startsWith("http")) {
-            LOG.debug("addTransferUrlTextView is focusable? " + addTransferUrlTextView.isFocusable());
-            LOG.debug("addTransferUrlTextView is focused? " + addTransferUrlTextView.isFocused());
-            InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(addTransferUrlTextView, InputMethodManager.SHOW_IMPLICIT);
+        if (addTransferUrlTextView.getVisibility()==View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
+            addTransferUrlTextView.getAutoCompleteTextView().requestFocus();
+            InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getAutoCompleteTextView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_FORCED);
         }
     }
     
