@@ -274,7 +274,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 if (download.isPausable()) {
                     items.add(new PauseDownloadMenuAction(context, download));
                 } else if (download.isResumable()) {
-                    items.add(new ResumeDownloadMenuAction(context, download));
+                    items.add(new ResumeDownloadMenuAction(context, download, ResumeDownloadMenuAction.getMenuStringResId(download)));
                 }
             }
 

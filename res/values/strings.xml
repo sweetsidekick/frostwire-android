@@ -461,4 +461,5 @@
     <string name="magnet_url_added">Magnet URL added to transfers. (Magnets work best on Wi-Fi)</string>
     <string name="torrent_url_added">Torrent URL added to transfers.</string>
     <string name="cloud_downloads_coming">Sorry: Starting cloud downloads from here will be available on further updates.</string>
+    <string name="seed">Seed</string>
 </resources>
