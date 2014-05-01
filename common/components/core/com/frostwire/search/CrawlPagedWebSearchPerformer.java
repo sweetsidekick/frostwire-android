@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ package com.frostwire.search;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.frostwire.logging.Logger;
+import com.frostwire.search.domainalias.DomainAliasManager;
+import com.frostwire.util.OSUtils;
 
 /**
  * @author gubatron
@@ -30,24 +31,19 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class CrawlPagedWebSearchPerformer<T extends CrawlableSearchResult> extends PagedWebSearchPerformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CrawlPagedWebSearchPerformer.class);
+    private static final Logger LOG = Logger.getLogger(CrawlPagedWebSearchPerformer.class);
 
-    private static final int DEFAULT_NUM_CRAWLS = 6;
     private static final int DEFAULT_CRAWL_TIMEOUT = 10000; // 10 seconds
-    private static final int DEFAULT_MAGNET_DOWNLOAD_TIMEOUT = 4000; // 4 seconds
+    private static final int DEFAULT_MAGNET_DOWNLOAD_TIMEOUT = OSUtils.isAndroid() ? 4000 : 20000; // 4 seconds for android, 20 seconds for desktop
 
     private static CrawlCache cache = null;
     private static MagnetDownloader magnetDownloader = null;
 
     private int numCrawls;
 
-    public CrawlPagedWebSearchPerformer(long token, String keywords, int timeout, int pages, int numCrawls) {
-        super(token, keywords, timeout, pages);
+    public CrawlPagedWebSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages, int numCrawls) {
+        super(domainAliasManager, token, keywords, timeout, pages);
         this.numCrawls = numCrawls;
-    }
-
-    public CrawlPagedWebSearchPerformer(long token, String keywords, int timeout, int pages) {
-        this(token, keywords, timeout, pages, DEFAULT_NUM_CRAWLS);
     }
 
     public static void setCache(CrawlCache cache) {

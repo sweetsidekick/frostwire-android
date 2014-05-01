@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * This class is a workaround to an old android issue #6191:
@@ -31,8 +30,6 @@ import android.util.Log;
  * 
  */
 public class ViewFlipper extends android.widget.ViewFlipper {
-
-    private static final String TAG = "FW.ViewFlipper";
 
     public ViewFlipper(Context context) {
         super(context);
@@ -47,8 +44,7 @@ public class ViewFlipper extends android.widget.ViewFlipper {
         try {
             super.onDetachedFromWindow();
         } catch (IllegalArgumentException e) {
-            Log.d(TAG, "Ignoring IllegalArgumentException");
-
+            // ignoring IllegalArgumentException
             // calling this to trigger updateRunning()
             stopFlipping();
         }

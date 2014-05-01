@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -37,9 +38,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -52,16 +53,19 @@ import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.dialogs.MenuDialog;
+import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.services.NativeAndroidPlayer;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
-import com.frostwire.android.gui.views.ContextMenuDialog;
-import com.frostwire.android.gui.views.ContextMenuItem;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.MediaPlayerControl;
 import com.frostwire.android.util.StringUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -69,7 +73,7 @@ import com.frostwire.android.util.StringUtils;
  * @author aldenml
  * 
  */
-public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl {
+public class MediaPlayerActivity extends AbstractActivity implements MediaPlayerControl, OnDialogClickListener {
 
     private static final String TAG = "FW.MediaPlayerActivity";
 
@@ -82,14 +86,14 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     private ImageButton buttonMenu;
 
     public MediaPlayerActivity() {
-        super(R.layout.activity_mediaplayer, false, 0);
+        super(R.layout.activity_mediaplayer);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     String action = intent.getAction();
-                    
+
                     if (action != null) {
                         if (action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED)) {
                             try {
@@ -97,10 +101,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                             } catch (Throwable e) {
                                 // ignore
                             }
-                        } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) ||
-                                   action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+                        } else if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                             try {
-                                initComponents();
+                                initComponents(null);
                             } catch (Throwable e) {
                                 // ignore
                             }
@@ -121,12 +124,13 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.togglePause();
+                UIUtils.showShortMessage(this, getString(R.string.player_paused_press_and_hold_to_stop));
             } catch (Throwable e) {
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
     }
-    
+
     public void resume() {
         if (mediaPlayer != null) {
             try {
@@ -204,18 +208,24 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     public boolean canStop() {
         return true;
     }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
+    }
 
     @Override
-    protected void initComponents() {
-
-        if (!(Engine.instance().getMediaPlayer() instanceof NativeAndroidPlayer)) {
+    protected void initComponents(Bundle savedInstanceState) {
+        CoreMediaPlayer mp = Engine.instance().getMediaPlayer();
+        if (mp == null || !(mp instanceof NativeAndroidPlayer)) {
             Log.e(TAG, "Only media playerControl of type NativeAndroidPlayer is supported");
             return;
         }
 
         initGestures();
 
-        mediaPlayer = (NativeAndroidPlayer) Engine.instance().getMediaPlayer();
+        mediaPlayer = (NativeAndroidPlayer) mp;
         mediaFD = mediaPlayer.getCurrentFD();
 
         if (mediaPlayer != null) {
@@ -286,7 +296,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (mediaFD == null) {
             return;
         }
-        
+
         TextView artist = findView(R.id.activity_mediaplayer_artist);
         if (!StringUtils.isNullOrEmpty(mediaFD.artist, true)) {
             artist.setText(mediaFD.artist);
@@ -307,22 +317,24 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     }
 
     private void initGestures() {
-        LinearLayout lowestLayout = findView(R.id.RootView);
-        lowestLayout.setOnTouchListener(new AbstractSwipeDetector() {
+        findView(R.id.activity_mediaplayer_artwork).setOnTouchListener(new AbstractSwipeDetector() {
             @Override
             public void onLeftToRightSwipe() {
                 playPrevious();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             }
 
             @Override
             public void onRightToLeftSwipe() {
                 playNext();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             }
 
             @Override
             public boolean onMultiTouchEvent(View v, MotionEvent event) {
                 pause();
                 sync();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_PAUSE_RESUME);
                 return true;
             }
         });
@@ -336,9 +348,9 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
-        
+
     }
-    
+
     private void playPrevious() {
         if (mediaPlayer != null) {
             try {
@@ -347,9 +359,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 Log.w(TAG, String.format("Review logic: %s", e.getMessage()));
             }
         }
-        
-    }
 
+    }
 
     @Override
     protected void onResume() {
@@ -419,15 +430,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
             sync();
         }
     };
-    
+
     private View.OnLongClickListener stopListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             stop();
+            UXStats.instance().log(UXAction.PLAYER_STOP_ON_LONG_CLICK);
             return true;
         }
     };
-    
 
     private View.OnClickListener previousListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -461,6 +472,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     // case there WON'T BE onStartTrackingTouch/onStopTrackingTouch notifications,
     // we will simply apply the updated position without suspending regular updates.
     private OnSeekBarChangeListener seekListener = new OnSeekBarChangeListener() {
+        private long lastProgressChanged = 0;
+        
         public void onStartTrackingTouch(SeekBar bar) {
             sync();
 
@@ -476,17 +489,22 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
             if (!fromuser) {
-                // We're not interested in programmatically generated changes to
+                // We're not interested in programatically generated changes to
                 // the progress bar's position.
                 return;
             }
-
-            if (playerControl != null) {
-                long duration = playerControl.getDuration();
-                long newposition = (duration * progress) / 1000L;
-                playerControl.seekTo((int) newposition);
-                if (currentTime != null)
-                    currentTime.setText(stringForTime((int) newposition));
+            
+            long now = System.currentTimeMillis();
+            if (now - lastProgressChanged > 1000) {
+                if (playerControl != null) {
+                    long duration = playerControl.getDuration();
+                    long newposition = (duration * progress) / 1000L;
+                    playerControl.seekTo((int) newposition);
+                    if (currentTime != null) {
+                        currentTime.setText(stringForTime((int) newposition));
+                    }
+                }
+                lastProgressChanged = now;
             }
         }
 
@@ -628,6 +646,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         } else {
             buttonPause.setImageResource(R.drawable.player_play_icon);
         }
+        buttonPause.setBackgroundDrawable(null);
     }
 
     private void doPauseResume() {
@@ -643,81 +662,60 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         updatePausePlay();
     }
+    
+    private static final String MEDIA_PLAYER_DIALOG_ID = "media_player_dialog";
+    
+    private static final int SHARE_MENU_DIALOG_ID = 0;
+    private static final int STOP_MENU_DIALOG_ID = 1;
+    private static final int DELETE_MENU_DIALOG_ID = 2;
+    
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (mediaFD == null) {
+            return;
+        }
+        
+        if (tag.equals(MEDIA_PLAYER_DIALOG_ID)) {
+            switch (which) {
+            case SHARE_MENU_DIALOG_ID:
+                mediaFD.shared = !mediaFD.shared;
+                Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
+                UXStats.instance().log(mediaFD.shared ? UXAction.PLAYER_MENU_SHARE : UXAction.PLAYER_MENU_UNSHARE);
+                break;
+            case STOP_MENU_DIALOG_ID:
+                stop();
+                UXStats.instance().log(UXAction.PLAYER_MENU_STOP);
+                break;
+            case DELETE_MENU_DIALOG_ID:
+                UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        onDeleteCurrentTrack();
+                        UXStats.instance().log(UXAction.PLAYER_MENU_DELETE_TRACK);
+                    }
+                });
+                break;
+            }
+        }
+    }
 
     private void showPlayerContextMenu() {
         if (mediaFD == null) {
             return;
         }
 
-        ContextMenuItem share = new ContextMenuItem() {
+        MenuItem share = new MenuItem(SHARE_MENU_DIALOG_ID, mediaFD.shared ? R.string.unshare : R.string.share, mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share);
+        MenuItem stop = new MenuItem(STOP_MENU_DIALOG_ID, R.string.stop, R.drawable.contextmenu_icon_stop);
+        MenuItem delete = new MenuItem(DELETE_MENU_DIALOG_ID, R.string.delete_this_track, R.drawable.contextmenu_icon_trash);
 
-            @Override
-            public void onClick() {
-                mediaFD.shared = !mediaFD.shared;
-                Librarian.instance().updateSharedStates(mediaFD.fileType, Arrays.asList(mediaFD));
-            }
-
-            @Override
-            public int getTextResId() {
-                return mediaFD.shared ? R.string.unshare : R.string.share;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return mediaFD.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share;
-            }
-        };
-
-        ContextMenuItem stop = new ContextMenuItem() {
-            @Override
-            public void onClick() {
-                stop();
-            }
-
-            @Override
-            public int getTextResId() {
-                return R.string.stop;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return R.drawable.contextmenu_icon_stop;
-            }
-        };
-        
-        ContextMenuItem delete = new ContextMenuItem() {
-
-            @Override
-            public int getTextResId() {
-                return R.string.delete_this_track;
-            }
-
-            @Override
-            public int getDrawableResId() {
-                return R.drawable.contextmenu_icon_trash;
-            }
-
-            @Override
-            public void onClick() {
-                UIUtils.showYesNoDialog(MediaPlayerActivity.this, R.string.are_you_sure_delete_current_track, R.string.application_label, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        onDeleteCurrentTrack();
-                    }
-                });
-            }
-            
-        };
-
-        ContextMenuDialog menu = new ContextMenuDialog();
-        menu.setItems(Arrays.asList(share, stop, delete));
-        menu.show(getSupportFragmentManager(), "playerContextMenu");
+        MenuDialog dlg = MenuDialog.newInstance(MEDIA_PLAYER_DIALOG_ID, Arrays.asList(share, stop, delete));
+        dlg.show(getFragmentManager());
     }
-    
+
     private void onDeleteCurrentTrack() {
         final FileDescriptor currentFD = mediaPlayer.getCurrentFD();
         PlaylistItem currentPlaylistItem = new PlaylistItem(currentFD);
         Playlist playlist = mediaPlayer.getPlaylist();
-        
+
         AsyncTask<Void, Void, Void> asyncDeleteTrackTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -725,7 +723,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return null;
             }
         };
-        
+
         if (playlist != null) {
             PlaylistItem nextItem = playlist.getNextItem();
             if (nextItem == null || nextItem.equals(currentPlaylistItem)) {
@@ -734,8 +732,8 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 return;
             }
         }
-        
+
         mediaPlayer.playNext();
-        asyncDeleteTrackTask.execute();        
+        asyncDeleteTrackTask.execute();
     }
 }

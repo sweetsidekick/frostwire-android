@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package com.frostwire.search.mininova;
 
 import java.util.List;
 
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
 import com.frostwire.util.JsonUtils;
 
@@ -30,13 +31,13 @@ import com.frostwire.util.JsonUtils;
  */
 public class MininovaSearchPerformer extends TorrentJsonSearchPerformer<MininovaVuzeItem, MininovaVuzeSearchResult> {
 
-    public MininovaSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1);
+    public MininovaSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout) {
+        super(domainAliasManager, token, keywords, timeout, 1);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://www.mininova.org/vuze.php?search=" + encodedKeywords;
+        return "http://" + getDomainNameToUse() + "/vuze.php?search=" + encodedKeywords;
     }
 
     @Override

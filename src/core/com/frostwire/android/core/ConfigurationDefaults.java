@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.frostwire.android.util.ByteUtils;
-
 import android.os.Environment;
+
+import com.frostwire.util.ByteUtils;
 
 /**
  * 
@@ -54,6 +54,7 @@ final class ConfigurationDefaults {
 
     private void load() {
         defaultValues.put(Constants.PREF_KEY_CORE_UUID, ByteUtils.uuidToByteArray(UUID.randomUUID()));
+        defaultValues.put(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION,"");//won't know until I see it.
 
         defaultValues.put(Constants.PREF_KEY_GUI_NICKNAME, "FrostNewbie");
         defaultValues.put(Constants.PREF_KEY_GUI_VIBRATE_ON_FINISHED_DOWNLOAD, true);
@@ -66,9 +67,9 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD, true);
         defaultValues.put(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, true);
-        defaultValues.put(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM, true);
-        //defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
+        defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST,true);
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, true);
+        defaultValues.put(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);
@@ -78,18 +79,21 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX, 100); // no ultra big torrents here
         defaultValues.put(Constants.PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT, 256);
 
-        //defaultValues.put(Constants.PREF_KEY_SEARCH_USE_BTJUNKIE, true);
-        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_CLEARBITS, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_EXTRATORRENT, true);
-        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_ISOHUNT, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MININOVA, true);
-        //defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TPB, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_VERTOR, true);
-        //defaultValues.put(Constants.PREF_KEY_SEARCH_USE_KAT, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_YOUTUBE, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_SOUNDCLOUD, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_ARCHIVEORG, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_FROSTCLICK, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_BITSNOOP, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TORLOCK, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_EZTV, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_APPIA, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TPB, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MONOVA, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_YIFY, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TORRENTSFM, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, false);

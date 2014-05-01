@@ -62,6 +62,7 @@ public class MenuBuilder implements DialogInterface.OnClickListener, DialogInter
 
         dialog = builder.create();
         dialog.setOnCancelListener(this);
+        dialog.setCanceledOnTouchOutside(true);
 
         return dialog;
     }

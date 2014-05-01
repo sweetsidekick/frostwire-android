@@ -19,10 +19,7 @@
 package com.frostwire.android.gui.util;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +33,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.InputType;
@@ -71,8 +67,6 @@ import com.frostwire.uxstats.UXStats;
 public final class UIUtils {
 
     private static final String TAG = "FW.UIUtils";
-
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm:ss aa", Locale.US);
 
     /**
      * Localizable Number Format constant for the current default locale.
@@ -131,14 +125,6 @@ public final class UIUtils {
      */
     public static Dialog showYesNoDialog(Context context, int messageId, int titleId, OnClickListener positiveListener) {
         return showYesNoDialog(context, messageId, titleId, positiveListener, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    public static void showYesNoDialog(Context context, int iconId, int messageId, int titleId, OnClickListener positiveListener) {
-        showYesNoDialog(context, iconId, messageId, titleId, positiveListener, new OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -230,19 +216,7 @@ public final class UIUtils {
         }, text);
     }
 
-    public static String formatDate(Date date) {
-        return DATE_FORMAT.format(date);
-    }
-
     public static String getBytesInHuman(float size) {
-        int i = 0;
-        for (i = 0; size > 1024; i++) {
-            size /= 1024f;
-        }
-        return String.format(Locale.US, "%.2f %s", size, BYTE_UNITS[i]);
-    }
-
-    public static String getBytesInHuman(double size) {
         int i = 0;
         for (i = 0; size > 1024; i++) {
             size /= 1024f;
@@ -364,11 +338,14 @@ public final class UIUtils {
         DonationsView donationsView = (DonationsView) activity.findViewById(resId);
 
         Biller biller = BillerFactory.getInstance(activity);
-        donationsView.setBiller(biller);
-        donationsView.setVisibility(View.GONE);
-
-        if (biller.isInAppBillingSupported()) {
-            UIUtils.supportFrostWire(donationsView);
+        
+        if (biller != null) {
+            donationsView.setBiller(biller);
+            donationsView.setVisibility(View.GONE);
+    
+            if (biller.isInAppBillingSupported()) {
+                UIUtils.supportFrostWire(donationsView);
+            }
         }
     }
 
@@ -418,28 +395,11 @@ public final class UIUtils {
      * @param activity
      */
     public static void showTransfersOnDownloadStart(Context context) {
-        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
+        if (ConfigurationManager.instance().showTransfersOnDownloadStart() && context != null) {
             Intent i = new Intent(context, MainActivity.class);
             i.setAction(Constants.ACTION_SHOW_TRANSFERS);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             context.startActivity(i);
         }
-    }
-
-    public static void picassoRecycle(Drawable d) {
-        try {
-            if (d != null && d.getClass().getName().contains("PicassoDrawable")) {
-                Field f = d.getClass().getDeclaredField("image");
-                f.setAccessible(true);
-                BitmapDrawable bd = (BitmapDrawable) f.get(d);
-                f.set(d, new DummyBitmapDrawable());
-                bd.getBitmap().recycle();
-            }
-        } catch (Throwable e) {
-            // not really necessary (specially for newer devices)
-        }
-    }
-
-    private static final class DummyBitmapDrawable extends BitmapDrawable {
     }
 }

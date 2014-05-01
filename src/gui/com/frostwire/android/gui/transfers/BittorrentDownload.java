@@ -42,12 +42,12 @@ public interface BittorrentDownload extends DownloadTransfer {
     public boolean isPausable();
 
     public boolean isSeeding();
+    
+    public void enqueue();
 
     public void pause();
 
     public void resume();
-
-    public void cancel(boolean deleteData, boolean async);
     
     public List<? extends BittorrentDownloadItem> getBittorrentItems();
 }

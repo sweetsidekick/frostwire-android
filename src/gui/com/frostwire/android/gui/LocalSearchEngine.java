@@ -64,18 +64,31 @@ public final class LocalSearchEngine {
 
     private boolean searchFinished;
 
-    private static LocalSearchEngine instance = new LocalSearchEngine();
+    private String androidId;
 
+    private static LocalSearchEngine instance;
+
+    public synchronized static void create(String androidId) {
+        if (instance != null) {
+            return;
+        }
+        instance = new LocalSearchEngine(androidId);
+    }
+    
     public static LocalSearchEngine instance() {
         return instance;
     }
 
-    private LocalSearchEngine() {
+    private LocalSearchEngine(String androidId) {
         CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache());
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new ManagerListener());
-
         this.MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
+        this.androidId = androidId;
+    }
+    
+    public String getAndroidId() {
+        return androidId;
     }
 
     public void registerListener(SearchManagerListener listener) {
@@ -87,7 +100,7 @@ public final class LocalSearchEngine {
             return;
         }
 
-        manager.stop(currentSearchToken);
+        manager.stop();
 
         currentSearchToken = Math.abs(System.nanoTime());
         currentSearchTokens = tokenize(query);
@@ -102,7 +115,7 @@ public final class LocalSearchEngine {
     }
 
     public void cancelSearch() {
-        manager.stop(currentSearchToken);
+        manager.stop();
         currentSearchToken = 0;
         currentSearchTokens = null;
         searchFinished = true;
@@ -149,14 +162,23 @@ public final class LocalSearchEngine {
         try {
             for (SearchResult sr : results) {
                 if (sr instanceof TorrentSearchResult) {
-                    if (((TorrentSearchResult) sr).getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
+                    if (((TorrentSearchResult) sr).getSeeds() == TorrentSearchResult.UNKOWN_SEEDS) {
+                        long creationTime = ((TorrentSearchResult) sr).getCreationTime();
+                        long age = System.currentTimeMillis() - creationTime;
+                        if (age > 31536000000l) {
+                            continue;
+                        }
+                    } else if (((TorrentSearchResult) sr).getSeeds() < MIN_SEEDS_TORRENT_RESULT) {
                         continue;
                     }
                 }
 
                 if (sr instanceof CrawledSearchResult) {
                     if (sr instanceof YouTubeCrawledSearchResult) {
-                        list.add(sr);
+                        // special case for flv files
+                        if (!((YouTubeCrawledSearchResult) sr).getFilename().endsWith(".flv")) {
+                            list.add(sr);
+                        }
                     } else if (filter(new LinkedList<String>(currentSearchTokens), sr)) {
                         list.add(sr);
                     }
@@ -186,7 +208,7 @@ public final class LocalSearchEngine {
 
         String str = sanitize(sb.toString());
         str = normalize(str);
-        
+
         Iterator<String> it = tokens.iterator();
         while (it.hasNext()) {
             String token = it.next();

@@ -26,14 +26,11 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.frostwire.search.SearchListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.clearbits.ClearBitsSearchPerformer;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
-import com.frostwire.search.isohunt.ISOHuntSearchPerformer;
 import com.frostwire.search.kat.KATSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.torrent.TorrentSearchPerformer;
 import com.frostwire.search.torrent.TorrentSearchResult;
-import com.frostwire.search.vertor.VertorSearchPerformer;
 import com.frostwire.torrent.TOTorrent;
 import com.frostwire.torrent.TOTorrentException;
 import com.frostwire.torrent.TorrentUtils;
@@ -47,38 +44,20 @@ import com.frostwire.torrent.TorrentUtils;
 public class StressTorrentTest extends TestCase {
 
     @LargeTest
-    public void testDownloadFromClearBits() {
-        ClearBitsSearchPerformer p = new ClearBitsSearchPerformer(System.currentTimeMillis(), "mp3", 10000);
-        testDownloadFrom(p);
-    }
-
-    @LargeTest
     public void testDownloadFromExtratorrent() {
-        ExtratorrentSearchPerformer p = new ExtratorrentSearchPerformer(System.currentTimeMillis(), "public domain", 10000);
-        testDownloadFrom(p);
-    }
-
-    @LargeTest
-    public void testDownloadFromISOHunt() {
-        ISOHuntSearchPerformer p = new ISOHuntSearchPerformer(System.currentTimeMillis(), "public domain", 10000);
+        ExtratorrentSearchPerformer p = new ExtratorrentSearchPerformer(null, System.currentTimeMillis(), "public domain", 10000);
         testDownloadFrom(p);
     }
 
     @LargeTest
     public void testDownloadFromKAT() {
-        KATSearchPerformer p = new KATSearchPerformer(System.currentTimeMillis(), "public domain", 10000);
+        KATSearchPerformer p = new KATSearchPerformer(null, System.currentTimeMillis(), "public domain", 10000);
         testDownloadFrom(p);
     }
 
     @LargeTest
     public void testDownloadFromMininova() {
-        MininovaSearchPerformer p = new MininovaSearchPerformer(System.currentTimeMillis(), "mp3", 10000);
-        testDownloadFrom(p);
-    }
-
-    @LargeTest
-    public void testDownloadFromVertor() {
-        VertorSearchPerformer p = new VertorSearchPerformer(System.currentTimeMillis(), "public domain", 10000);
+        MininovaSearchPerformer p = new MininovaSearchPerformer(null, System.currentTimeMillis(), "mp3", 10000);
         testDownloadFrom(p);
     }
 

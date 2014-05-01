@@ -112,7 +112,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
             //Suggestion: maybe look at the Content-length HTTP header for a size
             //if sound cloud sends this when the download starts and update the
             //link.getSize() value with this number as it becomes known.
-            return delegate.getStatusCode() == HttpDownload.STATUS_COMPLETE;
+            return delegate.getStatusCode() == HttpDownload.STATUS_COMPLETE || delegate.getStatusCode() == HttpDownload.STATUS_ERROR;
         } else {
             return false;
         }
@@ -168,9 +168,9 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
         if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
 
             byte[] coverArtBytes = downloadCoverArt();
-            Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
 
             if (coverArtBytes != null && coverArtBytes.length > 0) {
+//                Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
                 File finalFile = getFinalFile(tempFile, Constants.FILE_TYPE_AUDIO);
                 if (setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), finalFile.getAbsolutePath())) {
                     tempFile.delete();
@@ -206,9 +206,9 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
             ID3Wrapper newId3Wrapper = new ID3Wrapper(new ID3v1Tag(), new ID3v23Tag());
 
-            newId3Wrapper.setAlbum(sr.getUsername() + ": " + sr.getTitle() + " via SoundCloud.com");
+            newId3Wrapper.setAlbum(sr.getUsername() + ": " + sr.getDisplayName() + " via SoundCloud.com");
             newId3Wrapper.setArtist(sr.getUsername());
-            newId3Wrapper.setTitle(sr.getTitle());
+            newId3Wrapper.setTitle(sr.getDisplayName());
             newId3Wrapper.setAlbumImage(imageBytes, "image/jpg");
             newId3Wrapper.setUrl(sr.getDetailsUrl());
             newId3Wrapper.getId3v2Tag().setPadding(true);

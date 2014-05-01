@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,7 @@ public class HttpClientFactory {
     private HttpClientFactory() {
     }
 
-    public static HttpClient newInstance(HttpClientType type) {
-        switch (type) {
-        case Apache:
-            throw new UnsupportedOperationException();
-        case PureJava:
-            return new FWHttpClient();
-        default:
-            throw new IllegalArgumentException();
-        }
-    }
-
-    public static HttpClient newDefaultInstance() {
-        return newInstance(HttpClientType.PureJava);
+    public static HttpClient newInstance() {
+        return new JdkHttpClient();
     }
 }

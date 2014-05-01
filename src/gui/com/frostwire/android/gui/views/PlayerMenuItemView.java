@@ -1,4 +1,5 @@
 /*
+
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
  * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
  *
@@ -41,6 +42,7 @@ public class PlayerMenuItemView extends LinearLayout {
     private ImageView imageThumbnail;
     private TextView textTitle;
     private TextView textArtist;
+    private TextView textPlayingNow;
 
     public PlayerMenuItemView(Context context, AttributeSet set) {
         super(context, set);
@@ -59,6 +61,7 @@ public class PlayerMenuItemView extends LinearLayout {
         imageThumbnail = (ImageView) findViewById(R.id.view_player_menu_item_thumbnail);
         textTitle = (TextView) findViewById(R.id.view_player_menu_item_title);
         textArtist = (TextView) findViewById(R.id.view_player_menu_item_artist);
+        textPlayingNow = (TextView) findViewById(R.id.view_player_menu_item_playingnow);
 
         refresh();
     }
@@ -82,6 +85,7 @@ public class PlayerMenuItemView extends LinearLayout {
                 if (getVisibility() == View.VISIBLE) {
                     textTitle.setText(fd.title);
                     textArtist.setText(fd.artist);
+                    textPlayingNow.setText((Engine.instance().getMediaPlayer().isPlaying() ? getResources().getString(R.string.playing) : getResources().getString(R.string.paused)));
                     setArtwork(fd);
                 }
             } else {
@@ -91,6 +95,7 @@ public class PlayerMenuItemView extends LinearLayout {
                     imageThumbnail.setImageBitmap(null);
                     textTitle.setText("");
                     textArtist.setText("");
+                    textPlayingNow.setText("");
                 }
             }
         }

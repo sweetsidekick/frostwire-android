@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public class SetAsRingtoneMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public SetAsRingtoneMenuAction(Context context, FileDescriptor fd) {
-        super(context, R.drawable.contextmenu_icon_picture, R.string.set_as_ringtone);
+        super(context, R.drawable.contextmenu_icon_ringtone, R.string.set_as_ringtone);
 
         this.fd = fd;
     }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import com.frostwire.search.StreamableSearchResult;
  */
 public class ArchiveorgCrawledStreamableSearchResult extends ArchiveorgCrawledSearchResult implements StreamableSearchResult {
 
-    public ArchiveorgCrawledStreamableSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
-        super(sr, filename, file);
+    public ArchiveorgCrawledStreamableSearchResult(ArchiveorgSearchResult sr, ArchiveorgFile file) {
+        super(sr, file);
     }
 
     @Override

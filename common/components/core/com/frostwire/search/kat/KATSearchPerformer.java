@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package com.frostwire.search.kat;
 
 import java.util.List;
 
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.torrent.TorrentJsonSearchPerformer;
 import com.frostwire.util.JsonUtils;
 
@@ -31,13 +32,13 @@ import com.frostwire.util.JsonUtils;
  */
 public class KATSearchPerformer extends TorrentJsonSearchPerformer<KATItem, KATSearchResult> {
 
-    public KATSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1);
+    public KATSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout) {
+        super(domainAliasManager, token, keywords, timeout, 1);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://www.kat.ph/json.php?q=" + encodedKeywords;
+        return "http://"+getDomainNameToUse()+"/json.php?q=" + encodedKeywords;
     }
 
     @Override

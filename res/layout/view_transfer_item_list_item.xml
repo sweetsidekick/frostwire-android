@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ffe9eef3"
+        android:background="@drawable/browse_peer_list_item_download_button_background"
         android:gravity="center|center_vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
@@ -70,9 +70,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/view_transfer_item_list_item_title"
-            android:layout_margin="2sp"
+            android:layout_margin="4sp"
             android:indeterminateOnly="false"
-            android:progressDrawable="@drawable/progress_horizontal" />
+            android:progressDrawable="@drawable/transfer_progress_horizontal" />
 
         <TextView
             android:id="@+id/view_transfer_item_list_item_size"

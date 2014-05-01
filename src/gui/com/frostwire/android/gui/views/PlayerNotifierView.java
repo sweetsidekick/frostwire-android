@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ import com.frostwire.android.gui.services.Engine;
  * @author aldenml
  *
  */
-public class PlayerNotifierView extends LinearLayout implements Refreshable {
+public class PlayerNotifierView extends LinearLayout implements TimerObserver {
 
     private String lastStatusShown;
     private TextView statusText;
@@ -92,41 +93,40 @@ public class PlayerNotifierView extends LinearLayout implements Refreshable {
         if (mediaPlayer == null) {
             return;
         }
-
-        TextView isPlayingText = (TextView) findViewById(R.id.view_player_notifier_playing);
-        
+        ImageView notifierIconImageView = (ImageView) findViewById(R.id.view_player_notifier_icon);
+        int notifierResourceId = R.drawable.playernotifier_icon_play; 
         if (!mediaPlayer.isPlaying()) {
-            isPlayingText.setText(R.string.paused);
-        } else {
-            isPlayingText.setText(R.string.playing);
+            notifierResourceId = R.drawable.playernotifier_icon_pause;
         }
+        notifierIconImageView.setBackgroundResource(notifierResourceId);
     }
 
     @Override
-    public void refresh() {
-        FileDescriptor fd = Engine.instance().getMediaPlayer().getCurrentFD();
-        String status = "";
-        
-        refreshPlayerStateIndicator();
+    public void onTime() {
+        CoreMediaPlayer mp = Engine.instance().getMediaPlayer();
+        if (mp != null) {
+            FileDescriptor fd = mp.getCurrentFD();
 
-        if (fd != null) {
-            status = fd.artist + " - " + fd.title;
-
-            if (getVisibility() == View.GONE) {
-                setVisibility(View.VISIBLE);
-                startAnimation(showNotifierAnimation);
+            String status = "";
+            refreshPlayerStateIndicator();
+            if (fd != null) {
+                status = fd.artist + " - " + fd.title;
+                if (getVisibility() == View.GONE) {
+                    setVisibility(View.VISIBLE);
+                    startAnimation(showNotifierAnimation);
+                }
+            } else {
+                if (getVisibility() == View.VISIBLE) {
+                    startAnimation(hideNotifierAnimation);
+                    setVisibility(View.GONE);
+                }
             }
-        } else {
-            if (getVisibility() == View.VISIBLE) {
-                startAnimation(hideNotifierAnimation);
-                setVisibility(View.GONE);
+            if (!status.equals(lastStatusShown)) {
+                statusText.setText(status);
+                lastStatusShown = status;
+                statusContainer.startAnimation(fromRightAnimation);
             }
-        }
 
-        if (!status.equals(lastStatusShown)) {
-            statusText.setText(status);
-            lastStatusShown = status;
-            statusContainer.startAnimation(fromRightAnimation);
         }
     }
 

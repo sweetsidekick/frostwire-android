@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -39,10 +40,10 @@ import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.PeerListAdapter;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.AbstractListFragment;
-import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.android.gui.views.AbstractFragment;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * 
@@ -50,13 +51,14 @@ import com.frostwire.gui.upnp.UPnPManager;
  * @author aldenml
  * 
  */
-public class BrowsePeersFragment extends AbstractListFragment implements Refreshable, MainFragment {
+public class BrowsePeersFragment extends AbstractFragment implements TimerObserver, MainFragment {
 
     private PeerListAdapter adapter;
 
     private View header;
-
-    private int refreshUPnPCount;
+    private ListView list;
+    
+    private TimerSubscription subscription;
 
     public BrowsePeersFragment() {
         super(R.layout.fragment_browse_peers);
@@ -69,40 +71,32 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         setRetainInstance(true);
 
         if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
-            UPnPManager.instance().resume();
+            PeerManager.instance().start();
         }
 
         setupAdapter();
-
-        if (getActivity() instanceof AbstractActivity) {
-            ((AbstractActivity) getActivity()).addRefreshable(this);
-        }
+    }
+    
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        subscription = TimerService.subscribe(this, 2);
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        
+        subscription.unsubscribe();
     }
 
     @Override
-    public void refresh() {
+    public void onTime() {
         List<Peer> peers = PeerManager.instance().getPeers();
         adapter.updateList(peers);
-        
-        refreshUPnPCount++;
-
-        if (refreshUPnPCount % 10 == 0) {
-            if (Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
-                UPnPManager.instance().refreshRemoteDevices();
-            }
-        }
     }
 
-    @Override
-    public void dismissDialogs() {
-        super.dismissDialogs();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
-        }
-    }
-
-    
     @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -110,20 +104,24 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         TextView title = (TextView) header.findViewById(R.id.view_browse_peers_header_text_title);
         title.setText(R.string.wifi_sharing);
-        
+
         ImageButton wifiSharingOffButton = (ImageButton) header.findViewById(R.id.view_browse_peers_header_image_button_toggle_wifi_sharing);
         wifiSharingOffButton.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 onWifiSharingOffButtonClicked();
             }
         });
-        
 
         return header;
     }
     
+    @Override
+    protected void initComponents(View rootView) {
+        list = findView(rootView, R.id.fragment_browse_peers_list);
+    }
+
     private void onWifiSharingOffButtonClicked() {
         UIUtils.showYesNoDialog(getActivity(), R.string.are_you_sure_wifi_sharing_off, R.string.are_you_sure, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -132,13 +130,13 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
         });
 
     }
-    
+
     private void turnOffWifiSharingAndRefresh() {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, false);
-                UPnPManager.instance().pause();
+                PeerManager.instance().stop();
                 return null;
             }
 
@@ -151,10 +149,10 @@ public class BrowsePeersFragment extends AbstractListFragment implements Refresh
 
         task.execute();
     }
-    
+
     private void setupAdapter() {
         adapter = new PeerListAdapter(BrowsePeersFragment.this.getActivity(), new ArrayList<Peer>());
-        setListAdapter(adapter);
-        refresh();
+        list.setAdapter(adapter);
+        onTime();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,5 +82,10 @@ public class TorrentCrawledSearchResult extends AbstractCrawledSearchResult impl
     @Override
     public String getHash() {
         return sr.getHash();
+    }
+    
+    @Override
+    public String getThumbnailUrl() {
+        return sr.getThumbnailUrl();
     }
 }

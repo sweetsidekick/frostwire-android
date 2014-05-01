@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 <com.frostwire.android.gui.views.FWScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff6f6f6"
+    android:background="@color/app_background"
     android:fillViewport="true"
     android:scrollbars="vertical" >
 
@@ -38,6 +38,15 @@
             android:text="@string/dummy_title"
             android:textSize="25sp"
             android:textStyle="bold" />
+        
+        <Button
+            android:id="@+id/fragment_about_button_bitcoin"
+            style="@style/BlueButton"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/donate_in_btc" />
 
         <LinearLayout
             android:layout_width="match_parent"

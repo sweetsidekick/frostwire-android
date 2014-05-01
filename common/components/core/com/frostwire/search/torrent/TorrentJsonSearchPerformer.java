@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.SearchResult;
 
 /**
@@ -32,10 +33,12 @@ import com.frostwire.search.SearchResult;
  */
 public abstract class TorrentJsonSearchPerformer<T extends ComparableTorrentJsonItem, R extends TorrentSearchResult> extends TorrentSearchPerformer {
 
+    private static final int DEFAULT_NUM_CRAWLS = 10;
+
     private final Comparator<T> itemComparator;
 
-    public TorrentJsonSearchPerformer(long token, String keywords, int timeout, int pages) {
-        super(token, keywords, timeout, pages);
+    public TorrentJsonSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages, int numCrawls) {
+        super(domainAliasManager, token, keywords, timeout, pages, numCrawls);
         
         this.itemComparator = new Comparator<T>() {
             @Override
@@ -43,6 +46,10 @@ public abstract class TorrentJsonSearchPerformer<T extends ComparableTorrentJson
                 return b.getSeeds() - a.getSeeds();
             }
         };
+    }
+
+    public TorrentJsonSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages) {
+        this(domainAliasManager, token, keywords, timeout, pages, DEFAULT_NUM_CRAWLS);
     }
 
     @Override

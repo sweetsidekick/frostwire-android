@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 package com.frostwire.search;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.frostwire.search.domainalias.DomainAliasManager;
 
 /**
  * @author gubatron
@@ -31,12 +31,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PagedWebSearchPerformer.class);
-
     private final int pages;
 
-    public PagedWebSearchPerformer(long token, String keywords, int timeout, int pages) {
-        super(token, keywords, timeout);
+    public PagedWebSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages) {
+        super(domainAliasManager, token, keywords, timeout);
         this.pages = pages;
     }
 
@@ -48,14 +46,21 @@ public abstract class PagedWebSearchPerformer extends WebSearchPerformer {
     }
 
     protected List<? extends SearchResult> searchPage(int page) {
-        String url = getUrl(page, getEncodedKeywords());
-        String text = fetch(url);
-        if (text != null) {
-            return searchPage(text);
-        } else {
-            LOG.warn("Page content empty for url: " + url);
-            return Collections.emptyList();
+        List<? extends SearchResult> result = Collections.emptyList();
+        try {
+            String url = getUrl(page, getEncodedKeywords());
+            String text = fetchSearchPage(url);
+            if (text != null) {
+                result = searchPage(text);
+            }
+        } catch (Throwable e) {
+            checkAccesibleDomains();
         }
+        return result;
+    }
+
+    protected String fetchSearchPage(String url) throws IOException {
+        return fetch(url);
     }
 
     protected abstract String getUrl(int page, String encodedKeywords);

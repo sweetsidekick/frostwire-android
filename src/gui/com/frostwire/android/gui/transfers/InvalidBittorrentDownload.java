@@ -151,6 +151,10 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     @Override
     public void pause() {
     }
+    
+    @Override
+    public void enqueue() {
+    }
 
     @Override
     public void resume() {
@@ -163,10 +167,6 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
 
     @Override
     public void cancel(boolean deleteData) {
-    }
-
-    @Override
-    public void cancel(boolean deleteData, boolean async) {
     }
 
     @Override

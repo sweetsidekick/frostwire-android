@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 package com.frostwire.search;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -31,5 +30,5 @@ public interface RegexSearchPerformer<T extends SearchResult> extends SearchPerf
 
     public Pattern getPattern();
 
-    public T fromMatcher(Matcher matcher);
+    public T fromMatcher(SearchMatcher matcher);
 }

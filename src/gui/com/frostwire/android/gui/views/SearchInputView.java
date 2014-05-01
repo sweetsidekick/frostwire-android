@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,24 +21,19 @@ package com.frostwire.android.gui.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.MediaType;
-import com.frostwire.android.gui.util.OSUtils;
-import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
+import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -49,19 +44,21 @@ import com.frostwire.uxstats.UXStats;
  */
 public class SearchInputView extends LinearLayout {
 
+    private final TextInputClickListener textInputListener;
     private final SuggestionsAdapter adapter;
 
-    private ImageButton buttonMediaType;
     private ClearableEditTextView textInput;
+
+    private View dummyFocusView;
 
     private OnSearchListener onSearchListener;
 
     private int mediaTypeId;
-    private PopupWindow popup;
 
     public SearchInputView(Context context, AttributeSet set) {
         super(context, set);
 
+        this.textInputListener = new TextInputClickListener(this);
         this.adapter = new SuggestionsAdapter(context);
     }
 
@@ -97,146 +94,25 @@ public class SearchInputView extends LinearLayout {
 
         mediaTypeId = ConfigurationManager.instance().getLastMediaTypeFilter();
 
-        buttonMediaType = (ImageButton) findViewById(R.id.view_search_input_button_mediatype);
-        buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
-        buttonMediaType.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonMediaType_onClick(v);
-            }
-        });
-
         textInput = (ClearableEditTextView) findViewById(R.id.view_search_input_text_input);
-        textInput.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    startSearch(v);
-                    return true;
-                }
-                return false;
-            }
-        });
-        textInput.setOnActionListener(new OnActionListener() {
-            public void onTextChanged(View v, String str) {
-            }
 
-            public void onClear(View v) {
-                SearchInputView.this.onClear();
-            }
-        });
-        textInput.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startSearch(textInput);
-            }
-        });
+        textInput.setOnKeyListener(textInputListener);
+        textInput.setOnActionListener(textInputListener);
+        textInput.setOnItemClickListener(textInputListener);
         textInput.setAdapter(adapter);
 
         updateHint(mediaTypeId);
-    }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        hidePopup();
-        super.onDetachedFromWindow();
-    }
+        initRadioButton(R.id.view_search_input_radio_audio, Constants.FILE_TYPE_AUDIO);
+        initRadioButton(R.id.view_search_input_radio_videos, Constants.FILE_TYPE_VIDEOS);
+        initRadioButton(R.id.view_search_input_radio_pictures, Constants.FILE_TYPE_PICTURES);
+        initRadioButton(R.id.view_search_input_radio_applications, Constants.FILE_TYPE_APPLICATIONS);
+        initRadioButton(R.id.view_search_input_radio_documents, Constants.FILE_TYPE_DOCUMENTS);
+        initRadioButton(R.id.view_search_input_radio_torrents, Constants.FILE_TYPE_TORRENTS);
 
-    protected void buttonMediaType_onClick(View v) {
-        showPopup(v);
-        UXStats.instance().log(UXAction.SEARCH_RESULT_FILE_TYPE_CLICK);
-    }
+        setFileTypeCountersVisible(false);
 
-    private void showPopup(View v) {
-        hideSoftInput(v);
-        popup = newPopup();
-        popup.showAsDropDown(this, 20, 0);
-    }
-
-    private void hidePopup() {
-        if (popup != null) {
-            popup.dismiss();
-            popup = null;
-        }
-    }
-
-    private PopupWindow newPopup() {
-        final PopupWindow popup = new PopupWindow(getContext());
-
-        popup.setTouchInterceptor(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                    hidePopup();
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-        popup.setTouchable(true);
-        popup.setFocusable(true);
-        popup.setOutsideTouchable(true);
-        popup.setAnimationStyle(R.style.Animations_GrowFromLeft);
-
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.view_searchinput_menu_mediatype, null);
-        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-        view.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT));
-
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_audio, MediaType.getAudioMediaType().getId());
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_video, MediaType.getVideoMediaType().getId());
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_images, MediaType.getImageMediaType().getId());
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_applications, MediaType.getApplicationsMediaType().getId());
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_documents, MediaType.getDocumentMediaType().getId());
-        setupMenuItem(view, R.id.view_searchinput_menu_mediatype_torrents, MediaType.getTorrentMediaType().getId());
-
-        popup.setContentView(view);
-        popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchinput_menu_mediatype_background));
-        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-
-        if (OSUtils.isKindleFire()) {
-            popup.setHeight(450);
-        }
-
-        return popup;
-    }
-
-    private void setupMenuItem(View view, int id, final int mediaTypeId) {
-        final Button b = (Button) view.findViewById(id);
-        b.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateHint(mediaTypeId);
-                onMediaTypeSelected(mediaTypeId);
-
-                buttonMediaType.setImageResource(getDrawableId(mediaTypeId));
-                SearchInputView.this.mediaTypeId = mediaTypeId;
-                ConfigurationManager.instance().setLastMediaTypeFilter(mediaTypeId);
-
-                hidePopup();
-            }
-        });
-    }
-
-    private int getDrawableId(int mediaTypeId) {
-        if (MediaType.getApplicationsMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_application_icon_selector_on;
-        } else if (MediaType.getAudioMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_audio_icon_selector_on;
-        } else if (MediaType.getDocumentMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_document_icon_selector_on;
-        } else if (MediaType.getImageMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_picture_icon_selector_on;
-        } else if (MediaType.getVideoMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_video_icon_selector_on;
-        } else if (MediaType.getTorrentMediaType().getId() == mediaTypeId) {
-            return R.drawable.browse_peer_torrent_icon_selector_on;
-        } else {
-            return R.drawable.question_mark;
-        }
+        dummyFocusView = findViewById(R.id.view_search_input_linearlayout_dummy);
     }
 
     private void startSearch(View v) {
@@ -249,6 +125,8 @@ public class SearchInputView extends LinearLayout {
         if (query.length() > 0) {
             onSearch(query, mediaTypeId);
         }
+
+        dummyFocusView.requestFocus();
     }
 
     private void onSearch(String query, int mediaTypeId) {
@@ -277,9 +155,26 @@ public class SearchInputView extends LinearLayout {
     }
 
     private void updateHint(int fileType) {
-        String hint = getContext().getString(R.string.search_label) + " ";
-        hint += UIUtils.getFileTypeAsString(getContext().getResources(), (byte) fileType);
-        textInput.setHint(hint);
+        textInput.setHint(getContext().getString(R.string.search_label) + " " + getContext().getString(R.string.files));
+    }
+
+    private RadioButton initRadioButton(int viewId, byte fileType) {
+        final RadioButton button = (RadioButton) findViewById(viewId);
+        button.setOnClickListener(new RadioButtonListener(this, fileType));
+
+        if (mediaTypeId == fileType) {
+            button.setChecked(true);
+        }
+
+        return button;
+    }
+
+    private void radioButtonFileTypeClick(final int mediaTypeId) {
+        updateHint(mediaTypeId);
+        onMediaTypeSelected(mediaTypeId);
+
+        SearchInputView.this.mediaTypeId = mediaTypeId;
+        ConfigurationManager.instance().setLastMediaTypeFilter(mediaTypeId);
     }
 
     public static interface OnSearchListener {
@@ -289,5 +184,97 @@ public class SearchInputView extends LinearLayout {
         public void onMediaTypeSelected(View v, int mediaTypeId);
 
         public void onClear(View v);
+    }
+
+    public void updateFileTypeCounter(byte fileType, int numFiles) {
+        try {
+            int radioId = Constants.FILE_TYPE_AUDIO;
+            switch (fileType) {
+            case Constants.FILE_TYPE_AUDIO:
+                radioId = R.id.view_search_input_radio_audio;
+                break;
+            case Constants.FILE_TYPE_VIDEOS:
+                radioId = R.id.view_search_input_radio_videos;
+                break;
+            case Constants.FILE_TYPE_PICTURES:
+                radioId = R.id.view_search_input_radio_pictures;
+                break;
+            case Constants.FILE_TYPE_APPLICATIONS:
+                radioId = R.id.view_search_input_radio_applications;
+                break;
+            case Constants.FILE_TYPE_DOCUMENTS:
+                radioId = R.id.view_search_input_radio_documents;
+                break;
+            case Constants.FILE_TYPE_TORRENTS:
+                radioId = R.id.view_search_input_radio_torrents;
+                break;
+
+            }
+
+            RadioButton rButton = (RadioButton) findViewById(radioId);
+            String numFilesStr = String.valueOf(numFiles);
+            if (numFiles > 9999) {
+                numFilesStr = "+1k";
+            }
+            rButton.setText(numFilesStr);
+        } catch (Throwable e) {
+            // NPE
+        }
+    }
+
+    public void setFileTypeCountersVisible(boolean fileTypeCountersVisible) {
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.view_search_input_radiogroup_file_type);
+        radioGroup.setVisibility(fileTypeCountersVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private static final class TextInputClickListener extends ClickAdapter<SearchInputView> implements OnItemClickListener, OnActionListener {
+
+        public TextInputClickListener(SearchInputView owner) {
+            super(owner);
+        }
+
+        @Override
+        public boolean onKey(SearchInputView owner, View v, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                owner.startSearch(v);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (Ref.alive(ownerRef)) {
+                SearchInputView owner = ownerRef.get();
+                owner.startSearch(owner.textInput);
+            }
+        }
+
+        @Override
+        public void onTextChanged(View v, String str) {
+        }
+
+        @Override
+        public void onClear(View v) {
+            if (Ref.alive(ownerRef)) {
+                ownerRef.get().onClear();
+            }
+        }
+    }
+
+    private static final class RadioButtonListener extends ClickAdapter<SearchInputView> {
+
+        private final byte fileType;
+
+        public RadioButtonListener(SearchInputView owner, byte fileType) {
+            super(owner);
+            this.fileType = fileType;
+        }
+
+        @Override
+        public void onClick(SearchInputView owner, View v) {
+            owner.radioButtonFileTypeClick(fileType);
+            UXStats.instance().log(UXAction.SEARCH_RESULT_FILE_TYPE_CLICK);
+        }
     }
 }

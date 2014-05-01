@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="15" />
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
@@ -16,10 +16,4 @@
         <uses-library android:name="android.test.runner" />
     </application>
 
-    <!-- 
-    <activity
-            android:name="com.frostwire.android.tests.MemLeakTest"
-            android:label="@string/application_label" >
-    </activity>
-     -->
 </manifest>

@@ -31,7 +31,7 @@ import org.apache.commons.io.IOUtils;
 import android.util.Log;
 
 import com.frostwire.android.BuildConfig;
-import com.frostwire.android.util.ByteUtils;
+import com.frostwire.util.ByteUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 // Taken from

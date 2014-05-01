@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,13 +37,11 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.httpserver.HttpServerManager;
-import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.concurrent.ThreadPool;
+import com.frostwire.vuze.VuzeManager;
 
 /**
  * @author gubatron
@@ -61,8 +59,6 @@ public class EngineService extends Service implements IEngineService {
     private final ThreadPool threadPool;
 
     // services in background
-    private final HttpServerManager httpServerManager;
-    private final DesktopUploadManager desktopUploadManager;
 
     private final CoreMediaPlayer mediaPlayer;
 
@@ -74,9 +70,6 @@ public class EngineService extends Service implements IEngineService {
         binder = new EngineServiceBinder();
 
         threadPool = new ThreadPool("Engine");
-
-        httpServerManager = new HttpServerManager(threadPool);
-        desktopUploadManager = new DesktopUploadManager(this, httpServerManager.getSessionManager());
 
         mediaPlayer = new NativeAndroidPlayer(this);
 
@@ -153,16 +146,15 @@ public class EngineService extends Service implements IEngineService {
 
         Librarian.instance().invalidateCountCache();
 
-        AzureusManager.create(this);
         //TransferManager.instance().loadTorrents();
 
-        if (AzureusManager.isCreated()) { // safe move
-            AzureusManager.instance().resume();
-        }
-
-        httpServerManager.start(NetworkManager.instance().getListeningPort());
+        VuzeManager.getInstance().resume();
 
         PeerManager.instance().clear();
+
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP)) {
+            PeerManager.instance().start();
+        }
 
         state = STATE_STARTED;
         Log.v(TAG, "Engine started");
@@ -175,11 +167,11 @@ public class EngineService extends Service implements IEngineService {
 
         state = STATE_STOPPING;
 
-        httpServerManager.stop();
-
-        AzureusManager.instance().pause();
+        VuzeManager.getInstance().pause(disconnected);
 
         PeerManager.instance().clear();
+
+        PeerManager.instance().stop();
 
         state = disconnected ? STATE_DISCONNECTED : STATE_STOPPED;
         Log.v(TAG, "Engine stopped, state: " + state);
@@ -205,17 +197,12 @@ public class EngineService extends Service implements IEngineService {
             Notification notification = new Notification(R.drawable.frostwire_notification, getString(R.string.download_finished), System.currentTimeMillis());
             notification.vibrate = ConfigurationManager.instance().vibrateOnFinishedDownload() ? VENEZUELAN_VIBE : null;
             notification.number = TransferManager.instance().getDownloadsToReview();
-            notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_AUTO_CANCEL;
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
             notification.setLatestEventInfo(context, getString(R.string.download_finished), displayName, pi);
             manager.notify(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED, notification);
         } catch (Throwable e) {
             Log.e(TAG, "Error creating notification for download finished", e);
         }
-    }
-
-    @Override
-    public DesktopUploadManager getDesktopUploadManager() {
-        return desktopUploadManager;
     }
 
     private void registerPreferencesChangeListener() {

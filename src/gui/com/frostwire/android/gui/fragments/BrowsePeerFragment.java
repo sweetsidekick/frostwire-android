@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,47 +20,50 @@ package com.frostwire.android.gui.fragments;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.gui.Finger;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.adapters.FileListAdapter;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListFragment;
+import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
+import com.frostwire.localpeer.Finger;
+import com.frostwire.logging.Logger;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
  * @author aldenml
  * 
  */
-public class BrowsePeerFragment extends AbstractListFragment implements LoaderCallbacks<Object>, MainFragment {
+public class BrowsePeerFragment extends AbstractFragment implements LoaderCallbacks<Object>, MainFragment {
 
-    private static final Logger log = LoggerFactory.getLogger(BrowsePeerFragment.class);
+    private static final Logger log = Logger.getLogger(BrowsePeerFragment.class);
+
     private static final int LOADER_FINGER_ID = 0;
     private static final int LOADER_FILES_ID = 1;
 
@@ -74,6 +77,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     private RadioButton buttonDocuments;
 
     private BrowsePeerSearchBarView filesBar;
+    private ListView list;
 
     private FileListAdapter adapter;
 
@@ -188,15 +192,6 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
     }
 
     @Override
-    public void dismissDialogs() {
-        super.dismissDialogs();
-
-        if (adapter != null) {
-            adapter.dismissDialogs();
-        }
-    }
-
-    @Override
     public View getHeader(Activity activity) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         header = inflater.inflate(R.layout.view_browse_peer_header, null);
@@ -241,6 +236,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 }
             }
         });
+        
+        list = findView(v, R.id.fragment_browse_peer_list);
     }
 
     protected void onRefreshShared(byte fileType) {
@@ -251,21 +248,27 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
                 switch (fileType) {
                 case Constants.FILE_TYPE_APPLICATIONS:
                     numShared = finger.numSharedApplicationFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_APPLICATIONS);
                     break;
                 case Constants.FILE_TYPE_AUDIO:
                     numShared = finger.numSharedAudioFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_AUDIO);
                     break;
                 case Constants.FILE_TYPE_DOCUMENTS:
                     numShared = finger.numSharedDocumentFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_DOCUMENTS);
                     break;
                 case Constants.FILE_TYPE_PICTURES:
                     numShared = finger.numSharedPictureFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_PICTURES);
                     break;
                 case Constants.FILE_TYPE_RINGTONES:
                     numShared = finger.numSharedRingtoneFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_RINGTONES);
                     break;
                 case Constants.FILE_TYPE_VIDEOS:
                     numShared = finger.numSharedVideoFiles;
+                    UXStats.instance().log(UXAction.LIBRARY_BROWSE_FILE_TYPE_VIDEOS);
                     break;
                 }
 
@@ -288,7 +291,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             if (uuid != null) {
                 try {
-                    peer = PeerManager.instance().findPeerByUUID(uuid);
+                    peer = PeerManager.instance().findPeerByKey(uuid);
                     local = peer.isLocalHost();
                 } catch (Throwable e) {
                     peer = null; // weird situation reported by a strange bug.
@@ -309,7 +312,7 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
             if (uuid != null) {
                 try {
-                    peer = PeerManager.instance().findPeerByUUID(uuid);
+                    peer = PeerManager.instance().findPeerByKey(uuid);
                     local = peer.isLocalHost();
                 } catch (Throwable e) {
                     peer = null; // weird situation reported by a strange bug.
@@ -341,8 +344,8 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
 
     private void browseFilesButtonClick(byte fileType) {
         if (adapter != null) {
+            saveListViewVisiblePosition(adapter.getFileType());
             adapter.clear();
-            //adapter = null;
         }
 
         filesBar.clearCheckAll();
@@ -450,12 +453,26 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             unshared.setText(String.valueOf(numTotal - numShared));
 
             updateFileVisiblityIndicatorsAlpha();
+
+            if (fileType == Constants.FILE_TYPE_AUDIO) {
+                buttonAudio.setChecked(true);
+            }
         }
 
         if (adapter != null) {
             onRefreshShared(adapter.getFileType());
         } else {
             browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
+        }
+
+        restoreListViewScrollPosition();
+    }
+
+    private void restoreListViewScrollPosition() {
+        if (adapter != null) {
+            int savedListViewVisiblePosition = getSavedListViewVisiblePosition(adapter.getFileType());
+            savedListViewVisiblePosition = (savedListViewVisiblePosition > 0) ? savedListViewVisiblePosition + 1 : 0;
+            list.setSelection(savedListViewVisiblePosition);
         }
     }
 
@@ -472,15 +489,24 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
 
-            adapter = new FileListAdapter(getListView().getContext(), items, peer, local, fileType) {
+            adapter = new FileListAdapter(list.getContext(), items, peer, local, fileType) {
+
+                @Override
                 protected void onItemChecked(View v, boolean isChecked) {
                     if (!isChecked) {
                         filesBar.clearCheckAll();
                     }
                 }
+
+                @Override
+                protected void onLocalPlay() {
+                    if (adapter != null) {
+                        saveListViewVisiblePosition(adapter.getFileType());
+                    }
+                }
             };
             adapter.setCheckboxesVisibility(true);
-            setListAdapter(adapter);
+            list.setAdapter(adapter);
         } catch (Throwable e) {
             log.error("Error updating files in list", e);
         }
@@ -520,12 +546,20 @@ public class BrowsePeerFragment extends AbstractListFragment implements LoaderCa
         }
     }
 
+    private void saveListViewVisiblePosition(byte fileType) {
+        int firstVisiblePosition = list.getFirstVisiblePosition();
+        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType, firstVisiblePosition);
+    }
+
+    private int getSavedListViewVisiblePosition(byte fileType) {
+        //will return 0 if not found.
+        return ConfigurationManager.instance().getInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + fileType);
+    }
+
     private final class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || 
-                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) ||
-                intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }

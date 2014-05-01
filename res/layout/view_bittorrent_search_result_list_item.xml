@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,19 +26,17 @@
 
     <ImageView
         android:id="@+id/view_bittorrent_search_result_list_item_filetype_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center|center_vertical"
-        android:background="@null"
         android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/browse_peer_audio_icon_selector_off" />
+         />
 
     <ImageView
         android:id="@+id/view_bittorrent_search_result_list_item_download_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ffe9eef3"
+        android:background="@drawable/browse_peer_list_item_download_button_background"
         android:contentDescription="@null"
         android:paddingBottom="21dp"
         android:paddingLeft="9dp"
@@ -61,12 +59,22 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:text="@string/dummy_title" />
+        
+        <TextView
+            android:id="@+id/view_bittorrent_search_result_list_item_ad_indicator"
+            style="@style/ListItemAd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_bittorrent_search_result_list_item_title"
+            android:layout_marginBottom="4dp"
+            android:text="Ad" />
 
         <TextView
             android:id="@+id/view_bittorrent_search_result_list_item_file_size"
             style="@style/ListItemSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/view_bittorrent_search_result_list_item_ad_indicator"
             android:layout_below="@id/view_bittorrent_search_result_list_item_title"
             android:layout_marginBottom="4dp"
             android:layout_marginRight="6dp"

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ZipUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ZipUtils.class);
+    private static final Logger LOG = Logger.getLogger(ZipUtils.class);
 
     public static boolean unzip(File zipFile, File outputDir) {
         return unzip(zipFile, outputDir, null);

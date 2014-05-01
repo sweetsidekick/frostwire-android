@@ -21,9 +21,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
@@ -38,7 +36,7 @@ import com.frostwire.search.torrent.TorrentCrawledSearchResult;
  */
 public class MockSearchResultListener implements SearchManagerListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MockSearchResultListener.class);
+    private static final Logger LOG = Logger.getLogger(MockSearchResultListener.class);
 
     private final List<SearchResult> results;
 

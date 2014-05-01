@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,6 @@
         android:layout_height="1px"
         android:layout_alignParentRight="true"
         android:layout_below="@id/slidemenu_listitem_icon"
-        android:background="#ff172c40" />
+        android:background="@color/app_menu_item_line" />
 
 </RelativeLayout>

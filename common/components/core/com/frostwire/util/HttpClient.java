@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,24 +33,33 @@ public interface HttpClient {
     public void setListener(HttpClientListener listener);
 
     public HttpClientListener getListener();
+    
+    /** Returns the HTTP response code */
+    public int head(String url, int connectTimeoutInMillis) throws IOException;
 
-    public String get(String url);
+    public String get(String url) throws IOException;
 
-    public String get(String url, int timeout);
+    public String get(String url, int timeout) throws IOException;
 
-    public String get(String url, int timeout, String userAgent);
+    public String get(String url, int timeout, String userAgent) throws IOException;
 
-    public String get(String url, int timeout, String userAgent, String referrer, String cookie);
+    public String get(String url, int timeout, String userAgent, String referrer, String cookie) throws IOException;
 
-    public String get(String url, int timeout, String userAgent, String referrer, String cookie, Map<String, String> customHeaders);
+    public String get(String url, int timeout, String userAgent, String referrer, String cookie, Map<String, String> customHeaders) throws IOException;
 
     public byte[] getBytes(String url, int timeout, String userAgent, String referrer);
+
+    public byte[] getBytes(String url);
+
+    public void save(String url, File file) throws IOException;
 
     public void save(String url, File file, boolean resume) throws IOException;
 
     public void save(String url, File file, boolean resume, int timeout, String userAgent) throws IOException;
 
     public void post(String url, int timeout, String userAgent, String content, boolean gzip) throws IOException;
+
+    public String post(String url, int timeout, String userAgent, Map<String, String> formData);
 
     public void cancel();
 

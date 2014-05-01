@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, 2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.frostwire.android.R;
+import com.frostwire.logging.Logger;
 
 /**
  * @author gubatron
@@ -32,8 +32,8 @@ import com.frostwire.android.R;
  * 
  */
 public class FWContextWrapper extends ContextWrapper {
-    
-    private static final String TAG = "FW.FWContextWrapper";
+
+    private static final Logger LOG = Logger.getLogger(FWContextWrapper.class);
 
     private final Resources resources;
 
@@ -83,7 +83,7 @@ public class FWContextWrapper extends ContextWrapper {
             try {
                 id = Class.forName("com.android.internal.R$drawable").getField(name).getInt(null);
             } catch (Throwable e) {
-                Log.e(TAG, "Cannot find internal resource class");
+                LOG.warn("Cannot find internal resource class");
             }
             return id;
         }

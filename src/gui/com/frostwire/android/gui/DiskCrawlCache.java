@@ -26,14 +26,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.frostwire.android.BuildConfig;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.util.ByteUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.CrawlCache;
+import com.frostwire.util.ByteUtils;
+import com.frostwire.util.DirectoryUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
 import com.jakewharton.disklrucache.DiskLruCache.Editor;
 import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
@@ -46,7 +44,7 @@ import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
  */
 public class DiskCrawlCache implements CrawlCache {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DiskCrawlCache.class);
+    private static final Logger LOG = Logger.getLogger(DiskCrawlCache.class);
 
     private static final int APP_VERSION = 1;
     private static final int VALUE_COUNT = 1;
@@ -152,7 +150,7 @@ public class DiskCrawlCache implements CrawlCache {
                 cache.close();
             } catch (Exception e) { }
             
-            FileUtils.deleteFolderRecursively(cache.getDirectory());
+            DirectoryUtils.deleteFolderRecursively(cache.getDirectory());
             
             createCache();
         }

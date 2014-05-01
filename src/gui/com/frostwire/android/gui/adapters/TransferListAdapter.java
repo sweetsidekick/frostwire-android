@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,8 +50,6 @@ import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
 import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
-import com.frostwire.android.gui.transfers.DesktopTransfer;
-import com.frostwire.android.gui.transfers.DesktopTransferItem;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
@@ -240,8 +238,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             populatePeerUpload(view, (PeerHttpUpload) transfer);
         } else if (transfer instanceof HttpDownload) {
             populateHttpDownload(view, (HttpDownload) transfer);
-        } else if (transfer instanceof DesktopTransfer) {
-            populateDesktopTransfer(view, (DesktopTransfer) transfer);
         } else if (transfer instanceof YouTubeDownload) {
             populateYouTubeDownload(view, (YouTubeDownload) transfer);
         } else if (transfer instanceof SoundcloudDownload) {
@@ -252,8 +248,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     protected void populateChildView(View view, TransferItem item) {
         if (item instanceof BittorrentDownloadItem) {
             populateBittorrentDownloadItem(view, (BittorrentDownloadItem) item);
-        } else if (item instanceof DesktopTransferItem) {
-            populateDesktopTransferItem(view, (DesktopTransferItem) item);
         }
     }
 
@@ -291,7 +285,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
             boolean openMenu = false;
             openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
-            openMenu |= download.isComplete() && tag instanceof DesktopTransfer && ((DesktopTransfer) tag).getItems().size() == 0;
 
             if (openMenu) {
                 items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
@@ -363,9 +356,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                         //apk.getDrawable(id);
 
                         //in the meantime, just hardcode it
-                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_off);
+                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_menu);
                     } catch (Throwable e) {
-                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_off);
+                        groupIndicator.setImageResource(R.drawable.browse_peer_application_icon_selector_menu);
                     }
                 } else {
                     groupIndicator.setImageResource(getFileTypeIconId(extension));
@@ -491,46 +484,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonAction.setOnClickListener(actionOnClickListener);
     }
 
-    private void populateDesktopTransfer(View view, DesktopTransfer transfer) {
-        TextView title = findView(view, R.id.view_transfer_list_item_title);
-        ProgressBar progress = findView(view, R.id.view_transfer_list_item_progress);
-        TextView status = findView(view, R.id.view_transfer_list_item_status);
-        TextView speed = findView(view, R.id.view_transfer_list_item_speed);
-        TextView size = findView(view, R.id.view_transfer_list_item_size);
-        TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
-        TextView peers = findView(view, R.id.view_transfer_list_item_peers);
-        ImageView buttonAction = findView(view, R.id.view_transfer_list_item_button_action);
-
-        seeds.setText("");
-        peers.setText("");
-        title.setText(transfer.getDisplayName());
-        progress.setProgress(transfer.getProgress());
-        status.setText(getStatusFromResId(transfer.getStatus()));
-        speed.setText(UIUtils.getBytesInHuman(transfer.getDownloadSpeed()) + "/s");
-        size.setText(UIUtils.getBytesInHuman(transfer.getSize()));
-
-        buttonAction.setTag(transfer);
-        buttonAction.setOnClickListener(actionOnClickListener);
-    }
-
     private void populateBittorrentDownloadItem(View view, BittorrentDownloadItem item) {
-        ImageView icon = findView(view, R.id.view_transfer_item_list_item_icon);
-        TextView title = findView(view, R.id.view_transfer_item_list_item_title);
-        ProgressBar progress = findView(view, R.id.view_transfer_item_list_item_progress);
-        TextView size = findView(view, R.id.view_transfer_item_list_item_size);
-        ImageButton buttonPlay = findView(view, R.id.view_transfer_item_list_item_button_play);
-
-        icon.setImageResource(getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
-        title.setText(item.getDisplayName());
-        progress.setProgress(item.getProgress());
-        size.setText(UIUtils.getBytesInHuman(item.getSize()));
-
-        buttonPlay.setTag(item);
-        buttonPlay.setVisibility(item.isComplete() ? View.VISIBLE : View.GONE);
-        buttonPlay.setOnClickListener(playOnClickListener);
-    }
-
-    private void populateDesktopTransferItem(View view, DesktopTransferItem item) {
         ImageView icon = findView(view, R.id.view_transfer_item_list_item_icon);
         TextView title = findView(view, R.id.view_transfer_item_list_item_title);
         ProgressBar progress = findView(view, R.id.view_transfer_item_list_item_progress);
@@ -607,17 +561,17 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             return R.drawable.question_mark;
         }
         if (mt.equals(MediaType.getApplicationsMediaType())) {
-            return R.drawable.browse_peer_application_icon_selector_off;
+            return R.drawable.browse_peer_application_icon_selector_menu;
         } else if (mt.equals(MediaType.getAudioMediaType())) {
-            return R.drawable.browse_peer_audio_icon_selector_off;
+            return R.drawable.browse_peer_audio_icon_selector_menu;
         } else if (mt.equals(MediaType.getDocumentMediaType())) {
-            return R.drawable.browse_peer_document_icon_selector_off;
+            return R.drawable.browse_peer_document_icon_selector_menu;
         } else if (mt.equals(MediaType.getImageMediaType())) {
-            return R.drawable.browse_peer_picture_icon_selector_off;
+            return R.drawable.browse_peer_picture_icon_selector_menu;
         } else if (mt.equals(MediaType.getVideoMediaType())) {
-            return R.drawable.browse_peer_video_icon_selector_off;
+            return R.drawable.browse_peer_video_icon_selector_menu;
         } else if (mt.equals(MediaType.getTorrentMediaType())) {
-            return R.drawable.browse_peer_torrent_icon_selector_off;
+            return R.drawable.browse_peer_torrent_icon_selector_menu;
         } else {
             return R.drawable.question_mark;
         }
@@ -675,14 +629,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
             boolean canOpen = false;
             canOpen |= item.isComplete() && item instanceof BittorrentDownloadItem;
-            canOpen |= item.isComplete() && item instanceof DesktopTransferItem;
 
             if (canOpen) {
                 File savePath = null;
                 if (item instanceof BittorrentDownloadItem) {
                     savePath = ((BittorrentDownloadItem) item).getSavePath();
-                } else if (item instanceof DesktopTransferItem) {
-                    savePath = ((DesktopTransferItem) item).getSavePath();
                 }
 
                 if (savePath != null) {

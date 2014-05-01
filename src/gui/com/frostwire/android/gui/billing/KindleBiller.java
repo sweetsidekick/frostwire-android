@@ -47,7 +47,7 @@ final class KindleBiller extends PurchasingObserver implements Biller {
 
     @Override
     public boolean isInAppBillingSupported() {
-        return OSUtils.isKindleFire() && OSUtils.isAmazonDistribution();
+        return OSUtils.isKindleFire() || OSUtils.isAmazonDistribution();
     }
 
     @Override

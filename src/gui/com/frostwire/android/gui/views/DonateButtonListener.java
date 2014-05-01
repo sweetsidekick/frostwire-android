@@ -18,13 +18,9 @@
 
 package com.frostwire.android.gui.views;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.frostwire.android.gui.billing.Biller;
 
@@ -33,24 +29,19 @@ import com.frostwire.android.gui.billing.Biller;
  * @author aldenml
  *
  */
-public final class DonateButtonListener implements OnClickListener {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DonateButtonListener.class);
+public final class DonateButtonListener extends ClickAdapter<Biller> {
 
     private final String sku;
     private final String url;
-    private final Biller biller;
 
-    public DonateButtonListener(String sku, String url, Biller biller) {
+    public DonateButtonListener(Biller biller, String sku, String url) {
+        super(biller);
         this.sku = sku;
         this.url = url;
-        this.biller = biller;
     }
-
+    
     @Override
-    public void onClick(View v) {
-        LOG.info("Donation sku: " + sku);
-
+    public void onClick(Biller biller, View v) {
         if (biller != null && biller.isInAppBillingSupported()) {
             biller.requestPurchase(sku);
         } else {

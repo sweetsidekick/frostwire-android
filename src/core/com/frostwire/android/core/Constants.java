@@ -32,15 +32,15 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 1, (byte) 4 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 3, (byte) 0 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
 
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "104";
-    
-    public static final boolean IS_AMAZON_DISTRIBUTION = true;
+    public static final String FROSTWIRE_BUILD = "126";
+
+    public static final boolean IS_AMAZON_DISTRIBUTION = false;
 
     /**
      * 65280 - Default LAN bound port
@@ -49,6 +49,7 @@ public final class Constants {
 
     // preference keys
     public static final String PREF_KEY_CORE_UUID = "frostwire.prefs.core.uuid";
+    public static final String PREF_KEY_CORE_LAST_SEEN_VERSION = "frostwire.prefs.core.last_seen_version";
 
     public static final String PREF_KEY_NETWORK_USE_UPNP = "froswire.prefs.network.use_upnp";
     public static final String PREF_KEY_NETWORK_USE_MOBILE_DATA = "frostwire.prefs.network.use_mobile_data";
@@ -66,18 +67,21 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_MAX_TORRENT_FILES_TO_INDEX = "frostwire.prefs.search.max_torrent_files_to_index";
     public static final String PREF_KEY_SEARCH_FULLTEXT_SEARCH_RESULTS_LIMIT = "frostwire.prefs.search.fulltext_search_results_limit";
 
-    //public static final String PREF_KEY_SEARCH_USE_BTJUNKIE = "frostwire.prefs.search.use_btjunkie";
-    public static final String PREF_KEY_SEARCH_USE_CLEARBITS = "frostwire.prefs.search.use_clearbits";
     public static final String PREF_KEY_SEARCH_USE_EXTRATORRENT = "frostwire.prefs.search.use_extratorrent";
-    public static final String PREF_KEY_SEARCH_USE_ISOHUNT = "frostwire.prefs.search.use_isohunt";
     public static final String PREF_KEY_SEARCH_USE_MININOVA = "frostwire.prefs.search.use_mininova";
-    //public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
     public static final String PREF_KEY_SEARCH_USE_VERTOR = "frostwire.prefs.search.use_vertor";
-    //public static final String PREF_KEY_SEARCH_USE_KAT = "frostwire.prefs.search.use_kat";
     public static final String PREF_KEY_SEARCH_USE_YOUTUBE = "frostwire.prefs.search.use_youtube";
     public static final String PREF_KEY_SEARCH_USE_SOUNDCLOUD = "frostwire.prefs.search.use_soundcloud";
     public static final String PREF_KEY_SEARCH_USE_ARCHIVEORG = "frostwire.prefs.search.use_archiveorg";
     public static final String PREF_KEY_SEARCH_USE_FROSTCLICK = "frostwire.prefs.search.use_frostclick";
+    public static final String PREF_KEY_SEARCH_USE_BITSNOOP = "frostwire.prefs.search.use_bitsnoop";
+    public static final String PREF_KEY_SEARCH_USE_TORLOCK = "frostwire.prefs.search.use_torlock";
+    public static final String PREF_KEY_SEARCH_USE_EZTV = "frostwire.prefs.search.use_eztv";
+    public static final String PREF_KEY_SEARCH_USE_APPIA = "frostwire.prefs.search.use_appia";
+    public static final String PREF_KEY_SEARCH_USE_TPB = "frostwire.prefs.search.use_tpb";
+    public static final String PREF_KEY_SEARCH_USE_MONOVA = "frostwire.prefs.search.use_monova";
+    public static final String PREF_KEY_SEARCH_USE_YIFY = "frostwire.prefs.search.use_yify";
+    public static final String PREF_KEY_SEARCH_USE_TORRENTSFM = "frostwire.prefs.search.use_torrentsfm";
 
     public static final String PREF_KEY_SEARCH_PREFERENCE_CATEGORY = "frostwire.prefs.search.preference_category";
 
@@ -92,9 +96,9 @@ public final class Constants {
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE = "frostwire.prefs.gui.support_frostwire";
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD = "frostwire.prefs.gui.support_frostwire_threshold";
     public static final String PREF_KEY_GUI_SHOW_TV_MENU_ITEM = "frostwire.prefs.gui.show_tv_menu_item";
-    public static final String PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM = "frostwire.prefs.gui.show_free_apps_menu_item";
-    //public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
+    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
     public static final String PREF_KEY_GUI_INITIALIZE_APPIA = "frostwire.prefs.gui.initialize_appia";
+    public static final String PREF_KEY_GUI_USE_APPIA_SEARCH = "frostwire.prefs.gui.use_appia_search";
 
     public static final String PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED = "frostwire.prefs.torrent.max_download_speed";
     public static final String PREF_KEY_TORRENT_MAX_UPLOAD_SPEED = "frostwire.prefs.torrent.max_upload_speed";
@@ -121,6 +125,8 @@ public final class Constants {
     public static final String EXTRA_PEER_UUID = "com.frostwire.android.EXTRA_PEER_UUID";
     public static final String EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN = "com.frostwire.android.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN";
 
+    public static final String BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION = "com.frostwire.android.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION.";
+
     public static final int NOTIFICATION_MEDIA_PLAYING_ID = 1000;
     public static final int NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED = 1001;
     public static final int NOTIFICATION_MEDIA_PAUSED_ID = 1002;
@@ -143,13 +149,6 @@ public final class Constants {
 
     public static final String SERVER_PROMOTIONS_URL = "http://update.frostwire.com/o.php";
 
-    /**
-     * Maximum number of peers the PeerManager should hold
-     */
-    public static final int PEER_MANAGER_MAX_PEERS = 15;
-
-    public static final int PEER_MANAGER_CACHE_TIMEOUT = 5000;
-
     public static final long LIBRARIAN_FILE_COUNT_CACHE_TIMEOUT = 2 * 60 * 1000; // 2 minutes
 
     public static final int MAX_NUM_DOWNLOAD_CHECKED = 5;
@@ -158,9 +157,9 @@ public final class Constants {
 
     public static final int MAX_PEER_HTTP_DOWNLOAD_RETRIES = 3;
 
-    public static final String ADMOB_PUBLISHER_ID = "a14f3e8734c313a";
-
     public static final int DEVICE_MAJOR_TYPE_DESKTOP = CommonConstants.DEVICE_MAJOR_TYPE_DESKTOP;
     public static final int DEVICE_MAJOR_TYPE_PHONE = CommonConstants.DEVICE_MAJOR_TYPE_PHONE;
     public static final int DEVICE_MAJOR_TYPE_TABLET = CommonConstants.DEVICE_MAJOR_TYPE_TABLET;
+
+    public static final String BITCOIN_DONATION_URI = "bitcoin:19NzEEocAWydbkm3xEEVu43Ho2JFEYf5Vr?amount=0.0104";
 }

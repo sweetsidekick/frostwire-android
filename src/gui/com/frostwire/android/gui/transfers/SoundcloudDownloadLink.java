@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.transfers;
 
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 
 /**
@@ -31,7 +30,7 @@ public final class SoundcloudDownloadLink extends HttpDownloadLink {
     private final SoundcloudSearchResult sr;
 
     public SoundcloudDownloadLink(SoundcloudSearchResult sr) {
-        super(sr.getStreamUrl(), FileUtils.getValidFileName(sr.getFilename()), sr.getDisplayName(), sr.getSize(), false);
+        super(sr.getStreamUrl(), getValidFileName(sr.getFilename()), sr.getDisplayName(), sr.getSize(), false);
         this.sr = sr;
     }
 

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,11 @@
 
 package com.frostwire.android.gui.activities;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -31,7 +32,9 @@ import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment.OnRefreshSharedListener;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.Refreshable;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
 
 /**
  * @author gubatron
@@ -45,18 +48,28 @@ public class BrowsePeerActivity extends AbstractActivity {
     private BrowsePeerFragment browsePeerFragment;
 
     private Peer peer;
+    
+    private TimerSubscription playerSubscription;
 
     public BrowsePeerActivity() {
-        super(R.layout.activity_browse_peer, false, 1);
+        super(R.layout.activity_browse_peer);
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstance) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstance);
+        
+        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_browse_peer_player_notifier), 1);
     }
 
     @Override
-    protected void initComponents() {
+    protected void initComponents(Bundle savedInstanceState) {
         textNickname = findView(R.id.activity_browse_peer_text_nickname);
         textNickname.setText("");
         textTitle = findView(R.id.activity_browse_peer_text_title);
         textTitle.setText("");
-        browsePeerFragment = (BrowsePeerFragment) getSupportFragmentManager().findFragmentById(R.id.activity_browse_peer_fragment);
+        browsePeerFragment = (BrowsePeerFragment) getFragmentManager().findFragmentById(R.id.activity_browse_peer_fragment);
 
         peer = browsePeerFragment.getPeer();
         if (peer == null) { // save move
@@ -85,16 +98,16 @@ public class BrowsePeerActivity extends AbstractActivity {
             }
         });
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
-        addRefreshable((Refreshable) findView(R.id.activity_browse_peer_player_notifier));
-    }
-
+    
     private void updateTitle(byte fileType, int numShared) {
         String title = UIUtils.getFileTypeAsString(getResources(), fileType);
         title += " (" + numShared + ")";
         textTitle.setText(title);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        playerSubscription.unsubscribe();
     }
 }

@@ -1,10 +1,72 @@
-FrostWire 1.1.4 - OCT/04/2013
+FrostWire 1.3.0 - APR/30/2014
+ - Upgraded BitTorrent engine with latest code from Azureus project.
+ - Added uTP packet congestion support.
+ - Added Canonical Peer Priority support. (BEP40)
+ - Upgraded Android SDK target to Ice Cream Sandwich's API (15 - Android 4.0.3).
+   Users on Android devices running older versions will have to use FrostWire 1.2.3
+   or upgrade their operating system to +4.0.3 to receive further updates.
+ - Removed cling library for Local peer discovery, switched to JmDNS compatible with
+   frostwire for desktop 5.7.1.
+ - Considerable memory handling improvements, lots of leaks fixed which should lead
+   to very little out of memory errors from crashing the app.
+ - Added optional sponsored search results by Appia.
+ - Minor upgrades to audio player and Frostclick.com's free promotional downloads.
+ - Added TPB, Torrents.fm, Monova and Yify search. Search results available only when on a Wi-Fi connection.
+ - Magnet URI support when touching a magnet link on a web site.
+ - Paste a magnet or .torrent URI on the Transfers screen to start a download.
+ - Some search results now have image thumbnails. More coming.
+ - When internet connection is dropped, ongoing transfers are automatically paused and
+   restored when internet connection comes back.
+ - Corrected file sizes on SoundCloud search results.
+ - Multiple bug fixes.
+
+FrostWire 1.2.3 - DEC/10/2013
+ - Fixes crash when stopping a 1080p video transfer from cloud service.
+ - Player status bar removes words 'Playing' and 'Paused' instead uses icons.
+ - Number of search results under file type is now the same color as the file type icon.
+
+FrostWire 1.2.2 - DEC/02/2013
+ - Insanely faster cloud search results.
+ - Significant memory optimizations on search result parsing and display.
+ - Major update in cloud downloading architecture, Dynamic Adaptative Streaming over HTTP downloads supported.
+ - Removed jDownloader libraries, less complexity, lighter app.
+ - Fixes bug where transfer progress bar would fill up before download was complete.
+ - Throttles down CPU consumption when updating the audio player timers during playback.
+ - Fixes issue where search file type selector would hide after an orientation change
+   upon no results on the selected file type.
+
+FrostWire 1.2.1 - NOV/04/2013
+ - Fixes focus annoyance on search box after orientation change.
+ - Fixes CPU usage issues with Monova search.
+ - New search engine Eztv.
+ - Fixed crashes and NPEs.
+
+FrostWire 1.2.0 - NOV/01/2013
+ - New Flat Skin makes screens rendering faster.
+ - New, more stable, slide in navigation menu.
+ - Considerable memory usage optimizations.
+ - Fixed skip-song gesture on top of player seek bar.
+ - New icons.
+ - After opening one of My Files, FrostWire will now remember the position of the list of files, no more scrolling down to continue browsing your own files.
+ - Current song being played now is displayed at the bottom of the navigation menu.
+ - Current song being played now shows "Stop" icon when browsing your own audio files.
+ - Updated turkish translation, thanks @Serrae.
+ - New BitSnoop metasearch.
+ - New TorLock metasearch.
+ - Removed ISOHunt metasearch.
+ - Fixed Monova metasearch.
+ - French translation updated.
+
+FrostWire 1.1.4 - OCT/11/2013
  - Audio player shows correct android notification when paused.
+ - Fixes ExtraTorrent meta search.
  - Removed Vertor meta search. No longer serving .torrents without captcha.
+ - Updated arabic translation, thanks @nisrmasr.
  - Updated spanish translation, thanks @muckachina.
  - Updated portuguese translation, thanks @tati110.
  - Updated french translation.
  - Updated turkish translation.
+ - Updated polish translation.
  - New anonymous usage stats.
  - Fixed crashes and NPEs.
 

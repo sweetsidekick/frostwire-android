@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,24 @@
 -->
 <resources>
 
-    <color name="frostwire_dark_blue">#ff2c7fb0</color>
     <color name="frostwire_light_blue">#ff7adafa</color>
-    <color name="frostwire_lighter_blue">#ffc4eefe</color>
     <color name="frostwire_orange">#ffe9a54c</color>
-    <color name="tab_text_view">#ff5a7e9c</color>
     <color name="frostwire_gray_explanation_text">#ff99aabb</color>
-    <color name="frostwire_quickaction_separator">#ff839fb3</color>
-
-    <!-- colors for tab gradients, start is bottom, end is top (90 degrees) -->
-    <color name="tab_gradient_start_on">#ffd3e5ed</color>
-    <color name="tab_gradient_end_on">#ffffffff</color>
-    <color name="tab_gradient_start_off">#ff264c6b</color>
-    <color name="tab_gradient_end_off">#ff1b3e5a</color>
-    <color name="tab_background_on">#ffd3e5ed</color>
-    <color name="tab_background_off">#ff264c6b</color>
-
-    <!-- SlideMenu -->
-    <color name="slidemenu_list_background">#ff2c79a5</color>
+    
+    <!-- General application colors -->
+    <color name="app_basic_blue">#ff38536a</color>
+    <color name="app_search_blue">#ff375065</color>
+    <color name="app_dark_blue">#ff264053</color>
+    <color name="app_dark_blue_highlight">#ff21313f</color>
+    <color name="app_ligh_background">#fff8f8f8</color>
+    <color name="app_background">#ffffffff</color>
+    <color name="app_dark_icons">#ff546676</color>
+    <color name="app_light_icons">#ffe7ebee</color>
+    <color name="app_highlight_icons">#ff6fd0ec</color>
+    <color name="app_highlight_text">#ff5ca8bf</color>
+    <color name="app_list_cell_line">#ffdae2e9</color>
+    <color name="app_menu_item_pressed">#ff314c61</color>
+    <color name="app_menu_item_line">#ff1d2934</color>
+    <color name="app_light_gray_text">#ffbfcfdc</color>
 
 </resources>

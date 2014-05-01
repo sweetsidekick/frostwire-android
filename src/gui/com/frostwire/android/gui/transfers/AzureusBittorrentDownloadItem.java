@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@ package com.frostwire.android.gui.transfers;
 import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
+
+import com.frostwire.vuze.VuzeFileInfo;
 
 /**
  * @author gubatron
@@ -30,34 +31,36 @@ import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
  */
 final class AzureusBittorrentDownloadItem implements BittorrentDownloadItem {
 
-    private final DiskManagerFileInfo fileInfo;
+    private final VuzeFileInfo info;
+    private final String displayName;
 
-    public AzureusBittorrentDownloadItem(DiskManagerFileInfo fileInfo) {
-        this.fileInfo = fileInfo;
+    public AzureusBittorrentDownloadItem(VuzeFileInfo info) {
+        this.info = info;
+        this.displayName = FilenameUtils.getBaseName(info.getFilename());
     }
 
     @Override
     public String getDisplayName() {
-        return FilenameUtils.getBaseName(fileInfo.getFile(false).getName());
+        return displayName;
     }
 
     @Override
     public File getSavePath() {
-        return fileInfo.getFile(false);
+        return info.getFile();
     }
 
     @Override
     public int getProgress() {
-        return isComplete() ? 100 : (int) ((fileInfo.getDownloaded() * 100) / fileInfo.getLength());
+        return isComplete() ? 100 : (int) ((info.getDownloaded() * 100) / info.getLength());
     }
 
     @Override
     public long getSize() {
-        return fileInfo.getLength();
+        return info.getLength();
     }
 
     @Override
     public boolean isComplete() {
-        return fileInfo.getDownloaded() == fileInfo.getLength();
+        return info.getDownloaded() == info.getLength();
     }
 }

@@ -18,43 +18,52 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.global.GlobalManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-import com.aelitis.azureus.core.AzureusCore;
-import com.aelitis.azureus.core.AzureusCoreFactory;
-import com.aelitis.azureus.core.AzureusCoreRunningListener;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.DesktopUploadRequest;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
-import com.frostwire.android.util.ByteUtils;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
+import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
+import com.frostwire.util.ByteUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.frostwire.vuze.VuzeDownloadFactory;
+import com.frostwire.vuze.VuzeDownloadListener;
+import com.frostwire.vuze.VuzeDownloadManager;
+import com.frostwire.vuze.VuzeKeys;
+import com.frostwire.vuze.VuzeManager;
+import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public final class TransferManager {
+public final class TransferManager implements VuzeKeys {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransferManager.class);
+    private static final Logger LOG = Logger.getLogger(TransferManager.class);
 
     private final List<DownloadTransfer> downloads;
     private final List<UploadTransfer> uploads;
@@ -64,7 +73,9 @@ public final class TransferManager {
 
     private final Object alreadyDownloadingMonitor = new Object();
 
-    private static TransferManager instance;
+    private volatile static TransferManager instance;
+
+    private OnSharedPreferenceChangeListener preferenceListener;
 
     public static TransferManager instance() {
         if (instance == null) {
@@ -74,6 +85,8 @@ public final class TransferManager {
     }
 
     private TransferManager() {
+        registerPreferencesChangeListener();
+
         this.downloads = new LinkedList<DownloadTransfer>();
         this.uploads = new LinkedList<UploadTransfer>();
         this.bittorrentDownloads = new LinkedList<BittorrentDownload>();
@@ -155,29 +168,6 @@ public final class TransferManager {
         return upload;
     }
 
-    public DesktopTransfer desktopTransfer(DesktopUploadRequest dur, FileDescriptor fd) {
-        DesktopTransfer transfer = null;
-
-        for (DownloadTransfer downloadTransfer : downloads) {
-            if (downloadTransfer instanceof DesktopTransfer) {
-                DesktopTransfer desktopTransfer = (DesktopTransfer) downloadTransfer;
-                if (desktopTransfer.getDUR().equals(dur)) {
-                    transfer = desktopTransfer;
-                    break;
-                }
-            }
-        }
-
-        if (transfer == null) {
-            transfer = new DesktopTransfer(this, dur, fd);
-            downloads.add(transfer);
-        } else {
-            transfer.addFileDescriptor(fd);
-        }
-
-        return transfer;
-    }
-
     public void clearComplete() {
         List<Transfer> transfers = getTransfers();
 
@@ -232,7 +222,7 @@ public final class TransferManager {
     }
 
     public long getDownloadsBandwidth() {
-        long torrenDownloadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataReceiveRate() / 1000 : 0;
+        long torrenDownloadsBandwidth = VuzeManager.getInstance().getDataReceiveRate();
 
         long peerDownloadsBandwidth = 0;
         for (DownloadTransfer d : downloads) {
@@ -243,7 +233,7 @@ public final class TransferManager {
     }
 
     public double getUploadsBandwidth() {
-        long torrenUploadsBandwidth = AzureusManager.isCreated() ? AzureusManager.instance().getGlobalManager().getStats().getDataSendRate() / 1000 : 0;
+        long torrenUploadsBandwidth = VuzeManager.getInstance().getDataSendRate();
 
         long peerUploadsBandwidth = 0;
         for (UploadTransfer u : uploads) {
@@ -276,54 +266,24 @@ public final class TransferManager {
     public void loadTorrents() {
         bittorrentDownloads.clear();
 
-        if (!AzureusManager.isCreated()) {
-            return;
+        boolean stop = false;
+        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
+            stop = true;
+        } else {
+            if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
+                stop = true;
+            }
         }
 
-        AzureusCoreFactory.addCoreRunningListener(new AzureusCoreRunningListener() {
+        VuzeManager.getInstance().loadTorrents(stop, new LoadTorrentsListener() {
 
             @Override
-            public void azureusCoreRunning(AzureusCore core) {
-                GlobalManager globalManager = AzureusManager.instance().getAzureusCore().getGlobalManager();
-                List<?> downloadManagers = globalManager.getDownloadManagers();
-
-                List<DownloadManager> downloads = new ArrayList<DownloadManager>();
-                for (Object obj : downloadManagers) {
-                    if (obj instanceof DownloadManager) {
-                        try {
-                            if (((DownloadManager) obj).getTorrent() != null && ((DownloadManager) obj).getTorrent().getHash() != null) {
-                                LOG.debug("Loading torrent with hash: " + ByteUtils.encodeHex(((DownloadManager) obj).getTorrent().getHash()));
-                                downloads.add((DownloadManager) obj);
-                            }
-                        } catch (Throwable e) {
-                            // ignore
-                            LOG.debug("error loading torrent (not the end of the world, keep going)");
-                        }
-                    }
-                }
-
-                boolean stop = false;
-                if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
-                    stop = true;
-                } else {
-                    if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                        stop = true;
-                    }
-                }
-
-                for (DownloadManager dm : downloads) {
-                    if (stop && TorrentUtil.isComplete(dm)) {
-                        TorrentUtil.stop(dm);
-                    }
-
-                    bittorrentDownloads.add(BittorrentDownloadCreator.create(TransferManager.this, dm));
+            public void onLoad(List<VuzeDownloadManager> dms) {
+                for (VuzeDownloadManager dm : dms) {
+                    bittorrentDownloads.add(new AzureusBittorrentDownload(TransferManager.this, dm));
                 }
             }
-        });
-    }
-
-    List<BittorrentDownload> getBittorrentDownloads() {
-        return new LinkedList<BittorrentDownload>(bittorrentDownloads);
+        }, new DownloadListener());
     }
 
     boolean remove(Transfer transfer) {
@@ -346,10 +306,21 @@ public final class TransferManager {
 
     public BittorrentDownload downloadTorrent(String uri) {
         try {
-            BittorrentDownload download = BittorrentDownloadCreator.create(this, new URI(uri));
+            URI u = URI.create(uri);
 
+            BittorrentDownload download = null;
+
+            if (u.getScheme().equalsIgnoreCase("file")) {
+                download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
+            } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
+                download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
+            } else {
+                download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
+            }
             if (!(download instanceof InvalidBittorrentDownload)) {
-                bittorrentDownloads.add(download);
+                if (!bittorrentDownloads.contains(download)) {
+                    bittorrentDownloads.add(download);
+                }
             }
 
             return download;
@@ -359,15 +330,35 @@ public final class TransferManager {
         }
     }
 
+    private static BittorrentDownload createBittorrentDownload(TransferManager manager, TorrentSearchResult sr) {
+        if (StringUtils.isNullOrEmpty(sr.getHash())) {
+            return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
+        } else {
+            VuzeDownloadManager dm = VuzeManager.getInstance().find(ByteUtils.decodeHex(sr.getHash()));
+            if (dm == null) {// new download, I need to download the torrent
+                return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
+            } else {
+                if (sr instanceof TorrentCrawledSearchResult) {
+                    Set<String> paths = new HashSet<String>();
+                    paths.add(sr.getFilename());
+                    dm.setSkipped(paths, false);
+                } else {
+                    dm.setSkipped(null, false);
+                }
+            }
+            return new AzureusBittorrentDownload(manager, dm);
+        }
+    }
+
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload download = BittorrentDownloadCreator.create(this, sr);
+            BittorrentDownload dl = createBittorrentDownload(this, sr);
 
-            if (!(download instanceof InvalidBittorrentDownload)) {
-                bittorrentDownloads.add(download);
+            if (!bittorrentDownloads.contains(dl)) {
+                bittorrentDownloads.add(dl);
             }
 
-            return download;
+            return dl;
         } catch (Throwable e) {
             LOG.warn("Error creating download from search result: " + sr);
             return new InvalidBittorrentDownload(R.string.empty_string);
@@ -409,6 +400,19 @@ public final class TransferManager {
 
         return download;
     }
+    
+    public void resumeResumableTransfers() {
+        List<Transfer> transfers = getTransfers();
+
+        for (Transfer t : transfers) {
+            if (t instanceof BittorrentDownload) {
+                BittorrentDownload bt = (BittorrentDownload) t;
+                if (bt.isResumable()) {
+                    bt.resume();
+                }
+            } 
+        }        
+    }
 
     /** Stops all HttpDownloads (Cloud and Wi-Fi) */
     public void stopHttpTransfers() {
@@ -432,4 +436,61 @@ public final class TransferManager {
         }
     }
 
+    private void registerPreferencesChangeListener() {
+        preferenceListener = new OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED)) {
+                    setAzureusParameter(MAX_DOWNLOAD_SPEED);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED)) {
+                    setAzureusParameter(MAX_UPLOAD_SPEED);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS)) {
+                    setAzureusParameter(MAX_DOWNLOADS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOADS)) {
+                    setAzureusParameter(MAX_UPLOADS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS)) {
+                    setAzureusParameter(MAX_TOTAL_CONNECTIONS);
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS)) {
+                    setAzureusParameter(MAX_TORRENT_CONNECTIONS);
+                }
+            }
+        };
+        ConfigurationManager.instance().registerOnPreferenceChange(preferenceListener);
+    }
+
+    private void setAzureusParameter(String key) {
+        VuzeManager.getInstance().setParameter(key, ConfigurationManager.instance().getLong(key));
+    }
+
+    VuzeDownloadManager createVDM(String path, Set<String> selection) throws IOException {
+        VuzeDownloadManager dm = VuzeDownloadFactory.create(path, selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new DownloadListener());
+
+        return dm;
+    }
+
+    private static class DownloadListener implements VuzeDownloadListener {
+
+        @Override
+        public void stateChanged(VuzeDownloadManager dm, int state) {
+            if (state == VuzeDownloadManager.STATE_SEEDING) {
+                stopSeedingIfNecessary(dm);
+            }
+        }
+
+        @Override
+        public void downloadComplete(VuzeDownloadManager dm) {
+            stopSeedingIfNecessary(dm);
+            TransferManager.instance().incrementDownloadsToReview();
+            Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
+            Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
+        }
+
+        private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
+            boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
+            boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
+            boolean isDataWIFIUp = NetworkManager.instance().isDataWIFIUp();
+            if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
+                dm.stop();
+            }
+        }
+    }
 }

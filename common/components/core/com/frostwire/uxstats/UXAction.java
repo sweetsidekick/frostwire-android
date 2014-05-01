@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ import java.lang.reflect.Field;
  *
  */
 public final class UXAction {
+    public static final int CONFIGURATION_WIZARD_BASE = 0;
+    public static final int CONFIGURATION_WIZARD_FIRST_TIME = CONFIGURATION_WIZARD_BASE + 1;
+    public static final int CONFIGURATION_WIZARD_AFTER_UPDATE = CONFIGURATION_WIZARD_BASE + 2;
 
     public static final int SEARCH_BASE = 1000;
     public static final int SEARCH_STARTED_ENTER_KEY = SEARCH_BASE + 1;
@@ -54,6 +57,10 @@ public final class UXAction {
     public static final int DOWNLOAD_PAUSE = DOWNLOAD_BASE + 10;
     public static final int DOWNLOAD_RESUME = DOWNLOAD_BASE + 11;
     public static final int DOWNLOAD_REMOVE = DOWNLOAD_BASE + 12;
+    public static final int DOWNLOAD_CLICK_BITCOIN_PAYMENT = DOWNLOAD_BASE + 13;
+    public static final int DOWNLOAD_CLICK_LITECOIN_PAYMENT = DOWNLOAD_BASE + 14;
+    public static final int DOWNLOAD_CLICK_DOGECOIN_PAYMENT = DOWNLOAD_BASE + 15;
+    public static final int DOWNLOAD_CLICK_PAYPAL_PAYMENT = DOWNLOAD_BASE + 16;
 
     public static final int SHARING_BASE = 3000;
     public static final int SHARING_TORRENT_CREATED_FORMALLY = SHARING_BASE + 1;
@@ -70,14 +77,19 @@ public final class UXAction {
     public static final int LIBRARY_PLAY_AUDIO_FROM_FILE = LIBRARY_BASE + 1;
     public static final int LIBRARY_PLAY_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 2;
     public static final int LIBRARY_PLAY_AUDIO_FROM_STARRED_PLAYLIST = LIBRARY_BASE + 3;
-    public static final int LIBRARY_PLAY_AUDIO_FROM_RADIO = LIBRARY_BASE + 10;
-    public static final int LIBRARY_STARRED_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 4;
-    public static final int LIBRARY_PLAYLIST_CREATED = LIBRARY_BASE + 5;
-    public static final int LIBRARY_PLAYLIST_REMOVED = LIBRARY_BASE + 6;
-    public static final int LIBRARY_PLAYLIST_RENAMED = LIBRARY_BASE + 7;
-    public static final int LIBRARY_VIDEO_PLAY = LIBRARY_BASE + 8;
-    public static final int LIBRARY_VIDEO_TOGGLE_FULLSCREEN = LIBRARY_BASE + 9;
-    
+    public static final int LIBRARY_PLAY_AUDIO_FROM_RADIO = LIBRARY_BASE + 4;
+    public static final int LIBRARY_STARRED_AUDIO_FROM_PLAYLIST = LIBRARY_BASE + 5;
+    public static final int LIBRARY_PLAYLIST_CREATED = LIBRARY_BASE + 6;
+    public static final int LIBRARY_PLAYLIST_REMOVED = LIBRARY_BASE + 7;
+    public static final int LIBRARY_PLAYLIST_RENAMED = LIBRARY_BASE + 8;
+    public static final int LIBRARY_VIDEO_PLAY = LIBRARY_BASE + 9;
+    public static final int LIBRARY_VIDEO_TOGGLE_FULLSCREEN = LIBRARY_BASE + 10;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_AUDIO = LIBRARY_BASE + 11;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_RINGTONES = LIBRARY_BASE + 12;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_VIDEOS = LIBRARY_BASE + 13;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_PICTURES = LIBRARY_BASE + 14;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_APPLICATIONS = LIBRARY_BASE + 15;
+    public static final int LIBRARY_BROWSE_FILE_TYPE_DOCUMENTS = LIBRARY_BASE + 16;    
     
     public static final int WIFI_SHARING_BASE = 5000;
     public static final int WIFI_SHARING_SHARED = WIFI_SHARING_BASE + 1;
@@ -86,6 +98,19 @@ public final class UXAction {
     public static final int WIFI_SHARING_DOWNLOAD = WIFI_SHARING_BASE + 4;
     public static final int WIFI_SHARING_DND_UPLOAD_TO_DEVICE = WIFI_SHARING_BASE + 5;
     //public static final int WIFI_SHARING_MENU_UPLOAD_TO_DEVICE = WIFI_SHARING_BASE + 6;
+    
+    public static final int PLAYER_BASE = 6000;
+    public static final int PLAYER_GESTURE_SWIPE_SONG = PLAYER_BASE + 1;
+    public static final int PLAYER_GESTURE_PAUSE_RESUME = PLAYER_BASE + 2;
+    public static final int PLAYER_MENU_SHARE = PLAYER_BASE + 3;
+    public static final int PLAYER_MENU_UNSHARE = PLAYER_BASE + 4;
+    public static final int PLAYER_MENU_STOP = PLAYER_BASE + 5;
+    public static final int PLAYER_MENU_DELETE_TRACK = PLAYER_BASE + 6;
+    public static final int PLAYER_STOP_ON_LONG_CLICK = PLAYER_BASE + 7;
+    
+    public static final int MISC_BASE = 7000;
+    public static final int MISC_CHAT_OPENED_IN_BROWSER = MISC_BASE + 1;
+    public static final int MISC_PROMO_CLICK_ON_TIPS = MISC_BASE + 2;
 
     UXAction(int code, long time) {
         this.code = code;

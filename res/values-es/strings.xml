@@ -165,7 +165,7 @@
     <string name="internet_discovery">Comparte en Internet</string>
     <string name="internet_discovery_summary">Conectar a ususarios remotos por Internet.</string>
     <string name="meter">m</string>
-    <string name="kilometer">Km</string>
+    <string name="kilometer">km</string>
     <string name="from">De</string>
     <string name="wants_to_share_a_file">quiere compartir un archivo</string>
     <string name="translators">Traductores</string>
@@ -199,7 +199,7 @@
     <string name="files_shared">archivos compartidos</string>
     <string name="share_finished_downloads">Compartir las descargas terminadas en Wi-Fi</string>
     <string name="share_finished_downloads_summary">Las descargas compartidas estarán disponibles para otros usuarios de FrostWire en tu red de Wi-Fi.</string>
-    <string name="are_you_sure_delete_files">¿Estás seguro de que quieres borrar los archivos seleccionados?</string>
+    <string name="are_you_sure_delete_files">¿Estás seguro de que quieres borrar los archivos seleccionados de tu dispositivo?</string>
     <string name="searchable_activity_label">Actividad de Búsqueda</string>
     <string name="search_hint">Contenido de Búsqueda</string>
     <string name="search_settings_description">Búsqueda para Torrentes</string>
@@ -426,7 +426,14 @@
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>
     <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
-    <string name="anonymous_usage_statistics">Estadiísticas de uso anónimo</string>
+    <string name="anonymous_usage_statistics">Estadísticas de uso anónimo</string>
     <string name="anonymous_usage_statistics_summary">Envía estadísticas de uso anónimo. Ninguna información sobre contenido buscado, compartido o reproducido será almacenada en disco ni enviada a través de la red así como ninguna información que pueda identificarte personalmente.</string>
     <string name="paused_song_name">Pausado %s</string>
+    <string name="use_bitsnoop">Utilize BitSnoop</string>
+    <string name="use_torlock">Utilize TorLock</string>
+    <string name="use_eztv">Utilize Eztv</string>
+    <string name="transfer_status_demuxing">Demuxing</string>
+    <string name="player_paused_press_and_hold_to_stop">Reproductor pausado. (Truco: Presiona por unos segundos para detener)</string>
+    <string name="btc">BTC</string>
+    <string name="you_need_a_bitcoin_wallet_app">Necesitas un app de Bitcoin instalado para enviar donaciones en BTC.</string>
 </resources>

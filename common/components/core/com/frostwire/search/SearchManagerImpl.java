@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.frostwire.concurrent.DefaultThreadFactory;
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchManagerImpl implements SearchManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SearchManagerImpl.class);
+    private static final Logger LOG = Logger.getLogger(SearchManagerImpl.class);
 
     private static final int DEFAULT_NTHREADS = 4;
 
@@ -71,11 +71,15 @@ public class SearchManagerImpl implements SearchManager {
 
             SearchTask task = new PerformTask(this, performer, getOrder(performer.getToken()));
 
-            tasks.add(task);
-            executor.execute(task);
+            submitSearchTask(task);
         } else {
             LOG.warn("Search performer is null, review your logic");
         }
+    }
+
+    public void submitSearchTask(SearchTask task) {
+        tasks.add(task);
+        executor.execute(task);
     }
 
     @Override
@@ -143,12 +147,11 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
-    private void crawl(SearchPerformer performer, CrawlableSearchResult sr) {
+    public void crawl(SearchPerformer performer, CrawlableSearchResult sr) {
         if (performer != null && !performer.isStopped()) {
             try {
                 SearchTask task = new CrawlTask(this, performer, sr, getOrder(performer.getToken()));
-                tasks.add(task);
-                executor.execute(task);
+                submitSearchTask(task);
             } catch (Throwable e) {
                 LOG.warn("Error scheduling crawling of search result: " + sr);
             }
@@ -157,7 +160,7 @@ public class SearchManagerImpl implements SearchManager {
         }
     }
 
-    private void checkIfFinished(SearchPerformer performer) {
+    void checkIfFinished(SearchPerformer performer) {
         SearchTask pendingTask = null;
 
         synchronized (tasks) {
@@ -194,39 +197,7 @@ public class SearchManagerImpl implements SearchManager {
     }
 
     private static ExecutorService newFixedThreadPool(int nThreads) {
-        return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
-    }
-
-    private static final class PerformerResultListener implements SearchListener {
-
-        private final SearchManagerImpl manager;
-
-        public PerformerResultListener(SearchManagerImpl manager) {
-            this.manager = manager;
-        }
-
-        @Override
-        public void onResults(SearchPerformer performer, List<? extends SearchResult> results) {
-            List<SearchResult> list = new LinkedList<SearchResult>();
-
-            for (SearchResult sr : results) {
-                if (sr instanceof CrawlableSearchResult) {
-                    CrawlableSearchResult csr = (CrawlableSearchResult) sr;
-
-                    if (csr.isComplete()) {
-                        list.add(sr);
-                    }
-
-                    manager.crawl(performer, csr);
-                } else {
-                    list.add(sr);
-                }
-            }
-
-            if (!list.isEmpty()) {
-                manager.onResults(performer, list);
-            }
-        }
+        return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>(), new DefaultThreadFactory("SearchManager", false));
     }
 
     private static abstract class SearchTask implements Runnable, Comparable<SearchTask> {

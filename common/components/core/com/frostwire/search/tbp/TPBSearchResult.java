@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.frostwire.search.AbstractFileSearchResult;
-import com.frostwire.search.torrent.TorrentCrawlableSearchResult;
+import com.frostwire.search.SearchMatcher;
+import com.frostwire.search.torrent.AbstractTorrentSearchResult;
 import com.frostwire.util.HtmlManipulator;
 
 /**
@@ -36,7 +36,7 @@ import com.frostwire.util.HtmlManipulator;
  * @author aldenml
  *
  */
-public class TPBSearchResult extends AbstractFileSearchResult implements TorrentCrawlableSearchResult {
+public class TPBSearchResult extends AbstractTorrentSearchResult {
 
     private final static long[] BYTE_MULTIPLIERS = new long[] { 1, 2 << 9, 2 << 19, 2 << 29, 2 << 39, 2 << 49 };
 
@@ -64,11 +64,13 @@ public class TPBSearchResult extends AbstractFileSearchResult implements Torrent
     private final String detailsUrl;
     private final String torrentUrl;
     private final String infoHash;
+    private final String domainName;
     private final long size;
     private final long creationTime;
     private final int seeds;
 
-    public TPBSearchResult(Matcher matcher) {
+
+    public TPBSearchResult(String domainName, SearchMatcher matcher) {
         /*
          * Matcher groups cheatsheet
          * 1 -> Category (useless)
@@ -81,7 +83,7 @@ public class TPBSearchResult extends AbstractFileSearchResult implements Torrent
          * 8 -> seeds
          */
         this.detailsUrl = matcher.group(2);
-
+        this.domainName = domainName;
         String temp = HtmlManipulator.replaceHtmlEntities(matcher.group(3));
         temp = HtmlManipulator.replaceHtmlEntities(temp); // because of input
         this.filename = buildFilename(temp);
@@ -130,17 +132,12 @@ public class TPBSearchResult extends AbstractFileSearchResult implements Torrent
 
     @Override
     public String getDetailsUrl() {
-        return "http://thepiratebay.org" + detailsUrl;
+        return "http://" + domainName + detailsUrl;
     }
 
     @Override
     public String getDisplayName() {
         return displayName;
-    }
-
-    @Override
-    public boolean isComplete() {
-        return true;
     }
 
     private long parseSize(String group) {

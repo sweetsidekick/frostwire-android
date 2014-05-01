@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="preferExternal"
-	android:versionCode="104" android:versionName="1.1.4">
+	android:versionCode="126" android:versionName="1.3.0">
 
-	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="13" />
+	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19" />
 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -42,7 +42,7 @@
 
 	<application android:name="com.frostwire.android.gui.MainApplication"
 		android:allowBackup="true" android:icon="@drawable/app_icon"
-		android:label="@string/application_label" android:theme="@style/FrostWireTheme">
+		android:label="@string/application_label" android:theme="@style/Theme.FrostWire">
 
 		<!-- activities -->
 
@@ -51,7 +51,6 @@
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
-				<category android:name="tv.ouya.intent.category.GAME"/>
 			</intent-filter>
 
 			<!-- handle .torrent urls, files and magnets -->
@@ -149,7 +148,32 @@
 			android:screenOrientation="portrait" />
 		<activity android:name="com.frostwire.android.gui.activities.AboutActivity"
 			android:label="@string/activity_about" />
-			
+	
+		<!-- offercast -->
+		<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
+			android:label="@string/application_label" />
+		<service android:name="com.offercast.android.sdk.OCService" />
+		<receiver android:name="com.offercast.android.sdk.OCBroadcastReceiver"
+			android:enabled="true" android:exported="false">
+			<intent-filter android:priority="1001">
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+	
+		<!-- offercast metadata development -->
+		<!-- 
+		<meta-data android:name="application-id" android:value="8"/> <meta-data 
+			android:name="access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/> 
+			<meta-data android:name="store-name" android:value="Google"/> <meta-data 
+			android:name="store-category" android:value="Media &amp; Video"/>
+		-->
+	
+		<!-- offercast metadata production -->
+		<meta-data android:name="application-id" android:value="7" />
+		<meta-data android:name="access-token"
+			android:value="5e6c1ceb-2b03-4b2e-a57f-0876395149ad" />
+		<meta-data android:name="store-name" android:value="Google" />
+		<meta-data android:name="store-category" android:value="Media &amp; Video" />
 			
 	    <!--  appia activities -->
 		<activity
@@ -188,13 +212,13 @@
 		<!-- providers -->
 
 		<provider android:name="com.frostwire.android.core.providers.DocumentsProvider"
-			android:authorities="com.frostwire.android.core.providers.Documents" />
+			android:authorities="com.frostwire.android.core.providers.Documents" android:exported="true" />
 		<provider android:name="com.frostwire.android.core.providers.SharingProvider"
-			android:authorities="com.frostwire.android.core.providers.Sharing" />
+			android:authorities="com.frostwire.android.core.providers.Sharing" android:exported="true" />
 		<provider android:name="com.frostwire.android.core.providers.ApplicationsProvider"
-			android:authorities="com.frostwire.android.core.providers.Applications" />
+			android:authorities="com.frostwire.android.core.providers.Applications" android:exported="true" />
 		<provider android:name="com.frostwire.android.core.providers.TorrentsProvider"
-			android:authorities="com.frostwire.android.core.providers.Torrents" />
+			android:authorities="com.frostwire.android.core.providers.Torrents" android:exported="true"/>
 
 		<!-- services -->
 

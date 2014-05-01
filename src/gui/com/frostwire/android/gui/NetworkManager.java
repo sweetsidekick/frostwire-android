@@ -18,23 +18,20 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 
 import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.util.ByteUtils;
+import com.frostwire.util.ByteUtils;
 
 /**
  * @author gubatron
@@ -157,76 +154,17 @@ public final class NetworkManager {
         return networkInfo != null && networkInfo.isAvailable() && (networkInfo.getSubtype() == NETWORK_TYPE_4G_LTE || networkInfo.getSubtype() == NETWORK_TYPE_4G_EHRPD) && networkInfo.isConnected();
     }
 
-    /**
-     * This method returns the current active network interface that it's not the loop back.
-     * Until now, there is no evidence that at any given time, could be more than one (no loop back)
-     * interfaces up.
-     * 
-     * @return
-     */
-    public NetworkInterface getNetworkInterface() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-
-                while (addresses.hasMoreElements()) {
-                    InetAddress address = addresses.nextElement();
-                    if (!address.isLoopbackAddress()) {
-                        return networkInterface;
-                    }
-                }
-            }
-
-            return null;
-        } catch (Throwable e) {
-            return null;
-        }
-    }
-
-    public void printNetworkInfo() {
-        String str = "";
-
-        try {
-            if (!isDataUp()) {
-                str = context.getString(R.string.not_connected);
-            } else if (isDataMobileUp()) {
-                str = context.getString(R.string.mobile_data);
-            } else if (isDataWIFIUp()) {
-                String ipPortInfo = "";
-                NetworkInterface ni = getNetworkInterface();
-
-                if (ni != null) {
-                    ipPortInfo = getNetworkInterface().getInetAddresses().nextElement().getHostAddress() + ":" + getListeningPort();
-                }
-
-                WifiManager wifi = getWifiManager();
-                WifiInfo wifiInfo = wifi != null ? wifi.getConnectionInfo() : null;
-                String ssid = wifiInfo != null ? wifiInfo.getSSID() : null;
-                String wifiNameInfo = "";
-
-                if (ssid != null) {
-                    wifiNameInfo += "WiFi: " + ssid;
-                }
-
-                str = wifiNameInfo + ", Addr: " + ipPortInfo;
-            } else {
-                str = "";
-            }
-        } catch (Throwable e) {
-            // ignore, not a problem, only for debugging
-        }
-
-        Log.i(TAG, str);
-    }
-
-    private WifiManager getWifiManager() {
+    public WifiManager getWifiManager() {
         return (WifiManager) context.getSystemService(Application.WIFI_SERVICE);
     }
 
+    public InetAddress getMulticastInetAddress() throws IOException {
+        WifiManager wifi = getWifiManager();
+        int intaddr = wifi.getConnectionInfo().getIpAddress();
+        byte[] byteaddr = new byte[] { (byte) (intaddr & 0xff), (byte) (intaddr >> 8 & 0xff), (byte) (intaddr >> 16 & 0xff), (byte) (intaddr >> 24 & 0xff) };
+        return InetAddress.getByAddress(byteaddr);
+    }
+    
     private ConnectivityManager getConnectivityManager() {
         return (ConnectivityManager) context.getSystemService(Application.CONNECTIVITY_SERVICE);
     }

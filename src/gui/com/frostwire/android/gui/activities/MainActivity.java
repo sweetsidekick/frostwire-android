@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,77 +19,89 @@
 package com.frostwire.android.gui.activities;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.ref.WeakReference;
+import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.DesktopUploadRequest;
-import com.frostwire.android.core.DesktopUploadRequestStatus;
-import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
+import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
+import com.frostwire.android.gui.activities.internal.MainController;
+import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
+import com.frostwire.android.gui.activities.internal.XmlMenuItem;
+import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
+import com.frostwire.android.gui.dialogs.TermsUseDialog;
+import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
 import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
 import com.frostwire.android.gui.fragments.BrowsePeersFragment;
 import com.frostwire.android.gui.fragments.MainFragment;
 import com.frostwire.android.gui.fragments.SearchFragment;
-import com.frostwire.android.gui.fragments.SlideMenuFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
-import com.frostwire.android.gui.services.DesktopUploadManager;
+import com.frostwire.android.gui.fragments.TransfersFragment.TransferStatus;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractSlidingActivity;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialog;
-import com.frostwire.android.gui.views.DesktopUploadRequestDialogResult;
-import com.frostwire.android.gui.views.Refreshable;
-import com.frostwire.android.gui.views.ShareIndicationDialog;
-import com.frostwire.android.gui.views.TOS;
-import com.frostwire.android.gui.views.TOS.OnTOSAcceptListener;
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
-import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
+import com.frostwire.android.gui.views.AbstractActivity;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
+import com.frostwire.android.gui.views.PlayerMenuItemView;
+import com.frostwire.android.gui.views.TimerObserver;
+import com.frostwire.android.gui.views.TimerService;
+import com.frostwire.android.gui.views.TimerSubscription;
+import com.frostwire.logging.Logger;
+import com.frostwire.util.Ref;
+import com.frostwire.util.StringUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
+ * 
  * @author gubatron
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractSlidingActivity {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, OnDialogClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
+    private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
-    private static final String FRAGMENT_STACK_TAG = "fragment_stack";
+    private static final String FRAGMENTS_STACK_KEY = "fragments_stack";
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
-    //private static final String OFFERCAST_STARTED_KEY = "offercast_started";
     private static final String APPIA_STARTED_KEY = "appia_started";
+    
+    private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
 
     private static boolean firstTime = true;
 
-    private SlideMenuFragment menuFragment;
+    private MainController controller;
+
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private View leftDrawer;
+    private ListView listMenu;
 
     private SearchFragment search;
     private BrowsePeerFragment library;
@@ -98,49 +110,60 @@ public class MainActivity extends AbstractSlidingActivity {
     private BrowsePeersDisabledFragment peersDisabled;
     private AboutFragment about;
 
+    private Fragment currentFragment;
+    private final Stack<Integer> fragmentsStack;
+
+    private PlayerMenuItemView playerItem;
+
     // not sure about this variable, quick solution for now
     private String durToken;
-    
-    //private boolean offercastStarted = false;
+
+    private boolean offercastStarted = false;
     private boolean appiaStarted = false;
+    
+    private TimerSubscription playerSubscription;
 
     public MainActivity() {
-        super(R.layout.activity_main, false, 2);
+        super(R.layout.activity_main);
+        this.controller = new MainController(this);
+        this.fragmentsStack = new Stack<Integer>();
+    }
+
+    public void showMyFiles() {
+        controller.showMyFiles();
+    }
+
+    public void switchFragment(int itemId) {
+        controller.switchFragment(itemId);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setupFragments();
-
-        setupInitialFragment(savedInstanceState);
-
-        setupSlideMenu();
-
-        ImageButton buttonMenu = findView(R.id.activity_main_button_menu);
-        buttonMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSlidingMenu().toggle();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+            if (!(getCurrentFragment() instanceof SearchFragment)) {
+                controller.switchFragment(R.id.menu_main_search);
             }
-        });
-
-        if (savedInstanceState != null) {
-            durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
-            //offercastStarted = savedInstanceState.getBoolean(OFFERCAST_STARTED_KEY);
-            appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            toggleDrawer();
+        } else {
+            return super.onKeyDown(keyCode, event);
         }
 
-        addRefreshable((Refreshable) findView(R.id.activity_main_player_notifier));
-
-        onNewIntent(getIntent());
+        return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            super.onBackPressed();
+        if (fragmentsStack.size() > 1) {
+            try {
+                fragmentsStack.pop();
+                int id = fragmentsStack.peek();
+                Fragment fragment = getFragmentManager().findFragmentById(id);
+                switchContent(fragment, false);
+            } catch (Throwable e) {
+                // don't break the app
+                handleLastBackPressed();
+            }
         } else {
             handleLastBackPressed();
         }
@@ -150,108 +173,74 @@ public class MainActivity extends AbstractSlidingActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-            if (!(getCurrentFragment() instanceof SearchFragment)) {
-                switchFragment(R.id.menu_main_search);
+    public void onConfigurationUpdate() {
+        setupMenuItems();
+    }
+
+    @Override
+    protected void initComponents(Bundle savedInstanceState) {
+
+        drawerLayout = findView(R.id.drawer_layout);
+        drawerLayout.setDrawerListener(new SimpleDrawerListener() {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                refreshPlayerItem();
+                syncSlideMenu();
             }
-        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-            getSlidingMenu().toggle();
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
 
-        return true;
-    }
-
-    public void switchFragment(int itemId) {
-        Fragment fragment = getFragmentByMenuId(itemId);
-        if (fragment != null) {
-            switchContent(fragment);
-        }
-    }
-
-    public void showMyFiles() {
-        if (!(getCurrentFragment() instanceof BrowsePeerFragment)) {
-            switchFragment(R.id.menu_main_library);
-        }
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_SHARE_INDICATION)) {
-            showShareIndication();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        
-//        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
-//            startOffercast();
-//        }
-
-        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
-            startAppia();
-        }
-        
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
-            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
-                mainResume();
-            } else {
-                startWizardActivity();
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
             }
-        } else {
-            trackDialog(TOS.showEula(this, new OnTOSAcceptListener() {
-                public void onAccept() {
-                    startWizardActivity();
-                }
-            }));
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+            }
+        });
+
+        leftDrawer = findView(R.id.activity_main_left_drawer);
+        listMenu = findView(R.id.left_drawer);
+
+        playerItem = findView(R.id.slidemenu_player_menuitem);
+        playerItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.launchPlayerActivity();
+            }
+        });
+
+        setupFragments();
+
+        setupInitialFragment(savedInstanceState);
+
+        setupMenuItems();
+
+        if (savedInstanceState != null) {
+            durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
+            appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
-    }
+        
+        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_main_player_notifier), 1);
 
-//    private void startOffercast() {
-//        try {
-//            OfferUtils.startOffercast();
-//            offercastStarted = true;
-//        } catch (Throwable t) {
-//            offercastStarted = false;
-//        }
-//    }
-    
-    private void startAppia() {
-        try {
-            Appia appia = Appia.getAppia();
-            appia.setSiteId(3867);
-            appiaStarted = true;
-        } catch(Throwable t) {
-            appiaStarted = false;
-        }
-    }
+        onNewIntent(getIntent());
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        search.dismissDialogs();
-        library.dismissDialogs();
-        peers.dismissDialogs();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        saveLastFragment(outState);
-
-        outState.putString(DUR_TOKEN_KEY, durToken);
-        //outState.putBoolean(OFFERCAST_STARTED_KEY, offercastStarted);
-        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
+        SoftwareUpdater.instance().addConfigurationUpdateListener(this);
+        
+        setupActionBar();
+        setupDrawer();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         String action = intent.getAction();
-        onResumeFragments();
+        //onResumeFragments();
 
         if (action != null && action.equals(Constants.ACTION_SHOW_TRANSFERS)) {
-            showTransfers();
+            controller.showTransfers(TransferStatus.ALL);
         } else if (action != null && action.equals(Constants.ACTION_OPEN_TORRENT_URL)) {
             //Open a Torrent from a URL or from a local file :), say from Astro File Manager.
             /**
@@ -281,17 +270,15 @@ public class MainActivity extends AbstractSlidingActivity {
 
             //go!
             TransferManager.instance().downloadTorrent(intent.getDataString());
-        } else if ((action != null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) || durToken != null) {
-            handleDesktopUploadRequest(intent);
         }
         // When another application wants to "Share" a file and has chosen FrostWire to do so.
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
         else if (action != null && (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_SEND_MULTIPLE))) {
-            handleSendAction(intent);
+            controller.handleSendAction(intent);
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
-            showTransfers();
+            controller.showTransfers(TransferStatus.COMPLETED);
             TransferManager.instance().clearDownloadsToReview();
             try {
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(Constants.NOTIFICATION_DOWNLOAD_TRANSFER_FINISHED);
@@ -308,43 +295,237 @@ public class MainActivity extends AbstractSlidingActivity {
         }
     }
 
-    private Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_STACK_TAG);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refreshPeersFragment();
+
+        initializeAppia();
+        initializeOffercast();
+
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
+                mainResume();
+            } else {
+                controller.startWizardActivity();
+            }
+        } else {
+            TermsUseDialog dlg = new TermsUseDialog();
+            dlg.show(getFragmentManager());
+        }
+
+        checkLastSeenVersion();
+    }
+
+    private void initializeAppia() {
+        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
+            try {
+                Appia appia = Appia.getAppia();
+                appia.setSiteId(3867);
+                appiaStarted = true;
+            } catch (Throwable t) {
+                appiaStarted = false;
+            }
+        }
+    }
+
+    private void initializeOffercast() {
+        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+            try {
+                OfferUtils.startOffercast(getApplicationContext());
+                offercastStarted = true;
+            } catch (Exception e) {
+                offercastStarted = false;
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveLastFragment(outState);
+        saveFragmentsStack(outState);
+
+        outState.putString(DUR_TOKEN_KEY, durToken);
+        outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        
+        playerSubscription.unsubscribe();
+
+        //avoid memory leaks when the device is tilted and the menu gets recreated.
+        SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
+
+        if (playerItem != null) {
+            playerItem.unbindDrawables();
+        }
     }
 
     private void saveLastFragment(Bundle outState) {
         Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
+            getFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, fragment);
         }
     }
 
-    private void handleLastBackPressed() {
-        trackDialog(UIUtils.showYesNoDialog(this, R.string.are_you_sure_you_wanna_leave, R.string.minimize_frostwire, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }));
+    private void mainResume() {
+        syncSlideMenu();
+
+        if (firstTime) {
+            firstTime = false;
+            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        }
+
+        SoftwareUpdater.instance().checkForUpdate(this);
     }
 
-    private void switchContent(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).addToBackStack(null).commit();
-        getSupportFragmentManager().executePendingTransactions();
-        getSlidingMenu().showContent();
-        syncSlideMenu();
-        updateHeader(fragment);
+    private void checkLastSeenVersion() {
+        final String lastSeenVersion = ConfigurationManager.instance().getString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION);
+        if (StringUtils.isNullOrEmpty(lastSeenVersion)) {
+            //fresh install
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_FIRST_TIME);
+        } else if (!Constants.FROSTWIRE_VERSION_STRING.equals(lastSeenVersion)) {
+            //just updated.
+            ConfigurationManager.instance().setString(Constants.PREF_KEY_CORE_LAST_SEEN_VERSION, Constants.FROSTWIRE_VERSION_STRING);
+            UXStats.instance().log(UXAction.CONFIGURATION_WIZARD_AFTER_UPDATE);
+        }
+    }
+
+    private void toggleDrawer() {
+        if (drawerLayout.isDrawerOpen(leftDrawer)) {
+            drawerLayout.closeDrawer(leftDrawer);
+        } else {
+            drawerLayout.openDrawer(leftDrawer);
+        }
+
+        updateHeader(getCurrentFragment());
+    }
+
+    private Fragment getWifiSharingFragment() {
+        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP) ? peers : peersDisabled;
+    }
+
+    private void handleLastBackPressed() {
+        YesNoDialog dlg = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
+        dlg.show(getFragmentManager());
+    }
+    
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
+            finish();
+        } else if (tag.equals(TermsUseDialog.TAG)) {
+            controller.startWizardActivity();
+        }
+    }
+    
+    private void syncSlideMenu() {
+        Fragment fragment = getCurrentFragment();
+
+        if (fragment instanceof SearchFragment) {
+            setSelectedItem(R.id.menu_main_search);
+        } else if (fragment instanceof BrowsePeerFragment) {
+            setSelectedItem(R.id.menu_main_library);
+        } else if (fragment instanceof TransfersFragment) {
+            setSelectedItem(R.id.menu_main_transfers);
+        } else if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
+            setSelectedItem(R.id.menu_main_peers);
+        } else if (fragment instanceof AboutFragment) {
+            setSelectedItem(R.id.menu_main_about);
+        }
+
+        updateHeader(getCurrentFragment());
+    }
+
+    private void setSelectedItem(int id) {
+        try {
+            XmlMenuAdapter adapter = (XmlMenuAdapter) listMenu.getAdapter();
+            if (adapter != null) {
+                adapter.setSelectedItem(id);
+            }
+        } catch (Throwable e) { // protecting from weird android UI engine issues
+            LOG.warn("Error setting slide menu item selected", e);
+        }
+    }
+
+    private void refreshPlayerItem() {
+        if (playerItem != null) {
+            playerItem.refresh();
+        }
+    }
+
+    private void setupMenuItems() {
+        XmlMenuItem[] items = new XmlMenuLoader().load(this);
+        XmlMenuAdapter adapter = new XmlMenuAdapter(controller, items);
+        listMenu.setAdapter(adapter);
+    }
+
+    private void setupFragments() {
+        search = (SearchFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_search);
+        library = (BrowsePeerFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peer);
+        transfers = (TransfersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
+        peers = (BrowsePeersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
+        peersDisabled = (BrowsePeersDisabledFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
+        about = (AboutFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
+
+        hideFragments(getFragmentManager().beginTransaction()).commit();
+
+        library.setPeer(PeerManager.instance().getLocalPeer());
+    }
+
+    private FragmentTransaction hideFragments(FragmentTransaction ts) {
+        return ts.hide(search).hide(library).hide(transfers).hide(peers).hide(peersDisabled).hide(about);
+    }
+
+    private void setupInitialFragment(Bundle savedInstanceState) {
+        Fragment fragment = null;
+
+        if (savedInstanceState != null) {
+            fragment = getFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+            restoreFragmentsStack(savedInstanceState);
+        }
+        if (fragment == null) {
+            fragment = search;
+            setSelectedItem(R.id.menu_main_search);
+        }
+
+        switchContent(fragment);
+    }
+
+    private void saveFragmentsStack(Bundle outState) {
+        int[] stack = new int[fragmentsStack.size()];
+        for (int i = 0; i < stack.length; i++) {
+            stack[i] = fragmentsStack.get(i);
+        }
+        outState.putIntArray(FRAGMENTS_STACK_KEY, stack);
+    }
+
+    private void restoreFragmentsStack(Bundle savedInstanceState) {
+        try {
+            int[] stack = savedInstanceState.getIntArray(FRAGMENTS_STACK_KEY);
+            for (int id : stack) {
+                fragmentsStack.push(id);
+            }
+        } catch (Throwable e) {
+            // silent recovering, stack is't not really important
+        }
     }
 
     private void updateHeader(Fragment fragment) {
         try {
-            RelativeLayout placeholder = findView(R.id.activity_main_layout_header_placeholder);
-            if (placeholder.getChildCount() > 0) {
+            RelativeLayout placeholder = (RelativeLayout) getActionBar().getCustomView();//findView(R.id.activity_main_layout_header_placeholder);
+            if (placeholder!=null && placeholder.getChildCount() > 0) {
                 placeholder.removeAllViews();
             }
 
             if (fragment instanceof MainFragment) {
                 View header = ((MainFragment) fragment).getHeader(this);
-                if (header != null) {
+                if (placeholder != null && header != null) {
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
                     placeholder.addView(header, params);
@@ -355,64 +536,28 @@ public class MainActivity extends AbstractSlidingActivity {
         }
     }
 
-    private void setupFragments() {
-        menuFragment = new SlideMenuFragment();
-
-        search = new SearchFragment();
-        library = new BrowsePeerFragment();
-        transfers = new TransfersFragment();
-        peers = new BrowsePeersFragment();
-        peersDisabled = new BrowsePeersDisabledFragment();
-        about = new AboutFragment();
-
-        library.setPeer(PeerManager.instance().getLocalPeer());
+    private void refreshPeersFragment() {
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
+            controller.switchFragment(R.id.menu_main_peers);
+        }
+        PeerManager.instance().updateLocalPeer();
     }
 
-    private void setupInitialFragment(Bundle savedInstanceState) {
-        Fragment fragment = null;
-
-        if (savedInstanceState != null) {
-            fragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+    private void switchContent(Fragment fragment, boolean addToStack) {
+        hideFragments(getFragmentManager().beginTransaction()).show(fragment).commitAllowingStateLoss();
+        if (addToStack && (fragmentsStack.isEmpty() || fragmentsStack.peek() != fragment.getId())) {
+            fragmentsStack.push(fragment.getId());
         }
-        if (fragment == null) {
-            fragment = search;
-        }
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content_frame, fragment, FRAGMENT_STACK_TAG).commit();
-
+        currentFragment = fragment;
         updateHeader(fragment);
     }
 
-    private void setupSlideMenu() {
-        setBehindContentView(R.layout.slidemenu_frame);
-        getSupportFragmentManager().beginTransaction().replace(R.id.slidemenu_frame, menuFragment).commit();
+    /*
+     * The following methods are only public to be able to use them from another package(internal).
+     */
 
-        SlidingMenu menu = getSlidingMenu();
-
-        menu.setShadowWidthRes(R.dimen.mainmenu_shadow_width);
-        menu.setShadowDrawable(R.drawable.mainmenu_shadow);
-        menu.setBehindWidthRes(R.dimen.mainmenu_width);
-        menu.setFadeDegree(0.35f);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setBehindScrollScale(0.0f);
-
-        menu.setBehindCanvasTransformer(new CanvasTransformer() {
-            @Override
-            public void transformCanvas(Canvas canvas, float percentOpen) {
-                float scale = (float) (percentOpen * 0.25 + 0.75);
-                canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
-            }
-        });
-
-        menu.setOnOpenListener(new OnOpenListener() {
-            @Override
-            public void onOpen() {
-                menuFragment.refreshPlayerItem();
-            }
-        });
-    }
-
-    private Fragment getFragmentByMenuId(int id) {
+    public Fragment getFragmentByMenuId(int id) {
         switch (id) {
         case R.id.menu_main_search:
             return search;
@@ -428,142 +573,90 @@ public class MainActivity extends AbstractSlidingActivity {
             return null;
         }
     }
+
+    public void switchContent(Fragment fragment) {
+        switchContent(fragment, true);
+    }
+
+    public Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void closeSlideMenu() {
+        drawerLayout.closeDrawer(leftDrawer);
+    }
     
-    private Fragment getWifiSharingFragment() {
-        return (Fragment) (isWifiSharingEnabled() ? peers : peersDisabled);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private boolean isWifiSharingEnabled() {
-        return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP);
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
+    
+    private void setupActionBar() {
+        ActionBar bar = getActionBar();
 
-    private void syncSlideMenu() {
-        if (menuFragment != null) {
-            Fragment fragment = getCurrentFragment();
+        bar.setCustomView(R.layout.view_custom_actionbar);
+        
+        bar.setDisplayShowCustomEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setHomeButtonEnabled(true);
+    }
+    
+    private void setupDrawer() {
+        drawerToggle = new MenuDrawerToggle(this, drawerLayout);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+    
+    private static final class MenuDrawerToggle extends ActionBarDrawerToggle {
 
-            if (fragment instanceof SearchFragment) {
-                menuFragment.setSelectedItem(R.id.menu_main_search);
-            } else if (fragment instanceof BrowsePeerFragment) {
-                menuFragment.setSelectedItem(R.id.menu_main_library);
-            } else if (fragment instanceof TransfersFragment) {
-                menuFragment.setSelectedItem(R.id.menu_main_transfers);
-            } else if (fragment instanceof BrowsePeersFragment ||
-                       fragment instanceof BrowsePeersDisabledFragment) {
-                menuFragment.setSelectedItem(R.id.menu_main_peers);
-            } else if (fragment instanceof AboutFragment) {
-                menuFragment.setSelectedItem(R.id.menu_main_about);
+        private final WeakReference<MainActivity> activityRef;
+
+        public MenuDrawerToggle(MainActivity activity, DrawerLayout drawerLayout) {
+            super(activity, drawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+
+            // aldenml: even if the parent class hold a strong reference, I decided to keep a weak one
+            this.activityRef = Ref.weak(activity);
+        }
+
+        @Override
+        public void onDrawerClosed(View view) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
             }
         }
-    }
 
-    private void showTransfers() {
-        if (!(getCurrentFragment() instanceof TransfersFragment)) {
-            switchFragment(R.id.menu_main_transfers);
-        }
-    }
-
-    private void handleDesktopUploadRequest(Intent intent) {
-        String action = intent.getAction();
-
-        if (durToken == null && action.equals(Constants.ACTION_DESKTOP_UPLOAD_REQUEST)) {
-            durToken = intent.getStringExtra(Constants.EXTRA_DESKTOP_UPLOAD_REQUEST_TOKEN);
-        }
-
-        final DesktopUploadManager dum = Engine.instance().getDesktopUploadManager();
-
-        if (dum == null) {
-            return;
-        }
-
-        DesktopUploadRequest dur = dum.getRequest(durToken);
-
-        if (durToken != null && dur != null && dur.status == DesktopUploadRequestStatus.PENDING) {
-            DesktopUploadRequestDialog dlg = new DesktopUploadRequestDialog(this, dur, new DesktopUploadRequestDialog.OnDesktopUploadListener() {
-                @Override
-                public void onResult(DesktopUploadRequestDialog dialog, DesktopUploadRequestDialogResult result) {
-                    switch (result) {
-                    case ACCEPT:
-                        dum.authorizeRequest(durToken);
-                        if (ConfigurationManager.instance().showTransfersOnDownloadStart()) {
-                            Intent i = new Intent(Constants.ACTION_SHOW_TRANSFERS);
-                            MainActivity.this.startActivity(i.setClass(MainActivity.this, MainActivity.class));
-                        }
-                        break;
-                    case REJECT:
-                        dum.rejectRequest(durToken);
-                        break;
-                    case BLOCK:
-                        dum.blockComputer(durToken);
-                        break;
-                    }
-                    durToken = null;
-                }
-            });
-
-            trackDialog(dlg).show();
-        }
-    }
-
-    private void handleSendAction(Intent intent) {
-        String action = intent.getAction();
-        if (action.equals(Intent.ACTION_SEND)) {
-            handleSendSingleFile(intent);
-        } else if (action.equals(Intent.ACTION_SEND_MULTIPLE)) {
-            handleSendMultipleFiles(intent);
-        }
-    }
-
-    private void handleSendSingleFile(Intent intent) {
-        Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (uri == null) {
-            return;
-        }
-        shareFileByUri(uri);
-        UIUtils.showLongMessage(this, R.string.one_file_shared);
-    }
-
-    private void shareFileByUri(Uri uri) {
-        if (uri == null) {
-            return;
-        }
-
-        FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
-
-        if (fileDescriptor != null) {
-            fileDescriptor.shared = true;
-            Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
-        }
-    }
-
-    private void handleSendMultipleFiles(Intent intent) {
-        ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (fileUris != null) {
-            for (Uri uri : fileUris) {
-                shareFileByUri(uri);
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            if (Ref.alive(activityRef)) {
+                activityRef.get().invalidateOptionsMenu();
             }
-            UIUtils.showLongMessage(this, getString(R.string.n_files_shared, fileUris.size()));
         }
-    }
-
-    private void showShareIndication() {
-        ShareIndicationDialog dlg = new ShareIndicationDialog();
-        dlg.show(getSupportFragmentManager());
-    }
-
-    private void startWizardActivity() {
-        Intent i = new Intent(this, WizardActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-    }
-
-    private void mainResume() {
-        syncSlideMenu();
-
-        if (firstTime) {
-            firstTime = false;
-            Engine.instance().startServices(); // it's necessary for the first time after wizard
+        
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            if (Ref.alive(activityRef)) {
+                MainActivity activity = activityRef.get();
+                activity.refreshPlayerItem();
+                activity.syncSlideMenu();
+            }
         }
-
-        SoftwareUpdater.instance().checkForUpdate(this);
     }
 }

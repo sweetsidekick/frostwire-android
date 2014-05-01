@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,9 @@
 
     <item>
         <shape>
-            <gradient
-                android:angle="270"
-                android:endColor="#ff4eade3"
-                android:startColor="#ff7dc5ed" />
+            <solid android:color="@color/app_highlight_icons" />
 
-            <corners android:radius="8dp" />
-
-            <stroke
-                android:width="1px"
-                android:color="#ff3686b9" />
+            <corners android:radius="4dp" />
         </shape>
     </item>
 

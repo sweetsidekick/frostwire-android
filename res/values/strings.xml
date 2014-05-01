@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -199,7 +199,7 @@
     <string name="files_shared">files shared</string>
     <string name="share_finished_downloads">Share finished downloads on Wi-Fi</string>
     <string name="share_finished_downloads_summary">Finished downloads will be available to other FrostWire users on your Wi-Fi network.</string>
-    <string name="are_you_sure_delete_files">Are you sure you want to PERMANENTLY DELETE the selected files?</string>
+    <string name="are_you_sure_delete_files">Are you sure you want to PERMANENTLY DELETE the selected files from your device?</string>
     <string name="searchable_activity_label">Searchable Activity</string>
     <string name="search_hint">Search Content</string>
     <string name="search_settings_description">Search for Torrents</string>
@@ -229,11 +229,18 @@
     <string name="search_settings">Search Settings</string>
     <string name="use_kat">Use KAT.ph</string>
     <string name="use_clearbits">Use ClearBits.net</string>
+    <string name="use_tpb">Use TPB</string>
+    <string name="use_tpb_summary">TPB is magnet based, works only on Wi-Fi</string>
+    <string name="use_torrentsfm">Use Torrents.fm</string>
+    <string name="use_torrentsfm_summary">Torrents.fm is magnet based, works only on Wi-Fi</string>
+    <string name="use_monova">Use Monova</string>
+    <string name="use_monova_summary">Monova is magnet based, works only on Wi-Fi</string>
     <string name="use_extratorrent">Use ExtraTorrent.com</string>
     <string name="use_isohunt">Use ISOHunt.com</string>
     <string name="use_mininova">Use Mininova.org</string>
-    <string name="use_tpb">Use ThePirateBay.org</string>
     <string name="use_vertor">Use Vertor.com</string>
+    <string name="use_yify">Use Yify</string>
+    <string name="use_yify_summary">Yify is magnet based, works only on Wi-Fi</string>
     <string name="activity_media_player_image_description">Media image</string>
     <string name="ringtone_set">Ringtone Set</string>
     <string name="search">Search</string>
@@ -423,10 +430,35 @@
     <string name="use_frostclick">Use FrostClick</string>
     <string name="delete_this_track">Delete this track</string>
     <string name="are_you_sure_delete_current_track">Are you sure you want to delete the current track?</string>
-    <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.</string>
+    <string name="wifi_sharing_disabled">Wi-fi sharing is off.\n\nWi-fi sharing can be used to share files locally between FrostWire powered devices connected to the same Wi-Fi network.\n\n&lt;a href=\"http://bit.ly/1tVReSt\"&gt;Learn more.&lt;/a&gt;</string>
     <string name="turn_on_wifi_sharing">Turn on Wi-fi Sharing</string>    
     <string name="are_you_sure_wifi_sharing_off">Turning off Wi-Fi sharing will make all your locally shared files unavailable to other users on the nearby Wi-Fi network.</string>
     <string name="anonymous_usage_statistics">Anonymous Usage Statistics</string>
     <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
     <string name="paused_song_name">Paused %s</string>
+    <string name="use_bitsnoop">Use BitSnoop</string>
+    <string name="use_torlock">Use TorLock</string>
+    <string name="use_eztv">Use Eztv</string>
+    <string name="transfer_status_demuxing">Demuxing</string>
+    <string name="player_paused_press_and_hold_to_stop">Player paused. (Tip: Press and hold to stop)</string>
+    <string name="btc">BTC</string>
+    <string name="you_need_a_bitcoin_wallet_app">You need a Bitcoin wallet installed on you device to submit a BTC donation.</string>
+    <string name="transfers_select_all">all</string>
+    <string name="transfers_select_downloading">downloading</string>
+    <string name="transfers_select_completed">completed</string>
+    <string name="transfers_context_menu_clear_finished">Clear all Finished Transfers</string>
+    <string name="transfers_context_menu_stop_delete_data">Stop and Delete Data</string>
+    <string name="transfers_context_menu_pause_stop_all_transfers">Pause/Stop all Transfers</string>
+    <string name="transfers_context_resume_all_torrent_transfers">Resume all Torrent Transfers</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="please_check_connection_status_before_resuming_download">Please check the status of your internet connection before resuming.</string>
+    <string name="donate_in_btc">Donate in bitcoins</string>
+    <string name="torrent_transfer_enqueued_on_mobile_data">The torrent transfer will start downloading automatically when you connect to a Wi-Fi network.(Check your Network Preferences regarding 3G/4G data usage)</string>
+    <string name="torrent_transfer_consuming_mobile_data">Warning: This torrent transfer is using your 3G/4G data. (Check your Network Preferences if you wish to use BitTorrent only on WiFi)</string>
+    <string name="add_transfer_label">Paste a magnet or torrent URL</string>
+    <string name="please_enter_valid_url">Please enter a valid URL</string>
+    <string name="magnet_url_added">Magnet URL added to transfers. (Magnets work best on Wi-Fi)</string>
+    <string name="torrent_url_added">Torrent URL added to transfers.</string>
+    <string name="cloud_downloads_coming">Sorry: Starting cloud downloads from here will be available on further updates.</string>
 </resources>

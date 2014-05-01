@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@
 
 package com.frostwire.search.frostclick;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.frostwire.logging.Logger;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.domainalias.DomainAliasManager;
 
 /**
  * @author gubatron
@@ -36,14 +36,14 @@ import com.frostwire.search.SearchResult;
  */
 public class FrostClickSearchPerformer extends PagedWebSearchPerformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FrostClickSearchPerformer.class);
+    private static final Logger LOG = Logger.getLogger(FrostClickSearchPerformer.class);
 
     private static final int MAX_RESULTS = 1;
 
     private final Map<String, String> customHeaders;
 
-    public FrostClickSearchPerformer(long token, String keywords, int timeout, UserAgent userAgent) {
-        super(token, keywords, timeout, MAX_RESULTS);
+    public FrostClickSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, UserAgent userAgent) {
+        super(domainAliasManager ,token, keywords, timeout, MAX_RESULTS);
         this.customHeaders = buildCustomHeaders(userAgent);
     }
 
@@ -55,7 +55,14 @@ public class FrostClickSearchPerformer extends PagedWebSearchPerformer {
     @Override
     protected List<? extends SearchResult> searchPage(int page) {
         String url = getUrl(page, getEncodedKeywords());
-        String text = fetch(url, null, customHeaders);
+        String text = null;
+        try {
+            text = fetch(url, null, customHeaders);
+        } catch (IOException e) {
+            checkAccesibleDomains();
+            return Collections.emptyList();
+        }
+        
         if (text != null) {
             return searchPage(text);
         } else {

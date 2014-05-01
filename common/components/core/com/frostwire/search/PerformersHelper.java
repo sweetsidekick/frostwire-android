@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,17 +40,17 @@ public final class PerformersHelper {
     private PerformersHelper() {
     }
 
-    static List<? extends SearchResult> searchPageHelper(RegexSearchPerformer<?> performer, String page, int regexMaxResults) {
+    public static List<? extends SearchResult> searchPageHelper(RegexSearchPerformer<?> performer, String page, int regexMaxResults) {
         List<SearchResult> result = new LinkedList<SearchResult>();
 
-        Matcher matcher = performer.getPattern().matcher(page);
+        Matcher matcher = performer.getPattern().matcher(new MaxIterCharSequence(page, 2 * page.length()));
 
         int max = regexMaxResults;
 
         int i = 0;
 
         while (matcher.find() && i < max && !performer.isStopped()) {
-            SearchResult sr = performer.fromMatcher(matcher);
+            SearchResult sr = performer.fromMatcher(new SearchMatcher(matcher));
             if (sr != null) {
                 result.add(sr);
                 i++;

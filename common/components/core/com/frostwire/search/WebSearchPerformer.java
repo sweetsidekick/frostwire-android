@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 
 package com.frostwire.search;
 
+import java.io.IOException;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FilenameUtils;
 
+import com.frostwire.logging.Logger;
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
-import com.frostwire.util.URLUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.util.UserAgentGenerator;
 
 /**
@@ -35,21 +37,31 @@ import com.frostwire.util.UserAgentGenerator;
  */
 public abstract class WebSearchPerformer extends AbstractSearchPerformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebSearchPerformer.class);
+    private static final Logger LOG = Logger.getLogger(WebSearchPerformer.class);
 
     private static final String DEFAULT_USER_AGENT = UserAgentGenerator.getUserAgent();
+
+    private static final String[] STREAMABLE_EXTENSIONS = new String[] { "mp3", "ogg", "wma", "wmv", "m4a", "aac", "flac", "mp4", "flv", "mov", "mpg", "mpeg", "3gp", "m4v", "webm" };
 
     private final String keywords;
     private final String encodedKeywords;
     private final int timeout;
     private final HttpClient client;
 
-    public WebSearchPerformer(long token, String keywords, int timeout) {
+    private final DomainAliasManager domainAliasManager;
+
+    public WebSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout) {
         super(token);
+
+        if (domainAliasManager == null) {
+            throw new IllegalArgumentException("domainAliasManager can't be null");
+        }
+
+        this.domainAliasManager = domainAliasManager;
         this.keywords = keywords;
-        this.encodedKeywords = URLUtils.encode(keywords);
+        this.encodedKeywords = StringUtils.encodeUrl(keywords);
         this.timeout = timeout;
-        this.client = HttpClientFactory.newDefaultInstance();
+        this.client = HttpClientFactory.newInstance();
     }
 
     public final String getKeywords() {
@@ -71,15 +83,18 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
      * @param url
      * @return the web page (html)
      */
-    public String fetch(String url) {
+    public String fetch(String url) throws IOException {
         return fetch(url, null, null);
     }
 
-    public String fetch(String url, String cookie, Map<String, String> customHeaders) {
+    public String fetch(String url, String cookie, Map<String, String> customHeaders) throws IOException {
         return client.get(url, timeout, DEFAULT_USER_AGENT, null, cookie, customHeaders);
     }
 
-    
+    public String post(String url, Map<String, String> formData) {
+        return client.post(url, timeout, DEFAULT_USER_AGENT, formData);
+    }
+
     /**
      * Allow to perform the HTTP operation using the same internal http client.
      * 
@@ -96,5 +111,38 @@ public abstract class WebSearchPerformer extends AbstractSearchPerformer {
         } else {
             return null;
         }
+    }
+
+    protected final boolean isStreamable(String filename) {
+        String ext = FilenameUtils.getExtension(filename);
+        for (String s : STREAMABLE_EXTENSIONS) {
+            if (s.equals(ext)) {
+                return true; // fast return
+            }
+        }
+
+        return false;
+    }
+
+    public String getDomainNameToUse() {
+        return domainAliasManager.getDomainNameToUse();
+    }
+
+    public String getDefaultDomainName() {
+        return domainAliasManager.getDefaultDomain();
+    }
+
+    public DomainAliasManager getDomainAliasManager() {
+        return domainAliasManager;
+    }
+
+    /**
+     * The current domain has failed, mark it offline and let's try check if other mirrors are alive.
+     */
+    protected final void checkAccesibleDomains() {
+        LOG.debug("WebSearchPerformer.checkAccesibleDomains()! " + getDefaultDomainName() + " Performer failed, marking " + getDomainNameToUse() + " offline, checking domains.");
+
+        domainAliasManager.markDomainOffline(getDomainNameToUse());
+        domainAliasManager.checkStatuses(this);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
 import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
+import com.frostwire.android.gui.util.OfferUtils;
 
 /**
  * @author guabtron
@@ -37,10 +38,14 @@ import com.frostwire.android.gui.billing.DonationSkus.DonationSkuType;
  */
 public class DonationsView extends LinearLayout {
 
+    private final BitcoinButtonListener bitcoinButtonListener;
+
     private Biller biller;
 
     public DonationsView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.bitcoinButtonListener = new BitcoinButtonListener(this);
     }
 
     public void setBiller(Biller b) {
@@ -57,6 +62,7 @@ public class DonationsView extends LinearLayout {
 
     private void setupDonationButtons() {
         DonationSkus skus = BillerFactory.getDonationSkus();
+        setupBitcoinDonateButton();
         setupDonateButton(R.id.fragment_about_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
         setupDonateButton(R.id.fragment_about_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox");
         setupDonateButton(R.id.fragment_about_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl");
@@ -65,6 +71,27 @@ public class DonationsView extends LinearLayout {
 
     private void setupDonateButton(int id, String sku, String url) {
         Button donate = (Button) findViewById(id);
-        donate.setOnClickListener(new DonateButtonListener(sku, url, biller));
+        donate.setOnClickListener(new DonateButtonListener(biller, sku, url));
+    }
+    
+    private void onBTCDonationButtonClick() {
+        OfferUtils.onBTCDonationButtonClick(getContext());
+    }
+
+    private void setupBitcoinDonateButton() {
+        Button btc = (Button) findViewById(R.id.fragment_about_button_bitcoin);
+        btc.setOnClickListener(bitcoinButtonListener);
+    }
+
+    private static final class BitcoinButtonListener extends ClickAdapter<DonationsView> {
+
+        public BitcoinButtonListener(DonationsView owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(DonationsView owner, View v) {
+            owner.onBTCDonationButtonClick();
+        }
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.util.JsonUtils;
 
 /**
@@ -36,17 +36,17 @@ import com.frostwire.util.JsonUtils;
  */
 public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<ArchiveorgSearchResult> {
 
-    // TODO: Move this extensions to a common place
-    // remove some not so stream friendly extensions
-    private static final String[] STREAMABLE_EXTENSIONS = new String[] { "mp3", "ogg", "wma", "wmv", "m4a", "aac", "flac", "mp4", "flv", "mov", "mpg", "mpeg", "3gp", "m4v", "webm" };
+    private static final int MAX_RESULTS = 12;
 
-    public ArchiveorgSearchPerformer(long token, String keywords, int timeout) {
-        super(token, keywords, timeout, 1, 12);
+    public ArchiveorgSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout) {
+        super(domainAliasManager, token, keywords, timeout, 1, MAX_RESULTS);
     }
 
     @Override
     protected String getUrl(int page, String encodedKeywords) {
-        return "http://archive.org/advancedsearch.php?q="
+        return "http://"
+                + getDomainNameToUse()
+                + "/advancedsearch.php?q="
                 + encodedKeywords
                 + "&fl[]=avg_rating&fl[]=call_number&fl[]=collection&fl[]=contributor&fl[]=coverage&fl[]=creator&fl[]=date&fl[]=description&fl[]=downloads&fl[]=foldoutcount&fl[]=format&fl[]=headerImage&fl[]=identifier&fl[]=imagecount&fl[]=language&fl[]=licenseurl&fl[]=mediatype&fl[]=month&fl[]=num_reviews&fl[]=oai_updatedate&fl[]=publicdate&fl[]=publisher&fl[]=rights&fl[]=scanningcentre&fl[]=source&fl[]=subject&fl[]=title&fl[]=type&fl[]=volume&fl[]=week&fl[]=year&rows=50&page=1&indent=yes&output=json";
         //sort[]=downloads+desc&sort[]=createdate+desc
@@ -61,7 +61,7 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
 
         for (ArchiveorgItem item : response.response.docs) {
             if (!isStopped()) {
-                ArchiveorgSearchResult sr = new ArchiveorgSearchResult(item);
+                ArchiveorgSearchResult sr = new ArchiveorgSearchResult(getDomainNameToUse(), item);
                 result.add(sr);
             }
         }
@@ -71,7 +71,7 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
 
     @Override
     protected String getCrawlUrl(ArchiveorgSearchResult sr) {
-        return "http://archive.org/details/" + sr.getItem().identifier + "?output=json";
+        return "http://" + getDomainNameToUse() + "/details/" + sr.getIdentifier() + "?output=json";
     }
 
     @Override
@@ -79,6 +79,27 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         List<ArchiveorgCrawledSearchResult> list = new LinkedList<ArchiveorgCrawledSearchResult>();
 
         String json = new String(data, "UTF-8");
+
+        List<ArchiveorgFile> files = readFiles(json);
+
+        long totalSize = calcTotalSize(files);
+
+        for (ArchiveorgFile file : files) {
+            if (isStreamable(file.filename)) {
+                list.add(new ArchiveorgCrawledStreamableSearchResult(sr, file));
+            } else if (file.filename.endsWith(".torrent")) {
+                list.add(new ArchiveorgTorrentSearchResult(sr, file, totalSize));
+            } else {
+                list.add(new ArchiveorgCrawledSearchResult(sr, file));
+            }
+        }
+
+        return list;
+    }
+
+    private List<ArchiveorgFile> readFiles(String json) throws Exception {
+        List<ArchiveorgFile> result = new LinkedList<ArchiveorgFile>();
+
         JSONObject obj = new JSONObject(json);
         JSONObject files = obj.getJSONObject("files");
 
@@ -89,16 +110,12 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
             String name = it.next();
             ArchiveorgFile file = JsonUtils.toObject(files.getJSONObject(name).toString(), ArchiveorgFile.class);
             if (filter(file)) {
-                String filename = cleanName(name);
-                if (isStreamable(filename)) {
-                    list.add(new ArchiveorgCrawledStreamableSearchResult(sr, filename, file));
-                } else {
-                    list.add(new ArchiveorgCrawledSearchResult(sr, filename, file));
-                }
+                file.filename = cleanName(name);
+                result.add(file);
             }
         }
 
-        return list;
+        return result;
     }
 
     private String cleanName(String name) {
@@ -109,22 +126,25 @@ public class ArchiveorgSearchPerformer extends CrawlPagedWebSearchPerformer<Arch
         return name;
     }
 
+    private long calcTotalSize(List<ArchiveorgFile> files) {
+        long size = 0;
+
+        for (ArchiveorgFile f : files) {
+            try {
+                size += Long.parseLong(f.size);
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        return size;
+    }
+
     private boolean filter(ArchiveorgFile file) {
         if (file.format != null && file.format.equalsIgnoreCase("metadata")) {
             return false;
         }
 
         return true;
-    }
-
-    private boolean isStreamable(String filename) {
-        String ext = FilenameUtils.getExtension(filename);
-        for (String s : STREAMABLE_EXTENSIONS) {
-            if (s.equals(ext)) {
-                return true; // fast return
-            }
-        }
-
-        return false;
     }
 }

@@ -35,7 +35,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.transfers.AzureusManager;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
@@ -95,7 +94,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 // no sure about this case
             }
 
-            if (!Librarian.instance().isExternalStorageMounted() && AzureusManager.isCreated()) {
+            if (!Librarian.instance().isExternalStorageMounted()) {
                 Log.v(TAG, "Halting process due to lack of external storage");
                 Librarian.instance().halt();
             }
@@ -134,22 +133,47 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private void handleConnectedNetwork(NetworkInfo networkInfo) {
         if (NetworkManager.instance().isDataUp()) {
-            Log.v(TAG, "Connected to " + networkInfo.getTypeName());
-            if (Engine.instance().isDisconnected()) {
-                // avoid ANR error inside a broadcast receiver
-                engineExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Engine.instance().startServices();
 
-                        if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                            TransferManager.instance().stopSeedingTorrents();
+            boolean useTorrentsOnMobileData = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
+            
+            // "Boolean Master", just for fun.
+            // Let a <= "mobile up",
+            //     b <= "use torrents on mobile"
+            //
+            // In English:
+            // is mobile data up and not user torrents on mobile? then abort else start services.
+            //
+            // In Boolean:
+            // if (a && !b) then return; else start services.
+            //
+            // since early 'return' statements are a source of evil, I'll use boolean algebra...
+            // so that we can instead just start services under the right conditions.
+            //
+            // negating "a && !b" I get...
+            // ^(a && !b) => ^a || b
+            //
+            // In English:
+            // if not mobile up or use torrents on mobile data then start services. (no else needed)
+            //
+            // mobile up means only mobile data is up and wifi is down.
+
+            if (!NetworkManager.instance().isDataMobileUp() || useTorrentsOnMobileData) {
+                Log.v(TAG, "Connected to " + networkInfo.getTypeName());
+                if (Engine.instance().isDisconnected()) {
+                    // avoid ANR error inside a broadcast receiver
+                    engineExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Engine.instance().startServices();
+    
+                            if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS) ||
+                                (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY))) {
+                                TransferManager.instance().stopSeedingTorrents();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-
-            NetworkManager.instance().printNetworkInfo();
         }
     }
 }

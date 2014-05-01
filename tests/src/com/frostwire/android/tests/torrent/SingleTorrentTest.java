@@ -43,7 +43,7 @@ public class SingleTorrentTest extends TestCase {
     }
 
     public void testDownloadFrom(String url) {
-        HttpClient c = HttpClientFactory.newDefaultInstance();
+        HttpClient c = HttpClientFactory.newInstance();
         byte[] data = c.getBytes(url, 10000, UserAgentGenerator.getUserAgent(), null);
         ByteArrayInputStream is = new ByteArrayInputStream(data);
 

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.frostwire.search.torrent;
 import java.util.List;
 
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
+import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.PerformersHelper;
 import com.frostwire.search.SearchResult;
 
@@ -31,8 +32,8 @@ import com.frostwire.search.SearchResult;
  */
 public abstract class TorrentSearchPerformer extends CrawlPagedWebSearchPerformer<TorrentCrawlableSearchResult> {
 
-    public TorrentSearchPerformer(long token, String keywords, int timeout, int pages) {
-        super(token, keywords, timeout, pages);
+    public TorrentSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages, int numCrawls) {
+        super(domainAliasManager, token, keywords, timeout, pages, numCrawls);
     }
 
     @Override

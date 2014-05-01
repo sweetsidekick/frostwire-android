@@ -25,119 +25,86 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.tracker.client.TRTrackerScraperResponse;
-import org.gudy.azureus2.core3.util.Constants;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-
-import android.util.Log;
+import com.frostwire.util.ByteUtils;
+import com.frostwire.vuze.VuzeDownloadManager;
+import com.frostwire.vuze.VuzeFileInfo;
+import com.frostwire.vuze.VuzeFormatter;
+import com.frostwire.vuze.VuzeUtils;
+import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-final class AzureusBittorrentDownload implements BittorrentDownload {
-
-    private static final String TAG = "FW.AzureusBittorrentDownload";
+public final class AzureusBittorrentDownload implements BittorrentDownload {
 
     private final TransferManager manager;
-    private DownloadManager downloadManager;
+    private final VuzeDownloadManager downloadManager;
+    private final String hash;
 
     private List<BittorrentDownloadItem> items;
-    private String hash;
-    private boolean partialDownload;
-    private Set<DiskManagerFileInfo> fileInfoSet;
-    private long size;
-    private String displayName;
 
-    public AzureusBittorrentDownload(TransferManager manager, DownloadManager downloadManager) {
+    private boolean partialDownload;
+    private Set<VuzeFileInfo> fileInfoSet;
+    private long lastChangedTime;
+
+    public AzureusBittorrentDownload(TransferManager manager, VuzeDownloadManager downloadManager) {
         this.manager = manager;
         this.downloadManager = downloadManager;
+        this.hash = ByteUtils.encodeHex(downloadManager.getHash());
 
-        try {
-            hash = TorrentUtil.hashToString(downloadManager.getTorrent().getHash());
-        } catch (Throwable e) {
-            Log.e(TAG, String.format("Error getting hash %s", e.getMessage()));
-            hash = "";
-        }
-
-        fileInfoSet = TorrentUtil.getNoSkippedFileInfoSet(downloadManager);
-        partialDownload = !TorrentUtil.getSkippedFiles(downloadManager).isEmpty();
-
-        if (partialDownload) {
-            if (fileInfoSet.isEmpty()) {
-                size = downloadManager.getSize();
-            } else {
-                size = 0;
-                for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-                    size += fileInfo.getLength();
-                }
-            }
-        } else {
-            size = downloadManager.getSize();
-        }
-
-        if (fileInfoSet.size() == 1) {
-            displayName = FilenameUtils.getBaseName(fileInfoSet.toArray(new DiskManagerFileInfo[0])[0].getFile(false).getName());
-        } else {
-            displayName = downloadManager.getDisplayName();
-        }
-
-        items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
-        for (DiskManagerFileInfo fileInfo : fileInfoSet) {
-            items.add(new AzureusBittorrentDownloadItem(fileInfo));
-        }
+        refreshData(); // super mutable
     }
 
     public String getDisplayName() {
-        return displayName;
+        return downloadManager.getDisplayName();
     }
 
     public String getStatus() {
-        return DisplayFormatters.formatDownloadStatus(downloadManager);
+        return downloadManager.getStatus();
     }
 
     public int getProgress() {
+        refreshData();
+
         if (isComplete()) {
             return 100;
         }
 
         if (partialDownload) {
             long downloaded = 0;
-            for (DiskManagerFileInfo fileInfo : fileInfoSet) {
+            for (VuzeFileInfo fileInfo : fileInfoSet) {
                 downloaded += fileInfo.getDownloaded();
             }
-            return (int) ((downloaded * 100) / size);
+            return (int) ((downloaded * 100) / getSize());
         } else {
-            return downloadManager.getStats().getDownloadCompleted(true) / 10;
+            return downloadManager.getDownloadCompleted();
         }
     }
 
     public long getSize() {
-        return size;
+        return downloadManager.getSize();
     }
 
     public boolean isResumable() {
-        return TorrentUtil.isStartable(downloadManager);
+        return downloadManager.isResumable();
     }
 
     public boolean isPausable() {
-        return TorrentUtil.isStopable(downloadManager);
+        return downloadManager.isPausable();
     }
 
     public boolean isComplete() {
-        return TorrentUtil.isComplete(downloadManager);
+        return downloadManager.isComplete();
     }
 
     public boolean isDownloading() {
-        return downloadManager.getState() == DownloadManager.STATE_DOWNLOADING;
+        return downloadManager.isDownloading();
     }
 
     public boolean isSeeding() {
-        return downloadManager.getState() == DownloadManager.STATE_SEEDING;
+        return downloadManager.isSeeding();
     }
 
     public List<? extends BittorrentDownloadItem> getItems() {
@@ -146,134 +113,59 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         }
         return items;
     }
+    
+    public void enqueue() {
+        if (isPausable()) {
+            downloadManager.enqueue();
+        }
+    }
 
     public void pause() {
         if (isPausable()) {
-            TorrentUtil.stop(downloadManager);
+            downloadManager.stop();
         }
     }
 
     public void resume() {
         if (isResumable()) {
-            TorrentUtil.start(downloadManager);
+            downloadManager.start();
         }
     }
 
     public File getSavePath() {
-        return downloadManager.getSaveLocation();
+        return downloadManager.getSavePath();
     }
 
     public long getBytesReceived() {
-        return downloadManager.getStats().getTotalGoodDataBytesReceived();
+        return downloadManager.getBytesReceived();
     }
 
     public long getBytesSent() {
-        return downloadManager.getStats().getTotalDataBytesSent();
+        return downloadManager.getBytesSent();
     }
 
     public long getDownloadSpeed() {
-        return downloadManager.getStats().getDataReceiveRate();// / 1000;
+        return downloadManager.getDownloadSpeed();
     }
 
     public long getUploadSpeed() {
-        return downloadManager.getStats().getDataSendRate() / 1000;
+        return downloadManager.getUploadSpeed();
     }
 
     public long getETA() {
-        return downloadManager.getStats().getETA();
+        return downloadManager.getETA();
     }
 
     public Date getDateCreated() {
-        return new Date(downloadManager.getCreationTime());
+        return downloadManager.getCreationDate();
     }
 
     public String getPeers() {
-        long lTotalPeers = -1;
-        long lConnectedPeers = 0;
-        if (downloadManager != null) {
-            lConnectedPeers = downloadManager.getNbPeers();
-
-            if (lTotalPeers == -1) {
-                TRTrackerScraperResponse response = downloadManager.getTrackerScrapeResponse();
-                if (response != null && response.isValid()) {
-                    lTotalPeers = response.getPeers();
-                }
-            }
-        }
-
-        long totalPeers = lTotalPeers;
-        if (totalPeers <= 0) {
-            DownloadManager dm = downloadManager;
-            if (dm != null) {
-                totalPeers = dm.getActivationCount();
-            }
-        }
-
-        //        long value = lConnectedPeers * 10000000;
-        //        if (totalPeers > 0)
-        //            value = value + totalPeers;
-
-        int state = downloadManager.getState();
-        boolean started = state == DownloadManager.STATE_SEEDING || state == DownloadManager.STATE_DOWNLOADING;
-        boolean hasScrape = lTotalPeers >= 0;
-
-        String tmp;
-        if (started) {
-            tmp = hasScrape ? (lConnectedPeers > lTotalPeers ? "%1" : "%1 " + "/" + " %2") : "%1";
-        } else {
-            tmp = hasScrape ? "%2" : "";
-        }
-
-        tmp = tmp.replaceAll("%1", String.valueOf(lConnectedPeers));
-        tmp = tmp.replaceAll("%2", String.valueOf(totalPeers));
-
-        return tmp;
+        return VuzeFormatter.formatPeers(downloadManager.getPeers(), downloadManager.getConnectedPeers(), downloadManager.hasStarted(), downloadManager.hasScrape());
     }
 
     public String getSeeds() {
-        long lTotalSeeds = -1;
-        //long lTotalPeers = 0;
-        long lConnectedSeeds = 0;
-        DownloadManager dm = downloadManager;
-        if (dm != null) {
-            lConnectedSeeds = dm.getNbSeeds();
-
-            if (lTotalSeeds == -1) {
-                TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-                if (response != null && response.isValid()) {
-                    lTotalSeeds = response.getSeeds();
-                    //lTotalPeers = response.getPeers();
-                }
-            }
-        }
-
-        //        // Allows for 2097151 of each type (connected seeds, seeds, peers)
-        //        long value = (lConnectedSeeds << 42);
-        //        if (lTotalSeeds > 0)
-        //            value += (lTotalSeeds << 21);
-        //        if (lTotalPeers > 0)
-        //            value += lTotalPeers;
-
-        //boolean bCompleteTorrent = dm == null ? false : dm.getAssumedComplete();
-
-        int state = dm.getState();
-        boolean started = (state == DownloadManager.STATE_SEEDING || state == DownloadManager.STATE_DOWNLOADING);
-        boolean hasScrape = lTotalSeeds >= 0;
-        String tmp;
-
-        if (started) {
-            tmp = hasScrape ? (lConnectedSeeds > lTotalSeeds ? "%1" : "%1 " + "/" + " %2") : "%1";
-        } else {
-            tmp = hasScrape ? "%2" : "";
-        }
-        tmp = tmp.replaceAll("%1", String.valueOf(lConnectedSeeds));
-        String param2 = "?";
-        if (lTotalSeeds != -1) {
-            param2 = String.valueOf(lTotalSeeds);
-        }
-        tmp = tmp.replaceAll("%2", param2);
-
-        return tmp;
+        return VuzeFormatter.formatSeeds(downloadManager.getSeeds(), downloadManager.getConnectedSeeds(), downloadManager.hasStarted(), downloadManager.hasScrape());
     }
 
     public String getHash() {
@@ -281,75 +173,11 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     public String getSeedToPeerRatio() {
-        float ratio = -1;
-
-        DownloadManager dm = downloadManager;
-        if (dm != null) {
-            TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-            int seeds;
-            int peers;
-
-            if (response != null && response.isValid()) {
-                seeds = Math.max(dm.getNbSeeds(), response.getSeeds());
-
-                int trackerPeerCount = response.getPeers();
-                peers = dm.getNbPeers();
-                if (peers == 0 || trackerPeerCount > peers) {
-                    if (trackerPeerCount <= 0) {
-                        peers = dm.getActivationCount();
-                    } else {
-                        peers = trackerPeerCount;
-                    }
-                }
-            } else {
-                seeds = dm.getNbSeeds();
-                peers = dm.getNbPeers();
-            }
-
-            if (peers < 0 || seeds < 0) {
-                ratio = 0;
-            } else {
-                if (peers == 0) {
-                    if (seeds == 0)
-                        ratio = 0;
-                    else
-                        ratio = Float.POSITIVE_INFINITY;
-                } else {
-                    ratio = (float) seeds / peers;
-                }
-            }
-        }
-
-        if (ratio == -1) {
-            return "";
-        } else if (ratio == 0) {
-            return "??";
-        } else {
-            return DisplayFormatters.formatDecimal(ratio, 3);
-        }
+        return VuzeFormatter.formatSeedToPeerRatio(downloadManager.getConnectedSeeds(), downloadManager.getConnectedPeers());
     }
 
     public String getShareRatio() {
-        DownloadManager dm = downloadManager;
-
-        int sr = (dm == null) ? 0 : dm.getStats().getShareRatio();
-
-        if (sr == Integer.MAX_VALUE) {
-            sr = Integer.MAX_VALUE - 1;
-        }
-        if (sr == -1) {
-            sr = Integer.MAX_VALUE;
-        }
-
-        String shareRatio = "";
-
-        if (sr == Integer.MAX_VALUE) {
-            shareRatio = Constants.INFINITY_STRING;
-        } else {
-            shareRatio = DisplayFormatters.formatDecimal((double) sr / 1000, 3);
-        }
-
-        return shareRatio;
+        return VuzeFormatter.formatShareRatio(downloadManager.getShareRatio());
     }
 
     @Override
@@ -357,16 +185,13 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
         cancel(false);
     }
 
+    @Override
     public void cancel(boolean deleteData) {
-        cancel(deleteData, true);
-    }
-
-    public void cancel(boolean deleteData, boolean async) {
         manager.remove(this);
-        TorrentUtil.removeDownload(downloadManager, deleteData, deleteData, async);
+        VuzeUtils.removeDownload(downloadManager, deleteData, deleteData);
     }
 
-    DownloadManager getDownloadManager() {
+    VuzeDownloadManager getDownloadManager() {
         return downloadManager;
     }
 
@@ -374,9 +199,31 @@ final class AzureusBittorrentDownload implements BittorrentDownload {
     public List<? extends BittorrentDownloadItem> getBittorrentItems() {
         return items;
     }
-    
+
     @Override
     public String getDetailsUrl() {
         return null;
+    }
+
+    private void refreshData() {
+        if (lastChangedTime < downloadManager.getChangedTime()) {
+            lastChangedTime = downloadManager.getChangedTime();
+            fileInfoSet = VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
+            partialDownload = !VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
+
+            items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
+            for (VuzeFileInfo fileInfo : fileInfoSet) {
+                items.add(new AzureusBittorrentDownloadItem(fileInfo));
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BittorrentDownload)) {
+            return false;
+        }
+
+        return getHash().equals(((BittorrentDownload) o).getHash());
     }
 }

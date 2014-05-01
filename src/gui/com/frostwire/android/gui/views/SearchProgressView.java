@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,8 @@ import com.frostwire.android.gui.util.OfferUtils;
  */
 public class SearchProgressView extends LinearLayout {
 
+    private final FreeAppsListener freeAppsListener;
+
     private ProgressBar progressbar;
     private Button buttonCancel;
     private Button buttonFreeApps;
@@ -45,7 +47,9 @@ public class SearchProgressView extends LinearLayout {
 
     public SearchProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        
+
+        this.freeAppsListener = new FreeAppsListener(this);
+
         this.progressEnabled = true;
     }
 
@@ -83,19 +87,13 @@ public class SearchProgressView extends LinearLayout {
         buttonCancel = (Button) findViewById(R.id.view_search_progress_button_cancel);
         buttonFreeApps = (Button) findViewById(R.id.view_search_progress_button_free_apps);
         textNoResults = (TextView) findViewById(R.id.view_search_progress_text_no_results_feedback);
-        
+
         initButtonFreeApps();
     }
 
     private void initButtonFreeApps() {
         buttonFreeApps.setVisibility(View.GONE);
-        buttonFreeApps.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                OfferUtils.onFreeAppsClick(getContext());
-            }
-        });
+        buttonFreeApps.setOnClickListener(freeAppsListener);
     }
 
     private void startProgress() {
@@ -111,5 +109,16 @@ public class SearchProgressView extends LinearLayout {
         textNoResults.setVisibility(View.VISIBLE);
         buttonFreeApps.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
     }
- 
+
+    private static final class FreeAppsListener extends ClickAdapter<View> {
+
+        public FreeAppsListener(View owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(View owner, View v) {
+            OfferUtils.onFreeAppsClick(v.getContext());
+        }
+    }
 }

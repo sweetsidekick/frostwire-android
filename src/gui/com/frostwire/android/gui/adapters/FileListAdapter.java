@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -55,11 +54,14 @@ import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.android.gui.views.BrowseThumbnailImageButton;
+import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
 import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.util.Condition;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -73,14 +75,10 @@ import com.frostwire.uxstats.UXStats;
  */
 public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
 
-    @SuppressWarnings("unused")
-    private static final String TAG = "FW.FileListAdapter";
-
     private final Peer peer;
     private final boolean local;
     private final byte fileType;
     private final ImageLoader thumbnailLoader;
-    private final Drawable fileTypeDrawable;
 
     private final PadLockClickListener padLockClickListener;
     private final DownloadButtonClickListener downloadButtonClickListener;
@@ -103,7 +101,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.local = local;
         this.fileType = fileType;
         this.thumbnailLoader = ImageLoader.getDefault();
-        this.fileTypeDrawable = getContext().getResources().getDrawable(UIUtils.getFileTypeIconId(fileType));
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -195,10 +192,15 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         return new MenuAdapter(context, fd.title, items);
     }
 
+    protected void onLocalPlay() {
+    }
+
     private void localPlay(FileDescriptor fd) {
         if (fd == null) {
             return;
         }
+
+        onLocalPlay();
 
         if (fd.mime != null && fd.mime.contains("audio")) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
@@ -225,23 +227,29 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
     }
 
     private void populateViewThumbnail(View view, FileDescriptor fd) {
-        ImageView fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
+        BrowseThumbnailImageButton fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
             InputStream is = null;
 
             try {
-                thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
+                thumbnailLoader.displayImage(fd, fileThumbnail, null);
             } catch (Throwable e) {
-                fileThumbnail.setImageDrawable(fileTypeDrawable);
+                fileThumbnail.setImageDrawable(null);
             } finally {
                 IOUtils.closeQuietly(is);
             }
-        } else if (local && (fileType == Constants.FILE_TYPE_AUDIO || fileType == Constants.FILE_TYPE_VIDEOS)) {
-            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable, ImageLoader.OVERLAY_FLAG_PLAY);
         } else {
-            thumbnailLoader.displayImage(fd, fileThumbnail, fileTypeDrawable);
+            if (Condition.in(fileType, Constants.FILE_TYPE_AUDIO, Constants.FILE_TYPE_VIDEOS, Constants.FILE_TYPE_RINGTONES)) {
+                if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+                    fileThumbnail.setOverlayState(OverlayState.STOP);
+                } else {
+                    fileThumbnail.setOverlayState(OverlayState.PLAY);
+                }
+            }
+            
+            thumbnailLoader.displayImage(fd, fileThumbnail, null);
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
@@ -311,13 +319,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         TextView fileSize = findView(view, R.id.view_browse_peer_list_item_file_size);
         fileSize.setText(UIUtils.getBytesInHuman(fd.fileSize));
 
-        ImageButton downloadButton = findView(view, R.id.view_browse_peer_list_item_download);
+        BrowseThumbnailImageButton downloadButton = findView(view, R.id.view_browse_peer_list_item_download);
 
         if (local) {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-                downloadButton.setImageResource(R.drawable.browse_peer_stop_icon);
+                downloadButton.setOverlayState(OverlayState.STOP);
             } else {
-                downloadButton.setImageResource(R.drawable.browse_peer_play_icon);
+                downloadButton.setOverlayState(OverlayState.PLAY);
             }
         } else {
             downloadButton.setImageResource(R.drawable.download_icon);

@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,8 @@ package com.frostwire.android.gui.fragments;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,15 +41,14 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.LocalSearchEngine;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
-import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.transfers.ExistingDownload;
+import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearchResults;
+import com.frostwire.android.gui.dialogs.NewTransferDialog;
+import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
-import com.frostwire.android.gui.transfers.InvalidTransfer;
-import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListFragment;
-import com.frostwire.android.gui.views.NewTransferDialog;
-import com.frostwire.android.gui.views.NewTransferDialog.OnYesNoListener;
+import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
+import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -59,6 +57,7 @@ import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
+import com.frostwire.logging.Logger;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchManagerListener;
@@ -69,6 +68,7 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -77,9 +77,9 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public final class SearchFragment extends AbstractListFragment implements MainFragment {
+public final class SearchFragment extends AbstractFragment implements MainFragment, OnDialogClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SearchFragment.class);
+    private static final Logger LOG = Logger.getLogger(SearchFragment.class);
 
     private SearchResultListAdapter adapter;
     private List<Slide> slides;
@@ -88,9 +88,13 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
     private ProgressBar deepSearchProgress;
     private PromotionsView promotions;
     private SearchProgressView searchProgress;
+    private ListView list;
+
+    private final FileTypeCounter fileTypeCounter;
 
     public SearchFragment() {
         super(R.layout.fragment_search);
+        fileTypeCounter = new FileTypeCounter();
     }
 
     @Override
@@ -116,6 +120,15 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         header.setText(R.string.search);
 
         return header;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (adapter != null && (adapter.getCount() > 0 || adapter.getTotalCount() > 0)) {
+            refreshFileTypeCounters(true);
+        }
     }
 
     @Override
@@ -159,6 +172,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
             }
         });
+        
+        list = findView(view, R.id.fragment_search_list);
 
         showSearchView(view);
     }
@@ -169,22 +184,24 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 @Override
                 protected void searchResultClicked(SearchResult sr) {
                     startTransfer(sr, getString(R.string.download_added_to_queue));
-                    uxLogAction(sr);
                 }
             };
-            setListAdapter(adapter);
 
             LocalSearchEngine.instance().registerListener(new SearchManagerListener() {
                 @Override
                 public void onResults(SearchPerformer performer, final List<? extends SearchResult> results) {
                     @SuppressWarnings("unchecked")
-                    final List<SearchResult> filteredList = adapter.filter((List<SearchResult>) results);
+                    FilteredSearchResults fsr = adapter.filter((List<SearchResult>) results);
+                    final List<SearchResult> filteredList = fsr.filtered;
+
+                    fileTypeCounter.add(fsr);
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             adapter.addResults(results, filteredList);
                             showSearchView(getView());
+                            refreshFileTypeCounters(true);
                         }
                     });
                 }
@@ -201,11 +218,26 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 }
             });
         }
+        
+        list.setAdapter(adapter);
+    }
+
+    private void refreshFileTypeCounters(boolean fileTypeCountersVisible) {
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_APPLICATIONS, fileTypeCounter.fsr.numApplications);
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_AUDIO, fileTypeCounter.fsr.numAudio);
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_DOCUMENTS, fileTypeCounter.fsr.numDocuments);
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_PICTURES, fileTypeCounter.fsr.numPictures);
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_TORRENTS, fileTypeCounter.fsr.numTorrents);
+        searchInput.updateFileTypeCounter(Constants.FILE_TYPE_VIDEOS, fileTypeCounter.fsr.numVideo);
+
+        searchInput.setFileTypeCountersVisible(fileTypeCountersVisible);
     }
 
     private void performSearch(String query, int mediaTypeId) {
         adapter.clear();
         adapter.setFileType(mediaTypeId);
+        fileTypeCounter.clear();
+        refreshFileTypeCounters(false);
         LocalSearchEngine.instance().performSearch(query);
         searchProgress.setProgressEnabled(true);
         showSearchView(getView());
@@ -214,6 +246,8 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
 
     private void cancelSearch(View view) {
         adapter.clear();
+        fileTypeCounter.clear();
+        refreshFileTypeCounters(false);
         LocalSearchEngine.instance().cancelSearch();
         searchProgress.setProgressEnabled(false);
         showSearchView(getView());
@@ -225,7 +259,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
             deepSearchProgress.setVisibility(View.GONE);
         } else {
             if (adapter != null && adapter.getCount() > 0) {
-                switchView(view, android.R.id.list);
+                switchView(view, R.id.fragment_search_list);
                 deepSearchProgress.setVisibility(LocalSearchEngine.instance().isSearchFinished() ? View.GONE : View.VISIBLE);
             } else {
                 switchView(view, R.id.fragment_search_search_progress);
@@ -247,60 +281,32 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         }
     }
 
-    private void startTransfer(final SearchResult sr, final String toastMessage) {
-        OnYesNoListener listener = new OnYesNoListener() {
-            public void onYes(NewTransferDialog dialog) {
-                startDownload(sr, toastMessage);
+    @Override
+    public void onDialogClick(String tag, int which) {
+        if (tag.equals(NewTransferDialog.TAG) && which == AbstractDialog.BUTTON_POSITIVE) {
+            if (Ref.alive(NewTransferDialog.srRef)) {
+                startDownload(this.getActivity(), NewTransferDialog.srRef.get(), getString(R.string.download_added_to_queue));
             }
-
-            public void onNo(NewTransferDialog dialog) {
-            }
-        };
-
-        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG)) {
-            if (sr instanceof FileSearchResult) {
-                NewTransferDialog dlg = new NewTransferDialog();
-                dlg.setSearchResult((FileSearchResult) sr);
-                dlg.setListener(listener);
-                dlg.show(getFragmentManager());
-            }
-        } else {
-            listener.onYes(null);
         }
     }
 
-    private void startDownload(final SearchResult sr, final String toastMessage) {
-        AsyncTask<Void, Void, DownloadTransfer> task = new AsyncTask<Void, Void, DownloadTransfer>() {
-
-            @Override
-            protected DownloadTransfer doInBackground(Void... params) {
-                DownloadTransfer transfer = null;
-                try {
-                    transfer = TransferManager.instance().download(sr);
-                } catch (Throwable e) {
-                    LOG.warn("Error adding new download from result: " + sr, e);
-                }
-
-                return transfer;
+    private void startTransfer(final SearchResult sr, final String toastMessage) {
+        if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_SHOW_NEW_TRANSFER_DIALOG)) {
+            if (sr instanceof FileSearchResult) {
+                NewTransferDialog dlg = NewTransferDialog.newInstance((FileSearchResult) sr, false);
+                dlg.show(getFragmentManager());
             }
-
-            @Override
-            protected void onPostExecute(DownloadTransfer transfer) {
-                if (!(transfer instanceof InvalidTransfer)) {
-                    UIUtils.showShortMessage(getActivity(), toastMessage);
-                } else {
-                    if (transfer instanceof ExistingDownload) {
-                        //nothing happens here, the user should just see the transfer
-                        //manager and we avoid adding the same transfer twice.
-                    } else {
-                        UIUtils.showShortMessage(getActivity(), ((InvalidTransfer) transfer).getReasonResId());
-                    }
-                }
+        } else {
+            if (isVisible()) {
+                startDownload(getActivity(), sr, toastMessage);
             }
-
-        };
-
-        UIUtils.showTransfersOnDownloadStart(getActivity());
+        }
+        uxLogAction(sr);
+    }
+    
+    private static void startDownload(Context ctx, SearchResult sr, String message) {
+        StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
+        UIUtils.showTransfersOnDownloadStart(ctx);
         task.execute();
     }
 
@@ -356,7 +362,7 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
         @Override
         protected List<Slide> doInBackground(Void... params) {
             try {
-                HttpClient http = HttpClientFactory.newDefaultInstance();
+                HttpClient http = HttpClientFactory.newInstance();
                 String url = String.format("%s?from=android&fw=%s&sdk=%s", Constants.SERVER_PROMOTIONS_URL, Constants.FROSTWIRE_VERSION_STRING, Build.VERSION.SDK_INT);
                 String json = http.get(url);
                 SlideList slides = JsonUtils.toObject(json, SlideList.class);
@@ -374,6 +380,29 @@ public final class SearchFragment extends AbstractListFragment implements MainFr
                 f.slides = result;
                 f.promotions.setSlides(result);
             }
+        }
+    }
+
+    private static final class FileTypeCounter {
+
+        private final FilteredSearchResults fsr = new FilteredSearchResults();
+
+        public void add(FilteredSearchResults fsr) {
+            this.fsr.numAudio += fsr.numAudio;
+            this.fsr.numApplications += fsr.numApplications;
+            this.fsr.numDocuments += fsr.numDocuments;
+            this.fsr.numPictures += fsr.numPictures;
+            this.fsr.numTorrents += fsr.numTorrents;
+            this.fsr.numVideo += fsr.numVideo;
+        }
+
+        public void clear() {
+            this.fsr.numAudio = 0;
+            this.fsr.numApplications = 0;
+            this.fsr.numDocuments = 0;
+            this.fsr.numPictures = 0;
+            this.fsr.numTorrents = 0;
+            this.fsr.numVideo = 0;
         }
     }
 }

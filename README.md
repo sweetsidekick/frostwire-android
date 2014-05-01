@@ -36,3 +36,5 @@ HACKING GUIDELINES
 Becoming a collaborator will only happen after we have received lots of great patches and we get to know you better.
 
 Happy Hacking.
+
+[![tip for next commit](http://tip4commit.com/projects/200.svg)](http://tip4commit.com/projects/200)

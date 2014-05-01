@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,11 @@
 package com.frostwire.android.gui.fragments;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,30 +33,30 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.util.OfferUtils;
-import com.frostwire.gui.upnp.UPnPManager;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ * 
+ */
 public class BrowsePeersDisabledFragment extends Fragment implements MainFragment {
 
     private TextView header;
-    private Button wifiEnableButton;
+    private Button wifiSharingEnableButton;
     private Button freeAppsButton;
 
     public BrowsePeersDisabledFragment() {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //        setRetainInstance(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse_peers_disabled, container, false);
 
-        wifiEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
+        wifiSharingEnableButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_enable_wifi_sharing);
         freeAppsButton = (Button) view.findViewById(R.id.fragment_browse_peers_disabled_button_free_apps);
         freeAppsButton.setVisibility(OfferUtils.isfreeAppsEnabled() ? View.VISIBLE : View.GONE);
         freeAppsButton.setOnClickListener(new View.OnClickListener() {
@@ -64,14 +66,18 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
             }
         });
 
-        wifiEnableButton.setOnClickListener(new View.OnClickListener() {
+        wifiSharingEnableButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 onWifiEnableButtonClick();
             }
         });
-
+        
+        TextView disabledTextView = (TextView) view.findViewById(R.id.fragment_browse_peers_disabled_text_title);
+        disabledTextView.setText(Html.fromHtml(getString(R.string.wifi_sharing_disabled)));
+        disabledTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        
         return view;
     }
 
@@ -87,22 +93,28 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
     private void onWifiEnableButtonClick() {
         if (getActivity() instanceof MainActivity) {
             
-            AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void,Void,Void>() {
+            final CharSequence buttonCaption = wifiSharingEnableButton.getText();
+            wifiSharingEnableButton.setText("...");
+            wifiSharingEnableButton.setEnabled(false);
+
+            AsyncTask<Void, Void, Void> enableWifiTask = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
                     ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP, true);
-                    UPnPManager.instance().resume();
+                    PeerManager.instance().start();
                     return null;
                 }
-                
+
                 @Override
                 protected void onPostExecute(Void result) {
                     MainActivity activity = (MainActivity) getActivity();
                     activity.switchFragment(R.id.menu_main_peers);
+                    wifiSharingEnableButton.setText(buttonCaption);
+                    wifiSharingEnableButton.setEnabled(true);
                 }
-                
+
             };
-            
+
             enableWifiTask.execute();
         }
     }

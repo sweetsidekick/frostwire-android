@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,25 +69,29 @@
         android:key="frostwire.prefs.search.preference_category"
         android:title="@string/search_settings" >
         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_clearbits"
-            android:summary="@string/use_clearbits"
-            android:title="@string/use_clearbits" />
+            android:key="frostwire.prefs.search.use_tpb"
+            android:summary="@string/use_tpb_summary"
+            android:title="@string/use_tpb" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_torrentsfm"
+            android:summary="@string/use_torrentsfm_summary"
+            android:title="@string/use_torrentsfm" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_monova"
+            android:summary="@string/use_monova_summary"
+            android:title="@string/use_monova" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_yify"
+            android:summary="@string/use_yify_summary"
+            android:title="@string/use_yify" />
         <CheckBoxPreference
             android:key="frostwire.prefs.search.use_extratorrent"
             android:summary="@string/use_extratorrent"
             android:title="@string/use_extratorrent" />
         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_isohunt"
-            android:summary="@string/use_isohunt"
-            android:title="@string/use_isohunt" />
-        <CheckBoxPreference
             android:key="frostwire.prefs.search.use_mininova"
             android:summary="@string/use_mininova"
             android:title="@string/use_mininova" />
-<!--         <CheckBoxPreference
-            android:key="frostwire.prefs.search.use_vertor"
-            android:summary="@string/use_vertor"
-            android:title="@string/use_vertor" /> -->
         <CheckBoxPreference
             android:key="frostwire.prefs.search.use_youtube"
             android:summary="@string/use_youtube"
@@ -104,7 +108,19 @@
             android:key="frostwire.prefs.search.use_frostclick"
             android:summary="@string/use_frostclick"
             android:title="@string/use_frostclick" />
-    </PreferenceCategory>
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_bitsnoop"
+            android:summary="@string/use_bitsnoop"
+            android:title="@string/use_bitsnoop" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_torlock"
+            android:summary="@string/use_torlock"
+            android:title="@string/use_torlock" />
+        <CheckBoxPreference
+            android:key="frostwire.prefs.search.use_eztv"
+            android:summary="@string/use_eztv"
+            android:title="@string/use_eztv" />
+</PreferenceCategory>
     <PreferenceCategory android:title="@string/other_settings" >
         <CheckBoxPreference
             android:key="frostwire.prefs.gui.vibrate_on_finished_download"

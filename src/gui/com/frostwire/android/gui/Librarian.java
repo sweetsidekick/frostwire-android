@@ -41,6 +41,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.BaseColumns;
@@ -64,12 +65,13 @@ import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.core.providers.UniversalStore.Applications.ApplicationsColumns;
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
-import com.frostwire.android.gui.transfers.TorrentUtil;
 import com.frostwire.android.gui.util.Apk;
-import com.frostwire.android.gui.util.FileUtils;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.StringUtils;
-import com.frostwire.gui.upnp.UPnPManager;
+import com.frostwire.localpeer.Finger;
+import com.frostwire.localpeer.ScreenMetrics;
+import com.frostwire.util.DirectoryUtils;
+import com.frostwire.vuze.VuzeUtils;
 
 /**
  * The Librarian is in charge of:
@@ -251,8 +253,7 @@ public final class Librarian {
                     cr.insert(Sharing.Media.CONTENT_URI, contentValues);
                 } else {
                     // everything else is an update
-                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?",
-                            new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
+                    cr.update(Sharing.Media.CONTENT_URI, contentValues, SharingColumns.FILE_ID + "=? AND " + SharingColumns.FILE_TYPE + "=?", new String[] { String.valueOf(fileDescriptor.id), String.valueOf(fileType) });
                 }
             }
 
@@ -285,7 +286,7 @@ public final class Librarian {
     }
 
     public void scan(File file) {
-        scan(file, TorrentUtil.getIgnorableFiles());
+        scan(file, VuzeUtils.getIgnorableFiles());
     }
 
     public Finger finger(boolean local) {
@@ -296,14 +297,13 @@ public final class Librarian {
         finger.frostwireVersion = Constants.FROSTWIRE_VERSION_STRING;
         finger.totalShared = getNumFiles();
 
-        DeviceInfo di = new DeviceInfo();
-        finger.deviceVersion = di.getVersion();
-        finger.deviceModel = di.getModel();
-        finger.deviceProduct = di.getProduct();
-        finger.deviceName = di.getName();
-        finger.deviceManufacturer = di.getManufacturer();
-        finger.deviceBrand = di.getBrand();
-        finger.deviceScreen = di.getScreenMetrics();
+        finger.deviceVersion = Build.VERSION.RELEASE;
+        finger.deviceModel = Build.MODEL;
+        finger.deviceProduct = Build.PRODUCT;
+        finger.deviceName = Build.DEVICE;
+        finger.deviceManufacturer = Build.MANUFACTURER;
+        finger.deviceBrand = Build.BRAND;
+        finger.deviceScreen = readScreenMetrics();
 
         finger.numSharedAudioFiles = getNumFiles(Constants.FILE_TYPE_AUDIO, true);
         finger.numSharedVideoFiles = getNumFiles(Constants.FILE_TYPE_VIDEOS, true);
@@ -378,7 +378,7 @@ public final class Librarian {
     }
 
     public EphemeralPlaylist createEphemeralPlaylist(FileDescriptor fd) {
-        List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO,FilenameUtils.getPath(fd.filePath), false);
+        List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, FilenameUtils.getPath(fd.filePath), false);
 
         if (fds.size() == 0) { // just in case
             Log.w(TAG, "Logic error creating ephemeral playlist");
@@ -412,7 +412,7 @@ public final class Librarian {
 
     private void broadcastRefreshFinger() {
         context.sendBroadcast(new Intent(Constants.ACTION_REFRESH_FINGER));
-        UPnPManager.instance().refreshPing();
+        PeerManager.instance().updateLocalPeer();
     }
 
     private void syncApplicationsProviderSupport() {
@@ -531,7 +531,7 @@ public final class Librarian {
     }
 
     private void syncMediaStoreSupport() {
-        Set<File> ignorableFiles = TorrentUtil.getIgnorableFiles();
+        Set<File> ignorableFiles = VuzeUtils.getIgnorableFiles();
 
         syncMediaStore(Constants.FILE_TYPE_AUDIO, ignorableFiles);
         syncMediaStore(Constants.FILE_TYPE_PICTURES, ignorableFiles);
@@ -760,8 +760,7 @@ public final class Librarian {
     private void deleteSharedState(byte fileType, int fileId) {
         try {
             ContentResolver cr = context.getContentResolver();
-            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?",
-                    new String[] { String.valueOf(fileId), String.valueOf(fileType) });
+            int deleted = cr.delete(UniversalStore.Sharing.Media.CONTENT_URI, SharingColumns.FILE_ID + "= ? AND " + SharingColumns.FILE_TYPE + " = ?", new String[] { String.valueOf(fileId), String.valueOf(fileType) });
             Log.d(TAG, "deleteSharedState " + deleted + " rows  (fileType: " + fileType + ", fileId: " + fileId + " )");
         } catch (Throwable e) {
             Log.e(TAG, "Failed to delete shared state for fileType=" + fileType + ", fileId=" + fileId, e);
@@ -852,7 +851,7 @@ public final class Librarian {
 
             new UniversalScanner(context).scan(file.getAbsolutePath());
         } else if (file.isDirectory() && file.canRead()) {
-            Collection<File> flattenedFiles = FileUtils.getAllFolderFiles(file, null);
+            Collection<File> flattenedFiles = DirectoryUtils.getAllFolderFiles(file, null);
 
             if (ignorableFiles != null && !ignorableFiles.isEmpty()) {
                 flattenedFiles.removeAll(ignorableFiles);

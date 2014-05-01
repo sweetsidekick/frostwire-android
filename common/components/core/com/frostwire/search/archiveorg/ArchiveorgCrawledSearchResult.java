@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import com.frostwire.search.HttpSearchResult;
  */
 public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult implements HttpSearchResult {
 
-    private static final String DOWNLOAD_URL = "http://archive.org/download/%s/%s";
+    private static final String DOWNLOAD_URL = "http://%s/download/%s/%s";
 
     private final String filename;
 
@@ -41,12 +41,11 @@ public class ArchiveorgCrawledSearchResult extends AbstractCrawledSearchResult i
     private final String downloadUrl;
     private final long size;
 
-    public ArchiveorgCrawledSearchResult(ArchiveorgSearchResult sr, String filename, ArchiveorgFile file) {
+    public ArchiveorgCrawledSearchResult(ArchiveorgSearchResult sr, ArchiveorgFile file) {
         super(sr);
-        this.filename = filename;
-
+        this.filename = file.filename;
         this.displayName = FilenameUtils.getBaseName(filename) + " (" + sr.getDisplayName() + ")";
-        this.downloadUrl = String.format(Locale.US, DOWNLOAD_URL, sr.getItem().identifier, filename);
+        this.downloadUrl = String.format(Locale.US, DOWNLOAD_URL, sr.getDomainName(), sr.getIdentifier(), filename);
         this.size = calcSize(file);
     }
 

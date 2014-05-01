@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ package com.frostwire.search;
 
 import java.util.List;
 
+import com.frostwire.search.domainalias.DomainAliasManager;
+
 /**
  * 
  * @author gubatron
@@ -30,8 +32,8 @@ public abstract class PagedRegexSearchPerformer<T extends SearchResult> extends 
 
     private final int regexMaxResults;
 
-    public PagedRegexSearchPerformer(long token, String keywords, int timeout, int pages, int regexMaxResults) {
-        super(token, keywords, timeout, pages);
+    public PagedRegexSearchPerformer(DomainAliasManager domainAliasManager, long token, String keywords, int timeout, int pages, int regexMaxResults) {
+        super(domainAliasManager, token, keywords, timeout, pages);
         this.regexMaxResults = regexMaxResults;
     }
 

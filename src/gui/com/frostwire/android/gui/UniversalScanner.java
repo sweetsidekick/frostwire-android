@@ -23,8 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -43,6 +41,7 @@ import com.frostwire.android.core.providers.UniversalStore;
 import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -52,7 +51,7 @@ import com.frostwire.android.gui.util.UIUtils;
  */
 final class UniversalScanner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UniversalScanner.class);
+    private static final Logger LOG = Logger.getLogger(UniversalScanner.class);
 
     private final Context context;
 

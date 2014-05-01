@@ -26,7 +26,7 @@
     <string name="activity_chat_name">Czat</string>
     <string name="activity_downloads_name">Aktywne Pobieranie</string>
     <string name="activity_uploads_name">Aktywne Wysyłanie</string>
-    <string name="activity_about">Informacje o</string>
+    <string name="activity_about">O nas</string>
     <string name="activity_debug_name">Debugować</string>
     <string name="disconnected">Rozłączony</string>
     <string name="all_transfers_will_stop_are_you_sure">Wszystkie transfery się zatrzymają.\nJesteś tego pewny?</string>
@@ -92,7 +92,7 @@
     <string name="go_to">Idź Do</string>
     <string name="done">Gotowe</string>
     <string name="home">Strona Główna</string>
-    <string name="about">Informacje o</string>
+    <string name="about">O nas</string>
     <string name="send_to_third_party">Wyślij/Prześlij</string>
     <string name="send_file_using">Wyślij plik za pomocą</string>
     <string name="my_files">Moje pliki</string>
@@ -199,7 +199,7 @@
     <string name="files_shared">Udostępnione pliki</string>
     <string name="share_finished_downloads">Udostępnij zakończone pobierania przez WiFi</string>
     <string name="share_finished_downloads_summary">Pobrane pliki będą dostępne dla innych użytkowników FrostWire w sieci WiFi.</string>
-    <string name="are_you_sure_delete_files">Czy na pewno chcesz CAŁKOWICE USUNĄĆ wybrane pliki?</string>
+    <string name="are_you_sure_delete_files">Czy na pewno chcesz CAŁKOWICE USUNĄĆ wybrane pliki z twojego urządzenia?</string>
     <string name="searchable_activity_label">Aktywność Przeszukiwania</string>
     <string name="search_hint">Szukaj Zawartości</string>
     <string name="search_settings_description">Szukaj Torrentów</string>
@@ -390,10 +390,10 @@
     <string name="wifi_sharing">Udostępnianie przez Wi-Fi</string>
     <string name="activity_mediaplayer_name">Odtwarzacz Multimedialny</string>
     <string name="stop">Zatrzymaj</string>
-    <string name="donate_1">Podaruj 3zł</string>
-    <string name="donate_5">Podaruj 15zł</string>
-    <string name="donate_10">Podaruj 30zł</string>
-    <string name="donate_25">Podaruj 75zł</string>
+    <string name="donate_1">Podaruj $1</string>
+    <string name="donate_5">Podaruj $5</string>
+    <string name="donate_10">Podaruj $10</string>
+    <string name="donate_25">Podaruj $25</string>
 	<string name="one_file_shared" >Jeden plik został udostępniony dla wszystkich urządzeń FrostWire na tej samej sieci Wi-Fi.</string>
 	<string name="n_files_shared" >%d plików zostało udostępnionych dla wszystkich urządzeń FrostWire na tej samej sieci Wi-Fi</string>
 	<string name="playing_now_colon">Odtwarzane teraz:</string>
@@ -414,10 +414,10 @@
     <string name="clear_search_cache_summary">Wyczyść Pamięć Podręczną Wyszukiwania</string>
     <string name="no_results_feedback">Nie znaleziono żadnych rezultatów.\n\nSprawdź swoje połączenie z internetem lub użyj innych słów kluczowych.</string>
     <string name="donate">Podaruj</string>
-    <string name="one_dollar">3zł</string>
-    <string name="five_dollars">15zł</string>
-    <string name="ten_dollars">30zł</string>
-    <string name="twenty_five_dollars">50zł</string>
+    <string name="one_dollar">$1</string>
+    <string name="five_dollars">$5</string>
+    <string name="ten_dollars">$10</string>
+    <string name="twenty_five_dollars">$25</string>
     <string name="watch_tv">Oglądaj TV</string>
     <string name="free_apps">Darmowe Aplikacje</string>
     <string name="use_frostclick">Użyj FrostClick</string>

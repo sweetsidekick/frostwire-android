@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014,, FrostWire(R). All rights reserved.
  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ package com.frostwire.uxstats;
 
 import java.util.concurrent.ExecutorService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.frostwire.logging.Logger;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
@@ -32,8 +30,9 @@ import com.frostwire.util.JsonUtils;
  *
  */
 public final class UXStats {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UXStats.class);
+    private static final boolean IS_TESTING = false;
+    
+    private static final Logger LOG = Logger.getLogger(UXStats.class);
 
     private static final int HTTP_TIMEOUT = 4000;
 
@@ -50,7 +49,7 @@ public final class UXStats {
     }
 
     private UXStats() {
-        this.httpClient = HttpClientFactory.newDefaultInstance();
+        this.httpClient = HttpClientFactory.newInstance();
 
         this.executor = null;
         this.conf = null;
@@ -147,7 +146,13 @@ public final class UXStats {
         public void run() {
             try {
                 String json = JsonUtils.toJson(data);
-                httpClient.post(conf.getUrl(), HTTP_TIMEOUT, "FrostWire/UXStats", json, true);
+                String postURL = conf.getUrl();
+                
+                if (IS_TESTING) {
+                    postURL += "?test=1";
+                }
+                
+                httpClient.post(postURL, HTTP_TIMEOUT, "FrostWire/UXStats", json, true);
             } catch (Throwable e) {
                 LOG.error("Unable to send ux stats", e);
             }

@@ -19,391 +19,435 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import android.util.Log;
 
-import com.coremedia.iso.BoxParser;
-import com.coremedia.iso.IsoFile;
-import com.coremedia.iso.PropertyBoxParserImpl;
-import com.coremedia.iso.boxes.Box;
-import com.coremedia.iso.boxes.ContainerBox;
-import com.coremedia.iso.boxes.FileTypeBox;
-import com.coremedia.iso.boxes.HandlerBox;
-import com.coremedia.iso.boxes.MetaBox;
-import com.coremedia.iso.boxes.MovieBox;
-import com.coremedia.iso.boxes.TrackBox;
-import com.coremedia.iso.boxes.TrackHeaderBox;
-import com.coremedia.iso.boxes.UserDataBox;
-import com.coremedia.iso.boxes.apple.AppleAlbumArtistBox;
-import com.coremedia.iso.boxes.apple.AppleAlbumBox;
-import com.coremedia.iso.boxes.apple.AppleArtistBox;
-import com.coremedia.iso.boxes.apple.AppleCoverBox;
-import com.coremedia.iso.boxes.apple.AppleItemListBox;
-import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;
-import com.coremedia.iso.boxes.apple.AppleTrackTitleBox;
 import com.frostwire.android.R;
-import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.search.extractors.YouTubeExtractor.LinkInfo;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
-import com.frostwire.search.youtube.YouTubeDownloadLink;
-import com.googlecode.mp4parser.AbstractBox;
-import com.googlecode.mp4parser.authoring.Movie;
-import com.googlecode.mp4parser.authoring.Mp4TrackImpl;
-import com.googlecode.mp4parser.authoring.Track;
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.frostwire.util.HttpClient;
+import com.frostwire.util.HttpClient.HttpClientListener;
+import com.frostwire.util.HttpClientFactory;
+import com.frostwire.util.MP4Muxer;
+import com.frostwire.util.MP4Muxer.MP4Metadata;
 
 /**
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
-public class YouTubeDownload extends TemporaryDownloadTransfer<YouTubeCrawledSearchResult> {
+public final class YouTubeDownload implements DownloadTransfer {
 
-    private static final String TAG = "FW.YouTubeDownload";
+    private static final String TAG = "FW.HttpDownload";
 
-    private static final int STATUS_NONE = 0;
-    private static final int STATUS_VERIFYING = 1;
+    private static final int STATUS_DOWNLOADING = 1;
+    private static final int STATUS_COMPLETE = 2;
+    private static final int STATUS_ERROR = 3;
+    private static final int STATUS_CANCELLED = 4;
+    private static final int STATUS_WAITING = 5;
+    private static final int STATUS_DEMUXING = 6;
 
-    private int status;
+    private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
     private final TransferManager manager;
-    
-    public YouTubeDownload(TransferManager manager, YouTubeCrawledSearchResult sr) {
+    private final YouTubeCrawledSearchResult sr;
+    private final DownloadType downloadType;
+
+    private final File completeFile;
+    private final File tempVideo;
+    private final File tempAudio;
+
+    private final HttpClient httpClient;
+    private final HttpClientListener httpClientListener;
+    private final Date dateCreated;
+
+    private final long size;
+    private int status;
+    private long bytesReceived;
+    private long averageSpeed; // in bytes
+
+    // variables to keep the download rate of file transfer
+    private long speedMarkTimestamp;
+    private long totalReceivedSinceLastSpeedStamp;
+
+    YouTubeDownload(TransferManager manager, YouTubeCrawledSearchResult sr) {
         this.manager = manager;
         this.sr = sr;
+        this.downloadType = buildDownloadType(sr);
+        this.size = sr.getSize();
+
+        String filename = sr.getFilename();
+
+        completeFile = buildFile(SystemUtils.getTorrentDataDirectory(), filename);
+        tempVideo = buildTempFile(FilenameUtils.getBaseName(filename), "video");
+        tempAudio = buildTempFile(FilenameUtils.getBaseName(filename), "audio");
+
+        bytesReceived = 0;
+        dateCreated = new Date();
+
+        httpClientListener = new HttpDownloadListenerImpl();
+
+        httpClient = HttpClientFactory.newInstance();
+        httpClient.setListener(httpClientListener);
     }
 
-    @Override
+    private static File buildFile(File savePath, String name) {
+        String baseName = FilenameUtils.getBaseName(name);
+        String ext = FilenameUtils.getExtension(name);
+
+        File f = new File(savePath, name);
+        int i = 1;
+        while (f.exists() && i < Integer.MAX_VALUE) {
+            f = new File(savePath, baseName + " (" + i + ")." + ext);
+            i++;
+        }
+        return f;
+    }
+
+    private static File buildTempFile(String name, String ext) {
+        return new File(SystemUtils.getTempDirectory(), name + "." + ext);
+    }
+
+    private DownloadType buildDownloadType(YouTubeCrawledSearchResult sr) {
+        DownloadType dt;
+
+        if (sr.getVideo() != null && sr.getAudio() == null) {
+            dt = DownloadType.VIDEO;
+        } else if (sr.getVideo() != null && sr.getAudio() != null) {
+            dt = DownloadType.DASH;
+        } else if (sr.getVideo() == null && sr.getAudio() != null) {
+            dt = DownloadType.DEMUX;
+        } else {
+            throw new IllegalArgumentException("Not track specified");
+        }
+
+        return dt;
+    }
+
     public String getDisplayName() {
         return sr.getDisplayName();
     }
 
-    @Override
     public String getStatus() {
-        if (status == STATUS_VERIFYING) {
-            return String.valueOf(R.string.youtube_download_status_verifying);
+        return getStatusString(status);
+    }
+
+    public int getProgress() {
+        if (size > 0) {
+            return isComplete() ? 100 : (int) ((bytesReceived * 100) / size);
         } else {
-            return delegate != null ? delegate.getStatus() : "";
+            return 0;
         }
     }
 
-    @Override
-    public int getProgress() {
-        return delegate != null ? delegate.getProgress() : 0;
-    }
-
-    @Override
     public long getSize() {
-        return delegate != null ? delegate.getSize() : 0;
+        return size;
     }
 
-    @Override
     public Date getDateCreated() {
-        return delegate != null ? delegate.getDateCreated() : new Date();
+        return dateCreated;
     }
 
-    @Override
     public long getBytesReceived() {
-        return delegate != null ? delegate.getBytesReceived() : 0;
+        return bytesReceived;
     }
 
-    @Override
     public long getBytesSent() {
-        return delegate != null ? delegate.getBytesSent() : 0;
+        return 0;
     }
 
-    @Override
     public long getDownloadSpeed() {
-        return delegate != null ? delegate.getDownloadSpeed() : 0;
+        return (!isDownloading()) ? 0 : averageSpeed;
     }
 
-    @Override
     public long getUploadSpeed() {
-        return delegate != null ? delegate.getUploadSpeed() : 0;
+        return 0;
     }
 
-    @Override
     public long getETA() {
-        return delegate != null ? delegate.getETA() : 0;
+        if (size > 0) {
+            long speed = getDownloadSpeed();
+            return speed > 0 ? (size - getBytesReceived()) / speed : Long.MAX_VALUE;
+        } else {
+            return 0;
+        }
     }
 
-    @Override
     public boolean isComplete() {
-        return delegate != null ? delegate.isComplete() : false;
+        if (bytesReceived > 0) {
+            return bytesReceived == size || status == STATUS_COMPLETE || status == STATUS_ERROR;
+        } else {
+            return false;
+        }
     }
 
-    @Override
+    public boolean isDownloading() {
+        return status == STATUS_DOWNLOADING;
+    }
+
     public List<? extends TransferItem> getItems() {
         return Collections.emptyList();
     }
 
-    @Override
+    public File getSavePath() {
+        return completeFile;
+    }
+
     public void cancel() {
-        if (delegate != null) {
-            delegate.cancel();
-        }
-        manager.remove(this);
+        cancel(false);
     }
 
-    @Override
-    public boolean isDownloading() {
-        return delegate != null ? delegate.isDownloading() : false;
-    }
-
-    @Override
     public void cancel(boolean deleteData) {
-        if (delegate != null) {
-            delegate.cancel(deleteData);
+        if (status != STATUS_COMPLETE) {
+            status = STATUS_CANCELLED;
+        }
+        if (status != STATUS_COMPLETE || deleteData) {
+            cleanup();
         }
         manager.remove(this);
     }
 
     public void start() {
-        
-        try {
-            YouTubeDownloadLink ytLink = sr.getYouTubeDownloadLink();
-            HttpDownloadLink link = new HttpDownloadLink(ytLink.getDownloadUrl(),ytLink.getFilename(),sr.getDisplayName(),ytLink.getSize(),false);
-            if (link != null) {
-                final boolean isAudio =sr.getYouTubeDownloadLink().isAudio();
-                if (isAudio) {
-                    link = link.withFilename(link.getFileName().replace(".mp4", ".m4a"));
-                }
-                
-                final HttpDownloadLink finalLink = link;
+        if (downloadType == DownloadType.DEMUX) {
+            start(sr.getAudio(), tempAudio);
+        } else {
+            start(sr.getVideo(), tempVideo);
+        }
+    }
 
-                delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
-                delegate.setListener(new HttpDownloadListener() {
-                    @Override
-                    public void onComplete(HttpDownload download) {
-                        if (isAudio) {
-                            if (!demuxMP4Audio(finalLink, download, sr.getDetailsUrl())) {
-                                // handle demux error here. Why? java.lang.RuntimeException: too many PopLocalFrame calls
-                            }
+    int getStatusCode() {
+        return status;
+    }
+
+    private void start(final LinkInfo inf, final File temp) {
+        status = STATUS_WAITING;
+
+        Engine.instance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    status = STATUS_DOWNLOADING;
+                    httpClient.save(inf.link, temp, false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    httpClientListener.onError(httpClient, e);
+                }
+            }
+        });
+    }
+
+    private String getStatusString(int status) {
+        int resId;
+        switch (status) {
+        case STATUS_DOWNLOADING:
+            resId = R.string.peer_http_download_status_downloading;
+            break;
+        case STATUS_COMPLETE:
+            resId = R.string.peer_http_download_status_complete;
+            break;
+        case STATUS_ERROR:
+            resId = R.string.peer_http_download_status_error;
+            break;
+        case STATUS_CANCELLED:
+            resId = R.string.peer_http_download_status_cancelled;
+            break;
+        case STATUS_WAITING:
+            resId = R.string.peer_http_download_status_waiting;
+            break;
+        case STATUS_DEMUXING:
+            resId = R.string.transfer_status_demuxing;
+            break;
+        default:
+            resId = R.string.peer_http_download_status_unknown;
+            break;
+        }
+        return String.valueOf(resId);
+    }
+
+    private void updateAverageDownloadSpeed() {
+        long now = System.currentTimeMillis();
+
+        if (isComplete()) {
+            averageSpeed = 0;
+            speedMarkTimestamp = now;
+            totalReceivedSinceLastSpeedStamp = 0;
+        } else if (now - speedMarkTimestamp > SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS) {
+            averageSpeed = ((bytesReceived - totalReceivedSinceLastSpeedStamp) * 1000) / (now - speedMarkTimestamp);
+            speedMarkTimestamp = now;
+            totalReceivedSinceLastSpeedStamp = bytesReceived;
+        }
+    }
+
+    private void complete() {
+
+        status = STATUS_COMPLETE;
+
+        manager.incrementDownloadsToReview();
+        Engine.instance().notifyDownloadFinished(getDisplayName(), getSavePath());
+
+        if (completeFile.getAbsoluteFile().exists()) {
+            Librarian.instance().scan(getSavePath().getAbsoluteFile());
+        }
+
+        cleanupIncomplete();
+    }
+
+    private void error(Throwable e) {
+        if (status != STATUS_CANCELLED) {
+            if (e != null) {
+                Log.e(TAG, String.format("Error downloading url: %s", sr.getDownloadUrl()), e);
+            } else {
+                Log.e(TAG, String.format("Error downloading url: %s", sr.getDownloadUrl()));
+            }
+            status = STATUS_ERROR;
+            cleanup();
+        }
+    }
+
+    private void cleanup() {
+        try {
+            cleanupComplete();
+            cleanupIncomplete();
+        } catch (Throwable tr) {
+            // ignore
+        }
+    }
+
+    @Override
+    public String getDetailsUrl() {
+        return sr.getDetailsUrl();
+    }
+
+    private static enum DownloadType {
+        VIDEO, DASH, DEMUX
+    }
+
+    private final class HttpDownloadListenerImpl implements HttpClientListener {
+        @Override   
+        public void onError(HttpClient client, Exception e) {
+            error(e);
+        }
+
+        @Override
+        public void onData(HttpClient client, byte[] buffer, int offset, int length) {
+            if (status != STATUS_COMPLETE && status != STATUS_CANCELLED && status != STATUS_DEMUXING) {
+                bytesReceived += length;
+                updateAverageDownloadSpeed();
+                status = STATUS_DOWNLOADING;
+            }
+        }
+
+        @Override
+        public void onComplete(HttpClient client) {
+            if (downloadType == DownloadType.VIDEO) {
+                boolean renameTo = tempVideo.renameTo(completeFile);
+
+                if (!renameTo) {
+                    //error(null);
+                } else {
+                    complete();
+                }
+            } else if (downloadType == DownloadType.DEMUX) {
+                try {
+                    status = STATUS_DEMUXING;
+                    new MP4Muxer().demuxAudio(tempAudio.getAbsolutePath(), completeFile.getAbsolutePath(), buildMetadata());
+
+                    if (!completeFile.exists()) {
+                        //error(null);
+                    } else {
+                        complete();
+                    }
+
+                } catch (Exception e) {
+                    error(e);
+                }
+            } else if (downloadType == DownloadType.DASH) {
+                if (tempVideo.exists() && !tempAudio.exists()) {
+                    start(sr.getAudio(), tempAudio);
+                } else if (tempVideo.exists() && tempAudio.exists()) {
+                    try {
+                        status = STATUS_DEMUXING;
+                        new MP4Muxer().mux(tempVideo.getAbsolutePath(), tempAudio.getAbsolutePath(), completeFile.getAbsolutePath(), buildMetadata());
+
+                        if (!completeFile.exists()) {
+                            //error(null);
+                        } else {
+                            complete();
                         }
 
-                        moveFile(download.getSavePath(), !isAudio);
-
-                        scanFinalFile();
+                    } catch (Exception e) {
+                        error(e);
                     }
-                });
-                delegate.start();
+                } else {
+                    error(null);
+                }
+            } else {
+                // warning!!! if this point is reached review the logic
+                error(null);
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting youtube download", e);
+        }
+
+        @Override
+        public void onCancel(HttpClient client) {
+            cleanup();
+            status = STATUS_CANCELLED;
+        }
+
+        @Override
+        public void onHeaders(HttpClient httpClient, Map<String, List<String>> headerFields) {
+            
         }
     }
 
-    protected void moveFile(File savePath, boolean video) {
-        super.moveFile(savePath, video ? Constants.FILE_TYPE_VIDEOS : Constants.FILE_TYPE_AUDIO);
+    private void cleanupIncomplete() {
+        cleanupFile(tempVideo);
+        cleanupFile(tempAudio);
     }
 
-    private boolean demuxMP4Audio(HttpDownloadLink dl, HttpDownload delegate, String videoLink) {
-        String filename = delegate.getSavePath().getAbsolutePath();
-        try {
-            status = STATUS_VERIFYING;
-            String mp4Filename = filename.replace(".m4a", ".mp4");
-            final String jpgFilename = filename.replace(".m4a", ".jpg");
-            downloadThumbnail(dl, jpgFilename, videoLink);
-            new File(filename).renameTo(new File(mp4Filename));
-            FileInputStream fis = new FileInputStream(mp4Filename);
-            fis.getFD().sync();
-            FileChannel inFC = fis.getChannel();
-            Movie inVideo = buildMovie(inFC);
+    private void cleanupComplete() {
+        cleanupFile(completeFile);
+    }
 
-            Track audioTrack = null;
-
-            for (Track trk : inVideo.getTracks()) {
-                if (trk.getHandler().equals("soun")) {
-                    audioTrack = trk;
-                    break;
-                }
+    private void cleanupFile(File f) {
+        if (f.exists()) {
+            boolean delete = f.delete();
+            if (!delete) {
+                f.deleteOnExit();
             }
+        }
+    }
 
-            if (audioTrack == null) {
-                Log.e(TAG, "No Audio track in MP4 file!!! - " + filename);
-                fis.close();
-                return false;
-            }
-
-            Movie outMovie = new Movie();
-            outMovie.addTrack(audioTrack);
-
-            IsoFile out = new DefaultMp4Builder() {
-                protected FileTypeBox createFileTypeBox(Movie movie) {
-                    List<String> minorBrands = new LinkedList<String>();
-                    minorBrands.add("M4A ");
-                    minorBrands.add("mp42");
-                    minorBrands.add("isom");
-                    minorBrands.add("\0\0\0\0");
-
-                    return new FileTypeBox("M4A ", 0, minorBrands);
-                };
-
-                protected MovieBox createMovieBox(Movie movie, Map<Track, int[]> chunks) {
-                    MovieBox moov = super.createMovieBox(movie, chunks);
-                    moov.getMovieHeaderBox().setVersion(0);
-                    return moov;
-                };
-
-                protected TrackBox createTrackBox(Track track, Movie movie, Map<Track, int[]> chunks) {
-                    TrackBox trak = super.createTrackBox(track, movie, chunks);
-
-                    TrackHeaderBox tkhd = trak.getTrackHeaderBox();
-                    tkhd.setVersion(0);
-                    tkhd.setVolume(1.0f);
-
-                    return trak;
-                };
-
-                protected Box createUdta(Movie movie) {
-                    return addUserDataBox(sr.getDisplayName(), sr.getSource(), jpgFilename);
-                };
-            }.build(outMovie);
-            String audioFilename = filename;
-            FileOutputStream fos = new FileOutputStream(audioFilename);
-            out.getBox(fos.getChannel());
-            fos.close();
-
-            if (!new File(mp4Filename).delete()) {
-                new File(mp4Filename).deleteOnExit();
-            }
-            File jpgFile = new File(jpgFilename);
-            if (jpgFile.exists() && !jpgFile.delete()) {
-                jpgFile.deleteOnExit();
-            }
-
-            IOUtils.closeQuietly(fis);
-
-            return true;
-        } catch (Throwable e) {
-            Log.e(TAG, "Error demuxing MP4 audio - " + filename, e);
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof YouTubeDownload)) {
             return false;
-        } finally {
-            status = STATUS_NONE;
-        }
-    }
-    
-    public static Movie buildMovie(ReadableByteChannel channel) throws IOException {
-        BoxParser parser = new PropertyBoxParserImpl() {
-            @Override
-            public Box parseBox(ReadableByteChannel byteChannel, ContainerBox parent) throws IOException {
-                Box box = super.parseBox(byteChannel, parent);
-
-                if (box instanceof AbstractBox) {
-                    ((AbstractBox) box).parseDetails();
-                }
-
-                return box;
-            }
-        };
-        IsoFile isoFile = new IsoFile(channel, parser);
-        Movie m = new Movie();
-        List<TrackBox> trackBoxes = isoFile.getMovieBox().getBoxes(TrackBox.class);
-        for (TrackBox trackBox : trackBoxes) {
-            m.addTrack(new Mp4TrackImpl(trackBox));
         }
         
-        // do not close this isoFile at this time, ignore eclipse warning for now
-        // NOT: IOUtils.closeQuietly(isoFile);
-        
-        return m;
+        return sr.getFilename().equals(((YouTubeDownload) obj).sr.getFilename());
     }
-    
-    private static UserDataBox addUserDataBox(String title, String author, String jpgFilename) {
-        File jpgFile = new File(jpgFilename);
-        if (!jpgFile.exists()) {
-            return null;
+
+    private MP4Metadata buildMetadata() {
+        String title = sr.getDisplayName();
+        String author = sr.getDetailsUrl();
+        String source = "YouTube.com";
+
+        String jpgUrl = sr.getVideo() != null ? sr.getVideo().thumbnails.normal : null;
+        if (jpgUrl == null && sr.getAudio() != null) {
+            jpgUrl = sr.getAudio() != null ? sr.getAudio().thumbnails.normal : null;
         }
 
-        byte[] jpgData = toByteArray(jpgFile);
-        if (jpgData == null) {
-            return null;
-        }
+        byte[] jpg = jpgUrl != null ? HttpClientFactory.newInstance().getBytes(jpgUrl) : null;
 
-        //"/moov/udta/meta/ilst/covr/data"
-        UserDataBox udta = new UserDataBox();
-
-        MetaBox meta = new MetaBox();
-        udta.addBox(meta);
-
-        HandlerBox hdlr = new HandlerBox();
-        hdlr.setHandlerType("mdir");
-        meta.addBox(hdlr);
-
-        AppleItemListBox ilst = new AppleItemListBox();
-        meta.addBox(ilst);
-
-        AppleTrackTitleBox cnam = new AppleTrackTitleBox();
-        cnam.setValue(title);
-        ilst.addBox(cnam);
-
-        AppleArtistBox cART = new AppleArtistBox();
-        cART.setValue(author);
-        ilst.addBox(cART);
-
-        AppleAlbumArtistBox aART = new AppleAlbumArtistBox();
-        aART.setValue(title + " " + author);
-        ilst.addBox(aART);
-
-        AppleAlbumBox calb = new AppleAlbumBox();
-        calb.setValue(title + " " + author + " via YouTube.com");
-        ilst.addBox(calb);
-
-        AppleMediaTypeBox stik = new AppleMediaTypeBox();
-        stik.setValue("1");
-        ilst.addBox(stik);
-
-        AppleCoverBox covr = new AppleCoverBox();
-        covr.setJpg(jpgData);
-        ilst.addBox(covr);
-
-        return udta;
-    }
-    
-    private static void downloadThumbnail(HttpDownloadLink dl, String jpgFilename, String videoLink) {
-        try {
-            //http://www.youtube.com/watch?v=[id]
-            //http://i.ytimg.com/vi/[id]/hqdefault.jpg
-            String id = videoLink.replace("http://www.youtube.com/watch?v=", "");
-            String url = "http://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
-            HttpDownload.simpleHTTP(url, new FileOutputStream(jpgFilename), 3000);
-
-        } catch (Throwable e) {
-            Log.e(TAG, "Unable to get youtube thumbnail - " + dl.getFileName());
-        }
-    }
-    
-    private static byte[] toByteArray(File file) {
-        InputStream in = null;
-
-        try {
-            int length = (int) file.length();
-            byte[] array = new byte[length];
-            in = new FileInputStream(file);
-
-            int offset = 0;
-            while (offset < length) {
-                offset += in.read(array, offset, (length - offset));
-            }
-            in.close();
-            return array;
-        } catch (Throwable e) {
-            Log.e(TAG, "Error reading local youtube thumbnail - " + file);
-        }
-
-        return null;
+        return new MP4Metadata(title, author, source, jpg);
     }
 }

@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,54 +18,69 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:animateLayoutChanges="true" >
+    
+    <com.frostwire.android.gui.views.ClearableEditTextView
+        android:id="@+id/fragment_transfers_add_transfer_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        android:focusableInTouchMode="true"
+        frostwire:clearable_hint="@string/add_transfer_label" />
 
-    <LinearLayout
+    <RadioGroup
         android:id="@+id/fragment_transfers_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/browse_peer_filetype_buttons_background"
-        android:gravity="right" >
+        android:background="@color/app_dark_blue"
+        android:checkedButton="@+id/fragment_transfers_button_select_all"
+        android:orientation="horizontal" >
 
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@drawable/transfers_button_vertical_line_background" />
-
-        <Button
-            android:id="@+id/fragment_transfers_button_pauseall"
+        <RadioButton
+            android:id="@+id/fragment_transfers_button_select_all"
             style="@style/TransfersButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:drawableLeft="@drawable/stop_transfer"
-            android:paddingRight="10dp"
-            android:text="@string/stop" />
+            android:layout_weight="1"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/transfers_select_all" />
 
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@drawable/transfers_button_vertical_line_background" />
-
-        <Button
-            android:id="@+id/fragment_transfers_button_clearcomplete"
+        <RadioButton
+            android:id="@+id/fragment_transfers_button_select_downloading"
             style="@style/TransfersButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:drawableLeft="@drawable/remove_transfer"
-            android:paddingRight="10dp"
-            android:text="@string/clear" />
-    </LinearLayout>
+            android:layout_weight="1"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/transfers_select_downloading" />
 
-    <com.frostwire.android.gui.views.FWExpandableListView
-        android:id="@id/android:list"
+        <RadioButton
+            android:id="@+id/fragment_transfers_button_select_completed"
+            style="@style/TransfersButton"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/transfers_top_button_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/transfers_select_completed" />
+    </RadioGroup>
+
+    <com.frostwire.android.gui.views.ExpandableListView
+        android:id="@+id/fragment_transfers_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_transfers_buttons"
+        android:layout_height="0px"
+        android:layout_weight="1"
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
@@ -73,15 +88,17 @@
         android:id="@+id/activity_mediaplayer_donations_view_placeholder"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_above="@+id/fragment_transfers_indicators"
         android:visibility="visible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#ff1d2934" />
 
     <LinearLayout
         android:id="@+id/fragment_transfers_indicators"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/transfers_indicators_background"
         android:gravity="right" >
 
@@ -104,4 +121,9 @@
             android:text="@string/dummy_uploads_indicator" />
     </LinearLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#ff1d2934" />
+
+</LinearLayout>

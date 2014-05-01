@@ -62,4 +62,9 @@ public class HttpDownloadLink {
     public HttpDownloadLink withFilename(String filename) {
         return new HttpDownloadLink(this.url, filename, this.displayName, this.size, this.compressed);
     }
+    
+    protected static String getValidFileName(String fileName) {
+        String newFileName = fileName.replaceAll("[\\\\/:*?\"<>|\\[\\]]+", "_");
+        return newFileName;
+    }
 }

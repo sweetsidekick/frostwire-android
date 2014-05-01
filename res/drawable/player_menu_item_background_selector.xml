@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/slidemenu_list_selector_selected" android:state_focused="true"/>
-    <item android:drawable="@drawable/slidemenu_list_selector_selected" android:state_selected="true"/>
-    <item android:drawable="@drawable/slidemenu_list_selector_selected" android:state_pressed="true"/>
-    <item android:drawable="@drawable/player_menu_item_background"/>
+    <item android:drawable="@color/app_menu_item_pressed" android:state_focused="true"/>
+    <item android:drawable="@color/app_menu_item_pressed" android:state_selected="true"/>
+    <item android:drawable="@color/app_menu_item_pressed" android:state_pressed="true"/>
+    <item android:drawable="@color/app_dark_blue"/>
 
 </selector>
