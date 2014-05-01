@@ -127,6 +127,18 @@ public final class TransferManager implements VuzeKeys {
         return false;
     }
 
+    private boolean alreadyDownloadingByInfoHash(String infohash) {
+        synchronized (alreadyDownloadingMonitor) {
+            for (BittorrentDownload bt : bittorrentDownloads) {
+                if (bt.getHash().equalsIgnoreCase(infohash)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    
     public DownloadTransfer download(SearchResult sr) {
         if (alreadyDownloading(sr.getDetailsUrl())) {
             return new ExistingDownload();
@@ -318,8 +330,11 @@ public final class TransferManager implements VuzeKeys {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
             }
             if (!(download instanceof InvalidBittorrentDownload)) {
-                if (!bittorrentDownloads.contains(download)) {
-                    bittorrentDownloads.add(download);
+                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
+                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
+                    if (!bittorrentDownloads.contains(download)) {
+                        bittorrentDownloads.add(download);
+                    }
                 }
             }
 
