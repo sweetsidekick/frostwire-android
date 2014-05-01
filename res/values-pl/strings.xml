@@ -221,7 +221,7 @@
     <string name="torrent_fetcher_download_status_error">Błąd</string>
     <string name="torrent_fetcher_download_status_canceled">Anulowano</string>
     <string name="failed_to_add_download">Nie można dodać do pobierania</string>
-    <string name="file_is_already_downloading">Plik jest pobierany</string>
+    <string name="file_is_already_downloading">Plik jest już pobierany</string>
     <string name="not_connected">Nie Połączono</string>
     <string name="mobile_data">Mobilna Transmisja Danych</string>
     <string name="media_player_failed">Odtwarzacz multimedialny nie działa</string>
@@ -267,7 +267,7 @@
     <string name="azureus_manager_item_downloading">Pobieranie</string>
     <string name="azureus_manager_item_seeding">Seedowanie</string>
     <string name="azureus_manager_item_superseeding">Super-Seedowanie</string>
-    <string name="azureus_manager_item_stopping">Zatrzymanie</string>
+    <string name="azureus_manager_item_stopping">Zatrzymuje</string>
     <string name="azureus_manager_item_stopped">Zatrzymano</string>
     <string name="azureus_manager_item_paused">Wstrzymano</string>
     <string name="azureus_manager_item_queued">W kolejce</string>
@@ -284,7 +284,7 @@
     <string name="peer_http_download_status_waiting">Oczekiwanie</string>
     <string name="peer_http_download_status_unknown">Nieznany</string>
     <string name="peer_http_upload_status_uploading">Przesyłanie</string>
-    <string name="peer_http_upload_status_streaming">Streaming</string>
+    <string name="peer_http_upload_status_  ">Strumieniowanie</string>
     <string name="peer_http_upload_status_complete">Zakończony</string>
     <string name="peer_http_upload_status_error">Błąd</string>
     <string name="peer_http_upload_status_cancelled">Anulowany</string>
@@ -393,7 +393,7 @@
     <string name="donate_1">Podaruj 3zł</string>
     <string name="donate_5">Podaruj 15zł</string>
     <string name="donate_10">Podaruj 30zł</string>
-    <string name="donate_25">Podaruj 50zł</string>
+    <string name="donate_25">Podaruj 75zł</string>
 	<string name="one_file_shared" >Jeden plik został udostępniony dla wszystkich urządzeń FrostWire na tej samej sieci Wi-Fi.</string>
 	<string name="n_files_shared" >%d plików zostało udostępnionych dla wszystkich urządzeń FrostWire na tej samej sieci Wi-Fi</string>
 	<string name="playing_now_colon">Odtwarzane teraz:</string>
