@@ -436,4 +436,33 @@
     <string name="player_paused_press_and_hold_to_stop">Reproductor pausado. (Truco: Presiona por unos segundos para detener)</string>
     <string name="btc">BTC</string>
     <string name="you_need_a_bitcoin_wallet_app">Necesitas un app de Bitcoin instalado para enviar donaciones en BTC.</string>
+    <string name="drawer_close">Cierra el menu de navegación</string>
+    <string name="add_transfer_label">Copia una URL de magnet o torrent</string>
+    <string name="drawer_open">Abre el menu de navegación</string>
+    <string name="use_monova">Usa Monova</string>
+    <string name="use_torrentsfm_summary">Torrents.fm es basado en magnets, funciona solo con Wi-Fi</string>
+    <string name="please_check_connection_status_before_resuming_download">Please check the status of your internet connection before
+resuming.</string>
+    <string name="cloud_downloads_coming">Lo siento: Descargas desde el cloud estarán disponibles para futuras versiones.</string>
+    <string name="magnet_url_added">URL Magnet ha sido añadida a la lista de transferencias. (Los Magnets funcionan mejor con Wi-Fi)</string>
+    <string name="use_monova_summary">Monova es basado en magnets, funciona solo con Wi-Fi</string>
+    <string name="transfers_select_completed">completado</string>
+    <string name="transfers_context_menu_pause_stop_all_transfers">Pausa/Para todas las Transferencias</string>
+    <string name="transfers_select_downloading">descargando</string>
+    <string name="torrent_transfer_enqueued_on_mobile_data">LA descarga del torrent comenzará automáticamente cuando te conectes a la red Wi-Fi
+(Revisa tus Preferencias de red sobre el uso de data 3G/4G)</string>
+    <string name="transfers_context_menu_clear_finished">Limpia todas las descargas completadas</string>
+    <string name="transfers_select_all">Todo</string>
+    <string name="torrent_url_added">URL de Torrent añadida a las transferencias.</string>
+    <string name="please_enter_valid_url">Por favor ingrese una URL válida</string>
+    <string name="use_yify">Usar Yify</string>
+    <string name="torrent_transfer_consuming_mobile_data">Advertencia: Esta transferencia de torrent está usando tu data 3G/4G (Revisa tus preferencias de red si deseas usar BitTorrent solo con Wi-Fi)</string>
+    <string name="transfers_context_resume_all_torrent_transfers">Resumir todas las transferencias Torrent</string>
+    <string name="use_yify_summary">Yify es basado en magnets, funciona solo con Wi-Fi</string>
+    <string name="donate_in_btc">Dona en bitcoins</string>
+    <string name="empty_string"></string>
+    <string name="dummy_content_description"></string>
+    <string name="use_torrentsfm">Usar Torrents.fm</string>
+    <string name="transfers_context_menu_stop_delete_data">Parar y borrar la Data</string>
+    <string name="use_tpb_summary">TPB es basado en magnets, funciona solo con Wi-Fi</string>
 </resources>
