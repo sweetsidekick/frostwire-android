@@ -407,8 +407,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 } else if (text.startsWith("magnet")) {
                     addTransferUrlTextView.setText(text.trim());
                     TransferManager.instance().downloadTorrent(text.trim());
-                    toggleAddTransferControls();
                     UIUtils.showLongMessage(getActivity(), R.string.magnet_url_added);
+                    clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+                    toggleAddTransferControls();
                 }
             }
         }
@@ -430,7 +431,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         if (addTransferUrlTextView.getVisibility()==View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
             addTransferUrlTextView.getAutoCompleteTextView().requestFocus();
             InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getAutoCompleteTextView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_FORCED);
+            imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_IMPLICIT);
         }
     }
     
