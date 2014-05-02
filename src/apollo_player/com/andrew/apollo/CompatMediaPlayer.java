@@ -32,7 +32,7 @@ class CompatMediaPlayer extends MediaPlayer implements OnCompletionListener {
 
     public CompatMediaPlayer() {
         try {
-            m = MediaPlayer.class.getMethod("setNextMediaPlayer", MediaPlayer.class);
+            m = MediaPlayer.class.getDeclaredMethod("setNextMediaPlayer", MediaPlayer.class);
             mCompatMode = false;
         } catch (NoSuchMethodException e) {
             mCompatMode = true;
@@ -40,8 +40,7 @@ class CompatMediaPlayer extends MediaPlayer implements OnCompletionListener {
         }
     }
 
-    @SuppressLint("Override")
-    public void setNextMediaPlayer(MediaPlayer next) {
+    public void setNextMediaPlayerSupport(MediaPlayer next) {
         if (mCompatMode) {
             mNextPlayer = next;
         } else {

@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.adapters;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +28,14 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
@@ -203,13 +206,14 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         onLocalPlay();
 
         if (fd.mime != null && fd.mime.contains("audio")) {
-            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-                Engine.instance().getMediaPlayer().stop();
-            } else {
-                UIUtils.playEphemeralPlaylist(fd);
-                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
-            }
-            notifyDataSetChanged();
+            MusicUtils.playFile(getContext(), Uri.fromFile(new File(fd.filePath)));
+//            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+//                Engine.instance().getMediaPlayer().stop();
+//            } else {
+//                UIUtils.playEphemeralPlaylist(fd);
+//                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
+//            }
+//            notifyDataSetChanged();
         } else {
             if (fd.filePath != null && fd.mime != null) {
                 UIUtils.openFile(getContext(), fd.filePath, fd.mime);

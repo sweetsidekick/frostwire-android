@@ -2535,7 +2535,7 @@ public class MusicPlaybackService extends Service {
          */
         public void setNextDataSource(final String path) {
             try {
-                mCurrentMediaPlayer.setNextMediaPlayer(null);
+                mCurrentMediaPlayer.setNextMediaPlayerSupport(null);
             } catch (IllegalArgumentException e) {
                 Log.i(TAG, "Next media player is current one, continuing");
             } catch (IllegalStateException e) {
@@ -2553,7 +2553,7 @@ public class MusicPlaybackService extends Service {
             mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
             mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
             if (setDataSourceImpl(mNextMediaPlayer, path)) {
-                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
+                mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
             } else {
                 if (mNextMediaPlayer != null) {
                     mNextMediaPlayer.release();
