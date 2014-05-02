@@ -635,22 +635,22 @@ public class MusicPlaybackService extends Service {
                 | RemoteControlClient.FLAG_KEY_MEDIA_STOP;
 
         if (ApolloUtils.hasJellyBeanMR2()) {
-            flags |= RemoteControlClient.FLAG_KEY_MEDIA_POSITION_UPDATE;
-
-            mRemoteControlClient.setOnGetPlaybackPositionListener(
-                    new RemoteControlClient.OnGetPlaybackPositionListener() {
-                @Override
-                public long onGetPlaybackPosition() {
-                    return position();
-                }
-            });
-            mRemoteControlClient.setPlaybackPositionUpdateListener(
-                    new RemoteControlClient.OnPlaybackPositionUpdateListener() {
-                @Override
-                public void onPlaybackPositionUpdate(long newPositionMs) {
-                    seek(newPositionMs);
-                }
-            });
+//            flags |= RemoteControlClient.FLAG_KEY_MEDIA_POSITION_UPDATE;
+//
+//            mRemoteControlClient.setOnGetPlaybackPositionListener(
+//                    new RemoteControlClient.OnGetPlaybackPositionListener() {
+//                @Override
+//                public long onGetPlaybackPosition() {
+//                    return position();
+//                }
+//            });
+//            mRemoteControlClient.setPlaybackPositionUpdateListener(
+//                    new RemoteControlClient.OnPlaybackPositionUpdateListener() {
+//                @Override
+//                public void onPlaybackPositionUpdate(long newPositionMs) {
+//                    seek(newPositionMs);
+//                }
+//            });
         }
 
         mRemoteControlClient.setTransportControlFlags(flags);
