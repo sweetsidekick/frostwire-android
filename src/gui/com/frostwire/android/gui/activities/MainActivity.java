@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.activities;
 
+import static com.andrew.apollo.utils.MusicUtils.mService;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Stack;
@@ -26,9 +28,12 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
@@ -39,6 +44,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.andrew.apollo.IApolloService;
+import com.andrew.apollo.utils.MusicUtils;
+import com.andrew.apollo.utils.MusicUtils.ServiceToken;
 import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -83,7 +91,7 @@ import com.frostwire.uxstats.UXStats;
  * @author aldenml
  *
  */
-public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, OnDialogClickListener {
+public class MainActivity extends AbstractActivity implements ConfigurationUpdateListener, OnDialogClickListener, ServiceConnection {
 
     private static final Logger LOG = Logger.getLogger(MainActivity.class);
 
@@ -352,6 +360,15 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         outState.putString(DUR_TOKEN_KEY, durToken);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
+    
+    private ServiceToken mToken;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        mToken = MusicUtils.bindToService(this, this);
+    }
 
     @Override
     protected void onDestroy() {
@@ -364,6 +381,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         if (playerItem != null) {
             playerItem.unbindDrawables();
+        }
+        
+        if (mToken != null) {
+            MusicUtils.unbindFromService(mToken);
+            mToken = null;
         }
     }
 
@@ -625,6 +647,19 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void setupDrawer() {
         drawerToggle = new MenuDrawerToggle(this, drawerLayout);
         drawerLayout.setDrawerListener(drawerToggle);
+    }
+    
+    @Override
+    public void onServiceConnected(final ComponentName name, final IBinder service) {
+        mService = IApolloService.Stub.asInterface(service);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onServiceDisconnected(final ComponentName name) {
+        mService = null;
     }
     
     private static final class MenuDrawerToggle extends ActionBarDrawerToggle {
