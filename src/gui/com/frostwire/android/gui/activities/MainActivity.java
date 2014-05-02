@@ -231,6 +231,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         
         setupActionBar();
         setupDrawer();
+        
+        //PlaybackService.get(this);
     }
 
     @Override
