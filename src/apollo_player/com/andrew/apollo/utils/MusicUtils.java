@@ -39,16 +39,16 @@ import android.view.SubMenu;
 
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
-import com.andrew.apollo.loaders.FavoritesLoader;
-import com.andrew.apollo.loaders.LastAddedLoader;
-import com.andrew.apollo.loaders.PlaylistLoader;
-import com.andrew.apollo.loaders.SongLoader;
-import com.andrew.apollo.menu.FragmentMenuItems;
+//import com.andrew.apollo.R;
+//import com.andrew.apollo.loaders.FavoritesLoader;
+//import com.andrew.apollo.loaders.LastAddedLoader;
+//import com.andrew.apollo.loaders.PlaylistLoader;
+//import com.andrew.apollo.loaders.SongLoader;
+//import com.andrew.apollo.menu.FragmentMenuItems;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
-import com.devspark.appmsg.AppMsg;
+//import com.devspark.appmsg.AppMsg;
 
 import java.io.File;
 import java.util.Arrays;
@@ -186,18 +186,18 @@ public final class MusicUtils {
      * @param secs The track in seconds.
      * @return Duration of a track that's properly formatted.
      */
-    public static final String makeTimeString(final Context context, long secs) {
-        long hours, mins;
-
-        hours = secs / 3600;
-        secs -= hours * 3600;
-        mins = secs / 60;
-        secs -= mins * 60;
-
-        final String durationFormat = context.getResources().getString(
-                hours == 0 ? R.string.durationformatshort : R.string.durationformatlong);
-        return String.format(durationFormat, hours, mins, secs);
-    }
+//    public static final String makeTimeString(final Context context, long secs) {
+//        long hours, mins;
+//
+//        hours = secs / 3600;
+//        secs -= hours * 3600;
+//        mins = secs / 60;
+//        secs -= mins * 60;
+//
+//        final String durationFormat = context.getResources().getString(
+//                hours == 0 ? R.string.durationformatshort : R.string.durationformatlong);
+//        return String.format(durationFormat, hours, mins, secs);
+//    }
 
     /**
      * Changes to the next track
@@ -659,7 +659,7 @@ public final class MusicUtils {
      * @param context The {@link Context} to use.
      */
     public static void shuffleAll(final Context context) {
-        Cursor cursor = SongLoader.makeSongCursor(context);
+        Cursor cursor = null;//SongLoader.makeSongCursor(context);
         final long[] mTrackList = getSongListForCursor(cursor);
         final int position = 0;
         if (mTrackList.length == 0 || mService == null) {
@@ -859,9 +859,9 @@ public final class MusicUtils {
             makeInsertItems(ids, offSet, 1000, base);
             numinserted += resolver.bulkInsert(uri, mContentValuesCache);
         }
-        final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+//        final String message = context.getResources().getQuantityString(
+//                R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
+//        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
     }
 
     /**
@@ -877,9 +877,9 @@ public final class MusicUtils {
         resolver.delete(uri, Playlists.Members.AUDIO_ID + " = ? ", new String[] {
             Long.toString(id)
         });
-        final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtracksfromplaylist, 1, 1);
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+//        final String message = context.getResources().getQuantityString(
+//                R.plurals.NNNtracksfromplaylist, 1, 1);
+//        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
     }
 
     /**
@@ -892,8 +892,8 @@ public final class MusicUtils {
         }
         try {
             mService.enqueue(list, MusicPlaybackService.LAST);
-            final String message = makeLabel(context, R.plurals.NNNtrackstoqueue, list.length);
-            AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+            //final String message = makeLabel(context, R.plurals.NNNtrackstoqueue, list.length);
+            //AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
         } catch (final RemoteException ignored) {
         }
     }
@@ -925,9 +925,9 @@ public final class MusicUtils {
             if (cursor != null && cursor.getCount() == 1) {
                 cursor.moveToFirst();
                 Settings.System.putString(resolver, Settings.System.RINGTONE, uri.toString());
-                final String message = context.getString(R.string.set_as_ringtone,
-                        cursor.getString(2));
-                AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+//                final String message = context.getString(R.string.set_as_ringtone,
+//                        cursor.getString(2));
+//                AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
             }
         } finally {
             if (cursor != null) {
@@ -1106,7 +1106,7 @@ public final class MusicUtils {
      * @return The song list from our favorites database
      */
     public final static long[] getSongListForFavorites(final Context context) {
-        Cursor cursor = FavoritesLoader.makeFavoritesCursor(context);
+        Cursor cursor = null;//FavoritesLoader.makeFavoritesCursor(context);
         if (cursor != null) {
             final long[] list = getSongListForFavoritesCursor(cursor);
             cursor.close();
@@ -1130,7 +1130,7 @@ public final class MusicUtils {
      * @return The song list for the last added playlist
      */
     public static final long[] getSongListForLastAdded(final Context context) {
-        final Cursor cursor = LastAddedLoader.makeLastAddedCursor(context);
+        final Cursor cursor = null;//LastAddedLoader.makeLastAddedCursor(context);
         if (cursor != null) {
             final int count = cursor.getCount();
             final long[] list = new long[count];
@@ -1162,32 +1162,32 @@ public final class MusicUtils {
      * @param showFavorites True if we should show the option to add to the
      *            Favorites cache.
      */
-    public static void makePlaylistMenu(final Context context, final int groupId,
-            final SubMenu subMenu, final boolean showFavorites) {
-        subMenu.clear();
-        if (showFavorites) {
-            subMenu.add(groupId, FragmentMenuItems.ADD_TO_FAVORITES, Menu.NONE,
-                    R.string.add_to_favorites);
-        }
-        subMenu.add(groupId, FragmentMenuItems.NEW_PLAYLIST, Menu.NONE, R.string.new_playlist);
-        Cursor cursor = PlaylistLoader.makePlaylistCursor(context);
-        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                final Intent intent = new Intent();
-                String name = cursor.getString(1);
-                if (name != null) {
-                    intent.putExtra("playlist", getIdForPlaylist(context, name));
-                    subMenu.add(groupId, FragmentMenuItems.PLAYLIST_SELECTED, Menu.NONE,
-                            name).setIntent(intent);
-                }
-                cursor.moveToNext();
-            }
-        }
-        if (cursor != null) {
-            cursor.close();
-            cursor = null;
-        }
-    }
+//    public static void makePlaylistMenu(final Context context, final int groupId,
+//            final SubMenu subMenu, final boolean showFavorites) {
+//        subMenu.clear();
+//        if (showFavorites) {
+//            subMenu.add(groupId, FragmentMenuItems.ADD_TO_FAVORITES, Menu.NONE,
+//                    R.string.add_to_favorites);
+//        }
+//        subMenu.add(groupId, FragmentMenuItems.NEW_PLAYLIST, Menu.NONE, R.string.new_playlist);
+//        Cursor cursor = PlaylistLoader.makePlaylistCursor(context);
+//        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+//            while (!cursor.isAfterLast()) {
+//                final Intent intent = new Intent();
+//                String name = cursor.getString(1);
+//                if (name != null) {
+//                    intent.putExtra("playlist", getIdForPlaylist(context, name));
+//                    subMenu.add(groupId, FragmentMenuItems.PLAYLIST_SELECTED, Menu.NONE,
+//                            name).setIntent(intent);
+//                }
+//                cursor.moveToNext();
+//            }
+//        }
+//        if (cursor != null) {
+//            cursor.close();
+//            cursor = null;
+//        }
+//    }
 
     /**
      * Called when one of the lists should refresh or requery.
@@ -1356,9 +1356,9 @@ public final class MusicUtils {
             c.close();
         }
 
-        final String message = makeLabel(context, R.plurals.NNNtracksdeleted, list.length);
-
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+//        final String message = makeLabel(context, R.plurals.NNNtracksdeleted, list.length);
+//
+//        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
         // We deleted a number of tracks, which could affect any number of
         // things
         // in the media content domain, so update everything.
