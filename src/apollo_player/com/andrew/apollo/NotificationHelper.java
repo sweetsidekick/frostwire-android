@@ -24,6 +24,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.andrew.apollo.utils.ApolloUtils;
+import com.frostwire.android.R;
 
 /**
  * Builds the notification for Apollo's service. Jelly Bean and higher uses the
@@ -93,7 +94,7 @@ public class NotificationHelper {
         mNotification = new NotificationCompat.Builder(mService)
                 .setSmallIcon(R.drawable.stat_notify_music)
                 .setContentIntent(getPendingIntent())
-                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setPriority(Notification.PRIORITY_DEFAULT)
                 .setContent(mNotificationTemplate)
                 .build();
         // Control playback from the notification
@@ -102,7 +103,8 @@ public class NotificationHelper {
             // Expanded notifiction style
             mExpandedView = new RemoteViews(mService.getPackageName(),
                     R.layout.notification_template_expanded_base);
-            mNotification.bigContentView = mExpandedView;
+            //mNotification.bigContentView = mExpandedView;
+            mNotification.contentView = mExpandedView;
             // Control playback from the notification
             initExpandedPlaybackActions(isPlaying);
             // Set up the expanded content view

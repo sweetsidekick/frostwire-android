@@ -3,6 +3,8 @@ package com.andrew.apollo.appwidgets;
 import com.andrew.apollo.MusicPlaybackService;
 
 public class AppWidgetLarge {
+    
+    public static final String CMDAPPWIDGETUPDATE = "app_widget_large_update";
 
     private static AppWidgetLarge mInstance;
 

@@ -3,6 +3,8 @@ package com.andrew.apollo.appwidgets;
 import com.andrew.apollo.MusicPlaybackService;
 
 public class AppWidgetSmall {
+    
+    public static final String CMDAPPWIDGETUPDATE = "app_widget_small_update";
 
     private static AppWidgetSmall mInstance;
 
