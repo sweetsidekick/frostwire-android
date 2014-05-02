@@ -275,16 +275,20 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 if (download.isPausable()) {
                     items.add(new PauseDownloadMenuAction(context, download));
                 } else if (download.isResumable()) {
-                    if (!download.isComplete()) {
-                        items.add(new ResumeDownloadMenuAction(context, download, R.string.resume_torrent_menu_action));
-                    } else {
-                        //let's see if we can seed...
-                        boolean seedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
-                        boolean seedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
-                        boolean wifiIsUp = NetworkManager.instance().isDataWIFIUp();
-                        if ((seedTorrents && !seedTorrentsOnWifiOnly) ||
-                            (seedTorrents && seedTorrentsOnWifiOnly && wifiIsUp)) {
-                            items.add(new ResumeDownloadMenuAction(context, download, R.string.seed));    
+                    boolean wifiIsUp = NetworkManager.instance().isDataWIFIUp();
+                    boolean bittorrentOnMobileData = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
+
+                    if (wifiIsUp || (!wifiIsUp && bittorrentOnMobileData)) {
+                        if (!download.isComplete()) {
+                            items.add(new ResumeDownloadMenuAction(context, download, R.string.resume_torrent_menu_action));
+                        } else {
+                            //let's see if we can seed...
+                            boolean seedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
+                            boolean seedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
+                            if ((seedTorrents && !seedTorrentsOnWifiOnly) ||
+                                (seedTorrents && seedTorrentsOnWifiOnly && wifiIsUp)) {
+                                items.add(new ResumeDownloadMenuAction(context, download, R.string.seed));    
+                            }
                         }
                     }
                 }
