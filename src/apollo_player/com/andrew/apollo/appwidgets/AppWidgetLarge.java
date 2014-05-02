@@ -17,4 +17,7 @@ public class AppWidgetLarge {
 
     public void notifyChange(MusicPlaybackService musicPlaybackService, String what) {
     }
+    
+    public void performUpdate(final MusicPlaybackService service, final int[] appWidgetIds) {
+    }
 }

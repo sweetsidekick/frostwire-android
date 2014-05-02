@@ -1017,7 +1017,7 @@ public class MusicPlaybackService extends Service {
     private Cursor openCursorAndGoToFirst(Uri uri, String[] projection,
             String selection, String[] selectionArgs) {
         Cursor c = getContentResolver().query(uri, projection,
-                selection, selectionArgs, null, null);
+                selection, selectionArgs, null);
         if (c == null) {
             return null;
         }
@@ -1366,7 +1366,7 @@ public class MusicPlaybackService extends Service {
 
         if (ApolloUtils.hasJellyBeanMR2()
                 && (what.equals(PLAYSTATE_CHANGED) || what.equals(POSITION_CHANGED))) {
-            mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+            //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
         } else if (what.equals(PLAYSTATE_CHANGED)) {
             mRemoteControlClient.setPlaybackState(playState);
         } else if (what.equals(META_CHANGED) || what.equals(QUEUE_CHANGED)) {
@@ -1392,7 +1392,7 @@ public class MusicPlaybackService extends Service {
                     .apply();
 
             if (ApolloUtils.hasJellyBeanMR2()) {
-                mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+                //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
             }
         }
     }
@@ -2466,9 +2466,9 @@ public class MusicPlaybackService extends Service {
 
         private final WeakReference<MusicPlaybackService> mService;
 
-        private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
+        private CompatMediaPlayer mCurrentMediaPlayer = new CompatMediaPlayer();
 
-        private MediaPlayer mNextMediaPlayer;
+        private CompatMediaPlayer mNextMediaPlayer;
 
         private Handler mHandler;
 
@@ -2549,7 +2549,7 @@ public class MusicPlaybackService extends Service {
             if (path == null) {
                 return;
             }
-            mNextMediaPlayer = new MediaPlayer();
+            mNextMediaPlayer = new CompatMediaPlayer();
             mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
             mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
             if (setDataSourceImpl(mNextMediaPlayer, path)) {
@@ -2673,7 +2673,7 @@ public class MusicPlaybackService extends Service {
                 case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                     mIsInitialized = false;
                     mCurrentMediaPlayer.release();
-                    mCurrentMediaPlayer = new MediaPlayer();
+                    mCurrentMediaPlayer = new CompatMediaPlayer();
                     mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(SERVER_DIED), 2000);
                     return true;
