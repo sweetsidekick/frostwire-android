@@ -43,6 +43,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
+import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.adapters.menu.BrowsePeerMenuAction;
 import com.frostwire.android.gui.adapters.menu.CancelMenuAction;
 import com.frostwire.android.gui.adapters.menu.OpenMenuAction;
@@ -274,7 +275,18 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 if (download.isPausable()) {
                     items.add(new PauseDownloadMenuAction(context, download));
                 } else if (download.isResumable()) {
-                    items.add(new ResumeDownloadMenuAction(context, download, ResumeDownloadMenuAction.getMenuStringResId(download)));
+                    if (!download.isComplete()) {
+                        items.add(new ResumeDownloadMenuAction(context, download, R.string.resume_torrent_menu_action));
+                    } else {
+                        //let's see if we can seed...
+                        boolean seedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
+                        boolean seedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
+                        boolean wifiIsUp = NetworkManager.instance().isDataWIFIUp();
+                        if ((seedTorrents && !seedTorrentsOnWifiOnly) ||
+                            (seedTorrents && seedTorrentsOnWifiOnly && wifiIsUp)) {
+                            items.add(new ResumeDownloadMenuAction(context, download, R.string.seed));    
+                        }
+                    }
                 }
             }
 
