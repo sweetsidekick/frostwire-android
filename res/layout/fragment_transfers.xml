@@ -53,6 +53,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_all" />
 
         <RadioButton
@@ -63,6 +64,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_downloading" />
 
         <RadioButton
@@ -73,6 +75,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_completed" />
     </RadioGroup>
 

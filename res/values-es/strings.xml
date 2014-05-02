@@ -460,8 +460,6 @@ resuming.</string>
     <string name="transfers_context_resume_all_torrent_transfers">Resumir todas las transferencias Torrent</string>
     <string name="use_yify_summary">Yify es basado en magnets, funciona solo con Wi-Fi</string>
     <string name="donate_in_btc">Dona en bitcoins</string>
-    <string name="empty_string"></string>
-    <string name="dummy_content_description"></string>
     <string name="use_torrentsfm">Usar Torrents.fm</string>
     <string name="transfers_context_menu_stop_delete_data">Parar y borrar la Data</string>
     <string name="use_tpb_summary">TPB es basado en magnets, funciona solo con Wi-Fi</string>
