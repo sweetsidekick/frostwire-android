@@ -36,6 +36,7 @@
 	<classpathentry kind="src" path="common/components/vuze"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
+	<classpathentry kind="src" path="src/apollo_player"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="libs/gson-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mp4parser.jar"/>
