@@ -1,6 +1,7 @@
 package com.andrew.apollo.cache;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class ImageFetcher {
 
@@ -17,5 +18,9 @@ public class ImageFetcher {
     }
 
     public void setImageCache(ImageCache cacheCallback) {
+    }
+
+    public Bitmap getArtwork(String albumName, long albumId, String artistName) {
+        return null;
     }
 }
