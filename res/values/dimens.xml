@@ -39,5 +39,33 @@
     <dimen name="notification_expanded_button_padding">10.0dip</dimen>
     <dimen name="notification_expanded_content_padding_top">8.0dip</dimen>
     <dimen name="notification_expanded_collapse_padding">8.0dip</dimen>
+    
+    <!-- Audio player -->
+    <dimen name="audio_player_header_height">60.0dip</dimen>
+    <dimen name="audio_player_header_padding_left">16.0dip</dimen>
+    <dimen name="audio_player_header_padding_right">16.0dip</dimen>
+    <dimen name="audio_player_switch_padding">10.0dip</dimen>
+    <dimen name="audio_player_time_width">52.0dip</dimen>
+    <dimen name="audio_player_seek_bar_margin_bottom">2.0dip</dimen>
+    <dimen name="audio_player_controls_end_button_width">50.0dip</dimen>
+    <dimen name="audio_player_controls_end_button_height">50.0dip</dimen>
+    <dimen name="audio_player_controls_main_button_width">58.0dip</dimen>
+    <dimen name="audio_player_controls_main_button_height">58.0dip</dimen>
+    
+    <!-- Shadow height -->
+    <dimen name="shadow_height">5.0dip</dimen>
+    
+    <!-- Text sizes -->
+    <dimen name="text_size_extra_micro">10.0sp</dimen>
+    <dimen name="text_size_micro">12.0sp</dimen>
+    <dimen name="text_size_small">14.0sp</dimen>
+    <dimen name="text_size_medium">16.0sp</dimen>
+    <dimen name="text_size_large">18.0sp</dimen>
+    <dimen name="text_size_x_large">24.0sp</dimen>
+    <dimen name="text_size_dayum">36.0sp</dimen>
+    
+        <!-- Colorstrip -->
+    <dimen name="colorstrip_height">2.0dip</dimen>
+    
 
 </resources>

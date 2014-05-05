@@ -462,4 +462,13 @@
     <string name="torrent_url_added">Torrent URL added to transfers.</string>
     <string name="cloud_downloads_coming">Sorry: Starting cloud downloads from here will be available on further updates.</string>
     <string name="seed">Seed</string>
+    <string name="accessibility_play">Play</string>
+    <string name="accessibility_pause">Pause</string>
+    <string name="accessibility_next">Next</string>
+    <string name="accessibility_prev">Previous</string>
+    <string name="accessibility_shuffle">Shuffle</string>
+    <string name="accessibility_shuffle_all">Shuffle all</string>
+    <string name="accessibility_repeat">Repeat</string>
+    <string name="accessibility_repeat_all">Repeat all</string>
+    <string name="accessibility_repeat_one">Repeat one</string>
 </resources>
