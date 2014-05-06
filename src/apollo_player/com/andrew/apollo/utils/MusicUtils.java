@@ -50,6 +50,8 @@ import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 //import com.devspark.appmsg.AppMsg;
 
+import com.frostwire.android.R;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -186,18 +188,18 @@ public final class MusicUtils {
      * @param secs The track in seconds.
      * @return Duration of a track that's properly formatted.
      */
-//    public static final String makeTimeString(final Context context, long secs) {
-//        long hours, mins;
-//
-//        hours = secs / 3600;
-//        secs -= hours * 3600;
-//        mins = secs / 60;
-//        secs -= mins * 60;
-//
-//        final String durationFormat = context.getResources().getString(
-//                hours == 0 ? R.string.durationformatshort : R.string.durationformatlong);
-//        return String.format(durationFormat, hours, mins, secs);
-//    }
+    public static final String makeTimeString(final Context context, long secs) {
+        long hours, mins;
+
+        hours = secs / 3600;
+        secs -= hours * 3600;
+        mins = secs / 60;
+        secs -= mins * 60;
+
+        final String durationFormat = context.getResources().getString(
+                hours == 0 ? R.string.durationformatshort : R.string.durationformatlong);
+        return String.format(durationFormat, hours, mins, secs);
+    }
 
     /**
      * Changes to the next track

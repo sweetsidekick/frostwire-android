@@ -471,4 +471,9 @@
     <string name="accessibility_repeat">Repeat</string>
     <string name="accessibility_repeat_all">Repeat all</string>
     <string name="accessibility_repeat_one">Repeat one</string>
+    <string name="durationformatshort" translatable="false">%2$d:%3$02d</string>
+    <string name="durationformatlong" translatable="false">%1$d:%2$02d:%3$02d</string>
+    <string name="now_listening_to">#NowPlaying %1$s by %2$s #FrostWire</string>
+    <string name="share_track_using">Share track using:</string>
+    
 </resources>

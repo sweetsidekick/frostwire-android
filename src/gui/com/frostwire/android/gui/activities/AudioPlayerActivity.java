@@ -52,7 +52,6 @@ import android.widget.TextView;
 
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
 import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.ui.fragments.QueueFragment;
@@ -66,6 +65,7 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.frostwire.android.R;
 
 import java.lang.ref.WeakReference;
 
@@ -300,6 +300,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+        /*
         // Search view
         getMenuInflater().inflate(R.menu.search, menu);
         // Theme the search icon
@@ -336,6 +337,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Settings
         getMenuInflater().inflate(R.menu.activity_base, menu);
         return true;
+        */
+        return false;
     }
 
     /**
