@@ -20,11 +20,10 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.ThemeUtils;
-import com.andrew.apollo.widgets.theme.HoloSelector;
+import com.frostwire.android.R;
 
 /**
  * A custom {@link ImageButton} that represents the "repeat" button.
@@ -63,7 +62,7 @@ public class RepeatButton extends ImageButton implements OnClickListener, OnLong
         // Initialze the theme resources
         mResources = new ThemeUtils(context);
         // Set the selector
-        setBackgroundDrawable(new HoloSelector(context));
+        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (cycle repeat modes)
         setOnClickListener(this);
         // Show the cheat sheet
@@ -87,7 +86,7 @@ public class RepeatButton extends ImageButton implements OnClickListener, OnLong
         if (TextUtils.isEmpty(view.getContentDescription())) {
             return false;
         } else {
-            ApolloUtils.showCheatSheet(view);
+            //ApolloUtils.showCheatSheet(view);
             return true;
         }
     }
@@ -99,15 +98,15 @@ public class RepeatButton extends ImageButton implements OnClickListener, OnLong
         switch (MusicUtils.getRepeatMode()) {
             case MusicPlaybackService.REPEAT_ALL:
                 setContentDescription(getResources().getString(R.string.accessibility_repeat_all));
-                setImageDrawable(mResources.getDrawable(REPEAT_ALL));
+                setImageResource(R.drawable.btn_playback_repeat_all);
                 break;
             case MusicPlaybackService.REPEAT_CURRENT:
                 setContentDescription(getResources().getString(R.string.accessibility_repeat_one));
-                setImageDrawable(mResources.getDrawable(REPEAT_CURRENT));
+                setImageResource(R.drawable.btn_playback_repeat_one);
                 break;
             case MusicPlaybackService.REPEAT_NONE:
                 setContentDescription(getResources().getString(R.string.accessibility_repeat));
-                setImageDrawable(mResources.getDrawable(REPEAT_NONE));
+                setImageResource(R.drawable.btn_playback_repeat);
                 break;
             default:
                 break;

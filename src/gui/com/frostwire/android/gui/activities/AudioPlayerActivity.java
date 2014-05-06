@@ -52,9 +52,9 @@ import android.widget.TextView;
 
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.adapters.PagerAdapter;
+//import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
-import com.andrew.apollo.ui.fragments.QueueFragment;
+//import com.andrew.apollo.ui.fragments.QueueFragment;
 //import com.andrew.apollo.menu.DeleteDialog;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
@@ -132,7 +132,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     private ViewPager mViewPager;
 
     // Pager adpater
-    private PagerAdapter mPagerAdapter;
+    //private PagerAdapter mPagerAdapter;
 
     // ViewPager container
     private FrameLayout mPageContainer;
@@ -423,7 +423,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Current info
         updateNowPlayingInfo();
         // Refresh the queue
-        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+        //((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
     }
 
     /**
@@ -489,8 +489,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // ViewPager container
         mPageContainer = (FrameLayout)findViewById(R.id.audio_player_pager_container);
         // Theme the pager container background
-        mPageContainer
-                .setBackgroundDrawable(mResources.getDrawable("audio_player_pager_container"));
+        //mPageContainer
+        //        .setBackgroundDrawable(mResources.getDrawable("audio_player_pager_container"));
 
         // Now playing header
         mAudioPlayerHeader = (LinearLayout)findViewById(R.id.audio_player_header);
@@ -502,16 +502,16 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         mSwitch.setOnClickListener(mToggleHiddenPanel);
 
         // Initialize the pager adapter
-        mPagerAdapter = new PagerAdapter(this);
+        //mPagerAdapter = new PagerAdapter(this);
         // Queue
-        mPagerAdapter.add(QueueFragment.class, null);
+        //mPagerAdapter.add(QueueFragment.class, null);
 
         // Initialize the ViewPager
         mViewPager = (ViewPager)findViewById(R.id.audio_player_pager);
         // Attch the adapter
-        mViewPager.setAdapter(mPagerAdapter);
+        //mViewPager.setAdapter(mPagerAdapter);
         // Offscreen pager loading limit
-        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
+        //mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         // Play and pause button
         mPlayPauseButton = (PlayPauseButton)findViewById(R.id.action_button_play);
         // Shuffle button
@@ -537,7 +537,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Used to show and hide the queue fragment
         mQueueSwitch = (ImageView)findViewById(R.id.audio_player_switch_queue);
         // Theme the queue switch icon
-        mQueueSwitch.setImageDrawable(mResources.getDrawable("btn_switch_queue"));
+        //mQueueSwitch.setImageDrawable(mResources.getDrawable("btn_switch_queue"));
         // Progress
         mProgress = (SeekBar)findViewById(android.R.id.progress);
 
@@ -628,7 +628,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             // Make sure to process intent only once
             setIntent(new Intent());
             // Refresh the queue
-            ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+            //((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
         }
     }
 
@@ -919,7 +919,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         @Override
         public void onClick(final View v) {
-            ((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
+            //((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
         }
     };
 

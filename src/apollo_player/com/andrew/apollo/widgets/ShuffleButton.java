@@ -20,11 +20,10 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.ThemeUtils;
-import com.andrew.apollo.widgets.theme.HoloSelector;
+import com.frostwire.android.R;
 
 /**
  * @author Andrew Neal (andrewdneal@gmail.com)
@@ -56,7 +55,7 @@ public class ShuffleButton extends ImageButton implements OnClickListener, OnLon
         // Initialze the theme resources
         mResources = new ThemeUtils(context);
         // Theme the selector
-        setBackgroundDrawable(new HoloSelector(context));
+        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (cycle shuffle)
         setOnClickListener(this);
         // Show the cheat sheet
@@ -80,7 +79,7 @@ public class ShuffleButton extends ImageButton implements OnClickListener, OnLon
         if (TextUtils.isEmpty(view.getContentDescription())) {
             return false;
         } else {
-            ApolloUtils.showCheatSheet(view);
+            //ApolloUtils.showCheatSheet(view);
             return true;
         }
     }
@@ -92,15 +91,15 @@ public class ShuffleButton extends ImageButton implements OnClickListener, OnLon
         switch (MusicUtils.getShuffleMode()) {
             case MusicPlaybackService.SHUFFLE_NORMAL:
                 setContentDescription(getResources().getString(R.string.accessibility_shuffle_all));
-                setImageDrawable(mResources.getDrawable(SHUFFLE_ALL));
+                setImageResource(R.drawable.btn_playback_shuffle_all);
                 break;
             case MusicPlaybackService.SHUFFLE_AUTO:
                 setContentDescription(getResources().getString(R.string.accessibility_shuffle_all));
-                setImageDrawable(mResources.getDrawable(SHUFFLE_ALL));
+                setImageResource(R.drawable.btn_playback_shuffle_all);
                 break;
             case MusicPlaybackService.SHUFFLE_NONE:
                 setContentDescription(getResources().getString(R.string.accessibility_shuffle));
-                setImageDrawable(mResources.getDrawable(SHUFFLE));
+                setImageResource(R.drawable.btn_playback_shuffle);
                 break;
             default:
                 break;

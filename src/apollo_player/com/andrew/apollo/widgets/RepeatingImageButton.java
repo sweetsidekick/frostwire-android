@@ -20,11 +20,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-import com.andrew.apollo.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.ThemeUtils;
-import com.andrew.apollo.widgets.theme.HoloSelector;
+import com.frostwire.android.R;
 
 /**
  * A {@link ImageButton} that will repeatedly call a 'listener' method as long
@@ -66,7 +65,7 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
         // Initialze the theme resources
         mResources = new ThemeUtils(context);
         // Theme the selector
-        setBackgroundDrawable(new HoloSelector(context));
+        //setBackgroundDrawable(new HoloSelector(context));
         setFocusable(true);
         setLongClickable(true);
         setOnClickListener(this);
@@ -106,7 +105,7 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
     @Override
     public boolean performLongClick() {
         if (mListener == null) {
-            ApolloUtils.showCheatSheet(this);
+            //ApolloUtils.showCheatSheet(this);
         }
         mStartTime = SystemClock.elapsedRealtime();
         mRepeatCount = 0;
@@ -193,10 +192,10 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
     public void updateState() {
         switch (getId()) {
             case R.id.action_button_next:
-                setImageDrawable(mResources.getDrawable(NEXT));
+                setImageResource(R.drawable.btn_playback_next);
                 break;
             case R.id.action_button_previous:
-                setImageDrawable(mResources.getDrawable(PREVIOUS));
+                setImageResource(R.drawable.btn_playback_previous);
                 break;
             default:
                 break;

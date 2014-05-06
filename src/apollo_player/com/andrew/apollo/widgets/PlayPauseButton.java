@@ -19,11 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
-import com.andrew.apollo.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.ThemeUtils;
-import com.andrew.apollo.widgets.theme.HoloSelector;
+import com.frostwire.android.R;
 
 /**
  * A custom {@link ImageButton} that represents the "play and pause" button.
@@ -57,7 +56,7 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
         // Initialze the theme resources
         mResources = new ThemeUtils(context);
         // Theme the selector
-        setBackgroundDrawable(new HoloSelector(context));
+        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (play/pause)
         setOnClickListener(this);
         // Show the cheat sheet
@@ -81,7 +80,7 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
         if (TextUtils.isEmpty(view.getContentDescription())) {
             return false;
         } else {
-            ApolloUtils.showCheatSheet(view);
+            //ApolloUtils.showCheatSheet(view);
             return true;
         }
     }
@@ -92,10 +91,10 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
     public void updateState() {
         if (MusicUtils.isPlaying()) {
             setContentDescription(getResources().getString(R.string.accessibility_pause));
-            setImageDrawable(mResources.getDrawable(PAUSE));
+            setImageResource(R.drawable.btn_playback_pause);
         } else {
             setContentDescription(getResources().getString(R.string.accessibility_play));
-            setImageDrawable(mResources.getDrawable(PLAY));
+            setImageResource(R.drawable.btn_playback_play);
         }
     }
 
