@@ -180,6 +180,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <include layout="@layout/colorstrip" />
+    <!-- <include layout="@layout/colorstrip" /> -->
 
 </FrameLayout>
