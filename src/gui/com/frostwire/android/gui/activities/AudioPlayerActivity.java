@@ -12,11 +12,12 @@
 package com.frostwire.android.gui.activities;
 
 import static com.andrew.apollo.utils.MusicUtils.mService;
+
+import java.lang.ref.WeakReference;
+
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,17 +25,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
-import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
-import android.provider.MediaStore.Audio.Playlists;
 import android.provider.MediaStore.Audio.Albums;
 import android.provider.MediaStore.Audio.Artists;
-import android.support.v4.app.FragmentActivity;
+import android.provider.MediaStore.Audio.Playlists;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,8 +43,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -59,15 +56,12 @@ import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
-//import com.andrew.apollo.utils.NavUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
-
-import java.lang.ref.WeakReference;
+//import com.andrew.apollo.utils.NavUtils;
 
 /**
  * Apollo's "now playing" interface.
@@ -143,9 +137,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     // Image cache
     private ImageFetcher mImageFetcher;
 
-    // Theme resources
-    private ThemeUtils mResources;
-
     private long mPosOverride = -1;
 
     private long mStartSeekPos = 0;
@@ -164,11 +155,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialze the theme resources
-        mResources = new ThemeUtils(this);
-        // Set the overflow style
-        mResources.setOverflowStyle(this);
 
         // Fade it in
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

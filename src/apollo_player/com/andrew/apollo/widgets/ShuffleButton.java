@@ -20,9 +20,7 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.frostwire.android.R;
 
 /**
@@ -31,31 +29,11 @@ import com.frostwire.android.R;
 public class ShuffleButton extends ImageButton implements OnClickListener, OnLongClickListener {
 
     /**
-     * Shuffle theme resource
-     */
-    private static final String SHUFFLE = "btn_playback_shuffle";
-
-    /**
-     * Shuffle all theme resource
-     */
-    private static final String SHUFFLE_ALL = "btn_playback_shuffle_all";
-
-    /**
-     * The resources to use.
-     */
-    private final ThemeUtils mResources;
-
-    /**
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
      */
-    @SuppressWarnings("deprecation")
     public ShuffleButton(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        // Initialze the theme resources
-        mResources = new ThemeUtils(context);
-        // Theme the selector
-        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (cycle shuffle)
         setOnClickListener(this);
         // Show the cheat sheet

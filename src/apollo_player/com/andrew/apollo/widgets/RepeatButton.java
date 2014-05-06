@@ -20,9 +20,7 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.frostwire.android.R;
 
 /**
@@ -33,36 +31,11 @@ import com.frostwire.android.R;
 public class RepeatButton extends ImageButton implements OnClickListener, OnLongClickListener {
 
     /**
-     * Repeat one theme resource
-     */
-    private static final String REPEAT_ALL = "btn_playback_repeat_all";
-
-    /**
-     * Repeat one theme resource
-     */
-    private static final String REPEAT_CURRENT = "btn_playback_repeat_one";
-
-    /**
-     * Repeat one theme resource
-     */
-    private static final String REPEAT_NONE = "btn_playback_repeat";
-
-    /**
-     * The resources to use.
-     */
-    private final ThemeUtils mResources;
-
-    /**
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
      */
-    @SuppressWarnings("deprecation")
     public RepeatButton(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        // Initialze the theme resources
-        mResources = new ThemeUtils(context);
-        // Set the selector
-        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (cycle repeat modes)
         setOnClickListener(this);
         // Show the cheat sheet

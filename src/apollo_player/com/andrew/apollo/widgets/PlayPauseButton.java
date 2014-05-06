@@ -19,9 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.frostwire.android.R;
 
 /**
@@ -32,31 +30,11 @@ import com.frostwire.android.R;
 public class PlayPauseButton extends ImageButton implements OnClickListener, OnLongClickListener {
 
     /**
-     * Play button theme resource
-     */
-    private static final String PLAY = "btn_playback_play";
-
-    /**
-     * Pause button theme resource
-     */
-    private static final String PAUSE = "btn_playback_pause";
-
-    /**
-     * The resources to use.
-     */
-    private final ThemeUtils mResources;
-
-    /**
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
      */
-    @SuppressWarnings("deprecation")
     public PlayPauseButton(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        // Initialze the theme resources
-        mResources = new ThemeUtils(context);
-        // Theme the selector
-        //setBackgroundDrawable(new HoloSelector(context));
         // Control playback (play/pause)
         setOnClickListener(this);
         // Show the cheat sheet

@@ -20,9 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.frostwire.android.R;
 
 /**
@@ -32,22 +30,7 @@ import com.frostwire.android.R;
  */
 public class RepeatingImageButton extends ImageButton implements OnClickListener {
 
-    /**
-     * Next button theme resource
-     */
-    private static final String NEXT = "btn_playback_next";
-
-    /**
-     * Previous button theme resource
-     */
-    private static final String PREVIOUS = "btn_playback_previous";
-
     private static final long sInterval = 400;
-
-    /**
-     * The resources to use.
-     */
-    private final ThemeUtils mResources;
 
     private long mStartTime;
 
@@ -59,13 +42,8 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
      */
-    @SuppressWarnings("deprecation")
     public RepeatingImageButton(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        // Initialze the theme resources
-        mResources = new ThemeUtils(context);
-        // Theme the selector
-        //setBackgroundDrawable(new HoloSelector(context));
         setFocusable(true);
         setLongClickable(true);
         setOnClickListener(this);
