@@ -11,6 +11,11 @@
 
 package com.andrew.apollo.utils;
 
+import android.app.Activity;
+
+import com.andrew.apollo.cache.ImageCache;
+import com.andrew.apollo.cache.ImageFetcher;
+
 /**
  * Mostly general and UI helpers.
  * 
@@ -41,5 +46,17 @@ public final class ApolloUtils {
      */
     public static final boolean hasJellyBeanMR2() {
         return false;//Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+    }
+    
+    /**
+     * Creates a new instance of the {@link ImageCache} and {@link ImageFetcher}
+     * 
+     * @param activity The {@link Activity} to use.
+     * @return A new {@link ImageFetcher} used to fetch images asynchronously.
+     */
+    public static final ImageFetcher getImageFetcher(final Activity activity) {
+        final ImageFetcher imageFetcher = ImageFetcher.getInstance(activity);
+        imageFetcher.setImageCache(ImageCache.getInstance(activity));
+        return imageFetcher;
     }
 }

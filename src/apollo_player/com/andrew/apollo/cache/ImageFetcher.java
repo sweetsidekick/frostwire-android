@@ -2,6 +2,7 @@ package com.andrew.apollo.cache;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 public class ImageFetcher {
 
@@ -22,5 +23,11 @@ public class ImageFetcher {
 
     public Bitmap getArtwork(String albumName, long albumId, String artistName) {
         return null;
+    }
+
+    public void flush() {
+    }
+
+    public void loadCurrentArtwork(ImageView mAlbumArt) {
     }
 }

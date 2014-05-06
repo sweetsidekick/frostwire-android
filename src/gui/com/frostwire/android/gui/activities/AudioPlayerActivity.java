@@ -55,11 +55,11 @@ import com.andrew.apollo.MusicPlaybackService;
 import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.ui.fragments.QueueFragment;
-import com.andrew.apollo.menu.DeleteDialog;
+//import com.andrew.apollo.menu.DeleteDialog;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
-import com.andrew.apollo.utils.NavUtils;
+//import com.andrew.apollo.utils.NavUtils;
 import com.andrew.apollo.utils.ThemeUtils;
 import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
@@ -75,7 +75,7 @@ import java.lang.ref.WeakReference;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class AudioPlayerActivity extends Activity implements ServiceConnection,
-        OnSeekBarChangeListener, DeleteDialog.DeleteDialogCallback {
+        OnSeekBarChangeListener/*, DeleteDialog.DeleteDialogCallback*/ {
 
     // Message to refresh the time
     private static final int REFRESH_TIME = 1;
@@ -190,7 +190,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         // Theme the action bar
         final ActionBar actionBar = getActionBar();
-        mResources.themeActionBar(actionBar, getString(R.string.app_name));
+        //mResources.themeActionBar(actionBar, getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // Set the layout
@@ -285,6 +285,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
+        /*
         // Hide the EQ option if it can't be opened
         final Intent intent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
         if (getPackageManager().resolveActivity(intent, 0) == null) {
@@ -293,6 +294,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         }
         mResources.setFavoriteIcon(menu);
         return true;
+        */
+        return false;
     }
 
     /**
@@ -346,6 +349,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        /*
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Go back to the home activity
@@ -387,17 +391,17 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
                 return true;
             default:
                 break;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDelete(long[] ids) {
-        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
-        if (MusicUtils.getQueue().length == 0) {
-            NavUtils.goHome(this);
-        }
-    }
+//    @Override
+//    public void onDelete(long[] ids) {
+//        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+//        if (MusicUtils.getQueue().length == 0) {
+//            NavUtils.goHome(this);
+//        }
+//    }
 
     /**
      * {@inheritDoc}
@@ -405,7 +409,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        NavUtils.goHome(this);
+        //NavUtils.goHome(this);
     }
 
     /**
@@ -903,8 +907,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         @Override
         public void onClick(final View v) {
-            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(),
-                    MusicUtils.getArtistName(), MusicUtils.getCurrentAlbumId());
+//            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(),
+//                    MusicUtils.getArtistName(), MusicUtils.getCurrentAlbumId());
         }
     };
 
