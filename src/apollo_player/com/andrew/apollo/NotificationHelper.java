@@ -11,7 +11,8 @@
 
 package com.andrew.apollo;
 
-import android.annotation.SuppressLint;
+import java.lang.reflect.Field;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,7 +32,6 @@ import com.frostwire.android.R;
  *
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-@SuppressLint("NewApi")
 public class NotificationHelper {
 
     /**
@@ -71,45 +71,43 @@ public class NotificationHelper {
      */
     public NotificationHelper(final MusicPlaybackService service) {
         mService = service;
-        mNotificationManager = (NotificationManager)service
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     /**
      * Call this to build the {@link Notification}.
      */
-    public void buildNotification(final String albumName, final String artistName,
-            final String trackName, final Long albumId, final Bitmap albumArt,
-            final boolean isPlaying) {
+    public void buildNotification(final String albumName, final String artistName, final String trackName, final Long albumId, final Bitmap albumArt, final boolean isPlaying) {
 
         // Default notfication layout
-        mNotificationTemplate = new RemoteViews(mService.getPackageName(),
-                R.layout.notification_template_base);
+        mNotificationTemplate = new RemoteViews(mService.getPackageName(), R.layout.notification_template_base);
 
         // Set up the content view
         initCollapsedLayout(trackName, artistName, albumArt);
 
         // Notification Builder
-        mNotification = new NotificationCompat.Builder(mService)
-                .setSmallIcon(R.drawable.stat_notify_music)
-                .setContentIntent(getPendingIntent())
-                //.setPriority(Notification.PRIORITY_DEFAULT)
-                .setContent(mNotificationTemplate)
-                .build();
+        mNotification = new NotificationCompat.Builder(mService).setSmallIcon(R.drawable.stat_notify_music).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).build();
         // Control playback from the notification
         initPlaybackActions(isPlaying);
         if (ApolloUtils.hasJellyBean()) {
             // Expanded notifiction style
-            mExpandedView = new RemoteViews(mService.getPackageName(),
-                    R.layout.notification_template_expanded_base);
-            //mNotification.bigContentView = mExpandedView;
-            mNotification.contentView = mExpandedView;
+            mExpandedView = new RemoteViews(mService.getPackageName(), R.layout.notification_template_expanded_base);
+            setBigContentView(mNotification, mExpandedView);
             // Control playback from the notification
             initExpandedPlaybackActions(isPlaying);
             // Set up the expanded content view
             initExpandedLayout(trackName, albumName, artistName, albumArt);
         }
         mService.startForeground(APOLLO_MUSIC_SERVICE, mNotification);
+    }
+
+    private static void setBigContentView(Notification notification, RemoteViews view) {
+        try {
+            Field f = Notification.class.getDeclaredField("bigContentView");
+            f.set(notification, view);
+        } catch (Throwable e) {
+            // unable to set the big view version
+        }
     }
 
     /**
@@ -130,13 +128,11 @@ public class NotificationHelper {
             return;
         }
         if (mNotificationTemplate != null) {
-            mNotificationTemplate.setImageViewResource(R.id.notification_base_play,
-                    isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+            mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
         }
 
         if (ApolloUtils.hasJellyBean() && mExpandedView != null) {
-            mExpandedView.setImageViewResource(R.id.notification_expanded_base_play,
-                    isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+            mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
         }
         mNotificationManager.notify(APOLLO_MUSIC_SERVICE, mNotification);
     }
@@ -145,8 +141,7 @@ public class NotificationHelper {
      * Open to the now playing screen
      */
     private PendingIntent getPendingIntent() {
-        return PendingIntent.getActivity(mService, 0, new Intent("com.andrew.apollo.AUDIO_PLAYER")
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+        return PendingIntent.getActivity(mService, 0, new Intent("com.andrew.apollo.AUDIO_PLAYER").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
     }
 
     /**
@@ -155,24 +150,19 @@ public class NotificationHelper {
      */
     private void initExpandedPlaybackActions(boolean isPlaying) {
         // Play and pause
-        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_play,
-                retreivePlaybackActions(1));
+        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_play, retreivePlaybackActions(1));
 
         // Skip tracks
-        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_next,
-                retreivePlaybackActions(2));
+        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_next, retreivePlaybackActions(2));
 
         // Previous tracks
-        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_previous,
-                retreivePlaybackActions(3));
+        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_previous, retreivePlaybackActions(3));
 
         // Stop and collapse the notification
-        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_collapse,
-                retreivePlaybackActions(4));
+        mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_collapse, retreivePlaybackActions(4));
 
         // Update the play button image
-        mExpandedView.setImageViewResource(R.id.notification_expanded_base_play,
-                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+        mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
     }
 
     /**
@@ -180,24 +170,19 @@ public class NotificationHelper {
      */
     private void initPlaybackActions(boolean isPlaying) {
         // Play and pause
-        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_play,
-                retreivePlaybackActions(1));
+        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_play, retreivePlaybackActions(1));
 
         // Skip tracks
-        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_next,
-                retreivePlaybackActions(2));
+        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_next, retreivePlaybackActions(2));
 
         // Previous tracks
-        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_previous,
-                retreivePlaybackActions(3));
+        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_previous, retreivePlaybackActions(3));
 
         // Stop and collapse the notification
-        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_collapse,
-                retreivePlaybackActions(4));
+        mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_collapse, retreivePlaybackActions(4));
 
         // Update the play button image
-        mNotificationTemplate.setImageViewResource(R.id.notification_base_play,
-                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+        mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
     }
 
     /**
@@ -209,32 +194,32 @@ public class NotificationHelper {
         PendingIntent pendingIntent;
         final ComponentName serviceName = new ComponentName(mService, MusicPlaybackService.class);
         switch (which) {
-            case 1:
-                // Play and pause
-                action = new Intent(MusicPlaybackService.TOGGLEPAUSE_ACTION);
-                action.setComponent(serviceName);
-                pendingIntent = PendingIntent.getService(mService, 1, action, 0);
-                return pendingIntent;
-            case 2:
-                // Skip tracks
-                action = new Intent(MusicPlaybackService.NEXT_ACTION);
-                action.setComponent(serviceName);
-                pendingIntent = PendingIntent.getService(mService, 2, action, 0);
-                return pendingIntent;
-            case 3:
-                // Previous tracks
-                action = new Intent(MusicPlaybackService.PREVIOUS_ACTION);
-                action.setComponent(serviceName);
-                pendingIntent = PendingIntent.getService(mService, 3, action, 0);
-                return pendingIntent;
-            case 4:
-                // Stop and collapse the notification
-                action = new Intent(MusicPlaybackService.STOP_ACTION);
-                action.setComponent(serviceName);
-                pendingIntent = PendingIntent.getService(mService, 4, action, 0);
-                return pendingIntent;
-            default:
-                break;
+        case 1:
+            // Play and pause
+            action = new Intent(MusicPlaybackService.TOGGLEPAUSE_ACTION);
+            action.setComponent(serviceName);
+            pendingIntent = PendingIntent.getService(mService, 1, action, 0);
+            return pendingIntent;
+        case 2:
+            // Skip tracks
+            action = new Intent(MusicPlaybackService.NEXT_ACTION);
+            action.setComponent(serviceName);
+            pendingIntent = PendingIntent.getService(mService, 2, action, 0);
+            return pendingIntent;
+        case 3:
+            // Previous tracks
+            action = new Intent(MusicPlaybackService.PREVIOUS_ACTION);
+            action.setComponent(serviceName);
+            pendingIntent = PendingIntent.getService(mService, 3, action, 0);
+            return pendingIntent;
+        case 4:
+            // Stop and collapse the notification
+            action = new Intent(MusicPlaybackService.STOP_ACTION);
+            action.setComponent(serviceName);
+            pendingIntent = PendingIntent.getService(mService, 4, action, 0);
+            return pendingIntent;
+        default:
+            break;
         }
         return null;
     }
@@ -242,8 +227,7 @@ public class NotificationHelper {
     /**
      * Sets the track name, artist name, and album art in the normal layout
      */
-    private void initCollapsedLayout(final String trackName, final String artistName,
-            final Bitmap albumArt) {
+    private void initCollapsedLayout(final String trackName, final String artistName, final Bitmap albumArt) {
         // Track name (line one)
         mNotificationTemplate.setTextViewText(R.id.notification_base_line_one, trackName);
         // Artist name (line two)
@@ -256,8 +240,7 @@ public class NotificationHelper {
      * Sets the track name, album name, artist name, and album art in the
      * expanded layout
      */
-    private void initExpandedLayout(final String trackName, final String artistName,
-            final String albumName, final Bitmap albumArt) {
+    private void initExpandedLayout(final String trackName, final String artistName, final String albumName, final Bitmap albumArt) {
         // Track name (line one)
         mExpandedView.setTextViewText(R.id.notification_expanded_base_line_one, trackName);
         // Album name (line two)

@@ -12,6 +12,7 @@
 package com.andrew.apollo.utils;
 
 import android.app.Activity;
+import android.os.Build;
 
 import com.andrew.apollo.cache.ImageCache;
 import com.andrew.apollo.cache.ImageFetcher;
@@ -22,6 +23,9 @@ import com.andrew.apollo.cache.ImageFetcher;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public final class ApolloUtils {
+
+    private static final int VERSION_CODE_JELLY_BEAN = 16;
+    private static final int VERSION_CODE_JELLY_BEAN_MR2 = 18;
 
     /* This class is never initiated */
     public ApolloUtils() {
@@ -34,7 +38,7 @@ public final class ApolloUtils {
      *         otherwise
      */
     public static final boolean hasJellyBean() {
-        return false;//Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+        return Build.VERSION.SDK_INT >= VERSION_CODE_JELLY_BEAN;
     }
 
     /**
@@ -45,9 +49,9 @@ public final class ApolloUtils {
      *         false otherwise
      */
     public static final boolean hasJellyBeanMR2() {
-        return false;//Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return Build.VERSION.SDK_INT >= VERSION_CODE_JELLY_BEAN_MR2;
     }
-    
+
     /**
      * Creates a new instance of the {@link ImageCache} and {@link ImageFetcher}
      * 
