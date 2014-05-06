@@ -11,6 +11,10 @@
 
 package com.andrew.apollo.utils;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.WeakHashMap;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -34,8 +38,6 @@ import android.provider.MediaStore.Audio.PlaylistsColumns;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Menu;
-import android.view.SubMenu;
 
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
@@ -49,14 +51,7 @@ import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 //import com.devspark.appmsg.AppMsg;
-
 import com.frostwire.android.R;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.Locale;
-import java.util.WeakHashMap;
 
 /**
  * A collection of helpers directly related to music or Apollo's service.

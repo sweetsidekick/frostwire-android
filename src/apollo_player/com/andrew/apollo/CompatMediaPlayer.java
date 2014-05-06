@@ -18,7 +18,6 @@ package com.andrew.apollo;
 
 import java.lang.reflect.Method;
 
-import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.SystemClock;
