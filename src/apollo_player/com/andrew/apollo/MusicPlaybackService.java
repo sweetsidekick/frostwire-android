@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.TreeSet;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -63,13 +62,11 @@ import com.andrew.apollo.provider.RecentStore;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
-//import com.andrew.apollo.utils.PreferenceUtils;
 
 /**
  * A backbround {@link Service} used to keep music playing between activities
  * and when the user moves Apollo into the background.
  */
-@SuppressLint("NewApi")
 public class MusicPlaybackService extends Service {
     private static final String TAG = "MusicPlaybackService";
     private static final boolean D = false;
@@ -1366,6 +1363,7 @@ public class MusicPlaybackService extends Service {
         if (ApolloUtils.hasJellyBeanMR2()
                 && (what.equals(PLAYSTATE_CHANGED) || what.equals(POSITION_CHANGED))) {
             //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+            mRemoteControlClient.setPlaybackState(playState);
         } else if (what.equals(PLAYSTATE_CHANGED)) {
             mRemoteControlClient.setPlaybackState(playState);
         } else if (what.equals(META_CHANGED) || what.equals(QUEUE_CHANGED)) {
@@ -1392,6 +1390,7 @@ public class MusicPlaybackService extends Service {
 
             if (ApolloUtils.hasJellyBeanMR2()) {
                 //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+                mRemoteControlClient.setPlaybackState(playState);
             }
         }
     }

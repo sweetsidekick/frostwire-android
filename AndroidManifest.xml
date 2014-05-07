@@ -290,8 +290,7 @@
 			android:exported="false" />
 		<service android:name="com.frostwire.android.market.BillingService"
 			android:exported="false" />
-		<service android:name="com.andrew.apollo.MusicPlaybackService"
-			android:exported="false" />
+		<service android:name="com.andrew.apollo.MusicPlaybackService" />
 
 		<receiver android:name="com.frostwire.android.gui.services.EngineBroadcastReceiver">
 			<intent-filter>
