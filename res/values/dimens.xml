@@ -64,8 +64,28 @@
     <dimen name="text_size_x_large">24.0sp</dimen>
     <dimen name="text_size_dayum">36.0sp</dimen>
     
-        <!-- Colorstrip -->
+    <!-- Colorstrip -->
     <dimen name="colorstrip_height">2.0dip</dimen>
+    
+    <!-- Drag and drop -->
+    <dimen name="drag_and_drop_handle">26.0dip</dimen>
+    
+    <!-- List and grid view padding -->
+    <dimen name="list_preferred_item_padding">10.0dip</dimen>
+    <!-- List view fast scroll padding left -->
+    <dimen name="fast_scroll_padding_left">8.0dip</dimen>
+    <!-- List view fast scroll padding right -->
+    <dimen name="fast_scroll_padding_right">8.0dip</dimen>
+    <!-- grid view vertical and horizontal spacing -->
+    <dimen name="grid_item_spacing">4.0dip</dimen>
+    <!-- List item detailed height -->
+    <dimen name="list_item_detailed_height">120.0dip</dimen>
+    <!-- Top margin of "line_two" -->
+    <dimen name="list_item_line_two_margin_top">8.0dip</dimen>
+    <!-- Left padding in the grid text -->
+    <dimen name="grid_item_padding_left">8.0dip</dimen>
+    <!-- Grid and list item normal height -->
+    <dimen name="item_normal_height">64.0dip</dimen>
     
 
 </resources>

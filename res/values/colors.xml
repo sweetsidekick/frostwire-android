@@ -39,5 +39,8 @@
     <color name="app_menu_item_pressed">#ff314c61</color>
     <color name="app_menu_item_line">#ff1d2934</color>
     <color name="app_light_gray_text">#ffbfcfdc</color>
+    
+    <!-- A light, transparent Holo shade of blue -->
+    <color name="holo_blue_light_transparent">#9933b5e5</color>
 
 </resources>
