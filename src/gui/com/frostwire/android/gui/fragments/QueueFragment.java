@@ -14,10 +14,10 @@ package com.frostwire.android.gui.fragments;
 import java.util.List;
 
 import android.app.Fragment;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -31,10 +31,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.andrew.apollo.dragdrop.DragSortListView;
+import com.andrew.apollo.dragdrop.DragSortListView.DragScrollProfile;
+import com.andrew.apollo.dragdrop.DragSortListView.DropListener;
+import com.andrew.apollo.dragdrop.DragSortListView.RemoveListener;
+import com.andrew.apollo.loaders.NowPlayingCursor;
+import com.andrew.apollo.loaders.QueueLoader;
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.adapters.RecycleHolder;
+import com.frostwire.android.gui.adapters.SongAdapter;
 
 /**
  * This class is used to display all of the songs in the queue.
@@ -144,7 +152,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      */
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.queue, menu);
+        //inflater.inflate(R.menu.queue, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -153,6 +161,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        /*
         switch (item.getItemId()) {
             case R.id.menu_save_queue:
                 NowPlayingCursor queue = (NowPlayingCursor)QueueLoader
@@ -169,6 +178,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
             default:
                 break;
         }
+        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -179,6 +189,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     public void onCreateContextMenu(final ContextMenu menu, final View v,
             final ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        /*
         // Get the position of the selected item
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
         mSelectedPosition = info.position;
@@ -213,6 +224,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         // Delete the song
         menu.add(GROUP_ID, FragmentMenuItems.DELETE, Menu.NONE,
                 getString(R.string.context_menu_delete));
+        */
     }
 
     /**
@@ -220,6 +232,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      */
     @Override
     public boolean onContextItemSelected(final android.view.MenuItem item) {
+        /*
         if (item.getGroupId() == GROUP_ID) {
             switch (item.getItemId()) {
                 case FragmentMenuItems.PLAY_NEXT:
@@ -267,6 +280,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
                     break;
             }
         }
+        */
         return super.onContextItemSelected(item);
     }
 
