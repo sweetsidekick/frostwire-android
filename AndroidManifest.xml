@@ -199,7 +199,7 @@
                 <data android:mimeType="vnd.android.cursor.dir/artists" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.andrew.apollo.AUDIO_PLAYER" />
+                <action android:name="com.frostwire.android.AUDIO_PLAYER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

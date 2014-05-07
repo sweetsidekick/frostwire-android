@@ -20,7 +20,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.andrew.apollo.utils.ApolloUtils;
@@ -33,6 +32,8 @@ import com.frostwire.android.R;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class NotificationHelper {
+    
+    private static final String INTENT_AUDIO_PLAYER = "com.frostwire.android.AUDIO_PLAYER";
 
     /**
      * Notification ID
@@ -86,7 +87,7 @@ public class NotificationHelper {
         initCollapsedLayout(trackName, artistName, albumArt);
 
         // Notification Builder
-        mNotification = new NotificationCompat.Builder(mService).setSmallIcon(R.drawable.stat_notify_music).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).build();
+        mNotification = new Notification.Builder(mService).setSmallIcon(R.drawable.stat_notify_music).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).getNotification();
         // Control playback from the notification
         initPlaybackActions(isPlaying);
         if (ApolloUtils.hasJellyBean()) {
@@ -99,15 +100,6 @@ public class NotificationHelper {
             initExpandedLayout(trackName, albumName, artistName, albumArt);
         }
         mService.startForeground(APOLLO_MUSIC_SERVICE, mNotification);
-    }
-
-    private static void setBigContentView(Notification notification, RemoteViews view) {
-        try {
-            Field f = Notification.class.getDeclaredField("bigContentView");
-            f.set(notification, view);
-        } catch (Throwable e) {
-            // unable to set the big view version
-        }
     }
 
     /**
@@ -141,7 +133,7 @@ public class NotificationHelper {
      * Open to the now playing screen
      */
     private PendingIntent getPendingIntent() {
-        return PendingIntent.getActivity(mService, 0, new Intent("com.andrew.apollo.AUDIO_PLAYER").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+        return PendingIntent.getActivity(mService, 0, new Intent(INTENT_AUDIO_PLAYER).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
     }
 
     /**
@@ -251,4 +243,12 @@ public class NotificationHelper {
         mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
     }
 
+    private static void setBigContentView(Notification notification, RemoteViews view) {
+        try {
+            Field f = Notification.class.getDeclaredField("bigContentView");
+            f.set(notification, view);
+        } catch (Throwable e) {
+            // unable to set the big view version
+        }
+    }
 }
