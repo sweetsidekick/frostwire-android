@@ -27,6 +27,7 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.andrew.apollo.cache.ImageCache;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
@@ -123,5 +124,11 @@ public class MainApplication extends Application {
         msgs.put("GeneralView.no", context.getString(R.string.azureus_general_view_no));
 
         return msgs;
+    }
+    
+    @Override
+    public void onLowMemory() {
+        ImageCache.getInstance(this).evictAll();
+        super.onLowMemory();
     }
 }
