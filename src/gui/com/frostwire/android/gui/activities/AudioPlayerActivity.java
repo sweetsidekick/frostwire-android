@@ -472,13 +472,12 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     /**
      * Initializes the items in the now playing screen
      */
-    @SuppressWarnings("deprecation")
     private void initPlaybackControls() {
         // ViewPager container
         mPageContainer = (FrameLayout)findViewById(R.id.audio_player_pager_container);
         // Theme the pager container background
-        //mPageContainer
-        //        .setBackgroundDrawable(mResources.getDrawable("audio_player_pager_container"));
+        mPageContainer
+                .setBackgroundResource(R.drawable.audio_player_pager_container);
 
         // Now playing header
         mAudioPlayerHeader = (LinearLayout)findViewById(R.id.audio_player_header);
@@ -525,7 +524,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Used to show and hide the queue fragment
         mQueueSwitch = (ImageView)findViewById(R.id.audio_player_switch_queue);
         // Theme the queue switch icon
-        //mQueueSwitch.setImageDrawable(mResources.getDrawable("btn_switch_queue"));
+        mQueueSwitch.setImageResource(R.drawable.btn_switch_queue);
         // Progress
         mProgress = (SeekBar)findViewById(android.R.id.progress);
 
