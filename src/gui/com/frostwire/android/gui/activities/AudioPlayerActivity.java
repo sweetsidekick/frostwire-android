@@ -34,7 +34,6 @@ import android.os.SystemClock;
 import android.provider.MediaStore.Audio.Albums;
 import android.provider.MediaStore.Audio.Artists;
 import android.provider.MediaStore.Audio.Playlists;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,7 +61,9 @@ import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.adapters.PagerAdapter;
 //import com.andrew.apollo.utils.NavUtils;
+import com.frostwire.android.gui.fragments.QueueFragment;
 
 /**
  * Apollo's "now playing" interface.
@@ -127,7 +128,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     private ViewPager mViewPager;
 
     // Pager adpater
-    private FragmentPagerAdapter mPagerAdapter;
+    private PagerAdapter mPagerAdapter;
 
     // ViewPager container
     private FrameLayout mPageContainer;
@@ -489,7 +490,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         mSwitch.setOnClickListener(mToggleHiddenPanel);
 
         // Initialize the pager adapter
-        mPagerAdapter = new FragmentPagerAdapter(this);
+        mPagerAdapter = new PagerAdapter(this);
         // Queue
         mPagerAdapter.add(QueueFragment.class, null);
 

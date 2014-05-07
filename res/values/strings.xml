@@ -475,5 +475,11 @@
     <string name="durationformatlong" translatable="false">%1$d:%2$02d:%3$02d</string>
     <string name="now_listening_to">#NowPlaying %1$s by %2$s #FrostWire</string>
     <string name="share_track_using">Share track using:</string>
+    <string name="page_recent">Recent</string>
+    <string name="page_artists">Artists</string>
+    <string name="page_albums">Albums</string>
+    <string name="page_songs">Songs</string>
+    <string name="page_playlists">Playlists</string>
+    <string name="page_genres">Genres</string>
     
 </resources>
