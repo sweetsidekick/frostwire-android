@@ -34,6 +34,7 @@ import android.os.SystemClock;
 import android.provider.MediaStore.Audio.Albums;
 import android.provider.MediaStore.Audio.Artists;
 import android.provider.MediaStore.Audio.Playlists;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -126,7 +127,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
     private ViewPager mViewPager;
 
     // Pager adpater
-    //private PagerAdapter mPagerAdapter;
+    private FragmentPagerAdapter mPagerAdapter;
 
     // ViewPager container
     private FrameLayout mPageContainer;
@@ -409,7 +410,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Current info
         updateNowPlayingInfo();
         // Refresh the queue
-        //((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
     }
 
     /**
@@ -488,16 +489,16 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         mSwitch.setOnClickListener(mToggleHiddenPanel);
 
         // Initialize the pager adapter
-        //mPagerAdapter = new PagerAdapter(this);
+        mPagerAdapter = new FragmentPagerAdapter(this);
         // Queue
-        //mPagerAdapter.add(QueueFragment.class, null);
+        mPagerAdapter.add(QueueFragment.class, null);
 
         // Initialize the ViewPager
         mViewPager = (ViewPager)findViewById(R.id.audio_player_pager);
         // Attch the adapter
-        //mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setAdapter(mPagerAdapter);
         // Offscreen pager loading limit
-        //mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
+        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         // Play and pause button
         mPlayPauseButton = (PlayPauseButton)findViewById(R.id.action_button_play);
         // Shuffle button
@@ -614,7 +615,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             // Make sure to process intent only once
             setIntent(new Intent());
             // Refresh the queue
-            //((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+            ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
         }
     }
 
@@ -905,7 +906,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         @Override
         public void onClick(final View v) {
-            //((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
+            ((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
         }
     };
 
