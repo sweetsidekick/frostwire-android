@@ -71,7 +71,7 @@ public class EngineService extends Service implements IEngineService {
 
         threadPool = new ThreadPool("Engine");
 
-        mediaPlayer = new NativeAndroidPlayer(this);
+        mediaPlayer = new ApolloMediaPlayer(this);
 
         registerPreferencesChangeListener();
 

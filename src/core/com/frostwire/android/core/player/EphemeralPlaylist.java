@@ -118,4 +118,17 @@ public final class EphemeralPlaylist implements Playlist {
             }
         }
     }
+    
+    @Override
+    public List<PlaylistItem> getItems() {
+        return items;
+    }
+    
+    @Override
+    public PlaylistItem getCurrentItem() {
+        if (currentIndex >= 0) {
+            return items.get(currentIndex);
+        }
+        return null;
+    }
 }

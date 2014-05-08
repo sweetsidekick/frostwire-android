@@ -18,6 +18,8 @@
 
 package com.frostwire.android.core.player;
 
+import java.util.List;
+
 /**
  * @author gubatron
  * @author aldenml
@@ -33,4 +35,8 @@ public interface Playlist {
     public PlaylistItem getNextItem();
     
     public void removeItem(PlaylistItem item);
+    
+    public List<PlaylistItem> getItems();
+    
+    public PlaylistItem getCurrentItem();
 }
