@@ -206,14 +206,14 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         onLocalPlay();
 
         if (fd.mime != null && fd.mime.contains("audio")) {
-            MusicUtils.playFile(getContext(), Uri.fromFile(new File(fd.filePath)));
-//            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
-//                Engine.instance().getMediaPlayer().stop();
-//            } else {
-//                UIUtils.playEphemeralPlaylist(fd);
-//                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
-//            }
-//            notifyDataSetChanged();
+            MusicUtils.playAll(getContext(), new long[] { fd.id }, 0, false);
+            //            if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
+            //                Engine.instance().getMediaPlayer().stop();
+            //            } else {
+            //                UIUtils.playEphemeralPlaylist(fd);
+            //                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
+            //            }
+            //            notifyDataSetChanged();
         } else {
             if (fd.filePath != null && fd.mime != null) {
                 UIUtils.openFile(getContext(), fd.filePath, fd.mime);
@@ -252,7 +252,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                     fileThumbnail.setOverlayState(OverlayState.PLAY);
                 }
             }
-            
+
             thumbnailLoader.displayImage(fd, fileThumbnail, null);
         }
 
