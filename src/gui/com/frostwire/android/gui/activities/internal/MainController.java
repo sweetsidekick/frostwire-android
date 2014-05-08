@@ -32,8 +32,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.activities.AudioPlayerActivity;
 import com.frostwire.android.gui.activities.MainActivity;
-import com.frostwire.android.gui.activities.MediaPlayerActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.activities.WizardActivity;
 import com.frostwire.android.gui.dialogs.ShareIndicationDialog;
@@ -135,7 +135,7 @@ public final class MainController {
 
     public void launchPlayerActivity() {
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
-            Intent i = new Intent(activity, MediaPlayerActivity.class);
+            Intent i = new Intent(activity, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);

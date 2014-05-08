@@ -33,7 +33,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.player.CoreMediaPlayer;
-import com.frostwire.android.gui.activities.MediaPlayerActivity;
+import com.frostwire.android.gui.activities.AudioPlayerActivity;
 import com.frostwire.android.gui.services.Engine;
 
 /**
@@ -133,7 +133,7 @@ public class PlayerNotifierView extends LinearLayout implements TimerObserver {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
-            Intent i = new Intent(getContext(), MediaPlayerActivity.class);
+            Intent i = new Intent(getContext(), AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(i);
