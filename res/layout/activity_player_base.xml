@@ -88,13 +88,6 @@
             android:layout_centerHorizontal="true"
             android:scaleType="fitXY" />
 
-        <View
-            android:id="@+id/audio_player_footer_two"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/audio_player_album_art" />
-
         <FrameLayout
             android:id="@+id/audio_player_pager_container"
             android:layout_width="match_parent"
@@ -106,20 +99,6 @@
                 android:id="@+id/audio_player_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shadow_height"
-                android:layout_gravity="top"
-                android:contentDescription="@null"
-                android:src="@drawable/top_shadow" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shadow_height"
-                android:layout_gravity="bottom"
-                android:contentDescription="@null"
-                android:src="@drawable/bottom_shadow" />
         </FrameLayout>
     </RelativeLayout>
 

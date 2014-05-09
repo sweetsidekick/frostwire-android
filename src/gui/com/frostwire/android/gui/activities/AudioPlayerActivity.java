@@ -49,10 +49,8 @@ import android.widget.TextView;
 
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-//import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
-//import com.andrew.apollo.ui.fragments.QueueFragment;
-//import com.andrew.apollo.menu.DeleteDialog;
+import com.andrew.apollo.menu.DeleteDialog;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
@@ -62,7 +60,6 @@ import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PagerAdapter;
-//import com.andrew.apollo.utils.NavUtils;
 import com.frostwire.android.gui.fragments.QueueFragment;
 
 /**
@@ -70,8 +67,7 @@ import com.frostwire.android.gui.fragments.QueueFragment;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class AudioPlayerActivity extends Activity implements ServiceConnection,
-        OnSeekBarChangeListener/*, DeleteDialog.DeleteDialogCallback*/ {
+public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener/*, DeleteDialog.DeleteDialogCallback*/{
 
     // Message to refresh the time
     private static final int REFRESH_TIME = 1;
@@ -178,7 +174,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         // Theme the action bar
         final ActionBar actionBar = getActionBar();
-        //mResources.themeActionBar(actionBar, getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // Set the layout
@@ -273,17 +268,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        /*
-        // Hide the EQ option if it can't be opened
-        final Intent intent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-        if (getPackageManager().resolveActivity(intent, 0) == null) {
-            final MenuItem effects = menu.findItem(R.id.menu_audio_player_equalizer);
-            effects.setVisible(false);
-        }
-        mResources.setFavoriteIcon(menu);
         return true;
-        */
-        return false;
     }
 
     /**
@@ -291,45 +276,13 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        /*
-        // Search view
-        getMenuInflater().inflate(R.menu.search, menu);
-        // Theme the search icon
-        mResources.setSearchIcon(menu);
-
-        final SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
-        // Add voice search
-        final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        final SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
-        searchView.setSearchableInfo(searchableInfo);
-        // Perform the search
-        searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(final String query) {
-                // Open the search activity
-                NavUtils.openSearch(AudioPlayerActivity.this, query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String newText) {
-                // Nothing to do
-                return false;
-            }
-        });
 
         // Favorite action
         getMenuInflater().inflate(R.menu.favorite, menu);
-        // Shuffle all
-        getMenuInflater().inflate(R.menu.shuffle, menu);
         // Share, ringtone, and equalizer
         getMenuInflater().inflate(R.menu.audio_player, menu);
-        // Settings
-        getMenuInflater().inflate(R.menu.activity_base, menu);
+
         return true;
-        */
-        return false;
     }
 
     /**
@@ -337,59 +290,37 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        /*
         switch (item.getItemId()) {
-            case android.R.id.home:
-                // Go back to the home activity
-                NavUtils.goHome(this);
-                return true;
-            case R.id.menu_shuffle:
-                // Shuffle all the songs
-                MusicUtils.shuffleAll(this);
-                // Refresh the queue
-                ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
-                return true;
-            case R.id.menu_favorite:
-                // Toggle the current track as a favorite and update the menu
-                // item
-                MusicUtils.toggleFavorite();
-                invalidateOptionsMenu();
-                return true;
-            case R.id.menu_audio_player_ringtone:
-                // Set the current track as a ringtone
-                MusicUtils.setRingtone(this, MusicUtils.getCurrentAudioId());
-                return true;
-            case R.id.menu_audio_player_share:
-                // Share the current meta data
-                shareCurrentTrack();
-                return true;
-            case R.id.menu_audio_player_equalizer:
-                // Sound effects
-                NavUtils.openEffectsPanel(this);
-                return true;
-            case R.id.menu_settings:
-                // Settings
-                NavUtils.openSettings(this);
-                return true;
-            case R.id.menu_audio_player_delete:
-                // Delete current song
-                DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] {
-                    MusicUtils.getCurrentAudioId()
-                }, null).show(getSupportFragmentManager(), "DeleteDialog");
-                return true;
-            default:
-                break;
-        }*/
+        case android.R.id.home:
+            finish();
+            return true;
+        case R.id.menu_favorite:
+            // Toggle the current track as a favorite and update the menu
+            // item
+            MusicUtils.toggleFavorite();
+            invalidateOptionsMenu();
+            return true;
+        case R.id.menu_audio_player_share:
+            // Share the current meta data
+            shareCurrentTrack();
+            return true;
+        case R.id.menu_audio_player_delete:
+            // Delete current song
+            DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] { MusicUtils.getCurrentAudioId() }, null).show(getFragmentManager(), "DeleteDialog");
+            return true;
+        default:
+            break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onDelete(long[] ids) {
-//        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
-//        if (MusicUtils.getQueue().length == 0) {
-//            NavUtils.goHome(this);
-//        }
-//    }
+    //    @Override
+    //    public void onDelete(long[] ids) {
+    //        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+    //        if (MusicUtils.getQueue().length == 0) {
+    //            NavUtils.goHome(this);
+    //        }
+    //    }
 
     /**
      * {@inheritDoc}
@@ -411,7 +342,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Current info
         updateNowPlayingInfo();
         // Refresh the queue
-        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+        ((QueueFragment) mPagerAdapter.getFragment(0)).refreshQueue();
     }
 
     /**
@@ -474,18 +405,17 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     private void initPlaybackControls() {
         // ViewPager container
-        mPageContainer = (FrameLayout)findViewById(R.id.audio_player_pager_container);
+        mPageContainer = (FrameLayout) findViewById(R.id.audio_player_pager_container);
         // Theme the pager container background
-        mPageContainer
-                .setBackgroundResource(R.drawable.audio_player_pager_container);
+        mPageContainer.setBackgroundResource(R.drawable.audio_player_pager_container);
 
         // Now playing header
-        mAudioPlayerHeader = (LinearLayout)findViewById(R.id.audio_player_header);
+        mAudioPlayerHeader = (LinearLayout) findViewById(R.id.audio_player_header);
         // Opens the currently playing album profile
         mAudioPlayerHeader.setOnClickListener(mOpenAlbumProfile);
 
         // Used to hide the artwork and show the queue
-        final FrameLayout mSwitch = (FrameLayout)findViewById(R.id.audio_player_switch);
+        final FrameLayout mSwitch = (FrameLayout) findViewById(R.id.audio_player_switch);
         mSwitch.setOnClickListener(mToggleHiddenPanel);
 
         // Initialize the pager adapter
@@ -494,39 +424,39 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         mPagerAdapter.add(QueueFragment.class, null);
 
         // Initialize the ViewPager
-        mViewPager = (ViewPager)findViewById(R.id.audio_player_pager);
+        mViewPager = (ViewPager) findViewById(R.id.audio_player_pager);
         // Attch the adapter
         mViewPager.setAdapter(mPagerAdapter);
         // Offscreen pager loading limit
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         // Play and pause button
-        mPlayPauseButton = (PlayPauseButton)findViewById(R.id.action_button_play);
+        mPlayPauseButton = (PlayPauseButton) findViewById(R.id.action_button_play);
         // Shuffle button
-        mShuffleButton = (ShuffleButton)findViewById(R.id.action_button_shuffle);
+        mShuffleButton = (ShuffleButton) findViewById(R.id.action_button_shuffle);
         // Repeat button
-        mRepeatButton = (RepeatButton)findViewById(R.id.action_button_repeat);
+        mRepeatButton = (RepeatButton) findViewById(R.id.action_button_repeat);
         // Previous button
-        mPreviousButton = (RepeatingImageButton)findViewById(R.id.action_button_previous);
+        mPreviousButton = (RepeatingImageButton) findViewById(R.id.action_button_previous);
         // Next button
-        mNextButton = (RepeatingImageButton)findViewById(R.id.action_button_next);
+        mNextButton = (RepeatingImageButton) findViewById(R.id.action_button_next);
         // Track name
-        mTrackName = (TextView)findViewById(R.id.audio_player_track_name);
+        mTrackName = (TextView) findViewById(R.id.audio_player_track_name);
         // Artist name
-        mArtistName = (TextView)findViewById(R.id.audio_player_artist_name);
+        mArtistName = (TextView) findViewById(R.id.audio_player_artist_name);
         // Album art
-        mAlbumArt = (ImageView)findViewById(R.id.audio_player_album_art);
+        mAlbumArt = (ImageView) findViewById(R.id.audio_player_album_art);
         // Small album art
-        mAlbumArtSmall = (ImageView)findViewById(R.id.audio_player_switch_album_art);
+        mAlbumArtSmall = (ImageView) findViewById(R.id.audio_player_switch_album_art);
         // Current time
-        mCurrentTime = (TextView)findViewById(R.id.audio_player_current_time);
+        mCurrentTime = (TextView) findViewById(R.id.audio_player_current_time);
         // Total time
-        mTotalTime = (TextView)findViewById(R.id.audio_player_total_time);
+        mTotalTime = (TextView) findViewById(R.id.audio_player_total_time);
         // Used to show and hide the queue fragment
-        mQueueSwitch = (ImageView)findViewById(R.id.audio_player_switch_queue);
+        mQueueSwitch = (ImageView) findViewById(R.id.audio_player_switch_queue);
         // Theme the queue switch icon
         mQueueSwitch.setImageResource(R.drawable.btn_switch_queue);
         // Progress
-        mProgress = (SeekBar)findViewById(R.id.activity_audio_player_progress);
+        mProgress = (SeekBar) findViewById(R.id.activity_audio_player_progress);
 
         // Set the repeat listner for the previous button
         mPreviousButton.setRepeatListener(mRewindListener);
@@ -555,8 +485,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
     }
 
-    private long parseIdFromIntent(Intent intent, String longKey,
-        String stringKey, long defaultId) {
+    private long parseIdFromIntent(Intent intent, String longKey, String stringKey, long defaultId) {
         long id = intent.getLongExtra(longKey, -1);
         if (id < 0) {
             String idString = intent.getStringExtra(stringKey);
@@ -615,7 +544,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             // Make sure to process intent only once
             setIntent(new Intent());
             // Refresh the queue
-            ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
+            ((QueueFragment) mPagerAdapter.getFragment(0)).refreshQueue();
         }
     }
 
@@ -739,7 +668,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             final long pos = mPosOverride < 0 ? MusicUtils.position() : mPosOverride;
             if (pos >= 0 && MusicUtils.duration() > 0) {
                 refreshCurrentTimeText(pos);
-                final int progress = (int)(1000 * pos / MusicUtils.duration());
+                final int progress = (int) (1000 * pos / MusicUtils.duration());
                 mProgress.setProgress(progress);
 
                 if (mFromTouch) {
@@ -749,8 +678,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
                 } else {
                     // blink the counter
                     final int vis = mCurrentTime.getVisibility();
-                    mCurrentTime.setVisibility(vis == View.INVISIBLE ? View.VISIBLE
-                            : View.INVISIBLE);
+                    mCurrentTime.setVisibility(vis == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
                     return 500;
                 }
             } else {
@@ -787,8 +715,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
      */
     private void fade(final View v, final float alpha) {
         final ObjectAnimator fade = ObjectAnimator.ofFloat(v, "alpha", alpha);
-        fade.setInterpolator(AnimationUtils.loadInterpolator(this,
-                android.R.anim.accelerate_decelerate_interpolator));
+        fade.setInterpolator(AnimationUtils.loadInterpolator(this, android.R.anim.accelerate_decelerate_interpolator));
         fade.setDuration(400);
         fade.start();
     }
@@ -827,8 +754,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             return;
         }
         final Intent shareIntent = new Intent();
-        final String shareMessage = getString(R.string.now_listening_to,
-                MusicUtils.getTrackName(), MusicUtils.getArtistName());
+        final String shareMessage = getString(R.string.now_listening_to, MusicUtils.getTrackName(), MusicUtils.getArtistName());
 
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -894,8 +820,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         @Override
         public void onClick(final View v) {
-//            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(),
-//                    MusicUtils.getArtistName(), MusicUtils.getCurrentAlbumId());
+            //            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(),
+            //                    MusicUtils.getArtistName(), MusicUtils.getCurrentAlbumId());
         }
     };
 
@@ -906,7 +832,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
 
         @Override
         public void onClick(final View v) {
-            ((QueueFragment)mPagerAdapter.getFragment(0)).scrollToCurrentSong();
+            ((QueueFragment) mPagerAdapter.getFragment(0)).scrollToCurrentSong();
         }
     };
 
@@ -927,12 +853,12 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         @Override
         public void handleMessage(final Message msg) {
             switch (msg.what) {
-                case REFRESH_TIME:
-                    final long next = mAudioPlayer.get().refreshCurrentTime();
-                    mAudioPlayer.get().queueNextRefresh(next);
-                    break;
-                default:
-                    break;
+            case REFRESH_TIME:
+                final long next = mAudioPlayer.get().refreshCurrentTime();
+                mAudioPlayer.get().queueNextRefresh(next);
+                break;
+            default:
+                break;
             }
         }
     };
@@ -965,8 +891,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
             } else if (action.equals(MusicPlaybackService.PLAYSTATE_CHANGED)) {
                 // Set the play and pause image
                 mReference.get().mPlayPauseButton.updateState();
-            } else if (action.equals(MusicPlaybackService.REPEATMODE_CHANGED)
-                    || action.equals(MusicPlaybackService.SHUFFLEMODE_CHANGED)) {
+            } else if (action.equals(MusicPlaybackService.REPEATMODE_CHANGED) || action.equals(MusicPlaybackService.SHUFFLEMODE_CHANGED)) {
                 // Set the repeat image
                 mReference.get().mRepeatButton.updateRepeatState();
                 // Set the shuffle image
