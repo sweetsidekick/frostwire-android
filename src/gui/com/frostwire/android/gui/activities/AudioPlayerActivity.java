@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.MediaStore.Audio.Albums;
 import android.provider.MediaStore.Audio.Artists;
@@ -67,7 +68,7 @@ import com.frostwire.android.gui.fragments.QueueFragment;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener, DeleteDialog.DeleteDialogCallback{
+public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener, DeleteDialog.DeleteDialogCallback {
 
     // Message to refresh the time
     private static final int REFRESH_TIME = 1;
@@ -303,6 +304,14 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         case R.id.menu_audio_player_share:
             // Share the current meta data
             shareCurrentTrack();
+            return true;
+        case R.id.menu_audio_player_stop:
+            try {
+                MusicUtils.mService.stop();
+            } catch (RemoteException e) {
+                // ignore
+            }
+            finish();
             return true;
         case R.id.menu_audio_player_delete:
             // Delete current song
