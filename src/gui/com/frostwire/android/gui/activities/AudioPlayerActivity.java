@@ -526,7 +526,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection,
         // Theme the queue switch icon
         mQueueSwitch.setImageResource(R.drawable.btn_switch_queue);
         // Progress
-        mProgress = (SeekBar)findViewById(android.R.id.progress);
+        mProgress = (SeekBar)findViewById(R.id.activity_audio_player_progress);
 
         // Set the repeat listner for the previous button
         mPreviousButton.setRepeatListener(mRewindListener);
