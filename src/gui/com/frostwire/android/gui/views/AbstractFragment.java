@@ -50,7 +50,11 @@ public abstract class AbstractFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     protected final <T extends View> T findView(View v, int id) {
-        return (T) v.findViewById(id);
+        T result = null;
+        if (v != null) {
+           result = (T) v.findViewById(id);
+        }
+        return result;
     }
 
     protected abstract void initComponents(View rootView);

@@ -148,7 +148,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
     }
     
     public final static class AppiaSearchThrottle {
-        private final int MAX_SEARCHES_WITHIN_TIME_INTERVAL = 4;
+        private final int MAX_SEARCHES_WITHIN_TIME_INTERVAL = 3;
         private final int TIME_INTERVAL = 2 * 60 * 1000;
         private int searchAttempts;
         private long lastTimeSearchPerformed;

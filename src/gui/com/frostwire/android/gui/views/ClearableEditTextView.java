@@ -112,6 +112,22 @@ public class ClearableEditTextView extends RelativeLayout {
         input.selectAll();
     }
     
+    @Override
+    public void setFocusableInTouchMode(boolean focusableInTouchMode) {
+        super.setFocusable(focusableInTouchMode);
+        input.setFocusableInTouchMode(focusableInTouchMode);
+    }
+    
+    @Override
+    public void setFocusable(boolean focusable) {
+        super.setFocusable(focusable);
+        input.setFocusable(focusable);
+    }
+    
+    public AutoCompleteTextView getAutoCompleteTextView() {
+        return input;
+    }
+    
     public String getHint() {
         return (String) input.getHint();
     }
@@ -119,7 +135,14 @@ public class ClearableEditTextView extends RelativeLayout {
     public void setHint(String hint) {
         input.setHint(hint);
     }
-
+    
+    /** 
+     * This textview comes by default with a magnifier "search" icon.
+     * Use this after only after the view has been inflated. */
+    public void replaceSearchIconDrawable(int drawableId) {
+        imageSearch.setImageResource(drawableId);
+    }
+    
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();

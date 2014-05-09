@@ -127,25 +127,58 @@ public final class TransferManager implements VuzeKeys {
         return false;
     }
 
+    private boolean alreadyDownloadingByInfoHash(String infohash) {
+        synchronized (alreadyDownloadingMonitor) {
+            for (BittorrentDownload bt : bittorrentDownloads) {
+                if (bt.getHash().equalsIgnoreCase(infohash)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    
     public DownloadTransfer download(SearchResult sr) {
+        DownloadTransfer transfer = new InvalidDownload();
+        
         if (alreadyDownloading(sr.getDetailsUrl())) {
-            return new ExistingDownload();
+            transfer = new ExistingDownload();
         }
 
         if (sr instanceof TorrentSearchResult) {
-            return newBittorrentDownload((TorrentSearchResult) sr);
+            transfer = newBittorrentDownload((TorrentSearchResult) sr);
         } else if (sr instanceof HttpSlideSearchResult) {
-            return newHttpDownload((HttpSlideSearchResult) sr);
+            transfer = newHttpDownload((HttpSlideSearchResult) sr);
         } else if (sr instanceof YouTubeCrawledSearchResult) {
-            return newYouTubeDownload((YouTubeCrawledSearchResult) sr);
+            transfer = newYouTubeDownload((YouTubeCrawledSearchResult) sr);
         } else if (sr instanceof SoundcloudSearchResult) {
-            return newSoundcloudDownload((SoundcloudSearchResult) sr);
+            transfer = newSoundcloudDownload((SoundcloudSearchResult) sr);
         } else if (sr instanceof HttpSearchResult) {
-            return newHttpDownload((HttpSearchResult) sr);
-        } else {
-            return new InvalidDownload();
+            transfer = newHttpDownload((HttpSearchResult) sr);
+        }
+        
+        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
+            //give it time to get to a pausable state.
+            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+            enqueueTorrentTransfer(transfer);
+            //give it time to stop before onPostExecute
+            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+        }
+        
+        return transfer;
+    }
+    
+    private void enqueueTorrentTransfer(DownloadTransfer transfer) {
+        if (transfer instanceof AzureusBittorrentDownload) {
+            AzureusBittorrentDownload btDownload = (AzureusBittorrentDownload) transfer;
+            btDownload.enqueue();
+        } else if (transfer instanceof TorrentFetcherDownload){
+            TorrentFetcherDownload btDownload = (TorrentFetcherDownload) transfer;
+            btDownload.enqueue();
         }
     }
+
 
     public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
@@ -312,14 +345,25 @@ public final class TransferManager implements VuzeKeys {
 
             if (u.getScheme().equalsIgnoreCase("file")) {
                 download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
-            } else if (u.getScheme().equalsIgnoreCase("http")) {
+            } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
                 download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
             } else {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
             }
             if (!(download instanceof InvalidBittorrentDownload)) {
-                if (!bittorrentDownloads.contains(download)) {
-                    bittorrentDownloads.add(download);
+                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
+                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
+                    if (!bittorrentDownloads.contains(download)) {
+                        bittorrentDownloads.add(download);
+                        
+                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
+                            //give it time to get to a pausable state.
+                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+                            enqueueTorrentTransfer(download);
+                            //give it time to stop before onPostExecute
+                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+                        }
+                    }
                 }
             }
 
@@ -399,6 +443,22 @@ public final class TransferManager implements VuzeKeys {
         download.start();
 
         return download;
+    }
+    
+    private boolean isBittorrentDownload(DownloadTransfer transfer) {
+        return transfer instanceof AzureusBittorrentDownload || transfer instanceof TorrentFetcherDownload;
+    }
+
+    public boolean isBittorrentDownloadAndMobileDataSavingsOn(DownloadTransfer transfer) {
+        return isBittorrentDownload(transfer) && 
+                NetworkManager.instance().isDataMobileUp() && 
+                !ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
+    }
+    
+    public boolean isBittorrentDownloadAndMobileDataSavingsOff(DownloadTransfer transfer) {
+        return isBittorrentDownload(transfer) && 
+               NetworkManager.instance().isDataMobileUp() && 
+               ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
     }
     
     public void resumeResumableTransfers() {

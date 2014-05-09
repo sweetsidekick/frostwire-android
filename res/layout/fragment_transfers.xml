@@ -19,9 +19,23 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:animateLayoutChanges="true" >
+    
+    <com.frostwire.android.gui.views.ClearableEditTextView
+        android:id="@+id/fragment_transfers_add_transfer_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        android:focusableInTouchMode="true"
+        frostwire:clearable_hint="@string/add_transfer_label" />
 
     <RadioGroup
         android:id="@+id/fragment_transfers_buttons"
@@ -39,6 +53,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_all" />
 
         <RadioButton
@@ -49,6 +64,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_downloading" />
 
         <RadioButton
@@ -59,6 +75,7 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="@string/transfers_select_completed" />
     </RadioGroup>
 

@@ -21,14 +21,9 @@ package com.frostwire.android.gui.tasks;
 import android.content.Context;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.transfers.AzureusBittorrentDownload;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
-import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ContextTask;
@@ -54,58 +49,27 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
         this.message = message;
     }
 
-    private boolean isBittorrentDownload(DownloadTransfer transfer) {
-        return transfer instanceof AzureusBittorrentDownload || transfer instanceof TorrentFetcherDownload;
-    }
-
-    private boolean isBittorrentDownloadAndMobileDataSavingsOn(DownloadTransfer transfer) {
-        return isBittorrentDownload(transfer) && 
-                NetworkManager.instance().isDataMobileUp() && 
-                !ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
-    }
-    
-    private boolean isBittorrentDownloadAndMobileDataSavingsOff(DownloadTransfer transfer) {
-        return isBittorrentDownload(transfer) && 
-               NetworkManager.instance().isDataMobileUp() && 
-               ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
-    }
-
     @Override
     protected DownloadTransfer doInBackground() {
         DownloadTransfer transfer = null;
         try {
             transfer = TransferManager.instance().download(sr);
-            
-            if (transfer != null && isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
-                Thread.sleep(5000); //let it get to a pausable state.
-                enqueueTorrentTransfer(transfer);
-                Thread.sleep(1000); //let it stop. before onPostExecute
-            }
         } catch (Throwable e) {
             LOG.warn("Error adding new download from result: " + sr, e);
         }
-
         return transfer;
     }
 
-    private void enqueueTorrentTransfer(DownloadTransfer transfer) {
-        if (transfer instanceof AzureusBittorrentDownload) {
-            AzureusBittorrentDownload btDownload = (AzureusBittorrentDownload) transfer;
-            btDownload.enqueue();
-        } else if (transfer instanceof TorrentFetcherDownload){
-            TorrentFetcherDownload btDownload = (TorrentFetcherDownload) transfer;
-            btDownload.enqueue();
-        }
-    }
 
     @Override
     protected void onPostExecute(Context ctx, DownloadTransfer transfer) {
         if (transfer != null) {
             if (!(transfer instanceof InvalidTransfer)) {
-                if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
+                TransferManager tm = TransferManager.instance();
+                if (tm.isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
                     UIUtils.showLongMessage(ctx, R.string.torrent_transfer_enqueued_on_mobile_data);
                 } else {
-                    if (isBittorrentDownloadAndMobileDataSavingsOff(transfer)) {
+                    if (tm.isBittorrentDownloadAndMobileDataSavingsOff(transfer)) {
                         UIUtils.showLongMessage(ctx, R.string.torrent_transfer_consuming_mobile_data);
                     }
                     UIUtils.showShortMessage(ctx, message);

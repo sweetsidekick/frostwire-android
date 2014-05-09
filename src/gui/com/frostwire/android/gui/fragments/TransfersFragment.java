@@ -25,9 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipData.Item;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -47,10 +55,15 @@ import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
+import com.frostwire.android.gui.views.ClearableEditTextView;
+import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
+import com.frostwire.logging.Logger;
+import com.frostwire.util.Ref;
+import com.frostwire.util.StringUtils;
 
 /**
  * 
@@ -59,12 +72,14 @@ import com.frostwire.android.gui.views.TimerSubscription;
  * 
  */
 public class TransfersFragment extends AbstractFragment implements TimerObserver, MainFragment, OnDialogClickListener {
-
+    private static final Logger LOG = Logger.getLogger(TransfersFragment.class);
     private static final String SELECTED_STATUS_STATE_KEY = "selected_status";
 
     private final Comparator<Transfer> transferComparator;
 
+    private final ButtonAddTransferListener buttonAddTransferListener;
     private final ButtonMenuListener buttonMenuListener;
+    
 
     private Button buttonSelectAll;
     private Button buttonSelectDownloading;
@@ -72,6 +87,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private ExpandableListView list;
     private TextView textDownloads;
     private TextView textUploads;
+    private ClearableEditTextView addTransferUrlTextView;
 
     private TransferListAdapter adapter;
 
@@ -83,7 +99,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         super(R.layout.fragment_transfers);
 
         this.transferComparator = new TransferComparator();
-
+        this.buttonAddTransferListener = new ButtonAddTransferListener(this);
         this.buttonMenuListener = new ButtonMenuListener(this);
 
         selectedStatus = TransferStatus.ALL;
@@ -98,6 +114,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
+        
+        addTransferUrlTextView = findView(getView(), R.id.fragment_transfers_add_transfer_text_input);
+        addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
+        addTransferUrlTextView.setFocusable(true);
+        addTransferUrlTextView.setFocusableInTouchMode(true);
+        addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
     @Override
@@ -162,6 +184,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         ImageButton buttonMenu = (ImageButton) header.findViewById(R.id.view_transfers_header_button_menu);
         buttonMenu.setOnClickListener(buttonMenuListener);
+        
+        ImageButton buttonAddTransfer = (ImageButton) header.findViewById(R.id.view_transfers_header_button_add_transfer);
+        buttonAddTransfer.setOnClickListener(buttonAddTransferListener);
 
         return header;
     }
@@ -235,6 +260,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private static final int CLEAR_MENU_DIALOG_ID = 0;
     private static final int PAUSE_MENU_DIALOG_ID = 1;
     private static final int RESUME_MENU_DIALOG_ID = 2;
+
 
     @Override
     public void onDialogClick(String tag, int which) {
@@ -351,6 +377,83 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
         return false;
     }
+    
+    public void startTransferFromURL() {
+        String text = addTransferUrlTextView.getText();
+        if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {
+            toggleAddTransferControls();
+            if (text.startsWith("http") && text.contains("youtube") || text.contains("soundcloud")) {
+                UIUtils.showLongMessage(getActivity(), R.string.cloud_downloads_coming);
+                //TODO: Cloud downloads from URLS.
+            } else if (text.startsWith("http")) { //magnets are automatically started if found on the clipboard by autoPasteMagnetOrURL
+                TransferManager.instance().downloadTorrent(text.trim());
+                UIUtils.showLongMessage(getActivity(), R.string.torrent_url_added);
+            }
+            addTransferUrlTextView.setText("");
+        } else {
+            UIUtils.showLongMessage(getActivity(), R.string.please_enter_valid_url);
+        }
+    }
+
+    private void autoPasteMagnetOrURL() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData primaryClip = clipboard.getPrimaryClip();
+        if (primaryClip != null) {
+            Item itemAt = primaryClip.getItemAt(0);
+            try {
+                CharSequence charSequence = itemAt.getText();
+                
+                if (charSequence != null) {
+                    String text = null;
+                    
+                    if (charSequence instanceof String) {
+                        text = (String) charSequence;
+                    } else {
+                        text = charSequence.toString();
+                    }
+                    
+                    if (!StringUtils.isNullOrEmpty(text)) {
+                        if (text.startsWith("http")) {
+                            addTransferUrlTextView.setText(text.trim());
+                        } else if (text.startsWith("magnet")) {
+                            addTransferUrlTextView.setText(text.trim());
+                            TransferManager.instance().downloadTorrent(text.trim());
+                            UIUtils.showLongMessage(getActivity(), R.string.magnet_url_added);
+                            clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+                            toggleAddTransferControls();
+                        }
+                    }
+                }
+            } catch (Throwable t) {
+                
+            }
+        }
+    }
+
+    private void toggleAddTransferControls() {
+        if (addTransferUrlTextView.getVisibility() == View.GONE) {
+            addTransferUrlTextView.setVisibility(View.VISIBLE);
+            autoPasteMagnetOrURL();
+            showAddTransfersKeyboard();
+        } else {
+            addTransferUrlTextView.setVisibility(View.GONE);
+            addTransferUrlTextView.setText("");
+            hideAddTransfersKeyboard();
+        }
+    }
+
+    private void showAddTransfersKeyboard() {
+        if (addTransferUrlTextView.getVisibility()==View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
+            addTransferUrlTextView.getAutoCompleteTextView().requestFocus();
+            InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getAutoCompleteTextView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+    
+    private void hideAddTransfersKeyboard() {
+        InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(addTransferUrlTextView.getWindowToken(), 0);
+    }
 
     private static final class TransferComparator implements Comparator<Transfer> {
         public int compare(Transfer lhs, Transfer rhs) {
@@ -367,6 +470,18 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         ALL, DOWNLOADING, COMPLETED
     }
 
+    private static final class ButtonAddTransferListener extends ClickAdapter<TransfersFragment> {
+
+        public ButtonAddTransferListener(TransfersFragment f) {
+            super(f);
+        }
+
+        @Override
+        public void onClick(TransfersFragment f, View v) {
+            f.toggleAddTransferControls();
+        }
+    }
+    
     private static final class ButtonMenuListener extends ClickAdapter<TransfersFragment> {
 
         public ButtonMenuListener(TransfersFragment f) {
@@ -376,6 +491,43 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         @Override
         public void onClick(TransfersFragment f, View v) {
             f.showContextMenu();
+        }
+    }
+    
+    private static final class AddTransferTextListener extends ClickAdapter<TransfersFragment> implements OnItemClickListener, OnActionListener {
+
+        public AddTransferTextListener(TransfersFragment owner) {
+            super(owner);
+        }
+
+        @Override
+        public boolean onKey(TransfersFragment owner, View v, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                owner.startTransferFromURL();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (Ref.alive(ownerRef)) {
+                TransfersFragment owner = ownerRef.get();
+                owner.startTransferFromURL();
+            }
+        }
+
+        @Override
+        public void onClear(View v) {
+            if (Ref.alive(ownerRef)) {
+                //TransfersFragment owner = ownerRef.get();
+                //might clear.
+                LOG.debug("onClear");
+            }
+        }
+
+        @Override
+        public void onTextChanged(View v, String str) {
         }
     }
 

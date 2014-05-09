@@ -34,14 +34,14 @@ import com.frostwire.uxstats.UXStats;
  *
  */
 public final class ResumeDownloadMenuAction extends MenuAction {
-
+    //private static final Logger LOG = Logger.getLogger(ResumeDownloadMenuAction.class);
     private final BittorrentDownload download;
 
-    public ResumeDownloadMenuAction(Context context, BittorrentDownload download) {
-        super(context, R.drawable.contextmenu_icon_play_transfer, R.string.resume_torrent_menu_action);
+    public ResumeDownloadMenuAction(Context context, BittorrentDownload download, int stringId) {
+        super(context, R.drawable.contextmenu_icon_play_transfer, stringId);
         this.download = download;
     }
-
+    
     @Override
     protected void onClick(Context context) {
         if (NetworkManager.instance().isDataUp()) {
