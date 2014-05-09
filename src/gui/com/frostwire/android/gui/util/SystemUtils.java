@@ -50,9 +50,22 @@ public final class SystemUtils {
 
     public static File getApplicationStorageDirectory() {
         String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
-        File externalStorageDirectory = new File(path);
 
-        return createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
+        File externalStorageDirectory = new File(path);
+        File result = null;
+        try {
+            result = createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
+        } catch (RuntimeException re) {
+            //when users upgrade, they are seeing here that their PREF_KEY_STORAGE_PATH
+            //points to /mnt/sdcard, however this folder might be unreadable, if this is the
+            //case, let's use this moment to update the preference value to the right one.
+            ConfigurationManager.instance().resetToDefault(Constants.PREF_KEY_STORAGE_PATH);
+            path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+            externalStorageDirectory = new File(path);
+            result = createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
+        }
+        
+        return result;
     }
 
     public static File getAzureusDirectory() {
