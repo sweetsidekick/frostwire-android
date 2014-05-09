@@ -269,6 +269,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
      */
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
+        setFavoriteIcon(menu);
         return true;
     }
 
@@ -769,6 +770,15 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_track_using)));
+    }
+
+    private void setFavoriteIcon(final Menu favorite) {
+        final MenuItem favoriteAction = favorite.findItem(R.id.menu_favorite);
+        if (MusicUtils.isFavorite()) {
+            favoriteAction.setIcon(R.drawable.ic_action_favorite_selected);
+        } else {
+            favoriteAction.setIcon(R.drawable.ic_action_favorite_normal);
+        }
     }
 
     /**
