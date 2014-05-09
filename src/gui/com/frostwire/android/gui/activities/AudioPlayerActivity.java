@@ -67,7 +67,7 @@ import com.frostwire.android.gui.fragments.QueueFragment;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener/*, DeleteDialog.DeleteDialogCallback*/{
+public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener, DeleteDialog.DeleteDialogCallback{
 
     // Message to refresh the time
     private static final int REFRESH_TIME = 1;
@@ -314,13 +314,13 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         return super.onOptionsItemSelected(item);
     }
 
-    //    @Override
-    //    public void onDelete(long[] ids) {
-    //        ((QueueFragment)mPagerAdapter.getFragment(0)).refreshQueue();
-    //        if (MusicUtils.getQueue().length == 0) {
-    //            NavUtils.goHome(this);
-    //        }
-    //    }
+    @Override
+    public void onDelete(long[] ids) {
+        ((QueueFragment) mPagerAdapter.getFragment(0)).refreshQueue();
+        if (MusicUtils.getQueue().length == 0) {
+            finish();
+        }
+    }
 
     /**
      * {@inheritDoc}
