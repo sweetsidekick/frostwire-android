@@ -14,6 +14,7 @@ package com.frostwire.android.gui.activities;
 import static com.andrew.apollo.utils.MusicUtils.mService;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
@@ -61,6 +62,9 @@ import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.adapters.PagerAdapter;
 import com.frostwire.android.gui.fragments.QueueFragment;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
@@ -277,6 +281,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
      */
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
+        setShareText(menu);
         setFavoriteIcon(menu);
         return true;
     }
@@ -767,17 +772,43 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     /**
      * /** Used to shared what the user is currently listening to
      */
-    private void shareCurrentTrack() {
-        if (MusicUtils.getTrackName() == null || MusicUtils.getArtistName() == null) {
-            return;
-        }
-        final Intent shareIntent = new Intent();
-        final String shareMessage = getString(R.string.now_listening_to, MusicUtils.getTrackName(), MusicUtils.getArtistName());
+    //    private void shareCurrentTrack() {
+    //        if (MusicUtils.getTrackName() == null || MusicUtils.getArtistName() == null) {
+    //            return;
+    //        }
+    //        final Intent shareIntent = new Intent();
+    //        final String shareMessage = getString(R.string.now_listening_to, MusicUtils.getTrackName(), MusicUtils.getArtistName());
+    //
+    //        shareIntent.setAction(Intent.ACTION_SEND);
+    //        shareIntent.setType("text/plain");
+    //        shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+    //        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_track_using)));
+    //    }
 
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_track_using)));
+    private void shareCurrentTrack() {
+        try {
+            FileDescriptor fd = Librarian.instance().getFileDescriptor(Constants.FILE_TYPE_AUDIO, (int) MusicUtils.getCurrentAudioId(), false);
+            if (fd != null) {
+                fd.shared = !fd.shared;
+                Librarian.instance().updateSharedStates(fd.fileType, Arrays.asList(fd));
+                invalidateOptionsMenu();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setShareText(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menu_audio_player_share);
+        try {
+            FileDescriptor fd = Librarian.instance().getFileDescriptor(Constants.FILE_TYPE_AUDIO, (int) MusicUtils.getCurrentAudioId());
+            if (fd != null) {
+                item.setTitle(fd.shared ? R.string.unshare : R.string.share);
+                item.setIcon(fd.shared ? R.drawable.contextmenu_icon_unshare : R.drawable.contextmenu_icon_share);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private void setFavoriteIcon(final Menu favorite) {
