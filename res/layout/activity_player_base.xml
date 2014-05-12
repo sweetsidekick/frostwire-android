@@ -23,6 +23,7 @@
         android:id="@+id/audio_player_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/audio_player_header_height"
+        android:background="@color/body_background_white"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
