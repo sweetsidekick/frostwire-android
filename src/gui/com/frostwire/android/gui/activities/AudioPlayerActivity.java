@@ -38,6 +38,7 @@ import android.provider.MediaStore.Audio.Playlists;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
@@ -62,6 +63,9 @@ import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PagerAdapter;
 import com.frostwire.android.gui.fragments.QueueFragment;
+import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * Apollo's "now playing" interface.
@@ -182,6 +186,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
 
         // Cache all the items
         initPlaybackControls();
+
+        initGestures();
     }
 
     /**
@@ -778,6 +784,43 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             favoriteAction.setIcon(R.drawable.ic_action_favorite_selected);
         } else {
             favoriteAction.setIcon(R.drawable.ic_action_favorite_normal);
+        }
+    }
+
+    private void initGestures() {
+        findViewById(R.id.audio_player_album_art).setOnTouchListener(new SwipeDetector());
+    }
+
+    private static final class SwipeDetector extends AbstractSwipeDetector {
+        @Override
+        public void onLeftToRightSwipe() {
+            try {
+                MusicUtils.mService.prev();
+            } catch (RemoteException e) {
+                // ignore
+            }
+            UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
+        }
+
+        @Override
+        public void onRightToLeftSwipe() {
+            try {
+                MusicUtils.mService.next();
+            } catch (RemoteException e) {
+                // ignore
+            }
+            UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
+        }
+
+        @Override
+        public boolean onMultiTouchEvent(View v, MotionEvent event) {
+            try {
+                MusicUtils.mService.pause();
+            } catch (RemoteException e) {
+                // ignore
+            }
+            UXStats.instance().log(UXAction.PLAYER_GESTURE_PAUSE_RESUME);
+            return true;
         }
     }
 
