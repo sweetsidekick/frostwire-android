@@ -22,7 +22,7 @@
 
     <style name="Theme.FrostWire" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:windowBackground">@color/app_basic_blue</item>
+        <item name="android:windowBackground">@color/app_background</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:listViewStyle">@style/TransparentListView</item>
         <item name="android:expandableListViewStyle">@style/TransparentExpandableListView</item>

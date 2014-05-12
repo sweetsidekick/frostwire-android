@@ -19,16 +19,13 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/app_basic_blue" >
+        android:layout_height="wrap_content" >
 
         <ImageButton
             android:id="@+id/activity_browse_peer_button_back"
@@ -61,8 +58,7 @@
         android:name="com.frostwire.android.gui.fragments.BrowsePeerFragment"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_browse_peer" />
+        android:layout_weight="1" />
 
     <com.frostwire.android.gui.views.PlayerNotifierView
         android:id="@+id/activity_browse_peer_player_notifier"

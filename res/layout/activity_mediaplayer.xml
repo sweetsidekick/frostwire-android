@@ -22,7 +22,6 @@
     android:id="@+id/activity_mediaplayer_root"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@color/app_background"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -131,11 +130,11 @@
         android:id="@+id/view_media_controller_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/app_dark_blue_highlight"
+        android:padding="0sp"
         android:progress="10"
         android:progressDrawable="@drawable/player_seek_progress_horizontal"
-        android:thumb="@drawable/player_seekbar_thumb"
-        android:padding="0sp"
-        android:background="@color/app_dark_blue_highlight" />
+        android:thumb="@drawable/player_seekbar_thumb" />
 
     <LinearLayout
         android:layout_width="fill_parent"

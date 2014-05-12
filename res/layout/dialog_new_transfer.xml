@@ -23,8 +23,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="0dp"
-    android:scrollbars="vertical"
-    android:background="@color/app_background" >
+    android:scrollbars="vertical" >
 
     <TextView
         android:id="@+id/dialog_new_transfer_text"
@@ -65,7 +64,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:textColor="@color/frostwire_gray_explanation_text"
-        android:text="@string/dialog_new_transfer_check_text" />
+        android:text="@string/dialog_new_transfer_check_text"
+        android:textColor="@color/frostwire_gray_explanation_text" />
 
 </LinearLayout>

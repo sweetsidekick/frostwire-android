@@ -29,7 +29,7 @@
         android:bottom="1px"
         android:top="1px">
         <shape>
-            <solid android:color="@color/app_background" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
 

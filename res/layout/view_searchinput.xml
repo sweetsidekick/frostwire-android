@@ -22,7 +22,6 @@
     xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/app_basic_blue"
     android:orientation="vertical" >
 
     <View

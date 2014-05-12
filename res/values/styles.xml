@@ -19,13 +19,13 @@
  */
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <style name="ActionBar" parent="android:Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/app_basic_blue</item>
+        <item name="android:background">@color/action_bar_background</item>
         <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyle</item>
         <item name="android:subtitleTextStyle">@style/ActionBar.TitleTextStyle</item>
     </style>
-    
+
     <style name="ActionBar.TitleTextStyle" parent="android:TextAppearance.Medium">
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -37,9 +37,9 @@
     <style name="Widget.CompoundButton.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_button_selector</item>
     </style>
-    
+
     <style name="Widget.Button" parent="android:Widget.Holo.Light.Button">
-		<item name="android:background">@android:drawable/btn_default</item>
+        <item name="android:background">@android:drawable/btn_default</item>
     </style>
 
     <!-- styles for elements -->
@@ -246,7 +246,7 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/app_highlight_text</item>
     </style>
-    
+
     <style name="ListItemAd">
         <item name="android:singleLine">true</item>
         <item name="android:textSize">12sp</item>
@@ -270,7 +270,7 @@
     <style name="SearchResultListItemSource">
         <item name="android:singleLine">true</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/app_basic_blue</item>
+        <item name="android:textColor">@color/basic_blue</item>
     </style>
 
     <style name="MediaPlayerHeaderTitle">
@@ -314,7 +314,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
-    
+
     <!-- Notification bar event text -->
     <style name="NotificationText">
         <item name="android:layout_width">match_parent</item>

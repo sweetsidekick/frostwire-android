@@ -18,10 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<com.frostwire.android.gui.views.FWScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     android:fillViewport="true"
     android:scrollbars="vertical" >
 
@@ -38,14 +37,14 @@
             android:text="@string/dummy_title"
             android:textSize="25sp"
             android:textStyle="bold" />
-        
+
         <Button
             android:id="@+id/fragment_about_button_bitcoin"
             style="@style/BlueButton"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:text="@string/donate_in_btc" />
 
         <LinearLayout
@@ -108,4 +107,4 @@
             android:text="@string/dummy_title" />
     </LinearLayout>
 
-</com.frostwire.android.gui.views.FWScrollView>
+</ScrollView>
