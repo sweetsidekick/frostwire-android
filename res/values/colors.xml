@@ -23,12 +23,14 @@
     <!-- Basic colors -->
     <color name="basic_white">@android:color/white</color>
     <color name="basic_blue">#ff38536a</color>
+    <color name="basic_gray_light">#fff5f7f8</color>
 
     <!-- General app colors -->
     <color name="app_background">@color/basic_blue</color>
     <color name="app_text_color_primary">#ff323538</color>
     <color name="action_bar_background">@color/basic_blue</color>
     <color name="body_background_white">@color/basic_white</color>
+    <color name="body_background_gray_light">@color/basic_gray_light</color>
 
     <!-- Other colors (old) -->
     <color name="frostwire_light_blue">#ff7adafa</color>

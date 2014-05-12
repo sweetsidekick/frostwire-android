@@ -292,8 +292,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
 
-        // Favorite action
-        getMenuInflater().inflate(R.menu.favorite, menu);
+        // Favorite action (later)
+        //getMenuInflater().inflate(R.menu.favorite, menu);
         // Share, ringtone, and equalizer
         getMenuInflater().inflate(R.menu.audio_player, menu);
 
@@ -476,8 +476,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         mTotalTime = (TextView) findViewById(R.id.audio_player_total_time);
         // Used to show and hide the queue fragment
         mQueueSwitch = (ImageView) findViewById(R.id.audio_player_switch_queue);
-        // Theme the queue switch icon
-        mQueueSwitch.setImageResource(R.drawable.btn_switch_queue);
         // Progress
         mProgress = (SeekBar) findViewById(R.id.activity_audio_player_progress);
 
@@ -813,10 +811,12 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
 
     private void setFavoriteIcon(final Menu favorite) {
         final MenuItem favoriteAction = favorite.findItem(R.id.menu_favorite);
-        if (MusicUtils.isFavorite()) {
-            favoriteAction.setIcon(R.drawable.ic_action_favorite_selected);
-        } else {
-            favoriteAction.setIcon(R.drawable.ic_action_favorite_normal);
+        if (favoriteAction != null) {
+            if (MusicUtils.isFavorite()) {
+                favoriteAction.setIcon(R.drawable.ic_action_favorite_selected);
+            } else {
+                favoriteAction.setIcon(R.drawable.ic_action_favorite_normal);
+            }
         }
     }
 
