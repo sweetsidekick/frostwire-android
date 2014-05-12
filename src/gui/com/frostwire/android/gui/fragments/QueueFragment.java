@@ -27,8 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-import com.andrew.apollo.dragdrop.DragSortListView;
 import com.andrew.apollo.dragdrop.DragSortListView.DragScrollProfile;
 import com.andrew.apollo.dragdrop.DragSortListView.DropListener;
 import com.andrew.apollo.dragdrop.DragSortListView.RemoveListener;
@@ -49,7 +49,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     /**
      * Used to keep context menu items from bleeding into other fragments
      */
-    private static final int GROUP_ID = 13;
+    //private static final int GROUP_ID = 13;
 
     /**
      * LoaderCallbacks identifier
@@ -64,7 +64,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     /**
      * The list view
      */
-    private DragSortListView mListView;
+    private ListView mListView;
 
     /**
      * Represents a song
@@ -74,17 +74,17 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     /**
      * Position of a context menu item
      */
-    private int mSelectedPosition;
+    //private int mSelectedPosition;
 
     /**
      * Id of a context menu item
      */
-    private long mSelectedId;
+    //private long mSelectedId;
 
     /**
      * Song, album, and artist name used in the context menu
      */
-    private String mSongName, mAlbumName, mArtistName;
+    //private String mSongName, mAlbumName, mArtistName;
 
     /**
      * Empty constructor as per the {@link Fragment} documentation
@@ -108,9 +108,9 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The View for the fragment's UI
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.list_base, null);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_audio_player_queue, null);
         // Initialize the list
-        mListView = (DragSortListView) rootView.findViewById(R.id.list_base);
+        mListView = (ListView) rootView.findViewById(R.id.list_base);
         // Set the data behind the list
         mListView.setAdapter(mAdapter);
         // Release any references to the recycled Views
@@ -120,11 +120,11 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         // Play the selected song
         mListView.setOnItemClickListener(this);
         // Set the drop listener
-        mListView.setDropListener(this);
+        //mListView.setDropListener(this);
         // Set the swipe to remove listener
-        mListView.setRemoveListener(this);
+        //mListView.setRemoveListener(this);
         // Quick scroll while dragging
-        mListView.setDragScrollProfile(this);
+        //mListView.setDragScrollProfile(this);
         return rootView;
     }
 
