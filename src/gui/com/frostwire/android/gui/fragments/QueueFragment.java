@@ -17,28 +17,23 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.andrew.apollo.dragdrop.DragSortListView;
 import com.andrew.apollo.dragdrop.DragSortListView.DragScrollProfile;
 import com.andrew.apollo.dragdrop.DragSortListView.DropListener;
 import com.andrew.apollo.dragdrop.DragSortListView.RemoveListener;
-import com.andrew.apollo.loaders.NowPlayingCursor;
 import com.andrew.apollo.loaders.QueueLoader;
 import com.andrew.apollo.model.Song;
-import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.RecycleHolder;
@@ -49,8 +44,7 @@ import com.frostwire.android.gui.adapters.SongAdapter;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song>>,
-        OnItemClickListener, DropListener, RemoveListener, DragScrollProfile {
+public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song>>, OnItemClickListener, DropListener, RemoveListener, DragScrollProfile {
 
     /**
      * Used to keep context menu items from bleeding into other fragments
@@ -112,12 +106,11 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         // The View for the fragment's UI
-        final ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.list_base, null);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.list_base, null);
         // Initialize the list
-        mListView = (DragSortListView)rootView.findViewById(R.id.list_base);
+        mListView = (DragSortListView) rootView.findViewById(R.id.list_base);
         // Set the data behind the list
         mListView.setAdapter(mAdapter);
         // Release any references to the recycled Views
@@ -186,8 +179,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      * {@inheritDoc}
      */
     @Override
-    public void onCreateContextMenu(final ContextMenu menu, final View v,
-            final ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         /*
         // Get the position of the selected item
@@ -288,8 +280,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      * {@inheritDoc}
      */
     @Override
-    public void onItemClick(final AdapterView<?> parent, final View view, final int position,
-            final long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
         // When selecting a track from the queue, just jump there instead of
         // reloading the queue. This is both faster, and prevents accidentally
         // dropping out of party shuffle.
