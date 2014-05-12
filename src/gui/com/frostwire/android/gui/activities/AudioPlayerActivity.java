@@ -64,6 +64,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PagerAdapter;
 import com.frostwire.android.gui.fragments.QueueFragment;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -188,6 +189,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         initPlaybackControls();
 
         initGestures();
+        mPlayPauseButton.setOnLongClickListener(new StopListener(this));
     }
 
     /**
@@ -895,6 +897,27 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         @Override
         public void onClick(final View v) {
             ((QueueFragment) mPagerAdapter.getFragment(0)).scrollToCurrentSong();
+        }
+    };
+
+    private final static class StopListener implements View.OnLongClickListener {
+        private WeakReference<Activity> activityRef;
+
+        public StopListener(Activity activity) {
+            this.activityRef = Ref.weak(activity);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            try {
+                MusicUtils.mService.stop();
+                if (Ref.alive(activityRef)) {
+                    activityRef.get().finish();
+                }
+            } catch (RemoteException e) {
+                // ignore
+            }
+            return true;
         }
     };
 
