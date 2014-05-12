@@ -88,7 +88,7 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
         try {
             long audioId = MusicUtils.mService.getAudioId();
             return idMap.get(audioId);
-        } catch (RemoteException e) {
+        } catch (Throwable e) {
         }
 
         return null;
