@@ -193,7 +193,6 @@ public abstract class ImageWorker {
          * @param imageView The {@link ImageView} to use.
          * @param imageType The type of image URL to fetch for.
          */
-        @SuppressWarnings("deprecation")
         public BitmapWorkerTask(final ImageView imageView, final ImageType imageType) {
             imageView.setBackgroundDrawable(mDefaultArtwork);
             mImageReference = new WeakReference<ImageView>(imageView);
@@ -244,7 +243,7 @@ public abstract class ImageWorker {
                 addBitmapToCache(mKey, bitmap);
             }
 
-            // Add the second layer to the transiation drawable
+            // Add the second layer to the transition drawable
             if (bitmap != null) {
                 final BitmapDrawable layerTwo = new BitmapDrawable(mResources, bitmap);
                 layerTwo.setFilterBitmap(false);
