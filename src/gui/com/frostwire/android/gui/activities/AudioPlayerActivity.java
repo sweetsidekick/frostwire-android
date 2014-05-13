@@ -183,8 +183,10 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         mPlaybackStatus = new PlaybackStatus(this);
 
         // Theme the action bar
+        setTitle(R.string.now_playing);
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
 
         // Set the layout
         setContentView(R.layout.activity_player_base);

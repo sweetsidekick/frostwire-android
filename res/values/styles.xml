@@ -33,6 +33,10 @@
     <style name="ActionBar.SubTitleTextStyle" parent="android:TextAppearance.Small">
         <item name="android:textColor">@android:color/white</item>
     </style>
+    
+    <style name="ActionButton.Overflow" parent="@android:Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/mediaplayer_menu_icon</item>
+    </style>
 
     <style name="Widget.CompoundButton.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_button_selector</item>

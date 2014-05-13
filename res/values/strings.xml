@@ -500,5 +500,6 @@
     <string name="context_menu_remove_from_playlist">Remove from playlist</string>
     <string name="delete_dialog_title">Delete %s?</string>
     <string name="cannot_be_undone">This cannot be undone</string>
+    <string name="now_playing">Now Playing</string>
     
 </resources>
