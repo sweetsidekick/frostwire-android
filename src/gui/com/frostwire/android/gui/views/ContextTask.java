@@ -44,6 +44,6 @@ public abstract class ContextTask<Result> extends AbstractTask<Result> {
             onPostExecute(ctxRef.get(), result);
         }
     }
-
+    
     protected abstract void onPostExecute(Context ctx, Result result);
 }
