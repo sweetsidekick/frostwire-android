@@ -292,19 +292,24 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         
         List<MenuItem> dlgActions = new ArrayList<MenuItem>();
         
-        final List<Transfer> transfers = TransferManager.instance().getTransfers();
+        TransferManager tm = TransferManager.instance();
+        boolean bittorrentDisconnected = tm.isBittorrentDisconnected();
+        final List<Transfer> transfers = tm.getTransfers();
+        
         
         if (transfers != null && transfers.size() > 0) {
             if (someTransfersComplete(transfers)) {
                 dlgActions.add(clear);
             }
             
-            if (someTransfersActive(transfers)) {
-                dlgActions.add(pause);
-            }
-            
-            if (someTransfersInactive(transfers)) {
-                dlgActions.add(resume);
+            if (!bittorrentDisconnected) {
+                if (someTransfersActive(transfers)) {
+                    dlgActions.add(pause);
+                }
+                
+                if (someTransfersInactive(transfers)) {
+                    dlgActions.add(resume);
+                }
             }
         }
         
