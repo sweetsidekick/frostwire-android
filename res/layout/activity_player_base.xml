@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/audio_player_header_height"
         android:layout_alignParentTop="true"
+        android:background="@color/body_background_white"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
@@ -39,25 +40,24 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/audio_player_header_padding_left"
-            android:paddingRight="@dimen/audio_player_header_padding_right" >
+            android:padding="@dimen/audio_player_header_padding" >
 
             <TextView
                 android:id="@+id/audio_player_track_name"
+                style="@android:style/TextAppearance.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/audio_player_artist_name"
+                style="@android:style/TextAppearance.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:textSize="@dimen/text_size_medium" />
+                android:singleLine="true" />
         </LinearLayout>
 
         <FrameLayout
@@ -73,7 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:src="@drawable/btn_switch_queue" />
 
             <com.andrew.apollo.widgets.SquareImageView
                 android:id="@+id/audio_player_switch_album_art"
