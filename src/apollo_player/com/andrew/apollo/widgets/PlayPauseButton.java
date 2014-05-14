@@ -12,11 +12,9 @@
 package com.andrew.apollo.widgets;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.utils.MusicUtils;
@@ -27,7 +25,7 @@ import com.frostwire.android.R;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class PlayPauseButton extends ImageButton implements OnClickListener, OnLongClickListener {
+public class PlayPauseButton extends ImageButton implements OnClickListener {
 
     /**
      * @param context The {@link Context} to use
@@ -37,8 +35,6 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
         super(context, attrs);
         // Control playback (play/pause)
         setOnClickListener(this);
-        // Show the cheat sheet
-        setOnLongClickListener(this);
     }
 
     /**
@@ -48,19 +44,6 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
     public void onClick(final View v) {
         MusicUtils.playOrPause();
         updateState();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onLongClick(final View view) {
-        if (TextUtils.isEmpty(view.getContentDescription())) {
-            return false;
-        } else {
-            //ApolloUtils.showCheatSheet(view);
-            return true;
-        }
     }
 
     /**

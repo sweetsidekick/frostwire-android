@@ -208,7 +208,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     public boolean canStop() {
         return true;
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstance) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -473,7 +473,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     // we will simply apply the updated position without suspending regular updates.
     private OnSeekBarChangeListener seekListener = new OnSeekBarChangeListener() {
         private long lastProgressChanged = 0;
-        
+
         public void onStartTrackingTouch(SeekBar bar) {
             sync();
 
@@ -493,7 +493,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
                 // the progress bar's position.
                 return;
             }
-            
+
             long now = System.currentTimeMillis();
             if (now - lastProgressChanged > 1000) {
                 if (playerControl != null) {
@@ -642,7 +642,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         }
 
         if (playerControl.isPlaying()) {
-            buttonPause.setImageResource(R.drawable.player_pause_icon);
+            buttonPause.setImageResource(R.drawable.btn_playback_pause);
         } else {
             buttonPause.setImageResource(R.drawable.btn_playback_play);
         }
@@ -662,19 +662,19 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
 
         updatePausePlay();
     }
-    
+
     private static final String MEDIA_PLAYER_DIALOG_ID = "media_player_dialog";
-    
+
     private static final int SHARE_MENU_DIALOG_ID = 0;
     private static final int STOP_MENU_DIALOG_ID = 1;
     private static final int DELETE_MENU_DIALOG_ID = 2;
-    
+
     @Override
     public void onDialogClick(String tag, int which) {
         if (mediaFD == null) {
             return;
         }
-        
+
         if (tag.equals(MEDIA_PLAYER_DIALOG_ID)) {
             switch (which) {
             case SHARE_MENU_DIALOG_ID:
