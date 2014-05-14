@@ -29,6 +29,7 @@
     <!-- General app colors -->
     <color name="app_background">@color/basic_blue</color>
     <color name="app_text_color_primary">#ff323538</color>
+    <color name="app_boder_color_gray">#ffdddddd</color>
     <color name="action_bar_background">@color/basic_blue</color>
     <color name="body_background_white">@color/basic_white</color>
     <color name="body_background_gray">@color/basic_gray</color>
