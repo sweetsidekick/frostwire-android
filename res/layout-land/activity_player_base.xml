@@ -180,6 +180,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
+        android:background="@color/body_background_gray"
         android:baselineAligned="false" />
 
 </RelativeLayout>
