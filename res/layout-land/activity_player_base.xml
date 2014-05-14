@@ -134,20 +134,20 @@
 
     <TextView
         android:id="@+id/audio_player_current_time"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="@dimen/audio_player_time_width"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/activity_audio_player_progress"
-        android:layout_alignTop="@+id/activity_audio_player_progress"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
         android:gravity="center" />
 
     <TextView
         android:id="@+id/audio_player_total_time"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="@dimen/audio_player_time_width"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/activity_audio_player_progress"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/activity_audio_player_progress"
         android:gravity="center" />
 
     <SeekBar
@@ -167,6 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/activity_audio_player_donations"
+        android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
         android:baselineAligned="false" >
 
