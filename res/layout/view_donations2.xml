@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/body_background_gray"
+    android:baselineAligned="false"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="8sp"
+        android:paddingLeft="8sp"
+        android:paddingRight="8sp"
+        android:paddingTop="8sp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_frostwire"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/donate" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/view_donations_button_bitcoin"
+        android:layout_width="@dimen/view_donations_button_width"
+        android:layout_height="match_parent"
+        android:text="@string/btc" />
+
+    <Button
+        android:id="@+id/view_donations_button_donate1"
+        android:layout_width="@dimen/view_donations_button_width"
+        android:layout_height="match_parent"
+        android:text="@string/one_dollar" />
+
+    <Button
+        android:id="@+id/view_donations_button_donate2"
+        android:layout_width="@dimen/view_donations_button_width"
+        android:layout_height="match_parent"
+        android:text="@string/five_dollars" />
+
+    <Button
+        android:id="@+id/view_donations_button_donate3"
+        android:layout_width="@dimen/view_donations_button_width"
+        android:layout_height="match_parent"
+        android:text="@string/ten_dollars" />
+
+    <Button
+        android:id="@+id/view_donations_button_donate4"
+        android:layout_width="@dimen/view_donations_button_width"
+        android:layout_height="match_parent"
+        android:text="@string/twenty_five_dollars" />
+
+</LinearLayout>

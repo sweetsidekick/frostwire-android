@@ -86,5 +86,8 @@
     <!-- Grid and list item normal height -->
     <dimen name="item_normal_height">64.0dip</dimen>
     
+    <!-- Donations View -->
+    <dimen name="view_donations_button_width">50dp</dimen>
+    
 
 </resources>

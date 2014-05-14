@@ -149,4 +149,9 @@
         <include layout="@layout/audio_player_controls" />
     </LinearLayout>
 
+    <com.frostwire.android.gui.views.DonationsView2
+        android:id="@+id/activity_audio_player_donations"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
