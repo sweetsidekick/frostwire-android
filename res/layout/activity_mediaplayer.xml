@@ -153,7 +153,7 @@
             android:id="@+id/activity_mediaplayer_button_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/player_play_icon"
+            android:background="@drawable/btn_playback_play"
             android:contentDescription="@null" />
 
         <ImageButton

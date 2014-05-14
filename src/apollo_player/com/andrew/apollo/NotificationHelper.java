@@ -120,11 +120,11 @@ public class NotificationHelper {
             return;
         }
         if (mNotificationTemplate != null) {
-            mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+            mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_notification_playback_play);
         }
 
         if (ApolloUtils.hasJellyBean() && mExpandedView != null) {
-            mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+            mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_notification_playback_play);
         }
         mNotificationManager.notify(APOLLO_MUSIC_SERVICE, mNotification);
     }
@@ -154,7 +154,7 @@ public class NotificationHelper {
         mExpandedView.setOnClickPendingIntent(R.id.notification_expanded_base_collapse, retreivePlaybackActions(4));
 
         // Update the play button image
-        mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+        mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_notification_playback_play);
     }
 
     /**
@@ -174,7 +174,7 @@ public class NotificationHelper {
         mNotificationTemplate.setOnClickPendingIntent(R.id.notification_base_collapse, retreivePlaybackActions(4));
 
         // Update the play button image
-        mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+        mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_notification_playback_play);
     }
 
     /**

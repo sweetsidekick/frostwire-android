@@ -644,7 +644,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         if (playerControl.isPlaying()) {
             buttonPause.setImageResource(R.drawable.player_pause_icon);
         } else {
-            buttonPause.setImageResource(R.drawable.player_play_icon);
+            buttonPause.setImageResource(R.drawable.btn_playback_play);
         }
         buttonPause.setBackgroundDrawable(null);
     }
