@@ -31,7 +31,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceGroup;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -168,7 +167,6 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void updateConnectButton() {
         SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
-
         if (Engine.instance().isStarted()) {
             preference.setButtonText(R.string.disconnect);
             preference.setButtonEnabled(true);

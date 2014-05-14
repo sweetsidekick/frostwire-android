@@ -16,34 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.android.gui.views;
+package com.frostwire.util;
 
-import java.lang.ref.WeakReference;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import android.content.Context;
-
-import com.frostwire.util.Ref;
-
-/**
- * 
- * @author gubatron
- * @author aldenml
- * 
- */
-public abstract class ContextTask<Result> extends AbstractTask<Result> {
-
-    private final WeakReference<Context> ctxRef;
-
-    public ContextTask(Context ctx) {
-        this.ctxRef = Ref.weak(ctx);
-    }
-
-    @Override
-    protected final void onPostExecute(Result result) {
-        if (Ref.alive(ctxRef)) {
-            onPostExecute(ctxRef.get(), result);
-        }
-    }
+public final class URLUtils {
     
-    protected abstract void onPostExecute(Context ctx, Result result);
+    public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        }
+        return query_pairs;
+    }
 }

@@ -462,6 +462,7 @@
     <string name="torrent_url_added">Torrent URL added to transfers.</string>
     <string name="cloud_downloads_coming">Sorry: Starting cloud downloads from here will be available on further updates.</string>
     <string name="seed">Seed</string>
+    <string name="torrent_transfer_paused_disconnected_from_bittorrent">The transfer has been paused because you are Disconnected. (Check "Connectivity" in Preferences)</string>
     <string name="accessibility_play">Play</string>
     <string name="accessibility_pause">Pause</string>
     <string name="accessibility_next">Next</string>
@@ -501,5 +502,4 @@
     <string name="delete_dialog_title">Delete %s?</string>
     <string name="cannot_be_undone">This cannot be undone</string>
     <string name="now_playing">Now Playing</string>
-    
 </resources>

@@ -461,6 +461,10 @@ public final class TransferManager implements VuzeKeys {
                ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
     }
     
+    public boolean isBittorrentDisconnected(){
+       return Engine.instance().isStopped() || Engine.instance().isStopping() || Engine.instance().isDisconnected();
+    }
+    
     public void resumeResumableTransfers() {
         List<Transfer> transfers = getTransfers();
 

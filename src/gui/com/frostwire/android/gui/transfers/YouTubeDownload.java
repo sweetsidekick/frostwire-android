@@ -334,7 +334,7 @@ public final class YouTubeDownload implements DownloadTransfer {
 
     private final class HttpDownloadListenerImpl implements HttpClientListener {
         @Override   
-        public void onError(HttpClient client, Exception e) {
+        public void onError(HttpClient client, Throwable e) {
             error(e);
         }
 
