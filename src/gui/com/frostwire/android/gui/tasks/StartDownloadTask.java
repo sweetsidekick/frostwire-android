@@ -21,6 +21,7 @@ package com.frostwire.android.gui.tasks;
 import android.content.Context;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.InvalidTransfer;
@@ -74,7 +75,7 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
                     UIUtils.showShortMessage(ctx, message);
                 }
                 
-                if (tm.isBittorrentDisconnected()) {
+                if (tm.isBittorrentDisconnected() && transfer instanceof BittorrentDownload) {
                     asyncPauseTorrents();
                     UIUtils.showLongMessage(ctx, R.string.torrent_transfer_paused_disconnected_from_bittorrent);
                 }
