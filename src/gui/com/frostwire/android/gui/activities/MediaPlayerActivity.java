@@ -212,6 +212,7 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     @Override
     protected void onCreate(Bundle savedInstance) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        registerBroadcastReceiver();
         super.onCreate(savedInstance);
     }
 
@@ -365,13 +366,15 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
     @Override
     protected void onResume() {
         super.onResume();
+        registerBroadcastReceiver();
+        refreshFD();
+    }
 
+    private void registerBroadcastReceiver() {
         IntentFilter filter = new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
         filter.addAction(Constants.ACTION_MEDIA_PLAYER_PAUSED);
         registerReceiver(broadcastReceiver, filter);
-
-        refreshFD();
     }
 
     @Override
