@@ -160,7 +160,7 @@
             android:id="@+id/activity_mediaplayer_button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/player_next_icon"
+            android:background="@drawable/btn_playback_next"
             android:contentDescription="@null" />
     </LinearLayout>
 

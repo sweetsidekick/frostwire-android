@@ -350,7 +350,7 @@
     </style>
 
     <style name="NotificationAction.Next" parent="@style/NotificationAction">
-        <item name="android:src">@drawable/btn_playback_next</item>
+        <item name="android:src">@drawable/btn_notification_playback_next</item>
         <item name="android:contentDescription">@null</item>
     </style>
 

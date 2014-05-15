@@ -74,6 +74,7 @@
             android:layout_width="@dimen/audio_player_controls_main_button_width"
             android:layout_height="@dimen/audio_player_controls_main_button_height"
             android:layout_gravity="center"
+            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/btn_playback_next" />
     </FrameLayout>
