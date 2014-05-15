@@ -127,7 +127,6 @@
             android:id="@+id/activity_audio_player_progress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/audio_player_seek_bar_margin_bottom"
             android:layout_weight="1"
             android:max="1000" />
 
