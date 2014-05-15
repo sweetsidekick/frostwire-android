@@ -31,13 +31,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:scaleType="fitXY" />
-
-        <ImageView
-            android:layout_width="@dimen/shadow_height"
-            android:layout_height="match_parent"
-            android:layout_alignRight="@+id/audio_player_album_art"
-            android:contentDescription="@null"
-            android:src="@drawable/right_shadow" />
     </RelativeLayout>
 
     <FrameLayout
@@ -52,13 +45,6 @@
             android:id="@+id/audio_player_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <ImageView
-            android:layout_width="@dimen/shadow_height"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:contentDescription="@null"
-            android:src="@drawable/right_shadow" />
     </FrameLayout>
 
     <View
@@ -169,7 +155,8 @@
         android:layout_above="@+id/activity_audio_player_donations"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
-        android:baselineAligned="false" >
+        android:baselineAligned="false"
+        android:padding="12dp" >
 
         <include layout="@layout/audio_player_controls" />
     </LinearLayout>
