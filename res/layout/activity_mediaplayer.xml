@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:background="@null"
             android:contentDescription="@null"
-            android:src="@drawable/back_icon_activity" />
+            android:src="@drawable/ic_ab_back" />
 
         <ImageButton
             android:id="@+id/activity_mediaplayer_button_menu"
@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:background="@null"
             android:contentDescription="@null"
-            android:src="@drawable/mediaplayer_menu_icon" />
+            android:src="@drawable/ic_menu_moreoverflow" />
 
         <TextView
             android:id="@+id/activity_mediaplayer_artist"
