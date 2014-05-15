@@ -130,6 +130,11 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
             refreshFileTypeCounters(true);
         }
     }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+      //No call for super(). Bug on API Level > 11.
+    }
 
     @Override
     protected void initComponents(final View view) {
