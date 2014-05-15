@@ -12,11 +12,9 @@
 package com.andrew.apollo.widgets;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.ImageButton;
 
 import com.andrew.apollo.MusicPlaybackService;
@@ -28,7 +26,7 @@ import com.frostwire.android.R;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class RepeatButton extends ImageButton implements OnClickListener, OnLongClickListener {
+public class RepeatButton extends ImageButton implements OnClickListener {
 
     /**
      * @param context The {@link Context} to use
@@ -38,8 +36,6 @@ public class RepeatButton extends ImageButton implements OnClickListener, OnLong
         super(context, attrs);
         // Control playback (cycle repeat modes)
         setOnClickListener(this);
-        // Show the cheat sheet
-        setOnLongClickListener(this);
     }
 
     /**
@@ -52,37 +48,24 @@ public class RepeatButton extends ImageButton implements OnClickListener, OnLong
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onLongClick(final View view) {
-        if (TextUtils.isEmpty(view.getContentDescription())) {
-            return false;
-        } else {
-            //ApolloUtils.showCheatSheet(view);
-            return true;
-        }
-    }
-
-    /**
      * Sets the correct drawable for the repeat state.
      */
     public void updateRepeatState() {
         switch (MusicUtils.getRepeatMode()) {
-            case MusicPlaybackService.REPEAT_ALL:
-                setContentDescription(getResources().getString(R.string.accessibility_repeat_all));
-                setImageResource(R.drawable.btn_playback_repeat_all);
-                break;
-            case MusicPlaybackService.REPEAT_CURRENT:
-                setContentDescription(getResources().getString(R.string.accessibility_repeat_one));
-                setImageResource(R.drawable.btn_playback_repeat_one);
-                break;
-            case MusicPlaybackService.REPEAT_NONE:
-                setContentDescription(getResources().getString(R.string.accessibility_repeat));
-                setImageResource(R.drawable.btn_playback_repeat);
-                break;
-            default:
-                break;
+        case MusicPlaybackService.REPEAT_ALL:
+            setContentDescription(getResources().getString(R.string.accessibility_repeat_all));
+            setImageResource(R.drawable.btn_playback_repeat_all);
+            break;
+        case MusicPlaybackService.REPEAT_CURRENT:
+            setContentDescription(getResources().getString(R.string.accessibility_repeat_one));
+            setImageResource(R.drawable.btn_playback_repeat_one);
+            break;
+        case MusicPlaybackService.REPEAT_NONE:
+            setContentDescription(getResources().getString(R.string.accessibility_repeat));
+            setImageResource(R.drawable.btn_playback_repeat);
+            break;
+        default:
+            break;
         }
     }
 }
