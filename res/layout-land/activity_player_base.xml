@@ -47,12 +47,21 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <View
+        android:id="@+id/activity_audio_player_div1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/audio_player_large_album_frame"
+        android:background="@drawable/layout_divider_1_gray" />
+
     <LinearLayout
         android:id="@+id/audio_player_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/audio_player_header_height"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/activity_audio_player_div1"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
         android:background="@color/body_background_white"
         android:baselineAligned="false"
@@ -111,6 +120,15 @@
         </FrameLayout>
     </LinearLayout>
 
+    <View
+        android:id="@+id/activity_audio_player_div2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/audio_player_header"
+        android:layout_toRightOf="@+id/audio_player_large_album_frame"
+        android:background="@drawable/layout_divider_1_gray" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,7 +164,7 @@
         android:id="@+id/audio_player_controlss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/activity_audio_player_donations"
+        android:layout_above="@+id/activity_audio_player_div3"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
         android:baselineAligned="false"
@@ -154,6 +172,15 @@
 
         <include layout="@layout/audio_player_controls" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/activity_audio_player_div3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/activity_audio_player_donations"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/audio_player_large_album_frame"
+        android:background="@drawable/layout_divider_1_gray" />
 
     <com.frostwire.android.gui.views.DonationsView2
         android:id="@+id/activity_audio_player_donations"
