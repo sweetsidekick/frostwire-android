@@ -21,18 +21,17 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingBottom="8sp"
-        android:paddingLeft="8sp"
-        android:paddingRight="8sp"
-        android:paddingTop="8sp" >
+        android:padding="8dp" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/support_frostwire"
+            android:textColor="@color/app_text_highlight"
             android:textSize="12sp" />
 
         <TextView
@@ -40,35 +39,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:text="@string/donate" />
+            android:text="@string/donate"
+            android:textColor="@color/app_text_highlight" />
     </LinearLayout>
 
     <Button
         android:id="@+id/view_donations_button_bitcoin"
+        style="@style/DonationButton2"
         android:layout_width="@dimen/view_donations_button_width"
         android:layout_height="match_parent"
         android:text="@string/btc" />
 
     <Button
         android:id="@+id/view_donations_button_donate1"
+        style="@style/DonationButton2"
         android:layout_width="@dimen/view_donations_button_width"
         android:layout_height="match_parent"
         android:text="@string/one_dollar" />
 
     <Button
         android:id="@+id/view_donations_button_donate2"
+        style="@style/DonationButton2"
         android:layout_width="@dimen/view_donations_button_width"
         android:layout_height="match_parent"
         android:text="@string/five_dollars" />
 
     <Button
         android:id="@+id/view_donations_button_donate3"
+        style="@style/DonationButton2"
         android:layout_width="@dimen/view_donations_button_width"
         android:layout_height="match_parent"
         android:text="@string/ten_dollars" />
 
     <Button
         android:id="@+id/view_donations_button_donate4"
+        style="@style/DonationButton2"
         android:layout_width="@dimen/view_donations_button_width"
         android:layout_height="match_parent"
         android:text="@string/twenty_five_dollars" />

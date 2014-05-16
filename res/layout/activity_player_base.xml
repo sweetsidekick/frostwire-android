@@ -24,7 +24,7 @@
         android:id="@+id/audio_player_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/audio_player_header_height"
-        android:background="@drawable/audio_player_header_background"
+        android:background="@color/body_background_white"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
@@ -152,6 +152,8 @@
         android:id="@+id/activity_audio_player_donations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/body_background_gray" />
+        android:background="@color/body_background_gray"
+        android:divider="@drawable/layout_divider_1_gray"
+        android:showDividers="middle" />
 
 </LinearLayout>

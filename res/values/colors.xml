@@ -23,17 +23,21 @@
     <!-- Basic colors -->
     <color name="basic_white">@android:color/white</color>
     <color name="basic_blue">#ff38536a</color>
+    <color name="basic_blue_highlight">#ff6fd0ec</color>
     <color name="basic_gray">#ffeceff1</color>
     <color name="basic_gray_light">#fff5f7f8</color>
+    <color name="basic_gray_dark">#ffdddddd</color>
 
     <!-- General app colors -->
     <color name="app_background">@color/basic_blue</color>
-    <color name="app_text_color_primary">#ff323538</color>
-    <color name="app_boder_color_gray">#ffdddddd</color>
+    <color name="app_text_primary">#ff323538</color>
+    <color name="app_boder_gray_dark">@color/basic_gray_dark</color>
     <color name="action_bar_background">@color/basic_blue</color>
     <color name="body_background_white">@color/basic_white</color>
     <color name="body_background_gray">@color/basic_gray</color>
     <color name="body_background_gray_light">@color/basic_gray_light</color>
+    <color name="btn_background_on_light">@color/basic_blue</color>
+    <color name="app_text_highlight">@color/basic_blue_highlight</color>
 
     <!-- Other colors (old) -->
     <color name="frostwire_light_blue">#ff7adafa</color>
@@ -47,7 +51,6 @@
     <color name="app_ligh_background">#fff8f8f8</color>
     <color name="app_dark_icons">#ff546676</color>
     <color name="app_light_icons">#ffe7ebee</color>
-    <color name="app_highlight_icons">#ff6fd0ec</color>
     <color name="app_highlight_text">#ff5ca8bf</color>
     <color name="app_list_cell_line">#ffdae2e9</color>
     <color name="app_menu_item_pressed">#ff314c61</color>
