@@ -20,6 +20,11 @@
     android:background="@color/body_background_gray_light"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/layout_divider_1_gray" />
+
     <LinearLayout
         android:id="@+id/audio_player_header"
         android:layout_width="match_parent"
@@ -77,6 +82,11 @@
                 android:visibility="invisible" />
         </FrameLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/layout_divider_1_gray" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -147,6 +157,11 @@
 
         <include layout="@layout/audio_player_controls" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/layout_divider_1_gray" />
 
     <com.frostwire.android.gui.views.DonationsView2
         android:id="@+id/activity_audio_player_donations"
