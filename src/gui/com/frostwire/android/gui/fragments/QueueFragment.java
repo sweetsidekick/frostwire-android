@@ -110,7 +110,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         // The View for the fragment's UI
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_audio_player_queue, null);
         // Initialize the list
-        mListView = (ListView) rootView.findViewById(R.id.list_base);
+        mListView = (ListView) rootView.findViewById(R.id.fragment_audio_plauer_queue_list);
         // Set the data behind the list
         mListView.setAdapter(mAdapter);
         // Release any references to the recycled Views
