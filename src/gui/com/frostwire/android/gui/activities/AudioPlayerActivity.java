@@ -495,8 +495,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     private void updateNowPlayingInfo() {
         // Set the track name
         mTrackName.setText(MusicUtils.getTrackName());
-        // Set the artist name
-        mArtistName.setText(MusicUtils.getArtistName());
+        // Set the artist and album name
+        mArtistName.setText(getArtistAndAlbumName());
         // Set the total time
         mTotalTime.setText(MusicUtils.makeTimeString(this, MusicUtils.duration() / 1000));
         // Set the album art
@@ -505,7 +505,23 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         mImageFetcher.loadCurrentArtwork(mAlbumArtSmall);
         // Update the current time
         queueNextRefresh(1);
+    }
 
+    private String getArtistAndAlbumName() {
+        String str = "";
+
+        String artist = MusicUtils.getArtistName();
+        String album = MusicUtils.getAlbumName();
+
+        if (artist != null && album != null) {
+            str = artist + " - " + album;
+        } else if (artist != null) {
+            str = artist;
+        } else if (album != null) {
+            str = album;
+        }
+
+        return str;
     }
 
     private long parseIdFromIntent(Intent intent, String longKey, String stringKey, long defaultId) {
