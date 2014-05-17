@@ -45,6 +45,12 @@
             android:id="@+id/audio_player_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="@drawable/layout_divider_1_gray" />
     </FrameLayout>
 
     <View
