@@ -87,7 +87,7 @@ public class NotificationHelper {
         initCollapsedLayout(trackName, artistName, albumArt);
 
         // Notification Builder
-        mNotification = new Notification.Builder(mService).setSmallIcon(R.drawable.stat_notify_music).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).getNotification();
+        mNotification = new Notification.Builder(mService).setSmallIcon(R.drawable.frostwire_notification).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).getNotification();
         // Control playback from the notification
         initPlaybackActions(isPlaying);
         if (ApolloUtils.hasJellyBean()) {
