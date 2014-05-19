@@ -84,6 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
+        android:background="@color/body_background_gray_light"
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 

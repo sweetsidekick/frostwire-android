@@ -22,10 +22,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.frostwire.android.gui.views.ListView
+    <ListView
         android:id="@+id/fragment_browse_peers_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:visibility="visible"/>
-    
+        android:layout_height="match_parent"
+        android:background="@color/body_background_gray_light"
+        android:visibility="visible" />
+
 </RelativeLayout>
