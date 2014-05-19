@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -87,9 +87,9 @@ public final class TransferManager implements VuzeKeys {
     private TransferManager() {
         registerPreferencesChangeListener();
 
-        this.downloads = new LinkedList<DownloadTransfer>();
-        this.uploads = new LinkedList<UploadTransfer>();
-        this.bittorrentDownloads = new LinkedList<BittorrentDownload>();
+        this.downloads = new CopyOnWriteArrayList<DownloadTransfer>();
+        this.uploads = new CopyOnWriteArrayList<UploadTransfer>();
+        this.bittorrentDownloads = new CopyOnWriteArrayList<BittorrentDownload>();
 
         this.downloadsToReview = 0;
 
