@@ -66,8 +66,11 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.adapters.PagerAdapter;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.fragments.QueueFragment;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.android.gui.views.DonationsController;
 import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -157,6 +160,9 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
 
     private boolean mFromTouch = false;
 
+    private Biller biller;
+    private final DonationsController donationsController = new DonationsController();
+
     /**
      * {@inheritDoc}
      */
@@ -196,6 +202,9 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
 
         initGestures();
         mPlayPauseButton.setOnLongClickListener(new StopListener(this));
+
+        biller = BillerFactory.getInstance(this);
+        donationsController.setup(this, getWindow().getDecorView(), biller);
     }
 
     /**
@@ -422,6 +431,10 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             unregisterReceiver(mPlaybackStatus);
         } catch (final Throwable e) {
             //$FALL-THROUGH$
+        }
+
+        if (biller != null) {
+            biller.onDestroy();
         }
     }
 
