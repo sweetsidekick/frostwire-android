@@ -285,10 +285,6 @@ public class MediaPlayerActivity extends AbstractActivity implements MediaPlayer
         currentTime = (TextView) findViewById(R.id.view_media_controller_time_current);
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
-
-        if (mediaFD != null) {
-            UIUtils.initSupportFrostWire(this, R.id.activity_mediaplayer_donations_view_placeholder);
-        }
     }
 
     private void refreshUIData() {

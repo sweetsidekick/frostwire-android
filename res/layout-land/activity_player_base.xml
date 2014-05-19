@@ -188,7 +188,7 @@
         android:layout_toRightOf="@+id/audio_player_large_album_frame"
         android:background="@drawable/layout_divider_1_gray" />
 
-    <com.frostwire.android.gui.views.DonationsView2
+    <LinearLayout
         android:id="@+id/activity_audio_player_donations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -198,6 +198,9 @@
         android:background="@color/body_background_gray"
         android:baselineAligned="false"
         android:divider="@drawable/layout_divider_1_gray"
-        android:showDividers="middle" />
+        android:showDividers="middle" >
+
+        <include layout="@layout/view_donations2" />
+    </LinearLayout>
 
 </RelativeLayout>

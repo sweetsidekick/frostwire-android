@@ -22,9 +22,9 @@
     xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true" >
-    
+    android:animateLayoutChanges="true"
+    android:orientation="vertical" >
+
     <com.frostwire.android.gui.views.ClearableEditTextView
         android:id="@+id/fragment_transfers_add_transfer_text_input"
         android:layout_width="match_parent"
@@ -33,8 +33,8 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="6dp"
         android:layout_marginTop="6dp"
-        android:visibility="gone"
         android:focusableInTouchMode="true"
+        android:visibility="gone"
         frostwire:clearable_hint="@string/add_transfer_label" />
 
     <RadioGroup
@@ -53,8 +53,8 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/transfers_select_all" />
+            android:text="@string/transfers_select_all"
+            android:textSize="12sp" />
 
         <RadioButton
             android:id="@+id/fragment_transfers_button_select_downloading"
@@ -64,8 +64,8 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/transfers_select_downloading" />
+            android:text="@string/transfers_select_downloading"
+            android:textSize="12sp" />
 
         <RadioButton
             android:id="@+id/fragment_transfers_button_select_completed"
@@ -75,8 +75,8 @@
             android:background="@drawable/transfers_top_button_selector"
             android:button="@null"
             android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/transfers_select_completed" />
+            android:text="@string/transfers_select_completed"
+            android:textSize="12sp" />
     </RadioGroup>
 
     <com.frostwire.android.gui.views.ExpandableListView
@@ -87,11 +87,15 @@
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
 
-    <com.frostwire.android.gui.views.DonationsView
+    <LinearLayout
         android:id="@+id/activity_mediaplayer_donations_view_placeholder"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <include layout="@layout/view_donations" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

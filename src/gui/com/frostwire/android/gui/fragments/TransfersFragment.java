@@ -44,6 +44,8 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.dialogs.MenuDialog;
 import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
@@ -58,6 +60,7 @@ import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.ClearableEditTextView;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 import com.frostwire.android.gui.views.ClickAdapter;
+import com.frostwire.android.gui.views.DonationsController;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -79,7 +82,6 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private final ButtonAddTransferListener buttonAddTransferListener;
     private final ButtonMenuListener buttonMenuListener;
-    
 
     private Button buttonSelectAll;
     private Button buttonSelectDownloading;
@@ -95,6 +97,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private TimerSubscription subscription;
 
+    private Biller biller;
+    private final DonationsController donationsController;
+
     public TransfersFragment() {
         super(R.layout.fragment_transfers);
 
@@ -103,23 +108,51 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         this.buttonMenuListener = new ButtonMenuListener(this);
 
         selectedStatus = TransferStatus.ALL;
+
+        this.donationsController = new DonationsController();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        UIUtils.initSupportFrostWire(getActivity(), R.id.activity_mediaplayer_donations_view_placeholder);
+        initSupportFrostWire();
 
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
-        
+
         addTransferUrlTextView = findView(getView(), R.id.fragment_transfers_add_transfer_text_input);
         addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
         addTransferUrlTextView.setFocusable(true);
         addTransferUrlTextView.setFocusableInTouchMode(true);
         addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
+    }
+
+    private void initSupportFrostWire() {
+        View donationsView = getActivity().findViewById(R.id.activity_mediaplayer_donations_view_placeholder);
+
+        biller = BillerFactory.getInstance(getActivity());
+
+        if (biller != null) {
+            donationsView.setVisibility(View.GONE);
+
+            if (biller.isInAppBillingSupported()) {
+                UIUtils.supportFrostWire(donationsView);
+            }
+
+            if (donationsView.getVisibility() == View.VISIBLE) {
+                donationsController.setup(getActivity(), donationsView, biller);
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (biller != null) {
+            biller.onDestroy();
+        }
     }
 
     @Override
@@ -184,13 +217,13 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         ImageButton buttonMenu = (ImageButton) header.findViewById(R.id.view_transfers_header_button_menu);
         buttonMenu.setOnClickListener(buttonMenuListener);
-        
+
         ImageButton buttonAddTransfer = (ImageButton) header.findViewById(R.id.view_transfers_header_button_add_transfer);
         buttonAddTransfer.setOnClickListener(buttonAddTransferListener);
 
         return header;
     }
-    
+
     public void selectStatusTab(TransferStatus status) {
         selectedStatus = status;
         switch (selectedStatus) {
@@ -261,7 +294,6 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private static final int PAUSE_MENU_DIALOG_ID = 1;
     private static final int RESUME_MENU_DIALOG_ID = 2;
 
-
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(TRANSFERS_DIALOG_ID)) {
@@ -289,30 +321,29 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         MenuItem clear = new MenuItem(CLEAR_MENU_DIALOG_ID, R.string.transfers_context_menu_clear_finished, R.drawable.contextmenu_icon_remove_transfer);
         MenuItem pause = new MenuItem(PAUSE_MENU_DIALOG_ID, R.string.transfers_context_menu_pause_stop_all_transfers, R.drawable.contextmenu_icon_pause_transfer);
         MenuItem resume = new MenuItem(RESUME_MENU_DIALOG_ID, R.string.transfers_context_resume_all_torrent_transfers, R.drawable.contextmenu_icon_play);
-        
+
         List<MenuItem> dlgActions = new ArrayList<MenuItem>();
-        
+
         TransferManager tm = TransferManager.instance();
         boolean bittorrentDisconnected = tm.isBittorrentDisconnected();
         final List<Transfer> transfers = tm.getTransfers();
-        
-        
+
         if (transfers != null && transfers.size() > 0) {
             if (someTransfersComplete(transfers)) {
                 dlgActions.add(clear);
             }
-            
+
             if (!bittorrentDisconnected) {
                 if (someTransfersActive(transfers)) {
                     dlgActions.add(pause);
                 }
-                
+
                 if (someTransfersInactive(transfers)) {
                     dlgActions.add(resume);
                 }
             }
         }
-        
+
         if (dlgActions.size() > 0) {
             MenuDialog dlg = MenuDialog.newInstance(TRANSFERS_DIALOG_ID, dlgActions);
             dlg.show(getFragmentManager());
@@ -336,7 +367,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 if (yt.isComplete() || !yt.isDownloading()) {
                     return true;
                 }
-                
+
             } else if (t instanceof SoundcloudDownload) {
                 SoundcloudDownload sd = (SoundcloudDownload) t;
                 if (sd.isComplete() || !sd.isDownloading()) {
@@ -350,12 +381,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private boolean someTransfersComplete(List<Transfer> transfers) {
         for (Transfer t : transfers) {
             if (t.isComplete()) {
-                return true; 
+                return true;
             }
         }
         return false;
     }
-    
+
     private boolean someTransfersActive(List<Transfer> transfers) {
         for (Transfer t : transfers) {
             if (t instanceof BittorrentDownload) {
@@ -382,7 +413,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
         return false;
     }
-    
+
     public void startTransferFromURL() {
         String text = addTransferUrlTextView.getText();
         if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {
@@ -407,16 +438,16 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             Item itemAt = primaryClip.getItemAt(0);
             try {
                 CharSequence charSequence = itemAt.getText();
-                
+
                 if (charSequence != null) {
                     String text = null;
-                    
+
                     if (charSequence instanceof String) {
                         text = (String) charSequence;
                     } else {
                         text = charSequence.toString();
                     }
-                    
+
                     if (!StringUtils.isNullOrEmpty(text)) {
                         if (text.startsWith("http")) {
                             addTransferUrlTextView.setText(text.trim());
@@ -430,7 +461,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                     }
                 }
             } catch (Throwable t) {
-                
+
             }
         }
     }
@@ -448,13 +479,13 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     }
 
     private void showAddTransfersKeyboard() {
-        if (addTransferUrlTextView.getVisibility()==View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
+        if (addTransferUrlTextView.getVisibility() == View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
             addTransferUrlTextView.getAutoCompleteTextView().requestFocus();
             InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getAutoCompleteTextView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_IMPLICIT);
         }
     }
-    
+
     private void hideAddTransfersKeyboard() {
         InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(addTransferUrlTextView.getWindowToken(), 0);
@@ -486,7 +517,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             f.toggleAddTransferControls();
         }
     }
-    
+
     private static final class ButtonMenuListener extends ClickAdapter<TransfersFragment> {
 
         public ButtonMenuListener(TransfersFragment f) {
@@ -498,7 +529,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             f.showContextMenu();
         }
     }
-    
+
     private static final class AddTransferTextListener extends ClickAdapter<TransfersFragment> implements OnItemClickListener, OnActionListener {
 
         public AddTransferTextListener(TransfersFragment owner) {
