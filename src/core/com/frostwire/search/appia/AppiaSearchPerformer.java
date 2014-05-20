@@ -117,7 +117,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
         }
         
         //optimization #hack, should be gone when appia fixes this on their end.
-        //copyAppResultsToAudioResultsIfNothingFound(results);
+        //copyTorrentResultsToAudioResultsIfNothingFound(results);
         
         return results;
     }
@@ -126,7 +126,8 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
      * Delete this when Appia is able to provide audio/music related search results.
      * @param results
      */
-    private void copyAppResultsToAudioResultsIfNothingFound(List<AppiaSearchResult> results) {
+    @SuppressWarnings("unused")
+    private void copyTorrentResultsToAudioResultsIfNothingFound(List<AppiaSearchResult> results) {
         int countAudioMediaType = 0;
         List<AppiaSearchResult> appMediaTypedOnes = new ArrayList<AppiaSearchResult>();
         
