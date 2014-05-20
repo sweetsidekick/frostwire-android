@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
@@ -46,6 +47,8 @@ public final class DonationsController {
         setupBTC(ctx, v);
 
         DonationSkus skus = BillerFactory.getDonationSkus();
+        setupDonate(ctx, v, b, R.id.view_donations_support_textview_1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
+        setupDonate(ctx, v, b, R.id.view_donations_support_textview_2, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
         setupDonate(ctx, v, b, R.id.view_donations_button_donate1, skus.getSku(DonationSkuType.SKU_01_DOLLARS), "https://gumroad.com/l/pH");
         setupDonate(ctx, v, b, R.id.view_donations_button_donate2, skus.getSku(DonationSkuType.SKU_05_DOLLARS), "https://gumroad.com/l/oox");
         setupDonate(ctx, v, b, R.id.view_donations_button_donate3, skus.getSku(DonationSkuType.SKU_10_DOLLARS), "https://gumroad.com/l/rPl");
@@ -63,6 +66,11 @@ public final class DonationsController {
         Button btn = findButton(v, id);
         if (btn != null) {
             btn.setOnClickListener(new DonateListener(ctx, b, sku, url));
+        } else {
+            TextView tv = findTextView(v, id);
+            if (tv != null) {
+                tv.setOnClickListener(new DonateListener(ctx, b, sku, url));
+            }
         }
     }
 
@@ -70,6 +78,15 @@ public final class DonationsController {
         View b = v.findViewById(id);
         if (b != null && b instanceof Button) {
             return (Button) b;
+        } else {
+            return null;
+        }
+    }
+    
+    private TextView findTextView(View v, int id) {
+        View b = v.findViewById(id);
+        if (b != null && b instanceof TextView) {
+            return (TextView) b;
         } else {
             return null;
         }
