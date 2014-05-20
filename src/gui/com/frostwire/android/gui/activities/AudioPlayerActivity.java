@@ -878,11 +878,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
 
         @Override
         public boolean onMultiTouchEvent(View v, MotionEvent event) {
-            try {
-                MusicUtils.mService.pause();
-            } catch (RemoteException e) {
-                // ignore
-            }
+            MusicUtils.playOrPause();
             UXStats.instance().log(UXAction.PLAYER_GESTURE_PAUSE_RESUME);
             return true;
         }
