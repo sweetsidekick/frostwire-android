@@ -53,7 +53,7 @@ import com.frostwire.search.youtube.YouTubeSearchPerformer;
 public abstract class SearchEngine {
     private static final Logger LOG = Logger.getLogger(SearchEngine.class);
     public static final UserAgent FROSTWIRE_ANDROID_USER_AGENT = new UserAgent(OSUtils.getOSVersionString(), Constants.FROSTWIRE_VERSION_STRING, Constants.FROSTWIRE_BUILD);
-    private static final int DEFAULT_TIMEOUT = 5000;
+    private static final int DEFAULT_TIMEOUT = 10000;
 
     private final String name;
     private final String preferenceKey;
