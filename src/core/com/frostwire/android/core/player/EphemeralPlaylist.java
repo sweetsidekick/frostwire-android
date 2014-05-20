@@ -92,7 +92,7 @@ public final class EphemeralPlaylist implements Playlist {
     public void setNextItem(PlaylistItem playlistItem) {
         for (int index = 0; index < items.size(); index++) {
             if (items.get(index).equals(playlistItem)) {
-                currentIndex = index - 1;
+                currentIndex = index;
                 break;
             }
         }
