@@ -4,6 +4,7 @@ FrostWire 1.3.1 - MAY/15/2014
  - Fixes ConcurrentModificationException crash on transfer manager.
  - Fixes Unable to Pause Activity on MediaPlayer screen.
  - Fixes reported crash starting a transfer.
+ - Fixes issues with EZTV search.
 
 FrostWire 1.3.0 - APR/30/2014
  - Upgraded BitTorrent engine with latest code from Azureus project.
