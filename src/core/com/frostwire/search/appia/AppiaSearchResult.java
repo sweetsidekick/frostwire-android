@@ -14,16 +14,21 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
     public String appId;
     public String categoryName;
     
+    //kept for cloning purposes.
+    private final AppiaServletResponseItem servletResponseItem;
+    
     private final MediaType mediaType;
     
     private static final String CAT_ANDROID_GAMES_ALL_GAMES = "9";
     private static final String CAT_ANDROID_APPS_ALL_APPS = "33";
     private static final String CAT_ANDROID_APPS_BOOKS_REFERENCE = "2";
     private static final String CAT_ANDROID_APPS_MEDIA_N_VIDEO = "19";
-    private static final String CAT_ANDROID_APPS_MUSIC = "21";
+    protected static final String CAT_ANDROID_APPS_MUSIC = "21";
     private static final String CAT_ANDROID_APPS_PHOTOGRAPHY = "24";
     
     public AppiaSearchResult(AppiaServletResponseItem item, String appiaCategoryId) {
+        servletResponseItem = item;
+        
         clickProxyURL = item.clickProxyURL;
         impressionTrackingURL = item.impressionTrackingURL;
         displayName = item.displayName;
@@ -47,6 +52,13 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
         } else {
             mediaType = null;
         }
+    }
+    
+    /** Copy constructor in case you want an instance on another media type, no mutability. */
+    public AppiaSearchResult(AppiaSearchResult searchResult, String appiaCatId) {
+        //yes, the category name won't be the corresponding name, but we just don't have it
+        //if we have to do this.
+        this(searchResult.getAppiaServletResponseItem(), appiaCatId);
     }
     
     public String getImpressionTrackingURL() {
@@ -102,5 +114,10 @@ public class AppiaSearchResult extends AbstractFileSearchResult implements Compa
     
     public MediaType getMediaType() {
         return mediaType;
+    }
+
+    /** to be used in copy/update constructor */
+    private AppiaServletResponseItem getAppiaServletResponseItem() {
+        return servletResponseItem;
     }
 }

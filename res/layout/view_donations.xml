@@ -35,6 +35,7 @@
         android:paddingTop="8sp" >
 
         <TextView
+            android:id="@+id/view_donations_support_textview_1"
             style="@style/SlideMenu.Item.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +44,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/view_donations_support_textview_2"
             style="@style/SlideMenu.Item.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

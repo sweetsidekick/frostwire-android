@@ -28,6 +28,7 @@
         android:padding="8dp" >
 
         <TextView
+            android:id="@+id/view_donations_support_textview_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/support_frostwire"
@@ -35,6 +36,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/view_donations_support_textview_2"
             style="@android:style/TextAppearance.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

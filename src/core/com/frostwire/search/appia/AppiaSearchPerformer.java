@@ -28,6 +28,7 @@ import java.util.Set;
 
 import android.os.AsyncTask;
 
+import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.SearchEngine;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.util.StringUtils;
@@ -115,7 +116,33 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
             results = Collections.emptyList();
         }
         
+        //optimization #hack, should be gone when appia fixes this on their end.
+        //copyTorrentResultsToAudioResultsIfNothingFound(results);
+        
         return results;
+    }
+
+    /**
+     * Delete this when Appia is able to provide audio/music related search results.
+     * @param results
+     */
+    @SuppressWarnings("unused")
+    private void copyTorrentResultsToAudioResultsIfNothingFound(List<AppiaSearchResult> results) {
+        int countAudioMediaType = 0;
+        List<AppiaSearchResult> appMediaTypedOnes = new ArrayList<AppiaSearchResult>();
+        
+        for (AppiaSearchResult sr : results) {
+            if (sr.getMediaType().equals(MediaType.getAudioMediaType())) {
+                countAudioMediaType++;
+            } else if (sr.getMediaType().equals(MediaType.getTorrentMediaType())) {
+                appMediaTypedOnes.add(new AppiaSearchResult(sr, AppiaSearchResult.CAT_ANDROID_APPS_MUSIC));
+            }
+        }
+        
+        //no audio results? let's use the new copies then.
+        if (countAudioMediaType == 0 && !appMediaTypedOnes.isEmpty()) {
+            results.addAll(appMediaTypedOnes);
+        }
     }
 
     private Map<String, String> buildCustomHeaders(UserAgent userAgent, String androidId) {
@@ -133,7 +160,7 @@ public class AppiaSearchPerformer extends PagedWebSearchPerformer {
                 @Override
                 protected Void doInBackground(String... url) {
                     try {
-                        String output = HttpClientFactory.newInstance().get(url[0], 2000, SearchEngine.FROSTWIRE_ANDROID_USER_AGENT.toString());
+                        String output = HttpClientFactory.newInstance().get(url[0], 10000, SearchEngine.FROSTWIRE_ANDROID_USER_AGENT.toString());
                         if (output != null) {
                             System.out.println("Pixel tracked at " + url[0]);
                         }
