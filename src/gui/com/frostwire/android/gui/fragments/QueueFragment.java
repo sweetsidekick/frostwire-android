@@ -29,14 +29,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.andrew.apollo.dragdrop.DragSortListView.DragScrollProfile;
-import com.andrew.apollo.dragdrop.DragSortListView.DropListener;
-import com.andrew.apollo.dragdrop.DragSortListView.RemoveListener;
 import com.andrew.apollo.loaders.QueueLoader;
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
-import com.frostwire.android.gui.adapters.RecycleHolder;
 import com.frostwire.android.gui.adapters.SongAdapter;
 
 /**
@@ -44,7 +40,7 @@ import com.frostwire.android.gui.adapters.SongAdapter;
  * 
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song>>, OnItemClickListener, DropListener, RemoveListener, DragScrollProfile {
+public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song>>, OnItemClickListener {
 
     /**
      * Used to keep context menu items from bleeding into other fragments
@@ -69,7 +65,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     /**
      * Represents a song
      */
-    private Song mSong;
+    //private Song mSong;
 
     /**
      * Position of a context menu item
@@ -99,7 +95,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Create the adpater
-        mAdapter = new SongAdapter(getActivity(), R.layout.edit_track_list_item);
+        mAdapter = new SongAdapter(getActivity());
     }
 
     /**
@@ -114,7 +110,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         // Set the data behind the list
         mListView.setAdapter(mAdapter);
         // Release any references to the recycled Views
-        mListView.setRecyclerListener(new RecycleHolder());
+        mListView.setRecyclerListener(new SongAdapter.RecycleHolder());
         // Listen for ContextMenus to be created
         mListView.setOnCreateContextMenuListener(this);
         // Play the selected song
@@ -324,44 +320,44 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         mAdapter.unload();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public float getSpeed(final float w, final long t) {
-        if (w > 0.8f) {
-            return mAdapter.getCount() / 0.001f;
-        } else {
-            return 10.0f * w;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(final int which) {
-        mSong = mAdapter.getItem(which);
-        mAdapter.remove(mSong);
-        mAdapter.notifyDataSetChanged();
-        MusicUtils.removeTrack(mSong.mSongId);
-        // Build the cache
-        mAdapter.buildCache();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void drop(final int from, final int to) {
-        mSong = mAdapter.getItem(from);
-        mAdapter.remove(mSong);
-        mAdapter.insert(mSong, to);
-        mAdapter.notifyDataSetChanged();
-        MusicUtils.moveQueueItem(from, to);
-        // Build the cache
-        mAdapter.buildCache();
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public float getSpeed(final float w, final long t) {
+//        if (w > 0.8f) {
+//            return mAdapter.getCount() / 0.001f;
+//        } else {
+//            return 10.0f * w;
+//        }
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public void remove(final int which) {
+//        mSong = mAdapter.getItem(which);
+//        mAdapter.remove(mSong);
+//        mAdapter.notifyDataSetChanged();
+//        MusicUtils.removeTrack(mSong.mSongId);
+//        // Build the cache
+//        mAdapter.buildCache();
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public void drop(final int from, final int to) {
+//        mSong = mAdapter.getItem(from);
+//        mAdapter.remove(mSong);
+//        mAdapter.insert(mSong, to);
+//        mAdapter.notifyDataSetChanged();
+//        MusicUtils.moveQueueItem(from, to);
+//        // Build the cache
+//        mAdapter.buildCache();
+//    }
 
     /**
      * Scrolls the list to the currently playing song when the user touches the
