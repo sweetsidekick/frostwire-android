@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andrew.apollo.model.Song;
+import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.SongAdapter.MusicHolder.DataHolder;
 import com.frostwire.util.Ref;
@@ -55,6 +56,11 @@ public final class SongAdapter extends ArrayAdapter<Song> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.view_queue_list_item, parent, false);
             holder = new MusicHolder(convertView);
+
+            // clear icon
+            holder.icon.get().setImageDrawable(null);
+            holder.icon.get().setImageBitmap(null);
+
             convertView.setTag(holder);
         } else {
             holder = (MusicHolder) convertView.getTag();
@@ -64,6 +70,17 @@ public final class SongAdapter extends ArrayAdapter<Song> {
 
         holder.title.get().setText(dataHolder.title);
         holder.author.get().setText(dataHolder.author);
+
+        if (MusicUtils.getCurrentAudioId() == dataHolder.itemId) {
+            holder.title.get().setTextColor(getContext().getResources().getColor(R.color.app_text_highlight));
+            holder.author.get().setTextColor(getContext().getResources().getColor(R.color.app_text_highlight));
+            holder.icon.get().setImageResource(R.drawable.ic_headphones);
+        } else {
+            holder.title.get().setTextColor(getContext().getResources().getColor(R.color.app_text_primary));
+            holder.author.get().setTextColor(getContext().getResources().getColor(R.color.app_text_primary));
+            holder.icon.get().setImageDrawable(null);
+            holder.icon.get().setImageBitmap(null);
+        }
 
         return convertView;
     }

@@ -24,19 +24,29 @@
 
     <TextView
         android:id="@+id/view_queue_list_item_title"
-        android:layout_width="wrap_content"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="6dip"
-        android:layout_marginTop="4dip"
-        android:text="@string/dummy_title" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/dummy_title"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/view_queue_list_item_author"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@id/view_queue_list_item_title"
+        android:layout_alignRight="@id/view_queue_list_item_title"
         android:layout_below="@id/view_queue_list_item_title"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="@string/dummy_author" />
 
     <ImageView
@@ -45,8 +55,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
         android:contentDescription="@null"
         android:scaleType="fitXY"
         android:src="@drawable/ic_headphones" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/view_queue_list_item_author"
+        android:background="@drawable/layout_divider_1_gray" />
 
 </RelativeLayout>
