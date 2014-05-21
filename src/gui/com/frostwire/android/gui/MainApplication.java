@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.ViewConfiguration;
 
 import com.andrew.apollo.cache.ImageCache;
 import com.frostwire.android.R;
@@ -49,26 +51,28 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        ignoreHardwareMenu();
+
         try {
-            
-//            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
-//                return;
-//            }
-            
+
+            //            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
+            //                return;
+            //            }
+
             // important initial setup here
             ConfigurationManager.create(this);
 
             // important setup at very begining
             String azureusPath = SystemUtils.getAzureusDirectory().getAbsolutePath();
-            String torrentsPath  = SystemUtils.getTorrentsDirectory().getAbsolutePath();
+            String torrentsPath = SystemUtils.getTorrentsDirectory().getAbsolutePath();
             Map<String, String> messages = getVuzeMessages(this);
             VuzeConfiguration conf = new VuzeConfiguration(azureusPath, torrentsPath, messages);
             VuzeManager.setConfiguration(conf);
-            
+
             NetworkManager.create(this);
             Librarian.create(this);
             Engine.create(this);
-            
+
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
 
             ImageLoader.createDefaultInstance(this);
@@ -83,17 +87,13 @@ public class MainApplication extends Application {
         }
     }
 
-    private String getAndroidId() {
-        return Secure.getString(getContentResolver(), Secure.ANDROID_ID);
-    }
-    
     private String getDeviceId() {
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId=tm.getDeviceId();
-        
+        String deviceId = tm.getDeviceId();
+
         //probably it's a tablet... Sony's tablet returns null here.
         if (deviceId == null) {
-            deviceId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID); 
+            deviceId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
         }
         return deviceId;
     }
@@ -125,10 +125,23 @@ public class MainApplication extends Application {
 
         return msgs;
     }
-    
+
     @Override
     public void onLowMemory() {
         ImageCache.getInstance(this).evictAll();
         super.onLowMemory();
+    }
+
+    private void ignoreHardwareMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field f = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (f != null) {
+                f.setAccessible(true);
+                f.setBoolean(config, false);
+            }
+        } catch (Throwable ex) {
+            // Ignore
+        }
     }
 }
