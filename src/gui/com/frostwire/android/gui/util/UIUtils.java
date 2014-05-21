@@ -44,6 +44,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -283,6 +284,9 @@ public final class UIUtils {
                 context.startActivity(i);
 
                 if (mime != null && mime.contains("video")) {
+                    if (MusicUtils.isPlaying()) {
+                        MusicUtils.playOrPause();
+                    }
                     UXStats.instance().log(UXAction.LIBRARY_VIDEO_PLAY);
                 }
             }

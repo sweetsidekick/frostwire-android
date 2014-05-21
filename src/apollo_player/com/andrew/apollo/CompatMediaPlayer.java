@@ -63,14 +63,19 @@ class CompatMediaPlayer extends MediaPlayer implements OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (mNextPlayer != null) {
-            // as it turns out, starting a new MediaPlayer on the completion
-            // of a previous player ends up slightly overlapping the two
-            // playbacks, so slightly delaying the start of the next player
-            // gives a better user experience
-            SystemClock.sleep(50);
-            mNextPlayer.start();
+        try {
+            if (mNextPlayer != null) {
+                // as it turns out, starting a new MediaPlayer on the completion
+                // of a previous player ends up slightly overlapping the two
+                // playbacks, so slightly delaying the start of the next player
+                // gives a better user experience
+                SystemClock.sleep(50);
+                mNextPlayer.start();
+
+            }
+            mCompletion.onCompletion(this);
+        } catch (Throwable e) {
+            // yes, some times we get NPE due to sync issues
         }
-        mCompletion.onCompletion(this);
     }
 }
