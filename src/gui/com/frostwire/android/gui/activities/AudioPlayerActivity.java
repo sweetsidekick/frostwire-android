@@ -611,6 +611,11 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         // Set the repeat image
         mRepeatButton.updateRepeatState();
     }
+    
+    private void updateQueueFragmentCurrentSong() {
+        QueueFragment qFragment = (QueueFragment) mPagerAdapter.getFragment(0);
+        qFragment.notifyAdapterDataSetChanged();
+    }
 
     /**
      * @param delay When to update
@@ -651,6 +656,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
                 final long duration = MusicUtils.duration();
                 mStartSeekPos += duration;
                 newpos += duration;
+                
             }
             if (delta - mLastSeekEventTime > 250 || repcnt < 0) {
                 MusicUtils.seek(newpos);
@@ -1031,6 +1037,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
                 mReference.get().updateNowPlayingInfo();
                 // Update the favorites icon
                 mReference.get().invalidateOptionsMenu();
+                mReference.get().updateQueueFragmentCurrentSong();
             } else if (action.equals(MusicPlaybackService.PLAYSTATE_CHANGED)) {
                 // Set the play and pause image
                 mReference.get().mPlayPauseButton.updateState();
