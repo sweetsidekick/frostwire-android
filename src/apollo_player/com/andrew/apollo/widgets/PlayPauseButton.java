@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.util.UIUtils;
 
 /**
  * A custom {@link ImageButton} that represents the "play and pause" button.
@@ -56,6 +57,7 @@ public class PlayPauseButton extends ImageButton implements OnClickListener {
         } else {
             setContentDescription(getResources().getString(R.string.accessibility_play));
             setImageResource(R.drawable.btn_playback_play);
+            UIUtils.showShortMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop));
         }
     }
 
