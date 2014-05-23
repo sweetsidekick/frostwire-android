@@ -976,6 +976,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             try {
                 MusicUtils.mService.stop();
                 if (Ref.alive(activityRef)) {
+                    v.getContext().sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_STOPPED));
                     activityRef.get().finish();
                 }
             } catch (RemoteException e) {
@@ -1041,11 +1042,20 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             } else if (action.equals(MusicPlaybackService.PLAYSTATE_CHANGED)) {
                 // Set the play and pause image
                 mReference.get().mPlayPauseButton.updateState();
+                notifyMusicPlayerBroadcastReceivers(context);
             } else if (action.equals(MusicPlaybackService.REPEATMODE_CHANGED) || action.equals(MusicPlaybackService.SHUFFLEMODE_CHANGED)) {
                 // Set the repeat image
                 mReference.get().mRepeatButton.updateRepeatState();
                 // Set the shuffle image
                 mReference.get().mShuffleButton.updateShuffleState();
+            }
+        }
+
+        private void notifyMusicPlayerBroadcastReceivers(Context context) {
+            if (MusicUtils.isPlaying()) {
+                context.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
+            } else {
+                context.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PAUSED));
             }
         }
     }
