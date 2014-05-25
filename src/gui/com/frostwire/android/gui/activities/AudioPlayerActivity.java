@@ -82,6 +82,8 @@ import com.frostwire.uxstats.UXStats;
  */
 public class AudioPlayerActivity extends Activity implements ServiceConnection, OnSeekBarChangeListener, DeleteDialog.DeleteDialogCallback {
 
+    //private static final Logger log = Logger.getLogger(AudioPlayerActivity.class);
+    
     // Message to refresh the time
     private static final int REFRESH_TIME = 1;
 
@@ -1042,7 +1044,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             } else if (action.equals(MusicPlaybackService.PLAYSTATE_CHANGED)) {
                 // Set the play and pause image
                 mReference.get().mPlayPauseButton.updateState();
-                notifyMusicPlayerBroadcastReceivers(context);
             } else if (action.equals(MusicPlaybackService.REPEATMODE_CHANGED) || action.equals(MusicPlaybackService.SHUFFLEMODE_CHANGED)) {
                 // Set the repeat image
                 mReference.get().mRepeatButton.updateRepeatState();
@@ -1051,13 +1052,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             }
         }
 
-        private void notifyMusicPlayerBroadcastReceivers(Context context) {
-            if (MusicUtils.isPlaying()) {
-                context.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PLAY));
-            } else {
-                context.sendBroadcast(new Intent(Constants.ACTION_MEDIA_PLAYER_PAUSED));
-            }
-        }
     }
 
 }

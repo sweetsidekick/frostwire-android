@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.andrew.apollo.MusicPlaybackService;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -167,11 +168,8 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
-
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_PLAY));
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_PAUSED));
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_MEDIA_PLAYER_STOPPED));
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_REFRESH_FINGER));
+        
+        initBroadcastReceiver();
 
         getLoaderManager().destroyLoader(LOADER_FINGER_ID);
         getLoaderManager().restartLoader(LOADER_FINGER_ID, null, this);
@@ -184,10 +182,20 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
         }
     }
 
+    private void initBroadcastReceiver() {
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_REFRESH_FINGER);
+        filter.addAction(Constants.ACTION_MEDIA_PLAYER_PLAY);
+        filter.addAction(Constants.ACTION_MEDIA_PLAYER_PAUSED);
+        filter.addAction(Constants.ACTION_MEDIA_PLAYER_STOPPED);
+        filter.addAction(MusicPlaybackService.META_CHANGED);
+        filter.addAction(MusicPlaybackService.PLAYSTATE_CHANGED);
+        getActivity().registerReceiver(broadcastReceiver, filter);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-
         getActivity().unregisterReceiver(broadcastReceiver);
     }
 
@@ -559,7 +567,14 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     private final class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) || intent.getAction().equals(Constants.ACTION_MEDIA_PLAYER_PAUSED)) {
+            String action = intent.getAction();
+            if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || 
+                action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) || 
+                action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED) ||
+                action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED) ||
+                action.equals(MusicPlaybackService.PLAYSTATE_CHANGED) ||
+                action.equals(MusicPlaybackService.META_CHANGED)
+                ) {
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
