@@ -438,8 +438,17 @@ public final class YouTubeDownload implements DownloadTransfer {
 
     private MP4Metadata buildMetadata() {
         String title = sr.getDisplayName();
-        String author = sr.getDetailsUrl();
+        String author = sr.getSource();
         String source = "YouTube.com";
+        
+        if (author.startsWith("YouTube - ")) {
+            author = author.replace("YouTube - ", "") + " (YouTube)";
+        } else {
+            LinkInfo audioLinkInfo = ((YouTubeCrawledSearchResult) sr.getParent()).getAudio();
+            if (audioLinkInfo != null && audioLinkInfo.user != null) {
+                author = audioLinkInfo.user + " (YoutTube)";
+            }
+        }
 
         String jpgUrl = sr.getVideo() != null ? sr.getVideo().thumbnails.normal : null;
         if (jpgUrl == null && sr.getAudio() != null) {
