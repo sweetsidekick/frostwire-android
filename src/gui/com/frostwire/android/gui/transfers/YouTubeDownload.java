@@ -441,7 +441,7 @@ public final class YouTubeDownload implements DownloadTransfer {
         String author = sr.getSource();
         String source = "YouTube.com";
         
-        if (author.startsWith("YouTube - ")) {
+        if (author != null && author.startsWith("YouTube - ")) {
             author = author.replace("YouTube - ", "") + " (YouTube)";
         } else {
             LinkInfo audioLinkInfo = ((YouTubeCrawledSearchResult) sr.getParent()).getAudio();
