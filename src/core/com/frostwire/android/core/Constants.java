@@ -41,6 +41,8 @@ public final class Constants {
     public static final String FROSTWIRE_BUILD = "131";
 
     public static final boolean IS_AMAZON_DISTRIBUTION = false;
+    
+    public static final boolean IS_FREE_DISTRIBUTION = !IS_AMAZON_DISTRIBUTION;
 
     /**
      * 65280 - Default LAN bound port
