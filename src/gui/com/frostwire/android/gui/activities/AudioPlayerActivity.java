@@ -69,6 +69,7 @@ import com.frostwire.android.gui.adapters.PagerAdapter;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.fragments.QueueFragment;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.DonationsController;
 import com.frostwire.util.Ref;
@@ -205,8 +206,27 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         initGestures();
         mPlayPauseButton.setOnLongClickListener(new StopListener(this));
 
+        initSupportFrostWire();
+    }
+    
+    private void initSupportFrostWire() {
+        View donationsView = findViewById(R.id.activity_audio_player_donations);
+        
         biller = BillerFactory.getInstance(this);
-        donationsController.setup(this, getWindow().getDecorView(), biller);
+
+        if (biller != null) {
+            donationsView.setVisibility(View.GONE);
+
+            if (biller.isInAppBillingSupported()) {
+                //UIUtils.supportFrostWire(getWindow().getDecorView());
+                UIUtils.supportFrostWire(donationsView);
+            }
+
+            if (donationsView.getVisibility() == View.VISIBLE) {
+                //donationsController.setup(this, getWindow().getDecorView(), biller);
+                donationsController.setup(this, donationsView, biller);
+            }
+        }
     }
 
     /**

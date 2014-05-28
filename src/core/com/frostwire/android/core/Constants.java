@@ -40,7 +40,7 @@ public final class Constants {
      * needing to pass the Android app context to obtain the PackageManager instance.  */
     public static final String FROSTWIRE_BUILD = "131";
 
-    public static final boolean IS_AMAZON_DISTRIBUTION = false;
+    public static final boolean IS_AMAZON_DISTRIBUTION = true;
     
     public static final boolean IS_FREE_DISTRIBUTION = !IS_AMAZON_DISTRIBUTION;
 
