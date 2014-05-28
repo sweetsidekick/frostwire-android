@@ -211,19 +211,16 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     
     private void initSupportFrostWire() {
         View donationsView = findViewById(R.id.activity_audio_player_donations);
-        
         biller = BillerFactory.getInstance(this);
 
         if (biller != null) {
             donationsView.setVisibility(View.GONE);
 
             if (biller.isInAppBillingSupported()) {
-                //UIUtils.supportFrostWire(getWindow().getDecorView());
                 UIUtils.supportFrostWire(donationsView);
             }
 
             if (donationsView.getVisibility() == View.VISIBLE) {
-                //donationsController.setup(this, getWindow().getDecorView(), biller);
                 donationsController.setup(this, donationsView, biller);
             } else {
                 View div3view = findViewById(R.id.activity_audio_player_div3);
