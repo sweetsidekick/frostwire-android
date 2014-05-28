@@ -206,8 +206,12 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
                 Engine.instance().getMediaPlayer().stop();
             } else {
-                UIUtils.playEphemeralPlaylist(fd);
-                UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
+                try {
+                    UIUtils.playEphemeralPlaylist(fd);
+                    UXStats.instance().log(UXAction.LIBRARY_PLAY_AUDIO_FROM_FILE);
+                } catch (RuntimeException re) {
+                    UIUtils.showShortMessage(getContext(), R.string.media_player_failed);
+                }
             }
             notifyDataSetChanged();
         } else {
