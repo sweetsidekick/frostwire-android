@@ -225,6 +225,11 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             if (donationsView.getVisibility() == View.VISIBLE) {
                 //donationsController.setup(this, getWindow().getDecorView(), biller);
                 donationsController.setup(this, donationsView, biller);
+            } else {
+                View div3view = findViewById(R.id.activity_audio_player_div3);
+                if (div3view !=null){
+                    div3view.setVisibility(View.GONE);
+                }
             }
         }
     }

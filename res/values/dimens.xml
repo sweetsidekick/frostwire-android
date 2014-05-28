@@ -49,6 +49,7 @@
     <dimen name="audio_player_controls_end_button_height">50.0dip</dimen>
     <dimen name="audio_player_controls_main_button_width">58.0dip</dimen>
     <dimen name="audio_player_controls_main_button_height">58.0dip</dimen>
+    <dimen name="audio_player_donation_controls_height">80dp</dimen>
     
     <!-- Shadow height -->
     <dimen name="shadow_height">5.0dip</dimen>
