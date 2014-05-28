@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.activities.NoBTCWalletAvailableActivity;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.billing.DonationSkus;
@@ -105,7 +106,13 @@ public final class DonationsController {
             try {
                 ctx.startActivity(intent);
             } catch (Throwable t) {
-                UIUtils.showLongMessage(ctx, R.string.you_need_a_bitcoin_wallet_app);
+                if (Constants.IS_AMAZON_DISTRIBUTION) {
+                    //could not find Bitcoin Wallet apps in the Amazon Market
+                    //therefore we'll just show a toast in this case.
+                    UIUtils.showLongMessage(ctx, R.string.you_need_a_bitcoin_wallet_app);
+                } else {
+                    ctx.startActivity(new Intent(ctx,NoBTCWalletAvailableActivity.class));
+                }
             }
         }
     }

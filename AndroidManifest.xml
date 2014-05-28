@@ -20,7 +20,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="preferExternal"
-	android:versionCode="132" android:versionName="1.3.1">
+	android:versionCode="133" android:versionName="1.3.1">
 
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19" />
 
@@ -210,6 +210,11 @@
                 <data android:mimeType="vnd.android.cursor.dir/audio"/>
             </intent-filter>
         </activity>
+
+	   <activity
+			android:name="com.frostwire.android.gui.activities.NoBTCWalletAvailableActivity" 
+			android:label="@string/install_bitcoin_wallet">
+		</activity>
 	
 		<!-- offercast -->
 		<activity android:name="com.offercast.android.sdk.TermsAndConditionsActivity"
