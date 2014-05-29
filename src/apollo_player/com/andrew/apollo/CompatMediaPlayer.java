@@ -16,6 +16,7 @@
 
 package com.andrew.apollo;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.media.MediaPlayer;
@@ -46,6 +47,16 @@ class CompatMediaPlayer extends MediaPlayer implements OnCompletionListener {
             //super.setNextMediaPlayer(next);
             try {
                 m.invoke(this, next);
+            } catch (InvocationTargetException e) {
+                Throwable ex = e.getTargetException();
+
+                if (ex instanceof IllegalArgumentException) {
+                    throw (IllegalArgumentException) ex;
+                } else if (ex instanceof IllegalStateException) {
+                    throw (IllegalStateException) ex;
+                } else {
+                    throw new RuntimeException(e);
+                }
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
