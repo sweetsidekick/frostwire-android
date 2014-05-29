@@ -1,3 +1,6 @@
+FrostWire 1.3.2 - MAY/29/2014
+ - Fixes audio player crash.
+
 FrostWire 1.3.1 - MAY/15/2014
  - Fixes issue where torrent transfers would start even after user disconnected
    in the preferences screen.
