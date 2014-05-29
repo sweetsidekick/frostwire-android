@@ -32,13 +32,13 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 3, (byte) 1 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 3, (byte) 2 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
 
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "133";
+    public static final String FROSTWIRE_BUILD = "134";
 
     public static final boolean IS_AMAZON_DISTRIBUTION = false;
     
