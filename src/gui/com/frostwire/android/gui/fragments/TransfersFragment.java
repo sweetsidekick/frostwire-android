@@ -306,10 +306,15 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 TransferManager.instance().pauseTorrents();
                 break;
             case RESUME_MENU_DIALOG_ID:
-                if (NetworkManager.instance().isDataUp()) {
-                    TransferManager.instance().resumeResumableTransfers();
+                boolean bittorrentDisconnected = TransferManager.instance().isBittorrentDisconnected();
+                if (bittorrentDisconnected){
+                    UIUtils.showLongMessage(getActivity(), R.string.cant_resume_torrent_transfers);
                 } else {
-                    UIUtils.showShortMessage(getActivity(), R.string.please_check_connection_status_before_resuming_download);
+                    if (NetworkManager.instance().isDataUp()) {
+                        TransferManager.instance().resumeResumableTransfers();
+                    } else {
+                        UIUtils.showShortMessage(getActivity(), R.string.please_check_connection_status_before_resuming_download);
+                    }
                 }
                 break;
             }
@@ -337,10 +342,13 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
                 if (someTransfersActive(transfers)) {
                     dlgActions.add(pause);
                 }
+            }
 
-                if (someTransfersInactive(transfers)) {
-                    dlgActions.add(resume);
-                }
+            //let's show it even if bittorrent is disconnected
+            //user should get a message telling them to check why they can't resume.
+            //Preferences > Connectivity is disconnected.
+            if (someTransfersInactive(transfers)) {
+                dlgActions.add(resume);
             }
         }
 

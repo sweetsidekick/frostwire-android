@@ -23,6 +23,7 @@ import android.content.Context;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
+import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.uxstats.UXAction;
@@ -44,13 +45,18 @@ public final class ResumeDownloadMenuAction extends MenuAction {
     
     @Override
     protected void onClick(Context context) {
-        if (NetworkManager.instance().isDataUp()) {
-            if (download.isResumable()) {
-                download.resume();
-                UXStats.instance().log(UXAction.DOWNLOAD_RESUME);
-            }
+        boolean bittorrentDisconnected = TransferManager.instance().isBittorrentDisconnected();
+        if (bittorrentDisconnected){
+            UIUtils.showLongMessage(context, R.string.cant_resume_torrent_transfers);
         } else {
-            UIUtils.showShortMessage(context, R.string.please_check_connection_status_before_resuming_download);
+            if (NetworkManager.instance().isDataUp()) {
+                if (download.isResumable()) {
+                    download.resume();
+                    UXStats.instance().log(UXAction.DOWNLOAD_RESUME);
+                }
+            } else {
+                UIUtils.showShortMessage(context, R.string.please_check_connection_status_before_resuming_download);
+            }
         }
     }
 }

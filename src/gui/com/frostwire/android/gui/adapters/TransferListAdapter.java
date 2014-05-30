@@ -59,7 +59,6 @@ import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferItem;
-import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
@@ -257,7 +256,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         Object tag = view.getTag();
         String title = "";
         List<MenuAction> items = new ArrayList<MenuAction>();
-        boolean bittorrentDisconnected = TransferManager.instance().isBittorrentDisconnected();
 
         if (tag instanceof BittorrentDownload) {
             BittorrentDownload download = (BittorrentDownload) tag;
@@ -271,7 +269,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 items.add(new OpenMenuAction(context, path, mimeType));
             }
 
-            if (!bittorrentDisconnected && (!download.isComplete() || ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS))) {
+            if (!download.isComplete() || ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
                 if (download.isPausable()) {
                     items.add(new PauseDownloadMenuAction(context, download));
                 } else if (download.isResumable()) {

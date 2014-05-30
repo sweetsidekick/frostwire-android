@@ -254,7 +254,7 @@ public class PreferencesActivity extends PreferenceActivity {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                Engine.instance().stopServices(false);
+                Engine.instance().stopServices(true);
                 return null;
             }
 
