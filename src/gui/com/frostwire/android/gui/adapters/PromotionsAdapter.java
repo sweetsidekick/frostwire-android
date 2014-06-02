@@ -21,6 +21,8 @@ package com.frostwire.android.gui.adapters;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -29,7 +31,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.frostclick.Slide;
 
 /**
@@ -46,9 +48,9 @@ public class PromotionsAdapter extends BaseAdapter {
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
 
-    public PromotionsAdapter(List<Slide> slides) {
+    public PromotionsAdapter(Context ctx, List<Slide> slides) {
         this.slides = slides;
-        this.imageLoader = ImageLoader.getDefault();
+        this.imageLoader = ImageLoader.getInstance(ctx);
     }
 
     @Override
@@ -66,7 +68,9 @@ public class PromotionsAdapter extends BaseAdapter {
         imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         imageView.setPadding(0, 0, 0, 0);
         imageView.setAdjustViewBounds(true);
-        imageLoader.getPicasso().load(getItem(position).imageSrc).resize(promoWidth, promoHeight).into(imageView);
+        
+        
+        imageLoader.load(Uri.parse(getItem(position).imageSrc), imageView);
 
         return imageView;
     }

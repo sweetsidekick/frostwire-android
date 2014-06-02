@@ -64,6 +64,8 @@ public class MainApplication extends Application {
             LOG.error("Unable to install global http cache", e);
         }
 
+        com.frostwire.android.util.ImageLoader.getInstance(this);
+
         try {
 
             //            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
