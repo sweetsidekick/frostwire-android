@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,8 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.util.HttpResponseCache;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
@@ -47,11 +50,19 @@ import com.frostwire.vuze.VuzeManager;
  */
 public class MainApplication extends Application {
 
+    private static final Logger LOG = Logger.getLogger(MainApplication.class);
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         ignoreHardwareMenu();
+
+        try {
+            HttpResponseCache.install(this);
+        } catch (IOException e) {
+            LOG.error("Unable to install global http cache", e);
+        }
 
         try {
 
