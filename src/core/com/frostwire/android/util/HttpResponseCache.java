@@ -67,16 +67,16 @@ public final class HttpResponseCache extends ResponseCache implements Closeable 
         return delegate.put(uri, connection);
     }
 
-    public static void install(Context ctx) throws IOException {
+    public static HttpResponseCache install(Context ctx) throws IOException {
         ResponseCache installed = ResponseCache.getDefault();
         if (installed instanceof Closeable) {
             ((Closeable) installed).close();
         }
 
-        File directory = getCacheDir(ctx);
+        File directory = new File(getCacheDir(ctx), "http");
         long maxSize = calculateDiskCacheSize(directory);
 
-        android.net.http.HttpResponseCache.install(directory, maxSize);
+        return new HttpResponseCache(android.net.http.HttpResponseCache.install(directory, maxSize));
     }
 
     private static File getCacheDir(Context ctx) {
