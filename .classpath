@@ -21,6 +21,7 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="common/components/okhttp"/>
 	<classpathentry excluding="**/DNSUtilsImpl.java|**/bouncycastle/**|**/jman/**|**/swing/**|**/swt/**|**/systray/**|**/tests/**" kind="src" path="common/vuze/azureus2/src">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
