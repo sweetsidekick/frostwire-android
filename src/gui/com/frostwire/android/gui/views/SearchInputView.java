@@ -77,6 +77,10 @@ public class SearchInputView extends LinearLayout {
     public String getText() {
         return textInput.getText();
     }
+    
+    public void setText(String text) {
+        textInput.setText(text);
+    }
 
     public void updateHint(String newHint) {
         textInput.setHint(newHint);
@@ -155,7 +159,9 @@ public class SearchInputView extends LinearLayout {
     }
 
     private void updateHint(int fileType) {
-        textInput.setHint(getContext().getString(R.string.search_label) + " " + getContext().getString(R.string.files));
+        final String searchFiles = getContext().getString(R.string.search_label) + " " + getContext().getString(R.string.files);
+        final String orEnterYTorSCUrl = getContext().getString(R.string.or_enter_url);
+        textInput.setHint(searchFiles + " " + orEnterYTorSCUrl);
     }
 
     private RadioButton initRadioButton(int viewId, byte fileType) {
