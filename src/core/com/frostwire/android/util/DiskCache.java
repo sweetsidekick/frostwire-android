@@ -19,8 +19,9 @@
 package com.frostwire.android.util;
 
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -91,6 +92,28 @@ public final class DiskCache {
         }
     }
 
+    public void put(String key, InputStream in) {
+        Editor editor = null;
+
+        try {
+            editor = cache.edit(encodeKey(key));
+
+            if (editor != null) {
+                writeTo(editor, in);
+                editor.commit();
+            }
+
+        } catch (IOException e) {
+            LOG.warn("Error writing value to internal DiskLruCache", e);
+            try {
+                if (editor != null) {
+                    editor.abort();
+                }
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
     public void remove(String key) {
         try {
             cache.remove(encodeKey(key));
@@ -103,7 +126,7 @@ public final class DiskCache {
         return cache.size();
     }
 
-    private void writeTo(Editor editor, byte[] data) throws IOException, FileNotFoundException {
+    private void writeTo(Editor editor, byte[] data) throws IOException {
         OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
         try {
             out.write(data);
@@ -112,11 +135,20 @@ public final class DiskCache {
         }
     }
 
-    private static String encodeKey(String key) {
+    private void writeTo(Editor editor, InputStream in) throws IOException {
+        OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
+        try {
+            Util.copy(in, out); // using Util from okhttp only for consistency.
+        } finally {
+            out.close();
+        }
+    }
+
+    private String encodeKey(String key) {
         return Util.hash(key);
     }
 
-    public static final class Entry {
+    public static final class Entry implements Closeable {
 
         private final Snapshot snapshot;
 
@@ -125,11 +157,28 @@ public final class DiskCache {
         }
 
         public InputStream getInputStream() {
-            return snapshot.getInputStream(0);
+            return new SnapshotInputStream(snapshot);
         }
 
+        @Override
         public void close() {
             snapshot.close();
+        }
+    }
+
+    private static final class SnapshotInputStream extends FilterInputStream {
+
+        private final Snapshot snapshot;
+
+        public SnapshotInputStream(Snapshot snapshot) {
+            super(snapshot.getInputStream(0));
+            this.snapshot = snapshot;
+        }
+
+        @Override
+        public void close() throws IOException {
+            snapshot.close();
+            super.close();
         }
     }
 }
