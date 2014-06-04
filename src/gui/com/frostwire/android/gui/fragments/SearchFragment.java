@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.fragments;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -49,6 +50,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
+import com.frostwire.android.gui.views.ContextTask;
 import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
 import com.frostwire.android.gui.views.SearchInputView;
@@ -63,6 +65,9 @@ import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchManagerListener;
 import com.frostwire.search.SearchPerformer;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.soundcloud.SoundcloudItem;
+import com.frostwire.search.soundcloud.SoundcloudPlaylist;
+import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
@@ -142,7 +147,11 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         searchInput = findView(view, R.id.fragment_search_input);
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
-                performSearch(query, mediaTypeId);
+                if (query.contains("://m.soundcloud.com/") || query.contains("://soundcloud.com/")) {
+                    resolveSoundCloudSearchResultsFromUrl(query);
+                } else {
+                    performSearch(query, mediaTypeId);
+                }
             }
 
             public void onMediaTypeSelected(View v, int mediaTypeId) {
@@ -181,6 +190,10 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         list = findView(view, R.id.fragment_search_list);
 
         showSearchView(view);
+    }
+
+    protected void resolveSoundCloudSearchResultsFromUrl(String url) {
+        new DownloadSoundcloudFromUrlTask(getActivity(), url).execute();
     }
 
     private void setupAdapter() {
@@ -314,6 +327,16 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         UIUtils.showTransfersOnDownloadStart(ctx);
         task.execute();
     }
+    
+    private static void  startDownloads(Context ctx, List<? extends SearchResult> srs) {
+        if (srs!=null && !srs.isEmpty()) {
+            for (SearchResult sr : srs) {
+                StartDownloadTask task = new StartDownloadTask(ctx, sr);
+                task.execute();
+            }
+            UIUtils.showTransfersOnDownloadStart(ctx);
+        }
+    }
 
     private void startPromotionDownload(Slide slide) {
         SearchResult sr = null;
@@ -408,6 +431,51 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
             this.fsr.numPictures = 0;
             this.fsr.numTorrents = 0;
             this.fsr.numVideo = 0;
+        }
+    }
+    
+    private static final class DownloadSoundcloudFromUrlTask extends ContextTask<List<SoundcloudSearchResult>> {
+        private final String soundcloudUrl;
+
+        public DownloadSoundcloudFromUrlTask(Context ctx, String soundcloudUrl) {
+            super(ctx);
+            this.soundcloudUrl = soundcloudUrl;
+        }
+
+        @Override
+        protected void onPostExecute(Context ctx, List<SoundcloudSearchResult> result) {
+            if (!result.isEmpty()) {
+                SearchFragment.startDownloads(ctx, result);
+            }
+        }
+
+        @Override
+        protected List<SoundcloudSearchResult> doInBackground() {
+            final List<SoundcloudSearchResult> scResults = new ArrayList<SoundcloudSearchResult>();
+            
+            //resolve track information using http://api.soundcloud.com/resolve?url=<url>&client_id=b45b1aa10f1ac2941910a7f0d10f8e28
+            final String clientId="b45b1aa10f1ac2941910a7f0d10f8e28";
+            try {
+                final String resolveURL = "http://api.soundcloud.com/resolve.json?url="+soundcloudUrl+"&client_id="+clientId;
+                final String json = HttpClientFactory.newInstance().get(resolveURL,10000);
+
+                if (soundcloudUrl.contains("/sets/")) {
+                    //download a whole playlist
+                    final SoundcloudPlaylist playlist = JsonUtils.toObject(json, SoundcloudPlaylist.class);
+                    for (SoundcloudItem scItem : playlist.tracks) {
+                        scResults.add(new SoundcloudSearchResult(scItem, clientId));
+                    }
+                } else {
+                    //download single track
+                    final SoundcloudItem scItem = JsonUtils.toObject(json, SoundcloudItem.class);
+                    if (scItem != null) {
+                        scResults.add(new SoundcloudSearchResult(scItem, clientId));
+                    }
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return scResults;
         }
     }
 }

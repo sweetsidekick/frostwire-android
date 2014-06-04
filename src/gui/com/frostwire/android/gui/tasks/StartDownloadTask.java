@@ -49,6 +49,10 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
         this.sr = sr;
         this.message = message;
     }
+    
+    public StartDownloadTask(Context ctx, SearchResult sr){
+        this(ctx,sr,null);
+    }
 
     @Override
     protected DownloadTransfer doInBackground() {
@@ -72,7 +76,10 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
                     if (tm.isBittorrentDownloadAndMobileDataSavingsOff(transfer)) {
                         UIUtils.showLongMessage(ctx, R.string.torrent_transfer_consuming_mobile_data);
                     }
-                    UIUtils.showShortMessage(ctx, message);
+                    
+                    if (message != null){
+                        UIUtils.showShortMessage(ctx, message);
+                    }
                 }
                 
                 if (tm.isBittorrentDisconnected() && transfer instanceof BittorrentDownload) {
