@@ -11,6 +11,15 @@
 
 package com.andrew.apollo.cache;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -25,24 +34,15 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
-import android.text.TextUtils;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.andrew.apollo.utils.ApolloUtils;
-
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.squareup.okhttp.internal.DiskLruCache;
 
 /**
  * This class holds the memory and disk bitmap caches.

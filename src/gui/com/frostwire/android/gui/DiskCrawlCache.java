@@ -32,9 +32,9 @@ import com.frostwire.logging.Logger;
 import com.frostwire.search.CrawlCache;
 import com.frostwire.util.ByteUtils;
 import com.frostwire.util.DirectoryUtils;
-import com.jakewharton.disklrucache.DiskLruCache;
-import com.jakewharton.disklrucache.DiskLruCache.Editor;
-import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
+import com.squareup.okhttp.internal.DiskLruCache;
+import com.squareup.okhttp.internal.DiskLruCache.Editor;
+import com.squareup.okhttp.internal.DiskLruCache.Snapshot;
 
 /**
  * 
