@@ -50,29 +50,12 @@ public final class ImageLoader {
     }
 
     private ImageLoader(Context context) {
-        picasso = new Builder(context).downloader(new ImageDownloader()).build();
+        picasso = new Builder(context).downloader(new UrlConnectionDownloader()).build();
         picasso.setIndicatorsEnabled(true);
     }
 
     public void load(Uri uri, ImageView target) {
         picasso.load(uri).noFade().into(target);
-    }
-
-    private static class ImageDownloader implements Downloader {
-
-        @Override
-        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-            String scheme = uri.getScheme();
-            Downloader downloader = null;
-
-            if (scheme.equals("http")) {
-                downloader = new UrlConnectionDownloader();
-            } else if (scheme.equals("content")) {
-                //
-            }
-
-            return downloader != null ? downloader.load(uri, localCacheOnly) : null;
-        }
     }
 
     private static class UrlConnectionDownloader implements Downloader {
