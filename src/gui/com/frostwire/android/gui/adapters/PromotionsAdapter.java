@@ -18,18 +18,18 @@
 
 package com.frostwire.android.gui.adapters;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.frostclick.Slide;
 
 /**
@@ -42,13 +42,12 @@ import com.frostwire.frostclick.Slide;
  */
 public class PromotionsAdapter extends BaseAdapter {
 
-    private static final double PROMO_HEIGHT_TO_WIDTH_RATIO = 0.52998;
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
 
-    public PromotionsAdapter(List<Slide> slides) {
+    public PromotionsAdapter(Context ctx, List<Slide> slides) {
         this.slides = slides;
-        this.imageLoader = ImageLoader.getDefault();
+        this.imageLoader = ImageLoader.getInstance(ctx);
     }
 
     @Override
@@ -57,16 +56,13 @@ public class PromotionsAdapter extends BaseAdapter {
             return convertView;
         }
 
-        GridView gridView = (GridView) parent;
-        int promoWidth = getColumnWidth(gridView); //hack
-        int promoHeight = (int) (promoWidth * PROMO_HEIGHT_TO_WIDTH_RATIO);
-
         ImageView imageView = new ImageView(parent.getContext());
         imageView.setScaleType(ScaleType.MATRIX);
         imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         imageView.setPadding(0, 0, 0, 0);
         imageView.setAdjustViewBounds(true);
-        imageLoader.getPicasso().load(getItem(position).imageSrc).resize(promoWidth, promoHeight).into(imageView);
+
+        imageLoader.load(Uri.parse(getItem(position).imageSrc), imageView);
 
         return imageView;
     }
@@ -84,29 +80,5 @@ public class PromotionsAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    /**
-     * This is a hack.
-     * The reason is that, the very first time we try to find out what are the dimensions
-     * of the FWGridView component in the PromotionsAdapter.getView() method, it always
-     * returns 0. The idea was to use the width of the component, and the orientation of the
-     * device, and then we'd know if we're in a single column mode or 2 column mode when displaying
-     * the promos. This however works every time, but I'm not sure if it'll break after Android API 16 (Jelly Bean)
-     * since Android later introduced it's own getColumnWidth() method.
-     * @return
-     */
-    private int getColumnWidth(GridView grid) {
-        try {
-            Field field = GridView.class.getDeclaredField("mColumnWidth");
-            field.setAccessible(true);
-            Integer value = (Integer) field.get(grid);
-            field.setAccessible(false);
-            return value.intValue();
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

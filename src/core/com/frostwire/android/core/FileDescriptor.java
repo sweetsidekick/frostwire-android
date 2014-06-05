@@ -56,6 +56,8 @@ public class FileDescriptor implements Cloneable {
      * The year the media file was recorded, if any
      */
     public String year;
+    
+    public long albumId;
 
     /**
      * Empty constructor. Needed for in the JSON (and Gson) serialization process.
