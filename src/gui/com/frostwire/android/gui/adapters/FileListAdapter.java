@@ -236,12 +236,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-            try {
-                //Uri uri = ContentUris.withAppendedId(Applica, id)
-                //thumbnailLoader.load(uri, fileThumbnail);//fd
-            } catch (Throwable e) {
-                fileThumbnail.setImageDrawable(null);
-            }
+            Uri uri = Uri.parse("package://application/" + fd.album);
+            thumbnailLoader.load(uri, fileThumbnail, 96, 96);
         } else {
             if (Condition.in(fileType, Constants.FILE_TYPE_AUDIO, Constants.FILE_TYPE_VIDEOS, Constants.FILE_TYPE_RINGTONES)) {
                 if (fd.equals(Engine.instance().getMediaPlayer().getCurrentFD())) {
@@ -256,6 +252,9 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 thumbnailLoader.load(uri, fileThumbnail);
             } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
                 Uri uri = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, fd.id);
+                thumbnailLoader.load(uri, fileThumbnail, 96, 96);
+            } else if (fd.fileType == Constants.FILE_TYPE_PICTURES) {
+                Uri uri = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, fd.id);
                 thumbnailLoader.load(uri, fileThumbnail, 96, 96);
             }
         }

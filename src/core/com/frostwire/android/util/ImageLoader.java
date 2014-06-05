@@ -23,6 +23,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
@@ -38,6 +42,10 @@ import com.squareup.picasso.Picasso.Builder;
  */
 public final class ImageLoader {
 
+    private static final String SCHEME_PACKAGE = "package";
+
+    private static final String APPLICATION_AUTHORITY = "application";
+
     private final Picasso picasso;
 
     private static ImageLoader instance;
@@ -50,7 +58,8 @@ public final class ImageLoader {
     }
 
     private ImageLoader(Context context) {
-        picasso = new Builder(context).downloader(new UrlConnectionDownloader()).build();
+        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).build();
+
         picasso.setIndicatorsEnabled(true);
     }
 
@@ -60,6 +69,58 @@ public final class ImageLoader {
 
     public void load(Uri uri, ImageView target, int targetWidth, int targetHeight) {
         picasso.load(uri).noFade().resize(targetWidth, targetHeight).into(target);
+    }
+
+    private static class ImageDownloader implements Downloader {
+
+        private final PackageApplicationDownloader appDownloader;
+        private final UrlConnectionDownloader urlDownloader;
+
+        public ImageDownloader(Context context) {
+            this.appDownloader = new PackageApplicationDownloader(context);
+            this.urlDownloader = new UrlConnectionDownloader();
+        }
+
+        @Override
+        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            Downloader downloader = null;
+
+            String scheme = uri.getScheme();
+
+            if (SCHEME_PACKAGE.equals(scheme)) {
+                if (APPLICATION_AUTHORITY.equals(uri.getAuthority())) {
+                    downloader = appDownloader;
+                }
+            } else {
+                downloader = urlDownloader;
+            }
+
+            return downloader != null ? downloader.load(uri, localCacheOnly) : null;
+        }
+    }
+
+    private static class PackageApplicationDownloader implements Downloader {
+
+        private final Context context;
+
+        public PackageApplicationDownloader(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            String packageName = uri.getLastPathSegment();
+
+            PackageManager pm = context.getPackageManager();
+            try {
+                BitmapDrawable icon = (BitmapDrawable) pm.getApplicationIcon(packageName);
+                Bitmap bmp = icon.getBitmap();
+
+                return new Response(bmp, true, bmp.getByteCount());
+            } catch (NameNotFoundException e) {
+                return null;
+            }
+        }
     }
 
     private static class UrlConnectionDownloader implements Downloader {
