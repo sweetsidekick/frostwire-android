@@ -24,7 +24,6 @@ import android.os.ParcelFileDescriptor;
 import android.widget.ImageView;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.cache.ImageWorker.ImageType;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 import com.frostwire.android.util.ImageLoader;
@@ -79,7 +78,7 @@ public class ImageFetcher {
      * Used to fetch the current artwork.
      */
     public void loadCurrentArtwork(final ImageView imageView) {
-        loadImage(generateAlbumCacheKey(MusicUtils.getAlbumName(), MusicUtils.getArtistName()), MusicUtils.getArtistName(), MusicUtils.getAlbumName(), MusicUtils.getCurrentAlbumId(), imageView, ImageType.ALBUM);
+        loadImage(generateAlbumCacheKey(MusicUtils.getAlbumName(), MusicUtils.getArtistName()), MusicUtils.getArtistName(), MusicUtils.getAlbumName(), MusicUtils.getCurrentAlbumId(), imageView);
     }
 
     /**
@@ -133,7 +132,7 @@ public class ImageFetcher {
         return mDefault;
     }
 
-    protected void loadImage(final String key, final String artistName, final String albumName, final long albumId, final ImageView imageView, final ImageType imageType) {
+    protected void loadImage(final String key, final String artistName, final String albumName, final long albumId, final ImageView imageView) {
         Uri uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
         imageLoader.load(uri, imageView, R.drawable.default_artwork);
     }

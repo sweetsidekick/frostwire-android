@@ -55,7 +55,6 @@ import com.andrew.apollo.appwidgets.AppWidgetLarge;
 import com.andrew.apollo.appwidgets.AppWidgetLargeAlternate;
 import com.andrew.apollo.appwidgets.AppWidgetSmall;
 import com.andrew.apollo.appwidgets.RecentWidgetProvider;
-import com.andrew.apollo.cache.ImageCache;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.RecentStore;

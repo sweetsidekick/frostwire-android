@@ -11,12 +11,7 @@
 
 package com.andrew.apollo.utils;
 
-import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Build;
-
-import com.andrew.apollo.cache.ImageCache;
-import com.andrew.apollo.cache.ImageFetcher;
 
 /**
  * Mostly general and UI helpers.
@@ -51,27 +46,5 @@ public final class ApolloUtils {
      */
     public static final boolean hasJellyBeanMR2() {
         return Build.VERSION.SDK_INT >= VERSION_CODE_JELLY_BEAN_MR2;
-    }
-
-    /**
-     * Execute an {@link AsyncTask} on a thread pool
-     * 
-     * @param forceSerial True to force the task to run in serial order
-     * @param task Task to execute
-     * @param args Optional arguments to pass to
-     *            {@link AsyncTask#execute(Object[])}
-     * @param <T> Task argument type
-     */
-    public static <T> void execute(final boolean forceSerial, final AsyncTask<T, ?, ?> task,
-            final T... args) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
-            throw new UnsupportedOperationException(
-                    "This class can only be used on API 4 and newer.");
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB || forceSerial) {
-            task.execute(args);
-        } else {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, args);
-        }
     }
 }
