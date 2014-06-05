@@ -144,9 +144,6 @@
 			android:label="@string/activity_preferences_name" android:theme="@style/Preferences" />
 		<activity android:name="com.frostwire.android.gui.activities.BrowsePeerActivity"
 			android:label="@string/activity_browse_peer_name" />
-		<activity android:name=".gui.activities.MediaPlayerActivity"
-			android:label="@string/activity_mediaplayer_name"
-			android:screenOrientation="portrait" />
 		<activity android:name="com.frostwire.android.gui.activities.AboutActivity"
 			android:label="@string/activity_about" />
 		<activity
