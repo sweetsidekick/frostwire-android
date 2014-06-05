@@ -18,15 +18,15 @@
 
 package com.frostwire.android.gui.adapters;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.io.IOUtils;
-
+import android.content.ContentUris;
 import android.content.Context;
+import android.net.Uri;
+import android.provider.MediaStore.Images;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -56,11 +56,11 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.BrowseThumbnailImageButton;
 import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
-import com.frostwire.android.gui.views.ImageLoader;
 import com.frostwire.android.gui.views.ListAdapterFilter;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.util.Condition;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -100,7 +100,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         this.peer = peer;
         this.local = local;
         this.fileType = fileType;
-        this.thumbnailLoader = ImageLoader.getDefault();
+        this.thumbnailLoader = ImageLoader.getInstance(context);
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
@@ -235,14 +235,11 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-            InputStream is = null;
-
             try {
-                thumbnailLoader.displayImage(fd, fileThumbnail, null);
+                //Uri uri = ContentUris.withAppendedId(Applica, id)
+                //thumbnailLoader.load(uri, fileThumbnail);//fd
             } catch (Throwable e) {
                 fileThumbnail.setImageDrawable(null);
-            } finally {
-                IOUtils.closeQuietly(is);
             }
         } else {
             if (Condition.in(fileType, Constants.FILE_TYPE_AUDIO, Constants.FILE_TYPE_VIDEOS, Constants.FILE_TYPE_RINGTONES)) {
@@ -253,7 +250,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 }
             }
 
-            thumbnailLoader.displayImage(fd, fileThumbnail, null);
+            Uri uri = Uri.parse("content://media/external/audio/media/" + fd.id + "/albumart");
+            thumbnailLoader.load(uri, fileThumbnail);//fd
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
