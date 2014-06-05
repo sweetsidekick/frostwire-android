@@ -149,11 +149,7 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
                     cancelSearch(view);
                     new DownloadSoundcloudFromUrlTask(getActivity(), query).execute();
                 } else if (query.contains("youtube.com/")) {
-                    String ytId=extractYTId(query);
-                    if (ytId != null){
-                        searchInput.setText(getActivity().getString(R.string.searching_for) + " youtube:"+ytId);
-                        performSearch(ytId,Constants.FILE_TYPE_VIDEOS);
-                    }
+                    performYTSearch(query);
                 }
                 else {
                     performSearch(query, mediaTypeId);
@@ -263,6 +259,14 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         searchInput.setFileTypeCountersVisible(fileTypeCountersVisible);
     }
 
+    public void performYTSearch(String query) {
+        String ytId=extractYTId(query);
+        if (ytId != null){
+            searchInput.setText(getActivity().getString(R.string.searching_for) + " youtube:"+ytId);
+            performSearch(ytId,Constants.FILE_TYPE_VIDEOS);
+        }
+    }
+    
     private void performSearch(String query, int mediaTypeId) {
         adapter.clear();
         adapter.setFileType(mediaTypeId);

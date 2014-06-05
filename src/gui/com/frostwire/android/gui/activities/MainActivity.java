@@ -696,4 +696,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         }
     }
+
+    public void performYTSearch(String ytUrl) {
+        SearchFragment searchFragment = (SearchFragment) getFragmentByMenuId(R.id.menu_main_search);
+        searchFragment.performYTSearch(ytUrl);
+        switchContent(searchFragment);
+    }
 }

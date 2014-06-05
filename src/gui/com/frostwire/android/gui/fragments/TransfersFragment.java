@@ -43,11 +43,13 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.NetworkManager;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.dialogs.MenuDialog;
 import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
+import com.frostwire.android.gui.tasks.DownloadSoundcloudFromUrlTask;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.SoundcloudDownload;
@@ -423,20 +425,35 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     }
 
     public void startTransferFromURL() {
-        String text = addTransferUrlTextView.getText();
-        if (!StringUtils.isNullOrEmpty(text) && (text.startsWith("magnet") || text.startsWith("http"))) {
+        String url = addTransferUrlTextView.getText();
+        if (!StringUtils.isNullOrEmpty(url) && (url.startsWith("magnet") || url.startsWith("http"))) {
             toggleAddTransferControls();
-            if (text.startsWith("http") && text.contains("youtube") || text.contains("soundcloud")) {
-                UIUtils.showLongMessage(getActivity(), R.string.cloud_downloads_coming);
-                //TODO: Cloud downloads from URLS.
-            } else if (text.startsWith("http")) { //magnets are automatically started if found on the clipboard by autoPasteMagnetOrURL
-                TransferManager.instance().downloadTorrent(text.trim());
+            if (url.startsWith("http") && (url.contains("soundcloud.com/") || url.contains("youtube.com/"))) {
+                startCloudTransfer(url);
+            } else if (url.startsWith("http")) { //magnets are automatically started if found on the clipboard by autoPasteMagnetOrURL
+                TransferManager.instance().downloadTorrent(url.trim());
                 UIUtils.showLongMessage(getActivity(), R.string.torrent_url_added);
             }
             addTransferUrlTextView.setText("");
         } else {
             UIUtils.showLongMessage(getActivity(), R.string.please_enter_valid_url);
         }
+    }
+
+    private void startCloudTransfer(String text) {
+        if (text.contains("soundcloud.com/")) {
+            new DownloadSoundcloudFromUrlTask(getActivity(),text.trim()).execute();
+        } else if (text.contains("youtube.com/")) {
+            startYouTubeSearchFromUrl(text.trim());
+        } else {
+            UIUtils.showLongMessage(getActivity(), R.string.cloud_downloads_coming);
+        }
+    }
+
+    private void startYouTubeSearchFromUrl(String ytUrl) {
+        //fragments are not supposed to communicate directly so I'll let my activity know
+        MainActivity activity = (MainActivity) getActivity();
+        activity.performYTSearch(ytUrl);
     }
 
     private void autoPasteMagnetOrURL() {
