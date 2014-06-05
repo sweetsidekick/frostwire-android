@@ -75,6 +75,10 @@ public final class ImageLoader {
         picasso.load(uri).noFade().placeholder(placeholderResId).into(target);
     }
 
+    public void load(Uri uri, ImageView target, int targetWidth, int targetHeight, int placeholderResId) {
+        picasso.load(uri).noFade().resize(targetWidth, targetHeight).placeholder(placeholderResId).into(target);
+    }
+
     private static class ImageDownloader implements Downloader {
 
         private final PackageApplicationDownloader appDownloader;
