@@ -26,7 +26,6 @@ import org.apache.commons.io.FilenameUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +37,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
@@ -60,7 +59,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     private final OnLinkClickListener linkListener;
 
     private int fileType;
-    
+
     private ImageLoader thumbLoader;
 
     public SearchResultListAdapter(Context context) {
@@ -69,8 +68,8 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         this.linkListener = new OnLinkClickListener();
 
         this.fileType = NO_FILE_TYPE;
-        
-        this.thumbLoader = ImageLoader.getDefault();
+
+        this.thumbLoader = ImageLoader.getInstance(context);
     }
 
     public int getFileType() {
@@ -108,7 +107,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     protected void populateFilePart(View view, FileSearchResult sr) {
         ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
         fileTypeIcon.setImageResource(getFileTypeIconId());
-        
+
         TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
         adIndicator.setVisibility(View.GONE);
 
@@ -140,13 +139,12 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     private void populateThumbnail(View view, SearchResult sr) {
-         if (sr.getThumbnailUrl() != null) {
-             ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
-             Drawable defaultDrawable = this.getContext().getResources().getDrawable(getFileTypeIconId());
-             thumbLoader.displayImage(sr.getThumbnailUrl(), fileTypeIcon, defaultDrawable, 0);
-         }
+        if (sr.getThumbnailUrl() != null) {
+            ImageView fileTypeIcon = findView(view, R.id.view_bittorrent_search_result_list_item_filetype_icon);
+            thumbLoader.load(Uri.parse(sr.getThumbnailUrl()), fileTypeIcon, 96, 96, getFileTypeIconId());
+        }
     }
-    
+
     protected void populateYouTubePart(View view, YouTubeCrawledSearchResult sr) {
         TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
         extra.setText(FilenameUtils.getExtension(sr.getFilename()));
@@ -160,7 +158,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             seeds.setText("");
         }
     }
-    
+
     protected void populateAppiaPart(View view, AppiaSearchResult sr) {
         TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
         adIndicator.setVisibility(View.VISIBLE);
@@ -177,7 +175,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         sourceLink.setPaintFlags(sourceLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         sourceLink.setOnClickListener(linkListener);
     }
-    
+
     @Override
     protected void onItemClicked(View v) {
         SearchResult sr = (SearchResult) v.getTag();
@@ -190,9 +188,9 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
 
     protected void searchResultClicked(SearchResult sr) {
     }
-    
+
     protected void onAppiaSearchResultClicked(AppiaSearchResult sr) {
-        openURL(this.getContext(),sr.getDetailsUrl());
+        openURL(this.getContext(), sr.getDetailsUrl());
     }
 
     private void filter() {
@@ -211,7 +209,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
                 mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
             }
 
-            if (accept(sr,mt)) {
+            if (accept(sr, mt)) {
                 l.add(sr);
             }
             fsr.increment(mt);
@@ -249,7 +247,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             return R.drawable.question_mark;
         }
     }
-    
+
     private static void openURL(Context context, String url) {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
@@ -265,7 +263,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
             UXStats.instance().log(UXAction.SEARCH_RESULT_SOURCE_VIEW);
         }
     }
-    
+
     public static class FilteredSearchResults {
         public List<SearchResult> filtered;
         public int numAudio;
@@ -274,7 +272,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         public int numApplications;
         public int numDocuments;
         public int numTorrents;
-        
+
         private void increment(MediaType mt) {
             if (mt != null) {
                 switch (mt.getId()) {

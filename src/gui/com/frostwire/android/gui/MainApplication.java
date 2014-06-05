@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,9 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
-import com.frostwire.android.gui.views.ImageLoader;
+import com.frostwire.android.util.HttpResponseCache;
+import com.frostwire.android.util.ImageLoader;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
@@ -47,11 +50,21 @@ import com.frostwire.vuze.VuzeManager;
  */
 public class MainApplication extends Application {
 
+    private static final Logger LOG = Logger.getLogger(MainApplication.class);
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         ignoreHardwareMenu();
+
+        try {
+            HttpResponseCache.install(this);
+        } catch (IOException e) {
+            LOG.error("Unable to install global http cache", e);
+        }
+
+        com.frostwire.android.util.ImageLoader.getInstance(this);
 
         try {
 
@@ -74,8 +87,6 @@ public class MainApplication extends Application {
             Engine.create(this);
 
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
-
-            ImageLoader.createDefaultInstance(this);
 
             DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
 
@@ -129,6 +140,7 @@ public class MainApplication extends Application {
     @Override
     public void onLowMemory() {
         ImageCache.getInstance(this).evictAll();
+        ImageLoader.getInstance(this).clear();
         super.onLowMemory();
     }
 
