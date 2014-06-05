@@ -30,7 +30,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Cache;
 import com.squareup.picasso.Downloader;
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 
@@ -46,6 +48,7 @@ public final class ImageLoader {
 
     private static final String APPLICATION_AUTHORITY = "application";
 
+    private final Cache cache;
     private final Picasso picasso;
 
     private static ImageLoader instance;
@@ -58,7 +61,8 @@ public final class ImageLoader {
     }
 
     private ImageLoader(Context context) {
-        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).build();
+        this.cache = new LruCache(context);
+        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).memoryCache(cache).build();
 
         picasso.setIndicatorsEnabled(true);
     }
@@ -77,6 +81,10 @@ public final class ImageLoader {
 
     public void load(Uri uri, ImageView target, int targetWidth, int targetHeight, int placeholderResId) {
         picasso.load(uri).noFade().resize(targetWidth, targetHeight).placeholder(placeholderResId).into(target);
+    }
+
+    public void clear() {
+        cache.clear();
     }
 
     private static class ImageDownloader implements Downloader {

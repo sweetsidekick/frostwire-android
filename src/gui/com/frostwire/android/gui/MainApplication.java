@@ -36,6 +36,7 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.HttpResponseCache;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeConfiguration;
@@ -139,6 +140,7 @@ public class MainApplication extends Application {
     @Override
     public void onLowMemory() {
         ImageCache.getInstance(this).evictAll();
+        ImageLoader.getInstance(this).clear();
         super.onLowMemory();
     }
 
