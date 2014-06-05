@@ -18,12 +18,19 @@
 
 package com.frostwire.android.gui.tasks;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 
+import com.frostwire.android.R;
+import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.dialogs.ConfirmListDialog;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.ContextTask;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudItem;
@@ -31,15 +38,39 @@ import com.frostwire.search.soundcloud.SoundcloudPlaylist;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
+import com.frostwire.util.Ref;
 
+/*
+ * @author aldenml
+ * @author gubatron
+ */
 public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<SoundcloudSearchResult>> {
     private final String soundcloudUrl;
+    private WeakReference<ConfirmListDialog> dlgRef;
     
     public DownloadSoundcloudFromUrlTask(Context ctx, String soundcloudUrl) {
         super(ctx);
         this.soundcloudUrl = soundcloudUrl;
     }
     
+    private ConfirmListDialog createConfirmListDialog(Context ctx, List<SoundcloudSearchResult> results) {
+        String title = ctx.getString(R.string.confirm_download);
+        String whatToDownload = ctx.getString((results.size() > 1) ? R.string.playlist : R.string.track); 
+        String totalSize = UIUtils.getBytesInHuman(getTotalSize(results));
+        String text = ctx.getString(R.string.are_you_sure_you_want_to_download_the_following, whatToDownload, totalSize);
+        return new ConfirmListDialog<AbstractListAdapter>(title, text, 
+                new SimpleSoundcloudSearchResultAdapter(ctx, results), 
+                new OnStartDownloadsClickListener(ctx, results), null);
+    }
+
+    private long getTotalSize(List<SoundcloudSearchResult> results) {
+        long totalSizeInBytes = 0;
+        for (SoundcloudSearchResult sr : results) {
+            totalSizeInBytes += sr.getSize();
+        }
+        return totalSizeInBytes;
+    }
+
     public static void startDownloads(Context ctx, List<? extends SearchResult> srs) {
         if (srs!=null && !srs.isEmpty()) {
             for (SearchResult sr : srs) {
@@ -51,9 +82,24 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
     }
 
     @Override
-    protected void onPostExecute(Context ctx, List<SoundcloudSearchResult> result) {
-        if (!result.isEmpty()) {
-            startDownloads(ctx, result);
+    protected void onPostExecute(Context ctx, List<SoundcloudSearchResult> results) {
+        if (!results.isEmpty()) {
+            MainActivity activity = (MainActivity) ctx;
+            ConfirmListDialog dlg = createConfirmListDialog(ctx, results);
+            
+            //otherwise I can't dismiss the dialog, so I set the reference after the dialog has been created,
+            //hopefully faster than the user can click yes. #uglyhack
+            OnStartDownloadsClickListener onYesListener = (OnStartDownloadsClickListener) dlg.getOnYesListener();
+            onYesListener.setDialog(dlg);
+            dlgRef = new WeakReference<ConfirmListDialog>(dlg);
+            
+            dlg.show(activity.getFragmentManager());
+        }
+    }
+    
+    public void dismissDialog() {
+        if (Ref.alive(dlgRef)) {
+            dlgRef.get().dismiss();
         }
     }
 
@@ -84,5 +130,47 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             e.printStackTrace();
         }
         return scResults;
+    }
+    
+    private static class SimpleSoundcloudSearchResultAdapter extends AbstractListAdapter<SoundcloudSearchResult> {
+
+        public SimpleSoundcloudSearchResultAdapter(Context context, List<SoundcloudSearchResult> list) {
+            super(context, R.layout.list_item_track_confirmation_dialog, list);
+        }
+
+        @Override
+        protected void populateView(View view, SoundcloudSearchResult sr) {
+            TextView trackTitle = findView(view, R.id.list_item_track_confirmation_dialog_track_title);
+            trackTitle.setText(sr.getDisplayName());
+            
+            TextView trackSizeInHuman = findView(view, R.id.list_item_track_confirmation_dialog_file_size_in_human);
+            trackSizeInHuman.setText(UIUtils.getBytesInHuman(sr.getSize()));
+        }
+    }
+    
+    private static class OnStartDownloadsClickListener implements View.OnClickListener {
+        private final WeakReference<Context> ctxRef;
+        private final WeakReference<List<SoundcloudSearchResult>> resultsRef;
+        private WeakReference<ConfirmListDialog> dlgRef;
+        
+        public OnStartDownloadsClickListener(Context ctx, List<SoundcloudSearchResult> results) {
+            ctxRef = new WeakReference<Context>(ctx);
+            resultsRef = new WeakReference<List<SoundcloudSearchResult>>(results);
+        }
+        
+        public void setDialog(ConfirmListDialog dlg){
+            dlgRef = new WeakReference<ConfirmListDialog>(dlg);
+        }
+        
+        @Override
+        public void onClick(View v) {
+            if (Ref.alive(ctxRef)&& Ref.alive(resultsRef)) {
+                startDownloads(ctxRef.get(), resultsRef.get());
+                
+                if (Ref.alive(dlgRef)){
+                    dlgRef.get().dismiss();
+                }
+            }
+        }
     }
 }
