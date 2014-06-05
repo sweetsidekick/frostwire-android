@@ -64,9 +64,10 @@ public final class TableFetchers {
         private int sizeCol;
         private int dateAddedCol;
         private int dateModifiedCol;
+        private int albumIdCol;
 
         public String[] getColumns() {
-            return new String[] { AudioColumns._ID, AudioColumns.ARTIST, AudioColumns.TITLE, AudioColumns.ALBUM, AudioColumns.DATA, AudioColumns.YEAR, AudioColumns.MIME_TYPE, AudioColumns.SIZE, AudioColumns.DATE_ADDED, AudioColumns.DATE_MODIFIED };
+            return new String[] { AudioColumns._ID, AudioColumns.ARTIST, AudioColumns.TITLE, AudioColumns.ALBUM, AudioColumns.DATA, AudioColumns.YEAR, AudioColumns.MIME_TYPE, AudioColumns.SIZE, AudioColumns.DATE_ADDED, AudioColumns.DATE_MODIFIED, AudioColumns.ALBUM_ID };
         }
 
         public String getSortByExpression() {
@@ -88,6 +89,7 @@ public final class TableFetchers {
             sizeCol = cur.getColumnIndex(AudioColumns.SIZE);
             dateAddedCol = cur.getColumnIndex(AudioColumns.DATE_ADDED);
             dateModifiedCol = cur.getColumnIndex(AudioColumns.DATE_MODIFIED);
+            albumIdCol = cur.getColumnIndex(AudioColumns.ALBUM_ID);
         }
 
         public FileDescriptor fetch(Cursor cur) {
@@ -101,8 +103,12 @@ public final class TableFetchers {
             int size = cur.getInt(sizeCol);
             long dateAdded = cur.getLong(dateAddedCol);
             long dateModified = cur.getLong(dateModifiedCol);
+            long albumId = cur.getLong(albumIdCol);
 
-            return new FileDescriptor(Integer.valueOf(id), artist, title, album, year, path, Constants.FILE_TYPE_AUDIO, mime, size, dateAdded, dateModified, true);
+            FileDescriptor fd = new FileDescriptor(Integer.valueOf(id), artist, title, album, year, path, Constants.FILE_TYPE_AUDIO, mime, size, dateAdded, dateModified, true);
+            fd.albumId = albumId;
+            
+            return fd;
         }
 
         public byte getFileType() {

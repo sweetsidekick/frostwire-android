@@ -250,7 +250,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 }
             }
 
-            Uri uri = Uri.parse("content://media/external/audio/media/" + fd.id + "/albumart");
+            Uri uri = Uri.parse("content://media/external/audio/albumart/" + fd.albumId);
             thumbnailLoader.load(uri, fileThumbnail);//fd
         }
 
