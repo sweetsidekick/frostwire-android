@@ -27,6 +27,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -250,8 +251,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
                 }
             }
 
-            Uri uri = Uri.parse("content://media/external/audio/albumart/" + fd.albumId);
-            thumbnailLoader.load(uri, fileThumbnail);//fd
+            if (fd.fileType == Constants.FILE_TYPE_AUDIO) {
+                Uri uri = Uri.parse("content://media/external/audio/albumart/" + fd.albumId);
+                thumbnailLoader.load(uri, fileThumbnail);
+            } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
+                Uri uri = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, fd.id);
+                thumbnailLoader.load(uri, fileThumbnail, 96, 96);
+            }
         }
 
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);

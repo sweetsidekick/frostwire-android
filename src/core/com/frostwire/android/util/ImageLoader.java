@@ -58,6 +58,10 @@ public final class ImageLoader {
         picasso.load(uri).noFade().into(target);
     }
 
+    public void load(Uri uri, ImageView target, int targetWidth, int targetHeight) {
+        picasso.load(uri).noFade().resize(targetWidth, targetHeight).into(target);
+    }
+
     private static class UrlConnectionDownloader implements Downloader {
 
         private static final int DEFAULT_READ_TIMEOUT = 20 * 1000; // 20s
