@@ -54,18 +54,6 @@ public final class ApolloUtils {
     }
 
     /**
-     * Creates a new instance of the {@link ImageCache} and {@link ImageFetcher}
-     * 
-     * @param activity The {@link Activity} to use.
-     * @return A new {@link ImageFetcher} used to fetch images asynchronously.
-     */
-    public static final ImageFetcher getImageFetcher(final Activity activity) {
-        final ImageFetcher imageFetcher = ImageFetcher.getInstance(activity);
-        imageFetcher.setImageCache(ImageCache.getInstance(activity));
-        return imageFetcher;
-    }
-    
-    /**
      * Execute an {@link AsyncTask} on a thread pool
      * 
      * @param forceSerial True to force the task to run in serial order

@@ -543,8 +543,6 @@ public class MusicPlaybackService extends Service {
 
         // Initialize the image fetcher
         mImageFetcher = ImageFetcher.getInstance(this);
-        // Initialize the image cache
-        mImageFetcher.setImageCache(ImageCache.getInstance(this));
 
         // Start up the thread running the service. Note that we create a
         // separate thread because the service normally runs in the process's

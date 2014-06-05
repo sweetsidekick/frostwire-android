@@ -19,8 +19,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
-import com.andrew.apollo.cache.ImageFetcher;
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
 
@@ -47,11 +45,6 @@ public class DeleteDialog extends DialogFragment {
      * The item(s) to delete
      */
     private long[] mItemList;
-
-    /**
-     * The image cache
-     */
-    private ImageFetcher mFetcher;
 
     /**
      * Empty constructor as per the {@link Fragment} documentation
@@ -82,15 +75,11 @@ public class DeleteDialog extends DialogFragment {
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final String delete = getString(R.string.context_menu_delete);
         final Bundle arguments = getArguments();
-        // Get the image cache key
-        final String key = arguments.getString("cachekey");
         // Get the track(s) to delete
         mItemList = arguments.getLongArray("items");
         // Get the dialog title
         final String title = arguments.getString(NAME);
         final String dialogTitle = getString(R.string.delete_dialog_title, title);
-        // Initialize the image cache
-        mFetcher = ApolloUtils.getImageFetcher(getActivity());
         // Build the dialog
         return new AlertDialog.Builder(getActivity()).setTitle(dialogTitle)
                 .setMessage(R.string.cannot_be_undone)
@@ -98,8 +87,6 @@ public class DeleteDialog extends DialogFragment {
 
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
-                        // Remove the items from the image cache
-                        mFetcher.removeFromCache(key);
                         // Delete the selected item(s)
                         MusicUtils.deleteTracks(getActivity(), mItemList);
                         if (getActivity() instanceof DeleteDialogCallback) {

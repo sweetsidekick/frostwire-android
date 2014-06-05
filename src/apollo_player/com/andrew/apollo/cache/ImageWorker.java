@@ -405,29 +405,6 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Subclasses should override this to define any processing or work that
-     * must happen to produce the final {@link Bitmap}. This will be executed in
-     * a background thread and be long running.
-     *
-     * @param key The key to identify which image to process, as provided by
-     *            {@link ImageWorker#loadImage(mKey, ImageView)}
-     * @return The processed {@link Bitmap}.
-     */
-    protected abstract Bitmap processBitmap(String key);
-
-    /**
-     * Subclasses should override this to define any processing or work that
-     * must happen to produce the URL needed to fetch the final {@link Bitmap}.
-     *
-     * @param artistName The artist name param used in the Last.fm API.
-     * @param albumName The album name param used in the Last.fm API.
-     * @param imageType The type of image URL to fetch for.
-     * @return The image URL for an artist image or album image.
-     */
-    protected abstract String processImageUrl(String artistName, String albumName,
-            ImageType imageType);
-
-    /**
      * Used to define what type of image URL to fetch for, artist or album.
      */
     public enum ImageType {

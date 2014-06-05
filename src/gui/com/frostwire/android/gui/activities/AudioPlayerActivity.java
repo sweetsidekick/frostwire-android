@@ -183,7 +183,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         mToken = MusicUtils.bindToService(this, this);
 
         // Initialize the image fetcher/cache
-        mImageFetcher = ApolloUtils.getImageFetcher(this);
+        mImageFetcher = ImageFetcher.getInstance(this);
 
         // Initialize the handler used to update the current time
         mTimeHandler = new TimeHandler(this);
@@ -433,7 +433,6 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     protected void onStop() {
         super.onStop();
         MusicUtils.notifyForegroundStateChanged(this, false);
-        mImageFetcher.flush();
     }
 
     /**

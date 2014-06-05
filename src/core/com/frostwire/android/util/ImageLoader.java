@@ -83,6 +83,14 @@ public final class ImageLoader {
         picasso.load(uri).noFade().resize(targetWidth, targetHeight).placeholder(placeholderResId).into(target);
     }
 
+    public Bitmap get(Uri uri) {
+        try {
+            return picasso.load(uri).get();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public void clear() {
         cache.clear();
     }
