@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.os.Environment;
-import android.os.StatFs;
 
 /**
  * @author gubatron
@@ -67,38 +65,15 @@ public final class HttpResponseCache extends ResponseCache implements Closeable 
         return delegate.put(uri, connection);
     }
 
-    public static HttpResponseCache install(Context ctx) throws IOException {
+    public static HttpResponseCache install(Context context) throws IOException {
         ResponseCache installed = ResponseCache.getDefault();
         if (installed instanceof Closeable) {
             ((Closeable) installed).close();
         }
 
-        File directory = new File(getCacheDir(ctx), "http");
-        long maxSize = calculateDiskCacheSize(directory);
+        File directory = Caches.getCacheDir(context, "http");
+        long maxSize = Caches.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
 
         return new HttpResponseCache(android.net.http.HttpResponseCache.install(directory, maxSize));
-    }
-
-    private static File getCacheDir(Context ctx) {
-        if (Environment.isExternalStorageRemovable()) {
-            return ctx.getCacheDir();
-        } else {
-            return ctx.getExternalCacheDir();
-        }
-    }
-
-    static long calculateDiskCacheSize(File dir) {
-        long size = MIN_DISK_CACHE_SIZE;
-
-        try {
-            StatFs statFs = new StatFs(dir.getAbsolutePath());
-            long available = ((long) statFs.getBlockCount()) * statFs.getBlockSize();
-            // Target 2% of the total space.
-            size = available / 50;
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        // Bound inside min/max size for disk cache.
-        return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
     }
 }

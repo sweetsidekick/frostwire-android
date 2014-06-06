@@ -18,6 +18,7 @@
 
 package com.frostwire.android.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,9 +31,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Cache;
 import com.squareup.picasso.Downloader;
-import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 
@@ -44,11 +43,14 @@ import com.squareup.picasso.Picasso.Builder;
  */
 public final class ImageLoader {
 
+    private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+
     private static final String SCHEME_PACKAGE = "package";
 
     private static final String APPLICATION_AUTHORITY = "application";
 
-    private final Cache cache;
+    private final ImageCache cache;
     private final Picasso picasso;
 
     private static ImageLoader instance;
@@ -61,7 +63,11 @@ public final class ImageLoader {
     }
 
     private ImageLoader(Context context) {
-        this.cache = new LruCache(context);
+        File directory = Caches.getCacheDir(context, "picasso");
+        long diskSize = Caches.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
+        int memSize = Caches.calculateMemoryCacheSize(context);
+
+        this.cache = new ImageCache(directory, diskSize, memSize);
         this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).memoryCache(cache).build();
 
         picasso.setIndicatorsEnabled(true);
