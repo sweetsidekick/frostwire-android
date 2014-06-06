@@ -2431,6 +2431,9 @@ public class MusicPlaybackService extends Service {
          * @return The position of the next track to play
          */
         public int nextInt(final int interval) {
+            if (interval <= 0) {
+                return 0;
+            }
             int next;
             do {
                 next = mRandom.nextInt(interval);
