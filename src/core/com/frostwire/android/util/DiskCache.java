@@ -130,6 +130,10 @@ public final class DiskCache {
         return cache.getMaxSize();
     }
 
+    public void delete() throws IOException {
+        cache.delete();
+    }
+
     private void writeTo(Editor editor, byte[] data) throws IOException {
         OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
         try {

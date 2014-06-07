@@ -63,9 +63,9 @@ public final class ImageLoader {
     }
 
     private ImageLoader(Context context) {
-        File directory = Caches.getCacheDir(context, "picasso");
-        long diskSize = Caches.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
-        int memSize = Caches.calculateMemoryCacheSize(context);
+        File directory = SystemUtils.getCacheDir(context, "picasso");
+        long diskSize = SystemUtils.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
+        int memSize = SystemUtils.calculateMemoryCacheSize(context);
 
         this.cache = new ImageCache(directory, diskSize, memSize);
         this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).memoryCache(cache).build();

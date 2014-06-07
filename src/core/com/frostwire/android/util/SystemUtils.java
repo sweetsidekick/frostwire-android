@@ -34,9 +34,9 @@ import android.os.StatFs;
  * @author aldenml
  *
  */
-public final class Caches {
+public final class SystemUtils {
 
-    private Caches() {
+    private SystemUtils() {
     }
 
     public static File getCacheDir(Context context, String directory) {

@@ -37,6 +37,7 @@ import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.HttpResponseCache;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.logging.Logger;
+import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.util.DirectoryUtils;
 import com.frostwire.vuze.VuzeConfiguration;
 import com.frostwire.vuze.VuzeManager;
@@ -64,6 +65,7 @@ public class MainApplication extends Application {
         }
 
         com.frostwire.android.util.ImageLoader.getInstance(this);
+        CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache(this));
 
         try {
 

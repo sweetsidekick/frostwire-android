@@ -33,7 +33,7 @@ import com.squareup.picasso.LruCache;
  * @author aldenml
  * 
  */
-public final class ImageCache implements Cache {
+final class ImageCache implements Cache {
 
     private final DiskCache disk;
     private final LruCache mem;

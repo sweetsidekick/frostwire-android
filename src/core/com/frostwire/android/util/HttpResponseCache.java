@@ -71,8 +71,8 @@ public final class HttpResponseCache extends ResponseCache implements Closeable 
             ((Closeable) installed).close();
         }
 
-        File directory = Caches.getCacheDir(context, "http");
-        long maxSize = Caches.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
+        File directory = SystemUtils.getCacheDir(context, "http");
+        long maxSize = SystemUtils.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
 
         return new HttpResponseCache(android.net.http.HttpResponseCache.install(directory, maxSize));
     }

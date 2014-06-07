@@ -80,7 +80,6 @@ public final class LocalSearchEngine {
     }
 
     private LocalSearchEngine(String androidId) {
-        CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache());
         this.manager = new SearchManagerImpl();
         this.manager.registerListener(new ManagerListener());
         this.MIN_SEEDS_TORRENT_RESULT = ConfigurationManager.instance().getInt(Constants.PREF_KEY_SEARCH_MIN_SEEDS_FOR_TORRENT_RESULT);
