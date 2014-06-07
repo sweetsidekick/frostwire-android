@@ -43,7 +43,6 @@ public final class SystemUtils {
     private static final String DESKTOP_FILES_FOLDER_NAME = "DesktopFiles";
     private static final String TEMP_FOLDER_NAME = "Temp";
     private static final String AZUREUS_FOLDER_NAME = ".azureus";
-    private static final String DEEPSCAN_FOLDER_NAME = ".deepscan";
 
     private static final String APPLICATION_NAME = "frostwire.apk";
 
@@ -96,10 +95,6 @@ public final class SystemUtils {
         }
 
         return f;
-    }
-
-    public static File getDeepScanTorrentsDirectory() {
-        return createFolder(getApplicationStorageDirectory(), DEEPSCAN_FOLDER_NAME);
     }
 
     public static File getSaveDirectory(byte fileType) {
