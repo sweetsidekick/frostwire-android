@@ -81,6 +81,8 @@ public class ConfirmListDialog<Adapter extends AbstractListAdapter> extends Abst
 
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        
         dlg.setTitle(title);
         
         TextView textView = findView(dlg, R.id.dialog_confirm_list_text);

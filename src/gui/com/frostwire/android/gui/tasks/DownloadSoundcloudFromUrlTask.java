@@ -109,21 +109,29 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         
         //resolve track information using http://api.soundcloud.com/resolve?url=<url>&client_id=b45b1aa10f1ac2941910a7f0d10f8e28
         final String clientId="b45b1aa10f1ac2941910a7f0d10f8e28";
+        final String appVersion="dd9d3970";
         try {
-            final String resolveURL = "http://api.soundcloud.com/resolve.json?url="+soundcloudUrl+"&client_id="+clientId;
+            String url = soundcloudUrl;
+            if (soundcloudUrl.contains("?in=")) {
+                url = soundcloudUrl.substring(0, url.indexOf("?in="));
+            }
+
+            final String resolveURL = "http://api.soundcloud.com/resolve.json?url="+url+"&client_id="+clientId+"&app_version="+appVersion;;
             final String json = HttpClientFactory.newInstance().get(resolveURL,10000);
 
             if (soundcloudUrl.contains("/sets/")) {
                 //download a whole playlist
                 final SoundcloudPlaylist playlist = JsonUtils.toObject(json, SoundcloudPlaylist.class);
-                for (SoundcloudItem scItem : playlist.tracks) {
-                    scResults.add(new SoundcloudSearchResult(scItem, clientId));
+                if (playlist.tracks != null) {
+                    for (SoundcloudItem scItem : playlist.tracks) {
+                        scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
+                    }
                 }
             } else {
                 //download single track
                 final SoundcloudItem scItem = JsonUtils.toObject(json, SoundcloudItem.class);
                 if (scItem != null) {
-                    scResults.add(new SoundcloudSearchResult(scItem, clientId));
+                    scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
                 }
             }
         } catch (Throwable e) {
