@@ -24,6 +24,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -58,11 +60,12 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         String whatToDownload = ctx.getString((results.size() > 1) ? R.string.playlist : R.string.track); 
         String totalSize = UIUtils.getBytesInHuman(getTotalSize(results));
         String text = ctx.getString(R.string.are_you_sure_you_want_to_download_the_following, whatToDownload, totalSize);
-        return new ConfirmListDialog<AbstractListAdapter>(title, text, 
-                new SimpleSoundcloudSearchResultAdapter(ctx, results), 
-                new OnStartDownloadsClickListener(ctx, results), null);
+        
+        //ConfirmListDialog
+        ConfirmListDialog dlg = ConfirmSoundcloudDownloadDialog.newInstance(title, text, results, new OnStartDownloadsClickListener(ctx, results));
+        return dlg;
     }
-
+    
     private long getTotalSize(List<SoundcloudSearchResult> results) {
         long totalSizeInBytes = 0;
         for (SoundcloudSearchResult sr : results) {
@@ -179,6 +182,37 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
                     dlgRef.get().dismiss();
                 }
             }
+        }
+    }
+
+    private static class SoundcloudSearchResultList {
+        List<SoundcloudSearchResult> listData;
+    }
+    
+    public static class ConfirmSoundcloudDownloadDialog extends ConfirmListDialog<SimpleSoundcloudSearchResultAdapter,SoundcloudSearchResult> {
+        public ConfirmSoundcloudDownloadDialog() {
+            super();
+        }
+        
+        public static ConfirmSoundcloudDownloadDialog newInstance(String dialogTitle, String dialogText, List<SoundcloudSearchResult> listData, OnStartDownloadsClickListener onYesListener) {
+            ConfirmSoundcloudDownloadDialog dlg = new ConfirmSoundcloudDownloadDialog();
+            SoundcloudSearchResultList srList = new SoundcloudSearchResultList();
+            srList.listData = listData;
+            dlg.prepareArguments(dialogTitle, dialogText, JsonUtils.toJson(srList));
+            dlg.setOnYesListener(onYesListener);
+            return dlg;
+        }
+
+        @Override
+        protected List<SoundcloudSearchResult> initListAdapter(final ListView listView, String listDataInJSON) {
+            SoundcloudSearchResultList srList = JsonUtils.toObject(listDataInJSON, SoundcloudSearchResultList.class);
+            listView.setAdapter(new SimpleSoundcloudSearchResultAdapter(getActivity(), srList.listData));
+            return srList.listData;
+        }
+
+        @Override
+        protected OnStartDownloadsClickListener initOnYesListener(Button yesButton, List<SoundcloudSearchResult> listData) {
+            return new OnStartDownloadsClickListener(getActivity(), listData);
         }
     }
 }

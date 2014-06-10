@@ -44,6 +44,8 @@ import android.widget.LinearLayout;
 import com.frostwire.android.R;
 
 /**
+ * TODO: Use WeakReference for Context.
+ * 
  * We extend from ListAdapter to populate our ListViews.
  * This one allows us to click and long click on the elements of our ListViews.
  * 
