@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -42,9 +43,9 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 
 import com.frostwire.android.R;
+import com.frostwire.util.Ref;
 
 /**
- * TODO: Use WeakReference for Context.
  * 
  * We extend from ListAdapter to populate our ListViews.
  * This one allows us to click and long click on the elements of our ListViews.
@@ -58,7 +59,7 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
 
     private static String TAG = "FW.AbstractListAdapter";
 
-    private final Context context;
+    private final WeakReference<Context> context;
     private final int viewItemId;
 
     private final OnClickListener viewOnClickListener;
@@ -77,9 +78,8 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
     protected List<T> visualList;
 
     public AbstractListAdapter(Context context, int viewItemId, List<T> list, Set<T> checked) {
-        this.context = context;
+        this.context = new WeakReference<Context>(context);
         this.viewItemId = viewItemId;
-
         this.viewOnClickListener = new ViewOnClickListener();
         this.viewOnLongClickListener = new ViewOnLongClickListener();
         this.viewOnKeyListener = new ViewOnKeyListener();
@@ -148,7 +148,11 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
     }
 
     public Context getContext() {
-        return context;
+        Context result = null;
+        if (Ref.alive(context)) {
+            result = context.get();
+        }
+        return result;
     }
 
     /** This will return the count for the current file type */
@@ -263,12 +267,13 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
     public View getView(int position, View view, ViewGroup parent) {
 
         T item = getItem(position);
-
-        if (view == null) {
+        Context ctx = getContext();
+        
+        if (view == null && ctx != null) {
             // every list view item is wrapped in a generic container which has a hidden checkbox on the left hand side.
-            view = View.inflate(context, R.layout.view_selectable_list_item, null);
+            view = View.inflate(ctx, R.layout.view_selectable_list_item, null);
             LinearLayout container = findView(view, R.id.view_selectable_list_item_container);
-            View.inflate(context, viewItemId, container);
+            View.inflate(ctx, viewItemId, container);
         }
 
         try {
