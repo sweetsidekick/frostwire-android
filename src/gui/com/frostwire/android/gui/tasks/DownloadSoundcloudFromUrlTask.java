@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -179,9 +180,9 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             TextView trackSizeInHuman = findView(view, R.id.list_item_track_confirmation_dialog_file_size_in_human);
             trackSizeInHuman.setText(UIUtils.getBytesInHuman(sr.getSize()));
             
-            if (StringUtils.isNullOrEmpty(Usr.getThumbnailUrl()) {
-                ImageView = findView(view, R.id.list_item_track_confirmation_dialog_art);
-                ImageLoader.getInstance(getContext()).load(sr.getThumbnailUrl(), imageView);
+            if (!StringUtils.isNullOrEmpty(sr.getThumbnailUrl())) {
+                ImageView imageView = findView(view, R.id.list_item_track_confirmation_dialog_art);
+                ImageLoader.getInstance(getContext()).load(Uri.parse(sr.getThumbnailUrl()), imageView);
             }
         }
     }
