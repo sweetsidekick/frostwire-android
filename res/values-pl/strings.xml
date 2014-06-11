@@ -103,7 +103,7 @@
     <string name="remove">Usuń</string>
     <string name="try_valid_port_next_time">Spróbuj poprawny port następnym razem 1000 i 65500</string>
     <string name="still_listening_on_port">Wciąż nasłuchuje na porcie</string>
-    <string name="uh_still_listening_on_port">Uh... Wciąż nasłuchuje na porcie</string>
+    <string name="uh_still_listening_on_port">Uh&#8230; Wciąż nasłuchuje na porcie</string>
     <string name="new_port_saved">Nowy Port Zapisany</string>
     <string name="now_on_port">Obecnie na Porcie</string>
     <string name="stop_all_transfers_message">Spowoduje to anulowanie wszystkich bieżących pobierań i tych oczekujących w kolejce. Wszystkie przesyłane dane zostaną utracone. Jesteś tego pewny?</string>
@@ -284,7 +284,7 @@
     <string name="peer_http_download_status_waiting">Oczekiwanie</string>
     <string name="peer_http_download_status_unknown">Nieznany</string>
     <string name="peer_http_upload_status_uploading">Przesyłanie</string>
-    <string name="peer_http_upload_status_  ">Strumieniowanie</string>
+    <string name="peer_http_upload_status_streaming">Strumieniowanie</string>
     <string name="peer_http_upload_status_complete">Zakończony</string>
     <string name="peer_http_upload_status_error">Błąd</string>
     <string name="peer_http_upload_status_cancelled">Anulowany</string>
@@ -455,7 +455,6 @@
     <string name="torrent_transfer_consuming_mobile_data">Uwaga: Ten transfer torrentu zużywa Twój mobilny plan interntowy. (Sprawdź ustawienia Sieci jeśli chcesz pobierać pliki z sieci BitTorrent tylko poprzez Wi-Fi.)</string>
     <string name="transfers_context_resume_all_torrent_transfers">Wznów wszystkie transfery torrentów</string>
     <string name="use_bitsnoop">Użyj BitSnoop</string>
-    <string name="peer_http_upload_status_streaming">Strumieniowanie</string>
     <string name="use_yify_summary">Yify jest oparty na magnetach, działa tylko na Wi-Fi</string>
     <string name="donate_in_btc">Podaruj w bitcoin</string>
     <string name="use_torrentsfm">Użyj Torrents.fm</string>

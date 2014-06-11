@@ -46,7 +46,7 @@
     <string name="clear_finished">embersihan Selesai</string>
     <string name="support_free_software">Dukung Software Gratis</string>
     <string name="show_love">Cinta dengan FrostWire?</string>
-    <string name="waiting">Sedang Menunggu...</string>
+    <string name="waiting">Sedang Menunggu&#8230;</string>
     <string name="use_icons_to_browse">Gunakan ikon-ikon ini untuk menjelajahi arsip-arsip.</string>
     <string name="type_to_filter_results">Ketik untuk menapis hasil-hasilnya.</string>
     <string name="fetching_file_list">Mengambil daftar arsip yang dibagi</string>
@@ -116,7 +116,7 @@
     <string name="minimize_frostwire">Memperkecil FrostWire</string>
     <string name="are_you_sure_you_wanna_leave">Apakah Anda yakin kembali ke tampilan beranda?</string>
     <string name="set_as_ringtone">Atur sebagai Nada Dering</string>
-    <string name="set_as_wallpaperr">Atur sebagai Wallpaper</string>
+    <string name="set_as_wallpaper">Atur sebagai Wallpaper</string>
     <string name="failed_to_set_wallpaper">Gagal mengatur Wallpaper</string>
     <string name="tell_others_chooser">Tweet / SMS /Email</string>
     <string name="tell_others_subject">Sudahkah mendapatkan FrostWire untuk Android?</string>
@@ -124,7 +124,7 @@
     <string name="before_getting_started">Sebelum Anda memulai</string>
     <string name="user_connecting">Pengguna sedang menyambungkan</string>
     <string name="accept_connection_from">Terima sambungan dari</string>
-    <string name="please_enter_a_numberr">Silahkan masukkan nomer</string>
+    <string name="please_enter_a_number">Silahkan masukkan nomer</string>
     <string name="gotta_have_at_least_one_upload_slot">Setidaknya, harus punya satu slot unggahan</string>
     <string name="only_up_to_n_uploads_at_the_same_time">Hanya sampai %s unggahan pada waktu bersamaan</string>
     <string name="max_simultaneous_uploads_saved_n">Unggahan Bersama Maksimal yang disimpan (%s)</string>
@@ -229,10 +229,10 @@
     <string name="search_settings">Pengaturan Pencarian</string>
     <string name="use_kat">Gunakan KAT.ph</string>
     <string name="use_clearbits">Gunakan ClearBits.net</string>
-    <string name="use_extraTorrent">Gunakan ExtraTorrent.com</string>
+    <string name="use_extratorrent">Gunakan ExtraTorrent.com</string>
     <string name="use_isohunt">Gunakan ISOHunt.com</string>
     <string name="use_mininova">Gunakan Mininova.org</string>
-    <string name="use_thepiratebay">Gunakan ThePirateBay.org</string>
+    <string name="use_tpb">Gunakan ThePirateBay.org</string>
     <string name="use_vertor">Gunakan Vertor.com</string>
     <string name="activity_media_player_image_description">Gambar Media</string>
     <string name="ringtone_set">Set nada dering</string>
