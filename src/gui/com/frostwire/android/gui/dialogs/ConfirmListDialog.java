@@ -18,8 +18,6 @@
 
 package com.frostwire.android.gui.dialogs;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
@@ -34,9 +32,6 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.util.JsonUtils;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * This dialog should evolve to allow us for reuse on a number of situations in which you
@@ -55,7 +50,7 @@ import com.google.gson.reflect.TypeToken;
  * @param <Adapter>
  * @param <I>
  */
-public abstract class ConfirmListDialog<Adapter extends AbstractListAdapter, T> extends AbstractDialog {
+public abstract class ConfirmListDialog<Adapter extends AbstractListAdapter<?>,T> extends AbstractDialog {
     
     /**
      * TODOS: 1. Add an optional text filter control that will be connected to the adapter.

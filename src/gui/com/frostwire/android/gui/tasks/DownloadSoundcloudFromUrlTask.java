@@ -48,21 +48,21 @@ import com.frostwire.util.Ref;
  */
 public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<SoundcloudSearchResult>> {
     private final String soundcloudUrl;
-    private WeakReference<ConfirmListDialog> dlgRef;
+    private WeakReference<ConfirmSoundcloudDownloadDialog> dlgRef;
     
     public DownloadSoundcloudFromUrlTask(Context ctx, String soundcloudUrl) {
         super(ctx);
         this.soundcloudUrl = soundcloudUrl;
     }
     
-    private ConfirmListDialog createConfirmListDialog(Context ctx, List<SoundcloudSearchResult> results) {
+    private ConfirmSoundcloudDownloadDialog createConfirmListDialog(Context ctx, List<SoundcloudSearchResult> results) {
         String title = ctx.getString(R.string.confirm_download);
         String whatToDownload = ctx.getString((results.size() > 1) ? R.string.playlist : R.string.track); 
         String totalSize = UIUtils.getBytesInHuman(getTotalSize(results));
         String text = ctx.getString(R.string.are_you_sure_you_want_to_download_the_following, whatToDownload, totalSize);
         
         //ConfirmListDialog
-        ConfirmListDialog dlg = ConfirmSoundcloudDownloadDialog.newInstance(title, text, results, new OnStartDownloadsClickListener(ctx, results));
+        ConfirmSoundcloudDownloadDialog dlg = ConfirmSoundcloudDownloadDialog.newInstance(title, text, results, new OnStartDownloadsClickListener(ctx, results));
         return dlg;
     }
     
@@ -88,13 +88,13 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
     protected void onPostExecute(Context ctx, List<SoundcloudSearchResult> results) {
         if (!results.isEmpty()) {
             MainActivity activity = (MainActivity) ctx;
-            ConfirmListDialog dlg = createConfirmListDialog(ctx, results);
+            ConfirmSoundcloudDownloadDialog dlg = createConfirmListDialog(ctx, results);
             
             //otherwise I can't dismiss the dialog, so I set the reference after the dialog has been created,
             //hopefully faster than the user can click yes. #uglyhack
             OnStartDownloadsClickListener onYesListener = (OnStartDownloadsClickListener) dlg.getOnYesListener();
             onYesListener.setDialog(dlg);
-            dlgRef = new WeakReference<ConfirmListDialog>(dlg);
+            dlgRef = new WeakReference<ConfirmSoundcloudDownloadDialog>(dlg);
             
             dlg.show(activity.getFragmentManager());
         }
@@ -162,15 +162,15 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
     private static class OnStartDownloadsClickListener implements View.OnClickListener {
         private final WeakReference<Context> ctxRef;
         private final WeakReference<List<SoundcloudSearchResult>> resultsRef;
-        private WeakReference<ConfirmListDialog> dlgRef;
+        private WeakReference<ConfirmSoundcloudDownloadDialog> dlgRef;
         
         public OnStartDownloadsClickListener(Context ctx, List<SoundcloudSearchResult> results) {
             ctxRef = new WeakReference<Context>(ctx);
             resultsRef = new WeakReference<List<SoundcloudSearchResult>>(results);
         }
         
-        public void setDialog(ConfirmListDialog dlg){
-            dlgRef = new WeakReference<ConfirmListDialog>(dlg);
+        public void setDialog(ConfirmSoundcloudDownloadDialog dlg){
+            dlgRef = new WeakReference<ConfirmSoundcloudDownloadDialog>(dlg);
         }
         
         @Override
