@@ -25,6 +25,7 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.frostwire.android.gui.dialogs.ConfirmListDialog;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.ContextTask;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundcloudItem;
 import com.frostwire.search.soundcloud.SoundcloudPlaylist;
@@ -41,6 +43,7 @@ import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.util.HttpClientFactory;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.util.Ref;
+import com.frostwire.util.StringUtils;
 
 /*
  * @author aldenml
@@ -110,6 +113,25 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
     protected List<SoundcloudSearchResult> doInBackground() {
         final List<SoundcloudSearchResult> scResults = new ArrayList<SoundcloudSearchResult>();
         
+        //MOCK TEST FOR WHEN PHONE HAS NO INTERNET ACCESS.
+        /*
+        if (true) {
+        	SoundcloudItem sItem = new SoundcloudItem();
+        	for (int i=0; i < 10; i++) {
+            	sItem.artwork_url="http://dummy.com";
+            	sItem.created_at="2014-03-22";
+            	sItem.download_url="http://url";
+            	sItem.duration=334443;
+            	sItem.original_content_size=(i%2==0) ? 1122332: 16200234;
+            	sItem.title= (i % 2 == 0) ? "Dummy Title that is a bit longer than usual and perhaps might not fit" : "another one short";
+            	sItem.uri="http://uri.com";
+
+        		sItem.id=i;
+        	    scResults.add(new SoundcloudSearchResult(sItem,"someClient","someAppId"));
+        	}
+        	return scResults;
+        }*/
+        
         //resolve track information using http://api.soundcloud.com/resolve?url=<url>&client_id=b45b1aa10f1ac2941910a7f0d10f8e28
         final String clientId="b45b1aa10f1ac2941910a7f0d10f8e28";
         final String appVersion="dd9d3970";
@@ -156,6 +178,11 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             
             TextView trackSizeInHuman = findView(view, R.id.list_item_track_confirmation_dialog_file_size_in_human);
             trackSizeInHuman.setText(UIUtils.getBytesInHuman(sr.getSize()));
+            
+            if (StringUtils.isNullOrEmpty(Usr.getThumbnailUrl()) {
+                ImageView = findView(view, R.id.list_item_track_confirmation_dialog_art);
+                ImageLoader.getInstance(getContext()).load(sr.getThumbnailUrl(), imageView);
+            }
         }
     }
     
@@ -176,6 +203,9 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         @Override
         public void onClick(View v) {
             if (Ref.alive(ctxRef)&& Ref.alive(resultsRef)) {
+            	//TODO: gotta figure out how the parent dialog class
+            	//will interact with the adapter (in a generic way)
+            	//to filter out the List<T> when we have checkboxes.
                 startDownloads(ctxRef.get(), resultsRef.get());
                 
                 if (Ref.alive(dlgRef)){

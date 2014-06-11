@@ -87,6 +87,10 @@ public abstract class ConfirmListDialog<Adapter extends AbstractListAdapter<?>,T
     
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
+    	//TODO: Add checkbox on list item and make sure the adapter
+    	//will know what items have been selected and that we can
+    	//reinit the right checkboxes selected here when orientation change occurs.
+    	
         Bundle bundle = getArguments();
         title = bundle.getString("title");
         dlg.setTitle(title);
