@@ -18,6 +18,10 @@
 
 package com.frostwire.android.gui.dialogs;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Dialog;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
@@ -30,6 +34,9 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractListAdapter;
+import com.frostwire.util.JsonUtils;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * This dialog should evolve to allow us for reuse on a number of situations in which you
@@ -46,8 +53,9 @@ import com.frostwire.android.gui.views.AbstractListAdapter;
  * @author gubatron
  *
  * @param <Adapter>
+ * @param <I>
  */
-public class ConfirmListDialog<Adapter extends AbstractListAdapter> extends AbstractDialog {
+public abstract class ConfirmListDialog<Adapter extends AbstractListAdapter, T> extends AbstractDialog {
     
     /**
      * TODOS: 1. Add an optional text filter control that will be connected to the adapter.
@@ -55,39 +63,46 @@ public class ConfirmListDialog<Adapter extends AbstractListAdapter> extends Abst
      */
 
     private final static String TAG = "confirm_list_dialog";
-    private final String title;
-    private final String dialogText;
-    private final Adapter adapter;
+    private String title;
+    private String dialogText;
     private OnCancelListener onCancelListener;
     private OnClickListener onYesListener;
     
     public ConfirmListDialog() {
         super(TAG, R.layout.dialog_confirm_list);
-        this.title="";
-        this.dialogText="";
-        this.adapter=null;
-        this.onYesListener=null;
-        this.onCancelListener=null;
     }
     
-    public ConfirmListDialog(String dialogTitle, String dialogText, Adapter adapter, OnClickListener onYesClickListener,OnCancelListener cancelListener) {
-        super(TAG, R.layout.dialog_confirm_list);
-        this.title=dialogTitle;
-        this.dialogText=dialogText;
-        this.adapter=adapter;
-        this.onYesListener=onYesClickListener;
-        this.onCancelListener=cancelListener;
+    public OnClickListener getOnYesListener() {
+        return onYesListener;
     }
-
+    
+    /** do yesButton.setOnClickListener(yourYesListenerHere);*/
+    abstract protected OnClickListener initOnYesListener(Button yesButton, List<T> listData);
+    
+    /** rebuilds list of objects from json and does listView.setAdapter(YourAdapter(theObjectList)) */
+    abstract protected List<T> initListAdapter(ListView listView, String listDataInJSON);
+    
+    protected void prepareArguments(String dialogTitle, String dialogText, String listDataInJSON) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", dialogTitle);
+        bundle.putString("dialogText", dialogText);
+        bundle.putString("listData", listDataInJSON);
+        setArguments(bundle);
+    }
+    
     @Override
     protected void initComponents(Dialog dlg, Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        title = bundle.getString("title");
         dlg.setTitle(title);
         
+        dialogText = bundle.getString("dialogText");
         TextView textView = findView(dlg, R.id.dialog_confirm_list_text);
         textView.setText(dialogText);
         
         ListView listView = findView(dlg, R.id.dialog_confirm_list_list);
-        listView.setAdapter(adapter);
+        String listDataString = bundle.getString("listData");
+        List<T> listData = initListAdapter(listView, listDataString);
         
         final Dialog dialog = dlg;
         Button noButton = findView(dialog, R.id.dialog_confirm_list_button_no);
@@ -106,10 +121,11 @@ public class ConfirmListDialog<Adapter extends AbstractListAdapter> extends Abst
         }
         
         Button yesButton = findView(dialog, R.id.dialog_confirm_list_button_yes);
-        yesButton.setOnClickListener(onYesListener);
+        onYesListener = initOnYesListener(yesButton, listData);
+    }
+    
+    protected void setOnYesListener(OnClickListener listener) {
+        onYesListener = listener;
     }
 
-    public OnClickListener getOnYesListener() {
-        return onYesListener;
-    }
 }

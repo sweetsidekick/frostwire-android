@@ -70,7 +70,7 @@ public final class ImageLoader {
         this.cache = new ImageCache(directory, diskSize, memSize);
         this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).memoryCache(cache).build();
 
-        picasso.setIndicatorsEnabled(true);
+        picasso.setIndicatorsEnabled(false);
     }
 
     public void load(Uri uri, ImageView target) {
