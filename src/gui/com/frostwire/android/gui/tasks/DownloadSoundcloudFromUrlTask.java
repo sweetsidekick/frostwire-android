@@ -93,13 +93,7 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         if (!results.isEmpty()) {
             MainActivity activity = (MainActivity) ctx;
             ConfirmSoundcloudDownloadDialog dlg = createConfirmListDialog(ctx, results);
-            
-            //otherwise I can't dismiss the dialog, so I set the reference after the dialog has been created,
-            //hopefully faster than the user can click yes. #uglyhack
-            OnStartDownloadsClickListener onYesListener = (OnStartDownloadsClickListener) dlg.getOnYesListener();
-            onYesListener.setDialog(dlg);
             dlgRef = new WeakReference<ConfirmSoundcloudDownloadDialog>(dlg);
-            
             dlg.show(activity.getFragmentManager());
         }
     }
@@ -231,6 +225,7 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             srList.listData = listData;
             dlg.prepareArguments(dialogTitle, dialogText, JsonUtils.toJson(srList));
             dlg.setOnYesListener(onYesListener);
+            onYesListener.setDialog(dlg);
             return dlg;
         }
 
