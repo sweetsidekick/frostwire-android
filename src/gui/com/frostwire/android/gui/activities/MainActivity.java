@@ -58,8 +58,6 @@ import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
 import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.MainMenuAdapter;
-import com.frostwire.android.gui.activities.internal.XmlMenuItem;
-import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
 import com.frostwire.android.gui.dialogs.TermsUseDialog;
 import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
@@ -490,7 +488,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupMenuItems() {
-        XmlMenuItem[] items = new XmlMenuLoader().load(this);
         listMenu.setAdapter(new MainMenuAdapter(this));
         listMenu.setOnItemClickListener(new OnItemClickListener() {
 
