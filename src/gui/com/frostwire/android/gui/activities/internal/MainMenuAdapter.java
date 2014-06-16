@@ -28,6 +28,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.gui.views.menu.MenuBuilder;
 
@@ -70,6 +74,19 @@ public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
         MenuInflater menuInflater = new MenuInflater(context);
         Menu menu = new MenuBuilder(context);
         menuInflater.inflate(R.menu.main, menu);
+
+        ConfigurationManager config = ConfigurationManager.instance();
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
+            menu.removeItem(R.id.menu_launch_tv);
+        }
+
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) || !config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA) || OSUtils.isAmazonDistribution()) { //!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM)) {
+            menu.removeItem(R.id.menu_free_apps);
+        }
+
+        if (!OfferUtils.isfreeAppsEnabled()) {
+            menu.removeItem(R.id.menu_free_apps);
+        }
 
         for (int i = 0; i < menu.size(); i++) {
             add(menu.getItem(i));
