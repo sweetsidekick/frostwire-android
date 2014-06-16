@@ -94,7 +94,7 @@
             android:layout_gravity="left"
             android:orientation="vertical" >
 
-            <com.frostwire.android.gui.views.FWListView
+            <ListView
                 android:id="@+id/left_drawer"
                 style="@style/SlideMenu.List"
                 android:layout_width="match_parent"
