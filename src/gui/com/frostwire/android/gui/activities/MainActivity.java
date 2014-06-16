@@ -222,9 +222,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         setupFragments();
 
-        setupInitialFragment(savedInstanceState);
-
         setupMenuItems();
+
+        setupInitialFragment(savedInstanceState);
 
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);

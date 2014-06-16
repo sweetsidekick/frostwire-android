@@ -102,6 +102,10 @@ final class ImageCache implements Cache {
                     } finally {
                         e.close();
                     }
+
+                    if (bmp == null) { // some error decoding
+                        disk.remove(key);
+                    }
                 }
             } catch (Throwable e) {
                 // ignore
