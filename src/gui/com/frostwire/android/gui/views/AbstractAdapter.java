@@ -54,13 +54,13 @@ public abstract class AbstractAdapter<T> extends ArrayAdapter<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends View> T findView(View view, int id) {
-        return (T) getView(view, getHolder(view), id);
+    protected final <V extends View> V findView(View view, int id) {
+        return (V) getView(view, getHolder(view), id);
     }
 
     protected abstract void setupView(View view, T item);
 
-    private static SparseArray<View> getHolder(View view) {
+    private SparseArray<View> getHolder(View view) {
         @SuppressWarnings("unchecked")
         SparseArray<View> h = (SparseArray<View>) view.getTag();
         if (h == null) {
@@ -70,12 +70,17 @@ public abstract class AbstractAdapter<T> extends ArrayAdapter<T> {
         return h;
     }
 
-    private static View getView(View view, SparseArray<View> h, int id) {
-        View v = h.get(id);
-        if (v == null) {
+    private View getView(View view, SparseArray<View> h, int id) {
+        View v = null;
+
+        int index = h.indexOfKey(id);
+        if (index < 0) {
             v = view.findViewById(id);
             h.put(id, v);
+        } else {
+            v = h.valueAt(index);
         }
+
         return v;
     }
 }
