@@ -2539,6 +2539,9 @@ public class MusicPlaybackService extends Service {
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Media player not initialized!");
                 return;
+            } catch (Throwable e) {
+                Log.e(TAG, "Media player fatal error", e);
+                return;
             }
             if (mNextMediaPlayer != null) {
                 mNextMediaPlayer.release();
@@ -2551,7 +2554,12 @@ public class MusicPlaybackService extends Service {
             mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
             mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
             if (setDataSourceImpl(mNextMediaPlayer, path)) {
-                mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
+                try {
+                    mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
+                } catch (Throwable e) {
+                    Log.e(TAG, "Media player fatal error", e);
+                    return;
+                }
             } else {
                 if (mNextMediaPlayer != null) {
                     mNextMediaPlayer.release();
