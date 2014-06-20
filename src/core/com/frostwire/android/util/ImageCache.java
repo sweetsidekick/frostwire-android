@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.os.Looper;
 
 import com.frostwire.android.util.DiskCache.Entry;
 import com.squareup.picasso.Cache;
@@ -52,7 +53,7 @@ final class ImageCache implements Cache {
     public Bitmap get(String key) {
         Bitmap bmp = mem.get(key);
 
-        if (bmp == null) {
+        if (bmp == null && !isMain()) {
             bmp = diskGet(key);
         }
 
@@ -141,5 +142,9 @@ final class ImageCache implements Cache {
 
     private int diskMaxSize() {
         return disk != null ? (int) disk.maxSize() : 0;
+    }
+
+    private static boolean isMain() {
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 }
