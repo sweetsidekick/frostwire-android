@@ -52,6 +52,10 @@ public final class DiskCache {
         this.cache = DiskLruCache.open(directory, APP_VERSION, VALUE_COUNT, size);
     }
 
+    public boolean containsKey(String key) {
+        return cache.containsKey(encodeKey(key));
+    }
+
     public Entry get(String key) {
         Entry entry = null;
         Snapshot snapshot = null;

@@ -122,7 +122,7 @@ final class ImageCache implements Cache {
     }
 
     private void diskPut(String key, Bitmap bitmap) {
-        if (disk != null) {
+        if (disk != null && !disk.containsKey(key)) {
             try {
                 InputStream is = getInputStream(bitmap);
                 try {
