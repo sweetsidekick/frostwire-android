@@ -237,8 +237,8 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         }
 
         @Override
-        protected OnStartDownloadsClickListener initOnYesListener(Button yesButton, List<SoundcloudSearchResult> listData) {
-            return new OnStartDownloadsClickListener(getActivity(), listData);
+        protected OnStartDownloadsClickListener createOnYesListener(List<SoundcloudSearchResult> listData) {            
+        	return new OnStartDownloadsClickListener(getActivity(), listData);
         }
     }
 }
