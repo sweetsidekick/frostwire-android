@@ -130,12 +130,7 @@ public final class Engine implements IEngineService {
             }
 
             public void onServiceConnected(ComponentName name, IBinder service) {
-                //avoid casting android.os.BinderProxy instances that may come here.
-                if (service instanceof EngineServiceBinder) {
-                    Engine.this.service = ((EngineServiceBinder) service).getService();
-                }
-                
-                //QUESTION: should we do this only when the above condition is met?
+                Engine.this.service = ((EngineServiceBinder) service).getService();
                 registerStatusReceiver(context);
             }
         }, Context.BIND_AUTO_CREATE);
