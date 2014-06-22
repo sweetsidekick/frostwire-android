@@ -28,7 +28,7 @@
         android:layout_height="@dimen/notification_expanded_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/default_artwork"
+        android:background="@drawable/artwork_default"
         android:scaleType="fitXY" />
 
     <LinearLayout

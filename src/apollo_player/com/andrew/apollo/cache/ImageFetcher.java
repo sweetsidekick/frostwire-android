@@ -57,7 +57,7 @@ public class ImageFetcher {
      */
     public ImageFetcher(final Context context) {
         this.context = context.getApplicationContext();
-        this.mDefault = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.default_artwork)).getBitmap();
+        this.mDefault = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.artwork_default)).getBitmap();
         this.imageLoader = ImageLoader.getInstance(context);
     }
 
@@ -134,7 +134,7 @@ public class ImageFetcher {
 
     protected void loadImage(final String key, final String artistName, final String albumName, final long albumId, final ImageView imageView) {
         Uri uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
-        imageLoader.load(uri, imageView, R.drawable.default_artwork);
+        imageLoader.load(uri, imageView, R.drawable.artwork_default);
     }
 
     public final Bitmap getArtworkFromFile(final Context context, Uri uri) {

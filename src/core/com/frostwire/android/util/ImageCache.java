@@ -18,11 +18,17 @@
 
 package com.frostwire.android.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.os.Looper;
 
 import com.frostwire.android.util.DiskCache.Entry;
 import com.squareup.picasso.Cache;
@@ -47,7 +53,7 @@ final class ImageCache implements Cache {
     public Bitmap get(String key) {
         Bitmap bmp = mem.get(key);
 
-        if (bmp == null) {
+        if (bmp == null && !isMain()) {
             bmp = diskGet(key);
         }
 
@@ -76,10 +82,10 @@ final class ImageCache implements Cache {
         mem.clear();
     }
 
-    private byte[] getBytes(Bitmap bmp) {
-        ByteBuffer buffer = ByteBuffer.allocate(bmp.getByteCount());
-        bmp.copyPixelsToBuffer(buffer);
-        return buffer.array();
+    private InputStream getInputStream(Bitmap bmp) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream(bmp.getByteCount());
+        bmp.compress(CompressFormat.PNG, 100, out);
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
     private DiskCache createDiskCache(File directory, long diskSize) {
@@ -102,6 +108,10 @@ final class ImageCache implements Cache {
                     } finally {
                         e.close();
                     }
+
+                    if (bmp == null) { // some error decoding
+                        disk.remove(key);
+                    }
                 }
             } catch (Throwable e) {
                 // ignore
@@ -112,9 +122,14 @@ final class ImageCache implements Cache {
     }
 
     private void diskPut(String key, Bitmap bitmap) {
-        if (disk != null) {
+        if (disk != null && !disk.containsKey(key)) {
             try {
-                disk.put(key, getBytes(bitmap));
+                InputStream is = getInputStream(bitmap);
+                try {
+                    disk.put(key, is);
+                } finally {
+                    IOUtils.closeQuietly(is);
+                }
             } catch (Throwable e) {
                 // ignore
             }
@@ -127,5 +142,9 @@ final class ImageCache implements Cache {
 
     private int diskMaxSize() {
         return disk != null ? (int) disk.maxSize() : 0;
+    }
+
+    private static boolean isMain() {
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 }

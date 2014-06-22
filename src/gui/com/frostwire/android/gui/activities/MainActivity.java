@@ -41,6 +41,8 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -55,9 +57,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.SoftwareUpdater;
 import com.frostwire.android.gui.SoftwareUpdater.ConfigurationUpdateListener;
 import com.frostwire.android.gui.activities.internal.MainController;
-import com.frostwire.android.gui.activities.internal.XmlMenuAdapter;
-import com.frostwire.android.gui.activities.internal.XmlMenuItem;
-import com.frostwire.android.gui.activities.internal.XmlMenuLoader;
+import com.frostwire.android.gui.activities.internal.MainMenuAdapter;
 import com.frostwire.android.gui.dialogs.TermsUseDialog;
 import com.frostwire.android.gui.dialogs.YesNoDialog;
 import com.frostwire.android.gui.fragments.AboutFragment;
@@ -99,7 +99,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
-    
+
     private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
 
     private static boolean firstTime = true;
@@ -128,7 +128,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private boolean offercastStarted = false;
     private boolean appiaStarted = false;
-    
+
     private TimerSubscription playerSubscription;
 
     public MainActivity() {
@@ -222,24 +222,24 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         setupFragments();
 
-        setupInitialFragment(savedInstanceState);
-
         setupMenuItems();
+
+        setupInitialFragment(savedInstanceState);
 
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
             appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
         }
-        
-        playerSubscription = TimerService.subscribe((TimerObserver)findView(R.id.activity_main_player_notifier), 1);
+
+        playerSubscription = TimerService.subscribe((TimerObserver) findView(R.id.activity_main_player_notifier), 1);
 
         onNewIntent(getIntent());
 
         SoftwareUpdater.instance().addConfigurationUpdateListener(this);
-        
+
         setupActionBar();
         setupDrawer();
-        
+
         //PlaybackService.get(this);
     }
 
@@ -360,20 +360,20 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         outState.putString(DUR_TOKEN_KEY, durToken);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
     }
-    
+
     private ServiceToken mToken;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         mToken = MusicUtils.bindToService(this, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        
+
         playerSubscription.unsubscribe();
 
         //avoid memory leaks when the device is tilted and the menu gets recreated.
@@ -382,7 +382,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         if (playerItem != null) {
             playerItem.unbindDrawables();
         }
-        
+
         if (mToken != null) {
             MusicUtils.unbindFromService(mToken);
             mToken = null;
@@ -438,7 +438,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         YesNoDialog dlg = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
         dlg.show(getFragmentManager());
     }
-    
+
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
@@ -447,7 +447,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             controller.startWizardActivity();
         }
     }
-    
+
     private void syncSlideMenu() {
         Fragment fragment = getCurrentFragment();
 
@@ -468,10 +468,14 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private void setSelectedItem(int id) {
         try {
-            XmlMenuAdapter adapter = (XmlMenuAdapter) listMenu.getAdapter();
-            if (adapter != null) {
-                adapter.setSelectedItem(id);
+            int position = 0;
+            MainMenuAdapter adapter = (MainMenuAdapter) listMenu.getAdapter();
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if (adapter.getItemId(i) == id) {
+                    position = i;
+                }
             }
+            listMenu.setItemChecked(position, true);
         } catch (Throwable e) { // protecting from weird android UI engine issues
             LOG.warn("Error setting slide menu item selected", e);
         }
@@ -484,9 +488,29 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void setupMenuItems() {
-        XmlMenuItem[] items = new XmlMenuLoader().load(this);
-        XmlMenuAdapter adapter = new XmlMenuAdapter(controller, items);
-        listMenu.setAdapter(adapter);
+        listMenu.setAdapter(new MainMenuAdapter(this));
+        listMenu.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                controller.closeSlideMenu();
+
+                try {
+                    if (id == R.id.menu_main_preferences) {
+                        controller.showPreferences();
+                    } else if (id == R.id.menu_launch_tv) {
+                        controller.launchFrostWireTV();
+                    } else if (id == R.id.menu_free_apps) {
+                        controller.showFreeApps();
+                    } else {
+                        listMenu.setItemChecked(position, true);
+                        controller.switchFragment((int) id);
+                    }
+                } catch (Throwable e) { // protecting from weird android UI engine issues
+                    LOG.error("Error clicking slide menu item", e);
+                }
+            }
+        });
     }
 
     private void setupFragments() {
@@ -543,7 +567,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void updateHeader(Fragment fragment) {
         try {
             RelativeLayout placeholder = (RelativeLayout) getActionBar().getCustomView();//findView(R.id.activity_main_layout_header_placeholder);
-            if (placeholder!=null && placeholder.getChildCount() > 0) {
+            if (placeholder != null && placeholder.getChildCount() > 0) {
                 placeholder.removeAllViews();
             }
 
@@ -609,7 +633,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     public void closeSlideMenu() {
         drawerLayout.closeDrawer(leftDrawer);
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -621,7 +645,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -633,22 +657,22 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
-    
+
     private void setupActionBar() {
         ActionBar bar = getActionBar();
 
         bar.setCustomView(R.layout.view_custom_actionbar);
-        
+
         bar.setDisplayShowCustomEnabled(true);
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setHomeButtonEnabled(true);
     }
-    
+
     private void setupDrawer() {
         drawerToggle = new MenuDrawerToggle(this, drawerLayout);
         drawerLayout.setDrawerListener(drawerToggle);
     }
-    
+
     @Override
     public void onServiceConnected(final ComponentName name, final IBinder service) {
         mService = IApolloService.Stub.asInterface(service);
@@ -661,7 +685,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     public void onServiceDisconnected(final ComponentName name) {
         mService = null;
     }
-    
+
     private static final class MenuDrawerToggle extends ActionBarDrawerToggle {
 
         private final WeakReference<MainActivity> activityRef;
@@ -686,7 +710,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 activityRef.get().invalidateOptionsMenu();
             }
         }
-        
+
         @Override
         public void onDrawerStateChanged(int newState) {
             if (Ref.alive(activityRef)) {

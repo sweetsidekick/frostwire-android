@@ -28,6 +28,7 @@ import java.util.Set;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -374,8 +375,32 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected static <TView extends View> TView findView(View view, int id) {
-        return (TView) view.findViewById(id);
+    protected final <TView extends View> TView findView(View view, int id) {
+        return (TView) getView(view, getHolder(view), id);
+    }
+    
+    private SparseArray<View> getHolder(View view) {
+        @SuppressWarnings("unchecked")
+        SparseArray<View> h = (SparseArray<View>) view.getTag(R.id.abstract_list_adapter_holder_tag_id);
+        if (h == null) {
+            h = new SparseArray<View>();
+            view.setTag(R.id.abstract_list_adapter_holder_tag_id, h);
+        }
+        return h;
+    }
+
+    private View getView(View view, SparseArray<View> h, int id) {
+        View v = null;
+
+        int index = h.indexOfKey(id);
+        if (index < 0) {
+            v = view.findViewById(id);
+            h.put(id, v);
+        } else {
+            v = h.valueAt(index);
+        }
+
+        return v;
     }
 
     /**
