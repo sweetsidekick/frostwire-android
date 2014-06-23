@@ -131,7 +131,6 @@ public final class Engine implements IEngineService {
 
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Engine.this.service = ((EngineServiceBinder) service).getService();
-
                 registerStatusReceiver(context);
             }
         }, Context.BIND_AUTO_CREATE);
