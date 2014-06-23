@@ -119,6 +119,7 @@ public abstract class ConfirmListDialog<Adapter extends AbstractListAdapter<?>,T
         }
         
         onYesListener = createOnYesListener(listData);
+
         if (onYesListener != null) {
         	Button yesButton = findView(dialog, R.id.dialog_confirm_list_button_yes);
         	yesButton.setOnClickListener(onYesListener);

@@ -25,7 +25,6 @@ import java.util.List;
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -225,7 +224,6 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             srList.listData = listData;
             dlg.prepareArguments(dialogTitle, dialogText, JsonUtils.toJson(srList));
             dlg.setOnYesListener(onYesListener);
-            onYesListener.setDialog(dlg);
             return dlg;
         }
 
@@ -238,7 +236,9 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
 
         @Override
         protected OnStartDownloadsClickListener createOnYesListener(List<SoundcloudSearchResult> listData) {            
-        	return new OnStartDownloadsClickListener(getActivity(), listData);
+            OnStartDownloadsClickListener listener = new OnStartDownloadsClickListener(getActivity(), listData);
+            listener.setDialog(this);
+            return listener;
         }
     }
 }
