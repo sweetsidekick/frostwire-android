@@ -707,6 +707,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         @Override
         public void onDrawerOpened(View drawerView) {
             if (Ref.alive(activityRef)) {
+                UIUtils.hideKeyboardFromActivity(activityRef.get());
                 activityRef.get().invalidateOptionsMenu();
             }
         }
