@@ -143,6 +143,7 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
     protected void initComponents(final View view) {
 
         searchInput = findView(view, R.id.fragment_search_input);
+        searchInput.setShowKeyboardOnPaste(true);
         searchInput.setOnSearchListener(new OnSearchListener() {
             public void onSearch(View v, String query, int mediaTypeId) {
                 if (query.contains("://m.soundcloud.com/") || query.contains("://soundcloud.com/")) {

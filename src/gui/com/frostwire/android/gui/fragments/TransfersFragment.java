@@ -505,9 +505,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private void showAddTransfersKeyboard() {
         if (addTransferUrlTextView.getVisibility() == View.VISIBLE && (addTransferUrlTextView.getText().startsWith("http") || addTransferUrlTextView.getText().isEmpty())) {
-            addTransferUrlTextView.getAutoCompleteTextView().requestFocus();
-            InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getAutoCompleteTextView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(addTransferUrlTextView.getAutoCompleteTextView(), InputMethodManager.SHOW_IMPLICIT);
+            UIUtils.showKeyboard(addTransferUrlTextView.getAutoCompleteTextView().getContext(), addTransferUrlTextView.getAutoCompleteTextView());
         }
     }
 

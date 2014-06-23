@@ -43,7 +43,7 @@ import com.frostwire.android.R;
  */
 public class ClearableEditTextView extends RelativeLayout {
 
-    private AutoCompleteTextView input;
+    private FWAutoCompleteTextView input;
     private ImageView imageSearch;
     private ImageButton buttonClear;
 
@@ -57,6 +57,14 @@ public class ClearableEditTextView extends RelativeLayout {
         hint = arr.getString(R.styleable.ClearableEditTextView_clearable_hint);
     }
 
+    public void setShowKeyboardOnPaste(boolean show) {
+        input.setShowKeyboardOnPaste(show);
+    }
+    
+    public boolean isShowKeyboardOnPaste() {
+        return input.isShowKeyboardOnPaste();
+    }
+    
     public OnActionListener getOnActionListener() {
         return listener;
     }
@@ -149,7 +157,7 @@ public class ClearableEditTextView extends RelativeLayout {
 
         View.inflate(getContext(), R.layout.view_clearable_edittext, this);
 
-        input = (AutoCompleteTextView) findViewById(R.id.view_clearable_edit_text_input);
+        input = (FWAutoCompleteTextView) findViewById(R.id.view_clearable_edit_text_input);
         input.setHint(hint);
         input.setTransformationMethod(new SingleLineTransformationMethod());
         input.addTextChangedListener(new TextWatcher() {

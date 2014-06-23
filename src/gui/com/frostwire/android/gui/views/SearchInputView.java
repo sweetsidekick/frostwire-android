@@ -62,6 +62,14 @@ public class SearchInputView extends LinearLayout {
         this.adapter = new SuggestionsAdapter(context);
     }
 
+    public void setShowKeyboardOnPaste(boolean show) {
+        textInput.setShowKeyboardOnPaste(show);
+    }
+    
+    public boolean isShowKeyboardOnPaste() {
+        return textInput.isShowKeyboardOnPaste();
+    }
+    
     public OnSearchListener getOnSearchListener() {
         return onSearchListener;
     }
