@@ -236,7 +236,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         if (local && fileType == Constants.FILE_TYPE_APPLICATIONS) {
-            Uri uri = Uri.parse("package://application/" + fd.album);
+            Uri uri = Uri.withAppendedPath(ImageLoader.APPLICATION_THUMBNAILS_URI, fd.album);
             thumbnailLoader.load(uri, fileThumbnail, 96, 96);
         } else {
             if (Condition.in(fileType, Constants.FILE_TYPE_AUDIO, Constants.FILE_TYPE_VIDEOS, Constants.FILE_TYPE_RINGTONES)) {

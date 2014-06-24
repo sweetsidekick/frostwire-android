@@ -46,9 +46,13 @@ public final class ImageLoader {
     private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    private static final String SCHEME_PACKAGE = "package";
+    private static final String SCHEME_IMAGE = "image";
+
+    private static final String SCHEME_IMAGE_SLASH = SCHEME_IMAGE + "://";
 
     private static final String APPLICATION_AUTHORITY = "application";
+
+    public static final Uri APPLICATION_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + APPLICATION_AUTHORITY);
 
     private final ImageCache cache;
     private final Picasso picasso;
@@ -117,7 +121,7 @@ public final class ImageLoader {
 
             String scheme = uri.getScheme();
 
-            if (SCHEME_PACKAGE.equals(scheme)) {
+            if (SCHEME_IMAGE.equals(scheme)) {
                 if (APPLICATION_AUTHORITY.equals(uri.getAuthority())) {
                     downloader = appDownloader;
                 }
