@@ -20,6 +20,7 @@ package com.frostwire.android.gui.activities;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -171,12 +172,16 @@ public class PreferencesActivity extends PreferenceActivity {
             preference.setButtonText(R.string.disconnect);
             preference.setButtonEnabled(true);
         } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
-            preference.setButtonText(R.string.im_on_it);
-            preference.setButtonEnabled(false);
+            connectButtonImOnIt(preference);
         } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
             preference.setButtonText(R.string.connect);
             preference.setButtonEnabled(true);
         }
+    }
+
+    private void connectButtonImOnIt(SimpleActionPreference preference) {
+        preference.setButtonText(R.string.im_on_it);
+        preference.setButtonEnabled(false);
     }
 
     private void setupUPnPOption() {
@@ -203,7 +208,7 @@ public class PreferencesActivity extends PreferenceActivity {
             public void onClick(View v) {
                 if (Engine.instance().isStarted()) {
                     disconnect();
-                } else if (Engine.instance().isStopped()) {
+                } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
                     connect();
                 }
             }
@@ -225,11 +230,20 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void connect() {
-        final Context context = this;
+        final Activity context = this;
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 Engine.instance().startServices();
+                
+                context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+                        connectButtonImOnIt(preference);
+                    }
+                });
+                
                 PeerManager.instance().start();
                 return null;
             }
