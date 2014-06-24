@@ -1,8 +1,9 @@
-FrostWire 1.3.3 - JUNE/23/2014
+FrostWire 1.3.3 - JUNE/24/2014
  - Improvements in memory consumption and performance for image caching.
  - Download Soundcloud Tracks and Playlists by entering URL on search box.
  - Download Soundcloud Tracks and Playlists by entering URL on Transfer "+" control.
  - Search YouTube videos by pasting YouTube URL on search box.
+ - Fixes issue with Connect/Disconnect preferences button.
  - Fixes issues with Torrents.fm search.
  - Transparent use of ViewHolder pattern in ListViews.
  - GSON library update.
