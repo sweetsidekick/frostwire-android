@@ -263,8 +263,10 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
     public void performYTSearch(String query) {
         String ytId=extractYTId(query);
         if (ytId != null){
-            searchInput.setText(getActivity().getString(R.string.searching_for) + " youtube:"+ytId);
+            searchInput.setText("");
+            searchInput.performClickOnRadioButton(Constants.FILE_TYPE_VIDEOS);
             performSearch(ytId,Constants.FILE_TYPE_VIDEOS);
+            searchInput.setHint(getActivity().getString(R.string.searching_for) + " youtube:"+ytId);
         }
     }
     

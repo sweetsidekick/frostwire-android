@@ -452,6 +452,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private void startYouTubeSearchFromUrl(String ytUrl) {
         //fragments are not supposed to communicate directly so I'll let my activity know
+        //(NOTE: This is a poor implementation of fragment to fragment communication
+        // despite what the android documentation says http://developer.android.com/training/basics/fragments/communicating.html
+        // as this could not scale if you wanted to reuse fragments on other activities)
         MainActivity activity = (MainActivity) getActivity();
         activity.performYTSearch(ytUrl);
     }

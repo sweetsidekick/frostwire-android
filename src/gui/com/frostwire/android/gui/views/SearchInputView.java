@@ -20,6 +20,7 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -54,12 +55,16 @@ public class SearchInputView extends LinearLayout {
     private OnSearchListener onSearchListener;
 
     private int mediaTypeId;
+    
+    private final SparseIntArray mediaTypeToRadioButtonMap;
 
     public SearchInputView(Context context, AttributeSet set) {
         super(context, set);
 
         this.textInputListener = new TextInputClickListener(this);
         this.adapter = new SuggestionsAdapter(context);
+        
+        mediaTypeToRadioButtonMap = new SparseIntArray(6);
     }
 
     public void setShowKeyboardOnPaste(boolean show) {
@@ -84,6 +89,10 @@ public class SearchInputView extends LinearLayout {
 
     public String getText() {
         return textInput.getText();
+    }
+    
+    public void setHint(String hint) {
+        textInput.setHint(hint);
     }
     
     public void setText(String text) {
@@ -173,6 +182,7 @@ public class SearchInputView extends LinearLayout {
     }
 
     private RadioButton initRadioButton(int viewId, byte fileType) {
+        mediaTypeToRadioButtonMap.put(fileType, viewId);
         final RadioButton button = (RadioButton) findViewById(viewId);
         button.setOnClickListener(new RadioButtonListener(this, fileType));
 
@@ -181,6 +191,12 @@ public class SearchInputView extends LinearLayout {
         }
 
         return button;
+    }
+    
+    public void performClickOnRadioButton(final int mediaTypeId) {
+        int viewId = mediaTypeToRadioButtonMap.get(mediaTypeId);
+        final RadioButton button = (RadioButton) findViewById(viewId);
+        button.performClick();
     }
 
     private void radioButtonFileTypeClick(final int mediaTypeId) {
