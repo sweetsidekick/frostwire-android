@@ -19,6 +19,7 @@
 
 package com.frostwire.android.gui.views;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -104,7 +105,7 @@ public class PlayerMenuItemView extends LinearLayout {
     }
 
     private void setArtwork(FileDescriptor fd) {
-        Uri uri = Uri.parse("content://media/external/audio/albumart/" + fd.albumId);
+        Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, fd.albumId);
         ImageLoader.getInstance(getContext()).load(uri, imageThumbnail, 96, 96, R.drawable.artwork_default_micro_kind);
     }
 

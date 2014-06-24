@@ -248,7 +248,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptor> {
             }
 
             if (fd.fileType == Constants.FILE_TYPE_AUDIO) {
-                Uri uri = Uri.parse("content://media/external/audio/albumart/" + fd.albumId);
+                Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, fd.albumId);
                 thumbnailLoader.load(uri, fileThumbnail, 96, 96);
             } else if (fd.fileType == Constants.FILE_TYPE_VIDEOS) {
                 Uri uri = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, fd.id);

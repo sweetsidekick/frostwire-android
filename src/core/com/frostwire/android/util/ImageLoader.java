@@ -20,15 +20,22 @@ package com.frostwire.android.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
+
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Downloader;
@@ -52,7 +59,11 @@ public final class ImageLoader {
 
     private static final String APPLICATION_AUTHORITY = "application";
 
+    private static final String ALBUM_AUTHORITY = "album";
+
     public static final Uri APPLICATION_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + APPLICATION_AUTHORITY);
+
+    public static final Uri ALBUM_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + ALBUM_AUTHORITY);
 
     private final ImageCache cache;
     private final Picasso picasso;
@@ -108,10 +119,12 @@ public final class ImageLoader {
     private static class ImageDownloader implements Downloader {
 
         private final PackageApplicationDownloader appDownloader;
+        private final AlbumDownloader albumDownloader;
         private final UrlConnectionDownloader urlDownloader;
 
         public ImageDownloader(Context context) {
             this.appDownloader = new PackageApplicationDownloader(context);
+            this.albumDownloader = new AlbumDownloader(context);
             this.urlDownloader = new UrlConnectionDownloader();
         }
 
@@ -122,8 +135,12 @@ public final class ImageLoader {
             String scheme = uri.getScheme();
 
             if (SCHEME_IMAGE.equals(scheme)) {
-                if (APPLICATION_AUTHORITY.equals(uri.getAuthority())) {
+                String authority = uri.getAuthority();
+
+                if (APPLICATION_AUTHORITY.equals(authority)) {
                     downloader = appDownloader;
+                } else if (ALBUM_AUTHORITY.equals(authority)) {
+                    downloader = albumDownloader;
                 }
             } else {
                 downloader = urlDownloader;
@@ -150,10 +167,40 @@ public final class ImageLoader {
                 BitmapDrawable icon = (BitmapDrawable) pm.getApplicationIcon(packageName);
                 Bitmap bmp = icon.getBitmap();
 
-                return new Response(bmp, true, bmp.getByteCount());
+                return new Response(bmp, false, bmp.getByteCount());
             } catch (NameNotFoundException e) {
                 return null;
             }
+        }
+    }
+
+    private static class AlbumDownloader implements Downloader {
+
+        private final Context context;
+
+        public AlbumDownloader(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            String albumId = uri.getLastPathSegment();
+
+            ContentResolver cr = context.getContentResolver();
+
+            Cursor cursor = cr.query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[] { MediaStore.Audio.AlbumColumns.ALBUM_ART }, null, null, null);
+
+            try {
+                if (cursor.moveToFirst()) {
+                    String albumArt = cursor.getString(0);
+                    Bitmap bmp = BitmapFactory.decodeFile(albumArt);
+                    return new Response(bmp, false, bmp.getByteCount());
+                }
+            } finally {
+                cursor.close();
+            }
+
+            return null;
         }
     }
 

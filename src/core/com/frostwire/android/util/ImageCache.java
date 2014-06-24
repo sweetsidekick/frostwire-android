@@ -106,7 +106,7 @@ final class ImageCache implements Cache {
                     try {
                         bmp = BitmapFactory.decodeStream(e.getInputStream());
                     } finally {
-                        e.close();
+                        IOUtils.closeQuietly(e);
                     }
 
                     if (bmp == null) { // some error decoding

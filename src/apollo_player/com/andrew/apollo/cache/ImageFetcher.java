@@ -14,6 +14,7 @@ package com.andrew.apollo.cache;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -98,7 +99,7 @@ public class ImageFetcher {
 
         Bitmap artwork = null;
 
-        Uri uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
+        Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, albumId);
 
         if (isMain()) {
             artwork = getArtworkFromFile(context, uri);
@@ -133,7 +134,7 @@ public class ImageFetcher {
     }
 
     protected void loadImage(final String key, final String artistName, final String albumName, final long albumId, final ImageView imageView) {
-        Uri uri = Uri.parse("content://media/external/audio/albumart/" + albumId);
+        Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, albumId);
         imageLoader.load(uri, imageView, R.drawable.artwork_default);
     }
 
