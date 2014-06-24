@@ -20,11 +20,8 @@ package com.frostwire.android.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import org.apache.commons.io.IOUtils;
 
 import android.content.ContentResolver;
 import android.content.Context;
