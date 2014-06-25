@@ -651,7 +651,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 }
 
                 if (savePath != null) {
-                    UIUtils.openFile(context, savePath);
+                    if (savePath.exists()) {
+                        UIUtils.openFile(context, savePath);
+                    } else {
+                        UIUtils.showShortMessage(context, R.string.cant_open_file_does_not_exist, savePath.getName());
+                    }
                 }
             }
         }

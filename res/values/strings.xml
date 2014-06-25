@@ -514,4 +514,5 @@
     <string name="menu_enter_shortcut_label">Enter</string>
     <string name="menu_delete_shortcut_label">Del</string>
     <string name="menu_space_shortcut_label">Space</string>
+    <string name="cant_open_file_does_not_exist">I can\'t open %1$s, the file does not exist.</string>
 </resources>

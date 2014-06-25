@@ -463,4 +463,5 @@ resuming.</string>
     <string name="use_torrentsfm">Usar Torrents.fm</string>
     <string name="transfers_context_menu_stop_delete_data">Parar y borrar la Data</string>
     <string name="use_tpb_summary">TPB es basado en magnets, funciona solo con Wi-Fi</string>
+    <string name="cant_open_file_does_not_exist">No puedo abrir %1$s, el archivo no existe.</string>
 </resources>

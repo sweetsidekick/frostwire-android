@@ -429,4 +429,5 @@
     <string name="anonymous_usage_statistics">Statistiques d\'utilisation anonyme</string>
     <string name="anonymous_usage_statistics_summary">Envoyez des statistiques d\'utilisation anonyme. Aucune information en lien avec vos recherches, vos partages ou lectures ou aucune information permettant votre identification ne seront stockées sur le disque ou envoyées à travers le réseau.</string>
     <string name="paused_song_name">%s en pause</string>
+    <string name="cant_open_file_does_not_exist">Vous ne pouvez pas ouvrir %1$s, n\'existe pas le fichier.</string>
 </resources>
