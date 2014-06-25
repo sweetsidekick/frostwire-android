@@ -181,6 +181,7 @@ public final class ImageLoader {
 
         @Override
         public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            Response response = null;
             String albumId = uri.getLastPathSegment();
 
             ContentResolver cr = context.getContentResolver();
@@ -191,13 +192,13 @@ public final class ImageLoader {
                 if (cursor.moveToFirst()) {
                     String albumArt = cursor.getString(0);
                     Bitmap bmp = BitmapFactory.decodeFile(albumArt);
-                    return new Response(bmp, false, bmp.getByteCount());
+                    response = new Response(bmp, false, bmp.getByteCount());
                 }
             } finally {
                 cursor.close();
             }
 
-            return null;
+            return response;
         }
     }
 
