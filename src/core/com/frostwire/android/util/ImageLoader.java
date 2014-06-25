@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -73,6 +72,23 @@ public final class ImageLoader {
         }
         return instance;
     }
+    
+    public static Bitmap getAlbumArt(Context context, String albumId) {
+        Bitmap bitmap = null;
+        Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[] { MediaStore.Audio.AlbumColumns.ALBUM_ART }, null, null, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                String albumArt = cursor.getString(0);
+                bitmap = BitmapFactory.decodeFile(albumArt);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return bitmap;
+    }
+
 
     private ImageLoader(Context context) {
         File directory = SystemUtils.getCacheDir(context, "picasso");
@@ -183,24 +199,9 @@ public final class ImageLoader {
 
         @Override
         public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-            Response response = null;
             String albumId = uri.getLastPathSegment();
-
-            ContentResolver cr = context.getContentResolver();
-
-            Cursor cursor = cr.query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[] { MediaStore.Audio.AlbumColumns.ALBUM_ART }, null, null, null);
-
-            try {
-                if (cursor.moveToFirst()) {
-                    String albumArt = cursor.getString(0);
-                    Bitmap bmp = BitmapFactory.decodeFile(albumArt);
-                    response = new Response(bmp, false, bmp.getByteCount());
-                }
-            } finally {
-                cursor.close();
-            }
-
-            return response;
+            Bitmap bitmap = getAlbumArt(context, albumId);
+            return (bitmap != null) ? new Response(bitmap, false, bitmap.getByteCount()) : null;
         }
     }
 

@@ -11,17 +11,12 @@
 
 package com.andrew.apollo.cache;
 
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-
 import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Looper;
-import android.os.ParcelFileDescriptor;
 import android.widget.ImageView;
 
 import com.andrew.apollo.MusicPlaybackService;
@@ -102,7 +97,7 @@ public class ImageFetcher {
         Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, albumId);
 
         if (isMain()) {
-            artwork = getArtworkFromFile(context, uri);
+            artwork = ImageLoader.getAlbumArt(context,String.valueOf(albumId));
         } else {
             artwork = imageLoader.get(uri);
         }
@@ -136,25 +131,6 @@ public class ImageFetcher {
     protected void loadImage(final String key, final String artistName, final String albumName, final long albumId, final ImageView imageView) {
         Uri uri = ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, albumId);
         imageLoader.load(uri, imageView, R.drawable.artwork_default);
-    }
-
-    public final Bitmap getArtworkFromFile(final Context context, Uri uri) {
-        Bitmap artwork = null;
-        try {
-            final ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(uri, "r");
-            if (parcelFileDescriptor != null) {
-                final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-                artwork = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            }
-        } catch (final IllegalStateException e) {
-            // Log.e(TAG, "IllegalStateExcetpion - getArtworkFromFile - ", e);
-        } catch (final FileNotFoundException e) {
-            // Log.e(TAG, "FileNotFoundException - getArtworkFromFile - ", e);
-        } catch (final OutOfMemoryError evict) {
-            // Log.e(TAG, "OutOfMemoryError - getArtworkFromFile - ", evict);
-            imageLoader.clear();
-        }
-        return artwork;
     }
 
     static boolean isMain() {
