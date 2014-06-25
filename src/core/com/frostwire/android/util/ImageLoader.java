@@ -73,6 +73,18 @@ public final class ImageLoader {
         return instance;
     }
     
+    /**
+     * WARNING: this method does not make use of the cache.
+     * it is here to be used only (so far) on the notification window view and the RC Interface (things like Lock Screen, Android Wear),
+     * which run on another process space. If you try to use a cached image there, you will get some
+     * nasty exceptions, therefore you will need this.
+     * 
+     * For loading album art inside the application Activities/Views/Fragments, take a look at FileListAdapter and how it uses the ImageLoader.
+     * 
+     * @param context
+     * @param albumId
+     * @return
+     */
     public static Bitmap getAlbumArt(Context context, String albumId) {
         Bitmap bitmap = null;
         Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[] { MediaStore.Audio.AlbumColumns.ALBUM_ART }, null, null, null);
