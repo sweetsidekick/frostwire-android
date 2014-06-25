@@ -178,6 +178,8 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
                 } else {
                     moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
                 }
+            } else {
+                moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
             }
         } else {
             moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
