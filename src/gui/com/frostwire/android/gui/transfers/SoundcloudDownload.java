@@ -43,7 +43,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
     private static final String TAG = "FW.SoundcloudDownload";
 
-    private static final long MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH = 10485760; //10MB
+    private static final long MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH = 20971520; //20MB
 
     private final TransferManager manager;
 
@@ -165,17 +165,16 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
     }
 
     private void downloadAndUpdateCoverArt(File tempFile) {
-        //abort if file is too large.
-        //TODO: Review logic of this if, is that MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH meant to be the
-        //size of the cover art file? or the file size of the actual audio file?
-        //meaning was it because Mp3File takes too long or craps out
-        //just worried we might not be setting album cover for music files > 10Mb
-        //common for soundcloud hour long mixes.
         if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
             byte[] coverArtBytes = downloadCoverArt();
             if (coverArtBytes != null && coverArtBytes.length > 0) {
                 //Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
-                setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), tempFile.getAbsolutePath());
+                String tempPath = tempFile.getAbsolutePath() + ".tmp";
+                File tempTemp = new File(tempPath);
+                if (tempFile.renameTo(tempTemp)) {
+                    setAlbumArt(coverArtBytes, tempPath, tempFile.getAbsolutePath());
+                    tempTemp.delete();
+                }
             }
         }
     }
@@ -201,7 +200,6 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
             Mp3File mp3 = new Mp3File(mp3Filename);
 
             ID3Wrapper newId3Wrapper = new ID3Wrapper(new ID3v1Tag(), new ID3v23Tag());
-
             newId3Wrapper.setAlbum(sr.getUsername() + ": " + sr.getDisplayName() + " via SoundCloud.com");
             newId3Wrapper.setArtist(sr.getUsername());
             newId3Wrapper.setTitle(sr.getDisplayName());
@@ -216,6 +214,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
             return true;
         } catch (Throwable e) {
+            e.printStackTrace();
             return false;
         }
     }
