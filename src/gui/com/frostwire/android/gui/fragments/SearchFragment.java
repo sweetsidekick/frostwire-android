@@ -149,6 +149,7 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
                 if (query.contains("://m.soundcloud.com/") || query.contains("://soundcloud.com/")) {
                     cancelSearch(view);
                     new DownloadSoundcloudFromUrlTask(getActivity(), query).execute();
+                    searchInput.setText("");
                 } else if (query.contains("youtube.com/")) {
                     performYTSearch(query);
                 }

@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.dialogs.ConfirmListDialog;
-import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.ContextTask;
@@ -52,6 +51,7 @@ import com.frostwire.util.StringUtils;
  * @author gubatron
  */
 public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<SoundcloudSearchResult>> {
+    @SuppressWarnings("unused")
     private static final Logger LOG = Logger.getLogger(DownloadSoundcloudFromUrlTask.class);
     private final String soundcloudUrl;
     private WeakReference<ConfirmSoundcloudDownloadDialog> dlgRef;
@@ -139,11 +139,11 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             }
 
             final String resolveURL = "http://api.soundcloud.com/resolve.json?url="+url+"&client_id="+clientId+"&app_version="+appVersion;;
-            LOG.debug("DownloadSoundcloudFromUrlTask.resolveURL: " + resolveURL);
-            LOG.debug("DownloadSoundcloudFromUrlTask.json >> ");
+            //LOG.debug("DownloadSoundcloudFromUrlTask.resolveURL: " + resolveURL);
+            //LOG.debug("DownloadSoundcloudFromUrlTask.json >> ");
             final String json = HttpClientFactory.newInstance().get(resolveURL,10000);
-            LOG.debug(json);
-            LOG.debug("EOF DownloadSoundcloudFromUrlTask.json");
+            //LOG.debug(json);
+            //LOG.debug("EOF DownloadSoundcloudFromUrlTask.json");
             
             if (soundcloudUrl.contains("/sets/")) {
                 //download a whole playlist
