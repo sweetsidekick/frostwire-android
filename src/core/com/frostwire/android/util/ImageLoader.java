@@ -157,6 +157,7 @@ public final class ImageLoader {
 
         @Override
         public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+            Response response = null;
             String packageName = uri.getLastPathSegment();
 
             PackageManager pm = context.getPackageManager();
@@ -164,10 +165,11 @@ public final class ImageLoader {
                 BitmapDrawable icon = (BitmapDrawable) pm.getApplicationIcon(packageName);
                 Bitmap bmp = icon.getBitmap();
 
-                return new Response(bmp, false, bmp.getByteCount());
+                response = new Response(bmp, false, bmp.getByteCount());
             } catch (NameNotFoundException e) {
-                return null;
+                response = null;
             }
+            return response;
         }
     }
 
