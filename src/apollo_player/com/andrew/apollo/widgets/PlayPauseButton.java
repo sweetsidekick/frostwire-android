@@ -13,9 +13,11 @@ package com.andrew.apollo.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.R;
@@ -57,7 +59,7 @@ public class PlayPauseButton extends ImageButton implements OnClickListener {
         } else {
             setContentDescription(getResources().getString(R.string.accessibility_play));
             setImageResource(R.drawable.btn_playback_play);
-            UIUtils.showShortMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop));
+            UIUtils.showToastMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop), Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL, 0, 10);
         }
     }
 

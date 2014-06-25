@@ -39,6 +39,7 @@ import android.text.InputType;
 import android.text.method.KeyListener;
 import android.text.method.NumberKeyListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
@@ -89,10 +90,18 @@ public final class UIUtils {
         NUMBER_FORMAT1.setGroupingUsed(true);
     }
 
-    public static void showToastMessage(Context context, String message, int duration) {
+    public static void showToastMessage(Context context, String message, int duration, int gravity, int xOffset, int yOffset) {
         if (context != null && message != null) {
-            Toast.makeText(context, message, duration).show();
+            Toast toast = Toast.makeText(context, message, duration);
+            if (gravity != (Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM)) {
+                toast.setGravity(gravity, xOffset, yOffset);
+            }
+            toast.show();
         }
+    }
+    
+    public static void showToastMessage(Context context, String message, int duration) {
+        showToastMessage(context, message, duration, Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
     }
 
     public static void showShortMessage(Context context, String message) {
