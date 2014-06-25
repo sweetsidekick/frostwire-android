@@ -153,6 +153,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
                     @Override
                     public void onComplete(HttpDownload download) {
                         downloadAndUpdateCoverArt(download.getSavePath());
+                        moveFile(download.getSavePath(), Constants.FILE_TYPE_AUDIO);
                         scanFinalFile();
                     }
                 });
@@ -165,24 +166,17 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
     private void downloadAndUpdateCoverArt(File tempFile) {
         //abort if file is too large.
+        //TODO: Review logic of this if, is that MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH meant to be the
+        //size of the cover art file? or the file size of the actual audio file?
+        //meaning was it because Mp3File takes too long or craps out
+        //just worried we might not be setting album cover for music files > 10Mb
+        //common for soundcloud hour long mixes.
         if (tempFile != null && tempFile.exists() && tempFile.length() <= MAX_ACCEPTABLE_SOUNDCLOUD_FILESIZE_FOR_COVERART_FETCH) {
-
             byte[] coverArtBytes = downloadCoverArt();
-
             if (coverArtBytes != null && coverArtBytes.length > 0) {
-//                Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
-                File finalFile = getFinalFile(tempFile, Constants.FILE_TYPE_AUDIO);
-                if (setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), finalFile.getAbsolutePath())) {
-                    tempFile.delete();
-                    this.savePath = finalFile;
-                } else {
-                    moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
-                }
-            } else {
-                moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
+                //Log.v(TAG, "cover art array length (@" + coverArtBytes.hashCode() + "): " + coverArtBytes.length);
+                setAlbumArt(coverArtBytes, tempFile.getAbsolutePath(), tempFile.getAbsolutePath());
             }
-        } else {
-            moveFile(tempFile, Constants.FILE_TYPE_AUDIO);
         }
     }
 
