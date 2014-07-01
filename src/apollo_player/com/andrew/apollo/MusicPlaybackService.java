@@ -34,6 +34,7 @@ import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.media.RemoteControlClient;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
@@ -61,6 +62,8 @@ import com.andrew.apollo.provider.RecentStore;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
+import com.frostwire.android.gui.activities.AudioPlayerActivity;
+import com.frostwire.util.Ref;
 
 /**
  * A backbround {@link Service} used to keep music playing between activities
@@ -477,6 +480,8 @@ public class MusicPlaybackService extends Service {
      * Favorites database
      */
     private FavoritesStore mFavoritesCache;
+    
+    private boolean launchPlayerActivity;
 
     /**
      * {@inheritDoc}
@@ -1909,6 +1914,7 @@ public class MusicPlaybackService extends Service {
      * @param position The position to start playback at
      */
     public void open(final long[] list, final int position) {
+        launchPlayerActivity = true;
         synchronized (this) {
             if (mShuffleMode == SHUFFLE_AUTO) {
                 mShuffleMode = SHUFFLE_NORMAL;
@@ -2408,6 +2414,25 @@ public class MusicPlaybackService extends Service {
             }
         }
     }
+    
+    private static final class AudioOnPreparedListener implements OnPreparedListener {
+
+        private WeakReference<? extends Context> ctxRef;
+        
+        public AudioOnPreparedListener(WeakReference<? extends Context> contextRef) {
+            ctxRef = contextRef;
+        }
+        
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+
+            if (Ref.alive(ctxRef)) {
+                Intent i = new Intent(ctxRef.get(), AudioPlayerActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctxRef.get().startActivity(i);
+            }
+        }
+    }
 
     private static final class Shuffler {
 
@@ -2501,7 +2526,10 @@ public class MusicPlaybackService extends Service {
         private boolean setDataSourceImpl(final MediaPlayer player, final String path) {
             try {
                 player.reset();
-                player.setOnPreparedListener(null);
+                if (Ref.alive(mService)&& mService.get().launchPlayerActivity) {
+                    mService.get().launchPlayerActivity = false;
+                    player.setOnPreparedListener(new AudioOnPreparedListener(mService));
+                }
                 if (path.startsWith("content://")) {
                     player.setDataSource(mService.get(), Uri.parse(path));
                 } else {
