@@ -3,7 +3,8 @@ package com.andrew.apollo.loaders;
 
 import static com.andrew.apollo.utils.MusicUtils.mService;
 
-import android.annotation.SuppressLint;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
@@ -12,16 +13,13 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-
-import java.util.Arrays;
 
 /**
  * A custom {@link Cursor} used to return the queue and allow for easy dragging
  * and dropping of the items in it.
  */
-@SuppressLint("NewApi")
+//@SuppressLint("NewApi")
 public class NowPlayingCursor extends AbstractCursor {
 
     private static final String[] PROJECTION = new String[] {
