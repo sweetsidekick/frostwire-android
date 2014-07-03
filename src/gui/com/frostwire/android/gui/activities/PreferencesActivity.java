@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -48,7 +49,6 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
 import com.frostwire.android.util.StorageMount;
-import com.frostwire.android.util.StorageUtils;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -151,7 +151,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private void setupStoragePathOption() {
         ListPreference preferenceStoragePath = (ListPreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
 
-        List<StorageMount> mounts = StorageUtils.getStorageMounts();
+        List<StorageMount> mounts = new ArrayList<StorageMount>();// StorageUtils.getStorageMounts();
         int count = mounts.size();
 
         CharSequence[] entries = new CharSequence[count];
