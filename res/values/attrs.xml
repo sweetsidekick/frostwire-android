@@ -19,7 +19,12 @@
  */
 -->
 <resources>
-
+	<declare-styleable name="RichNotification">
+	    <attr name="rich_notification_icon" format="reference"/>
+	    <attr name="rich_notification_title" format="string"/>
+	    <attr name="rich_notification_description" format="string"/>
+	</declare-styleable>
+	
     <declare-styleable name="SimpleActionPreference">
         <attr name="button_text" format="string" />
     </declare-styleable>

@@ -348,7 +348,7 @@
     <string name="wizard_previous">Previous</string>
     <string name="wizard_next">Next</string>
     <string name="wizard_finish">Finish</string>
-    <string name="dummy_content_description"></string>
+    <string name="dummy_content_description">[dummy description]</string>
     <string name="welcome_to_frostwire">Welcome to FrostWire</string>
     <string name="let_apos_s_set_you_up_before_we_begin_">Let\'s set you up before we begin.</string>
     <string name="how_others_see_you_on_the_local_network_wifi_">How others see you on the local network (Wi-Fi)</string>
@@ -516,4 +516,6 @@
     <string name="menu_delete_shortcut_label">Del</string>
     <string name="menu_space_shortcut_label">Space</string>
     <string name="cant_open_file_does_not_exist">I can\'t open %1$s, the file does not exist.</string>
+    <string name="saving_to_sd_card">Saving to SD Card.</string>
+    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
 </resources>

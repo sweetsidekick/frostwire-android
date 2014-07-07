@@ -38,6 +38,7 @@
     <color name="body_background_gray_light">@color/basic_gray_light</color>
     <color name="btn_background_on_light">@color/basic_blue</color>
     <color name="app_text_highlight">@color/basic_blue_highlight</color>
+    <color name="app_rich_notification_background">#ffffedad</color>
 
     <!-- Other colors (old) -->
     <color name="frostwire_light_blue">#ff7adafa</color>

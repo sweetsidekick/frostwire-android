@@ -55,6 +55,7 @@ public class ClearableEditTextView extends RelativeLayout {
 
         TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.ClearableEditTextView);
         hint = arr.getString(R.styleable.ClearableEditTextView_clearable_hint);
+        arr.recycle();
     }
 
     public void setShowKeyboardOnPaste(boolean show) {

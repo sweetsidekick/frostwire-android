@@ -53,6 +53,7 @@ public class SimpleActionPreference extends Preference {
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.SimpleActionPreference);
 
         buttonText = attributes.getString(R.styleable.SimpleActionPreference_button_text);
+        attributes.recycle();
     }
 
     @Override
