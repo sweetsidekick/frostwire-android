@@ -28,6 +28,8 @@ import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -50,6 +52,7 @@ public class StoragePreference extends DialogPreference {
         super(context, attrs);
 
         setDialogLayoutResource(R.layout.dialog_preference_storage);
+        setPositiveButtonText(null);
     }
 
     public StoragePreference(Context context) {
@@ -63,6 +66,12 @@ public class StoragePreference extends DialogPreference {
         ListView list = (ListView) view.findViewById(R.id.dialog_preference_storage_list);
 
         list.setAdapter(new StoragesAdapter(getContext()));
+        list.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getDialog().dismiss();
+            }
+        });
     }
 
     private static final class StorageMount {
