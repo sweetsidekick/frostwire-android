@@ -80,4 +80,16 @@ public final class SystemUtils {
     public static boolean isExternalStorageMounted() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
+
+    public static long getAvailableStorageSize(File dir) {
+        long size = -1;
+        try {
+            StatFs stat = new StatFs(dir.getAbsolutePath());
+            size = stat.getAvailableBlocks() * stat.getBlockSize();
+        } catch (Throwable e) {
+            size = -1; // system error computing the available storage size
+        }
+
+        return size;
+    }
 }

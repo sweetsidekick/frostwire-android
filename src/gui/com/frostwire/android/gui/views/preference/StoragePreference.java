@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.views.preference;
 
+import java.io.File;
+
 import android.content.Context;
 import android.os.Environment;
 import android.preference.DialogPreference;
@@ -28,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.util.SystemUtils;
 
@@ -90,19 +93,29 @@ public class StoragePreference extends DialogPreference {
         }
 
         private void addItems(Context context) {
+            StorageMount primary = getPrimaryExternal(context);
+            if (primary != null) {
+                add(primary);
+            }
             add(new StorageMount("a", "a", "a"));
             add(new StorageMount("b", "b", "b"));
             add(new StorageMount("c", "c", "cs"));
         }
-        
-//        private StorageMount getPrimaryExternal(Context context) {
-//            if (SystemUtils.isExternalStorageMounted()) {
-//                String label = context.getString(R.string.device_memory);
-//                String description = "";
-//                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            } else {
-//                return null;
-//            }
-//        }
+
+        private StorageMount getPrimaryExternal(Context context) {
+            StorageMount mount = null;
+
+            if (SystemUtils.isExternalStorageMounted()) {
+                File dir = Environment.getExternalStorageDirectory();
+
+                String label = context.getString(R.string.device_memory);
+                String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(dir));
+                String path = dir.getAbsolutePath();
+
+                mount = new StorageMount(label, description, path);
+            }
+
+            return mount;
+        }
     }
 }
