@@ -135,6 +135,16 @@ public final class SystemUtils {
     public static File getUpdateInstallerPath() {
         return new File(SystemUtils.getSaveDirectory(Constants.FILE_TYPE_APPLICATIONS), APPLICATION_NAME);
     }
+    
+    /**
+     * Is it using the SD Card's private (non-persistent after uninstall) app folder to save
+     * downloaded files?
+     * @return
+     */
+    public static boolean isUsingSDCardPrivateStorage() {
+    	//TODO: implement this stub.
+    	return true;
+    }
 
     private static File createFolder(File parentDir, String folderName) {
         try {
