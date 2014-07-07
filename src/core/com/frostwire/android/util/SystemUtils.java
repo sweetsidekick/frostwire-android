@@ -42,10 +42,10 @@ public final class SystemUtils {
     public static File getCacheDir(Context context, String directory) {
         File cache = null;
 
-        if (Environment.isExternalStorageRemovable()) {
-            cache = context.getCacheDir();
-        } else {
+        if (isExternalStorageMounted()) {
             cache = context.getExternalCacheDir();
+        } else {
+            cache = context.getCacheDir();
         }
 
         return new File(cache, directory);
