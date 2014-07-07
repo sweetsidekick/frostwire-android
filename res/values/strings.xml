@@ -348,7 +348,7 @@
     <string name="wizard_previous">Previous</string>
     <string name="wizard_next">Next</string>
     <string name="wizard_finish">Finish</string>
-    <string name="dummy_content_description"></string>
+    <string name="dummy_content_description">[dummy description]</string>
     <string name="welcome_to_frostwire">Welcome to FrostWire</string>
     <string name="let_apos_s_set_you_up_before_we_begin_">Let\'s set you up before we begin.</string>
     <string name="how_others_see_you_on_the_local_network_wifi_">How others see you on the local network (Wi-Fi)</string>

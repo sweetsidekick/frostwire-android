@@ -78,6 +78,12 @@
             android:text="@string/transfers_select_completed"
             android:textSize="12sp" />
     </RadioGroup>
+    
+    <com.frostwire.android.gui.views.RichNotification
+        android:id="@+id/fragment_transfers_rich_notification"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"  
+    />
 
     <com.frostwire.android.gui.views.ExpandableListView
         android:id="@+id/fragment_transfers_list"
