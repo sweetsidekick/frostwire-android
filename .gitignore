@@ -9,3 +9,6 @@ tools/emulator.properties
 *~
 tests/bin/
 tests/gen/
+.idea/
+*.iml
+*.iws
