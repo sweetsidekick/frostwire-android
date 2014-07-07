@@ -22,6 +22,8 @@ import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
 /**
@@ -82,5 +84,21 @@ public abstract class AbstractAdapter<T> extends ArrayAdapter<T> {
         }
 
         return v;
+    }
+
+    public static abstract class OnItemClickAdapter<T> implements OnItemClickListener {
+
+        @Override
+        public final void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            try {
+                @SuppressWarnings("unchecked")
+                AbstractAdapter<T> adapter = (AbstractAdapter<T>) parent.getAdapter();
+                onItemClick(parent, view, adapter, position, id);
+            } catch (ClassCastException e) {
+                // ignore
+            }
+        }
+
+        public abstract void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<T> adapter, int position, long id);
     }
 }

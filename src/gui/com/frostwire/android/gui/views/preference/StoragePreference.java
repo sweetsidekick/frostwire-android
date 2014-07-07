@@ -29,7 +29,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -39,6 +38,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
+import com.frostwire.android.gui.views.AbstractAdapter.OnItemClickAdapter;
 import com.frostwire.android.util.SystemUtils;
 
 /**
@@ -66,9 +66,10 @@ public class StoragePreference extends DialogPreference {
         ListView list = (ListView) view.findViewById(R.id.dialog_preference_storage_list);
 
         list.setAdapter(new StoragesAdapter(getContext()));
-        list.setOnItemClickListener(new OnItemClickListener() {
+        list.setOnItemClickListener(new OnItemClickAdapter<StorageMount>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
+                System.out.println(adapter.getItem(position).path);
                 getDialog().dismiss();
             }
         });
