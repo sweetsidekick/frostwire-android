@@ -1,6 +1,8 @@
-FrostWire 1.3.4 - JULY/1/2014
+FrostWire 1.3.4 - JULY/7/2014
  - Doesn't prefer external storage as the app install path.
  - Opens Music Player window when playing a song from My Music.
+ - Moved vuze settings files to primary external private folder.
+ - Makeover on Preferences screen, setting groups now in separate screens.
 
 FrostWire 1.3.3 - JUNE/27/2014
  - Improvements in memory consumption and performance for image caching.
