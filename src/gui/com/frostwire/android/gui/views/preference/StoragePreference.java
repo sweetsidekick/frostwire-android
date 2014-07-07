@@ -19,10 +19,13 @@
 package com.frostwire.android.gui.views.preference;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.os.Environment;
 import android.preference.DialogPreference;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -97,9 +100,10 @@ public class StoragePreference extends DialogPreference {
             if (primary != null) {
                 add(primary);
             }
-            add(new StorageMount("a", "a", "a"));
-            add(new StorageMount("b", "b", "b"));
-            add(new StorageMount("c", "c", "cs"));
+
+            for (StorageMount mount : getSecondayExternals(context)) {
+                add(mount);
+            }
         }
 
         private StorageMount getPrimaryExternal(Context context) {
@@ -108,7 +112,7 @@ public class StoragePreference extends DialogPreference {
             if (SystemUtils.isExternalStorageMounted()) {
                 File dir = Environment.getExternalStorageDirectory();
 
-                String label = context.getString(R.string.device_memory);
+                String label = context.getString(R.string.device_storage);
                 String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(dir));
                 String path = dir.getAbsolutePath();
 
@@ -116,6 +120,29 @@ public class StoragePreference extends DialogPreference {
             }
 
             return mount;
+        }
+
+        private List<StorageMount> getSecondayExternals(Context context) {
+            List<StorageMount> mounts = new ArrayList<StorageMount>();
+
+            String primaryPath = context.getExternalFilesDir(null).getParent();
+
+            int i = 0;
+
+            for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
+                if (!f.getAbsolutePath().startsWith(primaryPath)) {
+
+                    String label = context.getString(R.string.sdcard_storage) + " " + (++i);
+                    String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f));
+                    String path = f.getAbsolutePath();
+
+                    StorageMount mount = new StorageMount(label, description, path);
+
+                    mounts.add(mount);
+                }
+            }
+
+            return mounts;
         }
     }
 }
