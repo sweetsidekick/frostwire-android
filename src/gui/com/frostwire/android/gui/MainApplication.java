@@ -25,6 +25,7 @@ import java.util.Map;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -76,8 +77,8 @@ public class MainApplication extends Application {
             // important initial setup here
             ConfigurationManager.create(this);
 
-            // important setup at very begining
-            String azureusPath = SystemUtils.getAzureusDirectory().getAbsolutePath();
+            // important setup at the very beginning
+            String azureusPath = SystemUtils.getAzureusDirectory(this).getAbsolutePath();
             String torrentsPath = SystemUtils.getTorrentsDirectory().getAbsolutePath();
             Map<String, String> messages = getVuzeMessages(this);
             VuzeConfiguration conf = new VuzeConfiguration(azureusPath, torrentsPath, messages);
@@ -89,7 +90,10 @@ public class MainApplication extends Application {
 
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
 
-            DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
+            // to alleviate a little if the external storage is not mounted
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
+            }
 
             Librarian.instance().syncMediaStore();
             Librarian.instance().syncApplicationsProvider();

@@ -21,6 +21,8 @@ package com.frostwire.android.gui.util;
 import java.io.File;
 import java.io.IOException;
 
+import android.content.Context;
+
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 
@@ -42,7 +44,7 @@ public final class SystemUtils {
     private static final String TORRENT_DATA_FOLDER_NAME = "TorrentsData";
     private static final String DESKTOP_FILES_FOLDER_NAME = "DesktopFiles";
     private static final String TEMP_FOLDER_NAME = "Temp";
-    private static final String AZUREUS_FOLDER_NAME = ".azureus";
+    private static final String AZUREUS_FOLDER_NAME = "vuze";
 
     private static final String APPLICATION_NAME = "frostwire.apk";
 
@@ -62,12 +64,12 @@ public final class SystemUtils {
             externalStorageDirectory = new File(path);
             result = createFolder(externalStorageDirectory, FROSTWIRE_FOLDER_NAME);
         }
-        
+
         return result;
     }
 
-    public static File getAzureusDirectory() {
-        return createFolder(getApplicationStorageDirectory(), AZUREUS_FOLDER_NAME);
+    public static File getAzureusDirectory(Context context) {
+        return createFolder(context.getExternalFilesDir(null), AZUREUS_FOLDER_NAME);
     }
 
     public static File getTorrentsDirectory() {
