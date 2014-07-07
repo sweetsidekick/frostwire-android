@@ -29,6 +29,7 @@ import android.content.ClipData;
 import android.content.ClipData.Item;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.activities.MainActivity;
+import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
@@ -56,6 +58,7 @@ import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.transfers.YouTubeDownload;
+import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
@@ -63,6 +66,7 @@ import com.frostwire.android.gui.views.ClearableEditTextView;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.DonationsController;
+import com.frostwire.android.gui.views.RichNotification;
 import com.frostwire.android.gui.views.TimerObserver;
 import com.frostwire.android.gui.views.TimerService;
 import com.frostwire.android.gui.views.TimerSubscription;
@@ -243,6 +247,15 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     @Override
     protected void initComponents(View v) {
+		RichNotification notification = findView(v, R.id.fragment_transfers_rich_notification);
+    	if (SystemUtils.isUsingSDCardPrivateStorage() &&
+    		!notification.wasDismissed()) {
+    		notification.setVisibility(View.VISIBLE);
+    		notification.setOnClickListener(new SDCardNotificationListener(this));
+    	} else {
+    		notification.setVisibility(View.GONE);
+    	}
+    	
         buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
         buttonSelectAll.setOnClickListener(new ButtonTabListener(this, TransferStatus.ALL));
 
@@ -607,5 +620,18 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             f.selectedStatus = status;
             f.onTime();
         }
+    }
+    
+    private static final class SDCardNotificationListener extends ClickAdapter<TransfersFragment> {
+
+		public SDCardNotificationListener(TransfersFragment owner) {
+			super(owner);
+		}
+    	
+		@Override
+		public void onClick(TransfersFragment owner, View v) {
+	        Intent i = new Intent(owner.getActivity(), PreferencesActivity.class);
+	        owner.getActivity().startActivity(i);
+		}
     }
 }
