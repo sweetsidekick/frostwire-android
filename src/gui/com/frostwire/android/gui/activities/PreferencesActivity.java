@@ -32,6 +32,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -133,7 +134,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void setupSearchEngines() {
-        PreferenceCategory category = (PreferenceCategory) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
+    	PreferenceScreen category = (PreferenceScreen) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
         for (SearchEngine engine : SearchEngine.getEngines()) {
             CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
             if (!engine.isActive()) {
