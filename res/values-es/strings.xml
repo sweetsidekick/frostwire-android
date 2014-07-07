@@ -385,7 +385,8 @@
     <string name="support_frostwire_summary">Muestra anuncios para respaldar el desarrollo de esta aplicación.</string>
     <string name="storage_preference_title">Seleccionar ubicación de almacenamiento</string>
     <string name="storage_preference_summary">La ubicación de almacenamiento por defecto donde se guardarán los archivos.</string>
-    <string name="connectivity">Conectividad</string>
+    <string name="bittorrent">BitTorrent</string>
+    <string name="bittorrent_network_summary">Estado de conexión</string>
     <string name="loading">Cargando</string>
     <string name="wifi_sharing">Red Wi-Fi</string>
     <string name="activity_mediaplayer_name">Reproductor</string>

@@ -392,7 +392,8 @@
     <string name="support_frostwire_summary">Show ads to support the development of this app.</string>
     <string name="storage_preference_title">Select Storage Location</string>
     <string name="storage_preference_summary">The default storage location where files will be saved.</string>
-    <string name="connectivity">Connectivity</string>
+    <string name="bittorrent">BitTorrent</string>
+    <string name="bittorrent_network_summary">BitTorrent connection status</string>
     <string name="loading">Loading</string>
     <string name="wifi_sharing">Wi-Fi Sharing</string>
     <string name="activity_mediaplayer_name">Media Player</string>
