@@ -21,8 +21,13 @@ package com.frostwire.android.gui.views.preference;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.gui.views.AbstractAdapter;
 
 /**
  * @author gubatron
@@ -33,8 +38,7 @@ public class StoragePreference extends DialogPreference {
 
     public StoragePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
-        
+
         setDialogLayoutResource(R.layout.dialog_preference_storage);
     }
 
@@ -42,38 +46,48 @@ public class StoragePreference extends DialogPreference {
         this(context, null);
     }
 
-    private void init() {
-        //        List<StorageMount> mounts = new ArrayList<StorageMount>();// StorageUtils.getStorageMounts();
-        //        mounts.add(new StorageMount("a", "b"));
-        //        mounts.add(new StorageMount("c", "d"));
-        //        int count = mounts.size();
-        //
-        //        CharSequence[] entries = new CharSequence[count];
-        //        CharSequence[] values = new CharSequence[count];
-        //
-        //        for (int i = 0; i < count; i++) {
-        //            StorageMount sm = mounts.get(i);
-        //            entries[i] = sm.getLabel();
-        //            values[i] = sm.getPath();
-        //        }
+    @Override
+    protected void onBindDialogView(View view) {
+        super.onBindDialogView(view);
+
+        ListView list = (ListView) view.findViewById(R.id.dialog_preference_storage_list);
+
+        list.setAdapter(new StoragesAdapter(getContext()));
     }
 
     private static final class StorageMount {
 
-        private final String label;
-        private final String path;
-
-        public StorageMount(String label, String path) {
+        public StorageMount(String label, String description, String path) {
             this.label = label;
+            this.description = description;
             this.path = path;
         }
 
-        public String getLabel() {
-            return label;
+        public final String label;
+        public final String description;
+        public final String path;
+    }
+
+    private final class StoragesAdapter extends AbstractAdapter<StorageMount> {
+
+        public StoragesAdapter(Context context) {
+            super(context, R.layout.view_preference_storage_list_item);
+
+            addItems(context);
         }
 
-        public String getPath() {
-            return path;
+        @Override
+        protected void setupView(View view, StorageMount item) {
+            ImageView icon = findView(view, R.id.view_preference_storage_list_item_icon);
+            TextView label = findView(view, R.id.view_preference_storage_list_item_label);
+
+            label.setText(item.label);
+        }
+
+        private void addItems(Context context) {
+            add(new StorageMount("a", "a", "a"));
+            add(new StorageMount("b", "b", "b"));
+            add(new StorageMount("c", "c", "cs"));
         }
     }
 }
