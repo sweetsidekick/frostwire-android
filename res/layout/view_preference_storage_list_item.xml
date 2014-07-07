@@ -48,4 +48,13 @@
         android:layout_toRightOf="@id/view_preference_storage_list_item_icon"
         android:text="@string/dummy_summary" />
 
+    <RadioButton
+        android:id="@+id/view_preference_storage_list_item_radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:checked="false"
+        android:focusable="false" />
+
 </RelativeLayout>

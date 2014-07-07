@@ -30,9 +30,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.util.SystemUtils;
@@ -89,10 +91,17 @@ public class StoragePreference extends DialogPreference {
             ImageView icon = findView(view, R.id.view_preference_storage_list_item_icon);
             TextView label = findView(view, R.id.view_preference_storage_list_item_label);
             TextView description = findView(view, R.id.view_preference_storage_list_item_description);
+            RadioButton radio = findView(view, R.id.view_preference_storage_list_item_radio);
 
             icon.setImageResource(R.drawable.app_icon);
             label.setText(item.label);
             description.setText(item.description);
+
+            if (ConfigurationManager.instance().getStoragePath().equals(item.path)) {
+                radio.setChecked(true);
+            } else {
+                radio.setChecked(false);
+            }
         }
 
         private void addItems(Context context) {

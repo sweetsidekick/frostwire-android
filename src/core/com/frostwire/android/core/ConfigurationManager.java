@@ -191,6 +191,10 @@ public class ConfigurationManager {
     public void unregisterOnPreferenceChange(OnSharedPreferenceChangeListener listener) {
         preferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
+    
+    public String getStoragePath() {
+        return ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+    }
 
     private void initPreferences() {
         for (Entry<String, Object> entry : defaults.getDefaultValues().entrySet()) {
