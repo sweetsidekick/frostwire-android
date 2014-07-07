@@ -25,8 +25,6 @@ import android.content.Context;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 
-import com.frostwire.android.util.StorageMount;
-
 /**
  * @author gubatron
  * @author aldenml
@@ -60,5 +58,24 @@ public class StoragePreference extends ListPreference {
 
 		setEntries(entries);
 		setEntryValues(values);
+	}
+	
+	private static final class StorageMount {
+
+	    private final String label;
+	    private final String path;
+
+	    public StorageMount(String label, String path) {
+	        this.label = label;
+	        this.path = path;
+	    }
+
+	    public String getLabel() {
+	        return label;
+	    }
+
+	    public String getPath() {
+	        return path;
+	    }
 	}
 }
