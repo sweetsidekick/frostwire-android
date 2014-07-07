@@ -18,64 +18,62 @@
 
 package com.frostwire.android.gui.views.preference;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
-import android.preference.ListPreference;
+import android.preference.DialogPreference;
 import android.util.AttributeSet;
+
+import com.frostwire.android.R;
 
 /**
  * @author gubatron
  * @author aldenml
  *
  */
-public class StoragePreference extends ListPreference {
+public class StoragePreference extends DialogPreference {
 
-	public StoragePreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+    public StoragePreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+        
+        setDialogLayoutResource(R.layout.dialog_preference_storage);
+    }
 
-	public StoragePreference(Context context) {
-		this(context, null);
-	}
+    public StoragePreference(Context context) {
+        this(context, null);
+    }
 
-	private void init() {
-		List<StorageMount> mounts = new ArrayList<StorageMount>();// StorageUtils.getStorageMounts();
-		mounts.add(new StorageMount("a", "b"));
-		mounts.add(new StorageMount("c", "d"));
-		int count = mounts.size();
+    private void init() {
+        //        List<StorageMount> mounts = new ArrayList<StorageMount>();// StorageUtils.getStorageMounts();
+        //        mounts.add(new StorageMount("a", "b"));
+        //        mounts.add(new StorageMount("c", "d"));
+        //        int count = mounts.size();
+        //
+        //        CharSequence[] entries = new CharSequence[count];
+        //        CharSequence[] values = new CharSequence[count];
+        //
+        //        for (int i = 0; i < count; i++) {
+        //            StorageMount sm = mounts.get(i);
+        //            entries[i] = sm.getLabel();
+        //            values[i] = sm.getPath();
+        //        }
+    }
 
-		CharSequence[] entries = new CharSequence[count];
-		CharSequence[] values = new CharSequence[count];
+    private static final class StorageMount {
 
-		for (int i = 0; i < count; i++) {
-			StorageMount sm = mounts.get(i);
-			entries[i] = sm.getLabel();
-			values[i] = sm.getPath();
-		}
+        private final String label;
+        private final String path;
 
-		setEntries(entries);
-		setEntryValues(values);
-	}
-	
-	private static final class StorageMount {
+        public StorageMount(String label, String path) {
+            this.label = label;
+            this.path = path;
+        }
 
-	    private final String label;
-	    private final String path;
+        public String getLabel() {
+            return label;
+        }
 
-	    public StorageMount(String label, String path) {
-	        this.label = label;
-	        this.path = path;
-	    }
-
-	    public String getLabel() {
-	        return label;
-	    }
-
-	    public String getPath() {
-	        return path;
-	    }
-	}
+        public String getPath() {
+            return path;
+        }
+    }
 }
