@@ -80,8 +80,11 @@ public class StoragePreference extends DialogPreference {
         protected void setupView(View view, StorageMount item) {
             ImageView icon = findView(view, R.id.view_preference_storage_list_item_icon);
             TextView label = findView(view, R.id.view_preference_storage_list_item_label);
+            TextView description = findView(view, R.id.view_preference_storage_list_item_description);
 
+            icon.setImageResource(R.drawable.app_icon);
             label.setText(item.label);
+            description.setText(item.description);
         }
 
         private void addItems(Context context) {

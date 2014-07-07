@@ -37,7 +37,15 @@
         android:id="@+id/view_preference_storage_list_item_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/view_preference_storage_list_item_icon" />
+        android:layout_toRightOf="@id/view_preference_storage_list_item_icon"
+        android:text="@string/dummy_title" />
+
+    <TextView
+        android:id="@+id/view_preference_storage_list_item_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_preference_storage_list_item_label"
+        android:layout_toRightOf="@id/view_preference_storage_list_item_icon"
+        android:text="@string/dummy_summary" />
 
 </RelativeLayout>
