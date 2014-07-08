@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -42,7 +43,6 @@ public final class SystemUtils {
     private static final String RINGTONES_FOLDER_NAME = "Ringtones";
     private static final String TORRENTS_FOLDER_NAME = "Torrents";
     private static final String TORRENT_DATA_FOLDER_NAME = "TorrentsData";
-    private static final String DESKTOP_FILES_FOLDER_NAME = "DesktopFiles";
     private static final String TEMP_FOLDER_NAME = "Temp";
     private static final String AZUREUS_FOLDER_NAME = "vuze";
 
@@ -78,10 +78,6 @@ public final class SystemUtils {
 
     public static File getTorrentDataDirectory() {
         return createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
-    }
-
-    public static File getDesktopFilesirectory() {
-        return createFolder(getApplicationStorageDirectory(), DESKTOP_FILES_FOLDER_NAME);
     }
 
     public static File getTempDirectory() {
@@ -135,15 +131,17 @@ public final class SystemUtils {
     public static File getUpdateInstallerPath() {
         return new File(SystemUtils.getSaveDirectory(Constants.FILE_TYPE_APPLICATIONS), APPLICATION_NAME);
     }
-    
+
     /**
      * Is it using the SD Card's private (non-persistent after uninstall) app folder to save
      * downloaded files?
      * @return
      */
     public static boolean isUsingSDCardPrivateStorage() {
-    	//TODO: implement this stub.
-    	return true;
+        String primaryPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String currentPath = ConfigurationManager.instance().getStoragePath();
+
+        return !primaryPath.equals(currentPath);
     }
 
     private static File createFolder(File parentDir, String folderName) {
