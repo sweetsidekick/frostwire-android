@@ -45,12 +45,14 @@
         
         <TextView android:id="@+id/view_rich_notification_title"
             android:text="@string/dummy_title"
+            android:textSize="@dimen/text_size_small"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"/>
         
         <TextView android:id="@+id/view_rich_notification_text"
             android:text="@string/dummy_content_description"
+            android:textSize="@dimen/text_size_micro"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"/>        
@@ -59,6 +61,7 @@
     <View android:id="@+id/view_rich_notification_close_button_vertical_separator"
         android:layout_width="1sp"
         android:layout_height="34sp"
+        android:layout_marginRight="5sp"
         android:background="@color/app_dark_blue"/>
 
     <ImageButton android:id="@+id/view_rich_notification_close_button"
@@ -66,5 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:background="@null"
+        android:layout_marginRight="5sp"
         android:src="@drawable/clearable_edittext_clear_icon"/>
 </LinearLayout>
