@@ -52,6 +52,7 @@ import com.frostwire.android.util.SystemUtils;
 public class StoragePreference extends DialogPreference {
 
     private Dialog confirmDlg;
+    private String selectedPath;
 
     public StoragePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -74,8 +75,13 @@ public class StoragePreference extends DialogPreference {
         list.setOnItemClickListener(new OnItemClickAdapter<StorageMount>() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
-                confirmDlg = showConfirmDialog(getContext());
-                confirmDlg.show();
+                selectedPath = adapter.getItem(position).path;
+                if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
+                    dismissPreferenceDialog();
+                } else {
+                    confirmDlg = showConfirmDialog(getContext());
+                    confirmDlg.show();
+                }
             }
         });
     }
@@ -89,8 +95,9 @@ public class StoragePreference extends DialogPreference {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (dialog != null && dialog.equals(confirmDlg)) {
-            if (which == Dialog.BUTTON_POSITIVE) {
-                System.out.println("Perform CHANGE");
+            if (which == Dialog.BUTTON_POSITIVE && selectedPath != null) {
+                ConfigurationManager.instance().setStoragePath(selectedPath);
+                dismissPreferenceDialog();
             }
         } else {
             super.onClick(dialog, which);
@@ -104,6 +111,12 @@ public class StoragePreference extends DialogPreference {
     private void dismissConfirmDialog() {
         if (confirmDlg != null && confirmDlg.isShowing()) {
             confirmDlg.dismiss();
+        }
+    }
+
+    private void dismissPreferenceDialog() {
+        if (getDialog() != null) {
+            getDialog().dismiss();
         }
     }
 

@@ -106,11 +106,11 @@ public class ConfigurationManager {
         editor.putBoolean(key, value);
         editor.commit();
     }
-    
+
     public File getFile(String key) {
         return new File(preferences.getString(key, ""));
     }
-    
+
     public void setFile(String key, File value) {
         editor.putString(key, value.getAbsolutePath());
         editor.commit();
@@ -133,11 +133,11 @@ public class ConfigurationManager {
     public void resetToDefaults() {
         resetToDefaults(defaults.getDefaultValues());
     }
-    
+
     public void resetToDefault(String key) {
         if (defaults != null) {
             Map<String, Object> defaultValues = defaults.getDefaultValues();
-            if (defaultValues!= null && defaultValues.containsKey(key)) {
+            if (defaultValues != null && defaultValues.containsKey(key)) {
                 Object defaultValue = defaultValues.get(key);
                 initPreference(key, defaultValue, true);
             }
@@ -191,9 +191,15 @@ public class ConfigurationManager {
     public void unregisterOnPreferenceChange(OnSharedPreferenceChangeListener listener) {
         preferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
-    
+
     public String getStoragePath() {
-        return ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+        return getString(Constants.PREF_KEY_STORAGE_PATH);
+    }
+
+    public void setStoragePath(String path) {
+        if (path != null && path.length() > 0) { // minor verifications
+            setString(Constants.PREF_KEY_STORAGE_PATH, path);
+        }
     }
 
     private void initPreferences() {
@@ -228,15 +234,15 @@ public class ConfigurationManager {
             setString(prefKeyName, defaultValue);
         }
     }
-    
+
     private void initByteArrayPreference(String prefKeyName, byte[] defaultValue, boolean force) {
         if (!preferences.contains(prefKeyName) || force) {
             setByteArray(prefKeyName, defaultValue);
         }
     }
-    
+
     private void initBooleanPreference(String prefKeyName, boolean defaultValue, boolean force) {
-        if (!preferences.contains(prefKeyName) || force ) {
+        if (!preferences.contains(prefKeyName) || force) {
             setBoolean(prefKeyName, defaultValue);
         }
     }
@@ -246,7 +252,7 @@ public class ConfigurationManager {
             setInt(prefKeyName, defaultValue);
         }
     }
-    
+
     private void initLongPreference(String prefKeyName, long defaultValue, boolean force) {
         if (!preferences.contains(prefKeyName) || force) {
             setLong(prefKeyName, defaultValue);
@@ -259,7 +265,6 @@ public class ConfigurationManager {
         }
     }
 
-    
     private void resetToDefaults(Map<String, Object> map) {
         for (Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof String) {
