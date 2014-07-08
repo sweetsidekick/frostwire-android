@@ -518,4 +518,5 @@
     <string name="cant_open_file_does_not_exist">I can\'t open %1$s, the file does not exist.</string>
     <string name="saving_to_sd_card">Saving to SD Card.</string>
     <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
+    <string name="device_memory">Device\'s Memory</string>
 </resources>

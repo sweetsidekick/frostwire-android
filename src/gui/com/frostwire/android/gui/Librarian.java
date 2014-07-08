@@ -42,7 +42,6 @@ import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Process;
 import android.provider.BaseColumns;
 import android.provider.MediaStore.MediaColumns;
@@ -362,7 +361,7 @@ public final class Librarian {
     }
 
     public boolean isExternalStorageMounted() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+        return com.frostwire.android.util.SystemUtils.isExternalStorageMounted();
     }
 
     /**

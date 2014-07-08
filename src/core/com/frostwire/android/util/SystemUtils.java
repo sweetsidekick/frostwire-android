@@ -76,4 +76,8 @@ public final class SystemUtils {
         // Bound inside min/max size for disk cache.
         return Math.max(Math.min(size, maxSize), minSize);
     }
+
+    public static boolean isExternalStorageMounted() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
 }

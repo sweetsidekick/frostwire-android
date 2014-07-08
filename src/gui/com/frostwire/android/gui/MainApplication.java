@@ -91,7 +91,7 @@ public class MainApplication extends Application {
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
 
             // to alleviate a little if the external storage is not mounted
-            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            if (com.frostwire.android.util.SystemUtils.isExternalStorageMounted()) {
                 DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
             }
 

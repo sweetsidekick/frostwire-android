@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.views.preference;
 
 import android.content.Context;
+import android.os.Environment;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.AbstractAdapter;
+import com.frostwire.android.util.SystemUtils;
 
 /**
  * @author gubatron
@@ -92,5 +94,15 @@ public class StoragePreference extends DialogPreference {
             add(new StorageMount("b", "b", "b"));
             add(new StorageMount("c", "c", "cs"));
         }
+        
+//        private StorageMount getPrimaryExternal(Context context) {
+//            if (SystemUtils.isExternalStorageMounted()) {
+//                String label = context.getString(R.string.device_memory);
+//                String description = "";
+//                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            } else {
+//                return null;
+//            }
+//        }
     }
 }
