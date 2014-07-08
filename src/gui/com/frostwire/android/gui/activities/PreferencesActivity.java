@@ -74,7 +74,6 @@ public class PreferencesActivity extends PreferenceActivity {
         setupClearIndex();
         setupSearchEngines();
         setupUPnPOption();
-        setupStoragePathOption();
         setupUXStatsOption();
     }
 
@@ -146,25 +145,6 @@ public class PreferencesActivity extends PreferenceActivity {
     private void updateIndexSummary(SimpleActionPreference preference) {
         float size = (((float) LocalSearchEngine.instance().getCacheSize()) / 1024) / 1024;
         preference.setSummary(getString(R.string.crawl_cache_size, size));
-    }
-
-    private void setupStoragePathOption() {
-        ListPreference preferenceStoragePath = (ListPreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
-
-        List<StorageMount> mounts = new ArrayList<StorageMount>();// StorageUtils.getStorageMounts();
-        int count = mounts.size();
-
-        CharSequence[] entries = new CharSequence[count];
-        CharSequence[] values = new CharSequence[count];
-
-        for (int i = 0; i < count; i++) {
-            StorageMount sm = mounts.get(i);
-            entries[i] = sm.getLabel();
-            values[i] = sm.getPath();
-        }
-
-        preferenceStoragePath.setEntries(entries);
-        preferenceStoragePath.setEntryValues(values);
     }
 
     private void updateConnectButton() {
