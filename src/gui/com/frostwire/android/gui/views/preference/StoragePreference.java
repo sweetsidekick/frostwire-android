@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Environment;
 import android.preference.DialogPreference;
@@ -48,6 +50,8 @@ import com.frostwire.android.util.SystemUtils;
  */
 public class StoragePreference extends DialogPreference {
 
+    private Dialog confirmDlg;
+
     public StoragePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -70,9 +74,27 @@ public class StoragePreference extends DialogPreference {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
                 System.out.println(adapter.getItem(position).path);
-                getDialog().dismiss();
+                //getDialog().dismiss();
+                confirmDlg = showConfirmDialog(getContext());
+                confirmDlg.show();
             }
         });
+    }
+
+    @Override
+    public void onActivityDestroy() {
+        dismissConfirmDialog();
+        super.onActivityDestroy();
+    }
+
+    private Dialog showConfirmDialog(Context context) {
+        return new AlertDialog.Builder(context).setMessage("tttt").setTitle("dddd").setPositiveButton(android.R.string.yes, this).setNegativeButton(android.R.string.no, this).create();
+    }
+
+    private void dismissConfirmDialog() {
+        if (confirmDlg != null && confirmDlg.isShowing()) {
+            confirmDlg.dismiss();
+        }
     }
 
     private static final class StorageMount {
