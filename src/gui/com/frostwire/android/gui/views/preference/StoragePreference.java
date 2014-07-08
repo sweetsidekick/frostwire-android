@@ -109,15 +109,17 @@ public class StoragePreference extends DialogPreference {
 
     private static final class StorageMount {
 
-        public StorageMount(String label, String description, String path) {
+        public StorageMount(String label, String description, String path, boolean primary) {
             this.label = label;
             this.description = description;
             this.path = path;
+            this.primary = primary;
         }
 
         public final String label;
         public final String description;
         public final String path;
+        public final boolean primary;
     }
 
     private final class StoragesAdapter extends AbstractAdapter<StorageMount> {
@@ -135,7 +137,7 @@ public class StoragePreference extends DialogPreference {
             TextView description = findView(view, R.id.view_preference_storage_list_item_description);
             RadioButton radio = findView(view, R.id.view_preference_storage_list_item_radio);
 
-            icon.setImageResource(R.drawable.app_icon);
+            icon.setImageResource(item.primary ? R.drawable.internal_memory_notification_dark_bg : R.drawable.sd_card_notification_dark_bg);
             label.setText(item.label);
             description.setText(item.description);
 
@@ -167,7 +169,7 @@ public class StoragePreference extends DialogPreference {
                 String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(dir));
                 String path = dir.getAbsolutePath();
 
-                mount = new StorageMount(label, description, path);
+                mount = new StorageMount(label, description, path, true);
             }
 
             return mount;
@@ -187,7 +189,7 @@ public class StoragePreference extends DialogPreference {
                     String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f));
                     String path = f.getAbsolutePath();
 
-                    StorageMount mount = new StorageMount(label, description, path);
+                    StorageMount mount = new StorageMount(label, description, path, false);
 
                     mounts.add(mount);
                 }
