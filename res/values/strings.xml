@@ -521,4 +521,5 @@
     <string name="device_memory">Device\'s Memory</string>
     <string name="device_storage">Device\'s Storage</string>
     <string name="sdcard_storage">SD \'s Storage</string>
+    <string name="storage_setting_warning">[WARNING: text here]</string>
 </resources>
