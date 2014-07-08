@@ -167,6 +167,12 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
         subscription = TimerService.subscribe(this, 2);
     }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	initStorageRelatedRichNotifications(getView());
+    }
 
     @Override
     public void onDestroyView() {
@@ -247,14 +253,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     @Override
     protected void initComponents(View v) {
-		RichNotification notification = findView(v, R.id.fragment_transfers_rich_notification);
-    	if (SystemUtils.isUsingSDCardPrivateStorage() &&
-    		!notification.wasDismissed()) {
-    		notification.setVisibility(View.VISIBLE);
-    		notification.setOnClickListener(new SDCardNotificationListener(this));
-    	} else {
-    		notification.setVisibility(View.GONE);
-    	}
+		initStorageRelatedRichNotifications(v);
     	
         buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
         buttonSelectAll.setOnClickListener(new ButtonTabListener(this, TransferStatus.ALL));
@@ -270,6 +269,29 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         textDownloads = findView(v, R.id.fragment_transfers_text_downloads);
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
     }
+
+	private void initStorageRelatedRichNotifications(View v) {
+		RichNotification sdCardNotification = findView(v, R.id.fragment_transfers_sd_card_notification);
+		sdCardNotification.setVisibility(View.GONE);
+		
+		RichNotification internalMemoryNotification = findView(v, R.id.fragment_transfers_internal_memory_notification);
+    	internalMemoryNotification.setVisibility(View.GONE);
+		
+		if (SystemUtils.isUsingSDCardPrivateStorage() &&
+    		!sdCardNotification.wasDismissed()) {
+    		sdCardNotification.setVisibility(View.VISIBLE);
+    		sdCardNotification.setOnClickListener(new SDCardNotificationListener(this));
+    	}
+		
+		//if you do have an SD Card mounted and you're using internal memory, we'll let you know
+		//that you now can use the SD Card. We'll keep this for a few releases.
+		if (com.frostwire.android.util.SystemUtils.isExternalStorageMounted() &&
+			!SystemUtils.isUsingSDCardPrivateStorage() &&
+			!internalMemoryNotification.wasDismissed()) {
+			internalMemoryNotification.setVisibility(View.VISIBLE);
+			internalMemoryNotification.setOnClickListener(new SDCardNotificationListener(this));
+		}
+	}
 
     private void setupAdapter() {
         List<Transfer> transfers = filter(TransferManager.instance().getTransfers(), selectedStatus);

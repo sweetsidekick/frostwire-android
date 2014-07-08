@@ -165,11 +165,7 @@ public class StoragePreference extends DialogPreference {
             label.setText(item.label);
             description.setText(item.description);
 
-            if (ConfigurationManager.instance().getStoragePath().equals(item.path)) {
-                radio.setChecked(true);
-            } else {
-                radio.setChecked(false);
-            }
+            radio.setChecked(ConfigurationManager.instance().getStoragePath().equals(item.path));
         }
 
         private void addItems(Context context) {
