@@ -26,6 +26,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
@@ -51,7 +52,7 @@ import com.frostwire.android.util.SystemUtils;
  */
 public class StoragePreference extends DialogPreference {
 
-    private Dialog confirmDlg;
+    private AlertDialog confirmDlg;
     private String selectedPath;
 
     public StoragePreference(Context context, AttributeSet attrs) {
@@ -79,8 +80,9 @@ public class StoragePreference extends DialogPreference {
                 if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
                     dismissPreferenceDialog();
                 } else {
-                    confirmDlg = showConfirmDialog(getContext());
+                    confirmDlg = createConfirmDialog(getContext());
                     confirmDlg.show();
+                    confirmDlg.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
                 }
             }
         });
@@ -104,8 +106,17 @@ public class StoragePreference extends DialogPreference {
         }
     }
 
-    private Dialog showConfirmDialog(Context context) {
-        return new AlertDialog.Builder(context).setMessage("tttt").setTitle("dddd").setPositiveButton(android.R.string.yes, this).setNegativeButton(android.R.string.no, this).create();
+    private AlertDialog createConfirmDialog(Context context) {
+        OnMultiChoiceClickListener checkListener = new OnMultiChoiceClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (confirmDlg != null && confirmDlg.isShowing()) {
+                    confirmDlg.getButton(Dialog.BUTTON_POSITIVE).setEnabled(isChecked);
+                }
+            }
+        };
+        return new AlertDialog.Builder(context).setMultiChoiceItems(new String[] { context.getString(R.string.storage_setting_confirm_dialog_text) }, new boolean[] { false }, checkListener).setTitle(R.string.storage_setting_confirm_dialog_title).setPositiveButton(android.R.string.ok, this).setNegativeButton(android.R.string.cancel, this).create();
     }
 
     private void dismissConfirmDialog() {

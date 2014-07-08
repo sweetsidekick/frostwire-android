@@ -522,4 +522,6 @@
     <string name="device_storage">Device\'s Storage</string>
     <string name="sdcard_storage">SD\'s Storage</string>
     <string name="storage_setting_warning">WARNING: All files downloaded by FrostWire into the SD Card will be deleted by ANDROID if you uninstall FrostWire.</string>
+    <string name="storage_setting_confirm_dialog_title">SD CARD</string>
+    <string name="storage_setting_confirm_dialog_text">I underestand ....</string>
 </resources>
