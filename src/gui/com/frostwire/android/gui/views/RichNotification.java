@@ -23,6 +23,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -83,6 +84,13 @@ public class RichNotification extends LinearLayout {
 				}
 			});
 		}
+		
+		//the limited android XML api won't allow android:fontFamily in XML
+		//and the allowed values for android:typeFace don't include Roboto (just sans | serif...
+		//font downloaded at http://developer.android.com/design/style/typography.html
+		Typeface mFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/Roboto-Light.ttf");
+		textViewTitle.setTypeface(mFont,Typeface.BOLD);
+		textViewDescription.setTypeface(mFont, Typeface.NORMAL);
 		
 		ImageButton dismissButton = (ImageButton) findViewById(R.id.view_rich_notification_close_button);
 		dismissButton.setOnClickListener(new OnClickListener() {

@@ -21,15 +21,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="64sp"
-    android:background="@color/app_rich_notification_background"
     android:gravity="center_vertical|left"
     android:orientation="horizontal"
-    android:padding="0sp" >
+    android:padding="0sp"
+    android:background="@drawable/rich_notification_border" >
 
     <ImageView android:id="@+id/view_rich_notification_icon"
-        android:src="@drawable/app_icon"
-        android:layout_width="32sp"
-        android:layout_height="64sp"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
         android:scaleType="fitCenter"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="5sp"
