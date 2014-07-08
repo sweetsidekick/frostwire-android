@@ -25,6 +25,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
@@ -73,8 +74,6 @@ public class StoragePreference extends DialogPreference {
         list.setOnItemClickListener(new OnItemClickAdapter<StorageMount>() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
-                System.out.println(adapter.getItem(position).path);
-                //getDialog().dismiss();
                 confirmDlg = showConfirmDialog(getContext());
                 confirmDlg.show();
             }
@@ -85,6 +84,17 @@ public class StoragePreference extends DialogPreference {
     public void onActivityDestroy() {
         dismissConfirmDialog();
         super.onActivityDestroy();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (dialog != null && dialog.equals(confirmDlg)) {
+            if (which == Dialog.BUTTON_POSITIVE) {
+                System.out.println("Perform CHANGE");
+            }
+        } else {
+            super.onClick(dialog, which);
+        }
     }
 
     private Dialog showConfirmDialog(Context context) {
