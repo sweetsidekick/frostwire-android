@@ -1,4 +1,9 @@
-FrostWire 1.3.4 - JULY/7/2014
+FrostWire 1.3.4 - JULY/9/2014
+ - Restored SD Card writing capabilities under new Android rules.
+   WARNING: All files stored to the application's SD Card folder
+   will be lost in the event of uninstalling. This is a problem
+   for every application on Android, not by our design.
+   Make sure to backup or sync files saved to the SD Card.
  - Doesn't prefer external storage as the app install path.
  - Opens Music Player window when playing a song from My Music.
  - Moved vuze settings files to primary external private folder.
