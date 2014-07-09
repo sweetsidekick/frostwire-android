@@ -75,7 +75,7 @@ public class PreferencesActivity extends PreferenceActivity {
         if (extras != null) {
         	if (extras.getString("onOpen") != null) {
         		if (extras.getString("onOpen").equals("StoragePreference")) {
-        			extras.putString("onOpen", null);
+        			getIntent().removeExtra("onOpen");
         			invokeStoragePreference();
         		}
         	}
