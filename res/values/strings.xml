@@ -519,11 +519,12 @@
     <string name="saving_to_sd_card">Saving to SD Card.</string>
     <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
     <string name="saving_to_internal_memory">Saving to Internal Memory</string>
-    <string name="saving_to_internal_memory_description">Your device has an SD Card with %1$s of space</string>
+    <string name="saving_to_internal_memory_description">You have an SD Card (%1$s available)</string>
     <string name="device_memory">Device\'s Memory</string>
     <string name="device_storage">Device\'s Storage</string>
     <string name="sdcard_storage">SD\'s Storage</string>
     <string name="storage_setting_warning">WARNING: All files downloaded by FrostWire into the SD Card will be deleted by ANDROID if you uninstall FrostWire.</string>
     <string name="storage_setting_confirm_dialog_title">SD CARD</string>
     <string name="storage_setting_confirm_dialog_text">I understand that all files downloaded to the SD Card by FrostWire will be deleted BY ANDROID the moment the FrostWire application is uninstalled from this device and I will not hold FrostWire LLC liable for any files lost.</string>
+    <string name="available">available</string>
 </resources>

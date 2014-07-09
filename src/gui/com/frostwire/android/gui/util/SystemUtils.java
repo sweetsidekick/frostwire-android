@@ -23,6 +23,8 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.os.Environment;
+import android.os.StatFs;
+import android.support.v4.content.ContextCompat;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -142,6 +144,27 @@ public final class SystemUtils {
         String currentPath = ConfigurationManager.instance().getStoragePath();
 
         return !primaryPath.equals(currentPath);
+    }
+    
+    public static File getSDCardDir(Context context) {
+    	String primaryPath = context.getExternalFilesDir(null).getParent();
+
+    	long biggestBytesAvailable = -1;
+    	
+    	File result = null;
+    	
+        for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
+            if (!f.getAbsolutePath().startsWith(primaryPath)) {
+            	long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
+            	if (bytesAvailable > biggestBytesAvailable) {
+            		biggestBytesAvailable = bytesAvailable;
+            		result = f;
+            	}
+            }
+        }
+        //System.out.println("FW.SystemUtils.getSDCardDir() -> " + result.getAbsolutePath());
+        // -> /storage/extSdCard/Android/data/com.frostwire.android/files
+        return result;
     }
 
     private static File createFolder(File parentDir, String folderName) {

@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -37,8 +38,9 @@ import com.frostwire.android.R;
 
 public class RichNotification extends LinearLayout {
 	public static final List<Integer> wasDismissed = new ArrayList<Integer>();
+	private final boolean titleUnderlined;
 	private final String title;
-	private final String description;
+	private String description;
 	private final Drawable icon;
 	private OnClickListener clickListener;
 	
@@ -46,7 +48,12 @@ public class RichNotification extends LinearLayout {
 		super(context, attrs);		
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.RichNotification);
 		icon = attributes.getDrawable(R.styleable.RichNotification_rich_notification_icon);
-		title = attributes.getString(R.styleable.RichNotification_rich_notification_title);
+		titleUnderlined = attributes.getBoolean(R.styleable.RichNotification_rich_notification_title_underlined, false);
+        if (titleUnderlined) {
+        	title = "<u>" + attributes.getString(R.styleable.RichNotification_rich_notification_title) + "</u>";
+        } else {
+        	title = attributes.getString(R.styleable.RichNotification_rich_notification_title);
+        }
 		description = attributes.getString(R.styleable.RichNotification_rich_notification_description);
 		attributes.recycle();
 		clickListener = null;
@@ -63,27 +70,15 @@ public class RichNotification extends LinearLayout {
 			imageViewIcon.setBackgroundDrawable(icon);
 		}
 		
-		TextView textViewTitle = (TextView) findViewById(R.id.view_rich_notification_title);
-		if (textViewTitle != null && title != null) {
-			textViewTitle.setText(title);
-			textViewTitle.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onClickNotification();
-				}
-			});
-		}
-		
-		TextView textViewDescription = (TextView) findViewById(R.id.view_rich_notification_text);
-		if (textViewDescription != null && description != null) {
-			textViewDescription.setText(description);
-			textViewDescription.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onClickNotification();
-				}
-			});
-		}
+		OnClickListener onClickNotificationListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onClickNotification();
+			}
+		};
+
+		TextView textViewTitle = updateTextViewText(R.id.view_rich_notification_title, (titleUnderlined) ? Html.fromHtml(title) : title, onClickNotificationListener);
+		TextView textViewDescription = updateTextViewText(R.id.view_rich_notification_description, description, onClickNotificationListener);
 		
 		//the limited android XML api won't allow android:fontFamily in XML
 		//and the allowed values for android:typeFace don't include Roboto (just sans | serif...
@@ -94,7 +89,6 @@ public class RichNotification extends LinearLayout {
 		
 		ImageButton dismissButton = (ImageButton) findViewById(R.id.view_rich_notification_close_button);
 		dismissButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				onDismiss();				
@@ -102,12 +96,31 @@ public class RichNotification extends LinearLayout {
 		});
 	}
 	
+	private TextView updateTextViewText(int textViewId, CharSequence text, OnClickListener onClickNotificationListener) {
+		TextView textView = (TextView) findViewById(textViewId);
+		if (textView != null && text != null) {
+			textView.setText(text);
+		}
+		
+		if (textView != null && onClickNotificationListener != null) {
+			textView.setOnClickListener(onClickNotificationListener);
+		}
+		
+		return textView;
+	}
+
+
 	public void setOnClickListener(OnClickListener listener) {
 		clickListener = listener;
 	}
 	
 	public boolean wasDismissed() {
 		return wasDismissed.contains(this.getId());
+	}
+	
+	public void setDescription(String newDescription) {
+		description = newDescription;
+		updateTextViewText(R.id.view_rich_notification_description, description, null);
 	}
 	
 	protected void onDismiss() {

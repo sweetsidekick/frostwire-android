@@ -31,6 +31,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -288,6 +289,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		if (com.frostwire.android.util.SystemUtils.isExternalStorageMounted() &&
 			!SystemUtils.isUsingSDCardPrivateStorage() &&
 			!internalMemoryNotification.wasDismissed()) {
+			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(SystemUtils.getSDCardDir(getActivity())));
+			String internalMemoryNotificationDescription = getString(R.string.saving_to_internal_memory_description, bytesAvailableInHuman);
+			internalMemoryNotification.setDescription(internalMemoryNotificationDescription);
 			internalMemoryNotification.setVisibility(View.VISIBLE);
 			internalMemoryNotification.setOnClickListener(new SDCardNotificationListener(this));
 		}

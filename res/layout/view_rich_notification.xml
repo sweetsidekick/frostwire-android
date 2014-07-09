@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"/>
         
-        <TextView android:id="@+id/view_rich_notification_text"
+        <TextView android:id="@+id/view_rich_notification_description"
             android:text="@string/dummy_content_description"
             android:textSize="@dimen/text_size_micro"
             android:layout_width="fill_parent"

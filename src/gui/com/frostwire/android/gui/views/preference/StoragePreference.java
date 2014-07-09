@@ -206,7 +206,7 @@ public class StoragePreference extends DialogPreference {
                 if (!f.getAbsolutePath().startsWith(primaryPath)) {
 
                     String label = context.getString(R.string.sdcard_storage) + " " + (++i);
-                    String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f));
+                    String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f)) + " " + context.getString(R.string.available);
                     String path = f.getAbsolutePath();
 
                     StorageMount mount = new StorageMount(label, description, path, false);
