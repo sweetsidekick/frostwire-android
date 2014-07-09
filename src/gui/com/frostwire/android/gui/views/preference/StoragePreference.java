@@ -83,21 +83,16 @@ public class StoragePreference extends DialogPreference {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
                 selectedPath = adapter.getItem(position).path;
-                File sdCardDir = com.frostwire.android.gui.util.SystemUtils.getSDCardDir(getContext());
                 
                 //if you select the one that was there before dismiss the dialog.
                 if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
                     dismissPreferenceDialog();
-                } else if (sdCardDir != null && sdCardDir.getAbsolutePath().equals(selectedPath)) {
+                } else {
                     //if you select the SD Card option, show the confirmation dialog, with ok button disabled.
                 	//will be enabled after user clicks on checkbox.
                 	confirmDlg = createConfirmDialog(getContext());
                     confirmDlg.show();
                     confirmDlg.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-                } else {
-                	//you select the internal memory option
-                	ConfigurationManager.instance().setStoragePath(selectedPath);
-                	dismissPreferenceDialog();
                 }
             }
         });

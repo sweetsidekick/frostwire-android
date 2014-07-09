@@ -27,8 +27,8 @@
     android:background="@drawable/rich_notification_border" >
 
     <ImageView android:id="@+id/view_rich_notification_icon"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="5sp"

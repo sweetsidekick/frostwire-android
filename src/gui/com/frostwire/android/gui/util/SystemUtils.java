@@ -145,7 +145,12 @@ public final class SystemUtils {
         return !primaryPath.equals(currentPath);
     }
     
-    public static File getSDCardDir(Context context) {
+    /**
+     * Iterates over all the secondary external storage roots and returns the one with the most bytes available.
+     * @param context
+     * @return
+     */
+    public static File getBiggestSDCardDir(Context context) {
     	String primaryPath = context.getExternalFilesDir(null).getParent();
 
     	long biggestBytesAvailable = -1;

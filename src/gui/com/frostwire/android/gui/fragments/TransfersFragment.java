@@ -288,7 +288,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		if (com.frostwire.android.util.SystemUtils.isExternalStorageMounted() &&
 			!SystemUtils.isUsingSDCardPrivateStorage() &&
 			!internalMemoryNotification.wasDismissed()) {
-			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(SystemUtils.getSDCardDir(getActivity())));
+			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(SystemUtils.getBiggestSDCardDir(getActivity())));
 			String internalMemoryNotificationDescription = getString(R.string.saving_to_internal_memory_description, bytesAvailableInHuman);
 			internalMemoryNotification.setDescription(internalMemoryNotificationDescription);
 			internalMemoryNotification.setVisibility(View.VISIBLE);
