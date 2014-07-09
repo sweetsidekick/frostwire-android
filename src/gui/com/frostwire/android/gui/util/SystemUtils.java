@@ -23,7 +23,6 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.os.Environment;
-import android.os.StatFs;
 import android.support.v4.content.ContextCompat;
 
 import com.frostwire.android.core.ConfigurationManager;

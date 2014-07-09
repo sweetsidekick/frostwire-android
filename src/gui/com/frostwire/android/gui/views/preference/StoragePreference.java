@@ -32,7 +32,6 @@ import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -79,8 +78,6 @@ public class StoragePreference extends DialogPreference {
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
                 selectedPath = adapter.getItem(position).path;
                 File sdCardDir = com.frostwire.android.gui.util.SystemUtils.getSDCardDir(getContext());
-                System.out.println("FW.selected path -> " + selectedPath);
-                System.out.println("FW.sd_card  path -> " + sdCardDir.getAbsolutePath());
                 
                 //if you select the one that was there before dismiss the dialog.
                 if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
@@ -183,14 +180,6 @@ public class StoragePreference extends DialogPreference {
             description.setText(item.description);
 
             radio.setChecked(ConfigurationManager.instance().getStoragePath().equals(item.path));
-            
-            final View viewFinal = view;
-            radio.setOnClickListener(new OnClickListener() {				
-				@Override
-				public void onClick(View v) {
-					viewFinal.callOnClick();
-				}
-			});
         }
 
         private void addItems(Context context) {
