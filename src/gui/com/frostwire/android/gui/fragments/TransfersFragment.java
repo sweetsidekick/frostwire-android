@@ -656,6 +656,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		@Override
 		public void onClick(TransfersFragment owner, View v) {
 	        Intent i = new Intent(owner.getActivity(), PreferencesActivity.class);
+	        i.putExtra("onOpen", "StoragePreference");
 	        owner.getActivity().startActivity(i);
 		}
     }

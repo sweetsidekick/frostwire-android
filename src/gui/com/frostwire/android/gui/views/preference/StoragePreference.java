@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
@@ -64,6 +65,11 @@ public class StoragePreference extends DialogPreference {
 
     public StoragePreference(Context context) {
         this(context, null);
+    }
+    
+    @Override
+    public void showDialog(Bundle state) {
+    	super.showDialog(state);
     }
 
     @Override

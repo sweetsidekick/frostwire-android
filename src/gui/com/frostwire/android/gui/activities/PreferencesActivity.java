@@ -43,6 +43,7 @@ import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
+import com.frostwire.android.gui.views.preference.StoragePreference;
 import com.frostwire.android.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -69,9 +70,25 @@ public class PreferencesActivity extends PreferenceActivity {
         setupSearchEngines();
         setupUPnPOption();
         setupUXStatsOption();
+        
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+        	if (extras.getString("onOpen") != null) {
+        		if (extras.getString("onOpen").equals("StoragePreference")) {
+        			invokeStoragePreference();
+        		}
+        	}
+        }
     }
 
-    private void setupSeedingOptions() {
+    private void invokeStoragePreference() {
+		final StoragePreference storagePreference = (StoragePreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
+		if (storagePreference != null) {
+			storagePreference.showDialog(null);
+		}
+	}
+
+	private void setupSeedingOptions() {
         final CheckBoxPreference preferenceSeeding = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
         final CheckBoxPreference preferenceSeedingWifiOnly = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
 
