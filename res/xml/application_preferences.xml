@@ -39,12 +39,6 @@
             android:key="frostwire.prefs.transfer.share_finished_downloads"
             android:summary="@string/share_finished_downloads_summary"
             android:title="@string/share_finished_downloads" />
-<!-- 
-        <ListPreference
-            android:key="frostwire.prefs.storage.path"
-            android:summary="@string/storage_preference_summary"
-            android:title="@string/storage_preference_title" />
--->
         <com.frostwire.android.gui.views.preference.StoragePreference
           android:key="frostwire.prefs.storage.path"
           android:summary="@string/storage_preference_summary"
