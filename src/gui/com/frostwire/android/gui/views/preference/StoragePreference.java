@@ -32,6 +32,7 @@ import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -77,12 +78,23 @@ public class StoragePreference extends DialogPreference {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
                 selectedPath = adapter.getItem(position).path;
+                File sdCardDir = com.frostwire.android.gui.util.SystemUtils.getSDCardDir(getContext());
+                System.out.println("FW.selected path -> " + selectedPath);
+                System.out.println("FW.sd_card  path -> " + sdCardDir.getAbsolutePath());
+                
+                //if you select the one that was there before dismiss the dialog.
                 if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
                     dismissPreferenceDialog();
-                } else {
-                    confirmDlg = createConfirmDialog(getContext());
+                } else if (sdCardDir != null && sdCardDir.getAbsolutePath().equals(selectedPath)) {
+                    //if you select the SD Card option, show the confirmation dialog, with ok button disabled.
+                	//will be enabled after user clicks on checkbox.
+                	confirmDlg = createConfirmDialog(getContext());
                     confirmDlg.show();
                     confirmDlg.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+                } else {
+                	//you select the internal memory option
+                	ConfigurationManager.instance().setStoragePath(selectedPath);
+                	dismissPreferenceDialog();
                 }
             }
         });
@@ -116,7 +128,12 @@ public class StoragePreference extends DialogPreference {
                 }
             }
         };
-        return new AlertDialog.Builder(context).setMultiChoiceItems(new String[] { context.getString(R.string.storage_setting_confirm_dialog_text) }, new boolean[] { false }, checkListener).setTitle(R.string.storage_setting_confirm_dialog_title).setPositiveButton(android.R.string.ok, this).setNegativeButton(android.R.string.cancel, this).create();
+        return new AlertDialog.Builder(context).
+        		setMultiChoiceItems(new String[] { context.getString(R.string.storage_setting_confirm_dialog_text) }, new boolean[] { false }, checkListener).
+        		setTitle(R.string.storage_setting_confirm_dialog_title).
+        		setPositiveButton(android.R.string.ok, this).
+        		setNegativeButton(android.R.string.cancel, this).
+        		create();
     }
 
     private void dismissConfirmDialog() {
@@ -166,6 +183,14 @@ public class StoragePreference extends DialogPreference {
             description.setText(item.description);
 
             radio.setChecked(ConfigurationManager.instance().getStoragePath().equals(item.path));
+            
+            final View viewFinal = view;
+            radio.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View v) {
+					viewFinal.callOnClick();
+				}
+			});
         }
 
         private void addItems(Context context) {
@@ -186,7 +211,7 @@ public class StoragePreference extends DialogPreference {
                 File dir = Environment.getExternalStorageDirectory();
 
                 String label = context.getString(R.string.device_storage);
-                String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(dir));
+                String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(dir)) + " " + context.getString(R.string.available);
                 String path = dir.getAbsolutePath();
 
                 mount = new StorageMount(label, description, path, true);
