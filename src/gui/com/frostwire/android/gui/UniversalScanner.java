@@ -32,6 +32,7 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.provider.MediaStore.Audio;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -173,8 +174,9 @@ final class UniversalScanner {
                 connection.disconnect();
             }
             
-            if (uri != null) {
-                MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(path));
+            MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(path));
+            
+            if (uri != null) {                
                 if (mt != null && mt.getId() == Constants.FILE_TYPE_DOCUMENTS) {
                     scanDocument(path);
                 } else {
@@ -184,11 +186,51 @@ final class UniversalScanner {
             } else {
                 if (path.endsWith(".apk")) {
                     //LOG.debug("Can't scan apk for security concerns: " + path);
-                } else {
+                } else if (mt != null) {
+                	if (mt.getId() == Constants.FILE_TYPE_AUDIO) {
+                		scanPrivateAudio(path);
+                	}
+                }
+                else {
                     scanDocument(path);
                     //LOG.debug("Scanned new file as document: " + path);
                 }
             }
         }
     }
+
+    /**
+     * Android geniuses put a .nomedia file on the .../Android/data/ folder
+     * inside the secondary external storage path, therefore, all attempts
+     * to use MediaScannerConnection to scan a media file fail. Therefore we
+     * have this method to insert the file's metadata manually on the content provider.
+     * @param path
+     */
+	public void scanPrivateAudio(String filePath) {
+		File file = new File(filePath);
+
+//        if (documentExists(filePath, file.length())) {
+//            return;
+//        }
+
+        String displayName = FilenameUtils.getBaseName(file.getName());
+        ContentResolver cr = context.getContentResolver();
+        ContentValues values = new ContentValues();
+
+        values.put(Audio.Media.DISPLAY_NAME, displayName);
+        values.put(Audio.Media.SIZE, file.length());
+        values.put(Audio.AudioColumns.DATA, file.getAbsolutePath());
+        
+//        values.put(DocumentsColumns.DATE_ADDED, System.currentTimeMillis());
+//        values.put(DocumentsColumns.DATE_MODIFIED, file.lastModified());
+//        values.put(DocumentsColumns.MIME_TYPE, UIUtils.getMimeType(filePath));
+
+        Uri uri = cr.insert(Audio.Media.EXTERNAL_CONTENT_URI, values);
+
+        FileDescriptor fd = new FileDescriptor();
+        fd.fileType = Constants.FILE_TYPE_AUDIO;
+        fd.id = Integer.valueOf(uri.getLastPathSegment());
+
+        shareFinishedDownload(fd);
+	}
 }
