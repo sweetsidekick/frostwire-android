@@ -32,7 +32,10 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
+import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -43,6 +46,7 @@ import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
+import com.frostwire.util.Condition;
 
 /**
  * 
@@ -167,7 +171,8 @@ final class UniversalScanner {
             }
         }
 
-        public void onScanCompleted(String path, Uri uri) {
+        
+		public void onScanCompleted(String path, Uri uri) {
             /** This will work if onScanCompleted is invoked after scanFile finishes. */
             numCompletedScans++;
             if (numCompletedScans == files.size()) {
@@ -176,7 +181,7 @@ final class UniversalScanner {
             
             MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(path));
             
-            if (uri != null) {                
+            if (uri != null && !path.contains("/Android/data/" + context.getPackageName())) {                
                 if (mt != null && mt.getId() == Constants.FILE_TYPE_DOCUMENTS) {
                     scanDocument(path);
                 } else {
@@ -187,8 +192,12 @@ final class UniversalScanner {
                 if (path.endsWith(".apk")) {
                     //LOG.debug("Can't scan apk for security concerns: " + path);
                 } else if (mt != null) {
-                	if (mt.getId() == Constants.FILE_TYPE_AUDIO) {
-                		scanPrivateAudio(path);
+                	if (mt.getId() == Constants.FILE_TYPE_PICTURES) {
+                		scanPrivatePicture(path);
+                	}
+                	if (mt.getId() == Constants.FILE_TYPE_AUDIO ||
+                	    mt.getId() == Constants.FILE_TYPE_VIDEOS) {
+                		scanPrivateFile(path, mt);
                 	}
                 }
                 else {
@@ -206,31 +215,50 @@ final class UniversalScanner {
      * have this method to insert the file's metadata manually on the content provider.
      * @param path
      */
-	public void scanPrivateAudio(String filePath) {
+	public void scanPrivateFile(String filePath, MediaType mt) {
 		File file = new File(filePath);
-
-//        if (documentExists(filePath, file.length())) {
-//            return;
-//        }
 
         String displayName = FilenameUtils.getBaseName(file.getName());
         ContentResolver cr = context.getContentResolver();
         ContentValues values = new ContentValues();
-
-        values.put(Audio.Media.DISPLAY_NAME, displayName);
-        values.put(Audio.Media.SIZE, file.length());
-        values.put(Audio.AudioColumns.DATA, file.getAbsolutePath());
         
-//        values.put(DocumentsColumns.DATE_ADDED, System.currentTimeMillis());
-//        values.put(DocumentsColumns.DATE_MODIFIED, file.lastModified());
-//        values.put(DocumentsColumns.MIME_TYPE, UIUtils.getMimeType(filePath));
+        Uri extContentUri = null;
+        int mtId = mt.getId();
+        
+        switch (mtId) {
+           case Constants.FILE_TYPE_AUDIO:
+        	   extContentUri = Audio.Media.EXTERNAL_CONTENT_URI;
+        	   break;
+           case Constants.FILE_TYPE_VIDEOS:
+        	   extContentUri = Video.Media.EXTERNAL_CONTENT_URI;
+               break;
+           
+        }
 
-        Uri uri = cr.insert(Audio.Media.EXTERNAL_CONTENT_URI, values);
+		if (extContentUri != null) {
+			//using Audio... keys, they're all the same.
+			values.put(Audio.Media.DISPLAY_NAME, displayName);
+			values.put(Audio.Media.SIZE, file.length());
+			values.put(Audio.AudioColumns.DATA, file.getAbsolutePath());
 
-        FileDescriptor fd = new FileDescriptor();
-        fd.fileType = Constants.FILE_TYPE_AUDIO;
-        fd.id = Integer.valueOf(uri.getLastPathSegment());
+			Uri uri = cr.insert(extContentUri, values);
 
-        shareFinishedDownload(fd);
+			FileDescriptor fd = new FileDescriptor();
+			fd.fileType = (byte) mtId;
+			fd.id = Integer.valueOf(uri.getLastPathSegment());
+
+			shareFinishedDownload(fd);
+		}
+	}
+
+	public void scanPrivatePicture(String path) {
+	    try {
+	    	ContentResolver cr = context.getContentResolver();
+	    	File f = new File(path);
+	    	Images.Media.insertImage(cr, f.getAbsolutePath(), f.getName(), f.getName());
+	    } catch (Throwable t) {
+	    	t.printStackTrace();
+	    }
+		
 	}
 }
