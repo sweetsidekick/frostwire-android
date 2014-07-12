@@ -19,6 +19,9 @@
 package com.frostwire.android.gui;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -32,10 +35,6 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.SystemClock;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Audio;
-import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -46,7 +45,6 @@ import com.frostwire.android.core.providers.UniversalStore.Documents;
 import com.frostwire.android.core.providers.UniversalStore.Documents.DocumentsColumns;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
-import com.frostwire.util.Condition;
 
 /**
  * 
@@ -67,11 +65,10 @@ final class UniversalScanner {
     public void scan(final String filePath) {
         scan(Arrays.asList(new File(filePath)));
     }
-    
+
     public void scan(final Collection<File> filesToScan) {
         new MultiFileAndroidScanner(filesToScan).scan();
     }
-
 
     private static void shareFinishedDownload(FileDescriptor fd) {
         if (fd != null) {
@@ -171,17 +168,16 @@ final class UniversalScanner {
             }
         }
 
-        
-		public void onScanCompleted(String path, Uri uri) {
+        public void onScanCompleted(String path, Uri uri) {
             /** This will work if onScanCompleted is invoked after scanFile finishes. */
             numCompletedScans++;
             if (numCompletedScans == files.size()) {
                 connection.disconnect();
             }
-            
+
             MediaType mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(path));
-            
-            if (uri != null && !path.contains("/Android/data/" + context.getPackageName())) {                
+
+            if (uri != null && !path.contains("/Android/data/" + context.getPackageName())) {
                 if (mt != null && mt.getId() == Constants.FILE_TYPE_DOCUMENTS) {
                     scanDocument(path);
                 } else {
@@ -192,15 +188,12 @@ final class UniversalScanner {
                 if (path.endsWith(".apk")) {
                     //LOG.debug("Can't scan apk for security concerns: " + path);
                 } else if (mt != null) {
-                	if (mt.getId() == Constants.FILE_TYPE_PICTURES) {
-                		scanPrivatePicture(path);
-                	}
-                	if (mt.getId() == Constants.FILE_TYPE_AUDIO ||
-                	    mt.getId() == Constants.FILE_TYPE_VIDEOS) {
-                		scanPrivateFile(path, mt);
-                	}
-                }
-                else {
+                    if (mt.getId() == Constants.FILE_TYPE_AUDIO ||
+                        mt.getId() == Constants.FILE_TYPE_VIDEOS ||
+                        mt.getId() == Constants.FILE_TYPE_PICTURES) {
+                        scanPrivateFile(uri, path, mt);
+                    }
+                } else {
                     scanDocument(path);
                     //LOG.debug("Scanned new file as document: " + path);
                 }
@@ -215,50 +208,62 @@ final class UniversalScanner {
      * have this method to insert the file's metadata manually on the content provider.
      * @param path
      */
-	public void scanPrivateFile(String filePath, MediaType mt) {
-		File file = new File(filePath);
+    private void scanPrivateFile(Uri oldUri, String filePath, MediaType mt) {
+        try {
+            int n = context.getContentResolver().delete(oldUri, null, null);
+            if (n > 0) {
+                LOG.debug("Deleted from Files provider: " + oldUri);
+            }
+            Uri uri = nativeScanFile(context, filePath);
 
-        String displayName = FilenameUtils.getBaseName(file.getName());
-        ContentResolver cr = context.getContentResolver();
-        ContentValues values = new ContentValues();
-        
-        Uri extContentUri = null;
-        int mtId = mt.getId();
-        
-        switch (mtId) {
-           case Constants.FILE_TYPE_AUDIO:
-        	   extContentUri = Audio.Media.EXTERNAL_CONTENT_URI;
-        	   break;
-           case Constants.FILE_TYPE_VIDEOS:
-        	   extContentUri = Video.Media.EXTERNAL_CONTENT_URI;
-               break;
-           
+            if (uri != null) {
+                FileDescriptor fd = new FileDescriptor();
+                fd.fileType = (byte) mt.getId();
+                fd.id = Integer.valueOf(uri.getLastPathSegment());
+
+                shareFinishedDownload(fd);
+            }
+        } catch (Throwable e) {
+            // eat
+            e.printStackTrace();
         }
+    }
 
-		if (extContentUri != null) {
-			//using Audio... keys, they're all the same.
-			values.put(Audio.Media.DISPLAY_NAME, displayName);
-			values.put(Audio.Media.SIZE, file.length());
-			values.put(Audio.AudioColumns.DATA, file.getAbsolutePath());
+    private static Uri nativeScanFile(Context context, String path) {
+        try {
+            File f = new File(path);
 
-			Uri uri = cr.insert(extContentUri, values);
+            Class<?> clazz = Class.forName("android.media.MediaScanner");
 
-			FileDescriptor fd = new FileDescriptor();
-			fd.fileType = (byte) mtId;
-			fd.id = Integer.valueOf(uri.getLastPathSegment());
+            Constructor<?> mediaScannerC = clazz.getDeclaredConstructor(Context.class);
+            Object scanner = mediaScannerC.newInstance(context);
 
-			shareFinishedDownload(fd);
-		}
-	}
+            Field mClientF = clazz.getDeclaredField("mClient");
+            mClientF.setAccessible(true);
+            Object mClient = mClientF.get(scanner);
 
-	public void scanPrivatePicture(String path) {
-	    try {
-	    	ContentResolver cr = context.getContentResolver();
-	    	File f = new File(path);
-	    	Images.Media.insertImage(cr, f.getAbsolutePath(), f.getName(), f.getName());
-	    } catch (Throwable t) {
-	    	t.printStackTrace();
-	    }
-		
-	}
+            Method scanSingleFileM = clazz.getDeclaredMethod("scanSingleFile", String.class, String.class, String.class);
+            Uri fileUri = (Uri) scanSingleFileM.invoke(scanner, f.getAbsolutePath(), "external", "data/raw");
+            int n = context.getContentResolver().delete(fileUri, null, null);
+            if (n > 0) {
+                LOG.debug("Deleted from Files provider: " + fileUri);
+            }
+
+            Field mNoMediaF = mClient.getClass().getDeclaredField("mNoMedia");
+            mNoMediaF.setAccessible(true);
+            mNoMediaF.setBoolean(mClient, false);
+
+            Method doScanFileM = mClient.getClass().getDeclaredMethod("doScanFile", String.class, String.class, long.class, long.class, boolean.class, boolean.class, boolean.class);
+            Uri mediaUri = (Uri) doScanFileM.invoke(mClient, f.getAbsolutePath(), null, f.lastModified(), f.length(), false, true, false);
+
+            Method releaseM = clazz.getDeclaredMethod("release");
+            releaseM.invoke(scanner);
+
+            return mediaUri;
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
