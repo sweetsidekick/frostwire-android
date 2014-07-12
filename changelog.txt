@@ -1,4 +1,6 @@
 FrostWire 1.3.4 - JULY/9/2014
+ - Large torrent downloads start a lot faster. Prevents possible
+   freezing (ANR) on some devices.
  - Restored SD Card writing capabilities under new Android rules.
    WARNING: All files stored to the application's SD Card folder
    will be lost in the event of uninstalling. This is a problem
@@ -7,7 +9,7 @@ FrostWire 1.3.4 - JULY/9/2014
  - Doesn't prefer external storage as the app install path.
  - Opens Music Player window when playing a song from My Music.
  - Moved vuze settings files to primary external private folder.
- - Makeover on Preferences screen, setting groups now in separate screens.
+ - Updated Preferences screen, setting groups now in separate sub-screens.
 
 FrostWire 1.3.3 - JUNE/27/2014
  - Improvements in memory consumption and performance for image caching.
