@@ -43,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
@@ -271,17 +272,16 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     }
 
 	private void initStorageRelatedRichNotifications(View v) {
-		RichNotification sdCardNotification = findView(v, R.id.fragment_transfers_sd_card_notification);
-		sdCardNotification.setVisibility(View.GONE);
-		
-		RichNotification internalMemoryNotification = findView(v, R.id.fragment_transfers_internal_memory_notification);
-    	internalMemoryNotification.setVisibility(View.GONE);
-		
-		if (SystemUtils.isUsingSDCardPrivateStorage() &&
-    		!sdCardNotification.wasDismissed()) {
-    		sdCardNotification.setVisibility(View.VISIBLE);
-    		sdCardNotification.setOnClickListener(new SDCardNotificationListener(this));
-    	}
+        RichNotification sdCardNotification = findView(v, R.id.fragment_transfers_sd_card_notification);
+        sdCardNotification.setVisibility(View.GONE);
+
+        RichNotification internalMemoryNotification = findView(v, R.id.fragment_transfers_internal_memory_notification);
+        internalMemoryNotification.setVisibility(View.GONE);
+
+        if (SystemUtils.isUsingSDCardPrivateStorage() && !sdCardNotification.wasDismissed()) {
+            sdCardNotification.setVisibility(View.VISIBLE);
+            sdCardNotification.setOnClickListener(new SDCardNotificationListener(this));
+        }
 		
 		//if you do have an SD Card mounted and you're using internal memory, we'll let you know
 		//that you now can use the SD Card. We'll keep this for a few releases.
@@ -656,7 +656,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		@Override
 		public void onClick(TransfersFragment owner, View v) {
 	        Intent i = new Intent(owner.getActivity(), PreferencesActivity.class);
-	        i.putExtra("onOpen", "StoragePreference");
+	        i.setAction(Constants.ACTION_SETTINGS_SELECT_STORAGE);
 	        owner.getActivity().startActivity(i);
 		}
     }

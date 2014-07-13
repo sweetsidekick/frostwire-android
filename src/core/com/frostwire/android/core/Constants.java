@@ -122,6 +122,7 @@ public final class Constants {
     public static final String ACTION_MEDIA_PLAYER_PAUSED = "com.frostwire.android.ACTION_MEDIA_PLAYER_PAUSED";
     public static final String ACTION_REFRESH_FINGER = "com.frostwire.android.ACTION_REFRESH_FINGER";
     public static final String ACTION_DESKTOP_UPLOAD_REQUEST = "com.frostwire.android.ACTION_DESKTOP_UPLOAD_REQUEST";
+    public static final String ACTION_SETTINGS_SELECT_STORAGE = "com.frostwire.android.ACTION_SETTINGS_SELECT_STORAGE";
     public static final String EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION = "com.frostwire.android.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION";
     public static final String EXTRA_DOWNLOAD_COMPLETE_PATH = "com.frostwire.android.EXTRA_DOWNLOAD_COMPLETE_PATH";
     public static final String EXTRA_PEER_UUID = "com.frostwire.android.EXTRA_PEER_UUID";

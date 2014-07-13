@@ -71,14 +71,10 @@ public class PreferencesActivity extends PreferenceActivity {
         setupUPnPOption();
         setupUXStatsOption();
         
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-        	if (extras.getString("onOpen") != null) {
-        		if (extras.getString("onOpen").equals("StoragePreference")) {
-        			getIntent().removeExtra("onOpen");
-        			invokeStoragePreference();
-        		}
-        	}
+        String action = getIntent().getAction();
+        if (action != null && action.equals(Constants.ACTION_SETTINGS_SELECT_STORAGE)) {
+            getIntent().setAction(null);
+            invokeStoragePreference();
         }
     }
 
