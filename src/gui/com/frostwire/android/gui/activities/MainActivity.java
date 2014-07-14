@@ -28,8 +28,11 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -368,6 +371,22 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         super.onCreate(savedInstanceState);
 
         mToken = MusicUtils.bindToService(this, this);
+        BroadcastReceiver br = new BroadcastReceiver() {
+            
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Constants.ACTION_NOTIFY_SDCARD_MOUNTED.equals(intent.getAction())) {
+                    onNotifySdCardMounted();
+                }
+            }
+        };
+        
+        IntentFilter bf = new IntentFilter(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
+        registerReceiver(br, bf);
+    }
+
+    private void onNotifySdCardMounted() {
+        transfers.initStorageRelatedRichNotifications(null);
     }
 
     @Override
@@ -727,4 +746,5 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         searchFragment.performYTSearch(ytUrl);
         switchContent(searchFragment);
     }
+
 }

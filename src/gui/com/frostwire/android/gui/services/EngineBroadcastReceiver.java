@@ -64,6 +64,9 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             String action = intent.getAction();
 
             if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
+                Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
+                context.sendBroadcast(i);
+                
                 if (Engine.instance().isDisconnected()) {
                     engineExecutor.execute(new Runnable() {
                         @Override

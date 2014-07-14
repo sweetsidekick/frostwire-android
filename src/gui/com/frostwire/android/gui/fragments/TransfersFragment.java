@@ -272,7 +272,10 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         textUploads = findView(v, R.id.fragment_transfers_text_uploads);
     }
 
-	private void initStorageRelatedRichNotifications(View v) {
+	public void initStorageRelatedRichNotifications(View v) {
+	    if (v == null) {
+	        v = getView();
+	    }
         RichNotification sdCardNotification = findView(v, R.id.fragment_transfers_sd_card_notification);
         sdCardNotification.setVisibility(View.GONE);
 
