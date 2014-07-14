@@ -45,6 +45,8 @@ public final class SystemUtils {
 
     private static final Logger LOG = Logger.getLogger(SystemUtils.class);
 
+    private static final int KITKAT = 19;
+
     private SystemUtils() {
     }
 
@@ -90,8 +92,31 @@ public final class SystemUtils {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
+    /**
+     * Use this instead of EnvironmentCompat.
+     * 
+     * @param path
+     * @return
+     */
     public static boolean isSecondaryExternalStorageMounted(File path) {
-        return path != null ? Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(path)) : false;
+        if (path == null) { // fast precondition
+            return false;
+        }
+
+        boolean result = false;
+
+        if (Build.VERSION.SDK_INT >= KITKAT) {
+            result = Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(path));
+        } else {
+            try {
+                String[] l = path.list();
+                result = l != null && l.length > 0;
+            } catch (Throwable e) {
+                LOG.error("Error detecting secondary external storage state", e);
+            }
+        }
+
+        return result;
     }
 
     public static long getAvailableStorageSize(File dir) {
@@ -106,8 +131,15 @@ public final class SystemUtils {
         return size;
     }
 
+    /**
+     * 
+     * Use this instead ContextCompat
+     * 
+     * @param context
+     * @return
+     */
     public static File[] getExternalFilesDirs(Context context) {
-        if (Build.VERSION.SDK_INT > 19) {
+        if (Build.VERSION.SDK_INT >= KITKAT) {
             return ContextCompat.getExternalFilesDirs(context, null);
         } else {
             List<File> dirs = new LinkedList<File>();

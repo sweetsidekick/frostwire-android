@@ -217,7 +217,8 @@ public class StoragePreference extends DialogPreference {
             int i = 0;
 
             for (File f : SystemUtils.getExternalFilesDirs(context)) {
-                if (!f.getAbsolutePath().startsWith(primaryPath)) {
+                if (!f.getAbsolutePath().startsWith(primaryPath) &&
+                        SystemUtils.isSecondaryExternalStorageMounted(f)) {
 
                     String label = context.getString(R.string.sdcard_storage) + " " + (++i);
                     String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f)) + " " + context.getString(R.string.available);

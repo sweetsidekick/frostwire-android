@@ -151,19 +151,19 @@ public final class SystemUtils {
      * @return
      */
     public static File getBiggestSDCardDir(Context context) {
-    	String primaryPath = context.getExternalFilesDir(null).getParent();
+        String primaryPath = context.getExternalFilesDir(null).getParent();
 
-    	long biggestBytesAvailable = -1;
-    	
-    	File result = null;
-    	
-        for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
+        long biggestBytesAvailable = -1;
+
+        File result = null;
+
+        for (File f : com.frostwire.android.util.SystemUtils.getExternalFilesDirs(context)) {
             if (!f.getAbsolutePath().startsWith(primaryPath)) {
-            	long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
-            	if (bytesAvailable > biggestBytesAvailable) {
-            		biggestBytesAvailable = bytesAvailable;
-            		result = f;
-            	}
+                long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
+                if (bytesAvailable > biggestBytesAvailable) {
+                    biggestBytesAvailable = bytesAvailable;
+                    result = f;
+                }
             }
         }
         //System.out.println("FW.SystemUtils.getSDCardDir() -> " + result.getAbsolutePath());
