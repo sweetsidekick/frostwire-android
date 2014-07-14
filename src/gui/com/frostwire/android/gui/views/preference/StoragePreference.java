@@ -30,7 +30,6 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.DialogPreference;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -217,7 +216,7 @@ public class StoragePreference extends DialogPreference {
 
             int i = 0;
 
-            for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
+            for (File f : SystemUtils.getExternalFilesDirs(context)) {
                 if (!f.getAbsolutePath().startsWith(primaryPath)) {
 
                     String label = context.getString(R.string.sdcard_storage) + " " + (++i);

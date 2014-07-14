@@ -22,12 +22,18 @@ import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.pm.ApplicationInfo.FLAG_LARGE_HEAP;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.os.EnvironmentCompat;
+
+import com.frostwire.logging.Logger;
 
 /**
  * 
@@ -36,6 +42,8 @@ import android.support.v4.os.EnvironmentCompat;
  *
  */
 public final class SystemUtils {
+
+    private static final Logger LOG = Logger.getLogger(SystemUtils.class);
 
     private SystemUtils() {
     }
@@ -96,5 +104,29 @@ public final class SystemUtils {
         }
 
         return size;
+    }
+
+    public static File[] getExternalFilesDirs(Context context) {
+        if (Build.VERSION.SDK_INT > 19) {
+            return ContextCompat.getExternalFilesDirs(context, null);
+        } else {
+            List<File> dirs = new LinkedList<File>();
+
+            dirs.add(context.getExternalFilesDir(null));
+
+            try {
+                String secondaryStorages = System.getenv("SECONDARY_STORAGE");
+                if (secondaryStorages != null) {
+                    String[] storages = secondaryStorages.split(File.pathSeparator);
+                    for (String s : storages) {
+                        dirs.add(new File(s));
+                    }
+                }
+            } catch (Throwable e) {
+                LOG.error("Unable to get secondary external storages", e);
+            }
+
+            return dirs.toArray(new File[0]);
+        }
     }
 }
