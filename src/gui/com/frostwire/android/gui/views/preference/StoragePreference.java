@@ -66,10 +66,10 @@ public class StoragePreference extends DialogPreference {
     public StoragePreference(Context context) {
         this(context, null);
     }
-    
+
     @Override
     public void showDialog(Bundle state) {
-    	super.showDialog(state);
+        super.showDialog(state);
     }
 
     @Override
@@ -83,14 +83,14 @@ public class StoragePreference extends DialogPreference {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, AbstractAdapter<StorageMount> adapter, int position, long id) {
                 selectedPath = adapter.getItem(position).path;
-                
+
                 //if you select the one that was there before dismiss the dialog.
                 if (ConfigurationManager.instance().getStoragePath().equals(selectedPath)) {
                     dismissPreferenceDialog();
                 } else {
                     //if you select the SD Card option, show the confirmation dialog, with ok button disabled.
-                	//will be enabled after user clicks on checkbox.
-                	confirmDlg = createConfirmDialog(getContext());
+                    //will be enabled after user clicks on checkbox.
+                    confirmDlg = createConfirmDialog(getContext());
                     confirmDlg.show();
                     confirmDlg.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
                 }
@@ -127,11 +127,11 @@ public class StoragePreference extends DialogPreference {
             }
         };
         return new AlertDialog.Builder(context).
-        		setMultiChoiceItems(new String[] { context.getString(R.string.storage_setting_confirm_dialog_text) }, new boolean[] { false }, checkListener).
-        		setTitle(R.string.storage_setting_confirm_dialog_title).
-        		setPositiveButton(android.R.string.ok, this).
-        		setNegativeButton(android.R.string.cancel, this).
-        		create();
+                setMultiChoiceItems(new String[] { context.getString(R.string.storage_setting_confirm_dialog_text) }, new boolean[] { false }, checkListener).
+                setTitle(R.string.storage_setting_confirm_dialog_title).
+                setPositiveButton(android.R.string.ok, this).
+                setNegativeButton(android.R.string.cancel, this).
+                create();
     }
 
     private void dismissConfirmDialog() {
