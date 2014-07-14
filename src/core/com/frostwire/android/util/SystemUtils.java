@@ -27,6 +27,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.v4.os.EnvironmentCompat;
 
 /**
  * 
@@ -42,7 +43,7 @@ public final class SystemUtils {
     public static File getCacheDir(Context context, String directory) {
         File cache = null;
 
-        if (isExternalStorageMounted()) {
+        if (isPrimaryExternalStorageMounted()) {
             cache = context.getExternalCacheDir();
         } else {
             cache = context.getCacheDir();
@@ -77,8 +78,12 @@ public final class SystemUtils {
         return Math.max(Math.min(size, maxSize), minSize);
     }
 
-    public static boolean isExternalStorageMounted() {
+    public static boolean isPrimaryExternalStorageMounted() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
+
+    public static boolean isSecondaryExternalStorageMounted(File path) {
+        return path != null ? Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(path)) : false;
     }
 
     public static long getAvailableStorageSize(File dir) {

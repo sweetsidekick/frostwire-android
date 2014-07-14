@@ -361,7 +361,7 @@ public final class Librarian {
     }
 
     public boolean isExternalStorageMounted() {
-        return com.frostwire.android.util.SystemUtils.isExternalStorageMounted();
+        return com.frostwire.android.util.SystemUtils.isPrimaryExternalStorageMounted();
     }
 
     /**

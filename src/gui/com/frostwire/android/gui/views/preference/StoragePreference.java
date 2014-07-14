@@ -197,7 +197,7 @@ public class StoragePreference extends DialogPreference {
         private StorageMount getPrimaryExternal(Context context) {
             StorageMount mount = null;
 
-            if (SystemUtils.isExternalStorageMounted()) {
+            if (SystemUtils.isPrimaryExternalStorageMounted()) {
                 File dir = Environment.getExternalStorageDirectory();
 
                 String label = context.getString(R.string.device_storage);

@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.fragments;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -285,10 +286,11 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		
 		//if you do have an SD Card mounted and you're using internal memory, we'll let you know
 		//that you now can use the SD Card. We'll keep this for a few releases.
-		if (com.frostwire.android.util.SystemUtils.isExternalStorageMounted() &&
+        File sdCardDir = SystemUtils.getBiggestSDCardDir(getActivity());
+		if (com.frostwire.android.util.SystemUtils.isSecondaryExternalStorageMounted(sdCardDir) &&
 			!SystemUtils.isUsingSDCardPrivateStorage() &&
 			!internalMemoryNotification.wasDismissed()) {
-			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(SystemUtils.getBiggestSDCardDir(getActivity())));
+			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(sdCardDir));
 			String internalMemoryNotificationDescription = getString(R.string.saving_to_internal_memory_description, bytesAvailableInHuman);
 			internalMemoryNotification.setDescription(internalMemoryNotificationDescription);
 			internalMemoryNotification.setVisibility(View.VISIBLE);
