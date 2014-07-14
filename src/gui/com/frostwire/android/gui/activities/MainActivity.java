@@ -133,6 +133,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private boolean appiaStarted = false;
 
     private TimerSubscription playerSubscription;
+    
+    private BroadcastReceiver mainBroadcastReceiver;
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -329,6 +331,31 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         checkLastSeenVersion();
+        registerMainBroadcastReceiver();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        if (mainBroadcastReceiver != null) {
+            unregisterReceiver(mainBroadcastReceiver);
+        }
+    }
+
+    private void registerMainBroadcastReceiver() {
+        mainBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Constants.ACTION_NOTIFY_SDCARD_MOUNTED.equals(intent.getAction())) {
+                    onNotifySdCardMounted();
+                }
+            }
+        };
+
+        IntentFilter bf = new IntentFilter(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
+        registerReceiver(mainBroadcastReceiver, bf);
     }
 
     private void initializeAppia() {
@@ -371,18 +398,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         super.onCreate(savedInstanceState);
 
         mToken = MusicUtils.bindToService(this, this);
-        BroadcastReceiver br = new BroadcastReceiver() {
-            
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (Constants.ACTION_NOTIFY_SDCARD_MOUNTED.equals(intent.getAction())) {
-                    onNotifySdCardMounted();
-                }
-            }
-        };
-        
-        IntentFilter bf = new IntentFilter(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
-        registerReceiver(br, bf);
     }
 
     private void onNotifySdCardMounted() {
