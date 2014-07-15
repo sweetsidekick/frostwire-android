@@ -18,11 +18,15 @@
 
 package com.frostwire.android.gui.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -64,6 +68,7 @@ import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
 import com.frostwire.android.util.ImageLoader;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.util.Condition;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -107,6 +112,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
+        
+        checkSDStatus();
     }
 
     public byte getFileType() {
@@ -412,6 +419,30 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
         item.fd = fd;
         super.deleteItem(item);
     }
+    
+    private void checkSDStatus() {
+        Map<String, Boolean> sds = new HashMap<String, Boolean>();
+
+        File[] externalDirs = SystemUtils.getExternalFilesDirs(getContext());
+        for (int i = 1; i < externalDirs.length; i++) {
+            File path = externalDirs[i];
+            sds.put(path.getAbsolutePath(), SystemUtils.isSecondaryExternalStorageMounted(path));
+        }
+        
+        if (sds.isEmpty()) {
+            return; // yes, fast return (for now)
+        }
+
+        
+        for (FileDescriptorItem item : getList()) {
+            for (Entry<String, Boolean> e : sds.entrySet()) {
+                if (item.fd.filePath.contains(e.getKey())) {
+                    item.mounted = e.getValue();
+                }
+                item.exists = true;
+            }
+        }
+    }
 
     private static class FileListFilter implements ListAdapterFilter<FileDescriptorItem> {
 
@@ -505,6 +536,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
     public static class FileDescriptorItem {
         
         public FileDescriptor fd;
+        public boolean mounted;
+        public boolean exists;
         
         @Override
         public boolean equals(Object o) {
