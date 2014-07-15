@@ -50,8 +50,8 @@ public abstract class AbstractAdapter<T> extends ArrayAdapter<T> {
             convertView = View.inflate(getContext(), layoutResId, null);
         }
 
-        setupView(convertView, item);
-
+        setupView(convertView, parent, item);
+        
         return convertView;
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractAdapter<T> extends ArrayAdapter<T> {
         return (V) getView(view, getHolder(view), id);
     }
 
-    protected abstract void setupView(View view, T item);
+    protected abstract void setupView(View view, ViewGroup parent, T item);
 
     private SparseArray<View> getHolder(View view) {
         @SuppressWarnings("unchecked")

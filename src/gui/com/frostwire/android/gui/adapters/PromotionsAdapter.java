@@ -25,12 +25,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
+import com.frostwire.android.R;
+import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.frostclick.Slide;
 
@@ -42,36 +41,47 @@ import com.frostwire.frostclick.Slide;
  * @author aldenml
  * 
  */
-public class PromotionsAdapter extends BaseAdapter {
+public class PromotionsAdapter extends AbstractAdapter<Slide> {
 
     private final List<Slide> slides;
     private final ImageLoader imageLoader;
     private static final double PROMO_HEIGHT_TO_WIDTH_RATIO = 0.52998;
 
     public PromotionsAdapter(Context ctx, List<Slide> slides) {
+        super(ctx, R.layout.view_promotions_item);
         this.slides = slides;
         this.imageLoader = ImageLoader.getInstance(ctx);
     }
-
+    
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView != null && convertView instanceof ImageView) {
-            return convertView;
-        }
-
-        ImageView imageView = new ImageView(parent.getContext());
-        imageView.setScaleType(ScaleType.MATRIX);
-        imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        imageView.setPadding(0, 0, 0, 0);
-        imageView.setAdjustViewBounds(true);
+    public void setupView(View convertView, ViewGroup parent, Slide viewItem) {
+        ImageView imageView = (ImageView) convertView;
         
         GridView gridView = (GridView) parent;
         int promoWidth = getColumnWidth(gridView); //hack
         int promoHeight = (int) (promoWidth * PROMO_HEIGHT_TO_WIDTH_RATIO);
-        imageLoader.load(Uri.parse(getItem(position).imageSrc), imageView, promoWidth, promoHeight);
+        imageLoader.load(Uri.parse(viewItem.imageSrc), imageView, promoWidth, promoHeight);
+     }
 
-        return imageView;
-    }
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        if (convertView != null && convertView instanceof ImageView) {
+//            return convertView;
+//        }
+//
+//        ImageView imageView = new ImageView(parent.getContext());
+//        imageView.setScaleType(ScaleType.MATRIX);
+//        imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//        imageView.setPadding(0, 0, 0, 0);
+//        imageView.setAdjustViewBounds(true);
+//        
+//        GridView gridView = (GridView) parent;
+//        int promoWidth = getColumnWidth(gridView); //hack
+//        int promoHeight = (int) (promoWidth * PROMO_HEIGHT_TO_WIDTH_RATIO);
+//        imageLoader.load(Uri.parse(getItem(position).imageSrc), imageView, promoWidth, promoHeight);
+//
+//        return imageView;
+//    }
 
     @Override
     public int getCount() {

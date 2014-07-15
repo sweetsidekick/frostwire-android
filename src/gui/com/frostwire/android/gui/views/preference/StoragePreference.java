@@ -32,6 +32,7 @@ import android.os.Environment;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -169,7 +170,7 @@ public class StoragePreference extends DialogPreference {
         }
 
         @Override
-        protected void setupView(View view, StorageMount item) {
+        protected void setupView(View view, ViewGroup parent, StorageMount item) {
             ImageView icon = findView(view, R.id.view_preference_storage_list_item_icon);
             TextView label = findView(view, R.id.view_preference_storage_list_item_label);
             TextView description = findView(view, R.id.view_preference_storage_list_item_description);
