@@ -2417,19 +2417,20 @@ public class MusicPlaybackService extends Service {
     
     private static final class AudioOnPreparedListener implements OnPreparedListener {
 
-        private WeakReference<? extends Context> ctxRef;
+        private WeakReference<MusicPlaybackService> serviceRef;
         
-        public AudioOnPreparedListener(WeakReference<? extends Context> contextRef) {
-            ctxRef = contextRef;
+        public AudioOnPreparedListener(WeakReference<MusicPlaybackService> serviceRef) {
+            this.serviceRef = serviceRef;
         }
         
         @Override
         public void onPrepared(MediaPlayer mp) {
 
-            if (Ref.alive(ctxRef)) {
-                Intent i = new Intent(ctxRef.get(), AudioPlayerActivity.class);
+            if (Ref.alive(serviceRef) && serviceRef.get().launchPlayerActivity) {
+                serviceRef.get().launchPlayerActivity = false;
+                Intent i = new Intent(serviceRef.get(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                ctxRef.get().startActivity(i);
+                serviceRef.get().startActivity(i);
             }
         }
     }
@@ -2527,7 +2528,6 @@ public class MusicPlaybackService extends Service {
             try {
                 player.reset();
                 if (Ref.alive(mService)&& mService.get().launchPlayerActivity) {
-                    mService.get().launchPlayerActivity = false;
                     player.setOnPreparedListener(new AudioOnPreparedListener(mService));
                 }
                 if (path.startsWith("content://")) {
