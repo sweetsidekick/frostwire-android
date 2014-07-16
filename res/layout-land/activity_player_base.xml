@@ -99,7 +99,7 @@
                     android:ellipsize="end"
                     android:gravity="bottom"
                     android:singleLine="true"
-                    android:textSize="@dimen/text_size_medium"
+                    style="@android:style/TextAppearance.Medium"
                     android:textStyle="bold" />
 
                 <TextView
@@ -109,7 +109,7 @@
                     android:ellipsize="end"
                     android:gravity="top"
                     android:singleLine="true"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@android:style/TextAppearance.Small" />
             </LinearLayout>
 
             <FrameLayout
