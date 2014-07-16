@@ -36,6 +36,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
+import com.frostwire.android.gui.UniversalScanner;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
@@ -180,15 +181,32 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void handleMediaMounted(Context context, Intent intent) {
-        String path = intent.getDataString();
-        if (!SystemUtils.isPrimaryExternalPath(new File(path))) {
-            Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
-            context.sendBroadcast(i);
+    private void handleMediaMounted(final Context context, Intent intent) {
+        try {
+            String path = intent.getDataString().replace("file://", "");
+            if (!SystemUtils.isPrimaryExternalPath(new File(path))) {
+                Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
+                context.sendBroadcast(i);
 
-            if (SystemUtils.hasKitKat()) {
-                
+                if (SystemUtils.hasKitKat()) {
+                    final File privateDir = new File(path + File.separator + "Android" + File.separator + "data" + File.separator + context.getPackageName() + File.separator + "files" + File.separator + "FrostWire");
+                    if (privateDir.exists() && privateDir.isDirectory()) {
+                        Thread t = new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                new UniversalScanner(context).scanDir(privateDir);
+                            }
+                        });
+
+                        t.setName("Private MediaScanning");
+                        t.setDaemon(true);
+                        t.start();
+                    }
+                }
             }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 }

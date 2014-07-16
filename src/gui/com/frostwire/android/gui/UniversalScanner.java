@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import android.content.ContentResolver;
@@ -52,7 +53,7 @@ import com.frostwire.logging.Logger;
  * @author aldenml
  * 
  */
-final class UniversalScanner {
+public final class UniversalScanner {
 
     private static final Logger LOG = Logger.getLogger(UniversalScanner.class);
 
@@ -265,5 +266,9 @@ final class UniversalScanner {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void scanDir(File privateDir) {
+        scan(FileUtils.listFiles(privateDir, null, true));
     }
 }
