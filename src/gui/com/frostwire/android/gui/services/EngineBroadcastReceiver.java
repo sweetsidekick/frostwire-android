@@ -182,9 +182,13 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private void handleMediaMounted(Context context, Intent intent) {
         String path = intent.getDataString();
-        if (SystemUtils.isSecondaryExternalPath(new File(path))) {
+        if (!SystemUtils.isPrimaryExternalPath(new File(path))) {
             Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
             context.sendBroadcast(i);
+
+            if (SystemUtils.hasKitKat()) {
+                
+            }
         }
     }
 }

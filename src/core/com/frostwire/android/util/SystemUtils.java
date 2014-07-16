@@ -121,7 +121,7 @@ public final class SystemUtils {
         return result;
     }
 
-    public static boolean isSecondaryExternalPath(File path) {
+    public static boolean isPrimaryExternalPath(File path) {
         String primary = Environment.getExternalStorageDirectory().getAbsolutePath();
         return path != null ? path.getAbsolutePath().startsWith(primary) : null;
     }
