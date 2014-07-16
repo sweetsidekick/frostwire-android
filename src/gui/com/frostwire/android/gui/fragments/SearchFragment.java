@@ -414,7 +414,7 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         @Override
         protected void onPostExecute(List<Slide> result) {
             SearchFragment f = fragment.get();
-            if (f != null) {
+            if (f != null && result != null && !result.isEmpty()) {
                 f.slides = result;
                 f.promotions.setSlides(result);
             }

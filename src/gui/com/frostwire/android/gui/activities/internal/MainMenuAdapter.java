@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
     }
 
     @Override
-    protected void setupView(View view, MenuItem item) {
+    protected void setupView(View view, ViewGroup parent, MenuItem item) {
         TextView label = findView(view, R.id.slidemenu_listitem_label);
         ImageView icon = findView(view, R.id.slidemenu_listitem_icon);
 
