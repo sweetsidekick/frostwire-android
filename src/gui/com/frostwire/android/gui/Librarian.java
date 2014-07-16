@@ -263,7 +263,7 @@ public final class Librarian {
         }
     }
 
-    public void deleteFiles(byte fileType, ArrayList<FileDescriptor> fds) {
+    public void deleteFiles(byte fileType, Collection<FileDescriptor> fds) {
         List<Integer> ids = new ArrayList<Integer>(fds.size());
 
         for (FileDescriptor fd : fds) {

@@ -146,7 +146,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         List<MenuAction> items = new ArrayList<MenuAction>();
 
-        FileDescriptor fd = ((FileDescriptorItem) view.getTag()).fd;
+        FileDescriptorItem item = (FileDescriptorItem) view.getTag();
+        
+        FileDescriptor fd = item.fd;
+        
+        if (checkIfNotExists(fd)) {
+            return null;
+        }
 
         List<FileDescriptor> checked = convertItems(getChecked());
         int numChecked = checked.size();
@@ -365,7 +371,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
         if (item.inSD) {
             if (item.mounted) {
                 img.setVisibility(View.GONE);
-            } else {
+            } else { // this case never happens
                 img.setVisibility(View.VISIBLE);
             }
         } else {
@@ -463,6 +469,20 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             }
         }
     }
+    
+    private boolean checkIfNotExists(FileDescriptor fd) {
+        File f = new File(fd.filePath);
+
+        if (!f.exists()) {
+
+            UIUtils.showShortMessage(getContext(), "TEMP MSG");
+            Librarian.instance().deleteFiles(fileType, Arrays.asList(fd));
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private static class FileListFilter implements ListAdapterFilter<FileDescriptorItem> {
 
@@ -521,6 +541,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             FileDescriptor fd = (FileDescriptor) v.getTag();
 
             if (fd == null) {
+                return;
+            }
+            
+            if (checkIfNotExists(fd)) {
                 return;
             }
 
