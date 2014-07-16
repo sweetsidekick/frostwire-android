@@ -45,7 +45,9 @@ public final class SystemUtils {
 
     private static final Logger LOG = Logger.getLogger(SystemUtils.class);
 
-    private static final int KITKAT = 19;
+    private static final int VERSION_CODE_JELLY_BEAN = 16;
+    private static final int VERSION_CODE_JELLY_BEAN_MR2 = 18;
+    private static final int VERSION_CODE_KITKAT = 19;
 
     private SystemUtils() {
     }
@@ -105,7 +107,7 @@ public final class SystemUtils {
 
         boolean result = false;
 
-        if (Build.VERSION.SDK_INT >= KITKAT) {
+        if (hasKitKat()) {
             result = Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(path));
         } else {
             try {
@@ -144,7 +146,7 @@ public final class SystemUtils {
      * @return
      */
     public static File[] getExternalFilesDirs(Context context) {
-        if (Build.VERSION.SDK_INT >= KITKAT) {
+        if (hasKitKat()) {
             List<File> dirs = new LinkedList<File>();
 
             for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
@@ -173,5 +175,41 @@ public final class SystemUtils {
 
             return dirs.toArray(new File[0]);
         }
+    }
+
+    public static boolean hasSdk(int versionCode) {
+        return Build.VERSION.SDK_INT >= versionCode;
+    }
+
+    /**
+     * Used to determine if the device is running Jelly Bean or greater
+     * 
+     * @return True if the device is running Jelly Bean or greater, false
+     *         otherwise
+     */
+    public static final boolean hasJellyBean() {
+        return hasSdk(VERSION_CODE_JELLY_BEAN);
+    }
+
+    /**
+     * Used to determine if the device is running
+     * Jelly Bean MR2 (Android 4.3) or greater
+     *
+     * @return True if the device is running Jelly Bean MR2 or greater,
+     *         false otherwise
+     */
+    public static final boolean hasJellyBeanMR2() {
+        return hasSdk(VERSION_CODE_JELLY_BEAN_MR2);
+    }
+
+    /**
+     * Used to determine if the device is running
+     * KitKat (Android 4.4) or greater
+     *
+     * @return True if the device is running KitKat or greater,
+     *         false otherwise
+     */
+    public static final boolean hasKitKat() {
+        return hasSdk(VERSION_CODE_KITKAT);
     }
 }

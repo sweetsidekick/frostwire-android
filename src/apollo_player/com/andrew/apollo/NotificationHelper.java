@@ -22,8 +22,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.frostwire.android.R;
+import com.frostwire.android.util.SystemUtils;
 
 /**
  * Builds the notification for Apollo's service. Jelly Bean and higher uses the
@@ -90,7 +90,7 @@ public class NotificationHelper {
         mNotification = new Notification.Builder(mService).setSmallIcon(R.drawable.frostwire_notification).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).getNotification();
         // Control playback from the notification
         initPlaybackActions(isPlaying);
-        if (ApolloUtils.hasJellyBean()) {
+        if (SystemUtils.hasJellyBean()) {
             // Expanded notifiction style
             mExpandedView = new RemoteViews(mService.getPackageName(), R.layout.notification_template_expanded_base);
             setBigContentView(mNotification, mExpandedView);
@@ -123,7 +123,7 @@ public class NotificationHelper {
             mNotificationTemplate.setImageViewResource(R.id.notification_base_play, isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
         }
 
-        if (ApolloUtils.hasJellyBean() && mExpandedView != null) {
+        if (SystemUtils.hasJellyBean() && mExpandedView != null) {
             mExpandedView.setImageViewResource(R.id.notification_expanded_base_play, isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
         }
         mNotificationManager.notify(APOLLO_MUSIC_SERVICE, mNotification);

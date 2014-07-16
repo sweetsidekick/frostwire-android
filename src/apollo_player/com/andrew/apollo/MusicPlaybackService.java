@@ -59,10 +59,10 @@ import com.andrew.apollo.appwidgets.RecentWidgetProvider;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.RecentStore;
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.gui.activities.AudioPlayerActivity;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.util.Ref;
 
 /**
@@ -632,7 +632,7 @@ public class MusicPlaybackService extends Service {
                 | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
                 | RemoteControlClient.FLAG_KEY_MEDIA_STOP;
 
-        if (ApolloUtils.hasJellyBeanMR2()) {
+        if (SystemUtils.hasJellyBeanMR2()) {
 //            flags |= RemoteControlClient.FLAG_KEY_MEDIA_POSITION_UPDATE;
 //
 //            mRemoteControlClient.setOnGetPlaybackPositionListener(
@@ -1362,7 +1362,7 @@ public class MusicPlaybackService extends Service {
                 ? RemoteControlClient.PLAYSTATE_PLAYING
                 : RemoteControlClient.PLAYSTATE_PAUSED;
 
-        if (ApolloUtils.hasJellyBeanMR2()
+        if (SystemUtils.hasJellyBeanMR2()
                 && (what.equals(PLAYSTATE_CHANGED) || what.equals(POSITION_CHANGED))) {
             //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
             mRemoteControlClient.setPlaybackState(playState);
@@ -1390,7 +1390,7 @@ public class MusicPlaybackService extends Service {
                     .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt)
                     .apply();
 
-            if (ApolloUtils.hasJellyBeanMR2()) {
+            if (SystemUtils.hasJellyBeanMR2()) {
                 //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
                 mRemoteControlClient.setPlaybackState(playState);
             }
