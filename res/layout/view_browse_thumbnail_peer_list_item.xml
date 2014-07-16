@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,5 +75,14 @@
         android:layout_alignLeft="@id/view_browse_peer_list_item_file_title"
         android:layout_marginBottom="2dip"
         android:text="@string/dummy_size" />
+
+    <ImageView
+        android:id="@+id/view_browse_peer_list_item_sd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/view_browse_peer_list_item_file_size"
+        android:layout_toRightOf="@id/view_browse_peer_list_item_file_size"
+        android:contentDescription="@null"
+        android:src="@drawable/file_list_sd_card" />
 
 </RelativeLayout>

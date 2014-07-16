@@ -112,7 +112,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         this.padLockClickListener = new PadLockClickListener();
         this.downloadButtonClickListener = new DownloadButtonClickListener();
-        
+
         checkSDStatus();
     }
 
@@ -242,7 +242,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private void populateViewThumbnail(View view, FileDescriptorItem item) {
         FileDescriptor fd = item.fd;
-        
+
         BrowseThumbnailImageButton fileThumbnail = findView(view, R.id.view_browse_peer_list_item_file_thumbnail);
         fileThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -290,6 +290,8 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         fileThumbnail.setTag(fd);
         fileThumbnail.setOnClickListener(downloadButtonClickListener);
+
+        populateSDState(view, item);
     }
 
     /**
@@ -319,7 +321,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private void populateViewPlain(View view, FileDescriptorItem item) {
         FileDescriptor fd = item.fd;
-        
+
         ImageButton padlock = findView(view, R.id.view_browse_peer_list_item_lock_toggle);
 
         TextView title = findView(view, R.id.view_browse_peer_list_item_file_title);
@@ -353,6 +355,22 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         downloadButton.setTag(fd);
         downloadButton.setOnClickListener(downloadButtonClickListener);
+
+        populateSDState(view, item);
+    }
+
+    private void populateSDState(View v, FileDescriptorItem item) {
+        ImageView img = findView(v, R.id.view_browse_peer_list_item_sd);
+
+        if (item.inSD) {
+            if (item.mounted) {
+                img.setVisibility(View.GONE);
+            } else {
+                img.setVisibility(View.VISIBLE);
+            }
+        } else {
+            img.setVisibility(View.GONE);
+        }
     }
 
     private void populateContainerAction(View view) {
@@ -383,43 +401,43 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             return R.layout.view_browse_peer_list_item;
         }
     }
-    
+
     private static ArrayList<FileDescriptor> convertItems(Collection<FileDescriptorItem> items) {
         if (items == null) {
             return new ArrayList<FileDescriptor>();
         }
-        
+
         ArrayList<FileDescriptor> list = new ArrayList<FileDescriptor>(items.size());
-        
+
         for (FileDescriptorItem item : items) {
             list.add(item.fd);
         }
-        
+
         return list;
     }
-    
+
     private static ArrayList<FileDescriptorItem> convertFiles(Collection<FileDescriptor> fds) {
         if (fds == null) {
             return new ArrayList<FileDescriptorItem>();
         }
-        
+
         ArrayList<FileDescriptorItem> list = new ArrayList<FileDescriptorItem>(fds.size());
-        
+
         for (FileDescriptor fd : fds) {
             FileDescriptorItem item = new FileDescriptorItem();
             item.fd = fd;
             list.add(item);
         }
-        
+
         return list;
     }
-    
+
     public void deleteItem(FileDescriptor fd) {
         FileDescriptorItem item = new FileDescriptorItem();
         item.fd = fd;
         super.deleteItem(item);
     }
-    
+
     private void checkSDStatus() {
         Map<String, Boolean> sds = new HashMap<String, Boolean>();
 
@@ -428,16 +446,18 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             File path = externalDirs[i];
             sds.put(path.getAbsolutePath(), SystemUtils.isSecondaryExternalStorageMounted(path));
         }
-        
+
         if (sds.isEmpty()) {
             return; // yes, fast return (for now)
         }
 
-        
         for (FileDescriptorItem item : getList()) {
             for (Entry<String, Boolean> e : sds.entrySet()) {
                 if (item.fd.filePath.contains(e.getKey())) {
+                    item.inSD = true;
                     item.mounted = e.getValue();
+                } else {
+                    item.inSD = false;
                 }
                 item.exists = true;
             }
@@ -481,7 +501,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private final class PadLockClickListener implements OnClickListener {
         public void onClick(View v) {
-            FileDescriptor fd = ((FileDescriptorItem) v.getTag()).fd;
+            FileDescriptor fd = (FileDescriptor) v.getTag();
 
             if (fd == null) {
                 return;
@@ -498,7 +518,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private final class DownloadButtonClickListener implements OnClickListener {
         public void onClick(View v) {
-            FileDescriptor fd = ((FileDescriptorItem) v.getTag()).fd;
+            FileDescriptor fd = (FileDescriptor) v.getTag();
 
             if (fd == null) {
                 return;
@@ -532,20 +552,21 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             }
         }
     }
-    
+
     public static class FileDescriptorItem {
-        
+
         public FileDescriptor fd;
+        public boolean inSD;
         public boolean mounted;
         public boolean exists;
-        
+
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof FileDescriptorItem)) {
                 return false;
             }
-            
-            return fd.equals(((FileDescriptorItem)o).fd);
+
+            return fd.equals(((FileDescriptorItem) o).fd);
         }
     }
 }

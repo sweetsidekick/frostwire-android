@@ -140,7 +140,15 @@ public final class SystemUtils {
      */
     public static File[] getExternalFilesDirs(Context context) {
         if (Build.VERSION.SDK_INT >= KITKAT) {
-            return ContextCompat.getExternalFilesDirs(context, null);
+            List<File> dirs = new LinkedList<File>();
+
+            for (File f : ContextCompat.getExternalFilesDirs(context, null)) {
+                if (f != null) {
+                    dirs.add(f);
+                }
+            }
+
+            return dirs.toArray(new File[0]);
         } else {
             List<File> dirs = new LinkedList<File>();
 
