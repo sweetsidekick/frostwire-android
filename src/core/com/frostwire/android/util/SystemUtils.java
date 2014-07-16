@@ -119,6 +119,11 @@ public final class SystemUtils {
         return result;
     }
 
+    public static boolean isSecondaryExternalPath(File path) {
+        String primary = Environment.getExternalStorageDirectory().getAbsolutePath();
+        return path != null ? path.getAbsolutePath().startsWith(primary) : null;
+    }
+
     public static long getAvailableStorageSize(File dir) {
         long size = -1;
         try {

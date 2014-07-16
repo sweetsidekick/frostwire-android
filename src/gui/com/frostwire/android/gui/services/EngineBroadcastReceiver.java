@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.services;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 import android.content.BroadcastReceiver;
@@ -36,6 +37,7 @@ import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
 /**
@@ -64,9 +66,8 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             String action = intent.getAction();
 
             if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
-                Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
-                context.sendBroadcast(i);
-                
+                handleMediaMounted(context, intent);
+
                 if (Engine.instance().isDisconnected()) {
                     engineExecutor.execute(new Runnable() {
                         @Override
@@ -138,7 +139,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
         if (NetworkManager.instance().isDataUp()) {
 
             boolean useTorrentsOnMobileData = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
-            
+
             // "Boolean Master", just for fun.
             // Let a <= "mobile up",
             //     b <= "use torrents on mobile"
@@ -168,15 +169,22 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                         @Override
                         public void run() {
                             Engine.instance().startServices();
-    
-                            if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS) ||
-                                (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY))) {
+
+                            if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS) || (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY))) {
                                 TransferManager.instance().stopSeedingTorrents();
                             }
                         }
                     });
                 }
             }
+        }
+    }
+
+    private void handleMediaMounted(Context context, Intent intent) {
+        String path = intent.getDataString();
+        if (SystemUtils.isSecondaryExternalPath(new File(path))) {
+            Intent i = new Intent(Constants.ACTION_NOTIFY_SDCARD_MOUNTED);
+            context.sendBroadcast(i);
         }
     }
 }
