@@ -368,6 +368,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private void populateSDState(View v, FileDescriptorItem item) {
         ImageView img = findView(v, R.id.view_browse_peer_list_item_sd);
+        ImageView lock = findView(v, R.id.view_browse_peer_list_item_lock_toggle);
 
         if (item.inSD) {
             if (item.mounted) {
@@ -378,6 +379,12 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
                 v.setBackgroundResource(R.drawable.browse_peer_listview_item_inactive_background);
                 setInactiveTextColors(v);
                 img.setVisibility(View.VISIBLE);
+
+                if (item.fd.shared) {
+                    lock.setImageResource(R.drawable.browse_peer_padlock_unlocked_icon_inactive);
+                } else {
+                    lock.setImageResource(R.drawable.browse_peer_padlock_locked_icon_inactive);
+                }
             }
         } else {
             v.setBackgroundResource(R.drawable.listview_item_background_selector);
@@ -492,7 +499,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             for (Entry<String, Boolean> e : sds.entrySet()) {
                 if (item.fd.filePath.contains(e.getKey())) {
                     item.inSD = true;
-                    item.mounted = false;//e.getValue();
+                    item.mounted = e.getValue();
                 } else {
                     item.inSD = false;
                 }
@@ -507,8 +514,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         if (!f.exists()) {
 
-            UIUtils.showShortMessage(getContext(), "TEMP MSG");
-            Librarian.instance().deleteFiles(fileType, Arrays.asList(fd));
+            if (SystemUtils.isSecondaryExternalStorageMounted(f.getAbsoluteFile())) {
+                UIUtils.showShortMessage(getContext(), R.string.file_descriptor_sd_mounted);
+                Librarian.instance().deleteFiles(fileType, Arrays.asList(fd));
+                deleteItem(fd);
+            } else {
+                UIUtils.showShortMessage(getContext(), R.string.file_descriptor_sd_unmounted);
+            }
 
             return true;
         } else {
@@ -556,6 +568,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             FileDescriptor fd = (FileDescriptor) v.getTag();
 
             if (fd == null) {
+                return;
+            }
+            
+            if (checkIfNotExists(fd)) {
                 return;
             }
 
