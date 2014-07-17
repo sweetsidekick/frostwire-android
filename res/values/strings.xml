@@ -527,6 +527,6 @@
     <string name="storage_setting_confirm_dialog_title">SD CARD</string>
     <string name="storage_setting_confirm_dialog_text">I understand that all files downloaded to the SD Card by FrostWire will be deleted BY ANDROID the moment the FrostWire application is uninstalled from this device and I will not hold FrostWire LLC liable for any files lost.</string>
     <string name="available">available</string>
-    <string name="file_descriptor_sd_mounted">TEMP MSG1</string>
-    <string name="file_descriptor_sd_unmounted">TEMP MSG2</string>
+    <string name="file_descriptor_sd_mounted">This file was deleted from the SD Card, or the SD Card you have inserted is a different one.</string>
+    <string name="file_descriptor_sd_unmounted">This file belongs to an SD Card, please insert it on your device.</string>
 </resources>

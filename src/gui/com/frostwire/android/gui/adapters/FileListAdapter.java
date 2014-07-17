@@ -484,11 +484,21 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
     private void checkSDStatus() {
         Map<String, Boolean> sds = new HashMap<String, Boolean>();
-
+        
+        String privateSubpath = "Android" + File.separator + "data";
+        
         File[] externalDirs = SystemUtils.getExternalFilesDirs(getContext());
         for (int i = 1; i < externalDirs.length; i++) {
             File path = externalDirs[i];
-            sds.put(path.getAbsolutePath(), SystemUtils.isSecondaryExternalStorageMounted(path));
+            String absolutePath = path.getAbsolutePath();
+            boolean isSecondaryExternalStorageMounted = SystemUtils.isSecondaryExternalStorageMounted(path);
+            
+            sds.put(absolutePath, isSecondaryExternalStorageMounted);
+            
+            if (absolutePath.contains(privateSubpath)) {
+                String prefix = absolutePath.substring(0, absolutePath.indexOf(privateSubpath)-1);
+                sds.put(prefix, isSecondaryExternalStorageMounted);
+            }
         }
 
         if (sds.isEmpty()) {
@@ -496,15 +506,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
         }
 
         for (FileDescriptorItem item : getList()) {
+            item.inSD = false;
             for (Entry<String, Boolean> e : sds.entrySet()) {
                 if (item.fd.filePath.contains(e.getKey())) {
                     item.inSD = true;
                     item.mounted = e.getValue();
-                } else {
-                    item.inSD = false;
                 }
             }
-            
             item.exists = true;
         }
     }
@@ -513,7 +521,6 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
         File f = new File(fd.filePath);
 
         if (!f.exists()) {
-
             if (SystemUtils.isSecondaryExternalStorageMounted(f.getAbsoluteFile())) {
                 UIUtils.showShortMessage(getContext(), R.string.file_descriptor_sd_mounted);
                 Librarian.instance().deleteFiles(fileType, Arrays.asList(fd));
