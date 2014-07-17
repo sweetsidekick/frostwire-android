@@ -173,15 +173,15 @@
 
     <style name="BrowsePeerList.Item.Title">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#ff3b3b3b</item>
+        <item name="android:textColor">@color/browse_peer_listview_item_foreground</item>
     </style>
 
     <style name="BrowsePeerList.Item.Extra">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">14dp</item>
-        <item name="android:textColor">#ff3b3b3b</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/browse_peer_listview_item_foreground</item>
     </style>
 
     <!-- Browse Peer list end -->

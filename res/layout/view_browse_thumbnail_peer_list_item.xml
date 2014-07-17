@@ -83,6 +83,6 @@
         android:layout_alignBottom="@id/view_browse_peer_list_item_file_size"
         android:layout_toRightOf="@id/view_browse_peer_list_item_file_size"
         android:contentDescription="@null"
-        android:src="@drawable/file_list_sd_card" />
+        android:src="@drawable/browse_peer_sd_icon_inactive" />
 
 </RelativeLayout>

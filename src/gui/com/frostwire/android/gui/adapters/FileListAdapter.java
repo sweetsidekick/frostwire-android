@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
@@ -370,13 +371,43 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         if (item.inSD) {
             if (item.mounted) {
+                v.setBackgroundResource(R.drawable.listview_item_press_background_selector);
+                setNormalTextColors(v);
                 img.setVisibility(View.GONE);
-            } else { // this case never happens
+            } else {
+                v.setBackgroundResource(R.color.browse_peer_listview_item_inactive_background);
+                setInactiveTextColors(v);
                 img.setVisibility(View.VISIBLE);
             }
         } else {
+            v.setBackgroundResource(R.drawable.listview_item_press_background_selector);
+            setNormalTextColors(v);
             img.setVisibility(View.GONE);
         }
+    }
+    
+    private void setNormalTextColors(View v) {
+        TextView title = findView(v, R.id.view_browse_peer_list_item_file_title);
+        TextView text = findView(v, R.id.view_browse_peer_list_item_extra_text);
+        TextView size = findView(v, R.id.view_browse_peer_list_item_file_size);
+
+        Resources res = getContext().getResources();
+
+        title.setTextColor(res.getColor(R.color.browse_peer_listview_item_foreground));
+        text.setTextColor(res.getColor(R.color.browse_peer_listview_item_foreground));
+        size.setTextColor(res.getColor(R.color.app_highlight_text));
+    }
+
+    private void setInactiveTextColors(View v) {
+        TextView title = findView(v, R.id.view_browse_peer_list_item_file_title);
+        TextView text = findView(v, R.id.view_browse_peer_list_item_extra_text);
+        TextView size = findView(v, R.id.view_browse_peer_list_item_file_size);
+
+        Resources res = getContext().getResources();
+
+        title.setTextColor(res.getColor(R.color.browse_peer_listview_item_inactive_foreground));
+        text.setTextColor(res.getColor(R.color.browse_peer_listview_item_inactive_foreground));
+        size.setTextColor(res.getColor(R.color.browse_peer_listview_item_inactive_foreground));
     }
 
     private void populateContainerAction(View view) {
@@ -461,12 +492,13 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             for (Entry<String, Boolean> e : sds.entrySet()) {
                 if (item.fd.filePath.contains(e.getKey())) {
                     item.inSD = true;
-                    item.mounted = e.getValue();
+                    item.mounted = false;//e.getValue();
                 } else {
                     item.inSD = false;
                 }
-                item.exists = true;
             }
+            
+            item.exists = true;
         }
     }
     
