@@ -31,6 +31,7 @@
         android:layout_marginRight="10sp" />
 
     <TextView
+        android:id="@+id/dialog_preference_storage_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
