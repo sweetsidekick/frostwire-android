@@ -371,16 +371,16 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         if (item.inSD) {
             if (item.mounted) {
-                v.setBackgroundResource(R.drawable.listview_item_press_background_selector);
+                v.setBackgroundResource(R.drawable.listview_item_background_selector);
                 setNormalTextColors(v);
                 img.setVisibility(View.GONE);
             } else {
-                v.setBackgroundResource(R.color.browse_peer_listview_item_inactive_background);
+                v.setBackgroundResource(R.drawable.browse_peer_listview_item_inactive_background);
                 setInactiveTextColors(v);
                 img.setVisibility(View.VISIBLE);
             }
         } else {
-            v.setBackgroundResource(R.drawable.listview_item_press_background_selector);
+            v.setBackgroundResource(R.drawable.listview_item_background_selector);
             setNormalTextColors(v);
             img.setVisibility(View.GONE);
         }
