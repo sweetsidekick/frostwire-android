@@ -54,6 +54,7 @@ import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
+import com.frostwire.vuze.VuzeUtils;
 import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
 
 /**
@@ -544,6 +545,7 @@ public final class TransferManager implements VuzeKeys {
         public void downloadComplete(VuzeDownloadManager dm) {
             stopSeedingIfNecessary(dm);
             TransferManager.instance().incrementDownloadsToReview();
+            VuzeUtils.finalCleanup(dm.getDM()); //make sure it cleans unnecessary files (android has handpicked seeding off by default)
             Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
             Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
         }
