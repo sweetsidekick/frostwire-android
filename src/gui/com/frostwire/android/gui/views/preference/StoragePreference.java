@@ -96,6 +96,10 @@ public class StoragePreference extends DialogPreference {
                 }
             }
         });
+        
+
+        TextView warningText = (TextView) view.findViewById(R.id.dialog_preference_storage_warning);
+        warningText.setVisibility(list.getCount() == 1 ? View.GONE : View.VISIBLE);
     }
 
     @Override
