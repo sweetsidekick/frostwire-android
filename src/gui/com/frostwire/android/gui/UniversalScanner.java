@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -253,6 +254,15 @@ public final class UniversalScanner {
             Field mNoMediaF = mClient.getClass().getDeclaredField("mNoMedia");
             mNoMediaF.setAccessible(true);
             mNoMediaF.setBoolean(mClient, false);
+            
+            // This is only for HTC (tested only on HTC One M8)
+            try {
+                Field mFileCacheF = clazz.getDeclaredField("mFileCache");
+                mFileCacheF.setAccessible(true);
+                mFileCacheF.set(scanner, new HashMap<String, Object>());
+            } catch (Throwable e) {
+                // no an HTC, I need some time to refactor this hack
+            }
 
             Method doScanFileM = mClient.getClass().getDeclaredMethod("doScanFile", String.class, String.class, long.class, long.class, boolean.class, boolean.class, boolean.class);
             Uri mediaUri = (Uri) doScanFileM.invoke(mClient, f.getAbsolutePath(), null, f.lastModified(), f.length(), false, true, false);
