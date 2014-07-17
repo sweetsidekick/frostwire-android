@@ -28,6 +28,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -77,8 +78,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                         }
                     });
                 }
-            } else if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED) ||
-                       action.equals(Intent.ACTION_MEDIA_REMOVED)) {
+            } else if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)) {
                 handleMediaUnmounted(context, intent);
             } else if (action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
                 handleActionPhoneStateChanged(intent);
@@ -109,19 +109,6 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
         } catch (Throwable e) {
             Log.e(TAG, "Error processing broadcast message", e);
         }
-    }
-
-    private void handleMediaUnmounted(Context context, Intent intent) {
-        //proposed logic:
-        //if current storage path is sd card
-        //and media that has been unmounted or removed is that
-        //same sd card path
-        //then we must automatically change the storage location
-        //to the device's internal memory
-        //otherwise everything stays in disarray, downloads fail
-        //and you can still see in the settings that the only option
-        //available (internal memory) is unselected.
-        
     }
 
     private void handleActionPhoneStateChanged(Intent intent) {
@@ -223,6 +210,21 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * make sure the current save location will be the primary external if
+     * the media being unmounted is the sd card.
+     * @param context
+     * @param intent
+     */
+    private void handleMediaUnmounted(Context context, Intent intent) {
+        String path = intent.getDataString().replace("file://", "");
+        if (!SystemUtils.isPrimaryExternalPath(new File(path)) &&
+            SystemUtils.isPrimaryExternalStorageMounted()) {
+            File primaryExternal = Environment.getExternalStorageDirectory();
+            ConfigurationManager.instance().setStoragePath(primaryExternal.getAbsolutePath());
         }
     }
 }
