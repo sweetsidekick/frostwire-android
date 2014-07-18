@@ -11,7 +11,7 @@ FrostWire 1.3.4 - JULY/18/2014
  - Moved vuze settings files to primary external private folder.
  - Updated Preferences screen, setting groups now in separate sub-screens.
  - Cleans up empty .torrent placeholder files when single torrent file download complete.
- - Translation updates for Spanish, Polish.
+ - Translation updates for Spanish, Polish, Portuguese.
 
 FrostWire 1.3.3 - JUNE/27/2014
  - Improvements in memory consumption and performance for image caching.
