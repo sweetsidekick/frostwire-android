@@ -19,6 +19,7 @@
  */ 
 -->
 <resources>
+
     <string name="application_label">FrostWire</string>
     <string name="activity_preferences_name">Configuración</string>
     <string name="activity_browse_peer_name">Explorar</string>
@@ -395,14 +396,14 @@
     <string name="donate_5">Donar $5</string>
     <string name="donate_10">Donar $10</string>
     <string name="donate_25">Donar $25</string>
-    <string name="one_file_shared" >Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
-	<string name="n_files_shared" >%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
-	<string name="playing_now_colon">Tocando ahora:</string>
-	<string name="my_filetype">Mis %s</string>
-	<string name="paused">Pausado</string>
-	<string name="use_youtube">Utilizar YouTube.com</string>
-	<string name="use_soundcloud">Utilizar Soundcloud.com</string>
-	<string name="upnp_discovery">Comparte en Wi-Fi</string>
+    <string name="one_file_shared">Un archivo ha sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
+    <string name="n_files_shared">%d archivos han sido compartido con otros dispositivos FrostWire en la misma red Wi-Fi.</string>
+    <string name="playing_now_colon">Tocando ahora:</string>
+    <string name="my_filetype">Mis %s</string>
+    <string name="paused">Pausado</string>
+    <string name="use_youtube">Utilizar YouTube.com</string>
+    <string name="use_soundcloud">Utilizar Soundcloud.com</string>
+    <string name="upnp_discovery">Comparte en Wi-Fi</string>
     <string name="upnp_discovery_summary">Comparte archivos con otros usuarios en la misma red Wi-Fi.</string>
     <string name="youtube_download_status_verifying">Verificando</string>
     <string name="donation_thanks">Muchas gracias por apoyar FrostWire</string>
@@ -426,7 +427,7 @@
     <string name="are_you_sure_delete_current_track">¿Seguro que quieres eliminar esta canción?</string>
     <string name="wifi_sharing_disabled">Compartir por Wi-fi está apagado.\n\nEsta funcionalidad te permite compartir archivos con otros dispositivos que corren FrostWire conectados a la misma red Wi-fi.</string>
     <string name="turn_on_wifi_sharing">Encender Compartido por Wi-Fi</string>
-    <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>    
+    <string name="are_you_sure_wifi_sharing_off">Si apagas el compartir archivos por Wi-Fi todos los archivos que has marcado como compartidos localmente no estarán disponibles a los usuarios conectados a esta red Wi-Fi.</string>
     <string name="anonymous_usage_statistics">Estadísticas de uso anónimo</string>
     <string name="anonymous_usage_statistics_summary">Envía estadísticas de uso anónimo. Ninguna información sobre contenido buscado, compartido o reproducido será almacenada en disco ni enviada a través de la red así como ninguna información que pueda identificarte personalmente.</string>
     <string name="paused_song_name">Pausado %s</string>
@@ -442,16 +443,13 @@
     <string name="drawer_open">Abre el menu de navegación</string>
     <string name="use_monova">Usa Monova</string>
     <string name="use_torrentsfm_summary">Torrents.fm es basado en magnets, funciona solo con Wi-Fi</string>
-    <string name="please_check_connection_status_before_resuming_download">Please check the status of your internet connection before
-resuming.</string>
     <string name="cloud_downloads_coming">Lo siento: Descargas desde el cloud estarán disponibles para futuras versiones.</string>
     <string name="magnet_url_added">URL Magnet ha sido añadida a la lista de transferencias. (Los Magnets funcionan mejor con Wi-Fi)</string>
     <string name="use_monova_summary">Monova es basado en magnets, funciona solo con Wi-Fi</string>
     <string name="transfers_select_completed">completado</string>
     <string name="transfers_context_menu_pause_stop_all_transfers">Pausa/Para todas las Transferencias</string>
     <string name="transfers_select_downloading">descargando</string>
-    <string name="torrent_transfer_enqueued_on_mobile_data">LA descarga del torrent comenzará automáticamente cuando te conectes a la red Wi-Fi
-(Revisa tus Preferencias de red sobre el uso de data 3G/4G)</string>
+    <string name="torrent_transfer_enqueued_on_mobile_data">La descarga del torrent comenzará automáticamente cuando te conectes a la red Wi-Fi (Revisa tus Preferencias de red sobre el uso de data 3G/4G)</string>
     <string name="transfers_context_menu_clear_finished">Limpia todas las descargas completadas</string>
     <string name="transfers_select_all">Todo</string>
     <string name="torrent_url_added">URL de Torrent añadida a las transferencias.</string>
@@ -465,4 +463,72 @@ resuming.</string>
     <string name="transfers_context_menu_stop_delete_data">Parar y borrar la Data</string>
     <string name="use_tpb_summary">TPB es basado en magnets, funciona solo con Wi-Fi</string>
     <string name="cant_open_file_does_not_exist">No puedo abrir %1$s, el archivo no existe.</string>
+    <string name="remove_from_queue">Borrar de la cola</string>
+    <string name="delete_dialog_title">Borrar %s?</string>
+    <string name="context_menu_use_as_ringtone">Usar como ringtone</string>
+    <string name="context_menu_more_by_artist">Más por artista</string>
+    <string name="add_to_queue">Añadir a la cola</string>
+    <string name="context_menu_fetch_album_art">Obtener carátula</string>
+    <string name="saving_to_internal_memory_description">Tambien tienes un SD Card (%1$s disp.)</string>
+    <string name="context_menu_remove_from_recent">Borrar de reciente</string>
+    <string name="durationformatlong">%1$d:%2$02d:%3$02d</string>
+    <string name="cannot_be_undone">Esto no puede revertirse</string>
+    <string name="accessibility_prev">Previo</string>
+    <string name="accessibility_shuffle">Barajada</string>
+    <string name="dummy_author">[Autor]</string>
+    <string name="context_menu_open_in_play_store">Abrir en Play Store</string>
+    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android borrará archivos descargados si FrostWire es desinstalado.</string>
+    <string name="context_menu_delete">Borrar</string>
+    <string name="device_memory">Memoria del dispositivo</string>
+    <string name="please_check_connection_status_before_resuming_download">Por favor revise el estado de su conexión a internet antes de resumir.</string>
+    <string name="page_recent">Reciente</string>
+    <string name="durationformatshort">%2$d:%3$02d</string>
+    <string name="menu_space_shortcut_label">Espacio</string>
+    <string name="confirm_download">Confirmar Descarga</string>
+    <string name="sdcard_storage">Almacenamiento SD</string>
+    <string name="are_you_sure_you_want_to_download_the_following">Desea descargar el siguiente %1$s (%2$s)?</string>
+    <string name="context_menu_play_next">Reproducir siguiente</string>
+    <string name="accessibility_repeat">Repetir</string>
+    <string name="menu_delete_shortcut_label">Del</string>
+    <string name="or_enter_url">o introduzca URL</string>
+    <string name="accessibility_repeat_one">Repetir una</string>
+    <string name="context_menu_remove_from_playlist">Borrar de playlist</string>
+    <string name="context_menu_play_selection">Reproducir</string>
+    <string name="accessibility_next">Siguiente</string>
+    <string name="playlist">Playlist</string>
+    <string name="page_artists">Artistas</string>
+    <string name="now_playing">Reproduciendo</string>
+    <string name="seed">Compartir (Seed)</string>
+    <string name="context_menu_rename_playlist">Renombrar</string>
+    <string name="accessibility_shuffle_all">Barajar todas</string>
+    <string name="prepend_shortcut_label"></string>
+    <string name="accessibility_pause">Pausa</string>
+    <string name="remove_from_favorites">Borrar de favoritos</string>
+    <string name="page_songs">Canciones</string>
+    <string name="add_to_favorites">Añadir a favoritos</string>
+    <string name="available">disponible</string>
+    <string name="storage_setting_confirm_dialog_title">TARJETA SD</string>
+    <string name="cant_resume_torrent_transfers"> "Conectividad"</string>
+    <string name="storage_setting_warning">AVISO: Todos los archivos descargados por FrostWire en la tarjeta SD serán borrados por ANDROID si FrostWire es desinstalado.</string>
+    <string name="install_bitcoin_wallet">Instalar Cartera Bitcoin</string>
+    <string name="device_storage">Almacenamiento del Dispositivo</string>
+    <string name="file_descriptor_sd_mounted">Este archivo fue borrado de la tarjeta SD o la tarjeta que ha insertado es una diferente.</string>
+    <string name="remove_from_recent">Borrar de reciente</string>
+    <string name="page_playlists">Playlists</string>
+    <string name="page_genres">Géneros</string>
+    <string name="context_menu_fetch_artist_image">Fetch artist image</string>
+    <string name="menu_enter_shortcut_label">Entrar</string>
+    <string name="now_listening_to">#AhoraTocando %1$s por %2$s #FrostWire</string>
+    <string name="track">pista</string>
+    <string name="page_albums">Albums</string>
+    <string name="file_descriptor_sd_unmounted">Este archivo pertenece a una tarjeta SD, por favor insertela en su dispositivo.</string>
+    <string name="torrent_transfer_paused_disconnected_from_bittorrent">La transferencia ha sido pausada porque se ha desconectado. (Revise estado de conexión BitTorrent en Preferencias)</string>
+    <string name="share_track_using">Compartir pista utilizando:</string>
+    <string name="accessibility_play">Reproducir</string>
+    <string name="saving_to_internal_memory">Guardar a Memoria Interna</string>
+    <string name="storage_setting_confirm_dialog_text">Entiendo que todos los archivos descargados a la tarjeta SD por FrostWire serán borrados POR ANDROID en el momentoque la aplicación FrostWire sea desinstalada de este dispositivo y no voy a mantener a FrostWire LLC como responsable de archivos perdidos.</string>
+    <string name="saving_to_sd_card">Guardando a la tarjeta SD.</string>
+    <string name="add_to_playlist">Agregar a Playlist</string>
+    <string name="accessibility_repeat_all">Repetir todo</string>
+
 </resources>
