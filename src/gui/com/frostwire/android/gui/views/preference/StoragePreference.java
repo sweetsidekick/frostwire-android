@@ -47,6 +47,8 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.gui.views.AbstractAdapter.OnItemClickAdapter;
 import com.frostwire.android.util.SystemUtils;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 
 /**
  * @author gubatron
@@ -117,9 +119,20 @@ public class StoragePreference extends DialogPreference {
                 ConfigurationManager.instance().setStoragePath(selectedPath);
                 COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsolutePath());
                 dismissPreferenceDialog();
+                uxLogSelection();
             }
         } else {
             super.onClick(dialog, which);
+        }
+    }
+
+    private void uxLogSelection() {
+        try {
+            File file = new File(selectedPath);
+            boolean isInternalMemory = SystemUtils.isPrimaryExternalPath(file);
+            UXStats.instance().log(isInternalMemory ? UXAction.SETTINGS_SET_STORAGE_INTERNAL_MEMORY : UXAction.SETTINGS_SET_STORAGE_SD_CARD);
+        } catch (Throwable t) {
+            //we tried.
         }
     }
 
