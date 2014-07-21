@@ -431,12 +431,12 @@
     <string name="anonymous_usage_statistics_summary">Envoyez des statistiques d\'utilisation anonyme. Aucune information en lien avec vos recherches, vos partages ou lectures ou aucune information permettant votre identification ne seront stockées sur le disque ou envoyées à travers le réseau.</string>
     <string name="paused_song_name">%s en pause</string>
     <string name="cant_open_file_does_not_exist">Vous ne pouvez pas ouvrir %1$s, n\'existe pas le fichier.</string>
-    <string name="remove_from_queue">Supprimer de la file d'attente</string>
+    <string name="remove_from_queue">Supprimer de la file d\'attente</string>
     <string name="delete_dialog_title">Supprimer %s?</string>
     <string name="context_menu_use_as_ringtone">Utiliser comme sonnerie</string>
     <string name="context_menu_more_by_artist">Plus par l\'artiste</string>
     <string name="add_to_queue">Ajouter à la liste</string>
-    <string name="context_menu_fetch_album_art">Chercher les pochettes d'album</string>
+    <string name="context_menu_fetch_album_art">Chercher les pochettes d\'album</string>
     <string name="drawer_close">Fermer navigation tiroir</string>
     <string name="saving_to_internal_memory_description">Vous avez également une carte SD (%1$s disponible)</string>
     <string name="bittorrent">BitTorrent</string>
@@ -472,7 +472,7 @@
     <string name="magnet_url_added">Magnet URL ajouté aux transferts. (Magnets fonctionnent le mieux sur Wi-Fi)</string>
     <string name="use_monova_summary">Monova est magnet base, ne fonctionne que sur le Wi-Fi</string>
     <string name="or_enter_url">ou entrez l\'URL</string>
-    <string name="accessibility_repeat_one">Répétition d'une</string>
+    <string name="accessibility_repeat_one">Répétition d\'une</string>
     <string name="transfers_select_completed">terminé</string>
     <string name="transfers_context_menu_pause_stop_all_transfers">Pause/Stop tous les transferts</string>
     <string name="context_menu_remove_from_playlist">Supprimer de la playlist</string>
@@ -486,7 +486,7 @@
     <string name="transfers_context_menu_clear_finished">Effacer tous les transferts terminés</string>
     <string name="btc">BTC</string>
     <string name="seed">Semence</string>
-    <string name="you_need_a_bitcoin_wallet_app">Vous avez besoin d'un porte-monnaie Bitcoin installé sur votre appareil de soumettre un don de la CTB.</string>
+    <string name="you_need_a_bitcoin_wallet_app">Vous avez besoin d\'un porte-monnaie Bitcoin installé sur votre appareil de soumettre un don de la CTB.</string>
     <string name="transfers_select_all">tous</string>
     <string name="context_menu_rename_playlist">Rebaptiser</string>
     <string name="accessibility_shuffle_all">Mélangez tous</string>
@@ -494,7 +494,7 @@
     <string name="accessibility_pause">Pause</string>
     <string name="torrent_url_added">Torrent URL ajouté aux transferts.</string>
     <string name="remove_from_favorites">Retirer des favoris</string>
-    <string name="please_enter_valid_url">S'il vous plaît entrer une URL valide</string>
+    <string name="please_enter_valid_url">S\'il vous plaît entrer une URL valide</string>
     <string name="page_songs">Chansons</string>
     <string name="add_to_favorites">Ajouter aux favoris</string>
     <string name="available">disponible</string>
@@ -521,10 +521,10 @@
     <string name="file_descriptor_sd_unmounted">Ce fichier appartient à une carte SD, s\'il vous plaît insérer sur votre appareil.</string>
     <string name="donate_in_btc">Faire un don en bitcoins</string>
     <string name="torrent_transfer_paused_disconnected_from_bittorrent">Le transfert a été interrompu parce que vous êtes déconnecté. (Vérifiez votre connexion BitTorrent dans les Préférences)</string>
-    <string name="share_track_using">Partager piste à l'aide:</string>
+    <string name="share_track_using">Partager piste à l\'aide:</string>
     <string name="accessibility_play">Jouer</string>
     <string name="saving_to_internal_memory">Sauvegarde sur la mémoire interne</string>
-    <string name="storage_setting_confirm_dialog_text">Je comprends que tous les fichiers téléchargés dans la carte SD par FrostWire seront supprimés par Android pour le moment l'application FrostWire est désinstallé de cet appareil et je ne vais pas tenir FrostWire LLC responsable des fichiers perdus.</string>
+    <string name="storage_setting_confirm_dialog_text">Je comprends que tous les fichiers téléchargés dans la carte SD par FrostWire seront supprimés par Android pour le moment l\'application FrostWire est désinstallé de cet appareil et je ne vais pas tenir FrostWire LLC responsable des fichiers perdus.</string>
     <string name="use_torrentsfm">Utilisez Torrents.fm</string>
     <string name="saving_to_sd_card">Enregistrement sur ​​carte SD.</string>
     <string name="transfers_context_menu_stop_delete_data">Arrêter et supprimer des données</string>
