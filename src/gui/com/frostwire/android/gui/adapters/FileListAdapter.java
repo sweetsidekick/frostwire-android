@@ -147,9 +147,15 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
 
         List<MenuAction> items = new ArrayList<MenuAction>();
 
-        FileDescriptorItem item = (FileDescriptorItem) view.getTag();
-        
-        FileDescriptor fd = item.fd;
+        // due to long click generic handle
+        FileDescriptor fd = null;
+
+        if (view.getTag() instanceof FileDescriptorItem) {
+            FileDescriptorItem item = (FileDescriptorItem) view.getTag();
+            fd = item.fd;
+        } else if (view.getTag() instanceof FileDescriptor) {
+            fd = (FileDescriptor) view.getTag();
+        }
         
         if (checkIfNotExists(fd)) {
             return null;
@@ -518,6 +524,10 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
     }
     
     private boolean checkIfNotExists(FileDescriptor fd) {
+        if (fd == null) {
+            return true;
+        }
+        
         File f = new File(fd.filePath);
 
         if (!f.exists()) {
