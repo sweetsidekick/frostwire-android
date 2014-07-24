@@ -26,6 +26,7 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="common/components/mp4parser"/>
 	<classpathentry kind="src" path="common/components/okhttp">
 		<attributes>
 			<attribute name="ignore_optional_problems" value="true"/>
@@ -48,7 +49,6 @@
 	<classpathentry kind="src" path="src/gui"/>
 	<classpathentry kind="src" path="src/apollo_player"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry exported="true" kind="lib" path="libs/mp4parser.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/AppiaSDK-2013-21.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/in-app-purchasing-1.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/offercastmobile-sdk-jar-1.3.2a.jar"/>
