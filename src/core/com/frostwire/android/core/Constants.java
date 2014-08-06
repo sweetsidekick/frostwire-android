@@ -32,15 +32,15 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 3, (byte) 4 };
+    public static final byte[] FROSTWIRE_VERSION = { (byte) 1, (byte) 3, (byte) 5 };
 
     public static final String FROSTWIRE_VERSION_STRING = FROSTWIRE_VERSION[0] + "." + FROSTWIRE_VERSION[1] + "." + FROSTWIRE_VERSION[2];
 
     /** should manually match the manifest, here for convenience so we can ask for it from static contexts without
      * needing to pass the Android app context to obtain the PackageManager instance.  */
-    public static final String FROSTWIRE_BUILD = "145";
+    public static final String FROSTWIRE_BUILD = "146";
 
-    public static final boolean IS_AMAZON_DISTRIBUTION = true;
+    public static final boolean IS_AMAZON_DISTRIBUTION = false;
     
     public static final boolean IS_FREE_DISTRIBUTION = !IS_AMAZON_DISTRIBUTION;
 
@@ -98,7 +98,7 @@ public final class Constants {
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE = "frostwire.prefs.gui.support_frostwire";
     public static final String PREF_KEY_GUI_SUPPORT_FROSTWIRE_THRESHOLD = "frostwire.prefs.gui.support_frostwire_threshold";
     public static final String PREF_KEY_GUI_SHOW_TV_MENU_ITEM = "frostwire.prefs.gui.show_tv_menu_item";
-    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST = "frostwire.prefs.gui.initialize_offercast";
+    public static final String PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN = "frostwire.prefs.gui.initialize_offercast_lockscreen";
     public static final String PREF_KEY_GUI_INITIALIZE_APPIA = "frostwire.prefs.gui.initialize_appia";
     public static final String PREF_KEY_GUI_USE_APPIA_SEARCH = "frostwire.prefs.gui.use_appia_search";
 

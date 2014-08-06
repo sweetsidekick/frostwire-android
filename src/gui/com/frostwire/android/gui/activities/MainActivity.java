@@ -129,7 +129,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     // not sure about this variable, quick solution for now
     private String durToken;
 
-    private boolean offercastStarted = false;
+    private boolean offercastLockScreenStarted = false;
     private boolean appiaStarted = false;
 
     private TimerSubscription playerSubscription;
@@ -315,9 +315,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         super.onResume();
 
         refreshPeersFragment();
-
+        
+        initializeOffercastLockScreen();
         initializeAppia();
-        initializeOffercast();
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
@@ -370,13 +370,13 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    private void initializeOffercast() {
-        if (!offercastStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST)) {
+    private void initializeOffercastLockScreen() {
+        if (!offercastLockScreenStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN)) {
             try {
-                OfferUtils.startOffercast(getApplicationContext());
-                offercastStarted = true;
+                OfferUtils.startOffercastLockScreen(getApplicationContext());
+                offercastLockScreenStarted = true;
             } catch (Exception e) {
-                offercastStarted = false;
+                offercastLockScreenStarted = false;
             }
         }
     }

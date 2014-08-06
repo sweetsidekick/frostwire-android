@@ -58,7 +58,7 @@ public class OfferUtils {
         return isAppiaSearchEnabled;
     }
 
-    public static void startOffercast(final Context context) throws Exception {
+    public static void startOffercastLockScreen(final Context context) throws Exception {
         if (!OSUtils.isAmazonDistribution()) {
             try {
                 OffercastSDK offercast = OffercastSDK.getInstance(context);

@@ -319,7 +319,7 @@ public final class SoftwareUpdater {
         }
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM, update.config.tv);
-        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST, update.config.offercast);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN, update.config.offercastLockScreen);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, update.config.appiaSearch);
 
@@ -375,7 +375,7 @@ public final class SoftwareUpdater {
         public boolean tv = true;
         public boolean appia = true;
         public boolean appiaSearch = true;
-        public boolean offercast = true;
+        public boolean offercastLockScreen = true;
 
         // ux stats
         public boolean uxEnabled = false;
