@@ -80,16 +80,16 @@ public class NotificationHelper {
      */
     public void buildNotification(final String albumName, final String artistName, final String trackName, final Long albumId, final Bitmap albumArt, final boolean isPlaying) {
 
-        // Default notfication layout
+        // Default notification layout
         mNotificationTemplate = new RemoteViews(mService.getPackageName(), R.layout.notification_template_base);
 
-        // Set up the content view
         initCollapsedLayout(trackName, artistName, albumArt);
 
         // Notification Builder
         mNotification = new Notification.Builder(mService).setSmallIcon(R.drawable.frostwire_notification).setContentIntent(getPendingIntent()).setContent(mNotificationTemplate).getNotification();
         // Control playback from the notification
         initPlaybackActions(isPlaying);
+        
         if (SystemUtils.hasJellyBean()) {
             // Expanded notifiction style
             mExpandedView = new RemoteViews(mService.getPackageName(), R.layout.notification_template_expanded_base);
@@ -99,6 +99,7 @@ public class NotificationHelper {
             // Set up the expanded content view
             initExpandedLayout(trackName, albumName, artistName, albumArt);
         }
+        
         mService.startForeground(APOLLO_MUSIC_SERVICE, mNotification);
     }
 
@@ -225,7 +226,9 @@ public class NotificationHelper {
         // Artist name (line two)
         mNotificationTemplate.setTextViewText(R.id.notification_base_line_two, artistName);
         // Album art
-        mNotificationTemplate.setImageViewBitmap(R.id.notification_base_image, albumArt);
+        if (albumArt != null) {
+            mNotificationTemplate.setImageViewBitmap(R.id.notification_base_image, albumArt);
+        }
     }
 
     /**
@@ -239,8 +242,11 @@ public class NotificationHelper {
         mExpandedView.setTextViewText(R.id.notification_expanded_base_line_two, albumName);
         // Artist name (line three)
         mExpandedView.setTextViewText(R.id.notification_expanded_base_line_three, artistName);
+        
         // Album art
-        mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
+        if (albumArt != null) {
+            mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
+        }
     }
 
     private static void setBigContentView(Notification notification, RemoteViews view) {
