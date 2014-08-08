@@ -47,13 +47,20 @@ public class NoBTCWalletAvailableActivity extends AbstractActivity {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=de.schildbach.wallet"));
+            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.mycelium.wallet"));
             NoBTCWalletAvailableActivity activity = activityReference.get();
             if (activity != null) {
                 try {
                     activity.startActivity(intent);
                 } catch (Throwable t) { 
-                    //avoids crash on android-15
+                    //no market app installed? take user to website
+                    Intent walletUrlIntent = new Intent(Intent.ACTION_VIEW);
+                    walletUrlIntent.setData(Uri.parse("https://mycelium.com/bitcoinwallet"));
+                    try {
+                        activity.startActivity(walletUrlIntent);
+                    } catch (Throwable t2) {
+                        //in the weird event the user has no browser installed.
+                    }
                 }
             }
         }
