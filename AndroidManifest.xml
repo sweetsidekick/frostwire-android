@@ -214,6 +214,7 @@
 		</activity>
 	
 		<!-- offercast -->
+		<!-- 
 		<activity
 			android:name="com.offercast.android.sdk.devicereg.termsandconditions.TermsAndConditionsActivity"
 			android:label="@string/application_label" android:screenOrientation="portrait" />
@@ -226,6 +227,7 @@
 		</receiver>
 		<meta-data android:name="ocm-application-id" android:value="8"/>
 		<meta-data android:name="ocm-access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/>
+		 -->
 			
 	    <!--  appia activities -->
 		<activity
