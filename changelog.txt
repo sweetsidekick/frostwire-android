@@ -4,6 +4,7 @@ FrostWire 1.3.5 - AUGUST/08/2014
  - Fixes possible crash when browsing files on device.
  - Fixes crash when playing a ringtone (Kindle Fire HD, Android 4.0.3 devices)
  - Fixes Transfer screen rendering issue on startup.
+ - Fixes soundcloud track/sets download by url.
 
 FrostWire 1.3.4 - JULY/20/2014
  - Large torrent downloads start a lot faster. Prevents possible
