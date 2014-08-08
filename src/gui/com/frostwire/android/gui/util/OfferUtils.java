@@ -25,7 +25,6 @@ import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
-import com.offercast.android.sdk.OffercastSDK;
 
 public class OfferUtils {
 
@@ -61,9 +60,11 @@ public class OfferUtils {
     public static void startOffercastLockScreen(final Context context) throws Exception {
         if (!OSUtils.isAmazonDistribution()) {
             try {
+                /*
                 OffercastSDK offercast = OffercastSDK.getInstance(context);
                 offercast.authorize();
                 LOG.info("Offercast started.");
+                */
             } catch (Exception e) {
                 LOG.error("Offercast could not start.", e);
             }
