@@ -38,6 +38,7 @@ import com.frostwire.android.gui.views.ContextTask;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchResult;
+import com.frostwire.search.soundcloud.SoundCloudRedirectResponse;
 import com.frostwire.search.soundcloud.SoundcloudItem;
 import com.frostwire.search.soundcloud.SoundcloudPlaylist;
 import com.frostwire.search.soundcloud.SoundcloudSearchResult;
@@ -145,25 +146,49 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
             //LOG.debug(json);
             //LOG.debug("EOF DownloadSoundcloudFromUrlTask.json");
             
-            if (soundcloudUrl.contains("/sets/")) {
-                //download a whole playlist
-                final SoundcloudPlaylist playlist = JsonUtils.toObject(json, SoundcloudPlaylist.class);
-                if (playlist.tracks != null) {
-                    for (SoundcloudItem scItem : playlist.tracks) {
-                        scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
-                    }
+            if (json.contains("\"status\":\"30")) {
+                try {
+                    System.out.println("Soundcloud Redirection! >> " + json);
+                    final SoundCloudRedirectResponse redirectResponse = JsonUtils.toObject(json, SoundCloudRedirectResponse.class);
+                    final String redirectedJson = HttpClientFactory.newInstance().get(redirectResponse.location,10000);
+                    //System.out.println(redirectedJson);
+                    downloadSetOrTrack(scResults, clientId, appVersion, redirectedJson);
+                } catch (Throwable t) {
+                    t.printStackTrace();
                 }
             } else {
-                //download single track
-                final SoundcloudItem scItem = JsonUtils.toObject(json, SoundcloudItem.class);
-                if (scItem != null) {
-                    scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
-                }
+                downloadSetOrTrack(scResults, clientId, appVersion, json);
             }
         } catch (Throwable e) {
             e.printStackTrace();
         }
         return scResults;
+    }
+
+    private void downloadSetOrTrack(final List<SoundcloudSearchResult> scResults, final String clientId, final String appVersion, final String json) {
+        if (soundcloudUrl.contains("/sets/")) {
+            downloadSet(scResults, clientId, appVersion, json);
+        } else {
+            downloadTrack(scResults, clientId, appVersion, json);
+        }
+    }
+
+    private void downloadTrack(final List<SoundcloudSearchResult> scResults, final String clientId, final String appVersion, final String json) {
+        //download single track
+        final SoundcloudItem scItem = JsonUtils.toObject(json, SoundcloudItem.class);
+        if (scItem != null) {
+            scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
+        }
+    }
+
+    private void downloadSet(final List<SoundcloudSearchResult> scResults, final String clientId, final String appVersion, final String json) {
+        //download a whole playlist
+        final SoundcloudPlaylist playlist = JsonUtils.toObject(json, SoundcloudPlaylist.class);
+        if (playlist != null && playlist.tracks != null) {
+            for (SoundcloudItem scItem : playlist.tracks) {
+                scResults.add(new SoundcloudSearchResult(scItem, clientId, appVersion));
+            }
+        }
     }
     
     private static class SimpleSoundcloudSearchResultAdapter extends AbstractListAdapter<SoundcloudSearchResult> {
