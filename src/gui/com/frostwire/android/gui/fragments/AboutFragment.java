@@ -25,12 +25,14 @@ import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
@@ -38,6 +40,7 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.views.DonationsController;
+import com.yasesprox.android.transcommusdk.TransCommuActivity;
 
 /**
  * @author gubatron
@@ -60,7 +63,7 @@ public class AboutFragment extends Fragment implements MainFragment {
 
         donationsController.setup(getActivity(), getView(), biller);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
@@ -71,6 +74,14 @@ public class AboutFragment extends Fragment implements MainFragment {
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        Button helpTranslateButton = (Button) view.findViewById(R.id.fragment_about_help_translate_frostwire_button);
+        helpTranslateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onHelpTranslate();
+            }
+        });
 
         return view;
     }
@@ -99,5 +110,11 @@ public class AboutFragment extends Fragment implements MainFragment {
         } catch (IOException e) {
             return "";
         }
+    }
+    
+    private void onHelpTranslate() {
+        Intent intent = new Intent(getActivity(),TransCommuActivity.class);
+        intent.putExtra(TransCommuActivity.APPLICATION_CODE_EXTRA, "FIATxTotqx");
+        this.startActivity(intent);
     }
 }
