@@ -162,24 +162,22 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
             biller.onDestroy();
         }
     }
-
+    
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         subscription = TimerService.subscribe(this, 2);
     }
     
     @Override
     public void onResume() {
-    	super.onResume();
-    	initStorageRelatedRichNotifications(getView());
+        super.onResume();
+        initStorageRelatedRichNotifications(getView());
     }
-
+    
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         subscription.unsubscribe();
     }
 
@@ -255,7 +253,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     @Override
     protected void initComponents(View v) {
-		initStorageRelatedRichNotifications(v);
+	    initStorageRelatedRichNotifications(v);
     	
         buttonSelectAll = findView(v, R.id.fragment_transfers_button_select_all);
         buttonSelectAll.setOnClickListener(new ButtonTabListener(this, TransferStatus.ALL));
