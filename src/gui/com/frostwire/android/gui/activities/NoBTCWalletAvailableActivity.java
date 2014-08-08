@@ -50,7 +50,11 @@ public class NoBTCWalletAvailableActivity extends AbstractActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=de.schildbach.wallet"));
             NoBTCWalletAvailableActivity activity = activityReference.get();
             if (activity != null) {
-                activity.startActivity(intent);
+                try {
+                    activity.startActivity(intent);
+                } catch (Throwable t) { 
+                    //avoids crash on android-15
+                }
             }
         }
     }
