@@ -28,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.views.AbstractActivity;
 
 public class NoBTCWalletAvailableActivity extends AbstractActivity {
@@ -47,16 +48,21 @@ public class NoBTCWalletAvailableActivity extends AbstractActivity {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.mycelium.wallet"));
-            NoBTCWalletAvailableActivity activity = activityReference.get();
+            final String androidAppId="com.mycelium.wallet";
+            //TODO: Put this back when Mycelium comes to the Android App Store.
+            //final String androidAppStoreUrl = (Constants.IS_AMAZON_DISTRIBUTION ? "http://www.amazon.com/gp/mas/dl/android=" : "market://details?id=") + androidAppId;
+            final String walletWebPage = "https://mycelium.com/bitcoinwallet";
+            final String androidAppStoreUrl = (Constants.IS_AMAZON_DISTRIBUTION ? walletWebPage : "market://details?id="+androidAppId);
+            
+            final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(androidAppStoreUrl));
+            final NoBTCWalletAvailableActivity activity = activityReference.get();
             if (activity != null) {
                 try {
                     activity.startActivity(intent);
                 } catch (Throwable t) { 
                     //no market app installed? take user to website
-                    Intent walletUrlIntent = new Intent(Intent.ACTION_VIEW);
-                    walletUrlIntent.setData(Uri.parse("https://mycelium.com/bitcoinwallet"));
                     try {
+                        final Intent walletUrlIntent = new Intent(Intent.ACTION_VIEW,Uri.parse(walletWebPage));
                         activity.startActivity(walletUrlIntent);
                     } catch (Throwable t2) {
                         //in the weird event the user has no browser installed.
