@@ -529,4 +529,5 @@
     <string name="available">available</string>
     <string name="file_descriptor_sd_mounted">This file was deleted from the SD Card, or the SD Card you have inserted is a different one.</string>
     <string name="file_descriptor_sd_unmounted">This file belongs to an SD Card, please insert it on your device.</string>
+    <string name="help_translate_frostwire">Help Translate FrostWire</string>
 </resources>
