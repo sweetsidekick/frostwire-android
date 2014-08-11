@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author gubatron
@@ -61,14 +62,26 @@ final class JavaFunctions {
         return true;
     }
 
-    public static Object[] list(String str) {
-        Object[] r = new Object[str.length()];
+    public static List<Object> list(Object obj) {
+        Object[] r = new Object[len(obj)];
 
-        for (int i = 0; i < str.length(); i++) {
-            r[i] = str.charAt(i);
+        if (obj instanceof Object[]) {
+            Object[] arr = (Object[]) obj;
+            for (int i = 0; i < arr.length; i++) {
+                r[i] = arr[i];
+            }
+            return new ArrayList<Object>(Arrays.asList(r));
         }
 
-        return r;
+        if (obj instanceof String) {
+            String str = (String) obj;
+            for (int i = 0; i < str.length(); i++) {
+                r[i] = str.charAt(i);
+            }
+            return new ArrayList<Object>(Arrays.asList(r));
+        }
+
+        throw new IllegalArgumentException("Not supported type");
     }
 
     public static String join(Object[] arr) {
@@ -76,6 +89,38 @@ final class JavaFunctions {
 
         for (Object obj : arr) {
             sb.append(obj.toString());
+        }
+
+        return sb.toString();
+    }
+
+    public static String join(Object[] arr, Object obj) {
+        if (arr.length == 0) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(arr[0].toString());
+        for (int i = 1; i < arr.length; i++) {
+            sb.append(obj.toString());
+            sb.append(arr[i].toString());
+        }
+
+        return sb.toString();
+    }
+
+    public static String join(List<Object> list, Object obj) {
+        if (list.size() == 0) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(list.get(0).toString());
+        for (int i = 1; i < list.size(); i++) {
+            sb.append(obj.toString());
+            sb.append(list.get(i).toString());
         }
 
         return sb.toString();
@@ -91,26 +136,24 @@ final class JavaFunctions {
             return ((String) obj).length();
         }
 
-        throw new IllegalArgumentException("Not supported type");
-    }
-
-    public static Object reverse(Object obj) {
-
-        if (obj instanceof Object[]) {
-            List<Object> list = new ArrayList<Object>();
-            list.addAll(Arrays.asList((Object[]) obj));
-            Collections.reverse(list);
-            return list.toArray();
-        }
-
-        if (obj instanceof String) {
-            return new StringBuilder((String) obj).reverse().toString();
+        if (obj instanceof List<?>) {
+            return ((List<?>) obj).size();
         }
 
         throw new IllegalArgumentException("Not supported type");
     }
 
-    public static Object splice(Object obj, int fromIndex) {
+    public static void reverse(Object obj) {
+
+        if (obj instanceof List<?>) {
+            Collections.reverse((List<?>) obj);
+            return;
+        }
+
+        throw new IllegalArgumentException("Not supported type");
+    }
+
+    public static Object slice(Object obj, int fromIndex) {
 
         if (obj instanceof Object[]) {
             return Arrays.asList((Object[]) obj).subList(fromIndex, ((Object[]) obj).length).toArray();
@@ -121,5 +164,27 @@ final class JavaFunctions {
         }
 
         throw new IllegalArgumentException("Not supported type");
+    }
+
+    public static String escape(String s) {
+        return Pattern.quote(s);
+    }
+
+    public static String[] mscpy(String[] arr) {
+        String[] r = new String[arr.length];
+
+        for (int i = 0; i < arr.length; i++) {
+            r[i] = new String(arr[i].toCharArray());
+        }
+
+        return r;
+    }
+
+    public static Object json_loads(String js) {
+        if (js.equals("\"\"")) {
+            return "";
+        }
+
+        return null;
     }
 }

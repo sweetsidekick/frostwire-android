@@ -18,13 +18,16 @@
 
 package com.frostwire.search.extractors.js;
 
+import static com.frostwire.search.extractors.js.JavaFunctions.escape;
 import static com.frostwire.search.extractors.js.JavaFunctions.isalpha;
 import static com.frostwire.search.extractors.js.JavaFunctions.isdigit;
 import static com.frostwire.search.extractors.js.JavaFunctions.join;
+import static com.frostwire.search.extractors.js.JavaFunctions.json_loads;
 import static com.frostwire.search.extractors.js.JavaFunctions.len;
 import static com.frostwire.search.extractors.js.JavaFunctions.list;
+import static com.frostwire.search.extractors.js.JavaFunctions.mscpy;
 import static com.frostwire.search.extractors.js.JavaFunctions.reverse;
-import static com.frostwire.search.extractors.js.JavaFunctions.splice;
+import static com.frostwire.search.extractors.js.JavaFunctions.slice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,9 +86,10 @@ public final class JsFunction<T> {
                 assert idx instanceof Integer;
 
                 assign = new Lambda1() {
+                    @SuppressWarnings("unchecked")
                     @Override
                     public Object eval(Object val) {
-                        ((Object[]) lvar)[(Integer) idx] = val;
+                        ((List<Object>) lvar).set((Integer) idx, val);
                         return val;
                     }
                 };
@@ -112,13 +116,21 @@ public final class JsFunction<T> {
             };
             expr = stmt.substring("return ".length());
         } else {
-            throw new JsError(String.format("Cannot determine left side of statement in %s", stmt));
+            // Try interpreting it as an expression
+            expr = stmt;
+            assign = new Lambda1() {
+                @Override
+                public Object eval(Object v) {
+                    return v;
+                }
+            };
         }
 
         Object v = interpret_expression(ctx, expr, local_vars, allow_recursion);
         return assign.eval(v);
     }
 
+    @SuppressWarnings("unchecked")
     private static Object interpret_expression(final JsContext ctx, String expr, Map<String, Object> local_vars, int allow_recursion) {
         if (isdigit(expr)) {
             return Integer.valueOf(expr);
@@ -128,34 +140,89 @@ public final class JsFunction<T> {
             return local_vars.get(expr);
         }
 
-        Matcher m = Pattern.compile("^(?<in>[a-z]+)\\.(?<member>.*)$").matcher(expr);
+        //        try:
+        //            return json.loads(expr)
+        //        except ValueError:
+        //            pass
+        Object jsl = json_loads(expr);
+        if (jsl != null) {
+            return jsl;
+        }
+
+        Matcher m = Pattern.compile("^(?<var>[a-zA-Z0-9_]+)\\.(?<member>[^\\(]+)(\\((?<args>[^\\(\\)]*)\\))?$").matcher(expr);
         if (m.find()) {
+            String variable = m.group("var");
             String member = m.group("member");
-            Object val = local_vars.get(m.group("in"));
-            if (member.equals("split(\"\")")) {
-                return list((String) val);
+            String arg_str = m.group("args");
+
+            Object obj = null;
+            if (local_vars.containsKey(variable)) {
+                obj = local_vars.get(variable);
+            } else {
+                if (!ctx.objects.containsKey(variable)) {
+                    ctx.objects.put(variable, extract_object(ctx, variable));
+                }
+                obj = ctx.objects.get(variable);
             }
-            if (member.equals("join(\"\")")) {
-                return join((Object[]) val);
+
+            if (arg_str == null) {
+                // Member access
+                if (member.equals("length")) {
+                    return len(obj);
+                }
+                return ((JsObject) obj).functions.get(member).eval(new Object[] {});
             }
-            if (member.equals("length")) {
-                return len(val);
+
+            if (!expr.endsWith(")")) {
+                throw new JsError("Error parsing js code");
             }
-            if (member.equals("reverse()")) {
-                return reverse(val);
+            List<Object> argvals = null;
+            if (arg_str.equals("")) {
+                argvals = new ArrayList<Object>();
+            } else {
+                argvals = new ArrayList<Object>();
+                for (String v : arg_str.split(",")) {
+                    argvals.add(interpret_expression(ctx, v, local_vars, 20));
+                }
             }
-            Matcher slice_m = Pattern.compile("slice\\((?<idx>.*)\\)").matcher(member);
-            if (slice_m.find()) {
-                Object idx = interpret_expression(ctx, slice_m.group("idx"), local_vars, allow_recursion - 1);
-                return splice(val, (Integer) idx);
+
+            if (member.equals("split")) {
+                //assert argvals == ('',)
+                return list(obj);
             }
+            if (member.equals("join")) {
+                //assert len(argvals) == 1
+                return join((List<Object>) obj, argvals.get(0));
+            }
+            if (member.equals("reverse")) {
+                //assert len(argvals) == 0
+                reverse(obj);
+                return obj;
+            }
+            if (member.equals("slice")) {
+                //assert len(argvals) == 1
+                return slice(obj, (Integer) argvals.get(0));
+            }
+            if (member.equals("splice")) {
+                //assert isinstance(obj, list)
+                int index = (Integer) argvals.get(0);
+                int howMany = (Integer) argvals.get(1);
+                List<Object> res = new ArrayList<Object>();
+                List<Object> list = (List<Object>) obj;
+                for (int i = index; i < Math.min(index + howMany, len(obj)); i++) {
+                    res.add(list.remove(index));
+                }
+                return res.toArray();
+            }
+
+            return ((JsObject) obj).functions.get(member).eval(argvals.toArray());
         }
 
         m = Pattern.compile("^(?<in>[a-z]+)\\[(?<idx>.+)\\]$").matcher(expr);
         if (m.find()) {
             Object val = local_vars.get(m.group("in"));
             Object idx = interpret_expression(ctx, m.group("idx"), local_vars, allow_recursion - 1);
-            return ((Object[]) val)[(Integer) idx];
+            return ((List<?>) val).get((Integer) idx);
         }
 
         m = Pattern.compile("^(?<a>.+?)(?<op>[%])(?<b>.+?)$").matcher(expr);
@@ -184,12 +251,40 @@ public final class JsFunction<T> {
         throw new JsError(String.format("Unsupported JS expression %s", expr));
     }
 
+    private static JsObject extract_object(final JsContext ctx, String objname) {
+        JsObject obj = new JsObject();
+        String obj_mRegex = String.format("(var\\p{Space}+)?%1$s\\p{Space}*=\\p{Space}*\\{", escape(objname)) + "\\p{Space}*(?<fields>([a-zA-Z$0-9]+\\p{Space}*:\\p{Space}*function\\(.*?\\)\\p{Space}*\\{.*?\\})*)\\}\\p{Space}*;";
+        final Matcher obj_m = Pattern.compile(obj_mRegex).matcher(ctx.jscode);
+        obj_m.find();
+        String fields = obj_m.group("fields");
+        // Currently, it only supports function definitions
+        final Matcher fields_m = Pattern.compile("(?<key>[a-zA-Z$0-9]+)\\p{Space}*:\\p{Space}*function\\((?<args>[a-z,]+)\\)\\{(?<code>[^\\}]+)\\}").matcher(fields);
+
+        while (fields_m.find()) {
+            final String[] argnames = mscpy(fields_m.group("args").split(","));
+
+            LambdaN f = build_function(ctx, argnames, fields_m.group("code"));
+
+            obj.functions.put(fields_m.group("key"), f);
+        }
+
+        return obj;
+    }
+
     private static LambdaN extract_function(final JsContext ctx, String funcname) {
-        final Matcher func_m = Pattern.compile("function " + java.util.regex.Pattern.quote(funcname) + "\\((?<args>[a-z,]+)\\)\\{(?<code>[^\\}]+)\\}").matcher(ctx.jscode);
-        func_m.find();
+        String func_mRegex = String.format("(function %1$s|[\\{;]%1$s\\p{Space}*=\\p{Space}*function)", escape(funcname)) + "\\((?<args>[a-z,]+)\\)\\{(?<code>[^\\}]+)\\}";
+        final Matcher func_m = Pattern.compile(func_mRegex).matcher(ctx.jscode);
+        if (!func_m.find()) {
+            throw new JsError("Could not find JS function " + funcname);
+        }
 
         final String[] argnames = mscpy(func_m.group("args").split(","));
-        final String[] stmts = mscpy(func_m.group("code").split(";"));
+
+        return build_function(ctx, argnames, func_m.group("code"));
+    }
+
+    private static LambdaN build_function(final JsContext ctx, final String[] argnames, String code) {
+        final String[] stmts = mscpy(code.split(";"));
 
         return new LambdaN() {
             @Override
@@ -205,15 +300,5 @@ public final class JsFunction<T> {
                 return res;
             }
         };
-    }
-
-    private static String[] mscpy(String[] arr) {
-        String[] r = new String[arr.length];
-
-        for (int i = 0; i < arr.length; i++) {
-            r[i] = new String(arr[i].toCharArray());
-        }
-
-        return r;
     }
 }
