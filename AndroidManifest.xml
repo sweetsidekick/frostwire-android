@@ -20,7 +20,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="auto"
-	android:versionCode="146" android:versionName="1.3.5">
+	android:versionCode="147" android:versionName="1.3.6">
 
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19" />
 
@@ -39,7 +39,6 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="com.android.vending.BILLING" />
 	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-
 
 	<application android:name="com.frostwire.android.gui.MainApplication"
 		android:allowBackup="true" android:icon="@drawable/app_icon"
