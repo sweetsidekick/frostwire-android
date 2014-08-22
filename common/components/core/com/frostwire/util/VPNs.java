@@ -21,6 +21,9 @@ package com.frostwire.util;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -49,9 +52,32 @@ public final class VPNs {
     private static boolean isPosixVPNActive() {
         boolean result = false;
         try {
-            result = readProcessOutput("netstat","-nr").indexOf(" tun") != -1;
+            result = isAnyNetworkInterfaceATunnel();
         } catch (Throwable t) {
             result = false;
+            try {
+                result = readProcessOutput("netstat","-nr").indexOf(" tun") != -1;                
+            } catch (Throwable t2) {
+                result = false;
+            }
+        }
+        
+        return result;
+    }
+    
+    private static boolean isAnyNetworkInterfaceATunnel() {
+        boolean result = false;
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface iface = networkInterfaces.nextElement();
+                if (iface.getDisplayName().contains("tun")) {
+                    result = true;
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         
         return result;
@@ -116,7 +142,22 @@ public final class VPNs {
         return result;
     }
     
+    public static void printNetworkInterfaces() {
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface iface = networkInterfaces.nextElement();
+                System.out.println(iface.getIndex() + ":" + iface.getDisplayName() + ":" +
+                "virtual=" + iface.isVirtual() + ":" + "mtu=" + iface.getMTU() + ":mac=" + (iface.getHardwareAddress()!=null ? "0x"+ByteUtils.encodeHex(iface.getHardwareAddress()) : "n/a"));
+            }
+        } catch (SocketException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
     public static void main(String[] args) {
         System.out.println("GOT VPN? " + isVPNActive());
+        printNetworkInterfaces();
     }
 }
