@@ -43,7 +43,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="common/vuze/plugins"/>
-	<classpathentry kind="src" path="common/components/core"/>
+	<classpathentry excluding="com/frostwire/util/VPNs.java" kind="src" path="common/components/core"/>
 	<classpathentry kind="src" path="common/components/vuze"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="src/gui"/>
