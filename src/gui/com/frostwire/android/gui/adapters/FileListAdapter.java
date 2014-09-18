@@ -157,7 +157,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
             fd = (FileDescriptor) view.getTag();
         }
         
-        if (checkIfNotExists(fd)) {
+        if (local && checkIfNotExists(fd)) {
             return null;
         }
 
