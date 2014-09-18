@@ -24,12 +24,9 @@ import java.io.InputStreamReader;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
+import org.apache.commons.io.IOUtils;
 import org.limewire.util.OSUtils;
-
-import com.limegroup.gnutella.gui.util.BackgroundExecutorService;
 
 /**
  * 
@@ -40,7 +37,7 @@ public final class VPNs {
     public static boolean isVPNActive() {
         boolean result = false;
         
-        if (OSUtils.isAnyMac() || OSUtils.isLinux()) {
+        if (OSUtils.isMacOSX() || OSUtils.isLinux()) {
             result = isPosixVPNActive();
         } else if (OSUtils.isWindows()) {
             result = isWindowsVPNActive();
@@ -55,11 +52,13 @@ public final class VPNs {
             result = isAnyNetworkInterfaceATunnel();
         } catch (Throwable t) {
             result = false;
+            /**
             try {
                 result = readProcessOutput("netstat","-nr").indexOf(" tun") != -1;                
             } catch (Throwable t2) {
                 result = false;
             }
+            */
         }
         
         return result;
@@ -84,61 +83,42 @@ public final class VPNs {
     }
     
     private static boolean isWindowsVPNActive() {
-        // we might need some native magic here, some how tap into the 
-        // starting points for research might be:
-        //
-        // Routing Table Manager Version 2
-        // http://msdn.microsoft.com/en-us/library/aa373798%28v=VS.85%29.aspx
-        //
-        // GetAdaptersInfo function
-        // http://msdn.microsoft.com/en-us/library/aa365917.aspx
-        //
-        // GetAdaptersAddresses function
-        // http://msdn.microsoft.com/en-us/library/aa365915.aspx
-        //
-        // IP_ADAPTER_INFO structure
-        // MIB_IF_TYPE_OTHER ?
-        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa366062(v=vs.85).aspx
-        return false;
+        boolean result=false;
+    	try {
+            result = readProcessOutput("netstat","-nr").indexOf("128.0.0.0") != -1;                
+        } catch (Throwable t2) {
+            result = false;
+        }
+    	return result;
     }
-    
+
+
     private static String readProcessOutput(String command, String arguments) {
         String result ="";
-        
         ProcessBuilder pb = new ProcessBuilder(command, arguments);
         pb.redirectErrorStream(true);
         try {
             Process process = pb.start();
             InputStream stdout = process.getInputStream();
-            
             final BufferedReader brstdout = new BufferedReader(new InputStreamReader(stdout));
+        	String line = null;
             
-            Callable<String> outputReader = new Callable<String>() {
-
-                @Override
-                public String call() throws Exception {
-                    String line="";
-                    try {
-                        
-                        StringBuilder stringBuilder = new StringBuilder();
-                        while ((line = brstdout.readLine()) != null) {
-                            stringBuilder.append(line);
-                        }
-                        
-                        line = stringBuilder.toString();
-                    } catch (Exception e) {
-                    }
-                    return line;
+            try {
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = brstdout.readLine()) != null) {
+                    stringBuilder.append(line);
                 }
-            };
-            
-            Future<String> futureOutput = BackgroundExecutorService.submit(outputReader);
-            result = futureOutput.get();
-            
+                
+                result = stringBuilder.toString();
+            } catch (Exception e) {
+            } finally {
+            	IOUtils.closeQuietly(brstdout);
+            	IOUtils.closeQuietly(stdout);
+            }
+
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        
         return result;
     }
     
