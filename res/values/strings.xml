@@ -142,7 +142,7 @@
     <string name="model">Model</string>
     <string name="release">Release</string>
     <string name="alpha_tests_team">Alpha Tests Team</string>
-    <string name="alpha_tests_team_thanks">Thanks to all our voluntary alpha testers for the patience and great feeback, special thanks to</string>
+    <string name="alpha_tests_team_thanks">Thanks to all our voluntary alpha testers for the patience and great feedback, special thanks to</string>
     <string name="pending">pending</string>
     <string name="manual">manual</string>
     <string name="disabled">disabled</string>
