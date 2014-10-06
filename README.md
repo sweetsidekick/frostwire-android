@@ -2,6 +2,8 @@
 
 [![tip for next commit](https://tip4commit.com/projects/200.svg)](https://tip4commit.com/github/frostwire/frostwire-android)
 
+![](http://i.imgur.com/U20h8cL.png)
+
 ## ABOUT
 
 A file sharing client, media player and simple file manager for your Android devices.
