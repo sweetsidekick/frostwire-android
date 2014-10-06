@@ -4,6 +4,11 @@
 
 ![](http://i.imgur.com/U20h8cL.png)
 
+
+[Latest Binaries Available here](http://www.frostwire.com/android)
+
+[Previous versions available on Sourceforge](https://sourceforge.net/projects/frostwire-android/files/)
+
 ## ABOUT
 
 A file sharing client, media player and simple file manager for your Android devices.
@@ -11,10 +16,6 @@ A file sharing client, media player and simple file manager for your Android dev
 FrostWire for Android will let you search and download files from the BitTorrent network and several popular cloud services and it will let you share files with other FrostWire for Android devices on the same local network (via WiFi)
 
 The local sharing happens through a simple JSON/HTTP protocol (still to be documented, you can look at how it works on the code for now, very very simple)
-
-We'll put the specs of this protocol out for you to implement clients in your favorite platform, this way you will be able to browse, stream media or download files that FrostWire for Android users have decided to share on the local network.
-
-FrostWire for Android also features a simple media player that we'll be evolving with future releases.
 
 **Downloading FrostWire does not constitute permission or a license for obtaining or distributing unauthorized files. It is illegal for you to distribute copyrighted files without permission.**
 
@@ -29,14 +30,16 @@ If you want to know about legal content you can download and distribute legally 
 - Looking at the Issue tracker (https://github.com/frostwire/frostwire-android/issues) is a good place to start if you want to help.
 
 - Try to mimic our coding style and formatting before you submit a patch.
+ 
+- All pull requests should come from a feature branch created on your git fork. We'll review your code and will only merge it to the `master` branch if it doesn't break the build. If you can include tests for your pull request you get extra bonus points ;)
 
-- When you submit a patch, try to explain what issue you're fixing in detail and how you're fixing in detail it so it's easier for us to read your patches.
+- When you submit a pull request try to explain what issue you're fixing in detail and how you're fixing in detail it so it's easier for us to read your patches.
   If it's too hard to explain what you're doing, you're probably making things more complex than they already are.
   Look and test your code well before submitting patches.
 
 - We prefer well named methods and code re-usability than a lot of comments. Code should be self-explanatory.
 
-Becoming a collaborator will only happen after we have received lots of great patches and we get to know you better.
+Becoming a core collaborator with direct commit access to the upstream repository will only happen after we have received lots of great patches and we get to know you better.
 
 ## BUILD INSTRUCTIONS
 
