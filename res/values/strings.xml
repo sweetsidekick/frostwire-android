@@ -523,7 +523,7 @@
     <string name="device_memory">Device\'s Memory</string>
     <string name="device_storage">Device\'s Storage</string>
     <string name="sdcard_storage">SD\'s Storage</string>
-    <string name="storage_setting_warning">WARNING: All files downloaded by FrostWire into the SD card will be deleted by Android if you uninstall FrostWire.</string>
+    <string name="storage_setting_warning">WARNING: All files downloaded by FrostWire into the SD card will be deleted BY ANDROID if you uninstall FrostWire.</string>
     <string name="storage_setting_confirm_dialog_title">SD CARD</string>
     <string name="storage_setting_confirm_dialog_text">I understand that all files downloaded to the SD card by FrostWire will be deleted by Android the moment the FrostWire application is uninstalled from this device and I will not hold FrostWire LLC liable for any files lost.</string>
     <string name="available">available</string>
