@@ -6,7 +6,6 @@
 
 
 [Latest binaries](http://www.frostwire.com/android)
-If you want to know about legal content you can download and distribute legally please visit FrostClick.com, Vodo.net, ClearBits.net and [Creative Commons](http://creativecommons.org)
 [Previous versions (SourceForge)](https://sourceforge.net/projects/frostwire-android/files/)
 
 # About
