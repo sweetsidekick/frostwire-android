@@ -396,7 +396,7 @@
     <string name="donate_5">Spenden $5</string>
     <string name="donate_10">Spenden $10</string>
     <string name="donate_25">Spenden $25</string>
-	<string name="my_filetype">Meine %s</string>
+    <string name="my_filetype">Meine %s</string>
     <string name="donate">Spenden</string>
     <string name="one_dollar">$1</string>
     <string name="five_dollars">$5</string>
