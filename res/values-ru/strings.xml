@@ -499,7 +499,6 @@
     <string name="dummy_author">[Author]</string>
     <string name="install_bitcoin_wallet">Install Bitcoin Wallet</string>
     <string name="cant_resume_torrent_transfers">Cannot resume torrent transfers, Check status of "Preferences" > "Connectivity"</string>
-    <string name="or_enter_url">or enter URL</string>
     <string name="confirm_download">Confirm Download</string>
     <string name="track">track</string>
     <string name="playlist">playlist</string>
