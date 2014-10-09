@@ -6,6 +6,7 @@
 
 
 [Latest binaries](http://www.frostwire.com/android)
+
 [Previous versions (SourceForge)](https://sourceforge.net/projects/frostwire-android/files/)
 
 # About
@@ -40,7 +41,7 @@ If you want to know about legal content you can download and distribute legally 
 
 Becoming a core collaborator with direct commit access to the upstream repository will only happen after we have received lots of great patches and we get to know you better.
 
-# Budild instructions
+# Build instructions
 
 ## Eclipse (temporary)
 
