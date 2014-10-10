@@ -83,10 +83,10 @@
     <string name="search_select_filetype">Please select a file type</string>
     <string name="searching_for">Searching for</string>
     <string name="search_for_type_files">Search for %s files</string>
-    <string name="update_title">Update Time!</string>
-    <string name="update_message">FrostWire has Downloaded a new PERFORMANCE UPDATE for you, please go ahead and touch the OK button if you want to install it now.</string>
+    <string name="update_title">Update time!</string>
+    <string name="update_message">FrostWire has downloaded a new PERFORMANCE UPDATE for you, please go ahead and touch the OK button if you want to install it now.</string>
     <string name="next_time">Next Time</string>
-    <string name="change_my_nickname">Change my Nickname</string>
+    <string name="change_my_nickname">Change my nickname</string>
     <string name="try_changing_your_nickname">Enter your nickname</string>
     <string name="reconnecting">Reconnecting</string>
     <string name="go_to">Go To</string>
@@ -256,8 +256,8 @@
     <string name="nickname_sharing_count_files">%1$s - Sharing %2$d files</string>
     <string name="play_image_description">Play</string>
     <string name="view_transfer_list_item_button_action_description">Action</string>
-    <string name="yes_no_cancel_transfer_question">Are you sure you want to stop and remove this download from the list (No data will be erased)?</string>
-    <string name="yes_no_cancel_delete_transfer_question">Are you sure you want to cancel this download (Downloaded data so far will be erased)?</string>
+    <string name="yes_no_cancel_transfer_question">Are you sure you want to stop and remove this download from the list (no data will be erased)?</string>
+    <string name="yes_no_cancel_delete_transfer_question">Are you sure you want to cancel this download (downloaded data so far will be erased)?</string>
     <string name="cancel_transfer">Cancel Transfer</string>
     <string name="view_transfer_list_item_group_indicator_description">More/Less information</string>
     <string name="view_transfer_list_item_icon_description">File type icon</string>
