@@ -28,7 +28,7 @@
     <string name="activity_downloads_name">Aktywne Pobieranie</string>
     <string name="activity_uploads_name">Aktywne Wysyłanie</string>
     <string name="activity_about">O nas</string>
-    <string name="activity_debug_name">Debugować</string>
+    <string name="activity_debug_name">Debugowanie</string>
     <string name="disconnected">Rozłączony</string>
     <string name="all_transfers_will_stop_are_you_sure">Wszystkie transfery się zatrzymają.\nJesteś tego pewny?</string>
     <string name="connect">Połącz</string>
@@ -38,7 +38,7 @@
     <string name="wait">Czekaj</string>
     <string name="exit">Zamknij</string>
     <string name="no_wifi_want_to_fix_it_question">Nie jesteś podłączony do sieci Wi-Fi.\n\nChciałbyś się połączyć?</string>
-    <string name="your_connection_has_dropped_stopping_services">Twoje połączenie Wi-Fi zmalało. Usługi zatrzymane.</string>
+    <string name="your_connection_has_dropped_stopping_services">Twoje połączenie Wi-Fi osłabło. Usługi zatrzymane.</string>
     <string name="wifi_network_changed_restarting_services">Sieć Wi-Fi zmieniła się. Usługi zostaną ponownie uruchomione.</string>
     <string name="no_network_connection">Brak Połączenia z Siecią</string>
     <string name="leaving_already">Już Wychodzisz?</string>
@@ -85,21 +85,21 @@
     <string name="searching_for">Wyszukiwanie dla</string>
     <string name="search_for_type_files">Wyszukiwanie dla %s pliku</string>
     <string name="update_title">Czas Aktualizacji!</string>
-    <string name="update_message">FrostWire pobrał nową AKTUALIZACJĘ WYDAJNOŚCI dla Ciebie, proszę przejść dalej i kliknąć przycisk OK, jeśli chcesz ją teraz zainstalować.</string>
+    <string name="update_message">FrostWire pobrał nową AKTUALIZACJĘ WYDAJNOŚCI, proszę przejść dalej i kliknąć przycisk OK, jeśli chcesz ją teraz zainstalować.</string>
     <string name="next_time">Następnym Razem</string>
-    <string name="change_my_nickname">Zmień Nickname</string>
+    <string name="change_my_nickname">Zmień Nick</string>
     <string name="try_changing_your_nickname">Wprowadź swój Nick</string>
-    <string name="reconnecting">Ponowne połączenie</string>
+    <string name="reconnecting">Ponawianie połączenia</string>
     <string name="go_to">Idź Do</string>
     <string name="done">Gotowe</string>
     <string name="home">Strona Główna</string>
     <string name="about">O nas</string>
     <string name="send_to_third_party">Wyślij/Prześlij</string>
     <string name="send_file_using">Wyślij plik za pomocą</string>
-    <string name="my_files">kMoje Pliki</string>
+    <string name="my_files">Moje Pliki</string>
     <string name="clear_messages">Wyczyść wiadomości</string>
     <string name="chat_actions">Akcje Czatu</string>
-    <string name="preferences">Preferencje</string>
+    <string name="preferences">Ustawienia</string>
     <string name="please_connect">Proszę połączyć się aby korzystać z tej funkcji</string>
     <string name="remove">Usuń</string>
     <string name="try_valid_port_next_time">Spróbuj poprawny port następnym razem 1000 i 65500</string>
@@ -320,10 +320,10 @@
     <string name="dummy_engine">[Engine]</string>
     <string name="dummy_sources">[Żródła]</string>
     <string name="empty_string"></string>
-    <string name="seed_finished_torrents">Seed Pobrane Torrenty</string>
+    <string name="seed_finished_torrents">Seeduj Pobrane Torrenty</string>
     <string name="seed_finished_torrents_summary">Udostępniaj fragmenty pobranych torrentów z każdym na internecie poprzez BitTorrent</string>
-    <string name="seed_finished_torrents_wifi_only">Seed tylko przez Wi-Fi</string>
-    <string name="seed_finished_torrents_wifi_only_summary">Seed tylko podczas połączenia przez Wi-Fi w celu zaoszczędzenia przepustowości w twoim planie danych</string>
+    <string name="seed_finished_torrents_wifi_only">Seeduj tylko przez Wi-Fi</string>
+    <string name="seed_finished_torrents_wifi_only_summary">Seeduj tylko podczas połączenia przez Wi-Fi w celu zaoszczędzenia przepustowości w twoim planie danych</string>
     <string name="dummy_downloads_indicator">0 @ 0 KB/s</string>
     <string name="dummy_uploads_indicator">0 @ 0 KB/s</string>
     <string name="seeding_has_been_turned_off">Seedowanie zostało wyłączone</string>
@@ -348,7 +348,7 @@
     <string name="how_others_see_you_on_the_local_network_wifi_">Jak inni widzą Cię w sieci lokalnej (Wi-Fi)</string>
     <string name="seeding_settings">Ustawienia Seedowania</string>
     <string name="seeding_settings_explanation">Użytkownicy BitTorrent w internecie będą mogli pobrać fragmenty plików danych twoich seedowanych torrentów.</string>
-    <string name="seeding_wifi_settings_explanation">Seed tylko przez połączenie Wi-Fi. Unikaj dodatkowych opłat od swojego operatora.</string>
+    <string name="seeding_wifi_settings_explanation">Seeduj tylko przez połączenie Wi-Fi. Unikaj dodatkowych opłat od swojego operatora.</string>
     <string name="intent_text">FrostWire jest programem peer-to-peer dla udostępniania tylko autoryzowanych plików. Instalacja i obsługa programu nie jest równoznaczna z uzyskaniem licencji na dystrybucje nieautoryzowanych treści.</string>
     <string name="accept_intent">Nie będę wykorzystywać FrostWire do naruszenia praw autorskich</string>
     <string name="toast_on_disconnect">Rozłączono z siecią BitTorrent. Wszystkie transfery BitTorrent zatrzymano.</string>
@@ -457,7 +457,7 @@
     <string name="transfers_context_resume_all_torrent_transfers">Wznów wszystkie transfery torrentów</string>
     <string name="use_bitsnoop">Używaj BitSnoop</string>
     <string name="use_yify_summary">Yify jest oparty na magnetach, działa tylko na Wi-Fi</string>
-    <string name="donate_in_btc">Podaruj w bitcoin</string>
+    <string name="donate_in_btc">Podaruj bitcoin</string>
     <string name="use_torrentsfm">Używaj Torrents.fm</string>
     <string name="transfers_context_menu_stop_delete_data">Zatrzymaj i Usuń Dane</string>
     <string name="use_tpb_summary">TPB jest oparty na magnetach, działa tylko na Wi-Fi</string>
@@ -467,7 +467,7 @@
     <string name="context_menu_more_by_artist">Więcej o Wykonawcy</string>
     <string name="add_to_queue">Dodaj do kolejki</string>
     <string name="context_menu_fetch_album_art">Pobierz Okładke</string>
-    <string name="saving_to_internal_memory_description">Masz również kartę SD (%1$s dostępne)</string>
+    <string name="saving_to_internal_memory_description">Masz również kartę SD (%1$s dostępną)</string>
     <string name="bittorrent">BitTorrent</string>
     <string name="context_menu_remove_from_recent">Usuń z ostatnich</string>
     <string name="durationformatlong">%1$d:%2$02d:%3$02d</string>
@@ -487,7 +487,7 @@
     <string name="are_you_sure_you_want_to_download_the_following">Czy jesteś pewnien że chcesz pobrać %1$s (%2$s)?</string>
     <string name="context_menu_play_next">Odtwórz Następny</string>
     <string name="accessibility_repeat">Powtórz</string>
-    <string name="menu_delete_shortcut_label">U</string>
+    <string name="menu_delete_shortcut_label">Usuń</string>
     <string name="or_enter_url">lub wpisz adres URL</string>
     <string name="accessibility_repeat_one">Powtórz jeden</string>
     <string name="transfers_context_menu_pause_stop_all_transfers">Pauzuj/Zatrzymaj wszystkie pobrania</string>
@@ -507,8 +507,8 @@
     <string name="add_to_favorites">Dodaj do Ulubionych</string>
     <string name="available">dostępne</string>
     <string name="storage_setting_confirm_dialog_title">KARTA SD</string>
-    <string name="cant_resume_torrent_transfers"> "Łączność"</string>
-    <string name="storage_setting_warning">UWAGA: Wszystkie pliki pobrane przez FrostWire i zapisane na karcie SD będą usunięte prez ANDROID jeżeli odinstalujesz FrostWire.</string>
+    <string name="cant_resume_torrent_transfers">Nie można wznowić torrentów, sprawdź "Ustawienia" > "Łączność"</string>
+    <string name="storage_setting_warning">UWAGA: Wszystkie pliki pobrane przez FrostWire i zapisane na karcie SD będą usunięte przez system Android jeżeli odinstalujesz FrostWire.</string>
     <string name="install_bitcoin_wallet">Zainstaluj Portwel Bitcoin</string>
     <string name="device_storage">Pamięć Wewnętrzna Urządzenia</string>
     <string name="file_descriptor_sd_mounted">Ten plik został usunięty z karty SD lub włożyłeś inną kartę.</string>
@@ -531,5 +531,6 @@
     <string name="saving_to_sd_card">Zapisuje na kartę SD.</string>
     <string name="add_to_playlist">Dodaj do Playlisty</string>
     <string name="accessibility_repeat_all">Powtórz Wszystkie</string>
+    <string name="help_translate_frostwire">Pomóż tłumaczyć FrostWire</string>
 
 </resources>
