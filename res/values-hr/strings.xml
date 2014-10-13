@@ -467,7 +467,7 @@
     <string name="accessibility_play">Svirati</string>
     <string name="accessibility_pause">Zaustaviti</string>
     <string name="accessibility_next">Sljedece</string>
-    <string name="accessibility_prev">Prijasnje</string></string>
+    <string name="accessibility_prev">Prijasnje</string>
     <string name="accessibility_shuffle">Shuffle</string>
     <string name="accessibility_shuffle_all">Shuffle all</string>
     <string name="accessibility_repeat">Ponoviti</string>
