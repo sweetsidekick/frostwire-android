@@ -30,6 +30,30 @@ Coding guidelines
 Becoming a core collaborator with direct commit access to the upstream repository will only happen after we have received lots of great patches and we get to know you better.
 
 
+Submitting Pull Requests
+------------------------
+- Fork the project
+
+- No matter how small your change will be, create a feature branch for it.
+
+- Make sure the name of your feature branch describes what you're trying to fix. If you don't know what to name it and there's an issue created for it, name your branch `issue-233` (where 233 would be the number of the issue you're fixing)
+
+- If your branch has taken a while to be accepted for merging into master, it's very likely that the `master` branch will have moved forward while you work. In this case, make sure to sync your `master`
+ 
+```
+git checkout master
+git pull upstream master
+```
+   and then rebase your branch to bring it up to speed so it can be merged properly:
+```
+git checkout my-branch
+git rebase master
+```
+   as you do this you may have to fix any possible conflicts, just follow the instruction git gives you if this is your first time.
+
+- Make sure to **squash** any cosmetic commits into the body of your work so that we don't pollude the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
+
+
 Tip for commit
 ---------------
 You can donate for development, thereby encouraging some developers or you can participate and get a tip for commits approved us.
