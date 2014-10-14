@@ -133,12 +133,12 @@
     <string name="files_shared_by">files shared by</string>
     <string name="mark_your_territory">Mark your Territory</string>
     <string name="get_a_frostwire_tshirt">Get a FrostWire T-Shirt</string>
-    <string name="internal_port">Internal Port</string>
-    <string name="external_port">External Port</string>
+    <string name="internal_port">Interni port</string>
+    <string name="external_port">Eksterni port</string>
     <string name="device">Uredjaj</string>
     <string name="manufacturer">Proizvodjac</string>
     <string name="name">Ime</string>
-    <string name="product">Product</string>
+    <string name="product">Proizvodi</string>
     <string name="model">Model</string>
     <string name="release">Release</string>
     <string name="alpha_tests_team">Alpha Tests Team</string>
