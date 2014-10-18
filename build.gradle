@@ -2,48 +2,6 @@ import groovy.swing.SwingBuilder
 
 apply plugin: "android"
 
-def myKeyAlias = ""
-def myKeyPassword = ""
-
-gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.hasTask(':packageRelease')) {
-
-        if (System.console() == null) {
-            new SwingBuilder().edt {
-                dialog(modal: true,
-                        title: 'Enter keystore data',
-                        alwaysOnTop: true,
-                        resizable: false,
-                        locationRelativeTo: null,
-                        pack: true,
-                        show: true
-                ) {
-                    vbox {
-                        label(text: "Key Alias:")
-                        inputAlias = textField()
-                        label(text: "Key Password:")
-                        inputPassword = passwordField()
-                        button(defaultButton: true, text: 'OK', actionPerformed: {
-                            myKeyAlias = inputAlias.toString()
-                            myKeyPassword = inputPassword.toString()
-                            dispose();
-                        })
-                    }
-                }
-            }
-        } else {
-            myKeyAlias = System.console().readPassword("\nKey Alias: ")
-            myKeyAlias = new String(myKeyAlias)
-            myKeyPassword = System.console().readPassword("\nKey Password: ")
-            myKeyPassword = new String(myKeyPassword)
-        }
-
-        android.signingConfigs.release.keyAlias = myKeyAlias
-        android.signingConfigs.release.storePassword = myKeyPassword
-        android.signingConfigs.release.keyPassword = myKeyPassword
-    }
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -116,9 +74,9 @@ android {
     signingConfigs {
         release {
             storeFile file("../frostwire-tools/installer_builders/android.keystore/frostwire.keystore")
-            storePassword myKeyPassword
-            keyAlias myKeyAlias
-            keyPassword myKeyPassword
+            storePassword ""
+            keyAlias ""
+            keyPassword ""
         }
     }
 
@@ -131,4 +89,46 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':packageRelease')) {
+
+        def myKeyAlias = ""
+        def myKeyPassword = ""
+
+        if (System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true,
+                        title: 'Enter keystore data',
+                        alwaysOnTop: true,
+                        resizable: false,
+                        locationRelativeTo: null,
+                        pack: true,
+                        show: true
+                ) {
+                    vbox {
+                        label(text: "Key Alias:")
+                        inputAlias = textField()
+                        label(text: "Key Password:")
+                        inputPassword = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            myKeyAlias = inputAlias.text
+                            myKeyPassword = new String(inputPassword.password)
+                            dispose();
+                        })
+                    }
+                }
+            }
+        } else {
+            myKeyAlias = System.console().readPassword("\nKey Alias: ")
+            myKeyAlias = new String(myKeyAlias)
+            myKeyPassword = System.console().readPassword("\nKey Password: ")
+            myKeyPassword = new String(myKeyPassword)
+        }
+
+        android.signingConfigs.release.keyAlias = myKeyAlias
+        android.signingConfigs.release.storePassword = myKeyPassword
+        android.signingConfigs.release.keyPassword = myKeyPassword
+    }
 }
