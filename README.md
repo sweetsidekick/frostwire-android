@@ -32,7 +32,7 @@ Becoming a core collaborator with direct commit access to the upstream repositor
 
 Submitting Pull Requests
 ------------------------
-- Fork the project
+- Fork the project.
 
 - No matter how small your change will be, create a feature branch for it.
 
