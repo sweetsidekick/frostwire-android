@@ -55,6 +55,8 @@ android {
             }
             resources {
                 srcDir 'common/components/mp4parser'
+                srcDir "common/vuze/azureus2/src/org/gudy/azureus2/internat"
+                srcDir "common/vuze/plugins/com/vuze/client/plugins/utp/internat"
                 include '**/*.properties'
                 exclude '**/*.java'
             }

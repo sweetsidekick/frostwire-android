@@ -42,6 +42,8 @@
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/mp4parser" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus2/src/org/gudy/azureus2/internat" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/common/vuze/plugins/com/vuze/client/plugins/utp/internat" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
