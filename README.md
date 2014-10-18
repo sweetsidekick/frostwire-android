@@ -1,5 +1,5 @@
-FrostWire for Android
-============
+# FrostWire for Android
+
 **A file sharing client, media player and simple file manager for your Android devices.**
 
 FrostWire for Android will let you search and download files from the BitTorrent network and several popular cloud services and it will let you share files with other FrostWire for Android devices on the same local network (via WiFi)
@@ -8,8 +8,7 @@ The local sharing happens through a simple JSON/HTTP protocol (still to be docum
 
 ![](http://i.imgur.com/U20h8cL.png)
 - - -
-Coding guidelines
-============
+# Coding guidelines
 
 - **Keep it simple**.
 
@@ -30,15 +29,15 @@ Coding guidelines
 Becoming a core collaborator with direct commit access to the upstream repository will only happen after we have received lots of great patches and we get to know you better.
 
 
-Submitting Pull Requests
-------------------------
+# Submitting Pull Requests
+
 - Fork the project.
 
 - No matter how small your change will be, create a feature branch for it.
 
-- Make sure the name of your feature branch describes what you're trying to fix. If you don't know what to name it and there's an issue created for it, name your branch `issue-233` (where 233 would be the number of the issue you're fixing)
+- Make sure the name of your feature branch describes what you're trying to fix. If you don't know what to name it and there's an issue created for it, name your branch `issue-233` (where 233 would be the number of the issue you're fixing).
 
-- If your branch has taken a while to be accepted for merging into master, it's very likely that the `master` branch will have moved forward while you work. In this case, make sure to sync your `master`
+- If your branch has taken a while to be accepted for merging into master, it's very likely that the `master` branch will have moved forward while you work. In this case, make sure to sync your `master`.
  
 ```
 git checkout master
@@ -54,17 +53,16 @@ git rebase master
 - Make sure to **squash** any cosmetic commits into the body of your work so that we don't pollude the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
 
 
-Tip for commit
----------------
+# Tip for commit
+
 You can donate for development, thereby encouraging some developers or you can participate and get a tip for commits approved us.
 
 [![tip for next commit](https://tip4commit.com/projects/200.svg)](https://tip4commit.com/github/frostwire/frostwire-android)
 
-Build instructions
-============
+# Build instructions
 
-Eclipse (temporary)
-------------------
+## Eclipse (temporary)
+
 As of 1.3.8 (build 149), this might be the last release we build the project using Eclipse/Android Development Toolkit Bundle.
 
 1. Make sure you have enough heap available for Eclipse.
@@ -82,8 +80,7 @@ As of 1.3.8 (build 149), this might be the last release we build the project usi
 
 Happy coding.
 
-Download:
-============
+# Download
 
 [Latest binaries](http://www.frostwire.com/android) | [Previous versions (SourceForge)](https://sourceforge.net/projects/frostwire-android/files/)
 
