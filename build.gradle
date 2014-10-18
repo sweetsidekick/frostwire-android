@@ -1,0 +1,134 @@
+import groovy.swing.SwingBuilder
+
+apply plugin: "android"
+
+def myKeyAlias = ""
+def myKeyPassword = ""
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':packageRelease')) {
+
+        if (System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true,
+                        title: 'Enter keystore data',
+                        alwaysOnTop: true,
+                        resizable: false,
+                        locationRelativeTo: null,
+                        pack: true,
+                        show: true
+                ) {
+                    vbox {
+                        label(text: "Key Alias:")
+                        inputAlias = textField()
+                        label(text: "Key Password:")
+                        inputPassword = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            myKeyAlias = inputAlias.toString()
+                            myKeyPassword = inputPassword.toString()
+                            dispose();
+                        })
+                    }
+                }
+            }
+        } else {
+            myKeyAlias = System.console().readPassword("\nKey Alias: ")
+            myKeyAlias = new String(myKeyAlias)
+            myKeyPassword = System.console().readPassword("\nKey Password: ")
+            myKeyPassword = new String(myKeyPassword)
+        }
+
+        android.signingConfigs.release.keyAlias = myKeyAlias
+        android.signingConfigs.release.storePassword = myKeyPassword
+        android.signingConfigs.release.keyPassword = myKeyPassword
+    }
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.2'
+    }
+}
+
+android {
+
+    compileSdkVersion 15
+    buildToolsVersion "21.0.0"
+
+    compileOptions.encoding = "8859_1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            res.srcDirs = ['res']
+            aidl.srcDirs = ['src']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDir 'libs'
+            java {
+                srcDir 'common/components/apache'
+                srcDir 'common/components/core'
+                srcDir 'common/components/gson'
+                srcDir 'common/components/httpserver'
+                srcDir 'common/components/jdownloader'
+                srcDir 'common/components/jmdns'
+                srcDir 'common/components/mp4parser'
+                srcDir 'common/components/okhttp'
+                srcDir 'common/components/vuze'
+                srcDir "common/components/minicastle"
+
+                srcDir 'common/vuze/azureus2/src'
+                srcDir 'common/vuze/azureus3/src'
+                srcDir 'common/vuze/plugins'
+
+                exclude "**/swt/**"
+                exclude "**/swing/**"
+                exclude "**/bouncycastle/**"
+                exclude "**/jman/**"
+                exclude "**/tests/**"
+                exclude "**/systray/**"
+                exclude "**/DNSUtilsImpl.java"
+
+                srcDir 'src/apollo_player'
+                srcDir 'src/core'
+                srcDir 'src/gui'
+            }
+            resources {
+                srcDir 'common/components/mp4parser'
+                include '**/*.properties'
+                exclude '**/*.java'
+            }
+        }
+    }
+
+    lintOptions {
+        //checkReleaseBuilds false
+        abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+        jumboMode = true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../frostwire-tools/installer_builders/android.keystore/frostwire.keystore")
+            storePassword myKeyPassword
+            keyAlias myKeyAlias
+            keyPassword myKeyPassword
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

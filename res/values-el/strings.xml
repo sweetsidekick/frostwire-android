@@ -528,6 +528,6 @@
     <string name="storage_setting_confirm_dialog_text">Κατάλαβα ότι όλα τα αρχεία που κατέβηκαν στην κάρτα SD από το FrostWire θα διαγραφούν από ΤΟ ANDROID τη στιγμή που η εφαρμογή του FrostWire απεγκατασταθεί από αυτή τη συσκευή και δεν θα θεωρήσω υπεύθυνη την FrostWire LLC για όσα αρχεία χαθούν.</string>
     <string name="available">διαθέσιμα</string>
     <string name="file_descriptor_sd_mounted">Αυτό το αρχείο διαγράφηκε από την κάρτα SD ή έχεις βάλει μία άλλη κάρτα SD.</string>
-    <string name="file_descriptor_sd_unmounted">Αυτό το αρχείο ανήκει σε μία κάρτα SD, παρακαλώ βάλ' τη στη συσκευή σου.</string>
+    <string name="file_descriptor_sd_unmounted">Αυτό το αρχείο ανήκει σε μία κάρτα SD, παρακαλώ βάλ\' τη στη συσκευή σου.</string>
     <string name="help_translate_frostwire">Βοήθα με τη μετάφραση του FrostWire</string>
 </resources>
