@@ -117,7 +117,7 @@
     <string name="are_you_sure_you_wanna_leave">Jeste li sigurni da zelite ici natrag na pocetni zaslon?</string>
     <string name="set_as_ringtone">Postaviti kao zvonjava</string>
     <string name="set_as_wallpaper">Postaviti kao pozadinu</string>
-    <string name="failed_to_set_wallpaper">Failed to set Wallpaper</string>
+    <string name="failed_to_set_wallpaper">Nemoguce postaviti pozadinsku sliku</string>
     <string name="tell_others_chooser">Tweet / SMS / Email</string>
     <string name="tell_others_subject">Imate li FrostWire za Android?</string>
     <string name="and_choose_what_filetypes_to_share">Provjerite kakve tipove dokumenata zelite omoguciti za dijeljenje na FrostWire mobilnoj mrezi i obliznjem Wi-Fi omogucenim racunalima.</string>
@@ -144,7 +144,7 @@
     <string name="alpha_tests_team">Alfa-test tim</string>
     <string name="alpha_tests_team_thanks">Hvala svim dobrovoljnim alfa-testerima za strpljenje i izvrsne povratne informacije, posebice hvala</string>
     <string name="pending">u tijeku</string>
-    <string name="manual">manual</string>
+    <string name="manual">manualno</string>
     <string name="disabled">onemoguceno</string>
     <string name="open">Otvori</string>
     <string name="connected_to">Spojen na</string>
@@ -255,7 +255,7 @@
     <string name="wizard_previous">Prijasnje</string>
     <string name="wizard_next">Sljedece</string>
     <string name="wizard_finish">Zavrsiti</string>
-    <string name="dummy_content_description">[dummy description]</string>
+    <string name="dummy_content_description">[imitacija opisa]</string>
     <string name="seeding_settings">Seedanje postavki</string>
     <string name="seeds_n">Seedovi: %s</string>
     <string name="peers_n">Peerovi: %s</string>
@@ -264,7 +264,7 @@
     <string name="back">Natrag</string>
     <string name="are_you_sure">Jeste li sigurni?</string>
     <string name="dummy_media_controller_time">00:00</string>
-    <string name="dummy_nickname">[Nickname]</string>
+    <string name="dummy_nickname">[Nadimak]</string>
     <string name="accept">Potvrditi</string>
     <string name="reject">Odbaciti</string>
     <string name="block">Blokiraj</string>
