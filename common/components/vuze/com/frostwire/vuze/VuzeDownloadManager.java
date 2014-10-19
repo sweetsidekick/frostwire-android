@@ -22,10 +22,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-import org.minicastle.util.Arrays;
-
 import com.frostwire.logging.Logger;
 
 /**

@@ -29,26 +29,26 @@ android {
 
                 srcDir "../frostwire-jlibtorrent/src"
 
-                srcDir 'common/components/apache'
+                srcDir "../frostwire-common/apache"
                 srcDir "../frostwire-common/core"
-                srcDir 'common/components/gson'
-                srcDir 'common/components/httpserver'
-                srcDir 'common/components/jdownloader'
-                srcDir 'common/components/jmdns'
-                srcDir 'common/components/mp4parser'
-                srcDir 'common/components/okhttp'
-                srcDir 'common/components/vuze'
-                srcDir "common/components/minicastle"
+                srcDir "../frostwire-common/gson"
+                srcDir "../frostwire-common/httpserver"
+                srcDir "../frostwire-common/jdownloader"
+                srcDir "../frostwire-common/jmdns"
+                srcDir "../frostwire-common/mp4parser"
+                srcDir "../frostwire-common/okhttp"
                 srcDir "../frostwire-common/vuze"
 
-                srcDir 'src/apollo_player'
-                srcDir 'src/core'
-                srcDir 'src/gui'
+                srcDir "src/apollo_player"
+                srcDir "src/core"
+                srcDir "src/gui"
+
+                srcDir "common/components/vuze"
             }
             resources {
-                srcDir 'common/components/mp4parser'
-                include '**/*.properties'
-                exclude '**/*.java'
+                srcDir "../frostwire-common/mp4parser"
+                include "**/*.properties"
+                exclude "**/*.java"
             }
         }
     }
