@@ -47,9 +47,9 @@ import org.gudy.azureus2.core3.util.SystemTime;
 import org.gudy.azureus2.core3.util.TorrentUtils;
 import org.json.simple.JSONObject;
 
-import com.aelitis.azureus.core.lws.LightWeightSeed;
-import com.aelitis.azureus.core.lws.LightWeightSeedAdapter;
-import com.aelitis.azureus.core.lws.LightWeightSeedManager;
+//import com.aelitis.azureus.core.lws.LightWeightSeed;
+//import com.aelitis.azureus.core.lws.LightWeightSeedAdapter;
+//import com.aelitis.azureus.core.lws.LightWeightSeedManager;
 import com.aelitis.azureus.core.metasearch.Engine;
 import com.aelitis.azureus.core.metasearch.MetaSearchManagerFactory;
 import com.aelitis.azureus.core.security.CryptoECCUtils;
@@ -138,7 +138,7 @@ SubscriptionImpl
 	private boolean			singleton_sp_attempted;
 	private String			local_name;
 	
-	private LightWeightSeed	lws;
+	//private LightWeightSeed	lws;
 	private int				lws_skip_check;
 	
 	private boolean			destroyed;
@@ -1464,19 +1464,19 @@ SubscriptionImpl
 				
 				boolean	create = false;
 
-				if ( lws == null ){
-					
-					create = true;
-					
-				}else{
-					
-					if ( !Arrays.equals( lws.getHash().getBytes(), hash )){
-			
-						lws.remove();
-						
-						create = true;
-					}
-				}
+//				if ( lws == null ){
+//
+//					create = true;
+//
+//				}else{
+//
+//					if ( !Arrays.equals( lws.getHash().getBytes(), hash )){
+//
+//						lws.remove();
+//
+//						create = true;
+//					}
+//				}
 				
 				if ( create ){
 										
@@ -1498,36 +1498,36 @@ SubscriptionImpl
 								}
 							}
 							
-							lws = LightWeightSeedManager.getSingleton().add(
-									getName(),
-									new HashWrapper( hash ),
-									TorrentUtils.getDecentralisedEmptyURL(),
-									versioned_data_location,
-									new LightWeightSeedAdapter()
-									{
-										public TOTorrent 
-										getTorrent(
-											byte[] 		hash,
-											URL 		announce_url, 
-											File 		data_location) 
-										
-											throws Exception
-										{
-											log( " - generating torrent: " + Debug.getCompressedStackTrace());
-											
-											TOTorrentCreator creator = 
-												TOTorrentFactory.createFromFileOrDirWithFixedPieceLength( 
-														data_location, 
-														announce_url,
-														256*1024 );
-									
-											TOTorrent t = creator.create();
-											
-											t.setHashOverride( hash );
-											
-											return( t );
-										}
-									});
+//							lws = LightWeightSeedManager.getSingleton().add(
+//									getName(),
+//									new HashWrapper( hash ),
+//									TorrentUtils.getDecentralisedEmptyURL(),
+//									versioned_data_location,
+//									new LightWeightSeedAdapter()
+//									{
+//										public TOTorrent
+//										getTorrent(
+//											byte[] 		hash,
+//											URL 		announce_url,
+//											File 		data_location)
+//
+//											throws Exception
+//										{
+//											log( " - generating torrent: " + Debug.getCompressedStackTrace());
+//
+//											TOTorrentCreator creator =
+//												TOTorrentFactory.createFromFileOrDirWithFixedPieceLength(
+//														data_location,
+//														announce_url,
+//														256*1024 );
+//
+//											TOTorrent t = creator.create();
+//
+//											t.setHashOverride( hash );
+//
+//											return( t );
+//										}
+//									});
 						}
 								
 					}catch( Throwable e ){
@@ -1953,19 +1953,19 @@ SubscriptionImpl
 	protected void
 	destroy()
 	{
-		LightWeightSeed l;
-		
-		synchronized( this ){
-			
-			destroyed	= true;
-			
-			l = lws;
-		}
-		
-		if ( l != null ){
-			
-			l.remove();
-		}
+//		LightWeightSeed l;
+//
+//		synchronized( this ){
+//
+//			destroyed	= true;
+//
+//			l = lws;
+//		}
+//
+//		if ( l != null ){
+//
+//			l.remove();
+//		}
 	}
 	
 	public void

@@ -66,8 +66,8 @@ import com.aelitis.azureus.core.custom.Customization;
 import com.aelitis.azureus.core.custom.CustomizationManager;
 import com.aelitis.azureus.core.custom.CustomizationManagerFactory;
 import com.aelitis.azureus.core.dht.DHT;
-import com.aelitis.azureus.core.lws.LightWeightSeed;
-import com.aelitis.azureus.core.lws.LightWeightSeedManager;
+//import com.aelitis.azureus.core.lws.LightWeightSeed;
+//import com.aelitis.azureus.core.lws.LightWeightSeedManager;
 import com.aelitis.azureus.core.messenger.config.PlatformSubscriptionsMessenger;
 import com.aelitis.azureus.core.metasearch.Engine;
 import com.aelitis.azureus.core.metasearch.MetaSearchListener;
@@ -5194,13 +5194,13 @@ SubscriptionManagerImpl
 		try{
 				// testing purposes, see if local exists
 			
-			LightWeightSeed lws = LightWeightSeedManager.getSingleton().get( new HashWrapper( torrent.getHash()));
+			//LightWeightSeed lws = LightWeightSeedManager.getSingleton().get( new HashWrapper( torrent.getHash()));
 	
-			if ( lws != null ){
+			if ( false) {//lws != null ){
 				
-				log( "Light weight seed found" );
+				//log( "Light weight seed found" );
 				
-				listener.complete( lws.getDataLocation());
+				//listener.complete( lws.getDataLocation());
 				
 			}else{
 				String	sid = ByteFormatter.encodeString( subs_id );

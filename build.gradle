@@ -48,6 +48,7 @@ android {
                 exclude "**/tests/**"
                 exclude "**/systray/**"
                 exclude "**/DNSUtilsImpl.java"
+                exclude "**/lws/**"
 
                 srcDir 'src/apollo_player'
                 srcDir 'src/core'
