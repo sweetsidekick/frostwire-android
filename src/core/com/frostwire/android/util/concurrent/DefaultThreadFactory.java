@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.frostwire.concurrent;
+package com.frostwire.android.util.concurrent;
 
 import java.util.concurrent.ThreadFactory;
 

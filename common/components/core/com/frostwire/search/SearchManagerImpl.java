@@ -26,7 +26,6 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.frostwire.concurrent.DefaultThreadFactory;
 import com.frostwire.logging.Logger;
 
 /**
@@ -197,7 +196,7 @@ public class SearchManagerImpl implements SearchManager {
     }
 
     private static ExecutorService newFixedThreadPool(int nThreads) {
-        return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>(), new DefaultThreadFactory("SearchManager", false));
+        return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
     }
 
     private static abstract class SearchTask implements Runnable, Comparable<SearchTask> {
