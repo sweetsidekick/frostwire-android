@@ -18,8 +18,6 @@
 
 package com.frostwire.vuze;
 
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.download.impl.DownloadManagerAdapter;
 
 import com.frostwire.logging.Logger;
 
@@ -29,7 +27,7 @@ import com.frostwire.logging.Logger;
  * @author aldenml
  *
  */
-final class VuzeCoreDownloadManagerAdapter extends DownloadManagerAdapter {
+final class VuzeCoreDownloadManagerAdapter {
 
     private static final Logger LOG = Logger.getLogger(VuzeCoreDownloadManagerAdapter.class);
 
@@ -41,8 +39,9 @@ final class VuzeCoreDownloadManagerAdapter extends DownloadManagerAdapter {
         this.listener = listener;
     }
 
-    @Override
-    public void stateChanged(DownloadManager manager, int state) {
+    public void stateChanged(Object manager, int state) {
+        // TODO:BITTORRENT
+        /*
         if (state == DownloadManager.STATE_READY) {
             manager.startDownload();
         } else {
@@ -53,11 +52,10 @@ final class VuzeCoreDownloadManagerAdapter extends DownloadManagerAdapter {
                     LOG.error("Error calling download manager listener", e);
                 }
             }
-        }
+        }*/
     }
 
-    @Override
-    public void downloadComplete(DownloadManager manager) {
+    public void downloadComplete(Object manager) {
         if (listener != null) {
             try {
                 listener.downloadComplete(dm);

@@ -32,6 +32,8 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
+    <file type="web" url="file://$PROJECT_DIR$/../frostwire-common/core" />
+    <file type="web" url="file://$PROJECT_DIR$/../frostwire-common/vuze" />
     <file type="web" url="file://$PROJECT_DIR$/../frostwire-jlibtorrent/src" />
   </component>
   <component name="GradleSettings">

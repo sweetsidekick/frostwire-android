@@ -26,8 +26,11 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDir 'libs'
             java {
+
+                srcDir "../frostwire-jlibtorrent/src"
+
                 srcDir 'common/components/apache'
-                srcDir 'common/components/core'
+                srcDir "../frostwire-common/core"
                 srcDir 'common/components/gson'
                 srcDir 'common/components/httpserver'
                 srcDir 'common/components/jdownloader'
@@ -36,19 +39,7 @@ android {
                 srcDir 'common/components/okhttp'
                 srcDir 'common/components/vuze'
                 srcDir "common/components/minicastle"
-
-                srcDir 'common/vuze/azureus2/src'
-                srcDir 'common/vuze/azureus3/src'
-                srcDir 'common/vuze/plugins'
-
-                exclude "**/swt/**"
-                exclude "**/swing/**"
-                exclude "**/bouncycastle/**"
-                exclude "**/jman/**"
-                exclude "**/tests/**"
-                exclude "**/systray/**"
-                exclude "**/DNSUtilsImpl.java"
-                exclude "**/lws/**"
+                srcDir "../frostwire-common/vuze"
 
                 srcDir 'src/apollo_player'
                 srcDir 'src/core'
@@ -56,8 +47,6 @@ android {
             }
             resources {
                 srcDir 'common/components/mp4parser'
-                srcDir "common/vuze/azureus2/src"
-                srcDir "common/vuze/plugins"
                 include '**/*.properties'
                 exclude '**/*.java'
             }

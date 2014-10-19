@@ -30,7 +30,6 @@ import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
 import com.frostwire.vuze.VuzeFormatter;
 import com.frostwire.vuze.VuzeUtils;
-import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
 
 /**
  * @author gubatron
@@ -188,7 +187,8 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
     @Override
     public void cancel(boolean deleteData) {
         manager.remove(this);
-        VuzeUtils.removeDownload(downloadManager, deleteData, deleteData);
+        // TODO:BITTORRENT
+        //VuzeUtils.removeDownload(downloadManager, deleteData, deleteData);
     }
 
     VuzeDownloadManager getDownloadManager() {
@@ -208,8 +208,9 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
     private void refreshData() {
         if (lastChangedTime < downloadManager.getChangedTime()) {
             lastChangedTime = downloadManager.getChangedTime();
-            fileInfoSet = VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
-            partialDownload = !VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
+            // TODO:BITTORRENT
+            fileInfoSet = null;//VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
+            partialDownload = false;//!VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
 
             items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
             for (VuzeFileInfo fileInfo : fileInfoSet) {

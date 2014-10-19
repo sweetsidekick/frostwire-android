@@ -62,7 +62,7 @@ class TorrentSearchResultInfo implements TorrentDownloadInfo {
     @Override
     public String getRelativePath() {
         if (sr instanceof TorrentCrawledSearchResult) {
-            return ((TorrentCrawledSearchResult) sr).getRelativePath();
+            return ((TorrentCrawledSearchResult) sr).getFilePath();
         } else {
             return null;
         }

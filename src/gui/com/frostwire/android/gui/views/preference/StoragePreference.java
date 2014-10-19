@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gudy.azureus2.core3.config.COConfigurationManager;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -117,7 +115,8 @@ public class StoragePreference extends DialogPreference {
         if (dialog != null && dialog.equals(confirmDlg)) {
             if (which == Dialog.BUTTON_POSITIVE && selectedPath != null) {
                 ConfigurationManager.instance().setStoragePath(selectedPath);
-                COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsolutePath());
+                // TODO:BITTORRENT
+                //COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsolutePath());
                 dismissPreferenceDialog();
                 uxLogSelection();
             }

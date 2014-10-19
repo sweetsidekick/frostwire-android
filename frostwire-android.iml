@@ -42,13 +42,10 @@
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/mp4parser" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus2/src" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/plugins" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/apache" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/gson" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/httpserver" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/jdownloader" isTestSource="false" />
@@ -57,9 +54,6 @@
       <sourceFolder url="file://$MODULE_DIR$/common/components/okhttp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/vuze" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/components/minicastle" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus2/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus3/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/plugins" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/apollo_player" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui" isTestSource="false" />
@@ -92,6 +86,15 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/core">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/core" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/vuze">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/vuze" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-jlibtorrent/src">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-jlibtorrent/src" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 15 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

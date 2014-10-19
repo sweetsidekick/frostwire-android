@@ -545,7 +545,8 @@ public final class TransferManager implements VuzeKeys {
         public void downloadComplete(VuzeDownloadManager dm) {
             stopSeedingIfNecessary(dm);
             TransferManager.instance().incrementDownloadsToReview();
-            VuzeUtils.finalCleanup(dm.getDM()); //make sure it cleans unnecessary files (android has handpicked seeding off by default)
+            // TODO:BITTORRENT
+            //VuzeUtils.finalCleanup(dm.getDM()); //make sure it cleans unnecessary files (android has handpicked seeding off by default)
             Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
             Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
         }

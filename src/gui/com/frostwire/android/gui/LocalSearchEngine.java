@@ -161,7 +161,7 @@ public final class LocalSearchEngine {
         try {
             for (SearchResult sr : results) {
                 if (sr instanceof TorrentSearchResult) {
-                    if (((TorrentSearchResult) sr).getSeeds() == TorrentSearchResult.UNKOWN_SEEDS) {
+                    if (((TorrentSearchResult) sr).getSeeds() == -1) {
                         long creationTime = ((TorrentSearchResult) sr).getCreationTime();
                         long age = System.currentTimeMillis() - creationTime;
                         if (age > 31536000000l) {
