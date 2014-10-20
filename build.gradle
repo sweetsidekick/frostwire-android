@@ -71,14 +71,21 @@ android {
     }
 
     buildTypes {
+
         release {
             signingConfig signingConfigs.release
+        }
+
+        debug {
+            ndk {
+                abiFilters "armeabi"
+            }
         }
     }
 
     splits {
         abi {
-            enable true
+            enable !gradle.startParameter.taskNames.contains("assembleDebug")
             universalApk true
         }
     }
@@ -98,7 +105,7 @@ dependencies {
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.hasTask(':packageRelease')) {
+    if (taskGraph.hasTask(":assembleRelease")) {
 
         def myKeyAlias = ""
         def myKeyPassword = ""
