@@ -368,25 +368,29 @@ public final class TransferManager implements VuzeKeys {
                 download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
             } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
                 download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
+                // TODO:BITTORRENT
+                // put logic of duplicates
+                bittorrentDownloads.add(download);
             } else {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
             }
-            if (!(download instanceof InvalidBittorrentDownload)) {
-                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
-                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
-                    if (!bittorrentDownloads.contains(download)) {
-                        bittorrentDownloads.add(download);
-                        
-                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
-                            //give it time to get to a pausable state.
-                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-                            enqueueTorrentTransfer(download);
-                            //give it time to stop before onPostExecute
-                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-                        }
-                    }
-                }
-            }
+            // TODO:BITTORRENT
+//            if (!(download instanceof InvalidBittorrentDownload)) {
+//                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
+//                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
+//                    if (!bittorrentDownloads.contains(download)) {
+//                        bittorrentDownloads.add(download);
+//
+//                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
+//                            //give it time to get to a pausable state.
+//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//                            enqueueTorrentTransfer(download);
+//                            //give it time to stop before onPostExecute
+//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//                        }
+//                    }
+//                }
+//            }
 
             return download;
         } catch (Throwable e) {

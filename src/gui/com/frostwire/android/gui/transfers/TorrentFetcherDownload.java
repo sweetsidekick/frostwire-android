@@ -44,8 +44,6 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     private TransferState state;
 
-    private boolean removed;
-
     public TorrentFetcherDownload(TransferManager manager, TorrentDownloadInfo info) {
         this.manager = manager;
         this.info = info;
