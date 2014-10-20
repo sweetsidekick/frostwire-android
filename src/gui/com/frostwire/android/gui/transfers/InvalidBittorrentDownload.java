@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.transfers.TransferItem;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.Date;
@@ -151,7 +153,7 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     }
 
     @Override
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return Collections.emptyList();
     }
 
@@ -159,11 +161,6 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     public void cancel(boolean deleteData) {
     }
 
-    @Override
-    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
-        return null;
-    }
-    
     @Override
     public String getDetailsUrl() {
         return null;

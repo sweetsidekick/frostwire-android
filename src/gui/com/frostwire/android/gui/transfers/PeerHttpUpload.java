@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.transfers.TransferItem;
 
 /**
  * @author gubatron
@@ -111,7 +112,7 @@ public class PeerHttpUpload implements UploadTransfer {
         return status == STATUS_UPLOADING;
     }
 
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return Collections.emptyList();
     }
 

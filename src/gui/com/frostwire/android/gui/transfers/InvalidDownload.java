@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.frostwire.android.R;
+import com.frostwire.transfers.TransferItem;
 
 /**
  * @author gubatron
@@ -92,7 +93,7 @@ public class InvalidDownload implements DownloadTransfer, InvalidTransfer {
     }
 
     @Override
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return null;
     }
 

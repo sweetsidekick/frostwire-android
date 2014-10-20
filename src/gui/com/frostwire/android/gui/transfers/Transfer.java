@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.transfers.TransferItem;
+
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public interface Transfer {
 
     public boolean isComplete();
 
-    public List<? extends TransferItem> getItems();
+    public List<TransferItem> getItems();
 
     public void cancel();
     

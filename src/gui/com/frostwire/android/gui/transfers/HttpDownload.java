@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.frostwire.transfers.TransferItem;
 import org.apache.commons.io.FilenameUtils;
 
 import android.os.SystemClock;
@@ -159,7 +160,7 @@ public final class HttpDownload implements DownloadTransfer {
         return status == STATUS_DOWNLOADING;
     }
 
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return Collections.emptyList();
     }
 

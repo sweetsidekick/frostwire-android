@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.frostwire.android.R;
 import com.frostwire.logging.Logger;
+import com.frostwire.transfers.TransferItem;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeTorrentDownloadListener;
 import com.frostwire.vuze.VuzeTorrentDownloader;
@@ -88,7 +89,7 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         return delegate != null ? delegate.getDateCreated() : dateCreated;
     }
 
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return delegate != null ? delegate.getItems() : new ArrayList<TransferItem>();
     }
 
@@ -232,11 +233,6 @@ public class TorrentFetcherDownload implements BittorrentDownload {
             }
             statusResId = R.string.torrent_fetcher_download_status_error;
         }
-    }
-
-    @Override
-    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
-        return (delegate != null) ? delegate.getBittorrentItems() : new ArrayList<BittorrentDownloadItem>(0);
     }
 
     @Override

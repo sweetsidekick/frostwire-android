@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.frostwire.transfers.TransferItem;
 import org.apache.commons.io.FilenameUtils;
 
 import android.app.Dialog;
@@ -50,7 +51,6 @@ import com.frostwire.android.gui.adapters.menu.OpenMenuAction;
 import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
 import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
-import com.frostwire.android.gui.transfers.BittorrentDownloadItem;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
@@ -58,7 +58,6 @@ import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
-import com.frostwire.android.gui.transfers.TransferItem;
 import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
@@ -247,9 +246,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     }
 
     protected void populateChildView(View view, TransferItem item) {
-        if (item instanceof BittorrentDownloadItem) {
-            populateBittorrentDownloadItem(view, (BittorrentDownloadItem) item);
-        }
+        populateBittorrentDownloadItem(view, item);
     }
 
     protected MenuAdapter getMenuAdapter(View view) {
@@ -262,9 +259,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             //If it's a torrent download with a single file, we should be able to open it.
-            if (download.isComplete() && download.getBittorrentItems().size() == 1) {
-                BittorrentDownloadItem transferItem = (BittorrentDownloadItem) download.getBittorrentItems().get(0);
-                String path = transferItem.getSavePath().getAbsolutePath();
+            if (download.isComplete() && download.getItems().size() == 1) {
+                TransferItem transferItem = download.getItems().get(0);
+                String path = transferItem.getFile().getAbsolutePath();
                 String mimeType = UIUtils.getMimeType(path);
                 items.add(new OpenMenuAction(context, path, mimeType));
             }
@@ -344,9 +341,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
                 if (item instanceof BittorrentDownload) {
                     BittorrentDownload bItem = (BittorrentDownload) item;
-                    if (bItem.getBittorrentItems().size() > 0) {
-                        BittorrentDownloadItem transferItem = bItem.getBittorrentItems().get(0);
-                        path = transferItem.getSavePath().getAbsolutePath();
+                    if (bItem.getItems().size() > 0) {
+                        TransferItem transferItem = bItem.getItems().get(0);
+                        path = transferItem.getFile().getAbsolutePath();
                         extension = FilenameUtils.getExtension(path);
                     }
                 } else if (item instanceof DownloadTransfer) {
@@ -498,14 +495,14 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         buttonAction.setOnClickListener(actionOnClickListener);
     }
 
-    private void populateBittorrentDownloadItem(View view, BittorrentDownloadItem item) {
+    private void populateBittorrentDownloadItem(View view, TransferItem item) {
         ImageView icon = findView(view, R.id.view_transfer_item_list_item_icon);
         TextView title = findView(view, R.id.view_transfer_item_list_item_title);
         ProgressBar progress = findView(view, R.id.view_transfer_item_list_item_progress);
         TextView size = findView(view, R.id.view_transfer_item_list_item_size);
         ImageButton buttonPlay = findView(view, R.id.view_transfer_item_list_item_button_play);
 
-        icon.setImageResource(getFileTypeIconId(FilenameUtils.getExtension(item.getSavePath().getAbsolutePath())));
+        icon.setImageResource(getFileTypeIconId(FilenameUtils.getExtension(item.getFile().getAbsolutePath())));
         title.setText(item.getDisplayName());
         progress.setProgress(item.getProgress());
         size.setText(UIUtils.getBytesInHuman(item.getSize()));
@@ -642,13 +639,10 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             TransferItem item = (TransferItem) v.getTag();
 
             boolean canOpen = false;
-            canOpen |= item.isComplete() && item instanceof BittorrentDownloadItem;
+            canOpen |= item.isComplete();
 
             if (canOpen) {
-                File savePath = null;
-                if (item instanceof BittorrentDownloadItem) {
-                    savePath = ((BittorrentDownloadItem) item).getSavePath();
-                }
+                File savePath = item.getFile();
 
                 if (savePath != null) {
                     if (savePath.exists()) {

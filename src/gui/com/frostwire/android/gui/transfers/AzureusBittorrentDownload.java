@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.frostwire.transfers.TransferItem;
 import com.frostwire.util.ByteUtils;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeFileInfo;
@@ -41,8 +42,6 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
     private final TransferManager manager;
     private final VuzeDownloadManager downloadManager;
     private final String hash;
-
-    private List<BittorrentDownloadItem> items;
 
     private boolean partialDownload;
     private Set<VuzeFileInfo> fileInfoSet;
@@ -106,11 +105,8 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
         return downloadManager.isSeeding();
     }
 
-    public List<? extends BittorrentDownloadItem> getItems() {
-        if (items.size() == 1) {
-            return Collections.emptyList();
-        }
-        return items;
+    public List<TransferItem> getItems() {
+        return null;
     }
     
     public void enqueue() {
@@ -196,11 +192,6 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
     }
 
     @Override
-    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
-        return items;
-    }
-
-    @Override
     public String getDetailsUrl() {
         return null;
     }
@@ -212,10 +203,10 @@ public final class AzureusBittorrentDownload implements BittorrentDownload {
             fileInfoSet = null;//VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.NO_SKIPPED);
             partialDownload = false;//!VuzeUtils.getFileInfoSet(downloadManager, InfoSetQuery.SKIPPED).isEmpty();
 
-            items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
-            for (VuzeFileInfo fileInfo : fileInfoSet) {
-                items.add(new AzureusBittorrentDownloadItem(fileInfo));
-            }
+//            items = new ArrayList<BittorrentDownloadItem>(fileInfoSet.size());
+//            for (VuzeFileInfo fileInfo : fileInfoSet) {
+//                items.add(new AzureusBittorrentDownloadItem(fileInfo));
+//            }
         }
     }
 

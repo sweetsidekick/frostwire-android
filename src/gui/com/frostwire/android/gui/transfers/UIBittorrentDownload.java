@@ -3,6 +3,7 @@ package com.frostwire.android.gui.transfers;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
+import com.frostwire.transfers.TransferItem;
 
 import java.io.File;
 import java.util.Date;
@@ -102,12 +103,6 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     }
 
     @Override
-    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
-        // TODO:BITTORRENT
-        return null;
-    }
-
-    @Override
     public File getSavePath() {
         return dl.getSavePath();
     }
@@ -178,9 +173,9 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     }
 
     @Override
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         // TODO:BITTORRENT
-        return null;
+        return dl.getItems();
     }
 
     @Override
