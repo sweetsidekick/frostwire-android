@@ -4,9 +4,11 @@ import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
+import com.frostwire.util.DirectoryUtils;
 
 import java.io.File;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +25,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     private String displayName;
     private long size;
+    private List<TransferItem> items;
 
     public UIBittorrentDownload(TransferManager manager, BTDownload dl) {
         this.manager = manager;
@@ -31,6 +34,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         this.displayName = dl.getDisplayName();
         this.size = calculateSize(dl);
+        this.items = calculateItems(dl);
 
         if (!dl.wasPaused()) {
             dl.resume();
@@ -194,6 +198,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
         public void update(BTDownload dl) {
             displayName = dl.getDisplayName();
             size = calculateSize(dl);
+            items = calculateItems(dl);
         }
 
         @Override
@@ -227,9 +232,22 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         @Override
         public void removed(BTDownload dl, Set<File> incompleteFiles) {
-            // TODO:BITTORRENT
-            //finalCleanup(incompleteFiles);
+            finalCleanup(incompleteFiles);
         }
+    }
+
+    private void finalCleanup(Set<File> incompleteFiles) {
+        for (File f : incompleteFiles) {
+            try {
+                if (f.exists() && !f.delete()) {
+                    LOG.info("Can't delete file: " + f);
+                }
+            } catch (Throwable e) {
+                LOG.info("Can't delete file: " + f);
+            }
+        }
+
+        DirectoryUtils.deleteEmptyDirectoryRecursive(dl.getSavePath());
     }
 
     private long calculateSize(BTDownload dl) {
@@ -252,5 +270,17 @@ public final class UIBittorrentDownload implements BittorrentDownload {
         }
 
         return size;
+    }
+
+    private List<TransferItem> calculateItems(BTDownload dl) {
+        List<TransferItem> l = new LinkedList<TransferItem>();
+
+        for (TransferItem item : dl.getItems()) {
+            if (!item.isSkipped()) {
+                l.add(item);
+            }
+        }
+
+        return l;
     }
 }

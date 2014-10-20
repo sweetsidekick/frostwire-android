@@ -119,23 +119,5 @@ public final class VuzeUtils {
         return set;
     }
 
-    public static void finalCleanup(DownloadManager dm) {
-        Set<File> toDelete = getIgnorableFiles(dm);
-
-        for (File f : toDelete) {
-            try {
-                if (f.exists() && !f.delete()) {
-                    LOG.info("Can't delete file: " + f);
-                }
-            } catch (Throwable e) {
-                LOG.info("Can't delete file: " + f);
-            }
-        }
-
-        DirectoryUtils.deleteEmptyDirectoryRecursive(dm.getSaveLocation());
-    }
-
-    public static enum InfoSetQuery {
-        ALL, SKIPPED, NO_SKIPPED
-    }*/
+    */
 }
