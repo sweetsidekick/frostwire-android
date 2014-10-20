@@ -413,11 +413,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         progress.setProgress(download.getProgress());
 
         if (download instanceof TorrentFetcherDownload) {
-            if (((TorrentFetcherDownload) download).getDelegate() != null) {
-                status.setText(download.getStatus());
-            } else {
-                status.setText(getStatusFromResId(download.getStatus()));
-            }
+            status.setText(download.getStatus());
         } else {
             status.setText(download.getStatus());
         }
