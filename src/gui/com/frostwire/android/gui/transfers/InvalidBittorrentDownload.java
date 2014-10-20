@@ -119,16 +119,6 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
     }
 
     @Override
-    public String getSeedToPeerRatio() {
-        return null;
-    }
-
-    @Override
-    public String getShareRatio() {
-        return null;
-    }
-
-    @Override
     public boolean isResumable() {
         return false;
     }

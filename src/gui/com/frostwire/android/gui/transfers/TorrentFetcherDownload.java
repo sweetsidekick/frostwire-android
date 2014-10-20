@@ -128,14 +128,6 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         return delegate != null ? delegate.getSeeds() : "";
     }
 
-    public String getSeedToPeerRatio() {
-        return delegate != null ? delegate.getSeedToPeerRatio() : "";
-    }
-
-    public String getShareRatio() {
-        return delegate != null ? delegate.getShareRatio() : "";
-    }
-
     public boolean isResumable() {
         return delegate != null ? delegate.isResumable() : false;
     }
