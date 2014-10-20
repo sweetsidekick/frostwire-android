@@ -1,13 +1,13 @@
 import groovy.swing.SwingBuilder
 
-apply plugin: "android"
+apply plugin: "com.android.application"
 
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath "com.android.tools.build:gradle:0.13.+"
     }
 }
 
@@ -16,11 +16,9 @@ android {
     compileSdkVersion 15
     buildToolsVersion "21.0.0"
 
-    compileOptions.encoding = "8859_1"
-
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
+            manifest.srcFile "AndroidManifest.xml"
             res.srcDirs = ['res']
             aidl.srcDirs = ['src']
             assets.srcDirs = ['assets']
@@ -75,6 +73,22 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            universalApk true
+        }
+    }
+
+    project.ext.versionCodes = ["armeabi": 1, "armeabi-v7a": 2, "arm64-v8a": 3, "mips": 4, "mips64": 5, "x86": 6, "x86_64": 7]
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.abiFilter, 0) * 1000000 + android.defaultConfig.versionCode
         }
     }
 }
