@@ -61,22 +61,12 @@ You can donate for development, thereby encouraging some developers or you can p
 
 # Build instructions
 
-## Eclipse (temporary)
+## Android Studio
 
-As of 1.3.8 (build 149), this might be the last release we build the project using Eclipse/Android Development Toolkit Bundle.
-
-1. Make sure you have enough heap available for Eclipse.
-2. Before you launch Eclipse, modify eclipse.ini to something along these lines:
-
-        -XX:MaxPermSize=256m
-        -Xms40m
-        -Xmx2048m
-
-
-3. Open the project in eclipse, and build it using the Wizard. Should work out of the box.
-![building with eclipse android tools](https://cloud.githubusercontent.com/assets/163977/4533475/57d32b66-4d9c-11e4-9dee-96e1f233ebfc.png)
-
-*We are currently doing major changes to our project structure and we'll be using [***gradle***](http://www.gradle.org/) and [***Android Studio***](https://developer.android.com/sdk/installing/studio.html) so these build instructions won't be valid for long*
+1. Make shure you have [Android Studio](https://developer.android.com/sdk/installing/studio.html) properly installed.
+2. Open the project in android studio.
+3. Wait for gradle sync and indices to update.
+4. Should work out of the box.
 
 Happy coding.
 
