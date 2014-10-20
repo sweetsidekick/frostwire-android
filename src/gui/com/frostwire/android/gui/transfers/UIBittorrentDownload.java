@@ -1,10 +1,13 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.bittorrent.BTDownload;
+import com.frostwire.bittorrent.BTDownloadListener;
+import com.frostwire.logging.Logger;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gubatron
@@ -12,10 +15,25 @@ import java.util.List;
  */
 public final class UIBittorrentDownload implements BittorrentDownload {
 
+    private static final Logger LOG = Logger.getLogger(UIBittorrentDownload.class);
+
+    private final TransferManager manager;
     private final BTDownload dl;
 
-    public UIBittorrentDownload(BTDownload dl) {
+    private String displayName;
+    private long size;
+
+    public UIBittorrentDownload(TransferManager manager, BTDownload dl) {
+        this.manager = manager;
         this.dl = dl;
+        this.dl.setListener(new StatusListener());
+
+        this.displayName = dl.getDisplayName();
+        this.size = calculateSize(dl);
+
+        if (!dl.wasPaused()) {
+            dl.resume();
+        }
     }
 
     @Override
@@ -106,7 +124,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public String getDisplayName() {
-        return dl.getDisplayName();
+        return displayName;
     }
 
     @Override
@@ -121,7 +139,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public long getSize() {
-        return dl.getSize();
+        return size;
     }
 
     @Override
@@ -173,5 +191,71 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     @Override
     public String getDetailsUrl() {
         return null;
+    }
+
+    private class StatusListener implements BTDownloadListener {
+
+        @Override
+        public void update(BTDownload dl) {
+            displayName = dl.getDisplayName();
+            size = calculateSize(dl);
+        }
+
+        @Override
+        public void finished(BTDownload dl) {
+            // TODO:BITTORRENT
+            /*
+            if (!SharingSettings.SEED_FINISHED_TORRENTS.getValue() || (dl.isPartial() && !SharingSettings.SEED_HANDPICKED_TORRENT_FILES.getValue())) {
+                dl.pause();
+            }
+
+            File saveLocation = dl.getSavePath();
+
+            if (iTunesSettings.ITUNES_SUPPORT_ENABLED.getValue() && !iTunesMediator.instance().isScanned(saveLocation)) {
+                if ((OSUtils.isMacOSX() || OSUtils.isWindows())) {
+                    iTunesMediator.instance().scanForSongs(saveLocation);
+                }
+            }
+
+            if (!LibraryMediator.instance().isScanned(dl.hashCode())) {
+                LibraryMediator.instance().scan(dl.hashCode(), saveLocation);
+            }
+
+            //if you have to hide seeds, do so.
+            GUIMediator.safeInvokeLater(new Runnable() {
+                public void run() {
+                    BTDownloadMediator.instance().updateTableFilters();
+                }
+            });
+            */
+        }
+
+        @Override
+        public void removed(BTDownload dl, Set<File> incompleteFiles) {
+            // TODO:BITTORRENT
+            //finalCleanup(incompleteFiles);
+        }
+    }
+
+    private long calculateSize(BTDownload dl) {
+        long size = dl.getSize();
+
+        boolean partial = dl.isPartial();
+        if (partial) {
+            List<com.frostwire.transfers.TransferItem> items = dl.getItems();
+
+            long totalSize = 0;
+            for (com.frostwire.transfers.TransferItem item : items) {
+                if (!item.isSkipped()) {
+                    totalSize += item.getSize();
+                }
+            }
+
+            if (totalSize > 0) {
+                size = totalSize;
+            }
+        }
+
+        return size;
     }
 }

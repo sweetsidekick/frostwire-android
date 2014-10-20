@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.transfers;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
+import com.frostwire.bittorrent.BTDownload;
+import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.bittorrent.BTEngineAdapter;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.HttpSearchResult;
 import com.frostwire.search.SearchResult;
@@ -318,6 +322,22 @@ public final class TransferManager implements VuzeKeys {
                 }
             }
         }, new DownloadListener());
+
+        BTEngine engine = BTEngine.getInstance();
+
+        engine.setListener(new BTEngineAdapter() {
+            @Override
+            public void downloadAdded(BTEngine engine, BTDownload dl) {
+                String name = dl.getName();
+                if (name != null && name.contains("fetchMagnet - ")) {
+                    return;
+                }
+
+                bittorrentDownloads.add(new UIBittorrentDownload(TransferManager.this, dl));
+            }
+        });
+
+        engine.restoreDownloads();
     }
 
     boolean remove(Transfer transfer) {
