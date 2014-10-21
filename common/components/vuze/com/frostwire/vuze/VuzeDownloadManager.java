@@ -22,15 +22,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.tracker.client.TRTrackerScraperResponse;
-import org.gudy.azureus2.core3.util.DisplayFormatters;
-import org.minicastle.util.Arrays;
-
 import com.frostwire.logging.Logger;
-import com.frostwire.vuze.VuzeUtils.InfoSetQuery;
 
 /**
  * 
@@ -43,35 +35,37 @@ public final class VuzeDownloadManager {
     private static final Logger LOG = Logger.getLogger(VuzeDownloadManager.class);
 
     // states from azureus download manager
-    public static final int STATE_WAITING = DownloadManager.STATE_WAITING;
-    public static final int STATE_INITIALIZING = DownloadManager.STATE_INITIALIZING;
-    public static final int STATE_INITIALIZED = DownloadManager.STATE_INITIALIZED;
-    public static final int STATE_ALLOCATING = DownloadManager.STATE_ALLOCATING;
-    public static final int STATE_CHECKING = DownloadManager.STATE_CHECKING;
-    public static final int STATE_READY = DownloadManager.STATE_READY;
-    public static final int STATE_DOWNLOADING = DownloadManager.STATE_DOWNLOADING;
-    public static final int STATE_FINISHING = DownloadManager.STATE_FINISHING;
-    public static final int STATE_SEEDING = DownloadManager.STATE_SEEDING;
-    public static final int STATE_STOPPING = DownloadManager.STATE_STOPPING;
-    public static final int STATE_STOPPED = DownloadManager.STATE_STOPPED;
-    public static final int STATE_CLOSED = DownloadManager.STATE_CLOSED;
-    public static final int STATE_QUEUED = DownloadManager.STATE_QUEUED;
-    public static final int STATE_ERROR = DownloadManager.STATE_ERROR;
+    public static final int STATE_WAITING = 0;
+    public static final int STATE_INITIALIZING = 1;
+    public static final int STATE_INITIALIZED = 2;
+    public static final int STATE_ALLOCATING = 3;
+    public static final int STATE_CHECKING = 4;
+    public static final int STATE_READY = 5;
+    public static final int STATE_DOWNLOADING = 6;
+    public static final int STATE_FINISHING = 7;
+    public static final int STATE_SEEDING = 8;
+    public static final int STATE_STOPPING = 9;
+    public static final int STATE_STOPPED = 10;
+    public static final int STATE_CLOSED = 11;
+    public static final int STATE_QUEUED = 12;
+    public static final int STATE_ERROR = 13;
 
     private static final byte[] EMPTY_HASH = {};
 
-    private final DownloadManager dm;
+    //private final DownloadManager dm;
 
-    private final byte[] hash;
-    private final File savePath;
-    private final Date creationDate;
+    private final byte[] hash = null;
+    private final File savePath = null;
+    private final Date creationDate = null;
 
     // the only fields that can be changed due to a partial download change
     private String displayName;
     private long size;
     private long changedTime;
 
-    VuzeDownloadManager(DownloadManager dm) {
+    VuzeDownloadManager() {
+        // TODO:BITTORRENT
+        /*
         this.dm = dm;
 
         dm.setUserData(VuzeKeys.VUZE_DOWNLOAD_MANAGER_OBJECT_KEY, this);
@@ -81,6 +75,7 @@ public final class VuzeDownloadManager {
         this.creationDate = new Date(dm.getCreationTime());
 
         refreshData(dm);
+        */
     }
 
     public String getDisplayName() {
@@ -120,125 +115,97 @@ public final class VuzeDownloadManager {
     }
 
     public String getStatus() {
-        return DisplayFormatters.formatDownloadStatus(dm);
+        return "";
     }
 
     public int getDownloadCompleted() {
-        return dm.getStats().getDownloadCompleted(true) / 10;
+        return 0;//dm.getStats().getDownloadCompleted(true) / 10;
     }
 
     public boolean isResumable() {
-        return ManagerUtils.isStartable(dm);
+        return false;
     }
 
     public boolean isPausable() {
-        return ManagerUtils.isStopable(dm);
+        return false;
     }
 
     public boolean isComplete() {
-        return dm.getAssumedComplete();
+        return false;
     }
 
     public boolean isDownloading() {
-        return dm.getState() == DownloadManager.STATE_DOWNLOADING;
+        return false;
     }
 
     public boolean isSeeding() {
-        return dm.getState() == DownloadManager.STATE_SEEDING;
+        return false;
     }
 
     public long getBytesReceived() {
-        return dm.getStats().getTotalGoodDataBytesReceived();
+        return 0;
     }
 
     public long getBytesSent() {
-        return dm.getStats().getTotalDataBytesSent();
+        return 0;
     }
 
     public long getDownloadSpeed() {
-        return dm.getStats().getDataReceiveRate();
+        return 0;
     }
 
     public long getUploadSpeed() {
-        return dm.getStats().getDataSendRate();
+        return 0;
     }
 
     public long getETA() {
-        return dm.getStats().getETA();
+        return 0;
     }
 
     public int getShareRatio() {
-        return dm.getStats().getShareRatio();
+        return 0;
     }
 
     public int getPeers() {
-        int peers;
-
-        TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-
-        if (response != null && response.isValid()) {
-            int trackerPeerCount = response.getPeers();
-            peers = dm.getNbPeers();
-            if (peers == 0 || trackerPeerCount > peers) {
-                if (trackerPeerCount <= 0) {
-                    peers = dm.getActivationCount();
-                } else {
-                    peers = trackerPeerCount;
-                }
-            }
-        } else {
-            peers = dm.getNbPeers();
-        }
-
-        return peers;
+        return 0;
     }
 
     public int getSeeds() {
-        int seeds;
-
-        TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-
-        if (response != null && response.isValid()) {
-            seeds = Math.max(dm.getNbSeeds(), response.getSeeds());
-        } else {
-            seeds = dm.getNbSeeds();
-        }
-
-        return seeds;
+        return 0;
     }
 
     public int getConnectedPeers() {
-        return dm.getNbPeers();
+        return 0;
     }
 
     public int getConnectedSeeds() {
-        return dm.getNbSeeds();
+        return 0;
     }
 
     public boolean hasStarted() {
-        int state = dm.getState();
-        return state == DownloadManager.STATE_SEEDING || state == DownloadManager.STATE_DOWNLOADING;
+        return false;
     }
 
     public boolean hasScrape() {
-        TRTrackerScraperResponse response = dm.getTrackerScrapeResponse();
-        return response != null && response.isValid();
+        return false;
     }
 
     public void start() {
-        ManagerUtils.start(dm);
+        //ManagerUtils.start(dm);
     }
 
     public void stop() {
-        ManagerUtils.stop(dm);
+        //ManagerUtils.stop(dm);
     }
     
     /** Like stop() but transfer can be started automatically, like when switching to Wi-Fi for example.*/
     public void enqueue() {
-        ManagerUtils.stop(dm, DownloadManager.STATE_QUEUED);
+        //ManagerUtils.stop(dm, DownloadManager.STATE_QUEUED);
     }
 
     public void setSkipped(Set<String> paths, boolean skipped) {
+        // TODO:BITTORRENT
+        /*
         DiskManagerFileInfo[] infs = dm.getDiskManagerFileInfoSet().getFiles();
 
         try {
@@ -265,28 +232,23 @@ public final class VuzeDownloadManager {
         }
 
         refreshData(dm);
+        */
     }
 
     @Override
     public boolean equals(Object o) {
+        // TODO:BITTORRENT
+
         boolean equals = false;
 
-        if (o instanceof VuzeDownloadManager) {
+        /*if (o instanceof VuzeDownloadManager) {
             VuzeDownloadManager other = (VuzeDownloadManager) o;
             if (dm.equals(other.dm) || Arrays.areEqual(getHash(), other.getHash())) {
                 equals = true;
             }
-        }
+        }*/
 
         return equals;
-    }
-
-    public DownloadManager getDM() {
-        return dm;
-    }
-
-    static VuzeDownloadManager getVDM(DownloadManager dm) {
-        return (VuzeDownloadManager) dm.getUserData(VuzeKeys.VUZE_DOWNLOAD_MANAGER_OBJECT_KEY);
     }
     
     static String removePrefixPath(String prefix, String path) {
@@ -297,6 +259,8 @@ public final class VuzeDownloadManager {
         return path;
     }
 
+    // TODO:BITTORRENT
+    /*
     private void refreshData(DownloadManager dm) {
         Set<DiskManagerFileInfo> noSkippedSet = VuzeUtils.getFileInfoSet(dm, InfoSetQuery.NO_SKIPPED);
 
@@ -340,5 +304,5 @@ public final class VuzeDownloadManager {
             LOG.error("Torrent download in bad state");
             return EMPTY_HASH;
         }
-    }
+    }*/
 }

@@ -10,7 +10,7 @@
       <configuration>
         <option name="SELECTED_BUILD_VARIANT" value="debug" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugJava" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugTest" />
         <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
@@ -41,28 +41,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/mp4parser" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus2/src" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/plugins" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/apache" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/core" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/gson" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/httpserver" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/jdownloader" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/jmdns" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/mp4parser" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/okhttp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/vuze" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/minicastle" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus2/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/azureus3/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/vuze/plugins" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/apollo_player" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/common/components/vuze" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
@@ -92,6 +77,38 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/apache">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/apache" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/core">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/core" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/gson">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/gson" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/httpserver">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/httpserver" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/jdownloader">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/jdownloader" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/jmdns">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/jmdns" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/mp4parser">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/mp4parser" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/mp4parser" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/okhttp">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/okhttp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-common/vuze">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-common/vuze" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../frostwire-jlibtorrent/src">
+      <sourceFolder url="file://$MODULE_DIR$/../frostwire-jlibtorrent/src" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 15 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

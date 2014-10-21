@@ -20,8 +20,6 @@ package com.frostwire.vuze;
 
 import java.io.File;
 
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-
 /**
  * 
  * @author gubatron
@@ -30,17 +28,14 @@ import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
  */
 public final class VuzeFileInfo {
 
-    private final DiskManagerFileInfo info;
     private final File file;
     private final String filename;
     private final long length;
 
-    public VuzeFileInfo(DiskManagerFileInfo info) {
-        this.info = info;
-
-        this.file = info.getFile(false);
-        this.filename = file.getName();
-        this.length = info.getLength();
+    public VuzeFileInfo() {
+        this.file = null;
+        this.filename = null;
+        this.length = 0;
     }
 
     public File getFile() {
@@ -56,6 +51,6 @@ public final class VuzeFileInfo {
     }
 
     public long getDownloaded() {
-        return info.getDownloaded();
+        return 0;
     }
 }

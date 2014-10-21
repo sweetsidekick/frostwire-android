@@ -18,24 +18,21 @@
 
 package com.frostwire.android.gui.transfers;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.frostwire.android.R;
+import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.jlibtorrent.TorrentInfo;
 import com.frostwire.logging.Logger;
-import com.frostwire.vuze.VuzeDownloadManager;
-import com.frostwire.vuze.VuzeTorrentDownloadListener;
-import com.frostwire.vuze.VuzeTorrentDownloader;
+import com.frostwire.transfers.TransferItem;
+import com.frostwire.transfers.TransferState;
+import com.frostwire.util.HttpClientFactory;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author gubatron
  * @author aldenml
- *
  */
 public class TorrentFetcherDownload implements BittorrentDownload {
 
@@ -43,119 +40,102 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     private final TransferManager manager;
     private final TorrentDownloadInfo info;
-    private final Date dateCreated;
+    private final Date created;
 
-    private int statusResId;
-    private final VuzeTorrentDownloader torrentDownloader;
-
-    private BittorrentDownload delegate;
-
-    private boolean removed;
+    private TransferState state;
 
     public TorrentFetcherDownload(TransferManager manager, TorrentDownloadInfo info) {
         this.manager = manager;
         this.info = info;
-        this.dateCreated = new Date();
+        this.created = new Date();
 
-        this.statusResId = R.string.torrent_fetcher_download_status_downloading_torrent;
+        state = TransferState.DOWNLOADING_TORRENT;
 
-        this.torrentDownloader = new VuzeTorrentDownloader(info.getTorrentUrl(), info.getDetailsUrl());
-        this.torrentDownloader.setListener(new TorrentDownloaderListener());
-        this.torrentDownloader.start();
-    }
-
-    public BittorrentDownload getDelegate() {
-        return delegate;
+        Thread t = new Thread(new FetcherRunnable(), "Torrent-Fetcher - " + info.getTorrentUrl());
+        t.setDaemon(true);
+        t.start();
     }
 
     public String getDisplayName() {
-        return delegate != null ? delegate.getDisplayName() : info.getDisplayName();
+        return info.getDisplayName();
     }
 
     public String getStatus() {
-        return delegate != null ? delegate.getStatus() : String.valueOf(statusResId);
+        return state.name();
     }
 
     public int getProgress() {
-        return delegate != null ? delegate.getProgress() : 0;
+        return 0;
     }
 
     public long getSize() {
-        return delegate != null ? delegate.getSize() : info.getSize();
+        return info.getSize();
     }
 
     public Date getDateCreated() {
-        return delegate != null ? delegate.getDateCreated() : dateCreated;
+        return created;
     }
 
-    public List<? extends TransferItem> getItems() {
-        return delegate != null ? delegate.getItems() : new ArrayList<TransferItem>();
+    public List<TransferItem> getItems() {
+        return Collections.emptyList();
     }
 
     public File getSavePath() {
-        return delegate != null ? delegate.getSavePath() : null;
+        return null;
     }
 
     public long getBytesReceived() {
-        return delegate != null ? delegate.getBytesReceived() : 0;
+        return 0;
     }
 
     public long getBytesSent() {
-        return delegate != null ? delegate.getBytesSent() : 0;
+        return 0;
     }
 
     public long getDownloadSpeed() {
-        return delegate != null ? delegate.getDownloadSpeed() : 0;
+        return 0;
     }
 
     public long getUploadSpeed() {
-        return delegate != null ? delegate.getUploadSpeed() : 0;
+        return 0;
     }
 
     public long getETA() {
-        return delegate != null ? delegate.getETA() : 0;
+        return 0;
     }
 
     public String getHash() {
-        return delegate != null ? delegate.getHash() : info.getHash();
+        return info.getHash();
     }
 
     public String getPeers() {
-        return delegate != null ? delegate.getPeers() : "";
+        return "";
     }
 
     public String getSeeds() {
-        return delegate != null ? delegate.getSeeds() : "";
-    }
-
-    public String getSeedToPeerRatio() {
-        return delegate != null ? delegate.getSeedToPeerRatio() : "";
-    }
-
-    public String getShareRatio() {
-        return delegate != null ? delegate.getShareRatio() : "";
+        return "";
     }
 
     public boolean isResumable() {
-        return delegate != null ? delegate.isResumable() : false;
+        return false;
     }
 
     public boolean isPausable() {
-        return delegate != null ? delegate.isPausable() : false;
+        return false;
     }
 
     public boolean isComplete() {
-        return delegate != null ? delegate.isComplete() : false;
+        return false;
     }
 
     @Override
     public boolean isDownloading() {
-        return delegate != null ? delegate.isDownloading() : true;
+        return true;
     }
 
     @Override
     public boolean isSeeding() {
-        return delegate != null ? delegate.isSeeding() : false;
+        return false;
     }
 
     @Override
@@ -165,86 +145,18 @@ public class TorrentFetcherDownload implements BittorrentDownload {
 
     @Override
     public void cancel(boolean deleteData) {
-        statusResId = R.string.torrent_fetcher_download_status_canceled;
-
-        if (delegate != null) {
-            delegate.cancel(deleteData);
-        } else {
-            removed = true;
-            try {
-                torrentDownloader.cancel();
-            } catch (Throwable e) {
-                // ignore, I can't do anything
-                LOG.error("Error canceling torrent downloader", e);
-            }
-            try {
-                torrentDownloader.getFile().delete();
-            } catch (Throwable e) {
-                // ignore, I can't do anything
-                LOG.error("Error deleting file of torrent downloader", e);
-            }
-        }
+        state = TransferState.CANCELED;
         manager.remove(this);
     }
 
     public void pause() {
-        if (delegate != null) {
-            delegate.pause();
-        }
     }
-    
+
     @Override
     public void enqueue() {
-        if (delegate != null) {
-            delegate.enqueue();
-        }
     }
 
     public void resume() {
-        if (delegate != null) {
-            delegate.resume();
-        }
-    }
-
-    private final class TorrentDownloaderListener implements VuzeTorrentDownloadListener {
-
-        private AtomicBoolean finished = new AtomicBoolean(false);
-
-        @Override
-        public void onFinished(VuzeTorrentDownloader dl) {
-            if (removed) {
-                return;
-            }
-            if (finished.compareAndSet(false, true)) {
-                try {
-
-                    Set<String> selection = new HashSet<String>();
-                    if (info.getRelativePath() != null) {
-                        selection.add(info.getRelativePath());
-                    }
-                    VuzeDownloadManager dm = manager.createVDM(dl.getFile().getAbsolutePath(), selection);
-
-                    delegate = new AzureusBittorrentDownload(manager, dm);
-
-                } catch (Throwable e) {
-                    statusResId = R.string.torrent_fetcher_download_status_error;
-                    LOG.error("Error creating the actual torrent download", e);
-                }
-            }
-        }
-
-        @Override
-        public void onError(VuzeTorrentDownloader dl) {
-            if (removed) {
-                return;
-            }
-            statusResId = R.string.torrent_fetcher_download_status_error;
-        }
-    }
-
-    @Override
-    public List<? extends BittorrentDownloadItem> getBittorrentItems() {
-        return (delegate != null) ? delegate.getBittorrentItems() : new ArrayList<BittorrentDownloadItem>(0);
     }
 
     @Override
@@ -264,4 +176,56 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         return u1.equalsIgnoreCase(u2);
     }
 
+    private void downloadTorrent(final byte[] data) {
+        try {
+
+            // TODO:BITTORRENT
+            // put the logic of partial download
+
+            TorrentInfo ti = TorrentInfo.bdecode(data);
+            BTEngine.getInstance().download(ti, null, null);
+
+        } catch (Throwable e) {
+            LOG.error("Error downloading torrent", e);
+        }
+    }
+
+    private class FetcherRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            if (state == TransferState.CANCELED) {
+                return;
+            }
+
+            try {
+                byte[] data = null;
+                String uri = info.getTorrentUrl();
+                String referrer = info.getDetailsUrl();
+                if (uri.startsWith("http")) {
+                    // use our http client, since we can handle referer
+                    data = HttpClientFactory.newInstance().getBytes(uri, 30000, referrer);
+                } else {
+                    data = BTEngine.getInstance().fetchMagnet(uri, 30000);
+                }
+
+                if (state == TransferState.CANCELED) {
+                    return;
+                }
+
+                if (data != null) {
+                    try {
+                        downloadTorrent(data);
+                    } finally {
+                        cancel();
+                    }
+                } else {
+                    state = TransferState.ERROR;
+                }
+            } catch (Throwable e) {
+                state = TransferState.ERROR;
+                LOG.error("Error downloading torrent from uri", e);
+            }
+        }
+    }
 }

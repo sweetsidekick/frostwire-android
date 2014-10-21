@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.frostwire.transfers.TransferItem;
 import org.apache.commons.io.FilenameUtils;
 
 import android.util.Log;
@@ -195,7 +196,7 @@ public final class YouTubeDownload implements DownloadTransfer {
         return status == STATUS_DOWNLOADING;
     }
 
-    public List<? extends TransferItem> getItems() {
+    public List<TransferItem> getItems() {
         return Collections.emptyList();
     }
 

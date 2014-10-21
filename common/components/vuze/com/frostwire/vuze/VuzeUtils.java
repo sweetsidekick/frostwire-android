@@ -22,10 +22,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfoSet;
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.global.GlobalManager;
 import org.gudy.azureus2.core3.util.HashWrapper;
 
 import com.frostwire.logging.Logger;
@@ -44,6 +40,8 @@ public final class VuzeUtils {
     private VuzeUtils() {
     }
 
+    // TODO:BITTORRENT
+    /*
     static Set<DiskManagerFileInfo> getFileInfoSet(DownloadManager dm, InfoSetQuery q) {
 
         Set<DiskManagerFileInfo> set = new HashSet<DiskManagerFileInfo>();
@@ -121,9 +119,6 @@ public final class VuzeUtils {
         return set;
     }
 
-    /**
-     * Deletes incomplete and skipped files.
-     */
     public static void finalCleanup(DownloadManager dm) {
         Set<File> toDelete = getIgnorableFiles(dm);
 
@@ -142,5 +137,5 @@ public final class VuzeUtils {
 
     public static enum InfoSetQuery {
         ALL, SKIPPED, NO_SKIPPED
-    }
+    }*/
 }

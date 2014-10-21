@@ -21,13 +21,7 @@ package com.frostwire.android.gui;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.apache.commons.io.FilenameUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -285,7 +279,8 @@ public final class Librarian {
     }
 
     public void scan(File file) {
-        scan(file, VuzeUtils.getIgnorableFiles());
+        // TODO:BITTORRENT
+        //scan(file, VuzeUtils.getIgnorableFiles());
     }
 
     public Finger finger(boolean local) {
@@ -530,7 +525,8 @@ public final class Librarian {
     }
 
     private void syncMediaStoreSupport() {
-        Set<File> ignorableFiles = VuzeUtils.getIgnorableFiles();
+        // TODO:BITTORRENT
+        Set<File> ignorableFiles = new HashSet<File>(); // VuzeUtils.getIgnorableFiles();
 
         syncMediaStore(Constants.FILE_TYPE_AUDIO, ignorableFiles);
         syncMediaStore(Constants.FILE_TYPE_PICTURES, ignorableFiles);

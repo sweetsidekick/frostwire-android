@@ -24,15 +24,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.gudy.azureus2.core3.disk.DiskManagerFileInfo;
-import org.gudy.azureus2.core3.download.DownloadManager;
-import org.gudy.azureus2.core3.download.DownloadManagerInitialisationAdapter;
-import org.gudy.azureus2.core3.global.GlobalManager;
 import org.gudy.azureus2.core3.util.HashWrapper;
-
-import com.frostwire.torrent.TOTorrent;
-import com.frostwire.torrent.TOTorrentException;
-import com.frostwire.torrent.TorrentUtils;
 
 /**
  * 
@@ -57,6 +49,8 @@ public final class VuzeDownloadFactory {
             throw new IllegalArgumentException("Download manager listener can't be null");
         }
 
+        // TODO:BITTORRENT
+        /*
         GlobalManager gm = VuzeManager.getInstance().getGlobalManager();
 
         DownloadManager dm = findDM(gm, torrent);
@@ -94,8 +88,12 @@ public final class VuzeDownloadFactory {
         }
 
         return vdm;
+        */
+        return null;
     }
 
+    // TODO:BITTORRENT
+    /*
     private static DownloadManager findDM(GlobalManager gm, String torrent) throws IOException {
         InputStream is = null;
 
@@ -139,5 +137,5 @@ public final class VuzeDownloadFactory {
         } finally {
             dm.getDownloadState().suppressStateSave(false);
         }
-    }
+    }*/
 }

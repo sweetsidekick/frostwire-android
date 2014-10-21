@@ -33,10 +33,6 @@ public interface BittorrentDownload extends DownloadTransfer {
 
     public String getSeeds();
 
-    public String getSeedToPeerRatio();
-
-    public String getShareRatio();
-
     public boolean isResumable();
 
     public boolean isPausable();
@@ -48,6 +44,4 @@ public interface BittorrentDownload extends DownloadTransfer {
     public void pause();
 
     public void resume();
-    
-    public List<? extends BittorrentDownloadItem> getBittorrentItems();
 }

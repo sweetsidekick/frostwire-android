@@ -1,13 +1,13 @@
 import groovy.swing.SwingBuilder
 
-apply plugin: "android"
+apply plugin: "com.android.application"
 
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath "com.android.tools.build:gradle:0.13.+"
     }
 }
 
@@ -16,50 +16,37 @@ android {
     compileSdkVersion 15
     buildToolsVersion "21.0.0"
 
-    compileOptions.encoding = "8859_1"
-
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
+            manifest.srcFile "AndroidManifest.xml"
             res.srcDirs = ['res']
             aidl.srcDirs = ['src']
             assets.srcDirs = ['assets']
             jniLibs.srcDir 'libs'
             java {
-                srcDir 'common/components/apache'
-                srcDir 'common/components/core'
-                srcDir 'common/components/gson'
-                srcDir 'common/components/httpserver'
-                srcDir 'common/components/jdownloader'
-                srcDir 'common/components/jmdns'
-                srcDir 'common/components/mp4parser'
-                srcDir 'common/components/okhttp'
-                srcDir 'common/components/vuze'
-                srcDir "common/components/minicastle"
 
-                srcDir 'common/vuze/azureus2/src'
-                srcDir 'common/vuze/azureus3/src'
-                srcDir 'common/vuze/plugins'
+                srcDir "../frostwire-jlibtorrent/src"
 
-                exclude "**/swt/**"
-                exclude "**/swing/**"
-                exclude "**/bouncycastle/**"
-                exclude "**/jman/**"
-                exclude "**/tests/**"
-                exclude "**/systray/**"
-                exclude "**/DNSUtilsImpl.java"
-                exclude "**/lws/**"
+                srcDir "../frostwire-common/apache"
+                srcDir "../frostwire-common/core"
+                srcDir "../frostwire-common/gson"
+                srcDir "../frostwire-common/httpserver"
+                srcDir "../frostwire-common/jdownloader"
+                srcDir "../frostwire-common/jmdns"
+                srcDir "../frostwire-common/mp4parser"
+                srcDir "../frostwire-common/okhttp"
+                srcDir "../frostwire-common/vuze"
 
-                srcDir 'src/apollo_player'
-                srcDir 'src/core'
-                srcDir 'src/gui'
+                srcDir "src/apollo_player"
+                srcDir "src/core"
+                srcDir "src/gui"
+
+                srcDir "common/components/vuze"
             }
             resources {
-                srcDir 'common/components/mp4parser'
-                srcDir "common/vuze/azureus2/src"
-                srcDir "common/vuze/plugins"
-                include '**/*.properties'
-                exclude '**/*.java'
+                srcDir "../frostwire-common/mp4parser"
+                include "**/*.properties"
+                exclude "**/*.java"
             }
         }
     }
@@ -84,8 +71,31 @@ android {
     }
 
     buildTypes {
+
         release {
             signingConfig signingConfigs.release
+        }
+
+        debug {
+            ndk {
+                abiFilters "armeabi", "x86"
+            }
+        }
+    }
+
+    splits {
+        abi {
+            enable !gradle.startParameter.taskNames.contains("assembleDebug")
+            universalApk true
+        }
+    }
+
+    project.ext.versionCodes = ["armeabi": 1, "armeabi-v7a": 2, "arm64-v8a": 3, "mips": 4, "mips64": 5, "x86": 6, "x86_64": 7]
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.abiFilter, 0) * 1000000 + android.defaultConfig.versionCode
         }
     }
 }
@@ -95,7 +105,7 @@ dependencies {
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.hasTask(':packageRelease')) {
+    if (taskGraph.hasTask(":assembleRelease")) {
 
         def myKeyAlias = ""
         def myKeyPassword = ""
