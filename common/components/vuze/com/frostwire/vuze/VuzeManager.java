@@ -44,18 +44,9 @@ import com.frostwire.util.OSUtils;
  */
 public final class VuzeManager {
 
-    private static final Logger LOG = Logger.getLogger(VuzeManager.class);
-
-    private static VuzeConfiguration conf = null;
-
     private final AtomicBoolean torrentsLoaded;
 
     private VuzeManager() {
-        if (conf == null) {
-            throw new IllegalStateException("no config set");
-        }
-
-        setupConfiguration();
 
         this.torrentsLoaded = new AtomicBoolean(false);
     }
@@ -71,13 +62,6 @@ public final class VuzeManager {
 
     public VuzeDownloadManager find(byte[] hash) {
         return null;
-    }
-
-    public void loadTorrents(final boolean stop, final LoadTorrentsListener loadListener, final VuzeDownloadListener downloadListener) {
-        if (!torrentsLoaded.compareAndSet(false, true)) {
-            //throw new RuntimeException("Load torrents can't be called twice, review the logic");
-            return;
-        }
     }
 
     public long getDataReceiveRate() {
@@ -120,68 +104,5 @@ public final class VuzeManager {
         // TODO:BITTORRENT
         //COConfigurationManager.resetToDefaults();
         //autoAdjustBittorrentSpeed();
-    }
-
-    public static void setConfiguration(VuzeConfiguration conf) {
-        VuzeManager.conf = conf;
-
-        // before anything else
-        System.setProperty("az.force.noncvs", "1"); // disable debug and development DHT
-        System.setProperty("azureus.loadplugins", "0"); // disable third party azureus plugins
-
-        setApplicationPath(conf.getConfigPath());
-        SystemProperties.setUserPath(conf.getConfigPath());
-    }
-
-    private void setupConfiguration() {
-        // TODO:BITTORRENT
-        SystemProperties.APPLICATION_NAME = "azureus";
-
-        //COConfigurationManager.setParameter("Auto Adjust Transfer Defaults", false);
-        //COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", conf.getTorrentsPath());
-
-        //disableDefaultPlugins();
-        //enablePlugins();
-
-        if (OSUtils.isAndroid()) {
-            setTimeGranularityMillis(300);
-
-            // TODO:BITTORRENT
-//            COConfigurationManager.setParameter("network.tcp.write.select.time", 1000);
-//            COConfigurationManager.setParameter("network.tcp.write.select.min.time", 1000);
-//            COConfigurationManager.setParameter("network.tcp.read.select.time", 1000);
-//            COConfigurationManager.setParameter("network.tcp.read.select.min.time", 1000);
-//            COConfigurationManager.setParameter("network.control.write.idle.time", 1000);
-//            COConfigurationManager.setParameter("network.control.read.idle.time", 1000);
-//
-//            COConfigurationManager.setParameter("network.max.simultaneous.connect.attempts", 1);
-//
-//            COConfigurationManager.setParameter("Enable incremental file creation", Long.valueOf(1));
-        }
-    }
-
-    private static void setApplicationPath(String path) {
-        try {
-            Field f = SystemProperties.class.getDeclaredField("app_path");
-            f.setAccessible(true);
-            f.set(null, path);
-        } catch (Throwable e) {
-            throw new RuntimeException("Unable to set vuze application path", e);
-        }
-    }
-
-    private static void setTimeGranularityMillis(long millis) {
-        try {
-            Field f = SystemTime.class.getDeclaredField("TIME_GRANULARITY_MILLIS");
-            f.setAccessible(true);
-            f.set(null, millis);
-        } catch (Throwable e) {
-            throw new RuntimeException("Unable to set vuze SystemTime.TIME_GRANULARITY_MILLIS", e);
-        }
-    }
-
-    public static interface LoadTorrentsListener {
-
-        public void onLoad(List<VuzeDownloadManager> dms);
     }
 }

@@ -58,8 +58,6 @@ import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
-import com.frostwire.vuze.VuzeUtils;
-import com.frostwire.vuze.VuzeManager.LoadTorrentsListener;
 
 /**
  * @author gubatron

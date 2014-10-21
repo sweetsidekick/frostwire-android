@@ -179,8 +179,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public List<TransferItem> getItems() {
-        // TODO:BITTORRENT
-        return dl.getItems();
+        return items;
     }
 
     @Override
