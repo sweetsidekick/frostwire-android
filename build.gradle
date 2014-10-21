@@ -85,8 +85,8 @@ android {
 
     splits {
         abi {
-            enable !gradle.startParameter.taskNames.contains(":assembleDebug") && !gradle.startParameter.taskNames.contains("assembleDebug")
-            universalApk true
+            enable false
+            universalApk false
         }
     }
 
