@@ -556,39 +556,4 @@ public final class TransferManager implements VuzeKeys {
     private void setAzureusParameter(String key) {
         VuzeManager.getInstance().setParameter(key, ConfigurationManager.instance().getLong(key));
     }
-
-    VuzeDownloadManager createVDM(String path, Set<String> selection) throws IOException {
-        VuzeDownloadManager dm = VuzeDownloadFactory.create(path, selection, SystemUtils.getTorrentDataDirectory().getAbsolutePath(), new DownloadListener());
-
-        return dm;
-    }
-
-    private static class DownloadListener implements VuzeDownloadListener {
-
-        @Override
-        public void stateChanged(VuzeDownloadManager dm, int state) {
-            if (state == VuzeDownloadManager.STATE_SEEDING) {
-                stopSeedingIfNecessary(dm);
-            }
-        }
-
-        @Override
-        public void downloadComplete(VuzeDownloadManager dm) {
-            stopSeedingIfNecessary(dm);
-            TransferManager.instance().incrementDownloadsToReview();
-            // TODO:BITTORRENT
-            //VuzeUtils.finalCleanup(dm.getDM()); //make sure it cleans unnecessary files (android has handpicked seeding off by default)
-            Engine.instance().notifyDownloadFinished(dm.getDisplayName(), dm.getSavePath().getAbsoluteFile());
-            Librarian.instance().scan(dm.getSavePath().getAbsoluteFile());
-        }
-
-        private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
-            boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
-            boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
-            boolean isDataWIFIUp = NetworkManager.instance().isDataWIFIUp();
-            if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
-                dm.stop();
-            }
-        }
-    }
 }

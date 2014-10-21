@@ -1,10 +1,16 @@
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.gui.Librarian;
+import com.frostwire.android.gui.NetworkManager;
+import com.frostwire.android.gui.services.Engine;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.util.DirectoryUtils;
+import com.frostwire.vuze.VuzeDownloadManager;
 
 import java.io.File;
 import java.util.Date;
@@ -39,6 +45,10 @@ public final class UIBittorrentDownload implements BittorrentDownload {
         if (!dl.wasPaused()) {
             dl.resume();
         }
+    }
+
+    public BTDownload getDl() {
+        return dl;
     }
 
     @Override
@@ -228,6 +238,26 @@ public final class UIBittorrentDownload implements BittorrentDownload {
                 }
             });
             */
+
+            // TODO:BITTORRENT
+            //if (state == VuzeDownloadManager.STATE_SEEDING) {
+            //    stopSeedingIfNecessary(dm);
+            //}
+            //stopSeedingIfNecessary(dm);
+            TransferManager.instance().incrementDownloadsToReview();
+            File saveLocation = getSavePath().getAbsoluteFile();
+            Engine.instance().notifyDownloadFinished(getDisplayName(), saveLocation);
+            Librarian.instance().scan(saveLocation);
+        }
+
+        // TODO:BITTORRENT
+        private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
+            boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
+            boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
+            boolean isDataWIFIUp = NetworkManager.instance().isDataWIFIUp();
+            if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
+                dm.stop();
+            }
         }
 
         @Override

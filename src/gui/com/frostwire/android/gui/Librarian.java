@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
+import com.frostwire.android.gui.transfers.Transfers;
 import org.apache.commons.io.FilenameUtils;
 import org.xmlpull.v1.XmlPullParser;
 
@@ -64,7 +65,6 @@ import com.frostwire.android.util.StringUtils;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.ScreenMetrics;
 import com.frostwire.util.DirectoryUtils;
-import com.frostwire.vuze.VuzeUtils;
 
 /**
  * The Librarian is in charge of:
@@ -279,8 +279,7 @@ public final class Librarian {
     }
 
     public void scan(File file) {
-        // TODO:BITTORRENT
-        //scan(file, VuzeUtils.getIgnorableFiles());
+        scan(file, Transfers.getIgnorableFiles());
     }
 
     public Finger finger(boolean local) {
@@ -592,11 +591,7 @@ public final class Librarian {
      *            - An implementation of TableFetcher
      * @param sharedOnly
      *            - if true, retrieves only the fine grained shared files.
-     * 
-     * @param whereClause - WHERE clause (without the 'WHERE' word)
-     * 
-     * @param selectionArgs - Arguments for the where '?' tokens.
-     * 
+     *
      * @return List<FileDescriptor>
      */
     private List<FileDescriptor> getFiles(int offset, int pageSize, TableFetcher fetcher, String where, String[] whereArgs, boolean sharedOnly) {
@@ -775,7 +770,6 @@ public final class Librarian {
     /**
      * Updates the number of files for this type.
      * @param fileType
-     * @param i
      */
     private void updateCacheNumFiles(byte fileType, int num, boolean sharedOnly) {
         if (sharedOnly) {
