@@ -130,6 +130,20 @@ public final class TransferManager implements VuzeKeys {
         return false;
     }
 
+    private boolean isDownloadingTorrentByUri(String uri) {
+        synchronized (alreadyDownloadingMonitor) {
+            for (DownloadTransfer dt : downloads) {
+                if (dt instanceof TorrentFetcherDownload) {
+                    String torrentUri = ((TorrentFetcherDownload) dt).getTorrentUri();
+                    if (torrentUri != null && torrentUri.equals(uri)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean alreadyDownloadingByInfoHash(String infohash) {
         synchronized (alreadyDownloadingMonitor) {
             for (BittorrentDownload bt : bittorrentDownloads) {
@@ -357,13 +371,12 @@ public final class TransferManager implements VuzeKeys {
             BittorrentDownload download = null;
 
             if (u.getScheme().equalsIgnoreCase("file")) {
-                // TODO:BITTORRENT
-                //download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
+                BTEngine.getInstance().download(new File(u.getPath()), null);
             } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
-                download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
-                // TODO:BITTORRENT
-                // put logic of duplicates
-                bittorrentDownloads.add(download);
+                if (!isDownloadingTorrentByUri(uri)) {
+                    download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
+                    bittorrentDownloads.add(download);
+                }
             } else {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
             }

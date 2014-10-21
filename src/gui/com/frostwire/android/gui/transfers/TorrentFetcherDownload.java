@@ -56,6 +56,10 @@ public class TorrentFetcherDownload implements BittorrentDownload {
         t.start();
     }
 
+    public String getTorrentUri() {
+        return info.getTorrentUrl();
+    }
+
     public String getDisplayName() {
         return info.getDisplayName();
     }
