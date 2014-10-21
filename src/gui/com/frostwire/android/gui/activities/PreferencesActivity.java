@@ -1,6 +1,6 @@
 /*
- * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml), Emil Suleymanov (sssemil)
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -50,10 +51,10 @@ import com.frostwire.uxstats.UXStats;
 
 /**
  * See {@link ConfigurationManager}
- * 
+ *
  * @author gubatron
  * @author aldenml
- *
+ * @author sssemil
  */
 public class PreferencesActivity extends PreferenceActivity {
 
@@ -63,6 +64,10 @@ public class PreferencesActivity extends PreferenceActivity {
 
         addPreferencesFromResource(R.xml.application_preferences);
 
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         setupConnectButton();
         setupSeedingOptions();
         setupNickname();
@@ -70,7 +75,7 @@ public class PreferencesActivity extends PreferenceActivity {
         setupSearchEngines();
         setupUPnPOption();
         setupUXStatsOption();
-        
+
         String action = getIntent().getAction();
         if (action != null && action.equals(Constants.ACTION_SETTINGS_SELECT_STORAGE)) {
             getIntent().setAction(null);
@@ -78,14 +83,25 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-    private void invokeStoragePreference() {
-		final StoragePreference storagePreference = (StoragePreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
-		if (storagePreference != null) {
-			storagePreference.showDialog(null);
-		}
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-	private void setupSeedingOptions() {
+    private void invokeStoragePreference() {
+        final StoragePreference storagePreference = (StoragePreference) findPreference(Constants.PREF_KEY_STORAGE_PATH);
+        if (storagePreference != null) {
+            storagePreference.showDialog(null);
+        }
+    }
+
+    private void setupSeedingOptions() {
         final CheckBoxPreference preferenceSeeding = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
         final CheckBoxPreference preferenceSeedingWifiOnly = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
 
@@ -141,7 +157,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void setupSearchEngines() {
-    	PreferenceScreen category = (PreferenceScreen) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
+        PreferenceScreen category = (PreferenceScreen) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
         for (SearchEngine engine : SearchEngine.getEngines()) {
             CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
             if (!engine.isActive()) {
@@ -224,7 +240,7 @@ public class PreferencesActivity extends PreferenceActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 Engine.instance().startServices();
-                
+
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -232,7 +248,7 @@ public class PreferencesActivity extends PreferenceActivity {
                         connectButtonImOnIt(preference);
                     }
                 });
-                
+
                 PeerManager.instance().start();
                 return null;
             }

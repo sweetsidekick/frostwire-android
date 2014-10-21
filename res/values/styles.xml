@@ -90,7 +90,10 @@
         <item name="android:overScrollFooter">@null</item>
     </style>
 
-    <style name="Preferences"></style>
+    <style name="Preferences" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
+    </style>
 
     <style name="ProgressBarHolo.Horizontal" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
