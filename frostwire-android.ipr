@@ -320,9 +320,11 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="support-v4-19.1.0">
+    <library name="support-v4-21.0.0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/libs/support-v4-19.1.0.jar!/" />
+        <root url="file://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/res" />
+        <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar!/" />
+        <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
