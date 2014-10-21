@@ -118,7 +118,8 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public void cancel(boolean deleteData) {
-        // TODO:BITTORRENT
+        manager.remove(this);
+        dl.remove(deleteData);
     }
 
     @Override
@@ -184,7 +185,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public void cancel() {
-        // TODO:BITTORRENT
+        cancel(false);
     }
 
     @Override

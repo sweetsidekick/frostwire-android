@@ -175,13 +175,14 @@ public final class TransferManager implements VuzeKeys {
     }
     
     private void enqueueTorrentTransfer(DownloadTransfer transfer) {
-        if (transfer instanceof AzureusBittorrentDownload) {
-            AzureusBittorrentDownload btDownload = (AzureusBittorrentDownload) transfer;
-            btDownload.enqueue();
-        } else if (transfer instanceof TorrentFetcherDownload){
-            TorrentFetcherDownload btDownload = (TorrentFetcherDownload) transfer;
-            btDownload.enqueue();
-        }
+        // TODO:BITTORRENT
+//        if (transfer instanceof AzureusBittorrentDownload) {
+//            AzureusBittorrentDownload btDownload = (AzureusBittorrentDownload) transfer;
+//            btDownload.enqueue();
+//        } else if (transfer instanceof TorrentFetcherDownload){
+//            TorrentFetcherDownload btDownload = (TorrentFetcherDownload) transfer;
+//            btDownload.enqueue();
+//        }
     }
 
 
@@ -313,15 +314,8 @@ public final class TransferManager implements VuzeKeys {
             }
         }
 
-        VuzeManager.getInstance().loadTorrents(stop, new LoadTorrentsListener() {
-
-            @Override
-            public void onLoad(List<VuzeDownloadManager> dms) {
-                for (VuzeDownloadManager dm : dms) {
-                    bittorrentDownloads.add(new AzureusBittorrentDownload(TransferManager.this, dm));
-                }
-            }
-        }, new DownloadListener());
+        // TODO:BITTORRENT
+        // review stop variable
 
         BTEngine engine = BTEngine.getInstance();
 
@@ -365,7 +359,8 @@ public final class TransferManager implements VuzeKeys {
             BittorrentDownload download = null;
 
             if (u.getScheme().equalsIgnoreCase("file")) {
-                download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
+                // TODO:BITTORRENT
+                //download = new AzureusBittorrentDownload(this, createVDM(u.getPath(), null));
             } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
                 download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
                 // TODO:BITTORRENT
@@ -415,7 +410,8 @@ public final class TransferManager implements VuzeKeys {
                     dm.setSkipped(null, false);
                 }
             }
-            return new AzureusBittorrentDownload(manager, dm);
+            // TODO:BITTORRENT
+            return null;//new AzureusBittorrentDownload(manager, dm);
         }
     }
 
@@ -471,7 +467,7 @@ public final class TransferManager implements VuzeKeys {
     }
     
     private boolean isBittorrentDownload(DownloadTransfer transfer) {
-        return transfer instanceof AzureusBittorrentDownload || transfer instanceof TorrentFetcherDownload;
+        return transfer instanceof UIBittorrentDownload || transfer instanceof TorrentFetcherDownload;
     }
 
     public boolean isBittorrentDownloadAndMobileDataSavingsOn(DownloadTransfer transfer) {
