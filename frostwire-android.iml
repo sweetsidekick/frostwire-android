@@ -47,7 +47,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/apollo_player" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gui" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/components/vuze" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />

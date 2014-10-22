@@ -40,8 +40,6 @@ android {
                 srcDir "src/apollo_player"
                 srcDir "src/core"
                 srcDir "src/gui"
-
-                srcDir "common/components/vuze"
             }
             resources {
                 srcDir "../frostwire-common/mp4parser"
