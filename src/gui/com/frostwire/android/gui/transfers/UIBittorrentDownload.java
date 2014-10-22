@@ -212,53 +212,21 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         @Override
         public void finished(BTDownload dl) {
-            // TODO:BITTORRENT
-            /*
-            if (!SharingSettings.SEED_FINISHED_TORRENTS.getValue() || (dl.isPartial() && !SharingSettings.SEED_HANDPICKED_TORRENT_FILES.getValue())) {
-                dl.pause();
-            }
-
-            File saveLocation = dl.getSavePath();
-
-            if (iTunesSettings.ITUNES_SUPPORT_ENABLED.getValue() && !iTunesMediator.instance().isScanned(saveLocation)) {
-                if ((OSUtils.isMacOSX() || OSUtils.isWindows())) {
-                    iTunesMediator.instance().scanForSongs(saveLocation);
-                }
-            }
-
-            if (!LibraryMediator.instance().isScanned(dl.hashCode())) {
-                LibraryMediator.instance().scan(dl.hashCode(), saveLocation);
-            }
-
-            //if you have to hide seeds, do so.
-            GUIMediator.safeInvokeLater(new Runnable() {
-                public void run() {
-                    BTDownloadMediator.instance().updateTableFilters();
-                }
-            });
-            */
-
-            // TODO:BITTORRENT
-            //if (state == VuzeDownloadManager.STATE_SEEDING) {
-            //    stopSeedingIfNecessary(dm);
-            //}
-            //stopSeedingIfNecessary(dm);
+            pauseSeedingIfNecessary(dl);
             TransferManager.instance().incrementDownloadsToReview();
             File saveLocation = getSavePath().getAbsoluteFile();
             Engine.instance().notifyDownloadFinished(getDisplayName(), saveLocation);
             Librarian.instance().scan(saveLocation);
         }
 
-        // TODO:BITTORRENT
-        /*
-        private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
+        private void pauseSeedingIfNecessary(BTDownload dl) {
             boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
             boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
             boolean isDataWIFIUp = NetworkManager.instance().isDataWIFIUp();
             if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
-                dm.stop();
+                dl.pause();
             }
-        }*/
+        }
 
         @Override
         public void removed(BTDownload dl, Set<File> incompleteFiles) {
@@ -313,21 +281,4 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         return l;
     }
-
-    /*
-    @Override
-    public boolean equals(Object o) {
-        // TODO:BITTORRENT
-
-        boolean equals = false;
-
-        if (o instanceof VuzeDownloadManager) {
-            VuzeDownloadManager other = (VuzeDownloadManager) o;
-            if (dm.equals(other.dm) || Arrays.areEqual(getHash(), other.getHash())) {
-                equals = true;
-            }
-        }
-
-        return equals;
-    }*/
 }
