@@ -19,7 +19,6 @@
 package com.frostwire.android.gui.transfers;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,11 +33,9 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.bittorrent.BTEngineAdapter;
@@ -49,12 +46,9 @@ import com.frostwire.search.soundcloud.SoundcloudSearchResult;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
-import com.frostwire.util.ByteUtils;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.frostwire.vuze.VuzeDownloadManager;
-import com.frostwire.vuze.VuzeManager;
 
 /**
  * @author gubatron
@@ -270,25 +264,25 @@ public final class TransferManager {
     }
 
     public long getDownloadsBandwidth() {
-        long torrenDownloadsBandwidth = VuzeManager.getInstance().getDataReceiveRate();
+        long torrentDownloadsBandwidth = BTEngine.getInstance().getDownloadRate();
 
         long peerDownloadsBandwidth = 0;
         for (DownloadTransfer d : downloads) {
             peerDownloadsBandwidth += d.getDownloadSpeed() / 1000;
         }
 
-        return torrenDownloadsBandwidth + peerDownloadsBandwidth;
+        return torrentDownloadsBandwidth + peerDownloadsBandwidth;
     }
 
     public double getUploadsBandwidth() {
-        long torrenUploadsBandwidth = VuzeManager.getInstance().getDataSendRate();
+        long torrentUploadsBandwidth = BTEngine.getInstance().getUploadRate();
 
         long peerUploadsBandwidth = 0;
         for (UploadTransfer u : uploads) {
             peerUploadsBandwidth += u.getUploadSpeed() / 1000;
         }
 
-        return torrenUploadsBandwidth + peerUploadsBandwidth;
+        return torrentUploadsBandwidth + peerUploadsBandwidth;
     }
 
     public int getDownloadsToReview() {
@@ -406,7 +400,8 @@ public final class TransferManager {
         if (StringUtils.isNullOrEmpty(sr.getHash())) {
             return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
         } else {
-            VuzeDownloadManager dm = VuzeManager.getInstance().find(ByteUtils.decodeHex(sr.getHash()));
+            // TODO:BITTORRENT
+            Object dm = null;//VuzeManager.getInstance().find(ByteUtils.decodeHex(sr.getHash()));
             if (dm == null) {// new download, I need to download the torrent
                 return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
             } else {

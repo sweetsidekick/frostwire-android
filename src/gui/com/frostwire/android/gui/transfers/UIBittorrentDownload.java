@@ -10,7 +10,6 @@ import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.util.DirectoryUtils;
-import com.frostwire.vuze.VuzeDownloadManager;
 
 import java.io.File;
 import java.util.Date;
@@ -251,6 +250,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
         }
 
         // TODO:BITTORRENT
+        /*
         private void stopSeedingIfNecessary(VuzeDownloadManager dm) {
             boolean seedFinishedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
             boolean seedFinishedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
@@ -258,7 +258,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
             if (!seedFinishedTorrents || (!isDataWIFIUp && seedFinishedTorrentsOnWifiOnly)) {
                 dm.stop();
             }
-        }
+        }*/
 
         @Override
         public void removed(BTDownload dl, Set<File> incompleteFiles) {
@@ -313,4 +313,21 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         return l;
     }
+
+    /*
+    @Override
+    public boolean equals(Object o) {
+        // TODO:BITTORRENT
+
+        boolean equals = false;
+
+        if (o instanceof VuzeDownloadManager) {
+            VuzeDownloadManager other = (VuzeDownloadManager) o;
+            if (dm.equals(other.dm) || Arrays.areEqual(getHash(), other.getHash())) {
+                equals = true;
+            }
+        }
+
+        return equals;
+    }*/
 }
