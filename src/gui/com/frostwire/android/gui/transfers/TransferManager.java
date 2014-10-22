@@ -53,8 +53,6 @@ import com.frostwire.util.ByteUtils;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.frostwire.vuze.VuzeDownloadFactory;
-import com.frostwire.vuze.VuzeDownloadListener;
 import com.frostwire.vuze.VuzeDownloadManager;
 import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
@@ -416,9 +414,11 @@ public final class TransferManager implements VuzeKeys {
                 if (sr instanceof TorrentCrawledSearchResult) {
                     Set<String> paths = new HashSet<String>();
                     paths.add(sr.getFilename());
-                    dm.setSkipped(paths, false);
+                    // TODO:BITTORRENT
+                    //dm.setSkipped(paths, false);
                 } else {
-                    dm.setSkipped(null, false);
+                    // TODO:BITTORRENT
+                    //dm.setSkipped(null, false);
                 }
             }
             // TODO:BITTORRENT

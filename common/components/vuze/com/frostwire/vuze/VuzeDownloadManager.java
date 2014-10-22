@@ -203,38 +203,6 @@ public final class VuzeDownloadManager {
         //ManagerUtils.stop(dm, DownloadManager.STATE_QUEUED);
     }
 
-    public void setSkipped(Set<String> paths, boolean skipped) {
-        // TODO:BITTORRENT
-        /*
-        DiskManagerFileInfo[] infs = dm.getDiskManagerFileInfoSet().getFiles();
-
-        try {
-            dm.getDownloadState().suppressStateSave(true);
-
-            if (paths == null || paths.isEmpty()) {
-                for (DiskManagerFileInfo inf : infs) {
-                    inf.setSkipped(false);
-                }
-            } else {
-                String savePath = dm.getSaveLocation().getPath();
-                for (DiskManagerFileInfo inf : infs) {
-                    String path = inf.getFile(false).getPath();
-                    path = removePrefixPath(savePath, path);
-                    if (skipped && !inf.isSkipped()) {
-                        inf.setSkipped(paths.contains(path));
-                    } else if (!skipped && inf.isSkipped()) {
-                        inf.setSkipped(!paths.contains(path));
-                    }
-                }
-            }
-        } finally {
-            dm.getDownloadState().suppressStateSave(false);
-        }
-
-        refreshData(dm);
-        */
-    }
-
     @Override
     public boolean equals(Object o) {
         // TODO:BITTORRENT
@@ -250,59 +218,4 @@ public final class VuzeDownloadManager {
 
         return equals;
     }
-    
-    static String removePrefixPath(String prefix, String path) {
-        path = path.replace(prefix, "");
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        return path;
-    }
-
-    // TODO:BITTORRENT
-    /*
-    private void refreshData(DownloadManager dm) {
-        Set<DiskManagerFileInfo> noSkippedSet = VuzeUtils.getFileInfoSet(dm, InfoSetQuery.NO_SKIPPED);
-
-        this.displayName = calculateDisplayName(dm, noSkippedSet);
-        this.size = calculateSize(dm, noSkippedSet);
-        this.changedTime = System.currentTimeMillis();
-    }
-
-    private static String calculateDisplayName(DownloadManager dm, Set<DiskManagerFileInfo> noSkippedSet) {
-        String displayName = null;
-
-        if (noSkippedSet.size() == 1) {
-            displayName = FilenameUtils.getBaseName(noSkippedSet.iterator().next().getFile(false).getName());
-        } else {
-            displayName = dm.getDisplayName();
-        }
-
-        return displayName;
-    }
-
-    private static long calculateSize(DownloadManager dm, Set<DiskManagerFileInfo> noSkippedSet) {
-        long size = 0;
-
-        boolean partial = noSkippedSet.size() != dm.getDiskManagerFileInfoSet().nbFiles();
-
-        if (partial) {
-            for (DiskManagerFileInfo fileInfo : noSkippedSet) {
-                size += fileInfo.getLength();
-            }
-        } else {
-            size = dm.getSize();
-        }
-
-        return size;
-    }
-
-    private static byte[] calculateHash(DownloadManager dm) {
-        try {
-            return dm.getTorrent().getHash();
-        } catch (Throwable e) {
-            LOG.error("Torrent download in bad state");
-            return EMPTY_HASH;
-        }
-    }*/
 }
