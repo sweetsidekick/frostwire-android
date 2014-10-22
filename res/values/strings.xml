@@ -319,8 +319,8 @@
     <string name="torrent_max_uploads">Max Uploads</string>
     <string name="torrent_max_total_connections_summary">Max Total Connections</string>
     <string name="torrent_max_total_connections">Max Total Connections</string>
-    <string name="torrent_max_torrent_connection_summary">Max Torrent Connections</string>
-    <string name="torrent_max_torrent_connection">Max Torrent Connections</string>
+    <string name="torrent_max_peers_summary">Max Peers</string>
+    <string name="torrent_max_peers">Max Peers</string>
     <string name="dummy_summary">[Summary]</string>
     <string name="dummy_version">[Version]</string>
     <string name="dummy_engine">[Engine]</string>

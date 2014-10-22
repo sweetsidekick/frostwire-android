@@ -190,15 +190,15 @@
             android:key="frostwire.prefs.torrent.max_total_connections"
             android:summary="@string/torrent_max_total_connections_summary"
             android:title="@string/torrent_max_total_connections"
-            frostwire:picker_defaultValue="250"
-            frostwire:picker_endRange="250"
+            frostwire:picker_defaultValue="200"
+            frostwire:picker_endRange="200"
             frostwire:picker_startRange="10" />
         <com.frostwire.android.gui.views.preference.NumberPickerPreference
-            android:key="frostwire.prefs.torrent.max_torrent_connections"
-            android:summary="@string/torrent_max_torrent_connection_summary"
-            android:title="@string/torrent_max_torrent_connection"
-            frostwire:picker_defaultValue="50"
-            frostwire:picker_endRange="100"
+            android:key="frostwire.prefs.torrent.max_peers"
+            android:summary="@string/torrent_max_peers_summary"
+            android:title="@string/torrent_max_peers"
+            frostwire:picker_defaultValue="200"
+            frostwire:picker_endRange="200"
             frostwire:picker_startRange="10" />
 
         <com.frostwire.android.gui.views.preference.SimpleActionPreference

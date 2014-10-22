@@ -54,7 +54,6 @@ import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 import com.frostwire.vuze.VuzeDownloadManager;
-import com.frostwire.vuze.VuzeKeys;
 import com.frostwire.vuze.VuzeManager;
 
 /**
@@ -62,7 +61,7 @@ import com.frostwire.vuze.VuzeManager;
  * @author aldenml
  *
  */
-public final class TransferManager implements VuzeKeys {
+public final class TransferManager {
 
     private static final Logger LOG = Logger.getLogger(TransferManager.class);
 
@@ -538,17 +537,17 @@ public final class TransferManager implements VuzeKeys {
                 BTEngine e = BTEngine.getInstance();
 
                 if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED)) {
-                    e.setDownloadSpeedLimit(ConfigurationManager.instance().getInt(key));
+                    e.setDownloadSpeedLimit((int) ConfigurationManager.instance().getLong(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED)) {
-                    e.setUploadSpeedLimit(ConfigurationManager.instance().getInt(key));
+                    e.setUploadSpeedLimit((int) ConfigurationManager.instance().getLong(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS)) {
-                    e.setMaxActiveDownloads(ConfigurationManager.instance().getInt(key));
+                    e.setMaxActiveDownloads((int) ConfigurationManager.instance().getLong(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOADS)) {
-                    e.setMaxActiveSeeds(ConfigurationManager.instance().getInt(key));
+                    e.setMaxActiveSeeds((int) ConfigurationManager.instance().getLong(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS)) {
-                    e.setMaxConnections(ConfigurationManager.instance().getInt(key));
+                    e.setMaxConnections((int) ConfigurationManager.instance().getLong(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_PEERS)) {
-                    e.setMaxPeers(ConfigurationManager.instance().getInt(key));
+                    e.setMaxPeers((int) ConfigurationManager.instance().getLong(key));
                 }
             }
         };
