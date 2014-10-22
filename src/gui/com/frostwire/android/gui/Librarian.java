@@ -524,8 +524,7 @@ public final class Librarian {
     }
 
     private void syncMediaStoreSupport() {
-        // TODO:BITTORRENT
-        Set<File> ignorableFiles = new HashSet<File>(); // VuzeUtils.getIgnorableFiles();
+        Set<File> ignorableFiles = Transfers.getIgnorableFiles();
 
         syncMediaStore(Constants.FILE_TYPE_AUDIO, ignorableFiles);
         syncMediaStore(Constants.FILE_TYPE_PICTURES, ignorableFiles);

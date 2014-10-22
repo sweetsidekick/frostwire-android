@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.jlibtorrent.FileEntry;
 import com.frostwire.jlibtorrent.TorrentInfo;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
@@ -183,15 +184,30 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     private void downloadTorrent(final byte[] data) {
         try {
 
-            // TODO:BITTORRENT
-            // put the logic of partial download
-
             TorrentInfo ti = TorrentInfo.bdecode(data);
-            BTEngine.getInstance().download(ti, null, null);
+            boolean[] selection = null;
+            if (info.getRelativePath() != null) {
+                selection = calculateSelection(ti, info.getRelativePath());
+            }
+
+            BTEngine.getInstance().download(ti, null, selection);
 
         } catch (Throwable e) {
             LOG.error("Error downloading torrent", e);
         }
+    }
+
+    private boolean[] calculateSelection(TorrentInfo ti, String path) {
+        boolean[] selection = new boolean[ti.getNumFiles()];
+
+        for (int i = 0; i < selection.length; i++) {
+            FileEntry e = ti.getFileAt(i);
+            if (path.endsWith(e.getPath())) {
+                selection[i] = true;
+            }
+        }
+
+        return selection;
     }
 
     private class FetcherRunnable implements Runnable {

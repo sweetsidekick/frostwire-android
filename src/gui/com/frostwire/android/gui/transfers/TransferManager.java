@@ -165,14 +165,15 @@ public final class TransferManager {
         } else if (sr instanceof HttpSearchResult) {
             transfer = newHttpDownload((HttpSearchResult) sr);
         }
-        
-        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
-            //give it time to get to a pausable state.
-            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-            enqueueTorrentTransfer(transfer);
-            //give it time to stop before onPostExecute
-            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-        }
+
+        // TODO:BITTORRENT
+//        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
+//            //give it time to get to a pausable state.
+//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//            enqueueTorrentTransfer(transfer);
+//            //give it time to stop before onPostExecute
+//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//        }
         
         return transfer;
     }
@@ -397,38 +398,20 @@ public final class TransferManager {
     }
 
     private static BittorrentDownload createBittorrentDownload(TransferManager manager, TorrentSearchResult sr) {
-        if (StringUtils.isNullOrEmpty(sr.getHash())) {
+        if (sr instanceof  TorrentCrawledSearchResult) {
+            BTEngine.getInstance().download((TorrentCrawledSearchResult) sr, null);
+        } else if (sr.getTorrentUrl() != null) {
             return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
-        } else {
-            // TODO:BITTORRENT
-            Object dm = null;//VuzeManager.getInstance().find(ByteUtils.decodeHex(sr.getHash()));
-            if (dm == null) {// new download, I need to download the torrent
-                return new TorrentFetcherDownload(manager, new TorrentSearchResultInfo(sr));
-            } else {
-                if (sr instanceof TorrentCrawledSearchResult) {
-                    Set<String> paths = new HashSet<String>();
-                    paths.add(sr.getFilename());
-                    // TODO:BITTORRENT
-                    //dm.setSkipped(paths, false);
-                } else {
-                    // TODO:BITTORRENT
-                    //dm.setSkipped(null, false);
-                }
-            }
-            // TODO:BITTORRENT
-            return null;//new AzureusBittorrentDownload(manager, dm);
         }
+
+        return null;
     }
 
     private BittorrentDownload newBittorrentDownload(TorrentSearchResult sr) {
         try {
-            BittorrentDownload dl = createBittorrentDownload(this, sr);
+            createBittorrentDownload(this, sr);
 
-            if (!bittorrentDownloads.contains(dl)) {
-                bittorrentDownloads.add(dl);
-            }
-
-            return dl;
+            return null;
         } catch (Throwable e) {
             LOG.warn("Error creating download from search result: " + sr);
             return new InvalidBittorrentDownload(R.string.empty_string);
