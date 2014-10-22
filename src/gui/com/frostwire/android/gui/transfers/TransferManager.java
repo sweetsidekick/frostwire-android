@@ -535,25 +535,23 @@ public final class TransferManager implements VuzeKeys {
     private void registerPreferencesChangeListener() {
         preferenceListener = new OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                BTEngine e = BTEngine.getInstance();
+
                 if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED)) {
-                    setAzureusParameter(MAX_DOWNLOAD_SPEED);
+                    e.setDownloadSpeedLimit(ConfigurationManager.instance().getInt(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOAD_SPEED)) {
-                    setAzureusParameter(MAX_UPLOAD_SPEED);
+                    e.setUploadSpeedLimit(ConfigurationManager.instance().getInt(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_DOWNLOADS)) {
-                    setAzureusParameter(MAX_DOWNLOADS);
+                    e.setMaxActiveDownloads(ConfigurationManager.instance().getInt(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_UPLOADS)) {
-                    setAzureusParameter(MAX_UPLOADS);
+                    e.setMaxActiveSeeds(ConfigurationManager.instance().getInt(key));
                 } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TOTAL_CONNECTIONS)) {
-                    setAzureusParameter(MAX_TOTAL_CONNECTIONS);
-                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_TORRENT_CONNECTIONS)) {
-                    setAzureusParameter(MAX_TORRENT_CONNECTIONS);
+                    e.setMaxConnections(ConfigurationManager.instance().getInt(key));
+                } else if (key.equals(Constants.PREF_KEY_TORRENT_MAX_PEERS)) {
+                    e.setMaxPeers(ConfigurationManager.instance().getInt(key));
                 }
             }
         };
         ConfigurationManager.instance().registerOnPreferenceChange(preferenceListener);
-    }
-
-    private void setAzureusParameter(String key) {
-        VuzeManager.getInstance().setParameter(key, ConfigurationManager.instance().getLong(key));
     }
 }
