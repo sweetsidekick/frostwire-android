@@ -311,6 +311,12 @@ public final class UIUtils {
         openFile(context, file.getAbsolutePath(), getMimeType(file.getAbsolutePath()));
     }
 
+    public static void openURL(Context context, String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        context.startActivity(i);
+    }
+
     public static String getMimeType(String filePath) {
         try {
             return MimeDetector.getMimeType(FilenameUtils.getExtension(filePath));

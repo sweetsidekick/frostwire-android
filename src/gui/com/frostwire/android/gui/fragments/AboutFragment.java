@@ -21,6 +21,7 @@ package com.frostwire.android.gui.fragments;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.frostwire.android.gui.util.UIUtils;
 import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
@@ -40,7 +41,6 @@ import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.views.DonationsController;
-import com.yasesprox.android.transcommusdk.TransCommuActivity;
 
 /**
  * @author gubatron
@@ -74,7 +74,7 @@ public class AboutFragment extends Fragment implements MainFragment {
         TextView content = (TextView) view.findViewById(R.id.fragment_about_content);
         content.setText(Html.fromHtml(getAboutText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
-        
+
         Button helpTranslateButton = (Button) view.findViewById(R.id.fragment_about_help_translate_frostwire_button);
         helpTranslateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,12 @@ public class AboutFragment extends Fragment implements MainFragment {
             }
         });
 
+
         return view;
+    }
+
+    private void onHelpTranslate() {
+        UIUtils.openURL(getActivity(), "https://github.com/frostwire/frostwire-android/wiki/Help-Translate-FrostWire");
     }
 
     @Override
@@ -110,11 +115,5 @@ public class AboutFragment extends Fragment implements MainFragment {
         } catch (IOException e) {
             return "";
         }
-    }
-    
-    private void onHelpTranslate() {
-        Intent intent = new Intent(getActivity(),TransCommuActivity.class);
-        intent.putExtra(TransCommuActivity.APPLICATION_CODE_EXTRA, "FIATxTotqx");
-        this.startActivity(intent);
     }
 }

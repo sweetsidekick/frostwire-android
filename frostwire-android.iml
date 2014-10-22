@@ -113,9 +113,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="picasso-2.3.4" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
-    <orderEntry type="library" exported="" name="transcommu-java-sdk-v1" level="project" />
     <orderEntry type="library" exported="" name="in-app-purchasing-1.0.3" level="project" />
-    <orderEntry type="library" exported="" name="transcommu-android-sdk-v1" level="project" />
     <orderEntry type="library" exported="" name="AppiaSDK-2013-21" level="project" />
   </component>
 </module>

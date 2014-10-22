@@ -190,7 +190,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     protected void onAppiaSearchResultClicked(AppiaSearchResult sr) {
-        openURL(this.getContext(), sr.getDetailsUrl());
+        UIUtils.openURL(this.getContext(), sr.getDetailsUrl());
     }
 
     private void filter() {
@@ -248,18 +248,12 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         }
     }
 
-    private static void openURL(Context context, String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        context.startActivity(i);
-    }
-
     private static class OnLinkClickListener implements OnClickListener {
 
         @Override
         public void onClick(View v) {
             String url = (String) v.getTag();
-            openURL(v.getContext(), url);
+            UIUtils.openURL(v.getContext(), url);
             UXStats.instance().log(UXAction.SEARCH_RESULT_SOURCE_VIEW);
         }
     }
