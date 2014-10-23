@@ -45,6 +45,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.gui.views.AbstractAdapter.OnItemClickAdapter;
 import com.frostwire.android.util.SystemUtils;
+import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
@@ -115,8 +116,8 @@ public class StoragePreference extends DialogPreference {
         if (dialog != null && dialog.equals(confirmDlg)) {
             if (which == Dialog.BUTTON_POSITIVE && selectedPath != null) {
                 ConfigurationManager.instance().setStoragePath(selectedPath);
-                // TODO:BITTORRENT
-                //COConfigurationManager.setParameter("General_sDefaultTorrent_Directory", com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsolutePath());
+                BTEngine.ctx.dataDir = new File(selectedPath).getAbsoluteFile();
+                BTEngine.ctx.torrentsDir = com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsoluteFile();
                 dismissPreferenceDialog();
                 uxLogSelection();
             }
