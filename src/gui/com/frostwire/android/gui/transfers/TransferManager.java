@@ -325,16 +325,22 @@ public final class TransferManager {
     }
 
     public BittorrentDownload downloadTorrent(String uri) {
+        String url = uri.trim();
         try {
-            URI u = URI.create(uri);
+            if (url.contains("urn%3Abtih%3A")) {
+                //fixes issue #129: over-encoded url coming from intent
+                url = url.replace("urn%3Abtih%3A", "urn:btih:");
+            }
+
+            URI u = URI.create(url);
 
             BittorrentDownload download = null;
 
             if (u.getScheme().equalsIgnoreCase("file")) {
                 BTEngine.getInstance().download(new File(u.getPath()), null);
             } else if (u.getScheme().equalsIgnoreCase("http") || u.getScheme().equalsIgnoreCase("magnet")) {
-                if (!isDownloadingTorrentByUri(uri)) {
-                    download = new TorrentFetcherDownload(this, new TorrentUrlInfo(uri.toString()));
+                if (!isDownloadingTorrentByUri(url)) {
+                    download = new TorrentFetcherDownload(this, new TorrentUrlInfo(u.toString()));
                     bittorrentDownloads.add(download);
                 }
             } else {
@@ -343,7 +349,7 @@ public final class TransferManager {
 
             return download;
         } catch (Throwable e) {
-            LOG.warn("Error creating download from uri: " + uri);
+            LOG.warn("Error creating download from uri: " + url);
             return new InvalidBittorrentDownload(R.string.empty_string);
         }
     }
