@@ -67,8 +67,6 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
 
     @Override
     protected void onPostExecute(Context ctx, DownloadTransfer transfer) {
-        // TODO:BITTORRENT
-        // fix new result from download, right now transfer will be always null
         if (transfer != null) {
             if (!(transfer instanceof InvalidTransfer)) {
                 TransferManager tm = TransferManager.instance();

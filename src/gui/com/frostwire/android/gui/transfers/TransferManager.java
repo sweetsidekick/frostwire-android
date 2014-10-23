@@ -149,7 +149,7 @@ public final class TransferManager {
 
     
     public DownloadTransfer download(SearchResult sr) {
-        DownloadTransfer transfer = new InvalidDownload();
+        DownloadTransfer transfer = null;
         
         if (alreadyDownloading(sr.getDetailsUrl())) {
             transfer = new ExistingDownload();
