@@ -217,7 +217,7 @@
     <string name="media_type_video">Video</string>
     <string name="media_type_images">Images</string>
     <string name="media_type_torrents">Torrents</string>
-    <string name="torrent_fetcher_download_status_downloading_torrent">Downloading Torrent</string>
+    <string name="torrent_fetcher_download_status_downloading_torrent">Downloading torrent</string>
     <string name="torrent_fetcher_download_status_error">Error</string>
     <string name="torrent_fetcher_download_status_canceled">Canceled</string>
     <string name="failed_to_add_download">Failed to add download</string>
@@ -530,4 +530,12 @@
     <string name="file_descriptor_sd_mounted">This file was deleted from the SD card, or the SD card you have inserted is a different one.</string>
     <string name="file_descriptor_sd_unmounted">This file belongs to an SD card, please insert it on your device.</string>
     <string name="help_translate_frostwire">Help translate FrostWire</string>
+    <string name="queued_for_checking">Queued for checking</string>
+    <string name="checking_ellipsis">Checking...</string>
+    <string name="downloading_metadata">Downloading metadata</string>
+    <string name="error_moving_incomplete">Error: Moving Incomplete</string>
+    <string name="error_wrong_md5_hash">Error: Wrong MD5 hash</string>
+    <string name="error_wrong_signature">Error: Wrong signature</string>
+    <string name="pausing">Pausing</string>
+    <string name="canceling">Canceling</string>
 </resources>

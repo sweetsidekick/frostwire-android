@@ -19,11 +19,11 @@
 package com.frostwire.android.gui.adapters;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 import com.frostwire.transfers.TransferItem;
+import com.frostwire.transfers.TransferState;
 import org.apache.commons.io.FilenameUtils;
 
 import android.app.Dialog;
@@ -76,7 +76,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
     private static final String TAG = "FW.TransferListAdapter";
 
-    private final Context context;
+    private final WeakReference<Context> context;
 
     private final OnClickListener viewOnClickListener;
     private final ViewOnLongClickListener viewOnLongClickListener;
@@ -88,8 +88,10 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
     private List<Transfer> list;
 
+    private final Map<String,String> TRANSFER_STATE_STRING_MAP = new Hashtable<String,String>();
+
     public TransferListAdapter(Context context, List<Transfer> list) {
-        this.context = context;
+        this.context = new WeakReference<Context>(context);
 
         this.viewOnClickListener = new ViewOnClickListener();
         this.viewOnLongClickListener = new ViewOnLongClickListener();
@@ -99,6 +101,34 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         this.dialogs = new ArrayList<Dialog>();
 
         this.list = list.equals(Collections.emptyList()) ? new ArrayList<Transfer>() : list;
+
+        initTransferStateStringMap();
+    }
+
+    private void initTransferStateStringMap() {
+        Context c = context.get();
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.QUEUED_FOR_CHECKING), c.getString(R.string.queued_for_checking));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.CHECKING), c.getString(R.string.checking_ellipsis));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.DOWNLOADING_METADATA), c.getString(R.string.downloading_metadata));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.DOWNLOADING_TORRENT), c.getString(R.string.torrent_fetcher_download_status_downloading_torrent));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.DOWNLOADING), c.getString(R.string.azureus_manager_item_downloading));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.FINISHED), c.getString(R.string.azureus_peer_manager_status_finished));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.SEEDING), c.getString(R.string.azureus_manager_item_seeding));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ALLOCATING), c.getString(R.string.azureus_manager_item_allocating));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.PAUSED), c.getString(R.string.azureus_manager_item_paused));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR), c.getString(R.string.azureus_manager_item_error));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_MOVING_INCOMPLETE), c.getString(R.string.error_moving_incomplete));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_HASH_MD5), c.getString(R.string.error_wrong_md5_hash));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_SIGNATURE), c.getString(R.string.error_wrong_signature));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.STOPPED), c.getString(R.string.azureus_manager_item_stopped));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.PAUSING), c.getString(R.string.pausing));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.CANCELING), c.getString(R.string.canceling));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.CANCELED), c.getString(R.string.torrent_fetcher_download_status_canceled));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.WAITING), c.getString(R.string.waiting));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.COMPLETE), c.getString(R.string.peer_http_download_status_complete));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.UPLOADING), c.getString(R.string.peer_http_upload_status_uploading));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.UNCOMPRESSING), c.getString(R.string.http_download_status_uncompressing));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.DEMUXING), c.getString(R.string.transfer_status_demuxing));
     }
 
     @Override
@@ -121,7 +151,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TransferItem item = getChildItem(groupPosition, childPosition);
 
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.view_transfer_item_list_item, null);
+            convertView = View.inflate(context.get(), R.layout.view_transfer_item_list_item, null);
 
             convertView.setOnClickListener(viewOnClickListener);
             convertView.setOnLongClickListener(viewOnLongClickListener);
@@ -171,11 +201,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         if (convertView == null || convertView instanceof TextView) {
             // convertView could be a dummy view due to an issue with the slide menu layout request order
             try {
-                convertView = View.inflate(context, R.layout.view_transfer_list_item, null);
+                convertView = View.inflate(context.get(), R.layout.view_transfer_list_item, null);
             } catch (Throwable e) {
                 // creating a dummy view to avoid a force close due to a NPE
                 // next time the "if" will try to recover the actual layout
-                convertView = new TextView(context);
+                convertView = new TextView(context.get());
                 ((TextView) convertView).setText("Rendering error");
             }
         }
@@ -263,33 +293,33 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 TransferItem transferItem = download.getItems().get(0);
                 String path = transferItem.getFile().getAbsolutePath();
                 String mimeType = UIUtils.getMimeType(path);
-                items.add(new OpenMenuAction(context, path, mimeType));
+                items.add(new OpenMenuAction(context.get(), path, mimeType));
             }
 
             if (!download.isComplete() || ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
                 if (download.isPausable()) {
-                    items.add(new PauseDownloadMenuAction(context, download));
+                    items.add(new PauseDownloadMenuAction(context.get(), download));
                 } else if (download.isResumable()) {
                     boolean wifiIsUp = NetworkManager.instance().isDataWIFIUp();
                     boolean bittorrentOnMobileData = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_MOBILE_DATA);
 
                     if (wifiIsUp || (!wifiIsUp && bittorrentOnMobileData)) {
                         if (!download.isComplete()) {
-                            items.add(new ResumeDownloadMenuAction(context, download, R.string.resume_torrent_menu_action));
+                            items.add(new ResumeDownloadMenuAction(context.get(), download, R.string.resume_torrent_menu_action));
                         } else {
                             //let's see if we can seed...
                             boolean seedTorrents = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
                             boolean seedTorrentsOnWifiOnly = ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
                             if ((seedTorrents && !seedTorrentsOnWifiOnly) ||
                                 (seedTorrents && seedTorrentsOnWifiOnly && wifiIsUp)) {
-                                items.add(new ResumeDownloadMenuAction(context, download, R.string.seed));    
+                                items.add(new ResumeDownloadMenuAction(context.get(), download, R.string.seed));
                             }
                         }
                     }
                 }
             }
 
-            items.add(new CancelMenuAction(context, download, !download.isComplete()));
+            items.add(new CancelMenuAction(context.get(), download, !download.isComplete()));
         } else if (tag instanceof DownloadTransfer) {
             DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
@@ -298,23 +328,23 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
 
             if (openMenu) {
-                items.add(new OpenMenuAction(context, download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
+                items.add(new OpenMenuAction(context.get(), download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
             } else {
-                items.add(new CancelMenuAction(context, download, true));
+                items.add(new CancelMenuAction(context.get(), download, true));
             }
 
             if (download instanceof PeerHttpDownload) {
                 PeerHttpDownload pdownload = (PeerHttpDownload) download;
-                items.add(new BrowsePeerMenuAction(context, pdownload.getPeer()));
+                items.add(new BrowsePeerMenuAction(context.get(), pdownload.getPeer()));
             }
         } else if (tag instanceof PeerHttpUpload) {
             PeerHttpUpload upload = (PeerHttpUpload) tag;
             title = upload.getDisplayName();
 
-            items.add(new CancelMenuAction(context, upload, false));
+            items.add(new CancelMenuAction(context.get(), upload, false));
         }
 
-        return items.size() > 0 ? new MenuAdapter(context, title, items) : null;
+        return items.size() > 0 ? new MenuAdapter(context.get(), title, items) : null;
     }
 
     protected String extractMime(DownloadTransfer download) {
@@ -406,17 +436,13 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TextView seeds = findView(view, R.id.view_transfer_list_item_seeds);
         TextView peers = findView(view, R.id.view_transfer_list_item_peers);
 
-        seeds.setText(context.getString(R.string.seeds_n, download.getSeeds()));
-        peers.setText(context.getString(R.string.peers_n, download.getPeers()));
+        seeds.setText(context.get().getString(R.string.seeds_n, download.getSeeds()));
+        peers.setText(context.get().getString(R.string.peers_n, download.getPeers()));
 
         title.setText(download.getDisplayName());
         progress.setProgress(download.getProgress());
 
-        if (download instanceof TorrentFetcherDownload) {
-            status.setText(download.getStatus());
-        } else {
-            status.setText(download.getStatus());
-        }
+        status.setText(TRANSFER_STATE_STRING_MAP.get(download.getStatus()));
 
         speed.setText(UIUtils.getBytesInHuman(download.getDownloadSpeed()) + "/s");
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
@@ -555,7 +581,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
     private String getStatusFromResId(String str) {
         String s = "";
         try {
-            s = context.getString(Integer.parseInt(str));
+            s = context.get().getString(Integer.parseInt(str));
         } catch (Throwable e) {
             // ignore
         }
@@ -620,7 +646,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             if (transfer instanceof BittorrentDownload) {
                 viewOnClickListener.onClick(v);
             } else {
-                trackDialog(UIUtils.showYesNoDialog(context, R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
+                trackDialog(UIUtils.showYesNoDialog(context.get(), R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         transfer.cancel();
                         UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
@@ -642,9 +668,9 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
                 if (savePath != null) {
                     if (savePath.exists()) {
-                        UIUtils.openFile(context, savePath);
+                        UIUtils.openFile(context.get(), savePath);
                     } else {
-                        UIUtils.showShortMessage(context, R.string.cant_open_file_does_not_exist, savePath.getName());
+                        UIUtils.showShortMessage(context.get(), R.string.cant_open_file_does_not_exist, savePath.getName());
                     }
                 }
             }
