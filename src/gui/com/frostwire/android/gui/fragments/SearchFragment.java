@@ -42,12 +42,14 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.LocalSearchEngine;
+import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter;
 import com.frostwire.android.gui.adapters.SearchResultListAdapter.FilteredSearchResults;
 import com.frostwire.android.gui.dialogs.NewTransferDialog;
 import com.frostwire.android.gui.tasks.DownloadSoundcloudFromUrlTask;
 import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
+import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
@@ -152,6 +154,9 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
                     searchInput.setText("");
                 } else if (query.contains("youtube.com/")) {
                     performYTSearch(query);
+                } else if (query.startsWith("magnet:?xt=urn:btih:")) {
+                    startMagnetDownload(query);
+                    searchInput.setText("");
                 }
                 else {
                     performSearch(query, mediaTypeId);
@@ -194,6 +199,17 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
         list = findView(view, R.id.fragment_search_list);
 
         showSearchView(view);
+    }
+
+    private void startMagnetDownload(String magnet) {
+        //Show me the transfer tab
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        i.setAction(Constants.ACTION_SHOW_TRANSFERS);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(i);
+
+        //go!
+        TransferManager.instance().downloadTorrent(magnet);
     }
 
     private static String extractYTId(String ytUrl) {
