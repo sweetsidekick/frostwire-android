@@ -83,11 +83,6 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
                         UIUtils.showShortMessage(ctx, message);
                     }
                 }
-                
-                if (tm.isBittorrentDisconnected() && transfer instanceof BittorrentDownload) {
-                    asyncPauseTorrents();
-                    UIUtils.showLongMessage(ctx, R.string.torrent_transfer_paused_disconnected_from_bittorrent);
-                }
             } else {
                 if (transfer instanceof ExistingDownload) {
                     //nothing happens here, the user should just see the transfer
@@ -97,21 +92,5 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
                 }
             }
         }
-    }
-
-    private void asyncPauseTorrents() {
-        //gubatron: I hate doing this, but it was absolutely necessary.
-        //new transfers wouldn't pause right after getting started,
-        //and TransferManager.instance().download(sr) doesn't have a callback
-        //I could use. 3 seconds seems to cut it everytime, did 3.5 accounting for slower devices.
-        new Thread() {
-            public void run() {
-                try {
-                    sleep(3500);
-                    TransferManager.instance().pauseTorrents();
-                } catch (Throwable e) {
-                }
-            };
-        }.start();
     }
 }

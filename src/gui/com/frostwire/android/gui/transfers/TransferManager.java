@@ -36,6 +36,7 @@ import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.bittorrent.BTEngineAdapter;
@@ -166,29 +167,8 @@ public final class TransferManager {
             transfer = newHttpDownload((HttpSearchResult) sr);
         }
 
-        // TODO:BITTORRENT
-//        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
-//            //give it time to get to a pausable state.
-//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//            enqueueTorrentTransfer(transfer);
-//            //give it time to stop before onPostExecute
-//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//        }
-        
         return transfer;
     }
-    
-    private void enqueueTorrentTransfer(DownloadTransfer transfer) {
-        // TODO:BITTORRENT
-//        if (transfer instanceof AzureusBittorrentDownload) {
-//            AzureusBittorrentDownload btDownload = (AzureusBittorrentDownload) transfer;
-//            btDownload.enqueue();
-//        } else if (transfer instanceof TorrentFetcherDownload){
-//            TorrentFetcherDownload btDownload = (TorrentFetcherDownload) transfer;
-//            btDownload.enqueue();
-//        }
-    }
-
 
     public DownloadTransfer download(Peer peer, FileDescriptor fd) {
         PeerHttpDownload download = new PeerHttpDownload(this, peer, fd);
@@ -309,18 +289,6 @@ public final class TransferManager {
     public void loadTorrents() {
         bittorrentDownloads.clear();
 
-        boolean stop = false;
-        if (!ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS)) {
-            stop = true;
-        } else {
-            if (!NetworkManager.instance().isDataWIFIUp() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY)) {
-                stop = true;
-            }
-        }
-
-        // TODO:BITTORRENT
-        // review stop variable
-
         BTEngine engine = BTEngine.getInstance();
 
         engine.setListener(new BTEngineAdapter() {
@@ -372,23 +340,6 @@ public final class TransferManager {
             } else {
                 download = new InvalidBittorrentDownload(R.string.torrent_scheme_download_not_supported);
             }
-            // TODO:BITTORRENT
-//            if (!(download instanceof InvalidBittorrentDownload)) {
-//                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
-//                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
-//                    if (!bittorrentDownloads.contains(download)) {
-//                        bittorrentDownloads.add(download);
-//
-//                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
-//                            //give it time to get to a pausable state.
-//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//                            enqueueTorrentTransfer(download);
-//                            //give it time to stop before onPostExecute
-//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//                        }
-//                    }
-//                }
-//            }
 
             return download;
         } catch (Throwable e) {
@@ -507,6 +458,38 @@ public final class TransferManager {
                 }
             }
         }
+    }
+
+    public void reviewBittorrentTransfers() {
+        // TODO:BITTORRENT
+//        if (tm.isBittorrentDisconnected() && transfer instanceof BittorrentDownload) {
+//            UIUtils.showLongMessage(ctx, R.string.torrent_transfer_paused_disconnected_from_bittorrent);
+//        }
+
+        //        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
+//            //give it time to get to a pausable state.
+//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//            enqueueTorrentTransfer(transfer);
+//            //give it time to stop before onPostExecute
+//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//        }
+
+        //            if (!(download instanceof InvalidBittorrentDownload)) {
+//                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
+//                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
+//                    if (!bittorrentDownloads.contains(download)) {
+//                        bittorrentDownloads.add(download);
+//
+//                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
+//                            //give it time to get to a pausable state.
+//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//                            enqueueTorrentTransfer(download);
+//                            //give it time to stop before onPostExecute
+//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
+//                        }
+//                    }
+//                }
+//            }
     }
 
     private void registerPreferencesChangeListener() {
