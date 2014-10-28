@@ -60,10 +60,6 @@ public class MainApplication extends Application {
             LOG.error("Unable to install global http cache", e);
         }
 
-        com.frostwire.android.util.ImageLoader.getInstance(this);
-        CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache(this));
-        CrawlPagedWebSearchPerformer.setMagnetDownloader(new LibTorrentMagnetDownloader());
-
         try {
 
             //            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
@@ -78,6 +74,10 @@ public class MainApplication extends Application {
             NetworkManager.create(this);
             Librarian.create(this);
             Engine.create(this);
+
+            com.frostwire.android.util.ImageLoader.getInstance(this);
+            CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache(this));
+            CrawlPagedWebSearchPerformer.setMagnetDownloader(new LibTorrentMagnetDownloader());
 
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
 

@@ -40,7 +40,6 @@ import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.UniversalScanner;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.util.SystemUtils;
-import com.frostwire.android.util.concurrent.ExecutorsHelper;
 
 /**
  * Receives and controls messages from the external world. Depending on the
@@ -54,12 +53,9 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "FW.EngineBroadcastReceiver";
 
-    private final ExecutorService engineExecutor;
-
     private boolean wasPlaying;
 
     public EngineBroadcastReceiver() {
-        engineExecutor = ExecutorsHelper.newFixedSizeThreadPool(1, "BroadcastReceiver-EngineExecutor");
     }
 
     @Override
@@ -71,7 +67,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 handleMediaMounted(context, intent);
 
                 if (Engine.instance().isDisconnected()) {
-                    engineExecutor.execute(new Runnable() {
+                    Engine.instance().getThreadPool().execute(new Runnable() {
                         @Override
                         public void run() {
                             Engine.instance().startServices();
@@ -131,7 +127,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
 
     private void handleDisconnectedNetwork(NetworkInfo networkInfo) {
         Log.v(TAG, "Disconnected from network (" + networkInfo.getTypeName() + ")");
-        engineExecutor.execute(new Runnable() {
+        Engine.instance().getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
                 Engine.instance().stopServices(true);
@@ -169,7 +165,7 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
                 Log.v(TAG, "Connected to " + networkInfo.getTypeName());
                 if (Engine.instance().isDisconnected()) {
                     // avoid ANR error inside a broadcast receiver
-                    engineExecutor.execute(new Runnable() {
+                    Engine.instance().getThreadPool().execute(new Runnable() {
                         @Override
                         public void run() {
                             Engine.instance().startServices();

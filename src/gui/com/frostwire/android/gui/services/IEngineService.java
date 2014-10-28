@@ -19,11 +19,11 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 import android.app.Application;
 
 import com.frostwire.android.core.player.CoreMediaPlayer;
-import com.frostwire.android.util.concurrent.ThreadPool;
 
 /**
  * @author gubatron
@@ -57,7 +57,7 @@ public interface IEngineService {
 
     public void stopServices(boolean disconnected);
 
-    public ThreadPool getThreadPool();
+    public ExecutorService getThreadPool();
 
     public void notifyDownloadFinished(String displayName, File file);
     

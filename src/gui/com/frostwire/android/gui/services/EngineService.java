@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -40,8 +41,8 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.util.concurrent.ThreadPool;
 import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.util.ThreadPool;
 
 /**
  * @author gubatron
@@ -56,7 +57,7 @@ public class EngineService extends Service implements IEngineService {
 
     private final IBinder binder;
 
-    private final ThreadPool threadPool;
+    static final ExecutorService threadPool = ThreadPool.newThreadPool("Engine");
 
     // services in background
 
@@ -68,8 +69,6 @@ public class EngineService extends Service implements IEngineService {
 
     public EngineService() {
         binder = new EngineServiceBinder();
-
-        threadPool = new ThreadPool("Engine");
 
         mediaPlayer = new ApolloMediaPlayer(this);
 
@@ -177,7 +176,7 @@ public class EngineService extends Service implements IEngineService {
         Log.v(TAG, "Engine stopped, state: " + state);
     }
 
-    public ThreadPool getThreadPool() {
+    public ExecutorService getThreadPool() {
         return threadPool;
     }
 

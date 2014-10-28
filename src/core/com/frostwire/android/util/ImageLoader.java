@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import com.frostwire.android.gui.services.Engine;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
@@ -108,7 +109,8 @@ public final class ImageLoader {
         int memSize = SystemUtils.calculateMemoryCacheSize(context);
 
         this.cache = new ImageCache(directory, diskSize, memSize);
-        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).memoryCache(cache).build();
+        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).
+                memoryCache(cache).executor(Engine.instance().getThreadPool()).build();
 
         picasso.setIndicatorsEnabled(false);
     }

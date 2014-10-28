@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.services;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 import android.app.Application;
 import android.content.ComponentName;
@@ -35,7 +36,6 @@ import android.telephony.TelephonyManager;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
-import com.frostwire.android.util.concurrent.ThreadPool;
 
 /**
  * @author gubatron
@@ -107,8 +107,8 @@ public final class Engine implements IEngineService {
         }
     }
 
-    public ThreadPool getThreadPool() {
-        return service != null ? service.getThreadPool() : null;
+    public ExecutorService getThreadPool() {
+        return EngineService.threadPool;
     }
 
     public void notifyDownloadFinished(String displayName, File file) {
