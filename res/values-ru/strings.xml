@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@
     <string name="rename">Переименовать</string>
     <string name="download">Скачать</string>
     <string name="download_selected_files">Скачать выбранное</string>
-    <string name="toggle_sharing_selected_files">Переключение раздачи</string>
+    <string name="toggle_sharing_selected_files">Вкл/Выкл раздачу</string>
     <string name="change_manual_listening_port">Слушать порт 1000 и порт 65535</string>
     <string name="is_not_responding">%s не отвечает</string>
     <string name="max_concurrent_uploads">Максимум одновременных загрузок</string>
@@ -115,14 +115,14 @@
     <string name="tos_refuse">Отклонить</string>
     <string name="downloads">Загрузки</string>
     <string name="minimize_frostwire">Свернуть FrostWire</string>
-    <string name="are_you_sure_you_wanna_leave">Вы уверены, что хотите вернуться назад, к экрану заставки?</string>
+    <string name="are_you_sure_you_wanna_leave">Вы уверены, что хотите вернуться к экрану заставки?</string>
     <string name="set_as_ringtone">Установить в качестве рингтона</string>
     <string name="set_as_wallpaper">Установить в качестве обоев</string>
     <string name="failed_to_set_wallpaper">Не удалось установить в качестве обоев</string>
     <string name="tell_others_chooser">Рассказать через Твиттер/SMS/E-Mail</string>
     <string name="tell_others_subject">Уже есть FrostWire для Андроида?</string>
     <string name="and_choose_what_filetypes_to_share">Отметьте, какие типы файлов Вы бы хотели раздавать в FrostWire Mobile через мобильную сеть и разрешенный Wi-Fi на ближайших компьютерах.</string>
-    <string name="before_getting_started">Прежде, чем Вы начнёте</string>
+    <string name="before_getting_started">Прежде, чем начать</string>
     <string name="user_connecting">Пользователь подключается</string>
     <string name="accept_connection_from">Принять подключение от</string>
     <string name="please_enter_a_number">Пожалуйста, введите номер</string>
@@ -221,7 +221,7 @@
     <string name="torrent_fetcher_download_status_downloading_torrent">Скачиваемый торрент</string>
     <string name="torrent_fetcher_download_status_error">Ошибка</string>
     <string name="torrent_fetcher_download_status_canceled">Отменено</string>
-    <string name="failed_to_add_download">Не удалось добавить скачивание</string>
+    <string name="failed_to_add_download">Не удалось добавить загрузку</string>
     <string name="file_is_already_downloading">Файл уже скачивается</string>
     <string name="not_connected">Не соединено</string>
     <string name="mobile_data">Мобильная передача данных</string>
@@ -296,9 +296,9 @@
     <string name="download_finished">Скачивание завершено</string>
     <string name="clear_complete">Удалить завершенные</string>
     <string name="downloading_promotion">Скачивается %s</string>
-    <string name="activity_about_droidwire_description">FrostWire для Андроида</string>
+    <string name="activity_about_droidwire_description">FrostWire для Android</string>
     <string name="dummy_hint">[Подсказка]</string>
-    <string name="dummy_peer_file_count">[Пир/Количество файлов]</string>
+    <string name="dummy_peer_file_count">[Пир/Всего файлов]</string>
     <string name="download_type_not_supported">Скачиваемый тип не поддерживается</string>
     <string name="im_on_it">Я в...</string>
     <string name="hint_transfers">Используйте "Меню" для большенства действий</string>
@@ -310,7 +310,7 @@
     <string name="torrent_max_downloads_summary">Максимум загрузок</string>
     <string name="torrent_max_downloads">Максимум загрузок</string>
     <string name="torrent_max_uploads_summary">Максимум раздач</string>
-    <string name="torrent_max_uploads">Максимум закачек</string>
+    <string name="torrent_max_uploads">Максимум раздач</string>
     <string name="torrent_max_total_connections_summary">Максимальное количество подключений</string>
     <string name="torrent_max_total_connections">Максимальное количество подключений</string>
     <string name="torrent_max_torrent_connection_summary">Максимум торрент соединений</string>
@@ -324,8 +324,8 @@
     <string name="seed_finished_torrents_summary">Раздавать части скаченных торрентов кому-либо в Интернете с помощью BitTorrent</string>
     <string name="seed_finished_torrents_wifi_only">Раздавать только по Wi-Fi</string>
     <string name="seed_finished_torrents_wifi_only_summary">Раздавать только когда подключено через Wi-Fi для того, чтобы сэкономить трафик на Вашем тарифном плане</string>
-    <string name="dummy_downloads_indicator">0 @ 0 Кбит/c</string>
-    <string name="dummy_uploads_indicator">0 @ 0 Кбит/c</string>
+    <string name="dummy_downloads_indicator">0 @ 0 КБ/c</string>
+    <string name="dummy_uploads_indicator">0 @ 0 КБ/c</string>
     <string name="seeding_has_been_turned_off">Раздача была отключена</string>
     <string name="nickname_hint">Псевдоним</string>
     <string name="show_transers_on_download_start">Показывать передачи данных при старте скачивания</string>
@@ -344,8 +344,8 @@
     <string name="wizard_finish">Завершить</string>
     <string name="dummy_content_description"></string>
     <string name="welcome_to_frostwire">Добро пожаловать в FrostWire</string>
-    <string name="let_apos_s_set_you_up_before_we_begin_">Давайте настроим Вас прежде, чем начнем.</string>
-    <string name="how_others_see_you_on_the_local_network_wifi_">Как другие видят Вас по локальной сети (Wi-Fi)</string>
+    <string name="let_apos_s_set_you_up_before_we_begin_">Давайте сделаем настройку прежде, чем начнем.</string>
+    <string name="how_others_see_you_on_the_local_network_wifi_">Как другие видят Вас в локальной сети (Wi-Fi)</string>
     <string name="seeding_settings">Настройки раздачи</string>
     <string name="seeding_settings_explanation">Пользователи BitTorrent в сети смогут скачивать части файла, который раздает ваш торрент.</string>
     <string name="seeding_wifi_settings_explanation">Раздавайте только при Wi-Fi подключении. Избегайте дополнительных расходов у своего сотового оператора.</string>
@@ -434,7 +434,7 @@
     <string name="use_torlock">Использовать TorLock</string>
     <string name="use_eztv">Использовать Eztv</string>
     <string name="transfer_status_demuxing">Демультиплексирование</string>
-    <string name="player_paused_press_and_hold_to_stop">Player paused. (Tip: Press and hold to stop)</string>
+    <string name="player_paused_press_and_hold_to_stop">Приостановлено. (Совет: нажмите и удерживайте, чтобы приостановить)</string>
     <string name="btc">BTC</string>
     <string name="you_need_a_bitcoin_wallet_app">На вашем устройстве должен быть Bitcoin кошелёк, чтобы отправить BTC для пожертвования.</string>
     <string name="transfers_select_all">Все</string>
@@ -444,19 +444,19 @@
     <string name="transfers_context_menu_stop_delete_data">Остановить и удалить файлы</string>
     <string name="transfers_context_menu_pause_stop_all_transfers">Приостановить/Остановить все передачи</string>
     <string name="transfers_context_resume_all_torrent_transfers">Возобновить все раздачи</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Показать панель навигацию</string>
+    <string name="drawer_close">Закрыть панель навигации</string>
     <string name="please_check_connection_status_before_resuming_download">Пожалуйста, проверьте ваше интернет-соединение, прежде чем возобновить.</string>
     <string name="donate_in_btc">Пожертвовать, биткоинами</string>
     <string name="torrent_transfer_enqueued_on_mobile_data">Торрент начнет загрузку автоматически, при подключении к сети Wi-Fi. (Проверьте настройки, касающиеся использования 3G/LTE)</string>
     <string name="torrent_transfer_consuming_mobile_data">Внимание: Эта торрент загрузка использует 3G/LTE сеть. (В настройках, можно настроить использование BitTorrent только через Wi-Fi)</string>
     <string name="add_transfer_label">Вставьте ссылку на magnet или торрент</string>
     <string name="please_enter_valid_url">Пожалуйста, введите правильный URL</string>
-    <string name="magnet_url_added">Magnet URL added to transfers. (Magnets work best on Wi-Fi)</string>
-    <string name="torrent_url_added">Torrent URL added to transfers.</string>
+    <string name="magnet_url_added">Magnet-ссылка добавлена для передачи. (лучше всего работают через Wi-Fi)</string>
+    <string name="torrent_url_added">Torrent-ссылка добавлена для передачи.</string>
     <string name="cloud_downloads_coming">К сожалению, возможность загрузки в облако, пока ещё в разработке.</string>
     <string name="seed">Сид</string>
-    <string name="torrent_transfer_paused_disconnected_from_bittorrent">The transfer has been paused because you are Disconnected. (Check your BitTorrent connection in Preferences)</string>
+    <string name="torrent_transfer_paused_disconnected_from_bittorrent">Передача была приостановлена, потому что нет соединения с сетью. (Проверьте ваше BitTorrent-соединение в настройках)</string>
     <string name="accessibility_play">Воспроизвести</string>
     <string name="accessibility_pause">Приостановить</string>
     <string name="accessibility_next">Далее</string>
@@ -489,7 +489,7 @@
     <string name="context_menu_delete">Удалить</string>
     <string name="context_menu_fetch_album_art">Получить изображение альбома</string>
     <string name="context_menu_fetch_artist_image">Получить изображение артиста</string>
-    <string name="context_menu_open_in_play_store">Open in Play Store</string>
+    <string name="context_menu_open_in_play_store">Открыть в Play Store</string>
     <string name="context_menu_remove_from_recent">Удалить из истории</string>
     <string name="context_menu_use_as_ringtone">Поставить на рингтон</string>
     <string name="context_menu_remove_from_playlist">Удалить из плейлиста</string>
@@ -497,8 +497,8 @@
     <string name="cannot_be_undone">Это не может быть отменено</string>
     <string name="now_playing">Сейчас проигрывается</string>
     <string name="dummy_author">[Автор]</string>
-    <string name="install_bitcoin_wallet">Установить Bitcoin Кашелёк</string>
-    <string name="cant_resume_torrent_transfers">Cannot resume torrent transfers, Check status of "Preferences" > "Connectivity"</string>
+    <string name="install_bitcoin_wallet">Установить Bitcoin кашелёк</string>
+    <string name="cant_resume_torrent_transfers">Не удается возобновить торрент-передачу, проверьте статус сети в "Настройки" > "Связь"</string>
     <string name="confirm_download">Подтвердите загрузку</string>
     <string name="track">трек</string>
     <string name="playlist">плейлист</string>
@@ -509,17 +509,17 @@
     <string name="menu_space_shortcut_label">Space</string>
     <string name="cant_open_file_does_not_exist">Невозможно открыть %1$s, файл не существует.</string>
     <string name="saving_to_sd_card">Сохранение на SD-карту.</string>
-    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android сотрет загруженные файлы, если они были удалены из FrostWire.</string>
+    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android сотрёт загруженные файлы, если они были удалены из FrostWire.</string>
     <string name="saving_to_internal_memory">Сохранение во внутреннюю память</string>
     <string name="saving_to_internal_memory_description">У вас также есть SD-карта (%1$s доступно)</string>
     <string name="device_memory">Память устройства</string>
     <string name="device_storage">Места на устройстве</string>
     <string name="sdcard_storage">Места на SD-карте</string>
-    <string name="storage_setting_warning">WARNING: All files downloaded by FrostWire into the SD card will be deleted BY ANDROID if you uninstall FrostWire.</string>
+    <string name="storage_setting_warning">Внимание: Все файлы загруженные через FrostWire на SD-карту, будут удалены ANDROID\'ом, если вы удалите FrostWire.</string>
     <string name="storage_setting_confirm_dialog_title">SD-КАРТА</string>
-    <string name="storage_setting_confirm_dialog_text">I understand that all files downloaded to the SD Card by FrostWire will be deleted BY ANDROID the moment the FrostWire application is uninstalled from this device and I will not hold FrostWire LLC liable for any files lost.</string>
+    <string name="storage_setting_confirm_dialog_text">Я понимаю, что все файлы, загруженные через FrostWire на SD-карту, будет удалены ANDROID\'ом. Приложение FrostWire, будет удалено с вашего устройства. Мы напоминаем, что FrostWire LLC не несёт ответственности за любые потерянные файлы.</string>
     <string name="available">доступно</string>
-    <string name="file_descriptor_sd_mounted">This file was deleted from the SD card, or the SD card you have inserted is a different one.</string>
+    <string name="file_descriptor_sd_mounted">Этот файл был удален с SD-карты, или вы вставили другую SD-карту.</string>
     <string name="file_descriptor_sd_unmounted">Этот файл находиться на SD-карте, пожалуйста вставьте её.</string>
     <string name="help_translate_frostwire">Помогите перевести FrostWire</string>
 </resources>
