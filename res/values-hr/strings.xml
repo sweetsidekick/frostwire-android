@@ -352,4 +352,15 @@
     <string name="clear_search_cache">Ocisti predmemoriju trazilice</string>
     <string name="share_indication_dialog_title">Kako dijeliti/oddijeliti datoteke</string>
     <string name="drawer_close">Zatvori navigacijsku ladicu</string>
+    <string name="saving_to_internal_memory_description">Imate i SD karticu (%1$s dostupno)</string>
+    <string name="type_here_to_search">Pisite ovdje za trazenje</string>
+    <string name="broadcast_discovery_summary">Spojite se na lokalne Wi-Fi peerove preko broadcasta (vise prometa na routeru)</string>
+    <string name="dialog_new_transfer_text_text"Jeste li sigurni da zelite preuzeti %1$s (%2$s)</string>
+    <string name="add_transfer_label">Zaljepite magnet ili torrent URL</string>
+    <string name="multicast_discovery_summary">Spojite se na lokalne Wi-Fi peerove preko multicasta (preporučeno)</string>
+    <string name="summary_files_shared">Dijelim %s datoteka lokalno</string>
+    <string name="upnp_discovery_summary">Dijeli datoteke sa peerovima na lokalnoj Wi-Fi mrezi.</string>
+    <string name="long_press_for_batch_actions">Dodirnite bilo koji naslov datoteke za batch akcije</string>
+    <string name="transfer_status_demuxing">Demuxam</string>
+    <string name="hint_transfers">Koristite "menu" za skup akcija</string>
 </resources>
