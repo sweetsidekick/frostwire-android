@@ -393,7 +393,7 @@
     <string name="storage_preference_title">Select Storage Location</string>
     <string name="storage_preference_summary">The default storage location where files will be saved.</string>
     <string name="bittorrent">BitTorrent</string>
-    <string name="bittorrent_network_summary">BitTorrent connection status</string>
+    <string name="bittorrent_network_summary">Connection status</string>
     <string name="loading">Loading</string>
     <string name="wifi_sharing">Wi-Fi Sharing</string>
     <string name="activity_mediaplayer_name">Media Player</string>

@@ -23,12 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
+import android.preference.*;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,7 +64,7 @@ public class PreferencesActivity extends PreferenceActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        setupConnectButton();
+        setupConnectSwitch();
         setupSeedingOptions();
         setupNickname();
         setupClearIndex();
@@ -171,22 +167,23 @@ public class PreferencesActivity extends PreferenceActivity {
         preference.setSummary(getString(R.string.crawl_cache_size, size));
     }
 
-    private void updateConnectButton() {
-        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+    private void updateConnectSwitch() {
+        SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+        preference.setSummary(R.string.bittorrent_network_summary);
+        preference.setEnabled(true);
+
         if (Engine.instance().isStarted()) {
-            preference.setButtonText(R.string.disconnect);
-            preference.setButtonEnabled(true);
+            preference.setChecked(true);
         } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
-            connectButtonImOnIt(preference);
+            connectSwitchImOnIt(preference);
         } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
-            preference.setButtonText(R.string.connect);
-            preference.setButtonEnabled(true);
+            preference.setChecked(false);
         }
     }
 
-    private void connectButtonImOnIt(SimpleActionPreference preference) {
-        preference.setButtonText(R.string.im_on_it);
-        preference.setButtonEnabled(false);
+    private void connectSwitchImOnIt(SwitchPreference preference) {
+        preference.setEnabled(false);
+        preference.setSummary(R.string.im_on_it);
     }
 
     private void setupUPnPOption() {
@@ -205,17 +202,19 @@ public class PreferencesActivity extends PreferenceActivity {
         });
     }
 
-    private void setupConnectButton() {
-        updateConnectButton();
-        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
-
-        preference.setOnActionListener(new OnClickListener() {
-            public void onClick(View v) {
+    private void setupConnectSwitch() {
+        updateConnectSwitch();
+        SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+        preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (Engine.instance().isStarted()) {
                     disconnect();
                 } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
                     connect();
                 }
+
+                return true;
             }
         });
     }
@@ -244,8 +243,8 @@ public class PreferencesActivity extends PreferenceActivity {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
-                        connectButtonImOnIt(preference);
+                        SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+                        connectSwitchImOnIt(preference);
                     }
                 });
 
@@ -256,7 +255,7 @@ public class PreferencesActivity extends PreferenceActivity {
             @Override
             protected void onPostExecute(Void result) {
                 UIUtils.showShortMessage(context, R.string.toast_on_connect);
-                updateConnectButton();
+                updateConnectSwitch();
                 if (!(context instanceof MainActivity)) {
                     Intent i = new Intent(context, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -280,7 +279,7 @@ public class PreferencesActivity extends PreferenceActivity {
             @Override
             protected void onPostExecute(Void result) {
                 UIUtils.showShortMessage(context, R.string.toast_on_disconnect);
-                updateConnectButton();
+                updateConnectSwitch();
                 if (!(context instanceof MainActivity)) {
                     Intent i = new Intent(context, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
