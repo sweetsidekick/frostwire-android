@@ -339,4 +339,17 @@
     <string name="playlist">Lista za sviranje</string>
     <string name="available">dostupno</string>
     <string name="help_translate_frostwire">Pomozite prevesti FrostWire</string>
+    <string name="azureus_peer_manager_status_finished">Finished</string>
+    <string name="activity_mediaplayer_name">Medijski svirac</string>
+    <string name="im_on_it">Radim na tome…</string>
+    <string name="context_menu_use_as_ringtone">Koristi kao zvuk zvonjave</string>
+    <string name="share_selected_files">Dijeli odabrane datoteke</string>
+    <string name="choose_wifi_network">Odaberite Wi-Fi mrezu</string>
+    <string name="torrent_max_download_speed">Maksimalna brzina preuzimanja</string>
+    <string name="context_menu_fetch_album_art">Dohvati sliku albuma</string>
+    <string name="activity_uploads_title_text">Slanja</string>
+    <string name="torrent_max_peers">Maksimum peerova</string>
+    <string name="clear_search_cache">Ocisti predmemoriju trazilice</string>
+    <string name="share_indication_dialog_title">Kako dijeliti/oddijeliti datoteke</string>
+    <string name="drawer_close">Zatvori navigacijsku ladicu</string>
 </resources>
