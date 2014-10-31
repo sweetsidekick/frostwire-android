@@ -18,6 +18,8 @@
 package com.frostwire.android.gui;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import org.apache.commons.io.IOUtils;
 
@@ -42,12 +44,21 @@ public class DiskCrawlCache implements CrawlCache {
     private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    private final DiskCache cache;
+    private final WeakReference<Context> contextWeakReference;
+    private DiskCache cache;
 
     public DiskCrawlCache(Context context) {
-        File directory = SystemUtils.getCacheDir(context, "search");
-        long diskSize = SystemUtils.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
-        this.cache = createDiskCache(directory, diskSize);
+        contextWeakReference = new WeakReference<Context>(context);
+        initDiskCache();
+    }
+
+    private void initDiskCache() {
+        Context context = contextWeakReference.get();
+        if (context != null) {
+            File directory = SystemUtils.getCacheDir(context, "search");
+            long diskSize = SystemUtils.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
+            this.cache = createDiskCache(directory, diskSize);
+        }
     }
 
     @Override
@@ -93,7 +104,12 @@ public class DiskCrawlCache implements CrawlCache {
     @Override
     public void clear() {
         if (cache != null) {
-            LOG.warn("Not implemented, pending review");
+            try {
+                cache.delete();
+                initDiskCache();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
