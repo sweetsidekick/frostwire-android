@@ -371,4 +371,13 @@
     <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mrezi.</string>
     <string name="delete_n_torrents_indexed">Obrisano %d torrenata indeksirano</string>
     <string name="dialog_desktop_upload_request_text_text">%1$s vam zeli poslati %2$s ukupno %3$s</string>
+    <string name="invalid_torrent_file">Nevazeca Torrent datoteka</string>
+    <string name="activity_media_player_name">Svirac medija</string>
+    <string name="context_menu_open_in_play_store">Otvori u Play Store-u</string>
+    <string name="failed_to_add_download">Nije moguce dodati preuzimanje</string>
+    <string name="my_filetype">Moje %s</string>
+    <string name="torrent_max_download_speed_summary">Maksimalna brzina preuzimanja/string>
+    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
+    <string name="use_torrentsfm_summary">Torrents.fm je baziran na magnetu, radi samo na Wi-Fi-u</string>
+    <string name="device_memory">Memorija uredjaja</string>
 </resources>
