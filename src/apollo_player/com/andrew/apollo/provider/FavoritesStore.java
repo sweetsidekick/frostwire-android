@@ -18,12 +18,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * This class is used to to create the database used to make the Favorites
+ * This class is used to create the database used to make the Favorites
  * playlist.
  * 
- * @author Andrew Neal (andrewdneal@gmail.com)
- */
-/**
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class FavoritesStore extends SQLiteOpenHelper {
