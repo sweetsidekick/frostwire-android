@@ -22,11 +22,9 @@
     xmlns:frostwire="http://schemas.android.com/apk/res/com.frostwire.android" >
 
     <PreferenceCategory android:title="@string/sharing_preferences" >
-        <com.frostwire.android.gui.views.preference.SimpleActionPreference
-            android:key="frostwire.prefs.internal.connect_disconnect"
-            android:summary="@string/bittorrent_network_summary"
-            android:title="@string/bittorrent"
-            frostwire:button_text="@string/empty_string" />
+        <SwitchPreference android:key="frostwire.prefs.internal.connect_disconnect"
+           android:summary="@string/bittorrent_network_summary"
+           android:title="@string/bittorrent" />
         <CheckBoxPreference
             android:key="frostwire.prefs.torrent.seed_finished_torrents"
             android:summary="@string/seed_finished_torrents_summary"
