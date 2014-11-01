@@ -371,6 +371,15 @@
     <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mrezi.</string>
     <string name="delete_n_torrents_indexed">Obrisano %d torrenata indeksirano</string>
     <string name="dialog_desktop_upload_request_text_text">%1$s vam zeli poslati %2$s ukupno %3$s</string>
+    <string name="please_check_connection_status_before_resuming_download">Please check the status of your internet connection before resuming.</string>
+    <string name="accept_intent">Necu koristiti FrostWire za krsenje autorskih prava</string>
+    <string name="toast_on_connect">BitTorrent jezgra pokrenuta.</string>
+    <string name="cloud_downloads_coming">Oprostite: Pokretanje preuzimanja u oblaku odavde ce biti dostupno u nadolazecim nadogradnjama.</string>
+    <string name="menu_space_shortcut_label">Razmak</string>
+    <string name="connected_using_dataplan">Spojeno putem podatkovnog plana</string>
+    <string name="tip_rename_your_files">Savjet: Preimenujte datoteke tako da se mogu naci</string>
+    <string name="input_text_hint">Sto trazite? (savjeti od Google-a)</string>
+    <string name="sdcard_storage">SD skladiste</string>
     <string name="invalid_torrent_file">Nevazeca Torrent datoteka</string>
     <string name="activity_media_player_name">Svirac medija</string>
     <string name="context_menu_open_in_play_store">Otvori u Play Store-u</string>
