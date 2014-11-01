@@ -363,4 +363,12 @@
     <string name="long_press_for_batch_actions">Dodirnite bilo koji naslov datoteke za batch akcije</string>
     <string name="transfer_status_demuxing">Demuxam</string>
     <string name="hint_transfers">Koristite "menu" za skup akcija</string>
+    <string name="show_transers_on_download_start">Pokazi transfere na pocetku preuzimanja</string>
+    <string name="storage_preference_title">Odaberite lokaciju spremanja</string>
+    <string name="loading_all">Ucitavam sve
+    <string name="cannot_be_undone">Ovo se ne moze ponistiti</string>
+    <string name="torrent_max_total_connections">Maksimum ukupnih konekcija</string>
+    <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mrezi.</string>
+    <string name="delete_n_torrents_indexed">Obrisano %d torrenata indeksirano</string>
+    <string name="dialog_desktop_upload_request_text_text">%1$s vam zeli poslati %2$s ukupno %3$s</string>
 </resources>
