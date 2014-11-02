@@ -355,7 +355,7 @@
     <string name="saving_to_internal_memory_description">Imate i SD karticu (%1$s dostupno)</string>
     <string name="type_here_to_search">Pisite ovdje za trazenje</string>
     <string name="broadcast_discovery_summary">Spojite se na lokalne Wi-Fi peerove preko broadcasta (vise prometa na routeru)</string>
-    <string name="dialog_new_transfer_text_text"Jeste li sigurni da zelite preuzeti %1$s (%2$s)</string>
+    <string name="dialog_new_transfer_text_text">Jeste li sigurni da zelite preuzeti %1$s (%2$s)</string>
     <string name="add_transfer_label">Zaljepite magnet ili torrent URL</string>
     <string name="multicast_discovery_summary">Spojite se na lokalne Wi-Fi peerove preko multicasta (preporučeno)</string>
     <string name="summary_files_shared">Dijelim %s datoteka lokalno</string>
@@ -365,7 +365,7 @@
     <string name="hint_transfers">Koristite "menu" za skup akcija</string>
     <string name="show_transers_on_download_start">Pokazi transfere na pocetku preuzimanja</string>
     <string name="storage_preference_title">Odaberite lokaciju spremanja</string>
-    <string name="loading_all">Ucitavam sve
+    <string name="loading_all">Ucitavam sve</string>
     <string name="cannot_be_undone">Ovo se ne moze ponistiti</string>
     <string name="torrent_max_total_connections">Maksimum ukupnih konekcija</string>
     <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mrezi.</string>
@@ -385,7 +385,7 @@
     <string name="context_menu_open_in_play_store">Otvori u Play Store-u</string>
     <string name="failed_to_add_download">Nije moguce dodati preuzimanje</string>
     <string name="my_filetype">Moje %s</string>
-    <string name="torrent_max_download_speed_summary">Maksimalna brzina preuzimanja/string>
+    <string name="torrent_max_download_speed_summary">Maksimalna brzina preuzimanja</string>
     <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
     <string name="use_torrentsfm_summary">Torrents.fm je baziran na magnetu, radi samo na Wi-Fi-u</string>
     <string name="device_memory">Memorija uredjaja</string>
