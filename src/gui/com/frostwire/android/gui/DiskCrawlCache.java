@@ -17,43 +17,39 @@
 
 package com.frostwire.android.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-
-import org.apache.commons.io.IOUtils;
-
 import android.content.Context;
-
-import com.frostwire.android.util.SystemUtils;
 import com.frostwire.android.util.DiskCache;
 import com.frostwire.android.util.DiskCache.Entry;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.CrawlCache;
+import com.frostwire.util.Ref;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
- *
  */
-public class DiskCrawlCache implements CrawlCache {
+public final class DiskCrawlCache implements CrawlCache {
 
     private static final Logger LOG = Logger.getLogger(DiskCrawlCache.class);
 
     private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    private final WeakReference<Context> contextWeakReference;
+    private final WeakReference<Context> contextRef;
     private DiskCache cache;
 
     public DiskCrawlCache(Context context) {
-        contextWeakReference = new WeakReference<Context>(context);
+        contextRef = Ref.weak(context);
         initDiskCache();
     }
 
     private void initDiskCache() {
-        Context context = contextWeakReference.get();
+        Context context = contextRef.get();
         if (context != null) {
             File directory = SystemUtils.getCacheDir(context, "search");
             long diskSize = SystemUtils.calculateDiskCacheSize(directory, MIN_DISK_CACHE_SIZE, MAX_DISK_CACHE_SIZE);
@@ -97,7 +93,11 @@ public class DiskCrawlCache implements CrawlCache {
     @Override
     public void remove(String key) {
         if (cache != null) {
-            cache.remove(key);
+            try {
+                cache.remove(key);
+            } catch (Throwable e) {
+                // ignore
+            }
         }
     }
 
@@ -107,15 +107,24 @@ public class DiskCrawlCache implements CrawlCache {
             try {
                 cache.delete();
                 initDiskCache();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                LOG.error("Unable to clear the crawl cache", e);
             }
         }
     }
 
     @Override
     public long size() {
-        return cache != null ? cache.size() : 0;
+        long size = 0;
+        if (cache != null) {
+            try {
+                size = cache.size();
+            } catch (Throwable e) {
+                LOG.error("Unable to get crawl cache size", e);
+            }
+        }
+
+        return size;
     }
 
     private DiskCache createDiskCache(File directory, long diskSize) {
