@@ -51,7 +51,7 @@
     <string name="type_to_filter_results">Pišite za filtriranje rezultata.</string>
     <string name="fetching_file_list">Preuzimam popis podijeljenih</string>
     <string name="not_sharing_files">ne dijeli datoteke.</string>
-    <string name="browse_peer">Pretrazivati peer-ove</string>
+    <string name="browse_peer">Pretraživati peer-ove</string>
     <string name="peer">Peer</string>
     <string name="peers">Peer-ovi</string>
     <string name="copy">Kopiraj</string>
@@ -101,7 +101,7 @@
     <string name="preferences">Postavke</string>
     <string name="please_connect">Spojite se kako bi ste koristili ovu opciju</string>
     <string name="remove">Maknuti</string>
-    <string name="try_valid_port_next_time">Pokusajte valjani port sljedeći put 1000 i 65500</string>
+    <string name="try_valid_port_next_time">Pokušajte valjani port sljedeći put 1000 i 65500</string>
     <string name="still_listening_on_port">Još uvijek slušam na portu</string>
     <string name="uh_still_listening_on_port">Molim? J/a jos uvijek slušam na portu</string>
     <string name="new_port_saved">Novi port sačuvan</string>
@@ -163,7 +163,7 @@
     <string name="use_mobile_data">Koristi 3G/4G za BitTorrent</string>
     <string name="send_to_chat">Pošalji u chat</string>
     <string name="sent_files_to_chat">Poslano %d datoteka u chat</string>
-    <string name="show_share_indication">Prikazi pomoć dijeljenja</string>
+    <string name="show_share_indication">Prikaži pomoć dijeljenja</string>
     <string name="activity_downloads_title_text">Preuzimanja</string>
     <string name="updating">Nadograđujem</string>
     <string name="search_hint">Tražiti sadržaj</string>
@@ -379,14 +379,14 @@
     <string name="connected_using_dataplan">Spojeno putem podatkovnog plana</string>
     <string name="tip_rename_your_files">Savjet: Preimenujte datoteke tako da se mogu naći</string>
     <string name="input_text_hint">Što trazite? (savjeti od Google-a)</string>
-    <string name="sdcard_storage">SD skladiste</string>
-    <string name="invalid_torrent_file">Nevazeca Torrent datoteka</string>
-    <string name="activity_media_player_name">Svirac medija</string>
+    <string name="sdcard_storage">SD skladište</string>
+    <string name="invalid_torrent_file">Nevažeća Torrent datoteka</string>
+    <string name="activity_media_player_name">Svirač medija</string>
     <string name="context_menu_open_in_play_store">Otvori u Play Store-u</string>
-    <string name="failed_to_add_download">Nije moguce dodati preuzimanje</string>
+    <string name="failed_to_add_download">Nije moguće dodati preuzimanje</string>
     <string name="my_filetype">Moje %s</string>
     <string name="torrent_max_download_speed_summary">Maksimalna brzina preuzimanja</string>
-    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android will erase downloaded files if FrostWire is uninstalled.</string>
+    <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android će obrisati preuzete datoteke ako je FrostWire deinstaliran.</string>
     <string name="use_torrentsfm_summary">Torrents.fm je baziran na magnetu, radi samo na Wi-Fi-u</string>
-    <string name="device_memory">Memorija uredjaja</string>
+    <string name="device_memory">Memorija uređaja</string>
 </resources>
