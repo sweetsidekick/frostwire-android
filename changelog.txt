@@ -1,3 +1,28 @@
+FrostWire 1.4.0 - NOVEMBER/05/2014
+ - Replaced Vuze Bittorrent engine for frostwire-jlibtorrent,
+   a java wrapper to the native libtorrent BitTorrent library.
+ - Peak memory usage dropped 50% when searching.
+ - Peak memory usage dropped 16% when downloading torrents.
+ - Number of threads dropped 41% when searching.
+ - Number of threads dropped 60% when downloading torrents.
+ - Peak CPU usage dropped 66% when searching.
+ - Peak CPU usage dropped 44% when downloading torrents.
+ - Got rid of over 2,000 classes.
+ - Upgraded Picasso library to 2.4.0.
+ - More responsive and stable torrent state handling experience.
+ - Torrent downloads start faster.
+ - Torrent downloads connect to more peers.
+ - Updated German translation.
+ - Updated Croatian translation.
+ - Updated Polish translation.
+ - Updated Spanish translation.
+ - Updated Russian translation.
+ - Gets rid of Transcommu.
+ - Project is now built using gradle script.
+ - Updated Preferences screen BitTorrent connection status button.
+ - Multiple bug fixes and crashes.
+ 
+
 FrostWire 1.3.8 - SEPTEMBER/18/2014
  - Fixes issue where FrostWire would think a Wi-Fi shared file belonged 
    to a removed SD card.
