@@ -269,7 +269,6 @@
     <string name="reject">Odbaciti</string>
     <string name="block">Blokiraj</string>
     <string name="block_computer">Blokiraj računalo</string>
-    <string name="desktop_transfer_status_complete">Zavrsiti</string>
     <string name="desktop_transfer_status_complete">Završiti</string>
     <string name="desktop_transfer_status_cancelled">Otkazano</string>
     <string name="desktop_transfer_status_unknown">Nepoznato</string>

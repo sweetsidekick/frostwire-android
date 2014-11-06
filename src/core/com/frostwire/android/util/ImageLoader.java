@@ -175,6 +175,10 @@ public final class ImageLoader {
 
             return downloader != null ? downloader.load(uri, localCacheOnly) : null;
         }
+
+        @Override
+        public void shutdown() {
+        }
     }
 
     private static class PackageApplicationDownloader implements Downloader {
@@ -201,6 +205,10 @@ public final class ImageLoader {
             }
             return response;
         }
+
+        @Override
+        public void shutdown() {
+        }
     }
 
     private static class AlbumDownloader implements Downloader {
@@ -216,6 +224,10 @@ public final class ImageLoader {
             String albumId = uri.getLastPathSegment();
             Bitmap bitmap = getAlbumArt(context, albumId);
             return (bitmap != null) ? new Response(bitmap, false, bitmap.getByteCount()) : null;
+        }
+
+        @Override
+        public void shutdown() {
         }
     }
 
@@ -247,6 +259,10 @@ public final class ImageLoader {
             boolean fromCache = parseResponseSourceHeader(connection.getHeaderField(RESPONSE_SOURCE));
 
             return new Response(connection.getInputStream(), fromCache, contentLength);
+        }
+
+        @Override
+        public void shutdown() {
         }
 
         protected HttpURLConnection openConnection(Uri path) throws IOException {
