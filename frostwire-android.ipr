@@ -320,13 +320,13 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="picasso-2.3.4">
+    <library name="picasso-2.4.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.3.4/3b646ddbdac8a33fc45b64564011da81d23e4635/picasso-2.3.4.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.4.0/f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2/picasso-2.4.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.3.4/e075e7639ce11119dd73ffcf81ffd7fabf3c6f18/picasso-2.3.4-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.4.0/5ef3429c638e8c1669023776b3deb55c1e13b0b8/picasso-2.4.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="support-v4-21.0.0">
@@ -340,4 +340,3 @@
     </library>
   </component>
 </project>
-
