@@ -1226,7 +1226,7 @@ public class MenuBuilder implements Menu {
         mCurrentMenuInfo = menuInfo;
     }
 
-    void setOptionalIconsVisible(boolean visible) {
+    public void setOptionalIconsVisible(boolean visible) {
         mOptionalIconsVisible = visible;
     }
     
