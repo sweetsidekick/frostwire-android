@@ -1,4 +1,4 @@
-FrostWire 1.4.0 - NOVEMBER/05/2014
+FrostWire 1.4.0 - NOVEMBER/08/2014
  - Replaced Vuze Bittorrent engine for frostwire-jlibtorrent,
    a java wrapper to the native libtorrent BitTorrent library.
  - Peak memory usage dropped 50% when searching.
@@ -8,6 +8,8 @@ FrostWire 1.4.0 - NOVEMBER/05/2014
  - Peak CPU usage dropped 66% when searching.
  - Peak CPU usage dropped 44% when downloading torrents.
  - Got rid of over 2,000 classes.
+ - New Shutdown feature, stops all services and activities,
+   FrostWire process ends gracefully.
  - Upgraded Picasso library to 2.4.0.
  - More responsive and stable torrent state handling experience.
  - Torrent downloads start faster.
@@ -20,6 +22,7 @@ FrostWire 1.4.0 - NOVEMBER/05/2014
  - Gets rid of Transcommu.
  - Project is now built using gradle script.
  - Updated Preferences screen BitTorrent connection status button.
+ - Fixes severe startup crash on Samsung Galaxy Mini devices.
  - Multiple bug fixes and crashes.
  
 
