@@ -558,7 +558,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                         controller.launchFrostWireTV();
                     } else if (id == R.id.menu_free_apps) {
                         controller.showFreeApps();
-                    } else if (id == R.id.menu_main_about) {
+                    } else if (id == R.id.menu_main_shutdown) {
                         controller.shutdown();
                     } else {
                         listMenu.setItemChecked(position, true);

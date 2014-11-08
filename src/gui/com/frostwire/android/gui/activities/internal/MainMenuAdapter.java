@@ -112,6 +112,8 @@ public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
             return R.drawable.menu_icon_preferences_over;
         case R.id.menu_main_about:
             return R.drawable.menu_icon_about_over;
+        case R.id.menu_main_shutdown:
+                return R.drawable.menu_icon_shutdown_over;
         default:
             return 0;
         }
