@@ -193,6 +193,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     @Override
     protected void initComponents(Bundle savedInstanceState) {
 
+        if (getIntent().getBooleanExtra("shutdown", false)) {
+            finish();
+            return;
+        }
+
         drawerLayout = findView(R.id.drawer_layout);
         drawerLayout.setDrawerListener(new SimpleDrawerListener() {
             @Override
@@ -250,7 +255,12 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+
+        if (intent.getBooleanExtra("shutdown", false)) {
+            finish();
+            return;
+        }
+
         String action = intent.getAction();
         //onResumeFragments();
 
@@ -408,7 +418,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     protected void onDestroy() {
         super.onDestroy();
 
-        playerSubscription.unsubscribe();
+        if (playerSubscription != null) {
+            playerSubscription.unsubscribe();
+        }
 
         //avoid memory leaks when the device is tilted and the menu gets recreated.
         SoftwareUpdater.instance().removeConfigurationUpdateListener(this);
@@ -536,6 +548,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                         controller.launchFrostWireTV();
                     } else if (id == R.id.menu_free_apps) {
                         controller.showFreeApps();
+                    } else if (id == R.id.menu_main_about) {
+                        controller.shutdown();
                     } else {
                         listMenu.setItemChecked(position, true);
                         controller.switchFragment((int) id);
