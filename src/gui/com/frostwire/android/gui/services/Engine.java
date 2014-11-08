@@ -46,6 +46,7 @@ public final class Engine implements IEngineService {
 
     private EngineService service;
     private ServiceConnection connection;
+    private EngineBroadcastReceiver receiver;
 
     private static Engine instance;
 
@@ -120,8 +121,13 @@ public final class Engine implements IEngineService {
 
     @Override
     public void shutdown() {
-        if (service != null && connection != null) {
-            getApplication().unbindService(connection);
+        if (service != null) {
+            if (connection != null) {
+                getApplication().unbindService(connection);
+            }
+            if (receiver != null) {
+                getApplication().unregisterReceiver(receiver);
+            }
             service.shutdown();
         }
     }
@@ -146,7 +152,7 @@ public final class Engine implements IEngineService {
     }
 
     private void registerStatusReceiver(Context context) {
-        EngineBroadcastReceiver receiver = new EngineBroadcastReceiver();
+        receiver = new EngineBroadcastReceiver();
 
         IntentFilter wifiFilter = new IntentFilter();
 
