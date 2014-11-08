@@ -204,6 +204,11 @@ public class EngineService extends Service implements IEngineService {
         }
     }
 
+    @Override
+    public void shutdown() {
+
+    }
+
     private void registerPreferencesChangeListener() {
         preferenceListener = new OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

@@ -62,4 +62,6 @@ public interface IEngineService {
     public void notifyDownloadFinished(String displayName, File file);
     
     public Application getApplication();
+
+    public void shutdown();
 }

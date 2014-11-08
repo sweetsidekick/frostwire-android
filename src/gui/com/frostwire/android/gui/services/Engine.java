@@ -117,6 +117,13 @@ public final class Engine implements IEngineService {
         }
     }
 
+    @Override
+    public void shutdown() {
+        if (service != null) {
+            service.shutdown();
+        }
+    }
+
     /**
      * 
      * @param context This must be the application context, otherwise there will be a leak.

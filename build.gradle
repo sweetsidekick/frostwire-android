@@ -80,8 +80,7 @@ android {
 
         debug {
             ndk {
-                abiFilters "armeabi"
-                //abiFilters "x86"
+                abiFilters 'armeabi'
             }
         }
     }
