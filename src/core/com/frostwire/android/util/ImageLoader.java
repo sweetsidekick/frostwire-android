@@ -143,6 +143,10 @@ public final class ImageLoader {
         cache.clear();
     }
 
+    public void shutdown() {
+        picasso.shutdown();
+    }
+
     private static class ImageDownloader implements Downloader {
 
         private final PackageApplicationDownloader appDownloader;

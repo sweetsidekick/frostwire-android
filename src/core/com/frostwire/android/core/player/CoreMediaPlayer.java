@@ -37,6 +37,8 @@ public interface CoreMediaPlayer {
 
     public void stop();
 
+    public void shutdown();
+
     public boolean isPlaying();
     
     public void seekTo(int position);

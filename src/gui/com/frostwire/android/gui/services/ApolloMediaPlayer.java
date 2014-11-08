@@ -70,6 +70,15 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
     }
 
     @Override
+    public void shutdown() {
+        try {
+            MusicUtils.mService.shutdown();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean isPlaying() {
         return MusicUtils.isPlaying();
     }

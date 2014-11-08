@@ -41,6 +41,7 @@ import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.util.ImageLoader;
 import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.ThreadPool;
@@ -100,6 +101,11 @@ public class EngineService extends Service implements IEngineService {
         stopServices(false);
 
         mediaPlayer.stop();
+        mediaPlayer.shutdown();
+
+        BTEngine.getInstance().stop();
+
+        ImageLoader.getInstance(this).shutdown();
     }
 
     public CoreMediaPlayer getMediaPlayer() {
@@ -173,7 +179,11 @@ public class EngineService extends Service implements IEngineService {
 
         PeerManager.instance().clear();
 
-        PeerManager.instance().stop();
+        try {
+            PeerManager.instance().stop();
+        } catch (Throwable e) {
+            LOG.error("Error stopping peer manager", e);
+        }
 
         state = disconnected ? STATE_DISCONNECTED : STATE_STOPPED;
         Log.v(TAG, "Engine stopped, state: " + state);
@@ -209,6 +219,7 @@ public class EngineService extends Service implements IEngineService {
 
     @Override
     public void shutdown() {
+        stopForeground(true);
         stopSelf();
     }
 
