@@ -35,6 +35,7 @@ import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.logging.Logger;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
@@ -64,6 +65,8 @@ public final class ImageLoader {
 
     private final ImageCache cache;
     private final Picasso picasso;
+
+    private boolean shutdown;
 
     private static ImageLoader instance;
 
@@ -120,15 +123,21 @@ public final class ImageLoader {
     }
 
     public void load(Uri uri, ImageView target, int targetWidth, int targetHeight) {
-        picasso.load(uri).noFade().resize(targetWidth, targetHeight).into(target);
+        if (!shutdown) {
+            picasso.load(uri).noFade().resize(targetWidth, targetHeight).into(target);
+        }
     }
 
     public void load(Uri uri, ImageView target, int placeholderResId) {
-        picasso.load(uri).noFade().placeholder(placeholderResId).into(target);
+        if (!shutdown) {
+            picasso.load(uri).noFade().placeholder(placeholderResId).into(target);
+        }
     }
 
     public void load(Uri uri, ImageView target, int targetWidth, int targetHeight, int placeholderResId) {
-        picasso.load(uri).noFade().resize(targetWidth, targetHeight).placeholder(placeholderResId).into(target);
+        if (!shutdown) {
+            picasso.load(uri).noFade().resize(targetWidth, targetHeight).placeholder(placeholderResId).into(target);
+        }
     }
 
     public Bitmap get(Uri uri) {
@@ -144,6 +153,7 @@ public final class ImageLoader {
     }
 
     public void shutdown() {
+        shutdown = true;
         picasso.shutdown();
     }
 
