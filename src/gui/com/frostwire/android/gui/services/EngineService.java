@@ -106,6 +106,18 @@ public class EngineService extends Service implements IEngineService {
         BTEngine.getInstance().stop();
 
         ImageLoader.getInstance(this).shutdown();
+
+        new Thread("shutdown-halt") {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Librarian.halt();
+            }
+        }.start();
     }
 
     public CoreMediaPlayer getMediaPlayer() {

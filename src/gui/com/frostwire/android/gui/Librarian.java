@@ -366,7 +366,7 @@ public final class Librarian {
      * Android kills the application in the same way if there is any handle open in the external
      * storage.
      */
-    public void halt() {
+    public static void halt() {
         Process.killProcess(Process.myPid());
     }
 
