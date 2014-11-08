@@ -42,6 +42,7 @@ import com.frostwire.android.gui.PeerManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.ThreadPool;
 
 /**
@@ -50,6 +51,8 @@ import com.frostwire.util.ThreadPool;
  *
  */
 public class EngineService extends Service implements IEngineService {
+
+    private static final Logger LOG = Logger.getLogger(EngineService.class);
 
     private static final String TAG = "FW.EngineService";
 
@@ -91,7 +94,7 @@ public class EngineService extends Service implements IEngineService {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        LOG.debug("EngineService onDestroy");
 
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
         stopServices(false);
@@ -206,7 +209,7 @@ public class EngineService extends Service implements IEngineService {
 
     @Override
     public void shutdown() {
-
+        stopSelf();
     }
 
     private void registerPreferencesChangeListener() {
@@ -232,7 +235,7 @@ public class EngineService extends Service implements IEngineService {
     }
 
     public class EngineServiceBinder extends Binder {
-        public IEngineService getService() {
+        public EngineService getService() {
             return EngineService.this;
         }
     }

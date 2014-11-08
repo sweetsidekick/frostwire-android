@@ -190,11 +190,22 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         setupMenuItems();
     }
 
+    private boolean isShutdown(Intent intent) {
+        boolean r = false;
+
+        if (intent != null && intent.getBooleanExtra("shutdown", false)) {
+            finish();
+            Engine.instance().shutdown();
+            r = true;
+        }
+
+        return r;
+    }
+
     @Override
     protected void initComponents(Bundle savedInstanceState) {
 
-        if (getIntent().getBooleanExtra("shutdown", false)) {
-            finish();
+        if (isShutdown(getIntent())) {
             return;
         }
 
@@ -256,8 +267,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     @Override
     protected void onNewIntent(Intent intent) {
 
-        if (intent.getBooleanExtra("shutdown", false)) {
-            finish();
+        if (isShutdown(intent)) {
             return;
         }
 

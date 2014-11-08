@@ -44,7 +44,8 @@ import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
  */
 public final class Engine implements IEngineService {
 
-    private IEngineService service;
+    private EngineService service;
+    private ServiceConnection connection;
 
     private static Engine instance;
 
@@ -119,7 +120,8 @@ public final class Engine implements IEngineService {
 
     @Override
     public void shutdown() {
-        if (service != null) {
+        if (service != null && connection != null) {
+            getApplication().unbindService(connection);
             service.shutdown();
         }
     }
@@ -132,7 +134,7 @@ public final class Engine implements IEngineService {
         Intent i = new Intent();
         i.setClass(context, EngineService.class);
         context.startService(i);
-        context.bindService(i, new ServiceConnection() {
+        context.bindService(i, connection = new ServiceConnection() {
             public void onServiceDisconnected(ComponentName name) {
             }
 
