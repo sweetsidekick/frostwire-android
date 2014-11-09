@@ -531,12 +531,12 @@
     <string name="add_to_playlist">Dodaj do Playlisty</string>
     <string name="accessibility_repeat_all">Powtórz Wszystkie</string>
     <string name="help_translate_frostwire">Pomóż tłumaczyć FrostWire</string>
-	<string name="queued_for_checking">Zakolejkowane do sprawdzenia</string>
+    <string name="queued_for_checking">Zakolejkowane do sprawdzenia</string>
     <string name="checking_ellipsis">Sprawdzanie...</string>
     <string name="downloading_metadata">Pobieranie metadanych</string>
-    <string name="Błąd_moving_incomplete">Błąd: Przenoszenie niekompletne</string>
-    <string name="Błąd_wrong_md5_hash">Błąd: Zły hash MD5</string>
-    <string name="Błąd_wrong_signature">Bład: Zła syngatura</string>
+    <string name="error_moving_incomplete">Błąd: Przenoszenie niekompletne</string>
+    <string name="error_wrong_md5_hash">Błąd: Zły hash MD5</string>
+    <string name="error_wrong_signature">Błąd: Zła syngatura</string>
     <string name="pausing">Zatrzymywanie</string>
     <string name="canceling">Anulowanie</string>
 </resources>
