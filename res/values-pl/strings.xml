@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
@@ -299,7 +299,7 @@
     <string name="dummy_hint">[Wskazówka]</string>
     <string name="dummy_peer_file_count">[Host/Ilość plików]</string>
     <string name="download_type_not_supported">Pobieranie typy nie są obsługiwane</string>
-    <string name="im_on_it">Pracuje nad tym...</string>
+    <string name="im_on_it">Pracuję nad tym...</string>
     <string name="hint_transfers">Użyj "menu" dla większego wyboru akcji</string>
     <string name="torrent_settings">Preferencje Torrentów</string>
     <string name="torrent_max_download_speed_summary">Maksymalna Szybkość Pobierania</string>
@@ -319,7 +319,7 @@
     <string name="dummy_engine">[Engine]</string>
     <string name="dummy_sources">[Żródła]</string>
     <string name="empty_string"></string>
-    <string name="seed_finished_torrents">Seeduj Pobrane Torrenty</string>
+    <string name="seed_finished_torrents">Seeduj pobrane Torrenty</string>
     <string name="seed_finished_torrents_summary">Udostępniaj fragmenty pobranych torrentów z każdym na internecie poprzez BitTorrent</string>
     <string name="seed_finished_torrents_wifi_only">Seeduj tylko przez Wi-Fi</string>
     <string name="seed_finished_torrents_wifi_only_summary">Seeduj tylko podczas połączenia przez Wi-Fi w celu zaoszczędzenia przepustowości w twoim planie danych</string>
@@ -386,7 +386,7 @@
     <string name="storage_preference_title">Wybierz Miejsce Zapisywania</string>
     <string name="storage_preference_summary">Miejsce domyślnie gdzie twoje pliki będą zapisywane.</string>
     <string name="connectivity">Łączność</string>
-    <string name="loading">Ładuje...</string>
+    <string name="loading">Ładuję...</string>
     <string name="wifi_sharing">Udostępnianie przez Wi-Fi</string>
     <string name="activity_mediaplayer_name">Odtwarzacz Multimedialny</string>
     <string name="stop">Zatrzymaj</string>
@@ -539,4 +539,6 @@
     <string name="error_wrong_signature">Błąd: Zła syngatura</string>
     <string name="pausing">Zatrzymywanie</string>
     <string name="canceling">Anulowanie</string>
+    <string name="torrent_max_peers">Maksimum Peerów</string>
+    <string name="torrent_max_peers_summary">Maksimum Peerów</string>
 </resources>
