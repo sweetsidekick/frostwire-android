@@ -104,6 +104,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private static final String APPIA_STARTED_KEY = "appia_started";
 
     private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
+    private static final String SHUTDOWN_DIALOG_ID = "shutdown_dialog";
 
     private static boolean firstTime = true;
 
@@ -191,15 +192,17 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private boolean isShutdown(Intent intent) {
-        boolean r = false;
-
-        if (intent != null && intent.getBooleanExtra("shutdown", false)) {
-            finish();
-            Engine.instance().shutdown();
-            r = true;
+        if (intent == null) {
+            return false;
         }
 
-        return r;
+        if (intent.getBooleanExtra("shutdown", false)) {
+            finish();
+            Engine.instance().shutdown();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -495,12 +498,19 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         dlg.show(getFragmentManager());
     }
 
+    private void handleShutdownRequest() {
+        YesNoDialog dlg = YesNoDialog.newInstance(SHUTDOWN_DIALOG_ID, R.string.app_shutdown_dlg_title, R.string.app_shutdown_dlg_message);
+        dlg.show(getFragmentManager());
+    }
+
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
             finish();
         } else if (tag.equals(TermsUseDialog.TAG)) {
             controller.startWizardActivity();
+        } else if (tag.equals(SHUTDOWN_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
+            controller.shutdown();
         }
     }
 
@@ -559,7 +569,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                     } else if (id == R.id.menu_free_apps) {
                         controller.showFreeApps();
                     } else if (id == R.id.menu_main_shutdown) {
-                        controller.shutdown();
+                        handleShutdownRequest();
                     } else {
                         listMenu.setItemChecked(position, true);
                         controller.switchFragment((int) id);

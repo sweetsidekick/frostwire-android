@@ -538,4 +538,6 @@
     <string name="error_wrong_signature">Error: Wrong signature</string>
     <string name="pausing">Pausing</string>
     <string name="canceling">Canceling</string>
+    <string name="app_shutdown_dlg_title">Shutdown</string>
+    <string name="app_shutdown_dlg_message">Are you sure?</string>
 </resources>
