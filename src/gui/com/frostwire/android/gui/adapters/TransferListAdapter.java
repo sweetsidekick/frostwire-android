@@ -172,7 +172,8 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return list.get(groupPosition).getItems().size();
+        int size = list.get(groupPosition).getItems().size();
+        return size <= 1 ? 0 : size;
     }
 
     @Override
