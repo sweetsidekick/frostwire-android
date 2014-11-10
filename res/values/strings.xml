@@ -539,5 +539,6 @@
     <string name="pausing">Pausing</string>
     <string name="canceling">Canceling</string>
     <string name="app_shutdown_dlg_title">Shutdown</string>
-    <string name="app_shutdown_dlg_message">Are you sure?</string>
+    <string name="app_shutdown_dlg_message">This will shutdown all transfers and background services, Are you sure?</string>
+    <string name="error_not_enough_peers">Try again, not enough peers</string>
 </resources>

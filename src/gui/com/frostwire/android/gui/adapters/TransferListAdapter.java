@@ -120,6 +120,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_MOVING_INCOMPLETE), c.getString(R.string.error_moving_incomplete));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_HASH_MD5), c.getString(R.string.error_wrong_md5_hash));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_SIGNATURE), c.getString(R.string.error_wrong_signature));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_NOT_ENOUGH_PEERS), c.getString(R.string.error_not_enough_peers));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.STOPPED), c.getString(R.string.azureus_manager_item_stopped));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.PAUSING), c.getString(R.string.pausing));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.CANCELING), c.getString(R.string.canceling));
