@@ -207,8 +207,8 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         }
 
         //  format strings
-        String sDown = UIUtils.rate2speed(TransferManager.instance().getDownloadsBandwidth());
-        String sUp = UIUtils.rate2speed(TransferManager.instance().getUploadsBandwidth());
+        String sDown = UIUtils.rate2speed(TransferManager.instance().getDownloadsBandwidth()/1024);
+        String sUp = UIUtils.rate2speed(TransferManager.instance().getUploadsBandwidth()/1024);
 
         // number of uploads (seeding) and downloads
         int downloads = TransferManager.instance().getActiveDownloads();
