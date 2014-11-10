@@ -196,7 +196,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             return false;
         }
 
-        if (intent.getBooleanExtra("shutdown", false)) {
+        if (intent.getBooleanExtra("shutdown-" + ConfigurationManager.instance().getUUIDString(), false)) {
             finish();
             Engine.instance().shutdown();
             return true;
