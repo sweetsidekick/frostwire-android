@@ -69,7 +69,7 @@
     <string name="share">Udostępnij</string>
     <string name="unshare">Nie Udostępniaj</string>
     <string name="sharing">Udostępnione</string>
-    <string name="send_pm">Wyslij Prywatną Wiadomość</string>
+    <string name="send_pm">Wyślij Prywatną Wiadomość</string>
     <string name="me">Ja</string>
     <string name="delete">Usuń</string>
     <string name="rename">Zmień Nazwę</string>
@@ -132,7 +132,7 @@
     <string name="browse">Przeglądaj</string>
     <string name="files_shared_by">pliki udostępnione przez</string>
     <string name="mark_your_territory">Zaznacz Swój Obszar</string>
-    <string name="get_a_frostwire_tshirt">Zdobądż Koszulkę FrostWire</string>
+    <string name="get_a_frostwire_tshirt">Zdobądź Koszulkę FrostWire</string>
     <string name="internal_port">Wewnętrzny Port</string>
     <string name="external_port">Zewnętrzny Port</string>
     <string name="device">Urządzenie</string>
@@ -183,7 +183,7 @@
     <string name="cant_open_file">Przepraszam, nie wiem jak otworzyć ten plik.</string>
     <string name="downloading_from_desktop">Pobieranie pliku(ów) z pulpitu</string>
     <string name="share_indication_dialog_title">Jak Udostępniać/Nie Udostępniać pliki</string>
-    <string name="dialog_share_indicator_text_text">Przejrzyj, Udostępniaj lub Nie Udostępniaj wiele plików, za pomocą pól wyboru, następnie dotknij zaznaczone pliki. \n\nUżyj ikony kłódki, aby udostępniać lub nie udostepniać indywidualne pliki.</string>
+    <string name="dialog_share_indicator_text_text">Przejrzyj, Udostępniaj lub Nie Udostępniaj wiele plików, za pomocą pól wyboru, następnie dotknij zaznaczone pliki. \n\nUżyj ikony kłódki, aby udostępniać lub nie udostępniać indywidualne pliki.</string>
     <string name="dialog_share_indicator_check_text">Pokaż tę pomoc następnym razem</string>
     <string name="show_share_indication">Pokaż Pomoc Udostępniania</string>
     <string name="download_added_to_queue">1 plik - pobieranie rozpoczęte</string>
@@ -192,7 +192,7 @@
     <string name="activity_uploads_title_text">Przesyłane</string>
     <string name="updating">Aktualizuje</string>
     <string name="loading_all">Załaduj Wszystko</string>
-    <string name="sharing_num_files">Udostepnianie %1$s plików typu %2$s</string>
+    <string name="sharing_num_files">Udostępnianie %1$s plików typu %2$s</string>
     <string name="share_selected_files">Udostępnij wybrane pliki</string>
     <string name="unshare_selected_files">Nie udostępniaj wybranych plików</string>
     <string name="long_press_for_batch_actions">Dotknij dowolny tytuł pliku dla akcji sekwencji wsadowej</string>
@@ -317,7 +317,7 @@
     <string name="dummy_summary">[Podsumowanie]</string>
     <string name="dummy_version">[Wersja]</string>
     <string name="dummy_engine">[Engine]</string>
-    <string name="dummy_sources">[Żródła]</string>
+    <string name="dummy_sources">[Źródła]</string>
     <string name="empty_string"></string>
     <string name="seed_finished_torrents">Seeduj pobrane Torrenty</string>
     <string name="seed_finished_torrents_summary">Udostępniaj fragmenty pobranych torrentów z każdym na internecie poprzez BitTorrent</string>
@@ -330,7 +330,7 @@
     <string name="show_transers_on_download_start">Pokaż Transfery przy Starcie Pobierania</string>
     <string name="dialog_new_transfer_title">Rozpocząć Pobieranie?</string>
     <string name="dialog_new_transfer_text_text">Czy na pewno chcesz pobrać %1$s (%2$s)</string>
-    <string name="dialog_new_transfer_check_text">Pokaż to nastepnym razem</string>
+    <string name="dialog_new_transfer_check_text">Pokaż to następnym razem</string>
     <string name="show_new_transfer_dialog">Pokaż Nowe Okno Transferu</string>
     <string name="dummy_action">[Akcja]</string>
     <string name="clear_torrent_index">Wyczyść Indeks Torrentów</string>
@@ -382,7 +382,7 @@
     <string name="desktop_transfer_status_cancelled">Anulowano</string>
     <string name="desktop_transfer_status_unknown">nieznany</string>
     <string name="support_frostwire">Wspieraj FrostWire</string>
-    <string name="support_frostwire_summary">Pokazuj reklamy aby wspierć rozwój tej aplikacji.</string>
+    <string name="support_frostwire_summary">Pokazuj reklamy aby wspierać rozwój tej aplikacji.</string>
     <string name="storage_preference_title">Wybierz Miejsce Zapisywania</string>
     <string name="storage_preference_summary">Miejsce domyślnie gdzie twoje pliki będą zapisywane.</string>
     <string name="connectivity">Łączność</string>
@@ -404,7 +404,7 @@
     <string name="upnp_discovery">Udostępnianie przez Wi-Fi</string>
     <string name="upnp_discovery_summary">Udostępnij pliki dla innych użytkowników FrostWire na lokalnej sieci Wi-Fi.</string>
     <string name="youtube_download_status_verifying">Weryfikowanie</string>
-    <string name="donation_thanks">Dziekujemy bardzo za Wspomaganie FrostWire</string>
+    <string name="donation_thanks">Dziękujemy bardzo za Wspomaganie FrostWire</string>
     <string name="torrent_scheme_download_not_supported">Pobranie nie jest wspomagane</string>
     <string name="retry_search">Ponów</string>
     <string name="use_archiveorg">Używaj Archive.org</string>
@@ -423,11 +423,11 @@
     <string name="use_frostclick">Używaj FrostClick</string>
     <string name="delete_this_track">Usuń ten Utwór</string>
     <string name="are_you_sure_delete_current_track">Czy na pewno chcesz usunąć bieżący utwór?</string>
-    <string name="wifi_sharing_disabled">Udostępnianie przez Wi-fi jest wyłączone.\n\nUdostępnianie przez Wi-Fi może być używane do lokalnego dzielenia sie plikami pomiędzy urządzeniami z zainstalowanym programem FrostWire i połączonymi do tej samej sieci Wi-Fi.</string>
+    <string name="wifi_sharing_disabled">Udostępnianie przez Wi-fi jest wyłączone.\n\nUdostępnianie przez Wi-Fi może być używane do lokalnego dzielenia się plikami pomiędzy urządzeniami z zainstalowanym programem FrostWire i połączonymi do tej samej sieci Wi-Fi.</string>
     <string name="turn_on_wifi_sharing">Włącz Udostępnianie przez Wi-Fi</string>
     <string name="are_you_sure_wifi_sharing_off">Wyłączenie udostępniania przez sieć Wi-Fi spowoduje że pliki, które zostały wcześniej udostępnione, nie będą dostępne dla innych użytkowników połączonych to tej samej sieci.</string>
     <string name="anonymous_usage_statistics">Anonimowe Statystyki Użytkowania</string>
-    <string name="anonymous_usage_statistics_summary">Wysyłaj anonimowe statystyki użytkowania. Żadna informacja dotycząca treści wyszukiwania, udostępniania, odtwarzania lub jakakolwiek informacja która mogłaby ciebie zidentyfikowac, nie będzie zapisana na dysku lub przesłana przez sieć.</string>
+    <string name="anonymous_usage_statistics_summary">Wysyłaj anonimowe statystyki użytkowania. Żadna informacja dotycząca treści wyszukiwania, udostępniania, odtwarzania lub jakakolwiek informacja która mogłaby ciebie zidentyfikować, nie będzie zapisana na dysku lub przesłana przez sieć.</string>
     <string name="paused_song_name">Wstrzymano %s</string>
     <string name="drawer_close">Zamknij menu nawigacji</string>
     <string name="add_transfer_label">Wklej magnet lub URL torrentu</string>
@@ -438,7 +438,7 @@
     <string name="use_torrentsfm_summary">Torrents.fm jest oparty na magnetach, działa tylko na Wi-Fi</string>
     <string name="use_eztv">Używaj Eztv</string>
     <string name="please_check_connection_status_before_resuming_download">Proszę sprawdź status swojego połączenia internetowego zanim wznowisz pobieranie.</string>
-    <string name="cloud_downloads_coming">Przepraszam: Pobiranie plików z tego źródła będzie dostępne w przyszłych wersjach.</string>
+    <string name="cloud_downloads_coming">Przepraszam: Pobieranie plików z tego źródła będzie dostępne w przyszłych wersjach.</string>
     <string name="player_paused_press_and_hold_to_stop">Odtwarzacz wstrzymany. (Naciśnij i przytrzymaj aby zatrzymać)</string>
     <string name="magnet_url_added">URL Magnetu dodana to listy transferów. (Magnety działają najlepiej na Wi-Fi)</string>
     <string name="use_monova_summary">Monova jest oparta na magnetach, działa tylko na Wi-Fi</string>
@@ -447,12 +447,12 @@
     <string name="torrent_transfer_enqueued_on_mobile_data">Pobieranie z sieci BitTorrent zacznie się automatycznie kiedy ponownie połączysz się z Wi-Fi. (Sprawdź Ustawienia dotyczące używania 3G/4G.</string>
     <string name="transfers_context_menu_clear_finished">Wyczyść wszystkie zakończone transfery</string>
     <string name="btc">BTC</string>
-    <string name="you_need_a_bitcoin_wallet_app">Musisz zainstalować portwel Bitcoin na twoim urządzeniu aby wysłać darowiznę w BTC.</string>
+    <string name="you_need_a_bitcoin_wallet_app">Musisz zainstalować portfel Bitcoin na twoim urządzeniu aby wysłać darowiznę w BTC.</string>
     <string name="transfers_select_all">Wszystkie</string>
     <string name="torrent_url_added">URL torrentu został dodany to listy transferów.</string>
-    <string name="please_enter_valid_url">Prosze dodać ważny URL</string>
+    <string name="please_enter_valid_url">Proszę dodać ważny URL</string>
     <string name="use_yify">Używaj Yify</string>
-    <string name="torrent_transfer_consuming_mobile_data">Uwaga: Ten transfer torrentu zużywa Twój mobilny plan interntowy. (Sprawdź ustawienia Sieci jeśli chcesz pobierać pliki z sieci BitTorrent tylko poprzez Wi-Fi.)</string>
+    <string name="torrent_transfer_consuming_mobile_data">Uwaga: Ten transfer torrentu zużywa Twój mobilny plan internetowy. (Sprawdź ustawienia Sieci jeśli chcesz pobierać pliki z sieci BitTorrent tylko poprzez Wi-Fi.)</string>
     <string name="transfers_context_resume_all_torrent_transfers">Wznów wszystkie transfery torrentów</string>
     <string name="use_bitsnoop">Używaj BitSnoop</string>
     <string name="use_yify_summary">Yify jest oparty na magnetach, działa tylko na Wi-Fi</string>
@@ -474,7 +474,7 @@
     <string name="accessibility_prev">Poprzedni</string>
     <string name="accessibility_shuffle">Losowo</string>
     <string name="dummy_author">[Autor]</string>
-    <string name="context_menu_open_in_play_store">Otwóż w Google Play</string>
+    <string name="context_menu_open_in_play_store">Otwórz w Google Play</string>
     <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android usunie pobrane pliki jeżeli FrostWire zostanie odinstalowany.</string>
     <string name="context_menu_delete">Usuń</string>
     <string name="device_memory">Pamięć urządzenia</string>
@@ -483,7 +483,7 @@
     <string name="menu_space_shortcut_label">Pojemność</string>
     <string name="confirm_download">Potwierdź pobranie</string>
     <string name="sdcard_storage">Karta SD</string>
-    <string name="are_you_sure_you_want_to_download_the_following">Czy jesteś pewnien że chcesz pobrać %1$s (%2$s)?</string>
+    <string name="are_you_sure_you_want_to_download_the_following">Czy jesteś pewien że chcesz pobrać %1$s (%2$s)?</string>
     <string name="context_menu_play_next">Odtwórz Następny</string>
     <string name="accessibility_repeat">Powtórz</string>
     <string name="menu_delete_shortcut_label">Usuń</string>
@@ -508,7 +508,7 @@
     <string name="storage_setting_confirm_dialog_title">KARTA SD</string>
     <string name="cant_resume_torrent_transfers">Nie można wznowić torrentów, sprawdź "Ustawienia" > "Łączność"</string>
     <string name="storage_setting_warning">UWAGA: Wszystkie pliki pobrane przez FrostWire i zapisane na karcie SD będą usunięte przez system Android jeżeli odinstalujesz FrostWire.</string>
-    <string name="install_bitcoin_wallet">Zainstaluj Portwel Bitcoin</string>
+    <string name="install_bitcoin_wallet">Zainstaluj Portfel Bitcoin</string>
     <string name="device_storage">Pamięć Wewnętrzna Urządzenia</string>
     <string name="file_descriptor_sd_mounted">Ten plik został usunięty z karty SD lub włożyłeś inną kartę.</string>
     <string name="remove_from_recent">Usuń z ostatnich</string>
@@ -536,7 +536,7 @@
     <string name="downloading_metadata">Pobieranie metadanych</string>
     <string name="error_moving_incomplete">Błąd: Przenoszenie niekompletne</string>
     <string name="error_wrong_md5_hash">Błąd: Zły hash MD5</string>
-    <string name="error_wrong_signature">Błąd: Zła syngatura</string>
+    <string name="error_wrong_signature">Błąd: Zła sygnatura</string>
     <string name="pausing">Zatrzymywanie</string>
     <string name="canceling">Anulowanie</string>
     <string name="torrent_max_peers">Maksimum Peerów</string>
