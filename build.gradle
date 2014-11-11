@@ -87,7 +87,7 @@ android {
 
     splits {
         abi {
-            enable false
+            enable true
             universalApk false
         }
     }
