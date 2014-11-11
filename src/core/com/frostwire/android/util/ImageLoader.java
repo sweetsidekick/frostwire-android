@@ -18,11 +18,6 @@
 
 package com.frostwire.android.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -33,18 +28,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
-
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.logging.Logger;
-import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
+import com.squareup.picasso.Request;
+import com.squareup.picasso.RequestHandler;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
- * 
  */
 public final class ImageLoader {
 
@@ -76,22 +71,22 @@ public final class ImageLoader {
         }
         return instance;
     }
-    
+
     /**
      * WARNING: this method does not make use of the cache.
      * it is here to be used only (so far) on the notification window view and the RC Interface (things like Lock Screen, Android Wear),
      * which run on another process space. If you try to use a cached image there, you will get some
      * nasty exceptions, therefore you will need this.
-     * 
+     * <p/>
      * For loading album art inside the application Activities/Views/Fragments, take a look at FileListAdapter and how it uses the ImageLoader.
-     * 
+     *
      * @param context
      * @param albumId
      * @return
      */
     public static Bitmap getAlbumArt(Context context, String albumId) {
         Bitmap bitmap = null;
-        Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[] { MediaStore.Audio.AlbumColumns.ALBUM_ART }, null, null, null);
+        Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
 
         try {
             if (cursor.moveToFirst()) {
@@ -112,7 +107,7 @@ public final class ImageLoader {
         int memSize = SystemUtils.calculateMemoryCacheSize(context);
 
         this.cache = new ImageCache(directory, diskSize, memSize);
-        this.picasso = new Builder(context).downloader(new ImageDownloader(context.getApplicationContext())).
+        this.picasso = new Builder(context).addRequestHandler(new ImageRequestHandler(context.getApplicationContext())).
                 memoryCache(cache).executor(Engine.instance().getThreadPool()).build();
 
         picasso.setIndicatorsEnabled(false);
@@ -157,55 +152,37 @@ public final class ImageLoader {
         picasso.shutdown();
     }
 
-    private static class ImageDownloader implements Downloader {
-
-        private final PackageApplicationDownloader appDownloader;
-        private final AlbumDownloader albumDownloader;
-        private final UrlConnectionDownloader urlDownloader;
-
-        public ImageDownloader(Context context) {
-            this.appDownloader = new PackageApplicationDownloader(context);
-            this.albumDownloader = new AlbumDownloader(context);
-            this.urlDownloader = new UrlConnectionDownloader();
-        }
-
-        @Override
-        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-            Downloader downloader = null;
-
-            String scheme = uri.getScheme();
-
-            if (SCHEME_IMAGE.equals(scheme)) {
-                String authority = uri.getAuthority();
-
-                if (APPLICATION_AUTHORITY.equals(authority)) {
-                    downloader = appDownloader;
-                } else if (ALBUM_AUTHORITY.equals(authority)) {
-                    downloader = albumDownloader;
-                }
-            } else {
-                downloader = urlDownloader;
-            }
-
-            return downloader != null ? downloader.load(uri, localCacheOnly) : null;
-        }
-
-        @Override
-        public void shutdown() {
-        }
-    }
-
-    private static class PackageApplicationDownloader implements Downloader {
+    private static final class ImageRequestHandler extends RequestHandler {
 
         private final Context context;
 
-        public PackageApplicationDownloader(Context context) {
+        public ImageRequestHandler(Context context) {
             this.context = context;
         }
 
         @Override
-        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-            Response response = null;
+        public boolean canHandleRequest(Request data) {
+            if (data == null || data.uri == null) {
+                return false;
+            }
+
+            return SCHEME_IMAGE.equals(data.uri.getScheme());
+        }
+
+        @Override
+        public Result load(Request data) throws IOException {
+            String authority = data.uri.getAuthority();
+
+            if (APPLICATION_AUTHORITY.equals(authority)) {
+                return loadApplication(data.uri);
+            } else if (ALBUM_AUTHORITY.equals(authority)) {
+                return loadAlbum(data.uri);
+            }
+            return null;
+        }
+
+        private Result loadApplication(Uri uri) throws IOException {
+            Result result;
             String packageName = uri.getLastPathSegment();
 
             PackageManager pm = context.getPackageManager();
@@ -213,96 +190,17 @@ public final class ImageLoader {
                 BitmapDrawable icon = (BitmapDrawable) pm.getApplicationIcon(packageName);
                 Bitmap bmp = icon.getBitmap();
 
-                response = new Response(bmp, false, bmp.getByteCount());
+                result = new Result(bmp, Picasso.LoadedFrom.DISK);
             } catch (NameNotFoundException e) {
-                response = null;
+                result = null;
             }
-            return response;
+            return result;
         }
 
-        @Override
-        public void shutdown() {
-        }
-    }
-
-    private static class AlbumDownloader implements Downloader {
-
-        private final Context context;
-
-        public AlbumDownloader(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
+        private Result loadAlbum(Uri uri) throws IOException {
             String albumId = uri.getLastPathSegment();
             Bitmap bitmap = getAlbumArt(context, albumId);
-            return (bitmap != null) ? new Response(bitmap, false, bitmap.getByteCount()) : null;
-        }
-
-        @Override
-        public void shutdown() {
-        }
-    }
-
-    private static class UrlConnectionDownloader implements Downloader {
-
-        private static final int DEFAULT_READ_TIMEOUT = 20 * 1000; // 20s
-        private static final int DEFAULT_CONNECT_TIMEOUT = 15 * 1000; // 15s
-
-        private static final String RESPONSE_SOURCE = "X-Android-Response-Source";
-
-        public UrlConnectionDownloader() {
-        }
-
-        @Override
-        public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-            HttpURLConnection connection = openConnection(uri);
-            connection.setUseCaches(true);
-            if (localCacheOnly) {
-                connection.setRequestProperty("Cache-Control", "only-if-cached,max-age=" + Integer.MAX_VALUE);
-            }
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode >= 300) {
-                connection.disconnect();
-                throw new ResponseException(responseCode + " " + connection.getResponseMessage());
-            }
-
-            long contentLength = connection.getHeaderFieldInt("Content-Length", -1);
-            boolean fromCache = parseResponseSourceHeader(connection.getHeaderField(RESPONSE_SOURCE));
-
-            return new Response(connection.getInputStream(), fromCache, contentLength);
-        }
-
-        @Override
-        public void shutdown() {
-        }
-
-        protected HttpURLConnection openConnection(Uri path) throws IOException {
-            HttpURLConnection connection = (HttpURLConnection) new URL(path.toString()).openConnection();
-            connection.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
-            return connection;
-        }
-
-        /** Returns {@code true} if header indicates the response body was loaded from the disk cache. */
-        private static boolean parseResponseSourceHeader(String header) {
-            if (header == null) {
-                return false;
-            }
-            String[] parts = header.split(" ", 2);
-            if ("CACHE".equals(parts[0])) {
-                return true;
-            }
-            if (parts.length == 1) {
-                return false;
-            }
-            try {
-                return "CONDITIONAL_CACHE".equals(parts[0]) && Integer.parseInt(parts[1]) == 304;
-            } catch (NumberFormatException e) {
-                return false;
-            }
+            return (bitmap != null) ? new Result(bitmap, Picasso.LoadedFrom.DISK) : null;
         }
     }
 }
