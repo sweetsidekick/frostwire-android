@@ -16,11 +16,14 @@
 
 package com.frostwire.android.market;
 
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import com.android.vending.billing.IMarketBillingService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -468,7 +471,7 @@ public class BillingService extends Service implements ServiceConnection {
                 Log.i(TAG, "binding to Market billing service");
             }
             boolean bindResult = bindService(
-                    new Intent(Consts.MARKET_BILLING_SERVICE_ACTION),
+                    getExplicitIntent(),
                     this,  // ServiceConnection.
                     Context.BIND_AUTO_CREATE);
 
@@ -479,8 +482,28 @@ public class BillingService extends Service implements ServiceConnection {
             }
         } catch (SecurityException e) {
             Log.e(TAG, "Security exception: " + e);
+        } catch (Throwable e) {
+            Log.e(TAG, "General error: " + e);
         }
         return false;
+    }
+
+    private Intent getExplicitIntent() {
+        PackageManager pm = getPackageManager();
+        Intent intent = new Intent(Consts.MARKET_BILLING_SERVICE_ACTION);
+        List<ResolveInfo> infos = pm.queryIntentServices(intent, 0);
+
+        if (infos == null || infos.size() != 1) {
+            return null;
+        }
+
+        ResolveInfo serviceInfo = infos.get(0);
+        String packageName = serviceInfo.serviceInfo.packageName;
+        String className = serviceInfo.serviceInfo.name;
+        ComponentName component = new ComponentName(packageName, className);
+        Intent iapIntent = new Intent();
+        iapIntent.setComponent(component);
+        return iapIntent;
     }
 
     /**
