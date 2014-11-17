@@ -424,8 +424,9 @@ public class BillingService extends Service implements ServiceConnection {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent, startId);
+        return START_NOT_STICKY;
     }
 
     /**
@@ -470,10 +471,16 @@ public class BillingService extends Service implements ServiceConnection {
             if (Consts.DEBUG) {
                 Log.i(TAG, "binding to Market billing service");
             }
-            boolean bindResult = bindService(
-                    getExplicitIntent(),
-                    this,  // ServiceConnection.
-                    Context.BIND_AUTO_CREATE);
+
+            boolean bindResult = false;
+            Intent intent = getExplicitIntent();
+
+            if (intent != null) {
+                bindResult = bindService(
+                        intent,
+                        this,  // ServiceConnection.
+                        Context.BIND_AUTO_CREATE);
+            }
 
             if (bindResult) {
                 return true;
@@ -701,6 +708,7 @@ public class BillingService extends Service implements ServiceConnection {
     public void unbind() {
         try {
             unbindService(this);
+            stopSelf();
         } catch (IllegalArgumentException e) {
             // This might happen if the service was disconnected
         }
