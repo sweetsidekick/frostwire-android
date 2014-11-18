@@ -15,6 +15,15 @@ repositories {
     mavenCentral()
 }
 
+def manifestVersionCode() {
+    def manifestFile = file(project.projectDir.absolutePath + '/AndroidManifest.xml')
+
+    def ns = new groovy.xml.Namespace("http://schemas.android.com/apk/res/android", "android")
+    def xml = new XmlParser().parse(manifestFile)
+
+    return Integer.parseInt(xml.attributes()[ns.versionCode].toString())
+}
+
 android {
 
     compileSdkVersion 15
@@ -97,7 +106,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.versionCodeOverride =
-                    project.ext.versionCodes.get(output.abiFilter, 0) * 1000000 + android.defaultConfig.versionCode
+		       project.ext.versionCodes.get(output.abiFilter, 0) * 1000000 + manifestVersionCode()
         }
     }
 }
