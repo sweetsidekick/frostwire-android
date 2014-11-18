@@ -323,7 +323,7 @@
     <string name="seed_finished_torrents">Раздавать завершенные торренты</string>
     <string name="seed_finished_torrents_summary">Раздавать части скаченных торрентов кому-либо в Интернете с помощью BitTorrent</string>
     <string name="seed_finished_torrents_wifi_only">Раздавать только по Wi-Fi</string>
-    <string name="seed_finished_torrents_wifi_only_summary">Раздавать только когда подключено через Wi-Fi для того, чтобы сэкономить трафик на Вашем тарифном плане</string>
+    <string name="seed_finished_torrents_wifi_only_summary">Раздавать только когда подключено через Wi-Fi, для того, чтобы сэкономить трафик через мобильные сети</string>
     <string name="dummy_downloads_indicator">0 @ 0 КБ/c</string>
     <string name="dummy_uploads_indicator">0 @ 0 КБ/c</string>
     <string name="seeding_has_been_turned_off">Раздача была отключена</string>
@@ -339,8 +339,8 @@
     <string name="clear">Очистить</string>
     <string name="delete_n_torrents_indexed">Удаленные %d торренты проиндексированы</string>
     <string name="there_is_n_torrents_indexed">Вот %d проиндексированные торренты</string>
-    <string name="wizard_previous">Предыдущий</string>
-    <string name="wizard_next">Следующий</string>
+    <string name="wizard_previous">Вернуться</string>
+    <string name="wizard_next">Продолжить</string>
     <string name="wizard_finish">Завершить</string>
     <string name="dummy_content_description"></string>
     <string name="welcome_to_frostwire">Добро пожаловать в FrostWire</string>
@@ -437,7 +437,7 @@
     <string name="player_paused_press_and_hold_to_stop">Приостановлено. (Совет: нажмите и удерживайте, чтобы приостановить)</string>
     <string name="btc">BTC</string>
     <string name="you_need_a_bitcoin_wallet_app">На вашем устройстве должен быть Bitcoin кошелёк, чтобы отправить BTC для пожертвования.</string>
-    <string name="transfers_select_all">Все</string>
+    <string name="transfers_select_all">все</string>
     <string name="transfers_select_downloading">загружаемые</string>
     <string name="transfers_select_completed">завершённые</string>
     <string name="transfers_context_menu_clear_finished">Очистить список завершённых передач</string>
