@@ -77,7 +77,7 @@ public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
         menuInflater.inflate(R.menu.main, menu);
 
         ConfigurationManager config = ConfigurationManager.instance();
-        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM)) {
+        if (!config.getBoolean(Constants.PREF_KEY_GUI_SHOW_TV_MENU_ITEM) || Constants.IS_AMAZON_DISTRIBUTION) {
             menu.removeItem(R.id.menu_launch_tv);
         }
 
