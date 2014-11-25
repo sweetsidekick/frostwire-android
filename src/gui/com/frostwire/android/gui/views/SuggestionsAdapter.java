@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 import com.frostwire.android.R;
-import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.util.HttpClient;
 import com.frostwire.util.HttpClientFactory;
 

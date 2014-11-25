@@ -31,7 +31,7 @@ import android.os.AsyncTask;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.SearchEngine;
 import com.frostwire.android.gui.util.OfferUtils;
-import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.PagedWebSearchPerformer;
 import com.frostwire.search.SearchResult;

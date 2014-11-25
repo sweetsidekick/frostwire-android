@@ -33,7 +33,7 @@ import android.text.Html;
 
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.search.CrawledSearchResult;
 import com.frostwire.search.FileSearchResult;

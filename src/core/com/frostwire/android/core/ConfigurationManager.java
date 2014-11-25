@@ -28,7 +28,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
-import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.util.ByteUtils;
 
 /**

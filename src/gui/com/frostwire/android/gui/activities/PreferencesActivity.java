@@ -41,7 +41,7 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
 import com.frostwire.android.gui.views.preference.StoragePreference;
-import com.frostwire.android.util.StringUtils;
+import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
 
