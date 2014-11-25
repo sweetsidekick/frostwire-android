@@ -358,18 +358,6 @@ public final class Librarian {
         return com.frostwire.android.util.SystemUtils.isPrimaryExternalStorageMounted();
     }
 
-    /**
-     * This method is for kill the application process.
-     * 
-     * It's absolutely not recommended to use this method but in very special situations.
-     * The actual existence reason of this method it to handle the external storage shared state.
-     * Android kills the application in the same way if there is any handle open in the external
-     * storage.
-     */
-    public static void halt() {
-        Process.killProcess(Process.myPid());
-    }
-
     public EphemeralPlaylist createEphemeralPlaylist(FileDescriptor fd) {
         List<FileDescriptor> fds = Librarian.instance().getFiles(Constants.FILE_TYPE_AUDIO, FilenameUtils.getPath(fd.filePath), false);
 

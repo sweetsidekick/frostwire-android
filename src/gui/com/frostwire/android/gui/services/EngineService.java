@@ -29,8 +29,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Binder;
-import android.os.IBinder;
+import android.os.*;
+import android.os.Process;
 import android.util.Log;
 
 import com.frostwire.android.R;
@@ -113,9 +113,9 @@ public class EngineService extends Service implements IEngineService {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    // ignore
                 }
-                Librarian.halt();
+                Process.killProcess(Process.myPid());
             }
         }.start();
     }

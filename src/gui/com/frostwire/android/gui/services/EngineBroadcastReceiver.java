@@ -97,11 +97,6 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             } else if (action.equals(Intent.ACTION_PACKAGE_REMOVED)) {
                 // no sure about this case
             }
-
-            if (!Librarian.instance().isExternalStorageMounted()) {
-                Log.v(TAG, "Halting process due to lack of external storage");
-                Librarian.instance().halt();
-            }
         } catch (Throwable e) {
             Log.e(TAG, "Error processing broadcast message", e);
         }

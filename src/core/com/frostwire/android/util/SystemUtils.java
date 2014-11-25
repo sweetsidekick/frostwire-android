@@ -90,15 +90,26 @@ public final class SystemUtils {
         return Math.max(Math.min(size, maxSize), minSize);
     }
 
+    /**
+     * returns true if the media is present
+     * and mounted at its mount point with read/write access.
+     *
+     * @return
+     * @see android.os.Environment#MEDIA_MOUNTED
+     */
     public static boolean isPrimaryExternalStorageMounted() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**
      * Use this instead of EnvironmentCompat.
-     * 
+     * <p/>
+     * returns true if the media is present
+     * and mounted at its mount point with read/write access.
+     *
      * @param path
      * @return
+     * @see android.os.Environment#MEDIA_MOUNTED
      */
     public static boolean isSecondaryExternalStorageMounted(File path) {
         if (path == null) { // fast precondition
