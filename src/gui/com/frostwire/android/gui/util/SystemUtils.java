@@ -122,6 +122,7 @@ public final class SystemUtils {
             break;
         case Constants.FILE_TYPE_TORRENTS:
             folderName = TORRENTS_FOLDER_NAME;
+            break;
         default: // We will treat anything else like documents (unknown types)
             folderName = DOCUMENTS_FOLDER_NAME;
         }
