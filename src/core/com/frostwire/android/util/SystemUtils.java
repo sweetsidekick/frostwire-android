@@ -53,7 +53,7 @@ public final class SystemUtils {
     }
 
     public static File getCacheDir(Context context, String directory) {
-        File cache = null;
+        File cache;
 
         if (isPrimaryExternalStorageMounted()) {
             cache = context.getExternalCacheDir();

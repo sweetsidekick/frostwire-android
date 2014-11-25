@@ -18,17 +18,22 @@
 
 package com.frostwire.android.core;
 
+import android.content.Context;
+
+import java.io.File;
+
 /**
  * @author gubatron
  * @author aldenml
  */
-public class CoreRuntimeException extends RuntimeException {
+public final class SystemDirs {
 
-    public CoreRuntimeException(String detailMessage) {
-        super(detailMessage);
+    private static final String LIBTORRENT_DIR = "libtorrent";
+
+    private SystemDirs() {
     }
 
-    public CoreRuntimeException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
+    public static File getLibTorrent(Context context) {
+        return new File(context.getExternalFilesDir(null), LIBTORRENT_DIR);
     }
 }

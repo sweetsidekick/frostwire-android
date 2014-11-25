@@ -25,6 +25,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ViewConfiguration;
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.CoreRuntimeException;
+import com.frostwire.android.core.SystemDirs;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.HttpResponseCache;
@@ -52,21 +54,11 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        ignoreHardwareMenu();
-
-        try {
-            HttpResponseCache.install(this);
-        } catch (IOException e) {
-            LOG.error("Unable to install global http cache", e);
-        }
-
         try {
 
-            //            if (!Librarian.instance().isExternalStorageMounted() || instance != null) {
-            //                return;
-            //            }
+            ignoreHardwareMenu();
+            installHttpCache();
 
-            // important initial setup here
             ConfigurationManager.create(this);
 
             setupBTEngine();
@@ -75,7 +67,7 @@ public class MainApplication extends Application {
             Librarian.create(this);
             Engine.create(this);
 
-            com.frostwire.android.util.ImageLoader.getInstance(this);
+            ImageLoader.getInstance(this);
             CrawlPagedWebSearchPerformer.setCache(new DiskCrawlCache(this));
             CrawlPagedWebSearchPerformer.setMagnetDownloader(new LibTorrentMagnetDownloader());
 
@@ -89,8 +81,7 @@ public class MainApplication extends Application {
             Librarian.instance().syncMediaStore();
             Librarian.instance().syncApplicationsProvider();
         } catch (Throwable e) {
-            String stacktrace = Log.getStackTraceString(e);
-            throw new RuntimeException("MainApplication Create exception: " + stacktrace, e);
+            throw new CoreRuntimeException("Unable to initialized main components", e);
         }
     }
 
@@ -119,8 +110,16 @@ public class MainApplication extends Application {
                 f.setAccessible(true);
                 f.setBoolean(config, false);
             }
-        } catch (Throwable ex) {
-            // Ignore
+        } catch (Throwable e) {
+            // ignore
+        }
+    }
+
+    private void installHttpCache() {
+        try {
+            HttpResponseCache.install(this);
+        } catch (IOException e) {
+            LOG.error("Unable to install global http cache", e);
         }
     }
 
@@ -129,7 +128,7 @@ public class MainApplication extends Application {
         URL.setURLStreamHandlerFactory(new AzURLStreamHandlerFactory());
 
         BTContext ctx = new BTContext();
-        ctx.homeDir = SystemUtils.getLibTorrentDirectory(this);
+        ctx.homeDir = SystemDirs.getLibTorrent(this);
         ctx.torrentsDir = SystemUtils.getTorrentsDirectory();
         ctx.dataDir = SystemUtils.getTorrentDataDirectory();
         ctx.port0 = 0;
