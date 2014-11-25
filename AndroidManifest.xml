@@ -263,8 +263,6 @@
 			android:authorities="com.frostwire.android.core.providers.Sharing" android:exported="true" />
 		<provider android:name="com.frostwire.android.core.providers.ApplicationsProvider"
 			android:authorities="com.frostwire.android.core.providers.Applications" android:exported="true" />
-		<provider android:name="com.frostwire.android.core.providers.TorrentsProvider"
-			android:authorities="com.frostwire.android.core.providers.Torrents" android:exported="true"/>
 
 		<!-- services -->
 
