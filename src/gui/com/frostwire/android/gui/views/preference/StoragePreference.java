@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.gui.views.AbstractAdapter.OnItemClickAdapter;
@@ -117,7 +118,7 @@ public class StoragePreference extends DialogPreference {
             if (which == Dialog.BUTTON_POSITIVE && selectedPath != null) {
                 ConfigurationManager.instance().setStoragePath(selectedPath);
                 BTEngine.ctx.dataDir = new File(selectedPath).getAbsoluteFile();
-                BTEngine.ctx.torrentsDir = com.frostwire.android.gui.util.SystemUtils.getTorrentsDirectory().getAbsoluteFile();
+                BTEngine.ctx.torrentsDir = SystemPaths.getTorrents();
                 dismissPreferenceDialog();
                 uxLogSelection();
             }

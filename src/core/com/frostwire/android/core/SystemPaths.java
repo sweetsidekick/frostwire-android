@@ -26,14 +26,25 @@ import java.io.File;
  * @author gubatron
  * @author aldenml
  */
-public final class SystemDirs {
+public final class SystemPaths {
 
-    private static final String LIBTORRENT_DIR = "libtorrent";
+    private static final String LIBTORRENT_PATH = "libtorrent";
+    private static final String APP_STORAGE_PATH = "FrostWire";
+    private static final String TORRENTS_PATH = "Torrents";
 
-    private SystemDirs() {
+    private SystemPaths() {
     }
 
     public static File getLibTorrent(Context context) {
-        return new File(context.getExternalFilesDir(null), LIBTORRENT_DIR);
+        return new File(context.getExternalFilesDir(null), LIBTORRENT_PATH);
+    }
+
+    public static File getTorrents() {
+        return new File(getAppStorage(), TORRENTS_PATH);
+    }
+
+    public static File getAppStorage() {
+        String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+        return new File(path, APP_STORAGE_PATH);
     }
 }

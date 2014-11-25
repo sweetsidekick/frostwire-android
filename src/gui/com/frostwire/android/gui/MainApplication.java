@@ -22,11 +22,10 @@ import android.app.Application;
 import android.content.Context;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.ViewConfiguration;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.SystemDirs;
+import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.HttpResponseCache;
@@ -128,8 +127,8 @@ public class MainApplication extends Application {
         URL.setURLStreamHandlerFactory(new AzURLStreamHandlerFactory());
 
         BTContext ctx = new BTContext();
-        ctx.homeDir = SystemDirs.getLibTorrent(this);
-        ctx.torrentsDir = SystemUtils.getTorrentsDirectory();
+        ctx.homeDir = SystemPaths.getLibTorrent(this);
+        ctx.torrentsDir = SystemPaths.getTorrents();
         ctx.dataDir = SystemUtils.getTorrentDataDirectory();
         ctx.port0 = 0;
         ctx.port1 = 0;

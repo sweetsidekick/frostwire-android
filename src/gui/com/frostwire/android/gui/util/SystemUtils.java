@@ -68,10 +68,6 @@ public final class SystemUtils {
         return result;
     }
 
-    public static File getTorrentsDirectory() {
-        return createFolder(getApplicationStorageDirectory(), TORRENTS_FOLDER_NAME);
-    }
-
     public static File getTorrentDataDirectory() {
         return createFolder(getApplicationStorageDirectory(), TORRENT_DATA_FOLDER_NAME);
     }
