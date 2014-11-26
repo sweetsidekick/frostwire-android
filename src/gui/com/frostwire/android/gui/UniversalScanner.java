@@ -184,7 +184,10 @@ public final class UniversalScanner {
                     scanDocument(path);
                 } else {
                     //LOG.debug("Scanned new file: " + uri);
-                    shareFinishedDownload(Librarian.instance().getFileDescriptor(uri));
+                    FileDescriptor fd = Librarian.instance().getFileDescriptor(uri);
+                    if (fd != null) {
+                        shareFinishedDownload(fd);
+                    }
                 }
             } else {
                 if (path.endsWith(".apk")) {
