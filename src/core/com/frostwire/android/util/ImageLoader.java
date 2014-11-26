@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.logging.Logger;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 import com.squareup.picasso.Request;
@@ -42,6 +43,8 @@ import java.io.IOException;
  * @author aldenml
  */
 public final class ImageLoader {
+
+    private static final Logger LOG = Logger.getLogger(ImageLoader.class);
 
     private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -86,15 +89,22 @@ public final class ImageLoader {
      */
     public static Bitmap getAlbumArt(Context context, String albumId) {
         Bitmap bitmap = null;
-        Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
 
         try {
-            if (cursor.moveToFirst()) {
-                String albumArt = cursor.getString(0);
-                bitmap = BitmapFactory.decodeFile(albumArt);
+
+            Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
+
+            try {
+                if (cursor.moveToFirst()) {
+                    String albumArt = cursor.getString(0);
+                    bitmap = BitmapFactory.decodeFile(albumArt);
+                }
+            } finally {
+                cursor.close();
             }
-        } finally {
-            cursor.close();
+
+        } catch (Throwable e) {
+            LOG.error("Error getting album art", e);
         }
 
         return bitmap;
