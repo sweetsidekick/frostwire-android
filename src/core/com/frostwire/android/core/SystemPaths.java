@@ -34,6 +34,13 @@ public final class SystemPaths {
     private static final String TORRENT_DATA_PATH = "TorrentsData";
     private static final String TEMP_PATH = "Temp";
 
+    private static final String AUDIO_PATH = "Music";
+    private static final String PICTURES_PATH = "Pictures";
+    private static final String VIDEOS_PATH = "Videos";
+    private static final String DOCUMENTS_PATH = "Documents";
+    private static final String APPLICATIONS_PATH = "Applications";
+    private static final String RINGTONES_PATH = "Ringtones";
+
     private SystemPaths() {
     }
 
@@ -56,5 +63,39 @@ public final class SystemPaths {
 
     public static File getTemp() {
         return new File(getAppStorage(), TEMP_PATH);
+    }
+
+    public static File getSaveDirectory(byte fileType) {
+        File parentFolder = getAppStorage();
+
+        String folderName;
+
+        switch (fileType) {
+            case Constants.FILE_TYPE_AUDIO:
+                folderName = AUDIO_PATH;
+                break;
+            case Constants.FILE_TYPE_PICTURES:
+                folderName = PICTURES_PATH;
+                break;
+            case Constants.FILE_TYPE_VIDEOS:
+                folderName = VIDEOS_PATH;
+                break;
+            case Constants.FILE_TYPE_DOCUMENTS:
+                folderName = DOCUMENTS_PATH;
+                break;
+            case Constants.FILE_TYPE_APPLICATIONS:
+                folderName = APPLICATIONS_PATH;
+                break;
+            case Constants.FILE_TYPE_RINGTONES:
+                folderName = RINGTONES_PATH;
+                break;
+            case Constants.FILE_TYPE_TORRENTS:
+                folderName = TORRENTS_PATH;
+                break;
+            default: // We will treat anything else like documents (unknown types)
+                folderName = DOCUMENTS_PATH;
+        }
+
+        return new File(parentFolder, folderName);
     }
 }

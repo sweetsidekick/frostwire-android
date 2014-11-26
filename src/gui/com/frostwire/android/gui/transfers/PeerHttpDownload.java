@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.frostwire.android.core.*;
 import com.frostwire.transfers.TransferItem;
 import org.apache.commons.io.FilenameUtils;
 
@@ -32,10 +33,6 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.frostwire.android.R;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.android.core.HttpFetcherListener;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
@@ -55,6 +52,7 @@ public final class PeerHttpDownload implements DownloadTransfer {
     private static final int STATUS_ERROR = 3;
     private static final int STATUS_CANCELLED = 4;
     private static final int STATUS_WAITING = 5;
+    private static final int STATUS_SAVE_DIR_ERROR = 7;
 
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
@@ -77,8 +75,17 @@ public final class PeerHttpDownload implements DownloadTransfer {
         this.peer = peer;
         this.fd = fd;
         this.dateCreated = new Date();
-        this.savePath = new File(SystemUtils.getSaveDirectory(fd.fileType), cleanFileName(FilenameUtils.getName(fd.filePath)));
+        this.savePath = new File(SystemPaths.getSaveDirectory(fd.fileType), cleanFileName(FilenameUtils.getName(fd.filePath)));
         status = STATUS_DOWNLOADING;
+
+        File savePathRoot = this.savePath.getParentFile();
+        if (savePathRoot == null) {
+            this.status = STATUS_SAVE_DIR_ERROR;
+        }
+
+        if (!savePathRoot.isDirectory() && !savePathRoot.mkdirs()) {
+            this.status = STATUS_SAVE_DIR_ERROR;
+        }
     }
 
     public Peer getPeer() {
@@ -170,6 +177,10 @@ public final class PeerHttpDownload implements DownloadTransfer {
      * @param retry
      */
     private void start(final int delay, final int retry) {
+        if (status == STATUS_SAVE_DIR_ERROR) {
+            return;
+        }
+
         Engine.instance().getThreadPool().execute(new Thread(getDisplayName()) {
             public void run() {
                 try {
@@ -190,24 +201,27 @@ public final class PeerHttpDownload implements DownloadTransfer {
     private String getStatusString(int status) {
         int resId;
         switch (status) {
-        case STATUS_DOWNLOADING:
-            resId = R.string.peer_http_download_status_downloading;
-            break;
-        case STATUS_COMPLETE:
-            resId = R.string.peer_http_download_status_complete;
-            break;
-        case STATUS_ERROR:
-            resId = R.string.peer_http_download_status_error;
-            break;
-        case STATUS_CANCELLED:
-            resId = R.string.peer_http_download_status_cancelled;
-            break;
-        case STATUS_WAITING:
-            resId = R.string.peer_http_download_status_waiting;
-            break;
-        default:
-            resId = R.string.peer_http_download_status_unknown;
-            break;
+            case STATUS_DOWNLOADING:
+                resId = R.string.peer_http_download_status_downloading;
+                break;
+            case STATUS_COMPLETE:
+                resId = R.string.peer_http_download_status_complete;
+                break;
+            case STATUS_ERROR:
+                resId = R.string.peer_http_download_status_error;
+                break;
+            case STATUS_SAVE_DIR_ERROR:
+                resId = R.string.http_download_status_save_dir_error;
+                break;
+            case STATUS_CANCELLED:
+                resId = R.string.peer_http_download_status_cancelled;
+                break;
+            case STATUS_WAITING:
+                resId = R.string.peer_http_download_status_waiting;
+                break;
+            default:
+                resId = R.string.peer_http_download_status_unknown;
+                break;
         }
         return String.valueOf(resId);
     }

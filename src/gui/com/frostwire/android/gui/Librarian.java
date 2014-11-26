@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
+import com.frostwire.android.core.*;
 import com.frostwire.android.gui.transfers.Transfers;
 import org.apache.commons.io.FilenameUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -45,11 +46,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.WindowManager;
 
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.CoreRuntimeException;
-import com.frostwire.android.core.FileDescriptor;
-import com.frostwire.android.core.MediaType;
 import com.frostwire.android.core.player.EphemeralPlaylist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.core.providers.TableFetcher;
@@ -519,7 +515,7 @@ public final class Librarian {
         syncMediaStore(Constants.FILE_TYPE_VIDEOS, ignorableFiles);
         syncMediaStore(Constants.FILE_TYPE_RINGTONES, ignorableFiles);
 
-        scan(SystemUtils.getSaveDirectory(Constants.FILE_TYPE_DOCUMENTS));
+        scan(SystemPaths.getSaveDirectory(Constants.FILE_TYPE_DOCUMENTS));
     }
 
     private void syncMediaStore(byte fileType, Set<File> ignorableFiles) {
@@ -531,9 +527,9 @@ public final class Librarian {
             ContentResolver cr = context.getContentResolver();
 
             String where = MediaColumns.DATA + " LIKE ?";
-            String[] whereArgs = new String[] { SystemUtils.getApplicationStorageDirectory().getAbsolutePath() + "%" };
+            String[] whereArgs = new String[]{SystemPaths.getAppStorage().getAbsolutePath() + "%"};
 
-            c = cr.query(fetcher.getContentUri(), new String[] { MediaColumns._ID, MediaColumns.DATA }, where, whereArgs, null);
+            c = cr.query(fetcher.getContentUri(), new String[]{MediaColumns._ID, MediaColumns.DATA}, where, whereArgs, null);
             if (c == null) {
                 return;
             }
