@@ -41,6 +41,8 @@ public final class SystemPaths {
     private static final String APPLICATIONS_PATH = "Applications";
     private static final String RINGTONES_PATH = "Ringtones";
 
+    private static final String APPLICATION_APK_NAME = "frostwire.apk";
+
     private SystemPaths() {
     }
 
@@ -97,5 +99,9 @@ public final class SystemPaths {
         }
 
         return new File(parentFolder, folderName);
+    }
+
+    public static File getUpdateApk() {
+        return new File(getSaveDirectory(Constants.FILE_TYPE_APPLICATIONS), APPLICATION_APK_NAME);
     }
 }

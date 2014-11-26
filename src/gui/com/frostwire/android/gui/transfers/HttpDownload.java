@@ -41,7 +41,6 @@ import com.frostwire.android.core.HttpFetcher;
 import com.frostwire.android.core.HttpFetcherListener;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.util.ZipUtils;
 
 /**

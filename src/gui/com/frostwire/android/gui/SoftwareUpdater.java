@@ -40,9 +40,9 @@ import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.HttpFetcher;
+import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.OSUtils;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.util.StringUtils;
 import com.frostwire.util.ByteUtils;
@@ -141,7 +141,7 @@ public final class SoftwareUpdater {
                             }
                             // didn't download it? go get it now
                             else {
-                                new HttpFetcher(update.u).save(SystemUtils.getUpdateInstallerPath());
+                                new HttpFetcher(update.u).save(SystemPaths.getUpdateApk());
 
                                 if (downloadedLatestFrostWire(update.md5)) {
                                     return true;
@@ -188,7 +188,7 @@ public final class SoftwareUpdater {
             }
 
             if (update.a.equals(UPDATE_ACTION_OTA)) {
-                if (!SystemUtils.getUpdateInstallerPath().exists()) {
+                if (!SystemPaths.getUpdateApk().exists()) {
                     return;
                 }
 
@@ -197,7 +197,7 @@ public final class SoftwareUpdater {
                 UIUtils.showYesNoDialog(context, R.drawable.app_icon, message, R.string.update_title, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Engine.instance().stopServices(false);
-                        UIUtils.openFile(context, SystemUtils.getUpdateInstallerPath().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
+                        UIUtils.openFile(context, SystemPaths.getUpdateApk().getAbsolutePath(), Constants.MIME_TYPE_ANDROID_PACKAGE_ARCHIVE);
                     }
                 });
             } else if (update.a.equals(UPDATE_ACTION_MARKET)) {
@@ -224,10 +224,10 @@ public final class SoftwareUpdater {
      * @return
      */
     private boolean downloadedLatestFrostWire(String md5) {
-        if (!SystemUtils.getUpdateInstallerPath().exists()) {
+        if (!SystemPaths.getUpdateApk().exists()) {
             return false;
         }
-        return checkMD5(SystemUtils.getUpdateInstallerPath(), md5);
+        return checkMD5(SystemPaths.getUpdateApk(), md5);
     }
 
     /**

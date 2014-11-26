@@ -32,6 +32,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.activities.MainActivity;
@@ -60,7 +62,6 @@ import com.frostwire.android.gui.transfers.SoundcloudDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.transfers.YouTubeDownload;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
 import com.frostwire.android.gui.views.AbstractFragment;
@@ -280,16 +281,16 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         RichNotification internalMemoryNotification = findView(v, R.id.fragment_transfers_internal_memory_notification);
         internalMemoryNotification.setVisibility(View.GONE);
 
-        if (SystemUtils.isUsingSDCardPrivateStorage() && !sdCardNotification.wasDismissed()) {
+        if (isUsingSDCardPrivateStorage() && !sdCardNotification.wasDismissed()) {
             sdCardNotification.setVisibility(View.VISIBLE);
             sdCardNotification.setOnClickListener(new SDCardNotificationListener(this));
         }
 		
 		//if you do have an SD Card mounted and you're using internal memory, we'll let you know
 		//that you now can use the SD Card. We'll keep this for a few releases.
-        File sdCardDir = SystemUtils.getBiggestSDCardDir(getActivity());
+        File sdCardDir = getBiggestSDCardDir(getActivity());
 		if (com.frostwire.android.util.SystemUtils.isSecondaryExternalStorageMounted(sdCardDir) &&
-			!SystemUtils.isUsingSDCardPrivateStorage() &&
+			!isUsingSDCardPrivateStorage() &&
 			!internalMemoryNotification.wasDismissed()) {
 			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(sdCardDir));
 			String internalMemoryNotificationDescription = getString(R.string.saving_to_internal_memory_description, bytesAvailableInHuman);
@@ -556,6 +557,44 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
     private void hideAddTransfersKeyboard() {
         InputMethodManager imm = (InputMethodManager) addTransferUrlTextView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(addTransferUrlTextView.getWindowToken(), 0);
+    }
+
+    /**
+     * Is it using the SD Card's private (non-persistent after uninstall) app folder to save
+     * downloaded files?
+     * @return
+     */
+    public static boolean isUsingSDCardPrivateStorage() {
+        String primaryPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String currentPath = ConfigurationManager.instance().getStoragePath();
+
+        return !primaryPath.equals(currentPath);
+    }
+
+    /**
+     * Iterates over all the secondary external storage roots and returns the one with the most bytes available.
+     * @param context
+     * @return
+     */
+    public static File getBiggestSDCardDir(Context context) {
+        String primaryPath = context.getExternalFilesDir(null).getParent();
+
+        long biggestBytesAvailable = -1;
+
+        File result = null;
+
+        for (File f : com.frostwire.android.util.SystemUtils.getExternalFilesDirs(context)) {
+            if (!f.getAbsolutePath().startsWith(primaryPath)) {
+                long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
+                if (bytesAvailable > biggestBytesAvailable) {
+                    biggestBytesAvailable = bytesAvailable;
+                    result = f;
+                }
+            }
+        }
+        //System.out.println("FW.SystemUtils.getSDCardDir() -> " + result.getAbsolutePath());
+        // -> /storage/extSdCard/Android/data/com.frostwire.android/files
+        return result;
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {

@@ -27,7 +27,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.android.util.HttpResponseCache;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.bittorrent.BTContext;

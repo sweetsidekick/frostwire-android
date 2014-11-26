@@ -56,7 +56,6 @@ import com.frostwire.android.core.providers.UniversalStore.Applications.Applicat
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
 import com.frostwire.android.gui.util.Apk;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.util.StringUtils;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.ScreenMetrics;

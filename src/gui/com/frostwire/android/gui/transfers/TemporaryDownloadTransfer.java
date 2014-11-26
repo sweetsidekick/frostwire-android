@@ -22,7 +22,6 @@ import java.io.File;
 
 import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.search.SearchResult;
 
 /**

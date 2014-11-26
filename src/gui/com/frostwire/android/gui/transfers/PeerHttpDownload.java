@@ -36,7 +36,6 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.SystemUtils;
 
 /**
  * @author gubatron

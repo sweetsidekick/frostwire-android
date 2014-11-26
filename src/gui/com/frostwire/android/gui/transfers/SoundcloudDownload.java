@@ -28,7 +28,6 @@ import android.util.Log;
 
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.SystemPaths;
-import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.mp3.ID3Wrapper;
 import com.frostwire.mp3.ID3v1Tag;
 import com.frostwire.mp3.ID3v23Tag;
