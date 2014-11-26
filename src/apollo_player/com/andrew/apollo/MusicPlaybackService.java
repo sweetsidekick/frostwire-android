@@ -63,6 +63,7 @@ import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.gui.activities.AudioPlayerActivity;
 import com.frostwire.android.util.SystemUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 
 /**
@@ -70,6 +71,9 @@ import com.frostwire.util.Ref;
  * and when the user moves Apollo into the background.
  */
 public class MusicPlaybackService extends Service {
+
+    private static final Logger LOG = Logger.getLogger(MusicPlaybackService.class);
+
     private static final String TAG = "MusicPlaybackService";
     private static final boolean D = false;
 
@@ -1761,7 +1765,12 @@ public class MusicPlaybackService extends Service {
             if (mCursor == null) {
                 return null;
             }
-            return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.TITLE));
+            try {
+                return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.TITLE));
+            } catch (Throwable e) {
+                LOG.error("Error getting track name", e);
+                return null;
+            }
         }
     }
 
