@@ -128,7 +128,7 @@ public final class YouTubeDownload implements DownloadTransfer {
     }
 
     private static File buildTempFile(String name, String ext) {
-        return new File(SystemUtils.getTempDirectory(), name + "." + ext);
+        return new File(SystemPaths.getTemp(), name + "." + ext);
     }
 
     private DownloadType buildDownloadType(YouTubeCrawledSearchResult sr) {

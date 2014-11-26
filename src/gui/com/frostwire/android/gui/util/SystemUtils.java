@@ -43,7 +43,6 @@ public final class SystemUtils {
     private static final String APPLICATIONS_FOLDER_NAME = "Applications";
     private static final String RINGTONES_FOLDER_NAME = "Ringtones";
     private static final String TORRENTS_FOLDER_NAME = "Torrents";
-    private static final String TEMP_FOLDER_NAME = "Temp";
 
     private static final String APPLICATION_NAME = "frostwire.apk";
 
@@ -65,21 +64,6 @@ public final class SystemUtils {
         }
 
         return result;
-    }
-
-    public static File getTempDirectory() {
-        File f = createFolder(getApplicationStorageDirectory(), TEMP_FOLDER_NAME);
-
-        File nomedia = new File(f, ".nomedia");
-        if (!nomedia.exists()) {
-            try {
-                nomedia.createNewFile();
-            } catch (IOException e) {
-                // unable to create nomedia file, ignore it for now
-            }
-        }
-
-        return f;
     }
 
     public static File getSaveDirectory(byte fileType) {

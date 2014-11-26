@@ -37,6 +37,7 @@ import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.util.DirectoryUtils;
 import org.gudy.azureus2.core3.util.protocol.AzURLStreamHandlerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -72,10 +73,7 @@ public class MainApplication extends Application {
 
             LocalSearchEngine.create(getDeviceId());//getAndroidId());
 
-            // to alleviate a little if the external storage is not mounted
-            if (com.frostwire.android.util.SystemUtils.isPrimaryExternalStorageMounted()) {
-                DirectoryUtils.deleteFolderRecursively(SystemUtils.getTempDirectory());
-            }
+            cleanTemp();
 
             Librarian.instance().syncMediaStore();
             Librarian.instance().syncApplicationsProvider();
@@ -138,5 +136,18 @@ public class MainApplication extends Application {
         BTEngine.ctx = ctx;
 
         BTEngine.getInstance().start();
+    }
+
+    private void cleanTemp() {
+        try {
+            File tmp = SystemPaths.getTemp();
+            DirectoryUtils.deleteFolderRecursively(tmp);
+
+            if (tmp.mkdirs()) {
+                new File(tmp, ".nomedia").createNewFile();
+            }
+        } catch (Throwable e) {
+            LOG.error("Error during setup of temp directory", e);
+        }
     }
 }

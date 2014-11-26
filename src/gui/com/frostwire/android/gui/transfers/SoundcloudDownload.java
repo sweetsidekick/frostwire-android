@@ -27,6 +27,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.util.SystemUtils;
 import com.frostwire.mp3.ID3Wrapper;
 import com.frostwire.mp3.ID3v1Tag;
@@ -149,7 +150,7 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
         try {
             final HttpDownloadLink link = buildDownloadLink();
             if (link != null) {
-                delegate = new HttpDownload(manager, SystemUtils.getTempDirectory(), link);
+                delegate = new HttpDownload(manager, SystemPaths.getTemp(), link);
                 delegate.setListener(new HttpDownloadListener() {
                     @Override
                     public void onComplete(HttpDownload download) {

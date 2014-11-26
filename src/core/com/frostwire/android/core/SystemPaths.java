@@ -32,6 +32,7 @@ public final class SystemPaths {
     private static final String APP_STORAGE_PATH = "FrostWire";
     private static final String TORRENTS_PATH = "Torrents";
     private static final String TORRENT_DATA_PATH = "TorrentsData";
+    private static final String TEMP_PATH = "Temp";
 
     private SystemPaths() {
     }
@@ -51,5 +52,9 @@ public final class SystemPaths {
 
     public static File getTorrentData() {
         return new File(getAppStorage(), TORRENT_DATA_PATH);
+    }
+
+    public static File getTemp() {
+        return new File(getAppStorage(), TEMP_PATH);
     }
 }
