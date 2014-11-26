@@ -1,3 +1,10 @@
+FrostWire 1.4.1 - NOVEMBER/26/2014
+ - Updated jlibtorrent binaries.
+ - Resilience to file disk permission errors causing the app to
+   not start in some environments.
+ - Improved disk I/O when persisting states of torrent transfers.
+ - Refactors, Cleanups and other misc. bug fixes.
+
 FrostWire 1.4.0 - NOVEMBER/08/2014
  - Replaced Vuze Bittorrent engine for frostwire-jlibtorrent,
    a java wrapper to the native libtorrent BitTorrent library.
