@@ -129,7 +129,7 @@ public class MainApplication extends Application {
         BTContext ctx = new BTContext();
         ctx.homeDir = SystemPaths.getLibTorrent(this);
         ctx.torrentsDir = SystemPaths.getTorrents();
-        ctx.dataDir = SystemUtils.getTorrentDataDirectory();
+        ctx.dataDir = SystemPaths.getTorrentData();
         ctx.port0 = 0;
         ctx.port1 = 0;
         ctx.iface = "0.0.0.0";

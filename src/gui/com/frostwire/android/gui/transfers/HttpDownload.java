@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.frostwire.android.core.SystemPaths;
 import com.frostwire.transfers.TransferItem;
 import org.apache.commons.io.FilenameUtils;
 
@@ -58,6 +59,7 @@ public final class HttpDownload implements DownloadTransfer {
     static final int STATUS_CANCELLED = 4;
     static final int STATUS_WAITING = 5;
     static final int STATUS_UNCOMPRESSING = 6;
+    static final int STATUS_SAVE_DIR_ERROR = 7;
 
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
@@ -82,12 +84,19 @@ public final class HttpDownload implements DownloadTransfer {
         this.dateCreated = new Date();
 
         this.savePath = new File(savePath, link.getFileName());
-
         this.status = STATUS_DOWNLOADING;
+
+        if (savePath == null) {
+            this.status = STATUS_SAVE_DIR_ERROR;
+        }
+
+        if (!savePath.isDirectory() && !savePath.mkdirs()) {
+            this.status = STATUS_SAVE_DIR_ERROR;
+        }
     }
 
     HttpDownload(TransferManager manager, HttpDownloadLink link) {
-        this(manager, SystemUtils.getTorrentDataDirectory(), link);
+        this(manager, SystemPaths.getTorrentData(), link);
     }
 
     public HttpDownloadListener getListener() {
@@ -195,6 +204,10 @@ public final class HttpDownload implements DownloadTransfer {
      * @param retry
      */
     private void start(final int delay, final int retry) {
+        if (status == STATUS_SAVE_DIR_ERROR) {
+            return;
+        }
+
         Engine.instance().getThreadPool().execute(new Thread(getDisplayName()) {
             public void run() {
                 try {
@@ -215,27 +228,30 @@ public final class HttpDownload implements DownloadTransfer {
     private String getStatusString(int status) {
         int resId;
         switch (status) {
-        case STATUS_DOWNLOADING:
-            resId = R.string.peer_http_download_status_downloading;
-            break;
-        case STATUS_COMPLETE:
-            resId = R.string.peer_http_download_status_complete;
-            break;
-        case STATUS_ERROR:
-            resId = R.string.peer_http_download_status_error;
-            break;
-        case STATUS_CANCELLED:
-            resId = R.string.peer_http_download_status_cancelled;
-            break;
-        case STATUS_WAITING:
-            resId = R.string.peer_http_download_status_waiting;
-            break;
-        case STATUS_UNCOMPRESSING:
-            resId = R.string.http_download_status_uncompressing;
-            break;
-        default:
-            resId = R.string.peer_http_download_status_unknown;
-            break;
+            case STATUS_DOWNLOADING:
+                resId = R.string.peer_http_download_status_downloading;
+                break;
+            case STATUS_COMPLETE:
+                resId = R.string.peer_http_download_status_complete;
+                break;
+            case STATUS_ERROR:
+                resId = R.string.peer_http_download_status_error;
+                break;
+            case STATUS_SAVE_DIR_ERROR:
+                resId = R.string.http_download_status_save_dir_error;
+                break;
+            case STATUS_CANCELLED:
+                resId = R.string.peer_http_download_status_cancelled;
+                break;
+            case STATUS_WAITING:
+                resId = R.string.peer_http_download_status_waiting;
+                break;
+            case STATUS_UNCOMPRESSING:
+                resId = R.string.http_download_status_uncompressing;
+                break;
+            default:
+                resId = R.string.peer_http_download_status_unknown;
+                break;
         }
         return String.valueOf(resId);
     }

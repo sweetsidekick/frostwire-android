@@ -541,4 +541,5 @@
     <string name="app_shutdown_dlg_title">Shutdown</string>
     <string name="app_shutdown_dlg_message">This will shutdown all transfers and background services. Are you sure?</string>
     <string name="error_not_enough_peers">Try again, not enough peers</string>
+    <string name="http_download_status_save_dir_error">Save directory does not exist or can\'t be created</string>
 </resources>

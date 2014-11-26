@@ -135,18 +135,6 @@ public final class TransferManager {
         }
         return false;
     }
-
-    private boolean alreadyDownloadingByInfoHash(String infohash) {
-        synchronized (alreadyDownloadingMonitor) {
-            for (BittorrentDownload bt : bittorrentDownloads) {
-                if (bt.getHash().equalsIgnoreCase(infohash)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     
     public DownloadTransfer download(SearchResult sr) {
         DownloadTransfer transfer = null;
@@ -464,38 +452,6 @@ public final class TransferManager {
                 }
             }
         }
-    }
-
-    public void reviewBittorrentTransfers() {
-        // TODO:BITTORRENT
-//        if (tm.isBittorrentDisconnected() && transfer instanceof BittorrentDownload) {
-//            UIUtils.showLongMessage(ctx, R.string.torrent_transfer_paused_disconnected_from_bittorrent);
-//        }
-
-        //        if (isBittorrentDownloadAndMobileDataSavingsOn(transfer)) {
-//            //give it time to get to a pausable state.
-//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//            enqueueTorrentTransfer(transfer);
-//            //give it time to stop before onPostExecute
-//            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//        }
-
-        //            if (!(download instanceof InvalidBittorrentDownload)) {
-//                if ((download instanceof AzureusBittorrentDownload && !alreadyDownloadingByInfoHash(download.getHash())) ||
-//                    (download instanceof TorrentFetcherDownload && !alreadyDownloading(uri.toString()))) {
-//                    if (!bittorrentDownloads.contains(download)) {
-//                        bittorrentDownloads.add(download);
-//
-//                        if (isBittorrentDownloadAndMobileDataSavingsOn(download)) {
-//                            //give it time to get to a pausable state.
-//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//                            enqueueTorrentTransfer(download);
-//                            //give it time to stop before onPostExecute
-//                            try { Thread.sleep(5000);  } catch (Throwable t) { /*meh*/ }
-//                        }
-//                    }
-//                }
-//            }
     }
 
     private void registerPreferencesChangeListener() {

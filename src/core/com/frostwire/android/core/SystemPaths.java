@@ -31,6 +31,7 @@ public final class SystemPaths {
     private static final String LIBTORRENT_PATH = "libtorrent";
     private static final String APP_STORAGE_PATH = "FrostWire";
     private static final String TORRENTS_PATH = "Torrents";
+    private static final String TORRENT_DATA_PATH = "TorrentsData";
 
     private SystemPaths() {
     }
@@ -39,12 +40,16 @@ public final class SystemPaths {
         return new File(context.getExternalFilesDir(null), LIBTORRENT_PATH);
     }
 
+    public static File getAppStorage() {
+        String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
+        return new File(path, APP_STORAGE_PATH);
+    }
+
     public static File getTorrents() {
         return new File(getAppStorage(), TORRENTS_PATH);
     }
 
-    public static File getAppStorage() {
-        String path = ConfigurationManager.instance().getString(Constants.PREF_KEY_STORAGE_PATH);
-        return new File(path, APP_STORAGE_PATH);
+    public static File getTorrentData() {
+        return new File(getAppStorage(), TORRENT_DATA_PATH);
     }
 }
