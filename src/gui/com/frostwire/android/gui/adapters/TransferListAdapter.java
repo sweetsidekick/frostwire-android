@@ -326,8 +326,10 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
 
+            boolean errored = download.getStatus() != null && getStatusFromResId(download.getStatus()).contains("Error");
+
             boolean openMenu = false;
-            openMenu |= download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
+            openMenu |= !errored && download.isComplete() && (tag instanceof HttpDownload || tag instanceof PeerHttpDownload || tag instanceof YouTubeDownload || tag instanceof SoundcloudDownload);
 
             if (openMenu) {
                 items.add(new OpenMenuAction(context.get(), download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
@@ -339,6 +341,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 PeerHttpDownload pdownload = (PeerHttpDownload) download;
                 items.add(new BrowsePeerMenuAction(context.get(), pdownload.getPeer()));
             }
+
         } else if (tag instanceof PeerHttpUpload) {
             PeerHttpUpload upload = (PeerHttpUpload) tag;
             title = upload.getDisplayName();
