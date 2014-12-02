@@ -173,8 +173,13 @@ public final class MainController {
         if (uri == null) {
             return;
         }
-        shareFileByUri(uri);
-        UIUtils.showLongMessage(activity, R.string.one_file_shared);
+
+        try {
+            shareFileByUri(uri);
+            UIUtils.showLongMessage(activity, R.string.one_file_shared);
+        } catch (Throwable t) {
+            UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+        }
     }
 
     private void shareFileByUri(Uri uri) {
