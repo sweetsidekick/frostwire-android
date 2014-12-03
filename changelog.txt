@@ -4,7 +4,7 @@ FrostWire 1.4.1 - DECEMBER/02/2014
    not start in some environments.
  - Improved disk I/O when persisting states of torrent transfers.
  - Refactors, Cleanups and other misc. bug fixes.
- - Clears errored transfers from transfer list.
+ - Improved user experience on transfer list actions.
  - Preferences screen won't automatically kick user to search screen
    when BitTorrent connectivity changes.
 
