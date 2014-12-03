@@ -289,7 +289,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 		//if you do have an SD Card mounted and you're using internal memory, we'll let you know
 		//that you now can use the SD Card. We'll keep this for a few releases.
         File sdCardDir = getBiggestSDCardDir(getActivity());
-		if (com.frostwire.android.util.SystemUtils.isSecondaryExternalStorageMounted(sdCardDir) &&
+		if (sdCardDir != null && com.frostwire.android.util.SystemUtils.isSecondaryExternalStorageMounted(sdCardDir) &&
 			!isUsingSDCardPrivateStorage() &&
 			!internalMemoryNotification.wasDismissed()) {
 			String bytesAvailableInHuman = UIUtils.getBytesInHuman(com.frostwire.android.util.SystemUtils.getAvailableStorageSize(sdCardDir));
@@ -576,25 +576,32 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
      * @param context
      * @return
      */
-    public static File getBiggestSDCardDir(Context context) {
-        String primaryPath = context.getExternalFilesDir(null).getParent();
+    private static File getBiggestSDCardDir(Context context) {
+        try {
+            String primaryPath = context.getExternalFilesDir(null).getParent();
 
-        long biggestBytesAvailable = -1;
+            long biggestBytesAvailable = -1;
 
-        File result = null;
+            File result = null;
 
-        for (File f : com.frostwire.android.util.SystemUtils.getExternalFilesDirs(context)) {
-            if (!f.getAbsolutePath().startsWith(primaryPath)) {
-                long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
-                if (bytesAvailable > biggestBytesAvailable) {
-                    biggestBytesAvailable = bytesAvailable;
-                    result = f;
+            for (File f : com.frostwire.android.util.SystemUtils.getExternalFilesDirs(context)) {
+                if (!f.getAbsolutePath().startsWith(primaryPath)) {
+                    long bytesAvailable = com.frostwire.android.util.SystemUtils.getAvailableStorageSize(f);
+                    if (bytesAvailable > biggestBytesAvailable) {
+                        biggestBytesAvailable = bytesAvailable;
+                        result = f;
+                    }
                 }
             }
+            //System.out.println("FW.SystemUtils.getSDCardDir() -> " + result.getAbsolutePath());
+            // -> /storage/extSdCard/Android/data/com.frostwire.android/files
+            return result;
+        } catch (Throwable e) {
+            // the context could be null due to a UI bad logic or context.getExternalFilesDir(null) could be null
+            LOG.error("Error getting the biggest SD card", e);
         }
-        //System.out.println("FW.SystemUtils.getSDCardDir() -> " + result.getAbsolutePath());
-        // -> /storage/extSdCard/Android/data/com.frostwire.android/files
-        return result;
+
+        return null;
     }
 
     private static final class TransferComparator implements Comparator<Transfer> {
