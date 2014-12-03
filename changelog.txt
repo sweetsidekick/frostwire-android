@@ -5,7 +5,9 @@ FrostWire 1.4.1 - DECEMBER/02/2014
  - Improved disk I/O when persisting states of torrent transfers.
  - Refactors, Cleanups and other misc. bug fixes.
  - Clears errored transfers from transfer list.
- 
+ - Preferences screen won't automatically kick user to search screen
+   when BitTorrent connectivity changes.
+
 FrostWire 1.4.0 - NOVEMBER/08/2014
  - Replaced Vuze Bittorrent engine for frostwire-jlibtorrent,
    a java wrapper to the native libtorrent BitTorrent library.
