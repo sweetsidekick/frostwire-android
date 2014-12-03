@@ -257,6 +257,7 @@
     <string name="play_image_description">Play</string>
     <string name="view_transfer_list_item_button_action_description">Action</string>
     <string name="yes_no_cancel_transfer_question">Are you sure you want to stop and remove this download from the list (no data will be erased)?</string>
+    <string name="yes_no_cancel_transfer_question_cloud">Are you sure you want to stop and remove this download from the list?</string>
     <string name="yes_no_cancel_delete_transfer_question">Are you sure you want to cancel this download (downloaded data so far will be erased)?</string>
     <string name="cancel_transfer">Cancel Transfer</string>
     <string name="view_transfer_list_item_group_indicator_description">More/Less information</string>

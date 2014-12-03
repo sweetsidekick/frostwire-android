@@ -80,7 +80,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
     private final OnClickListener viewOnClickListener;
     private final ViewOnLongClickListener viewOnLongClickListener;
-    private final ActionOnClickListener actionOnClickListener;
     private final OpenOnClickListener playOnClickListener;
 
     /** Keep track of all dialogs ever opened so we dismiss when we leave to avoid memleaks */
@@ -95,7 +94,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
         this.viewOnClickListener = new ViewOnClickListener();
         this.viewOnLongClickListener = new ViewOnLongClickListener();
-        this.actionOnClickListener = new ActionOnClickListener();
         this.playOnClickListener = new OpenOnClickListener();
 
         this.dialogs = new ArrayList<Dialog>();
@@ -291,7 +289,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             title = download.getDisplayName();
 
             //If it's a torrent download with a single file, we should be able to open it.
-            if (download.isComplete() && download.getItems().size() == 1) {
+            if (download.isComplete()) {
                 TransferItem transferItem = download.getItems().get(0);
                 String path = transferItem.getFile().getAbsolutePath();
                 String mimeType = UIUtils.getMimeType(path);
@@ -333,14 +331,14 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
             if (openMenu) {
                 items.add(new OpenMenuAction(context.get(), download.getDisplayName(), download.getSavePath().getAbsolutePath(), extractMime(download)));
-            } else {
-                items.add(new CancelMenuAction(context.get(), download, true));
             }
 
             if (download instanceof PeerHttpDownload) {
                 PeerHttpDownload pdownload = (PeerHttpDownload) download;
                 items.add(new BrowsePeerMenuAction(context.get(), pdownload.getPeer()));
             }
+
+            items.add(new CancelMenuAction(context.get(), download, !openMenu));
 
         } else if (tag instanceof PeerHttpUpload) {
             PeerHttpUpload upload = (PeerHttpUpload) tag;
@@ -453,7 +451,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private void populatePeerDownload(View view, PeerHttpDownload download) {
@@ -475,7 +473,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private void populatePeerUpload(View view, PeerHttpUpload upload) {
@@ -497,7 +495,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(upload.getSize()));
 
         buttonAction.setTag(upload);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private void populateHttpDownload(View view, HttpDownload download) {
@@ -519,7 +517,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private void populateBittorrentDownloadItem(View view, TransferItem item) {
@@ -558,7 +556,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private void populateSoundcloudDownload(View view, SoundcloudDownload download) {
@@ -580,7 +578,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         size.setText(UIUtils.getBytesInHuman(download.getSize()));
 
         buttonAction.setTag(download);
-        buttonAction.setOnClickListener(actionOnClickListener);
+        buttonAction.setOnClickListener(viewOnClickListener);
     }
 
     private String getStatusFromResId(String str) {
@@ -641,23 +639,6 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
                 Log.e(TAG, "Failed to create the menu");
             }
             return false;
-        }
-    }
-
-    private final class ActionOnClickListener implements OnClickListener {
-        public void onClick(View v) {
-            final Transfer transfer = (Transfer) v.getTag();
-
-            if (transfer instanceof BittorrentDownload) {
-                viewOnClickListener.onClick(v);
-            } else {
-                trackDialog(UIUtils.showYesNoDialog(context.get(), R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        transfer.cancel();
-                        UXStats.instance().log(UXAction.DOWNLOAD_REMOVE);
-                    }
-                }));
-            }
         }
     }
 

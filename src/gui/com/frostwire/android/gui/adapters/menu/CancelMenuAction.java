@@ -22,8 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.frostwire.android.R;
-import com.frostwire.android.gui.transfers.DownloadTransfer;
-import com.frostwire.android.gui.transfers.Transfer;
+import com.frostwire.android.gui.transfers.*;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.uxstats.UXAction;
@@ -47,7 +46,12 @@ public class CancelMenuAction extends MenuAction {
 
     @Override
     protected void onClick(Context context) {
-        UIUtils.showYesNoDialog(context, (deleteData) ? R.string.yes_no_cancel_delete_transfer_question : R.string.yes_no_cancel_transfer_question, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
+        int yes_no_cancel_transfer_id = R.string.yes_no_cancel_transfer_question;
+        if (transfer instanceof HttpDownload || transfer instanceof YouTubeDownload || transfer instanceof SoundcloudDownload) {
+            yes_no_cancel_transfer_id = R.string.yes_no_cancel_transfer_question_cloud;
+        }
+
+        UIUtils.showYesNoDialog(context, (deleteData) ? R.string.yes_no_cancel_delete_transfer_question : yes_no_cancel_transfer_id, R.string.cancel_transfer, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (transfer instanceof DownloadTransfer) {
                     ((DownloadTransfer) transfer).cancel(deleteData);
