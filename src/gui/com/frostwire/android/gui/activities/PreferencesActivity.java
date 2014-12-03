@@ -256,11 +256,6 @@ public class PreferencesActivity extends PreferenceActivity {
             protected void onPostExecute(Void result) {
                 UIUtils.showShortMessage(context, R.string.toast_on_connect);
                 updateConnectSwitch();
-                if (!(context instanceof MainActivity)) {
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(i);
-                }
             }
         };
 
@@ -280,11 +275,6 @@ public class PreferencesActivity extends PreferenceActivity {
             protected void onPostExecute(Void result) {
                 UIUtils.showShortMessage(context, R.string.toast_on_disconnect);
                 updateConnectSwitch();
-                if (!(context instanceof MainActivity)) {
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    context.startActivity(i);
-                }
             }
         };
 
