@@ -234,21 +234,26 @@ public class StoragePreference extends DialogPreference {
         private List<StorageMount> getSecondayExternals(Context context) {
             List<StorageMount> mounts = new ArrayList<StorageMount>();
 
-            String primaryPath = context.getExternalFilesDir(null).getParent();
+            // "Returns null if external storage is not currently mounted".
+            File externalFilesDir = context.getExternalFilesDir(null);
 
-            int i = 0;
+            if (externalFilesDir != null) {
+                String primaryPath = externalFilesDir.getParent();
 
-            for (File f : SystemUtils.getExternalFilesDirs(context)) {
-                if (!f.getAbsolutePath().startsWith(primaryPath) &&
-                        SystemUtils.isSecondaryExternalStorageMounted(f)) {
+                int i = 0;
 
-                    String label = context.getString(R.string.sdcard_storage) + " " + (++i);
-                    String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f)) + " " + context.getString(R.string.available);
-                    String path = f.getAbsolutePath();
+                for (File f : SystemUtils.getExternalFilesDirs(context)) {
+                    if (!f.getAbsolutePath().startsWith(primaryPath) &&
+                            SystemUtils.isSecondaryExternalStorageMounted(f)) {
 
-                    StorageMount mount = new StorageMount(label, description, path, false);
+                        String label = context.getString(R.string.sdcard_storage) + " " + (++i);
+                        String description = UIUtils.getBytesInHuman(SystemUtils.getAvailableStorageSize(f)) + " " + context.getString(R.string.available);
+                        String path = f.getAbsolutePath();
 
-                    mounts.add(mount);
+                        StorageMount mount = new StorageMount(label, description, path, false);
+
+                        mounts.add(mount);
+                    }
                 }
             }
 
