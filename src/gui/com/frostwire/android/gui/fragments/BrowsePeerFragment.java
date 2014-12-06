@@ -30,14 +30,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.andrew.apollo.MusicPlaybackService;
 import com.frostwire.android.R;
@@ -51,6 +49,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractFragment;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView;
 import com.frostwire.android.gui.views.BrowsePeerSearchBarView.OnActionListener;
+import com.frostwire.android.gui.views.OverScrollListener;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.logging.Logger;
 import com.frostwire.uxstats.UXAction;
@@ -78,7 +77,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     private RadioButton buttonDocuments;
 
     private BrowsePeerSearchBarView filesBar;
-    private ListView list;
+    private com.frostwire.android.gui.views.ListView list;
 
     private FileListAdapter adapter;
 
@@ -89,6 +88,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     private View header;
 
     private OnRefreshSharedListener onRefreshSharedListener;
+    private long lastAdapterRefresh;
 
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
@@ -246,6 +246,15 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
         });
         
         list = findView(v, R.id.fragment_browse_peer_list);
+        list.setOverScrollListener(new OverScrollListener() {
+            @Override
+            public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+                long now = SystemClock.elapsedRealtime();
+                if (clampedY && (now - lastAdapterRefresh) > 5000) {
+                    refreshSelection();
+                }
+            }
+        });
     }
 
     protected void onRefreshShared(byte fileType) {
@@ -634,6 +643,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
     public void refreshSelection() {
         if (adapter != null) {
+            lastAdapterRefresh = SystemClock.elapsedRealtime();
             browseFilesButtonClick(adapter.getFileType());
         }
     }

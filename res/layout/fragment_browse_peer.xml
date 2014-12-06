@@ -96,16 +96,18 @@
         android:layout_height="0dip"
         android:layout_weight="1" >
 
-        <com.frostwire.android.gui.views.ListView
-            android:id="@+id/fragment_browse_peer_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/body_background_gray_light"
-            android:clickable="true"
-            android:fastScrollEnabled="true"
-            android:focusableInTouchMode="true"
-            android:longClickable="true"
-            android:textFilterEnabled="true" />
+            <com.frostwire.android.gui.views.ListView
+                    android:id="@+id/fragment_browse_peer_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/body_background_gray_light"
+                    android:clickable="true"
+                    android:fastScrollEnabled="true"
+                    android:focusableInTouchMode="true"
+                    android:longClickable="true"
+                    android:textFilterEnabled="true"
+                    android:overScrollMode="always"/>
+
     </FrameLayout>
 
 </LinearLayout>

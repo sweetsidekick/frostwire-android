@@ -20,6 +20,7 @@ package com.frostwire.android.gui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 
 /**
  * @author gubatron
@@ -28,15 +29,50 @@ import android.util.AttributeSet;
  */
 public class ListView extends android.widget.ListView {
 
+    private static final int MAX_Y_OVERSCROLL_DISTANCE = 100;
+    private final int mMaxYOverscrollDistance;
+
+    private OverScrollListener overScrollListener = null;
+
     public ListView(Context context, AttributeSet attrs, int defStyle) {
         super(new FWContextWrapper(context), attrs, defStyle);
+        mMaxYOverscrollDistance = calculateMaxOverscrollScreenDistance(context);
     }
 
     public ListView(Context context, AttributeSet attrs) {
         super(new FWContextWrapper(context), attrs);
+        mMaxYOverscrollDistance = calculateMaxOverscrollScreenDistance(context);
     }
 
     public ListView(Context context) {
         super(new FWContextWrapper(context));
+        mMaxYOverscrollDistance = calculateMaxOverscrollScreenDistance(context);
+    }
+
+    public void setOverScrollListener(OverScrollListener listener) {
+        overScrollListener = listener;
+    }
+
+    private static int calculateMaxOverscrollScreenDistance(Context context) {
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        final float density = metrics.density;
+        return (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+    }
+
+    @Override
+    protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverscrollDistance, isTouchEvent);
+    }
+
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+        if (overScrollListener != null) {
+            try {
+                overScrollListener.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
     }
 }
