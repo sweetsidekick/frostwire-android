@@ -104,7 +104,7 @@ public class NotificationHelper {
             // Expanded notifiction style
             mExpandedView = new RemoteViews(mService.getPackageName(),
                     R.layout.notification_template_expanded_base);
-            mNotification.bigContentView = mExpandedView;
+            setBigContentView(mNotification, mExpandedView);
             // Control playback from the notification
             initExpandedPlaybackActions(isPlaying);
             // Set up the expanded content view
@@ -269,4 +269,12 @@ public class NotificationHelper {
         mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
     }
 
+    private static void setBigContentView(Notification notification, RemoteViews view) {
+        try {
+            java.lang.reflect.Field f = Notification.class.getDeclaredField("bigContentView");
+            f.set(notification, view);
+        } catch (Throwable e) {
+            // unable to set the big view version
+        }
+    }
 }
