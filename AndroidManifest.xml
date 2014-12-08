@@ -226,7 +226,6 @@
 		<activity
 			android:name="com.andrew.apollo.ui.activities.AudioPlayerActivity"
 			android:clearTaskOnLaunch="true"
-			android:exported="true"
 			android:launchMode="singleTask"
 			android:windowSoftInputMode="adjustPan" >
 			<intent-filter>
@@ -284,10 +283,24 @@
 				<data android:mimeType="vnd.android.cursor.dir/audio"/>
 			</intent-filter>
 		</activity>
+		<!-- Profile phone Activity -->
+		<activity
+			android:name="com.andrew.apollo.ui.activities.ProfileActivity"
+			android:excludeFromRecents="true" />
+		<!-- Shortcut launcher Activity -->
+		<activity
+			android:name="com.andrew.apollo.ui.activities.ShortcutActivity"
+			android:excludeFromRecents="true"
+			android:theme="@style/Theme.Transparent" >
+			<intent-filter>
+				<action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 		<!-- Search interface -->
 		<activity
-			android:name="com.andrew.apollo.ui.activities.SearchActivity"
-			android:exported="true" >
+			android:name="com.andrew.apollo.ui.activities.SearchActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 				<action android:name="android.intent.action.MEDIA_SEARCH" />
