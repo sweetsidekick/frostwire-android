@@ -255,11 +255,12 @@ public final class ApolloUtils {
             @Override
             public void onGlobalLayout() {
                 /* Layout pass done, unregister for further events */
-                if (hasJellyBean()) {
-                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else {
+                // aldenml: The new api is just the same logic
+                //if (hasJellyBean()) {
+                //    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                //} else {
                     view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
+                //}
                 runnable.run();
             }
         };
