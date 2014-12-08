@@ -372,10 +372,10 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
                 // Sound effects
                 NavUtils.openEffectsPanel(this);
                 return true;
-            case R.id.menu_settings:
+            /*case R.id.menu_settings:
                 // Settings
                 NavUtils.openSettings(this);
-                return true;
+                return true;*/
             case R.id.menu_audio_player_delete:
                 // Delete current song
                 DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] {

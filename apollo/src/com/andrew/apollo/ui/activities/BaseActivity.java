@@ -216,10 +216,10 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_settings:
+            /*case R.id.menu_settings:
                 // Settings
                 NavUtils.openSettings(this);
-                return true;
+                return true;*/
 
             default:
                 break;
