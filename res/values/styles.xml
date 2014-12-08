@@ -239,13 +239,13 @@
         <item name="android:singleLine">true</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#ff3b3b3b</item>
+        <item name="android:textColor">@color/app_list_item_title_text_color</item>
     </style>
 
     <style name="ListItemExtra">
         <item name="android:singleLine">true</item>
         <item name="android:textSize">14dp</item>
-        <item name="android:textColor">#ff3b3b3b</item>
+        <item name="android:textColor">@color/app_list_item_title_text_color</item>
     </style>
 
     <style name="ListItemSize">

@@ -39,6 +39,7 @@
     <color name="btn_background_on_light">@color/basic_blue</color>
     <color name="app_text_highlight">@color/basic_blue_highlight</color>
     <color name="app_rich_notification_background">#ffffedad</color>
+    <color name="app_list_item_title_text_color">#ff3b3b3b</color>
 
     <!-- Other colors (old) -->
     <color name="frostwire_light_blue">#ff7adafa</color>
@@ -59,7 +60,7 @@
     <color name="app_light_gray_text">#ffbfcfdc</color>
 
     <color name="browse_peer_listview_item_inactive_background">#ffeff0f1</color>
-    <color name="browse_peer_listview_item_foreground">#ff3b3b3b</color>
+    <color name="browse_peer_listview_item_foreground">@color/app_list_item_title_text_color</color>
     <color name="browse_peer_listview_item_inactive_foreground">#ffb1b1b1</color>
 
     <color name="tpi_unselected_text_color">@color/basic_white</color>
