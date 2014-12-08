@@ -635,6 +635,8 @@ public class MusicPlaybackService extends Service {
                 | RemoteControlClient.FLAG_KEY_MEDIA_STOP;
 
         if (ApolloUtils.hasJellyBeanMR2()) {
+            // aldenml: Commented due to the nature of the needed refactor
+            /*
             flags |= RemoteControlClient.FLAG_KEY_MEDIA_POSITION_UPDATE;
 
             mRemoteControlClient.setOnGetPlaybackPositionListener(
@@ -651,6 +653,7 @@ public class MusicPlaybackService extends Service {
                     seek(newPositionMs);
                 }
             });
+            */
         }
 
         mRemoteControlClient.setTransportControlFlags(flags);
@@ -1379,7 +1382,8 @@ public class MusicPlaybackService extends Service {
 
         if (ApolloUtils.hasJellyBeanMR2()
                 && (what.equals(PLAYSTATE_CHANGED) || what.equals(POSITION_CHANGED))) {
-            mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+            //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+            mRemoteControlClient.setPlaybackState(playState);
         } else if (what.equals(PLAYSTATE_CHANGED)) {
             mRemoteControlClient.setPlaybackState(playState);
         } else if (what.equals(META_CHANGED) || what.equals(QUEUE_CHANGED)) {
@@ -1405,7 +1409,8 @@ public class MusicPlaybackService extends Service {
                     .apply();
 
             if (ApolloUtils.hasJellyBeanMR2()) {
-                mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+                //mRemoteControlClient.setPlaybackState(playState, position(), 1.0f);
+                mRemoteControlClient.setPlaybackState(playState);
             }
         }
     }
