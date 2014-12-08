@@ -109,6 +109,11 @@ public final class MainController {
         }
     }
 
+    public void launchMyMusic() {
+        Intent i = new Intent(activity, com.andrew.apollo.ui.activities.HomeActivity.class);
+        activity.startActivity(i);
+    }
+
     public void showTransfers(TransferStatus status) {
         if (!(activity.getCurrentFragment() instanceof TransfersFragment)) {
             TransfersFragment fragment = (TransfersFragment) activity.getFragmentByMenuId(R.id.menu_main_transfers);
