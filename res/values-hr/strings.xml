@@ -115,7 +115,6 @@
     <string name="downloads">Preuzimanja</string>
     <string name="minimize_frostwire">Sakriti FrostWire</string>
     <string name="are_you_sure_you_wanna_leave">Jeste li sigurni da želite ici natrag na početni zaslon?</string>
-    <string name="set_as_ringtone">Postaviti kao zvonjavu</string>
     <string name="set_as_wallpaper">Postaviti kao pozadinu</string>
     <string name="failed_to_set_wallpaper">Nemoguce postaviti pozadinsku sliku</string>
     <string name="tell_others_chooser">Tweet / SMS / Email</string>
@@ -302,36 +301,9 @@
     <string name="transfers_select_downloading">preuzimanje</string>
     <string name="transfers_select_completed">Završeno</string>
     <string name="drawer_open">Otvori navigacijsku ladicu</string>
-    <string name="accessibility_play">Svirati</string>
-    <string name="accessibility_pause">Zaustaviti</string>
-    <string name="accessibility_next">Sljedeće</string>
-    <string name="accessibility_prev">Prijašnje</string>
-    <string name="accessibility_shuffle">Miješati</string>
-    <string name="accessibility_shuffle_all">Miješati sve</string>
-    <string name="accessibility_repeat">Ponoviti</string>
-    <string name="accessibility_repeat_all">Ponovi sve</string>
-    <string name="accessibility_repeat_one">Ponovi jednu</string>
     <string name="durationformatshort" translatable="false">%2$d:%3$02d</string>
     <string name="durationformatlong" translatable="false">%1$d:%2$02d:%3$02d</string>
-    <string name="now_listening_to">#NowPlaying %1$s by %2$s #FrostWire</string>
-    <string name="share_track_using">Podijeli pjesmu koristeći:</string>
-    <string name="page_recent">Nedavno</string>
-    <string name="page_artists">Umjetnici</string>
-    <string name="page_albums">Albumi</string>
-    <string name="page_songs">Pjesme</string>
-    <string name="page_genres">Žanrovi</string>
-    <string name="add_to_favorites">Dodati u najdraže</string>
-    <string name="add_to_queue">Dodati u red</string>
-    <string name="remove_from_favorites">Maknuti iz najdraže</string>
     <string name="remove_from_recent">Maknuti iz nedavno</string>
-    <string name="remove_from_queue">Maknuti iz reda</string>
-    <string name="context_menu_play_selection">Sviraj</string>
-    <string name="context_menu_play_next">Svirati sljedeću</string>
-    <string name="context_menu_more_by_artist">Više od izvodjaca</string>
-    <string name="context_menu_rename_playlist">Preimenovati</string>
-    <string name="context_menu_delete">Izbrisati</string>
-    <string name="context_menu_remove_from_recent">Maknuti iz nedavno</string>
-    <string name="delete_dialog_title">Izbrisati %s?</string>
     <string name="now_playing">Sada igra</string>
     <string name="dummy_author">[Autor]</string>
     <string name="confirm_download">Potvrditi preuzimanje</string>
@@ -342,11 +314,9 @@
     <string name="azureus_peer_manager_status_finished">Završeno</string>
     <string name="activity_mediaplayer_name">Medijski svirač</string>
     <string name="im_on_it">Radim na tome…</string>
-    <string name="context_menu_use_as_ringtone">Koristi kao zvuk zvonjave</string>
     <string name="share_selected_files">Dijeli odabrane datoteke</string>
     <string name="choose_wifi_network">Odaberite Wi-Fi mrežu</string>
     <string name="torrent_max_download_speed">Maksimalna brzina preuzimanja</string>
-    <string name="context_menu_fetch_album_art">Dohvati sliku albuma</string>
     <string name="activity_uploads_title_text">Slanja</string>
     <string name="torrent_max_peers">Maksimum peerova</string>
     <string name="clear_search_cache">Ocisti predmemoriju tražilice</string>
@@ -366,7 +336,6 @@
     <string name="show_transers_on_download_start">Pokazi transfere na pocetku preuzimanja</string>
     <string name="storage_preference_title">Odaberite lokaciju spremanja</string>
     <string name="loading_all">Ucitavam sve</string>
-    <string name="cannot_be_undone">Ovo se ne moze ponistiti</string>
     <string name="torrent_max_total_connections">Maksimum ukupnih konekcija</string>
     <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mrezi.</string>
     <string name="delete_n_torrents_indexed">Obrisano %d torrenata indeksirano</string>
@@ -382,7 +351,6 @@
     <string name="sdcard_storage">SD skladište</string>
     <string name="invalid_torrent_file">Nevažeća Torrent datoteka</string>
     <string name="activity_media_player_name">Svirač medija</string>
-    <string name="context_menu_open_in_play_store">Otvori u Play Store-u</string>
     <string name="failed_to_add_download">Nije moguće dodati preuzimanje</string>
     <string name="my_filetype">Moje %s</string>
     <string name="torrent_max_download_speed_summary">Maksimalna brzina preuzimanja</string>

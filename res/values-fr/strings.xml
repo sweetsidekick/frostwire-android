@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
+
 -->
 <resources>
 
@@ -116,7 +117,6 @@
     <string name="downloads">Téléchargements</string>
     <string name="minimize_frostwire">Réduire FrostWire</string>
     <string name="are_you_sure_you_wanna_leave">Êtes-vous sûr de vouloir retourner sur l\'écran d\'accueil?</string>
-    <string name="set_as_ringtone">Définir comme sonnerie</string>
     <string name="set_as_wallpaper">Définir comme fond d\'écran</string>
     <string name="failed_to_set_wallpaper">Echec de configuration fond d\'écran</string>
     <string name="tell_others_chooser">Tweet / SMS / Email</string>
@@ -431,72 +431,46 @@
     <string name="anonymous_usage_statistics_summary">Envoyez des statistiques d\'utilisation anonyme. Aucune information en lien avec vos recherches, vos partages ou lectures ou aucune information permettant votre identification ne seront stockées sur le disque ou envoyées à travers le réseau.</string>
     <string name="paused_song_name">%s en pause</string>
     <string name="cant_open_file_does_not_exist">Vous ne pouvez pas ouvrir %1$s, n\'existe pas le fichier.</string>
-    <string name="remove_from_queue">Supprimer de la file d\'attente</string>
-    <string name="delete_dialog_title">Supprimer %s?</string>
-    <string name="context_menu_use_as_ringtone">Utiliser comme sonnerie</string>
-    <string name="context_menu_more_by_artist">Plus par l\'artiste</string>
-    <string name="add_to_queue">Ajouter à la liste</string>
-    <string name="context_menu_fetch_album_art">Chercher les pochettes d\'album</string>
     <string name="drawer_close">Fermer navigation tiroir</string>
     <string name="saving_to_internal_memory_description">Vous avez également une carte SD (%1$s disponible)</string>
     <string name="bittorrent">BitTorrent</string>
     <string name="add_transfer_label">Coller un magnet ou torrent URL</string>
     <string name="drawer_open">Ouvrir le tiroir de navigation</string>
-    <string name="context_menu_remove_from_recent">Supprimer de la récente</string>
     <string name="use_torlock">Utilisez TorLock</string>
     <string name="use_monova">Utilisez Monova</string>
     <string name="durationformatlong">%1$d:%2$02d:%3$02d</string>
     <string name="transfer_status_demuxing">Demuxing</string>
-    <string name="cannot_be_undone">Cela ne peut pas être annulée</string>
-    <string name="accessibility_prev">Précédent</string>
-    <string name="accessibility_shuffle">Battage</string>
     <string name="dummy_author">[Author]</string>
-    <string name="context_menu_open_in_play_store">Ouvert en Play Store</string>
     <string name="android_will_erase_files_if_frostwire_is_uninstalled">Android va effacer les fichiers téléchargés si FrostWire est désinstallé.</string>
     <string name="use_torrentsfm_summary">Torrents.fm est magnet base, ne fonctionne que sur le Wi-Fi</string>
-    <string name="context_menu_delete">Effacer</string>
     <string name="use_eztv">Utilisez Eztv</string>
     <string name="device_memory">Mémoire de l\'appareil</string>
     <string name="please_check_connection_status_before_resuming_download">S\'il vous plaît vérifier l\'état de votre connexion Internet avant de reprendre.</string>
-    <string name="page_recent">Récent</string>
     <string name="durationformatshort">%2$d:%3$02d</string>
     <string name="cloud_downloads_coming">Désolé: à partir de téléchargements de nuages ​​à partir d\'ici sera disponible sur d\'autres mises à jour.</string>
     <string name="menu_space_shortcut_label">Espace</string>
     <string name="confirm_download">Confirmez Télécharger</string>
     <string name="sdcard_storage">Le stockage de SD</string>
     <string name="are_you_sure_you_want_to_download_the_following">Etes-vous sûr que vous voulez télécharger la suivante %1$s (%2$s)?</string>
-    <string name="context_menu_play_next">Jouer prochaine</string>
-    <string name="accessibility_repeat">Repeter</string>
     <string name="player_paused_press_and_hold_to_stop">Lecteur de musique en pause. (Astuce: Appuyez et maintenez pour arrêter)</string>
     <string name="menu_delete_shortcut_label">Del</string>
     <string name="magnet_url_added">Magnet URL ajouté aux transferts. (Magnets fonctionnent le mieux sur Wi-Fi)</string>
     <string name="use_monova_summary">Monova est magnet base, ne fonctionne que sur le Wi-Fi</string>
     <string name="or_enter_url">ou entrez l\'URL</string>
-    <string name="accessibility_repeat_one">Répétition d\'une</string>
     <string name="transfers_select_completed">terminé</string>
     <string name="transfers_context_menu_pause_stop_all_transfers">Pause/Stop tous les transferts</string>
-    <string name="context_menu_remove_from_playlist">Supprimer de la playlist</string>
-    <string name="context_menu_play_selection">Interpréter</string>
     <string name="transfers_select_downloading">téléchargement</string>
-    <string name="accessibility_next">Suivant</string>
     <string name="playlist">playlist</string>
     <string name="torrent_transfer_enqueued_on_mobile_data">Le transfert de torrent va commencer à télécharger automatiquement lorsque vous vous connectez à un réseau Wi-Fi gratuite. (Vérifiez vos préférences de réseau quant à l\'utilisation de données 3G/4G)</string>
-    <string name="page_artists">Artistes</string>
     <string name="now_playing">Jouer</string>
     <string name="transfers_context_menu_clear_finished">Effacer tous les transferts terminés</string>
     <string name="btc">BTC</string>
     <string name="seed">Semence</string>
     <string name="you_need_a_bitcoin_wallet_app">Vous avez besoin d\'un porte-monnaie Bitcoin installé sur votre appareil de soumettre un don de la CTB.</string>
     <string name="transfers_select_all">tous</string>
-    <string name="context_menu_rename_playlist">Rebaptiser</string>
-    <string name="accessibility_shuffle_all">Mélangez tous</string>
     <string name="prepend_shortcut_label"></string>
-    <string name="accessibility_pause">Pause</string>
     <string name="torrent_url_added">Torrent URL ajouté aux transferts.</string>
-    <string name="remove_from_favorites">Retirer des favoris</string>
     <string name="please_enter_valid_url">S\'il vous plaît entrer une URL valide</string>
-    <string name="page_songs">Chansons</string>
-    <string name="add_to_favorites">Ajouter aux favoris</string>
     <string name="available">disponible</string>
     <string name="use_yify">Utilisez Yify</string>
     <string name="torrent_transfer_consuming_mobile_data">Attention: Ce transfert de torrent utilise vos données 3G/4G. (Vérifiez vos préférences de réseau si vous souhaitez utiliser BitTorrent uniquement sur WiFi)</string>
@@ -511,25 +485,16 @@
     <string name="file_descriptor_sd_mounted">Ce fichier a été supprimé de la carte SD ou la carte SD insérée n\'est pas un autre.</string>
     <string name="remove_from_recent">Supprimer de la récente</string>
     <string name="bittorrent_network_summary">BitTorrent état ​​de la connexion</string>
-    <string name="page_playlists">Playlists</string>
-    <string name="page_genres">Genres</string>
-    <string name="context_menu_fetch_artist_image">Fetch image artiste</string>
     <string name="menu_enter_shortcut_label">Entrer</string>
-    <string name="now_listening_to">#NowPlaying %1$s by %2$s #FrostWire</string>
     <string name="track">chanson</string>
-    <string name="page_albums">Albums</string>
     <string name="file_descriptor_sd_unmounted">Ce fichier appartient à une carte SD, s\'il vous plaît insérer sur votre appareil.</string>
     <string name="donate_in_btc">Faire un don en bitcoins</string>
     <string name="torrent_transfer_paused_disconnected_from_bittorrent">Le transfert a été interrompu parce que vous êtes déconnecté. (Vérifiez votre connexion BitTorrent dans les Préférences)</string>
-    <string name="share_track_using">Partager piste à l\'aide:</string>
-    <string name="accessibility_play">Jouer</string>
     <string name="saving_to_internal_memory">Sauvegarde sur la mémoire interne</string>
     <string name="storage_setting_confirm_dialog_text">Je comprends que tous les fichiers téléchargés dans la carte SD par FrostWire seront supprimés par Android pour le moment l\'application FrostWire est désinstallé de cet appareil et je ne vais pas tenir FrostWire LLC responsable des fichiers perdus.</string>
     <string name="use_torrentsfm">Utilisez Torrents.fm</string>
     <string name="saving_to_sd_card">Enregistrement sur ​​carte SD.</string>
     <string name="transfers_context_menu_stop_delete_data">Arrêter et supprimer des données</string>
-    <string name="add_to_playlist">Ajouter à la playlist</string>
     <string name="use_tpb_summary">TPB est magnet base, ne fonctionne que sur le Wi-Fi</string>
-    <string name="accessibility_repeat_all">Répéter tout</string>
 
 </resources>

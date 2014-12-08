@@ -115,7 +115,6 @@
     <string name="downloads">다운로드</string>
     <string name="minimize_frostwire"> FrostWire 최소화</string>
     <string name="are_you_sure_you_wanna_leave">홈스크린으로 돌아가시겠습니까?</string>
-    <string name="set_as_ringtone">벨소리로 설정</string>
     <string name="set_as_wallpaper">배경화면으로 설정</string>
     <string name="failed_to_set_wallpaper">배경화면으로 설정 실패</string>
     <string name="tell_others_chooser">트위터로 보내기/SMS/이메일</string>

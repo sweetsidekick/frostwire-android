@@ -115,7 +115,6 @@
     <string name="downloads">İndirmeler</string>
     <string name="minimize_frostwire">FrostWire\'ı Küçültün</string>
     <string name="are_you_sure_you_wanna_leave">Ana sayfaya geri dönmek istediğinize emin misiniz?</string>
-    <string name="set_as_ringtone">Cep Melodisi olarak kurun</string>
     <string name="set_as_wallpaper">Duvar-kağıdı olarak ayarla</string>
     <string name="failed_to_set_wallpaper">Duvar-kağıdı olarak ayarlanamadı</string>
     <string name="tell_others_chooser">Twit\'le / SMS Çek / E-posta Gönder</string>
