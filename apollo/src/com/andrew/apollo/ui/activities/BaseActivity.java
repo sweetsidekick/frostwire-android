@@ -144,6 +144,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
 
         // Theme the action bar
         mResources.themeActionBar(getActionBar(), getString(R.string.app_name));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set the layout
         setContentView(setContentView());
@@ -216,6 +217,9 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             /*case R.id.menu_settings:
                 // Settings
                 NavUtils.openSettings(this);
