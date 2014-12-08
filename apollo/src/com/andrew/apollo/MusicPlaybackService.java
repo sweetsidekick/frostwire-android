@@ -2484,9 +2484,9 @@ public class MusicPlaybackService extends Service {
 
         private final WeakReference<MusicPlaybackService> mService;
 
-        private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
+        private com.frostwire.android.CompatMediaPlayer mCurrentMediaPlayer = new com.frostwire.android.CompatMediaPlayer();
 
-        private MediaPlayer mNextMediaPlayer;
+        private com.frostwire.android.CompatMediaPlayer mNextMediaPlayer;
 
         private Handler mHandler;
 
@@ -2553,7 +2553,7 @@ public class MusicPlaybackService extends Service {
          */
         public void setNextDataSource(final String path) {
             try {
-                mCurrentMediaPlayer.setNextMediaPlayer(null);
+                mCurrentMediaPlayer.setNextMediaPlayerSupport(null);
             } catch (IllegalArgumentException e) {
                 Log.i(TAG, "Next media player is current one, continuing");
             } catch (IllegalStateException e) {
@@ -2567,11 +2567,11 @@ public class MusicPlaybackService extends Service {
             if (path == null) {
                 return;
             }
-            mNextMediaPlayer = new MediaPlayer();
+            mNextMediaPlayer = new com.frostwire.android.CompatMediaPlayer();
             mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
             mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
             if (setDataSourceImpl(mNextMediaPlayer, path)) {
-                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
+                mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
             } else {
                 if (mNextMediaPlayer != null) {
                     mNextMediaPlayer.release();
@@ -2691,7 +2691,7 @@ public class MusicPlaybackService extends Service {
                 case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                     mIsInitialized = false;
                     mCurrentMediaPlayer.release();
-                    mCurrentMediaPlayer = new MediaPlayer();
+                    mCurrentMediaPlayer = new com.frostwire.android.CompatMediaPlayer();
                     mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(SERVER_DIED), 2000);
                     return true;

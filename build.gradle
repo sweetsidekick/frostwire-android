@@ -70,6 +70,7 @@ android {
 
                 srcDir 'apollo/src'
 
+                srcDir 'src'
                 srcDir "src/core"
                 srcDir "src/gui"
             }
