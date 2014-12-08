@@ -570,7 +570,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                         controller.showFreeApps();
                     } else if (id == R.id.menu_main_shutdown) {
                         handleShutdownRequest();
-                    } else if (id == R.id.menu_launch_tv) {
+                    } else if (id == R.id.menu_main_my_music) {
                         controller.launchMyMusic();
                     } else {
                         listMenu.setItemChecked(position, true);
