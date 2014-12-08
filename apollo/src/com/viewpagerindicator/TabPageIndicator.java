@@ -30,7 +30,7 @@ import android.widget.TextView;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change

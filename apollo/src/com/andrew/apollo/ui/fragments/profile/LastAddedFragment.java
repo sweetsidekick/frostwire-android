@@ -30,7 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.adapters.ProfileSongAdapter;
 import com.andrew.apollo.loaders.LastAddedLoader;
 import com.andrew.apollo.menu.CreateNewPlaylist;

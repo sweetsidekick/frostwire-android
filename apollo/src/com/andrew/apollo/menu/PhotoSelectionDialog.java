@@ -20,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.ui.activities.ProfileActivity;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;

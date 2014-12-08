@@ -37,7 +37,7 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 
 /**
  * Draws circles (one for each view). The current view position is filled and

@@ -35,7 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 
 /**
  * In order to implement the theme chooser for Apollo, this class returns a

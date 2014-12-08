@@ -25,6 +25,8 @@ import android.widget.RemoteViews;
 
 import com.andrew.apollo.utils.ApolloUtils;
 
+import com.frostwire.android.R;
+
 /**
  * Builds the notification for Apollo's service. Jelly Bean and higher uses the
  * expanded notification by default.

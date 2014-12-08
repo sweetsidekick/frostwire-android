@@ -21,7 +21,7 @@ import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.ui.activities.AudioPlayerActivity;
 import com.andrew.apollo.ui.activities.HomeActivity;
 import com.andrew.apollo.utils.ApolloUtils;

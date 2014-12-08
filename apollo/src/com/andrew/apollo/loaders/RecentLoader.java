@@ -14,7 +14,7 @@ package com.andrew.apollo.loaders;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.model.Album;
 import com.andrew.apollo.provider.RecentStore;
 import com.andrew.apollo.provider.RecentStore.RecentStoreColumns;

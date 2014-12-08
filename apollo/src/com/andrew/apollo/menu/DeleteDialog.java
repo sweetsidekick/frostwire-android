@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;

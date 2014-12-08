@@ -295,7 +295,8 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
      */
     @Override
     public Loader<List<Song>> onCreateLoader(final int id, final Bundle args) {
-        return new QueueLoader(getActivity());
+        // TODO:APOLLO
+        return null;// new QueueLoader(getActivity());
     }
 
     /**

@@ -21,7 +21,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.cache.ImageCache;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.provider.RecentStore;

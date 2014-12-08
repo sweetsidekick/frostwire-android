@@ -20,7 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.model.Album;
 import com.andrew.apollo.ui.activities.AudioPlayerActivity;
 import com.andrew.apollo.ui.activities.HomeActivity;

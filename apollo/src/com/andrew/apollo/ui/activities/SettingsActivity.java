@@ -26,7 +26,7 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.andrew.apollo.MusicPlaybackService;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.cache.ImageCache;
 import com.andrew.apollo.ui.fragments.ThemeFragment;
 import com.andrew.apollo.utils.ApolloUtils;

@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.ui.MusicHolder;
 import com.andrew.apollo.ui.fragments.profile.AlbumSongFragment;

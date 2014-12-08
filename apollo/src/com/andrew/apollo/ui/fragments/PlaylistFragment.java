@@ -37,7 +37,7 @@ import android.widget.ListView;
 
 import com.andrew.apollo.Config;
 import com.andrew.apollo.MusicStateListener;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.adapters.PlaylistAdapter;
 import com.andrew.apollo.loaders.PlaylistLoader;
 import com.andrew.apollo.menu.FragmentMenuItems;

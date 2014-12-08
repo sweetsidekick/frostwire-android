@@ -21,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.model.Album;
 import com.andrew.apollo.ui.MusicHolder;

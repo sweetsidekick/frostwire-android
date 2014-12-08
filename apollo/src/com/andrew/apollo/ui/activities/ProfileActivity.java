@@ -29,7 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.menu.PhotoSelectionDialog;

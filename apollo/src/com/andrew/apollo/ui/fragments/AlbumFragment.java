@@ -39,7 +39,7 @@ import android.widget.TextView;
 
 import com.andrew.apollo.Config;
 import com.andrew.apollo.MusicStateListener;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.adapters.AlbumAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.loaders.AlbumLoader;

@@ -28,7 +28,7 @@ import android.support.v4.content.Loader;
 
 import com.andrew.apollo.Config;
 import com.andrew.apollo.IApolloService;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.format.Capitalize;
 import com.andrew.apollo.loaders.AsyncHandler;
 import com.andrew.apollo.loaders.LastAddedLoader;

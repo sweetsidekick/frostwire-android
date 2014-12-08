@@ -30,7 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.andrew.apollo.Config;
-import com.andrew.apollo.R;
+import com.frostwire.android.R;
 import com.andrew.apollo.adapters.GenreAdapter;
 import com.andrew.apollo.loaders.GenreLoader;
 import com.andrew.apollo.menu.FragmentMenuItems;

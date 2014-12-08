@@ -26,14 +26,14 @@ def manifestVersionCode() {
 
 android {
 
-    compileSdkVersion 15
+    compileSdkVersion 18
     buildToolsVersion '21.1.1'
 
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             res.srcDirs = ['res', 'apollo/res']
-            aidl.srcDirs = ['src']
+            aidl.srcDirs = ['src', 'apollo/src']
             assets.srcDirs = ['assets']
             jniLibs.srcDir 'libs'
             java {
@@ -50,7 +50,8 @@ android {
                 srcDir "../frostwire-common/okhttp"
                 srcDir "../frostwire-common/vuze"
 
-                srcDir "src/apollo_player"
+                srcDir 'apollo/src'
+
                 srcDir "src/core"
                 srcDir "src/gui"
             }

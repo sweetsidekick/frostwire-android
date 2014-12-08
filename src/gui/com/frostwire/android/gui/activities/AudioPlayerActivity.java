@@ -209,6 +209,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
     }
     
     private void initSupportFrostWire() {
+        // TODO:APOLLO
+        /*
         View donationsView = findViewById(R.id.activity_audio_player_donations);
         biller = BillerFactory.getInstance(this);
 
@@ -227,7 +229,7 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
                     div3view.setVisibility(View.GONE);
                 }
             }
-        }
+        }*/
     }
 
     /**
@@ -353,6 +355,8 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
             // Share the current meta data
             shareCurrentTrack();
             return true;
+        // TODO:APOLLO
+            /*
         case R.id.menu_audio_player_stop:
             try {
                 MusicUtils.mService.stop();
@@ -360,10 +364,11 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
                 // ignore
             }
             finish();
-            return true;
+            return true;*/
         case R.id.menu_audio_player_delete:
+            // TODO:APOLLO
             // Delete current song
-            DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] { MusicUtils.getCurrentAudioId() }, null).show(getFragmentManager(), "DeleteDialog");
+            //DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] { MusicUtils.getCurrentAudioId() }, null).show(getFragmentManager(), "DeleteDialog");
             return true;
         default:
             break;
@@ -513,8 +518,9 @@ public class AudioPlayerActivity extends Activity implements ServiceConnection, 
         mTotalTime = (TextView) findViewById(R.id.audio_player_total_time);
         // Used to show and hide the queue fragment
         mQueueSwitch = (ImageView) findViewById(R.id.audio_player_switch_queue);
+        // TODO:APOLLO
         // Progress
-        mProgress = (SeekBar) findViewById(R.id.activity_audio_player_progress);
+        //mProgress = (SeekBar) findViewById(R.id.activity_audio_player_progress);
 
         // Set the repeat listner for the previous button
         mPreviousButton.setRepeatListener(mRewindListener);

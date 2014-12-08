@@ -22,5 +22,4 @@
     android:minWidth="@dimen/app_widget_large_min_width"
     android:previewImage="@drawable/app_widget_recents"
     android:resizeMode="vertical|horizontal"
-    android:updatePeriodMillis="0"
-    android:widgetCategory="keyguard|home_screen" />
+    android:updatePeriodMillis="0" />
