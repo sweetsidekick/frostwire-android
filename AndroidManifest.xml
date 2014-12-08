@@ -284,6 +284,21 @@
 				<data android:mimeType="vnd.android.cursor.dir/audio"/>
 			</intent-filter>
 		</activity>
+		<!-- Search interface -->
+		<activity
+			android:name="com.andrew.apollo.ui.activities.SearchActivity"
+			android:exported="true" >
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<action android:name="android.intent.action.MEDIA_SEARCH" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<meta-data
+				android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
+		</activity>
 
 		<!-- offercast -->
 		<!-- 
