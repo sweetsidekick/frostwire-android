@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:0.13.+"
+        classpath 'com.android.tools.build:gradle:0.14.4'
     }
 }
 
@@ -106,7 +106,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.versionCodeOverride =
-		       project.ext.versionCodes.get(output.abiFilter, 0) * 1000000 + manifestVersionCode()
+		       project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + manifestVersionCode()
         }
     }
 }
