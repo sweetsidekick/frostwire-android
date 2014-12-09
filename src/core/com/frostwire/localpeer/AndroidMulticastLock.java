@@ -29,29 +29,20 @@ import android.net.wifi.WifiManager;
  */
 public final class AndroidMulticastLock implements MulticastLock {
 
-    private static final String LOCK_NAME_PREFIX = "FWLock_";
-    private static final AtomicInteger lockCount = new AtomicInteger(0);
-
-    private final android.net.wifi.WifiManager.MulticastLock lock;
-
-    public AndroidMulticastLock(WifiManager wifi) {
-        lock = wifi.createMulticastLock(LOCK_NAME_PREFIX + lockCount.getAndIncrement());
-        lock.setReferenceCounted(true);
+   public AndroidMulticastLock(WifiManager wifi) {
     }
 
     @Override
     public void acquire() {
-        lock.acquire();
     }
 
     @Override
     public void release() {
-        lock.release();
     }
 
     @Override
     public boolean isHeld() {
-        return lock.isHeld();
+        return false;
     }
 
 }
