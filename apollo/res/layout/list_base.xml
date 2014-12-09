@@ -45,6 +45,8 @@
         android:paddingRight="@dimen/fast_scroll_padding_right"
         android:background="@color/body_background_gray_light"
         android:dividerHeight="0dp"
-        android:divider="@null"/>
+        android:divider="@color/transparent"
+        android:overScrollHeader="@null"
+        android:overScrollFooter="@null"/>
 
 </FrameLayout>

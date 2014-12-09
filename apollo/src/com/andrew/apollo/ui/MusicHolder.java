@@ -88,7 +88,7 @@ public class MusicHolder {
 
         // Initialize mBackground
         mBackground = new WeakReference<ImageView>(
-                (ImageView)view.findViewById(R.id.list_item_background));
+                null);//(ImageView)view.findViewById(R.id.list_item_background));
 
         // Initialize mImage
         mImage = new WeakReference<ImageView>((ImageView)view.findViewById(R.id.image));

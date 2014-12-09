@@ -78,6 +78,7 @@
         <item name="android:divider">@android:color/transparent</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:headerDividersEnabled">false</item>
+        <item name="android:overScrollHeader">@null</item>
         <item name="android:overScrollFooter">@null</item>
     </style>
 
