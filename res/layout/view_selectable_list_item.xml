@@ -24,7 +24,7 @@
     android:background="@drawable/listview_item_background_selector"
     android:orientation="horizontal"
     android:paddingBottom="1px"
-    android:paddingTop="1px" >
+    android:paddingTop="1px">
 
     <CheckBox
         android:id="@+id/view_selectable_list_item_checkbox"

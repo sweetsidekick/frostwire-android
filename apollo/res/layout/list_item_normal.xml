@@ -20,7 +20,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    tools:ignore="ContentDescription" >
+    tools:ignore="ContentDescription"
+    android:background="@drawable/listview_item_background_selector">
 
     <com.andrew.apollo.widgets.SquareImageView
         android:id="@+id/image"
@@ -37,8 +38,8 @@
         android:layout_toRightOf="@+id/image"
         android:gravity="center_vertical"
         android:minHeight="@dimen/item_normal_height"
-        android:paddingLeft="@dimen/list_preferred_item_padding"
-        android:paddingRight="@dimen/list_preferred_item_padding" >
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp" >
 
         <com.andrew.apollo.widgets.theme.ThemeableTextView
             android:id="@+id/line_one"

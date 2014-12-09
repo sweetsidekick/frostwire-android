@@ -20,8 +20,9 @@
     android:layout_height="@dimen/item_normal_height"
     android:gravity="center_vertical"
     android:minHeight="@dimen/item_normal_height"
-    android:paddingLeft="@dimen/list_preferred_item_padding"
-    android:paddingRight="@dimen/list_preferred_item_padding" >
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:background="@drawable/listview_item_background_selector">
 
     <com.andrew.apollo.widgets.theme.ThemeableTextView
         android:id="@+id/line_one"
