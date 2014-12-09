@@ -95,7 +95,7 @@
     <string name="about">About</string>
     <string name="send_to_third_party">Send/Upload</string>
     <string name="send_file_using">Send file using</string>
-    <string name="my_files">My files</string>
+    <string name="my_files">My Files</string>
     <string name="clear_messages">Clear messages</string>
     <string name="chat_actions">Chat Actions</string>
     <string name="preferences">Preferences</string>
@@ -495,7 +495,7 @@
     <string name="file_descriptor_sd_unmounted">This file belongs to an SD card, please insert it on your device.</string>
     <string name="help_translate_frostwire">Help translate FrostWire</string>
     <string name="queued_for_checking">Queued for checking</string>
-    <string name="checking_ellipsis">Checking...</string>
+    <string name="checking_ellipsis">Checking&#8230;</string>
     <string name="downloading_metadata">Downloading metadata</string>
     <string name="error_moving_incomplete">Error: Moving Incomplete</string>
     <string name="error_wrong_md5_hash">Error: Wrong MD5 hash</string>
@@ -506,4 +506,5 @@
     <string name="app_shutdown_dlg_message">This will shutdown all transfers and background services. Are you sure?</string>
     <string name="error_not_enough_peers">Try again, not enough peers</string>
     <string name="http_download_status_save_dir_error">Save directory does not exist or can\'t be created</string>
+    <string name="my_music">My Music</string>
 </resources>

@@ -19,15 +19,10 @@
 package com.frostwire.android.gui.activities.internal;
 
 import android.content.Context;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -37,10 +32,8 @@ import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.gui.views.menu.MenuBuilder;
 
 /**
- * 
  * @author gubatron
  * @author aldenml
- *
  */
 public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
 
@@ -96,26 +89,28 @@ public final class MainMenuAdapter extends AbstractAdapter<MenuItem> {
 
     private int getOverIcon(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.menu_main_search:
-            return R.drawable.menu_icon_search_over;
-        case R.id.menu_main_library:
-            return R.drawable.menu_icon_library_over;
-        case R.id.menu_main_transfers:
-            return R.drawable.menu_icon_transfers_over;
-        case R.id.menu_main_peers:
-            return R.drawable.menu_icon_peers_over;
-        case R.id.menu_free_apps:
-            return R.drawable.menu_icon_free_apps_over;
-        case R.id.menu_launch_tv:
-            return R.drawable.menu_icon_tv;
-        case R.id.menu_main_preferences:
-            return R.drawable.menu_icon_preferences_over;
-        case R.id.menu_main_about:
-            return R.drawable.menu_icon_about_over;
-        case R.id.menu_main_shutdown:
-            return R.drawable.menu_icon_exit_over;
-        default:
-            return 0;
+            case R.id.menu_main_search:
+                return R.drawable.menu_icon_search_over;
+            case R.id.menu_main_my_music:
+                return R.drawable.menu_icon_my_music_over;
+            case R.id.menu_main_library:
+                return R.drawable.menu_icon_library_over;
+            case R.id.menu_main_transfers:
+                return R.drawable.menu_icon_transfers_over;
+            case R.id.menu_main_peers:
+                return R.drawable.menu_icon_peers_over;
+            case R.id.menu_free_apps:
+                return R.drawable.menu_icon_free_apps_over;
+            case R.id.menu_launch_tv:
+                return R.drawable.menu_icon_tv;
+            case R.id.menu_main_preferences:
+                return R.drawable.menu_icon_preferences_over;
+            case R.id.menu_main_about:
+                return R.drawable.menu_icon_about_over;
+            case R.id.menu_main_shutdown:
+                return R.drawable.menu_icon_exit_over;
+            default:
+                return 0;
         }
     }
 }
