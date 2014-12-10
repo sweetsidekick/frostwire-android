@@ -30,10 +30,10 @@
     <color name="line_three">@color/app_list_item_title_text_color</color>
 
     <!-- Now playing -->
-    <color name="audio_player_current_time">@color/white</color>
-    <color name="audio_player_total_time">@color/white</color>
-    <color name="audio_player_line_one">@color/white</color>
-    <color name="audio_player_line_two">@color/transparent_white</color>
+    <color name="audio_player_current_time">#ff000000</color>
+    <color name="audio_player_total_time">#ff000000</color>
+    <color name="audio_player_line_one">#ff000000</color>
+    <color name="audio_player_line_two">#ff000000</color>
     <color name="audio_player_pager_container">@color/action_bar_color</color>
 
     <!-- Bottom action bar -->

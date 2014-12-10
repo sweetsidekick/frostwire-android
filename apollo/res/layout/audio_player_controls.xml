@@ -21,14 +21,16 @@
         android:layout_height="match_parent"
         android:layout_weight="1" >
 
-        <com.andrew.apollo.widgets.ShuffleButton
-            android:id="@+id/action_button_shuffle"
+        <com.andrew.apollo.widgets.RepeatButton
+            android:id="@+id/action_button_repeat"
             android:layout_width="@dimen/audio_player_controls_end_button_width"
             android:layout_height="@dimen/audio_player_controls_end_button_height"
             android:layout_gravity="center"
-            android:contentDescription="@string/accessibility_shuffle"
+            android:background="@null"
+            android:contentDescription="@string/accessibility_repeat"
+            android:focusable="true"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_playback_shuffle" />
+            android:src="@drawable/btn_playback_repeat" />
     </FrameLayout>
 
     <FrameLayout
@@ -41,6 +43,7 @@
             android:layout_width="@dimen/audio_player_controls_main_button_width"
             android:layout_height="@dimen/audio_player_controls_main_button_height"
             android:layout_gravity="center"
+            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/btn_playback_previous" />
     </FrameLayout>
@@ -55,6 +58,7 @@
             android:layout_width="@dimen/audio_player_controls_main_button_width"
             android:layout_height="@dimen/audio_player_controls_main_button_height"
             android:layout_gravity="center"
+            android:background="@null"
             android:contentDescription="@string/accessibility_play"
             android:focusable="true"
             android:scaleType="centerInside"
@@ -71,6 +75,7 @@
             android:layout_width="@dimen/audio_player_controls_main_button_width"
             android:layout_height="@dimen/audio_player_controls_main_button_height"
             android:layout_gravity="center"
+            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/btn_playback_next" />
     </FrameLayout>
@@ -80,15 +85,15 @@
         android:layout_height="match_parent"
         android:layout_weight="1" >
 
-        <com.andrew.apollo.widgets.RepeatButton
-            android:id="@+id/action_button_repeat"
+        <com.andrew.apollo.widgets.ShuffleButton
+            android:id="@+id/action_button_shuffle"
             android:layout_width="@dimen/audio_player_controls_end_button_width"
             android:layout_height="@dimen/audio_player_controls_end_button_height"
             android:layout_gravity="center"
-            android:contentDescription="@string/accessibility_repeat"
-            android:focusable="true"
+            android:background="@null"
+            android:contentDescription="@string/accessibility_shuffle"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_playback_repeat" />
+            android:src="@drawable/btn_playback_shuffle" />
     </FrameLayout>
 
 </merge>
