@@ -327,6 +327,8 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
         // Display the now playing screen or shuffle if this isn't anything
         // playing
         bottomActionBar.setOnClickListener(mOpenNowPlaying);
+
+        mPlayPauseButton.setOnLongClickListener(new StopListener(this, false));
     }
 
     /**

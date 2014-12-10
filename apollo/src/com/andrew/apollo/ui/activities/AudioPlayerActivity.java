@@ -540,6 +540,8 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         mNextButton.setRepeatListener(mFastForwardListener);
         // Update the progress
         mProgress.setOnSeekBarChangeListener(this);
+
+        mPlayPauseButton.setOnLongClickListener(new StopListener(this, true));
     }
 
     /**
