@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     app:themeResource="audio_player_line_two" />
             </LinearLayout>
 
@@ -140,7 +140,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <ImageView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/layout_divider_1_gray" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/layout_divider_1_gray" />
+
+                <!--<ImageView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/shadow_height"
                     android:layout_gravity="top"
@@ -152,7 +164,7 @@
                     android:layout_height="@dimen/shadow_height"
                     android:layout_gravity="bottom"
                     android:contentDescription="@null"
-                    android:src="@drawable/bottom_shadow" />
+                    android:src="@drawable/bottom_shadow" />-->
             </FrameLayout>
         </RelativeLayout>
 
@@ -202,7 +214,5 @@
             <include layout="@layout/audio_player_controls" />
         </LinearLayout>
     </RelativeLayout>
-
-    <include layout="@layout/colorstrip" />
 
 </com.andrew.apollo.widgets.theme.ThemeableFrameLayout>
