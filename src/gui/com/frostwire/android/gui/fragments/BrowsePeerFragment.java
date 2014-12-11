@@ -58,7 +58,7 @@ import com.frostwire.uxstats.UXStats;
 /**
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
 public class BrowsePeerFragment extends AbstractFragment implements LoaderCallbacks<Object>, MainFragment {
 
@@ -88,11 +88,12 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     private View header;
 
     private OnRefreshSharedListener onRefreshSharedListener;
+    private OnUpdateFilesListener onUpdateFilesListener;
+
     private long lastAdapterRefresh;
 
     public BrowsePeerFragment() {
         super(R.layout.fragment_browse_peer);
-
         broadcastReceiver = new LocalBroadcastReceiver();
     }
 
@@ -168,7 +169,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
-        
+
         initBroadcastReceiver();
 
         getLoaderManager().destroyLoader(LOADER_FINGER_ID);
@@ -179,6 +180,75 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
             browseFilesButtonClick(adapter.getFileType());
         } else {
             //browseFilesButtonClick(Constants.FILE_TYPE_AUDIO);
+        }
+    }
+
+    public void showFile(final FileDescriptor scrollToFileDescriptor) {
+        byte fileType = scrollToFileDescriptor.fileType;
+        //adapter is usually null at this point when this is called from outside app to share file w/FrostWire.
+        if (adapter == null) {
+            final List<FileDescriptor> files = peer.browse(fileType);
+            updateFiles(new Object[] { (Byte) fileType, files });
+        }
+        setOnUpdateFilesListener(createScrollToFileOnLoadFinishedListener(scrollToFileDescriptor));
+        clickBrowseFileButton(fileType);
+    }
+
+    private void clickBrowseFileButton(byte fileType) {
+         RadioButton button = buttonAudio;
+         switch (fileType) {
+             case Constants.FILE_TYPE_APPLICATIONS:
+                 button = buttonApplications;
+                 break;
+             case Constants.FILE_TYPE_DOCUMENTS:
+                 button = buttonDocuments;
+                 break;
+             case Constants.FILE_TYPE_PICTURES:
+                 button = buttonPictures;
+                 break;
+             case Constants.FILE_TYPE_VIDEOS:
+                 button = buttonVideos;
+                 break;
+             case Constants.FILE_TYPE_AUDIO:
+                 button = buttonAudio;
+                 break;
+         }
+         button.performClick();
+    }
+
+
+    private OnUpdateFilesListener createScrollToFileOnLoadFinishedListener(final FileDescriptor scrollToFileDescriptor) {
+        return new OnUpdateFilesListener() {
+            @Override
+            public void onUpdateFiles() {
+                scrollToFileDescriptor(scrollToFileDescriptor);
+                setOnUpdateFilesListener(null); //clear listener after you're done.
+            }
+        };
+    }
+
+    private void setOnUpdateFilesListener(OnUpdateFilesListener onUpdateFilesListener) {
+        this.onUpdateFilesListener = onUpdateFilesListener;
+    }
+
+    private void scrollToFileDescriptor(FileDescriptor scrollToFileDescriptor) {
+        if (adapter != null && scrollToFileDescriptor != null) {
+            List<FileListAdapter.FileDescriptorItem> files = adapter.getList();
+            if (files != null && files.size() > 0) {
+                for (int i = 0; i < files.size(); i++) {
+                    if (files.get(i).fd.id == scrollToFileDescriptor.id) {
+                        ConfigurationManager.instance().setInt(Constants.BROWSE_PEER_FRAGMENT_LISTVIEW_FIRST_VISIBLE_POSITION + scrollToFileDescriptor.fileType, i);
+                        final int position = i;
+                        getView().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                list.smoothScrollToPositionFromTop(position, (getView().getHeight() - list.getHeight()) / 2, 400);
+                            }
+                        });
+                        return;
+                    }
+                }
+            }
         }
     }
 
@@ -244,7 +314,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
                 }
             }
         });
-        
+
         list = findView(v, R.id.fragment_browse_peer_list);
         list.setOverScrollListener(new OverScrollListener() {
             @Override
@@ -524,6 +594,14 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
             };
             adapter.setCheckboxesVisibility(true);
             list.setAdapter(adapter);
+
+            if (onUpdateFilesListener != null) {
+                try {
+                    onUpdateFilesListener.onUpdateFiles();
+                } catch (Throwable t) {
+                    log.error(t.getMessage(), t);
+                }
+            }
         } catch (Throwable e) {
             log.error("Error updating files in list", e);
         }
@@ -577,8 +655,8 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) || 
-                action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) || 
+            if (action.equals(Constants.ACTION_MEDIA_PLAYER_PLAY) ||
+                action.equals(Constants.ACTION_MEDIA_PLAYER_STOPPED) ||
                 action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED) ||
                 action.equals(Constants.ACTION_MEDIA_PLAYER_PAUSED) ||
                 action.equals(MusicPlaybackService.PLAYSTATE_CHANGED) ||
@@ -639,6 +717,10 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
     public static interface OnRefreshSharedListener {
         public void onRefresh(Fragment f, byte fileType, int numShared);
+    }
+
+    public static interface OnUpdateFilesListener {
+        public void onUpdateFiles();
     }
 
     public void refreshSelection() {

@@ -44,10 +44,9 @@ import com.frostwire.android.util.SystemUtils;
 /**
  * Receives and controls messages from the external world. Depending on the
  * status it attempts to control what happens with the Engine.
- * 
+ *
  * @author gubatron
  * @author aldenml
- *
  */
 public class EngineBroadcastReceiver extends BroadcastReceiver {
 
@@ -203,17 +202,18 @@ public class EngineBroadcastReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * make sure the current save location will be the primary external if
      * the media being unmounted is the sd card.
+     *
      * @param context
      * @param intent
      */
     private void handleMediaUnmounted(Context context, Intent intent) {
         String path = intent.getDataString().replace("file://", "");
         if (!SystemUtils.isPrimaryExternalPath(new File(path)) &&
-            SystemUtils.isPrimaryExternalStorageMounted()) {
+                SystemUtils.isPrimaryExternalStorageMounted()) {
             File primaryExternal = Environment.getExternalStorageDirectory();
             ConfigurationManager.instance().setStoragePath(primaryExternal.getAbsolutePath());
         }

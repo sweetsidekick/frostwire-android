@@ -18,19 +18,16 @@
 
 package com.frostwire.android.gui.activities.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
-
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.activities.AudioPlayerActivity;
 import com.frostwire.android.gui.activities.MainActivity;
@@ -41,8 +38,13 @@ import com.frostwire.android.gui.fragments.BrowsePeerFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment.TransferStatus;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * 
@@ -160,10 +162,13 @@ public final class MainController {
 
     private void handleSendMultipleFiles(Intent intent) {
         ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (fileUris != null) {
+        if (fileUris != null && fileUris.size() > 0) {
             for (Uri uri : fileUris) {
                 shareFileByUri(uri);
             }
+
+            FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(fileUris.get(0));
+            showFile(fileDescriptor);
             UIUtils.showLongMessage(activity, activity.getString(R.string.n_files_shared, fileUris.size()));
         }
     }
@@ -174,11 +179,29 @@ public final class MainController {
             return;
         }
 
-        try {
-            shareFileByUri(uri);
-            UIUtils.showLongMessage(activity, R.string.one_file_shared);
-        } catch (Throwable t) {
-            UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+        FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
+
+        // Until we don't show .torrents on file manager, the most logical thing to do if user wants to
+        // "Share" a `.torrent` from a third party app with FrostWire, that is starting the `.torrent` transfer.
+        if (fileDescriptor.filePath != null && fileDescriptor.filePath.endsWith(".torrent")) {
+            TransferManager.instance().downloadTorrent(uri.toString());
+            activity.switchFragment(R.id.menu_main_transfers);
+        } else {
+            try {
+                shareFileByUri(uri);
+                showFile(fileDescriptor);
+                UIUtils.showLongMessage(activity, R.string.one_file_shared);
+            } catch (Throwable t) {
+                UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+            }
+        }
+
+    }
+
+    private void showFile(FileDescriptor fileDescriptor) {
+        if (fileDescriptor != null) {
+            showMyFiles();
+            ((BrowsePeerFragment) activity.getFragmentByMenuId(R.id.menu_main_library)).showFile(fileDescriptor);
         }
     }
 
