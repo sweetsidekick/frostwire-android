@@ -551,7 +551,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         // Set the track name
         mTrackName.setText(MusicUtils.getTrackName());
         // Set the artist name
-        mArtistName.setText(MusicUtils.getArtistName());
+        mArtistName.setText(getArtistAndAlbumName());//MusicUtils.getArtistName());
         // Set the total time
         mTotalTime.setText(MusicUtils.makeTimeString(this, MusicUtils.duration() / 1000));
         // Set the album art
@@ -561,6 +561,23 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         // Update the current time
         queueNextRefresh(1);
 
+    }
+
+    private String getArtistAndAlbumName() {
+        String str = "";
+
+        String artist = MusicUtils.getArtistName();
+        String album = MusicUtils.getAlbumName();
+
+        if (artist != null && album != null) {
+            str = artist + " - " + album;
+        } else if (artist != null) {
+            str = artist;
+        } else if (album != null) {
+            str = album;
+        }
+
+        return str;
     }
 
     private long parseIdFromIntent(Intent intent, String longKey,
