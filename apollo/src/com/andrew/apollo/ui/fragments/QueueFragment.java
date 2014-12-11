@@ -293,6 +293,13 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         // reloading the queue. This is both faster, and prevents accidentally
         // dropping out of party shuffle.
         MusicUtils.setQueuePosition(position);
+        notifyAdapterDataSetChanged();
+    }
+
+    public void notifyAdapterDataSetChanged() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /**

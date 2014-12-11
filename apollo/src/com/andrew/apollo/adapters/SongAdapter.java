@@ -84,8 +84,19 @@ public class SongAdapter extends ArrayAdapter<Song> {
         holder.mLineOne.get().setText(dataHolder.mLineOne);
         // Set the song duration (line one, right)
         holder.mLineOneRight.get().setText(dataHolder.mLineOneRight);
-        // Set the album name (line two)
+        // Set the artist name (line two)
         holder.mLineTwo.get().setText(dataHolder.mLineTwo);
+
+        if (MusicUtils.getCurrentAudioId() == dataHolder.mItemId) {
+            holder.mLineOne.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_highlight));
+            holder.mLineOneRight.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_highlight));
+            holder.mLineTwo.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_highlight));
+        } else {
+            holder.mLineOne.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_primary));
+            holder.mLineOneRight.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_primary));
+            holder.mLineTwo.get().setTextColor(getContext().getResources().getColor(com.frostwire.android.R.color.app_text_primary));
+        }
+
         return convertView;
     }
 
@@ -124,8 +135,8 @@ public class SongAdapter extends ArrayAdapter<Song> {
             mData[i].mLineOne = song.mSongName;
             // Song duration (line one, right)
             mData[i].mLineOneRight = MusicUtils.makeTimeString(getContext(), song.mDuration);
-            // Album names (line two)
-            mData[i].mLineTwo = song.mAlbumName;
+            // Artist name (line two)
+            mData[i].mLineTwo = song.mArtistName;
         }
     }
 

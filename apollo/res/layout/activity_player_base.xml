@@ -142,7 +142,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/audio_player_album_art"
-                android:visibility="invisible" >
+                android:visibility="invisible"
+                android:layout_marginBottom="16dp">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/audio_player_pager"
@@ -185,7 +186,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@android:id/progress"
             android:gravity="center"
-            android:textSize="@dimen/text_size_micro"
+            android:textSize="@dimen/text_size_medium"
             app:themeResource="audio_player_current_time" />
 
         <com.andrew.apollo.widgets.theme.ThemeableTextView
@@ -196,7 +197,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@android:id/progress"
             android:gravity="center"
-            android:textSize="@dimen/text_size_micro"
+            android:textSize="@dimen/text_size_medium"
             app:themeResource="audio_player_total_time" />
 
         <com.andrew.apollo.widgets.theme.ThemeableSeekBar
@@ -207,8 +208,7 @@
             android:layout_marginBottom="@dimen/audio_player_seek_bar_margin_bottom"
             android:layout_toLeftOf="@+id/audio_player_total_time"
             android:layout_toRightOf="@+id/audio_player_current_time"
-            android:max="1000"
-            android:thumb="@null"/>
+            android:max="1000"/>
 
         <LinearLayout
             android:id="@+id/audio_player_controlss"

@@ -270,7 +270,10 @@ public class SongFragment extends Fragment implements LoaderCallbacks<List<Song>
     @Override
     public void onItemClick(final AdapterView<?> parent, final View view, final int position,
             final long id) {
-        MusicUtils.playAllFromUserItemClick(getActivity(), mAdapter, position);
+        if (mAdapter != null) {
+            MusicUtils.playAllFromUserItemClick(getActivity(), mAdapter, position);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
