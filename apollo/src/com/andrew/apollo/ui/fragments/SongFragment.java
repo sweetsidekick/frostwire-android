@@ -272,6 +272,12 @@ public class SongFragment extends Fragment implements LoaderCallbacks<List<Song>
             final long id) {
         if (mAdapter != null) {
             MusicUtils.playAllFromUserItemClick(getActivity(), mAdapter, position);
+        }
+        notifyAdapterDataSetChanged();
+    }
+
+    public void notifyAdapterDataSetChanged() {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -372,6 +378,6 @@ public class SongFragment extends Fragment implements LoaderCallbacks<List<Song>
      */
     @Override
     public void onMetaChanged() {
-        // Nothing to do
+        notifyAdapterDataSetChanged();
     }
 }
