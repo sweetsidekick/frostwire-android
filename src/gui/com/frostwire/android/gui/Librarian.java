@@ -18,16 +18,6 @@
 
 package com.frostwire.android.gui;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-
-import com.frostwire.android.core.*;
-import com.frostwire.android.gui.transfers.Transfers;
-import org.apache.commons.io.FilenameUtils;
-import org.xmlpull.v1.XmlPullParser;
-
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -38,14 +28,13 @@ import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Process;
 import android.provider.BaseColumns;
 import android.provider.MediaStore.MediaColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.WindowManager;
-
+import com.frostwire.android.core.*;
 import com.frostwire.android.core.player.EphemeralPlaylist;
 import com.frostwire.android.core.player.PlaylistItem;
 import com.frostwire.android.core.providers.TableFetcher;
@@ -55,11 +44,19 @@ import com.frostwire.android.core.providers.UniversalStore.Applications;
 import com.frostwire.android.core.providers.UniversalStore.Applications.ApplicationsColumns;
 import com.frostwire.android.core.providers.UniversalStore.Sharing;
 import com.frostwire.android.core.providers.UniversalStore.Sharing.SharingColumns;
+import com.frostwire.android.gui.transfers.Transfers;
 import com.frostwire.android.gui.util.Apk;
-import com.frostwire.util.StringUtils;
 import com.frostwire.localpeer.Finger;
 import com.frostwire.localpeer.ScreenMetrics;
 import com.frostwire.util.DirectoryUtils;
+import com.frostwire.util.StringUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * The Librarian is in charge of:
@@ -876,6 +873,34 @@ public final class Librarian {
         return screenInches;
     }
 
+    /**
+     * When a file descriptor's URI does not fall into one of the TableFetchers (ContentProviders)
+     * the FileDescriptor object obtained will come from TableFetchers.DocumentsTableFetcher and
+     * it will NOT have a `filePath` attribute set (null), also the `fileType` field will be set to
+     * Constants.FILE_TYPE_DOCUMENTS, which can throw things off if the given URI is not as expected
+     * even though the file may be a media file.
+     *
+     * This method will use the given URI on the generic content resolver to find the disk file path,
+     * update the fileDescriptor.filePath field, and then with the extension it will try to determine
+     * the closest fileType (byte) associated.
+     *
+     * @param uri (input)
+     * @param fileDescriptor (output, can't be null)
+     */
+    public void updateFileDescriptor(Uri uri, FileDescriptor fileDescriptor) {
+        if (fileDescriptor.filePath == null) {
+            try {
+                Cursor query = context.getContentResolver().query(uri, null, null, null, null);
+                int pathColumn = query.getColumnIndex("_data");
+                query.moveToFirst();
+                fileDescriptor.filePath = query.getString(pathColumn);
+                fileDescriptor.fileType = (byte) MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(fileDescriptor.filePath)).getId();
+            } catch (Throwable t) {
+
+            }
+        }
+    }
+
     private static class FileCountCache {
 
         public int shared;
@@ -940,6 +965,20 @@ public final class Librarian {
             // sometimes uri.getLastPathSegment() is not an integer
             e.printStackTrace();
         }
+
+        // try to save it.
+        if (fd == null) {
+            fd = new FileDescriptor();
+
+            if (uri.toString().startsWith("content://")) {
+                fd.id = Integer.valueOf(uri.getLastPathSegment());
+                updateFileDescriptor(uri, fd);
+            } else if (uri.toString().startsWith("file://")) {
+                fd.filePath = uri.toString();
+                fd.fileType = (byte) MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(fd.filePath)).getId();
+            }
+        }
+
         return fd;
     }
 
