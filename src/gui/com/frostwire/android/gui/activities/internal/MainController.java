@@ -25,6 +25,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.andrew.apollo.ui.activities.AudioPlayerActivity;
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
@@ -32,7 +33,6 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
-import com.frostwire.android.gui.activities.AudioPlayerActivity;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.activities.WizardActivity;
