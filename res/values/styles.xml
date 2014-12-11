@@ -314,6 +314,7 @@
 
     <style name="DonationButton2">
         <item name="android:background">@drawable/btn_donation_background</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:padding">4dp</item>
         <item name="android:textSize">18sp</item>
     </style>

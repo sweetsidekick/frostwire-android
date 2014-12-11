@@ -23,7 +23,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/body_background_gray_light">
 
         <View
             android:id="@+id/audio_player_footer"
@@ -38,7 +39,8 @@
             android:layout_height="@dimen/audio_player_header_height"
             android:layout_alignParentTop="true"
             android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:background="@color/basic_white">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -98,14 +100,15 @@
             android:layout_above="@android:id/progress"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/audio_player_header" >
+            android:layout_below="@+id/audio_player_header">
 
             <com.andrew.apollo.widgets.SquareImageView
                 android:id="@+id/audio_player_album_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:padding="16dp"/>
 
             <View
                 android:id="@+id/audio_player_footer_two"
@@ -114,7 +117,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/audio_player_album_art" />
 
-            <ImageView
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignTop="@+id/audio_player_album_art"
+                android:background="@drawable/layout_divider_1_gray" />
+
+            <!--<ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shadow_height"
                 android:layout_alignTop="@+id/audio_player_album_art"
@@ -126,7 +135,7 @@
                 android:layout_height="@dimen/shadow_height"
                 android:layout_alignBottom="@+id/audio_player_album_art"
                 android:contentDescription="@null"
-                android:src="@drawable/bottom_shadow" />
+                android:src="@drawable/bottom_shadow" />-->
 
             <FrameLayout
                 android:id="@+id/audio_player_pager_container"
@@ -199,7 +208,7 @@
             android:layout_toLeftOf="@+id/audio_player_total_time"
             android:layout_toRightOf="@+id/audio_player_current_time"
             android:max="1000"
-            android:thumb="@null" />
+            android:thumb="@null"/>
 
         <LinearLayout
             android:id="@+id/audio_player_controlss"
@@ -209,9 +218,36 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:baselineAligned="false"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <include layout="@layout/audio_player_controls" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/body_background_gray_light">
+
+                <include layout="@layout/audio_player_controls" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/layout_divider_1_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/body_background_gray"
+                android:divider="@drawable/layout_divider_1_gray"
+                android:showDividers="middle">
+
+                <include layout="@layout/view_donations2" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
 
