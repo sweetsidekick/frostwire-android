@@ -1,3 +1,9 @@
+FrostWire 1.4.2 - DECEMBER/11/2014
+ - When sharing files from 3rd party apps with FrostWire, the file
+   shared will be displayed by FrostWire. If the file is a .torrent
+   a torrent transfer will be started.
+ - Not using wifi multicast lock for energy savings.
+
 FrostWire 1.4.1 - DECEMBER/02/2014
  - Updated jlibtorrent binaries.
  - Resilience to file disk permission errors causing the app to
