@@ -507,4 +507,5 @@
     <string name="error_not_enough_peers">Try again, not enough peers</string>
     <string name="http_download_status_save_dir_error">Save directory does not exist or can\'t be created</string>
     <string name="my_music">My Music</string>
+    <string name="support">Support</string>
 </resources>
