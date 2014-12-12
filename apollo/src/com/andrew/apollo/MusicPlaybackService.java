@@ -55,10 +55,12 @@ import com.andrew.apollo.cache.ImageCache;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.RecentStore;
+import com.andrew.apollo.ui.activities.AudioPlayerActivity;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.PreferenceUtils;
+import com.frostwire.util.Ref;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -482,6 +484,8 @@ public class MusicPlaybackService extends Service {
      * Favorites database
      */
     private FavoritesStore mFavoritesCache;
+
+    private boolean launchPlayerActivity;
 
     /**
      * {@inheritDoc}
@@ -1949,6 +1953,7 @@ public class MusicPlaybackService extends Service {
      * @param position The position to start playback at
      */
     public void open(final long[] list, final int position) {
+        launchPlayerActivity = true;
         synchronized (this) {
             if (mShuffleMode == SHUFFLE_AUTO) {
                 mShuffleMode = SHUFFLE_NORMAL;
@@ -2541,7 +2546,9 @@ public class MusicPlaybackService extends Service {
         private boolean setDataSourceImpl(final MediaPlayer player, final String path) {
             try {
                 player.reset();
-                player.setOnPreparedListener(null);
+                if (Ref.alive(mService)&& mService.get().launchPlayerActivity) {
+                    player.setOnPreparedListener(new AudioOnPreparedListener(mService));
+                }
                 if (path.startsWith("content://")) {
                     player.setDataSource(mService.get(), Uri.parse(path));
                 } else {
@@ -3033,4 +3040,23 @@ public class MusicPlaybackService extends Service {
 
     }
 
+    private static final class AudioOnPreparedListener implements MediaPlayer.OnPreparedListener {
+
+        private WeakReference<MusicPlaybackService> serviceRef;
+
+        public AudioOnPreparedListener(WeakReference<MusicPlaybackService> serviceRef) {
+            this.serviceRef = serviceRef;
+        }
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+
+            if (Ref.alive(serviceRef) && serviceRef.get().launchPlayerActivity) {
+                serviceRef.get().launchPlayerActivity = false;
+                Intent i = new Intent(serviceRef.get(), AudioPlayerActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                serviceRef.get().startActivity(i);
+            }
+        }
+    }
 }
