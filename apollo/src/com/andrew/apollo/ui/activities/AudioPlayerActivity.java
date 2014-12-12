@@ -386,6 +386,14 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
                 // Settings
                 NavUtils.openSettings(this);
                 return true;*/
+            case R.id.menu_audio_player_stop:
+                try {
+                    MusicUtils.mService.stop();
+                } catch (Throwable e) {
+                    // ignore
+                }
+                NavUtils.goHome(this);
+                return true;
             case R.id.menu_audio_player_delete:
                 // Delete current song
                 DeleteDialog.newInstance(MusicUtils.getTrackName(), new long[] {
