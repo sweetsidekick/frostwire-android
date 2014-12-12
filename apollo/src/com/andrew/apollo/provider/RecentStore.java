@@ -100,25 +100,29 @@ public class RecentStore extends SQLiteOpenHelper {
             return;
         }
 
-        final SQLiteDatabase database = getWritableDatabase();
-        final ContentValues values = new ContentValues(6);
+        try {
+            final SQLiteDatabase database = getWritableDatabase();
+            final ContentValues values = new ContentValues(6);
 
-        database.beginTransaction();
+            database.beginTransaction();
 
-        values.put(RecentStoreColumns.ID, albumId);
-        values.put(RecentStoreColumns.ALBUMNAME, albumName);
-        values.put(RecentStoreColumns.ARTISTNAME, artistName);
-        values.put(RecentStoreColumns.ALBUMSONGCOUNT, songCount);
-        values.put(RecentStoreColumns.ALBUMYEAR, albumYear);
-        values.put(RecentStoreColumns.TIMEPLAYED, System.currentTimeMillis());
+            values.put(RecentStoreColumns.ID, albumId);
+            values.put(RecentStoreColumns.ALBUMNAME, albumName);
+            values.put(RecentStoreColumns.ARTISTNAME, artistName);
+            values.put(RecentStoreColumns.ALBUMSONGCOUNT, songCount);
+            values.put(RecentStoreColumns.ALBUMYEAR, albumYear);
+            values.put(RecentStoreColumns.TIMEPLAYED, System.currentTimeMillis());
 
-        database.delete(RecentStoreColumns.NAME, RecentStoreColumns.ID + " = ?", new String[] {
-            String.valueOf(albumId)
-        });
-        database.insert(RecentStoreColumns.NAME, null, values);
-        database.setTransactionSuccessful();
-        database.endTransaction();
-
+            database.delete(RecentStoreColumns.NAME, RecentStoreColumns.ID + " = ?", new String[]{
+                    String.valueOf(albumId)
+            });
+            database.insert(RecentStoreColumns.NAME, null, values);
+            database.setTransactionSuccessful();
+            database.endTransaction();
+        } catch (Throwable e) {
+            // not critical at all
+            e.printStackTrace();
+        }
     }
 
     /**

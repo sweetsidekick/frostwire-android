@@ -1764,7 +1764,12 @@ public class MusicPlaybackService extends Service {
             if (mCursor == null) {
                 return null;
             }
-            return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.ALBUM));
+            try {
+                return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.ALBUM));
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return "---";
+            }
         }
     }
 
@@ -1778,7 +1783,12 @@ public class MusicPlaybackService extends Service {
             if (mCursor == null) {
                 return null;
             }
-            return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.TITLE));
+            try {
+                return mCursor.getString(mCursor.getColumnIndexOrThrow(AudioColumns.TITLE));
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return "---";
+            }
         }
     }
 
