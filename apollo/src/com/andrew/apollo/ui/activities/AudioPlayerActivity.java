@@ -38,6 +38,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
@@ -66,6 +67,11 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.frostwire.android.gui.billing.Biller;
+import com.frostwire.android.gui.billing.BillerFactory;
+import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.android.gui.views.DonationsController;
 
 import java.lang.ref.WeakReference;
 
@@ -198,6 +204,10 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
 
         // Cache all the items
         initPlaybackControls();
+
+        mPlayPauseButton.setOnLongClickListener(new StopListener(this, true));
+        findViewById(R.id.audio_player_album_art).setOnTouchListener(new SwipeDetector());
+        initSupportFrostWire();
     }
 
     /**
@@ -540,8 +550,6 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         mNextButton.setRepeatListener(mFastForwardListener);
         // Update the progress
         mProgress.setOnSeekBarChangeListener(this);
-
-        mPlayPauseButton.setOnLongClickListener(new StopListener(this, true));
     }
 
     /**
@@ -1006,4 +1014,58 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         }
     }
 
+    private static final class SwipeDetector extends AbstractSwipeDetector {
+        @Override
+        public void onLeftToRightSwipe() {
+            try {
+                MusicUtils.mService.prev();
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        @Override
+        public void onRightToLeftSwipe() {
+            try {
+                MusicUtils.mService.next();
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        @Override
+        public boolean onMultiTouchEvent(View v, MotionEvent event) {
+            try {
+                MusicUtils.playOrPause();
+            } catch (Throwable e) {
+                // ignore
+            }
+            return true;
+        }
+    }
+
+    private Biller biller;
+    private final DonationsController donationsController = new DonationsController();
+
+    private void initSupportFrostWire() {
+        View donationsView = findViewById(R.id.activity_audio_player_donations);
+        biller = BillerFactory.getInstance(this);
+
+        if (donationsView != null && biller != null) {
+            donationsView.setVisibility(View.GONE);
+
+            if (biller.isInAppBillingSupported()) {
+                UIUtils.supportFrostWire(donationsView);
+            }
+
+            if (donationsView.getVisibility() == View.VISIBLE) {
+                donationsController.setup(this, donationsView, biller);
+            } else {
+                View div3view = findViewById(R.id.activity_audio_player_div3);
+                if (div3view !=null){
+                    div3view.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
 }
