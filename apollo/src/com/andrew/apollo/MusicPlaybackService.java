@@ -2459,6 +2459,9 @@ public class MusicPlaybackService extends Service {
          * @return The position of the next track to play
          */
         public int nextInt(final int interval) {
+            if (interval <= 0) {
+                return 0;
+            }
             int next;
             do {
                 next = mRandom.nextInt(interval);
@@ -2564,7 +2567,11 @@ public class MusicPlaybackService extends Service {
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Media player not initialized!");
                 return;
+            } catch (Throwable e) {
+                Log.e(TAG, "Media player fatal error", e);
+                return;
             }
+
             if (mNextMediaPlayer != null) {
                 mNextMediaPlayer.release();
                 mNextMediaPlayer = null;
@@ -2576,7 +2583,12 @@ public class MusicPlaybackService extends Service {
             mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
             mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
             if (setDataSourceImpl(mNextMediaPlayer, path)) {
-                mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
+                try {
+                    mCurrentMediaPlayer.setNextMediaPlayerSupport(mNextMediaPlayer);
+                } catch (Throwable e) {
+                    Log.e(TAG, "Media player fatal error", e);
+                    return;
+                }
             } else {
                 if (mNextMediaPlayer != null) {
                     mNextMediaPlayer.release();

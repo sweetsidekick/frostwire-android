@@ -23,6 +23,7 @@ import android.content.Context;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.view.ViewConfiguration;
+import com.andrew.apollo.cache.ImageCache;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.SystemPaths;
@@ -94,6 +95,7 @@ public class MainApplication extends Application {
 
     @Override
     public void onLowMemory() {
+        ImageCache.getInstance(this).evictAll();
         ImageLoader.getInstance(this).clear();
         super.onLowMemory();
     }
