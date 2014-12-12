@@ -50,6 +50,9 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
      */
     private final ThemeUtils mResources;
 
+    private int playDrawable;
+    private int pauseDrawable;
+
     /**
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
@@ -65,6 +68,9 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
         setOnClickListener(this);
         // Show the cheat sheet
         setOnLongClickListener(this);
+
+        this.playDrawable = 0;
+        this.pauseDrawable = 0;
     }
 
     /**
@@ -95,12 +101,29 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
     public void updateState() {
         if (MusicUtils.isPlaying()) {
             setContentDescription(getResources().getString(R.string.accessibility_pause));
-            setImageDrawable(mResources.getDrawable(PAUSE));
+            if (pauseDrawable == 0) {
+                setImageDrawable(mResources.getDrawable(PAUSE));
+            } else {
+                setImageResource(pauseDrawable);
+            }
         } else {
             setContentDescription(getResources().getString(R.string.accessibility_play));
-            setImageDrawable(mResources.getDrawable(PLAY));
-            UIUtils.showToastMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop), Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL, 0, 10);
+            if (playDrawable == 0) {
+                setImageDrawable(mResources.getDrawable(PLAY));
+            } else {
+                setImageResource(playDrawable);
+            }
+            //UIUtils.showToastMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop), Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL, 0, 10);
         }
     }
 
+    public void setPlayDrawable(int resId) {
+        this.playDrawable = resId;
+        updateState();
+    }
+
+    public void setPauseDrawable(int resId) {
+        this.pauseDrawable = resId;
+        updateState();
+    }
 }

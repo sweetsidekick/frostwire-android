@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
 import com.andrew.apollo.MusicStateListener;
+import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.frostwire.android.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
@@ -310,6 +311,14 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
     private void initBottomActionBar() {
         // Play and pause button
         mPlayPauseButton = (PlayPauseButton)findViewById(R.id.action_button_play);
+        mPlayPauseButton.setPlayDrawable(R.drawable.btn_playback_play_bottom);
+        mPlayPauseButton.setPauseDrawable(R.drawable.btn_playback_pause_bottom);
+
+        RepeatingImageButton prevButton = (RepeatingImageButton)findViewById(R.id.action_button_previous);
+        RepeatingImageButton nextButton = (RepeatingImageButton)findViewById(R.id.action_button_next);
+        prevButton.setPreviousDrawable(R.drawable.btn_playback_previous_bottom);
+        nextButton.setNextDrawable(R.drawable.btn_playback_next_bottom);
+
         // Shuffle button
         mShuffleButton = (ShuffleButton)findViewById(R.id.action_button_shuffle);
         // Repeat button

@@ -56,6 +56,9 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
 
     private RepeatListener mListener;
 
+    private int previousDrawable;
+    private int nextDrawable;
+
     /**
      * @param context The {@link Context} to use
      * @param attrs The attributes of the XML tag that is inflating the view.
@@ -193,14 +196,32 @@ public class RepeatingImageButton extends ImageButton implements OnClickListener
     public void updateState() {
         switch (getId()) {
             case R.id.action_button_next:
-                setImageDrawable(mResources.getDrawable(NEXT));
+                if (nextDrawable == 0) {
+                    setImageDrawable(mResources.getDrawable(NEXT));
+                } else {
+                    setImageResource(nextDrawable);
+                }
                 break;
             case R.id.action_button_previous:
-                setImageDrawable(mResources.getDrawable(PREVIOUS));
+                if (previousDrawable == 0) {
+                    setImageDrawable(mResources.getDrawable(PREVIOUS));
+                } else {
+                    setImageResource(previousDrawable);
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    public void setPreviousDrawable(int resId) {
+        this.previousDrawable = resId;
+        updateState();
+    }
+
+    public void setNextDrawable(int resId) {
+        this.nextDrawable = resId;
+        updateState();
     }
 
     public interface RepeatListener {

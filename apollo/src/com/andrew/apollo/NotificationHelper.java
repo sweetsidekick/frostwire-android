@@ -92,7 +92,7 @@ public class NotificationHelper {
 
         // Notification Builder
         mNotification = new NotificationCompat.Builder(mService)
-                .setSmallIcon(R.drawable.stat_notify_music)
+                .setSmallIcon(R.drawable.frostwire_notification)
                 .setContentIntent(getPendingIntent())
                 .setPriority(0)//(Notification.PRIORITY_DEFAULT)
                 .setContent(mNotificationTemplate)
@@ -131,12 +131,12 @@ public class NotificationHelper {
         }
         if (mNotificationTemplate != null) {
             mNotificationTemplate.setImageViewResource(R.id.notification_base_play,
-                    isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+                    isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
         }
 
         if (ApolloUtils.hasJellyBean() && mExpandedView != null) {
             mExpandedView.setImageViewResource(R.id.notification_expanded_base_play,
-                    isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+                    isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
         }
         mNotificationManager.notify(APOLLO_MUSIC_SERVICE, mNotification);
     }
@@ -172,7 +172,7 @@ public class NotificationHelper {
 
         // Update the play button image
         mExpandedView.setImageViewResource(R.id.notification_expanded_base_play,
-                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+                isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
     }
 
     /**
@@ -197,7 +197,7 @@ public class NotificationHelper {
 
         // Update the play button image
         mNotificationTemplate.setImageViewResource(R.id.notification_base_play,
-                isPlaying ? R.drawable.btn_playback_pause : R.drawable.btn_playback_play);
+                isPlaying ? R.drawable.btn_notification_playback_pause : R.drawable.btn_notification_playback_play);
     }
 
     /**
