@@ -181,21 +181,22 @@ public final class MainController {
 
         FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
 
-        // Until we don't show .torrents on file manager, the most logical thing to do if user wants to
-        // "Share" a `.torrent` from a third party app with FrostWire, that is starting the `.torrent` transfer.
-        if (fileDescriptor.filePath != null && fileDescriptor.filePath.endsWith(".torrent")) {
-            TransferManager.instance().downloadTorrent(uri.toString());
-            activity.switchFragment(R.id.menu_main_transfers);
-        } else {
-            try {
-                shareFileByUri(uri);
-                showFile(fileDescriptor);
-                UIUtils.showLongMessage(activity, R.string.one_file_shared);
-            } catch (Throwable t) {
-                UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+        if (fileDescriptor != null) {
+            // Until we don't show .torrents on file manager, the most logical thing to do if user wants to
+            // "Share" a `.torrent` from a third party app with FrostWire, that is starting the `.torrent` transfer.
+            if (fileDescriptor.filePath != null && fileDescriptor.filePath.endsWith(".torrent")) {
+                TransferManager.instance().downloadTorrent(uri.toString());
+                activity.switchFragment(R.id.menu_main_transfers);
+            } else {
+                try {
+                    shareFileByUri(uri);
+                    showFile(fileDescriptor);
+                    UIUtils.showLongMessage(activity, R.string.one_file_shared);
+                } catch (Throwable t) {
+                    UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+                }
             }
         }
-
     }
 
     private void showFile(FileDescriptor fileDescriptor) {
