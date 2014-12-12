@@ -137,6 +137,10 @@ public final class ApolloUtils {
      *         returned at all
      */
     public static final boolean isOnline(final Context context) {
+        // aldenml: this nulls the feature of online download of music data
+        if (true) {
+            return false;
+        }
         /*
          * This sort of handles a sudden configuration change, but I think it
          * should be dealt with in a more professional way.
