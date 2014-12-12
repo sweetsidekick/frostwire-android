@@ -2545,6 +2545,9 @@ public class MusicPlaybackService extends Service {
             } catch (final IllegalArgumentException todo) {
                 // TODO: notify the user why the file couldn't be opened
                 return false;
+            } catch (Throwable e) {
+                // TODO: notify the user why the file couldn't be opened due to an unknown error
+                return false;
             }
             player.setOnCompletionListener(this);
             player.setOnErrorListener(this);

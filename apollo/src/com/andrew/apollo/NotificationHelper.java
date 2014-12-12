@@ -245,11 +245,13 @@ public class NotificationHelper {
     private void initCollapsedLayout(final String trackName, final String artistName,
             final Bitmap albumArt) {
         // Track name (line one)
-        mNotificationTemplate.setTextViewText(R.id.notification_base_line_one, trackName);
+        mNotificationTemplate.setTextViewText(R.id.notification_base_line_one, trackName != null ? trackName : "---");
         // Artist name (line two)
-        mNotificationTemplate.setTextViewText(R.id.notification_base_line_two, artistName);
+        mNotificationTemplate.setTextViewText(R.id.notification_base_line_two, artistName != null ? artistName : "---");
         // Album art
-        mNotificationTemplate.setImageViewBitmap(R.id.notification_base_image, albumArt);
+        if (albumArt != null) {
+            mNotificationTemplate.setImageViewBitmap(R.id.notification_base_image, albumArt);
+        }
     }
 
     /**
@@ -259,13 +261,15 @@ public class NotificationHelper {
     private void initExpandedLayout(final String trackName, final String artistName,
             final String albumName, final Bitmap albumArt) {
         // Track name (line one)
-        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_one, trackName);
+        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_one, trackName != null ? trackName : "---");
         // Album name (line two)
-        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_two, albumName);
+        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_two, albumName != null ? albumName : "---");
         // Artist name (line three)
-        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_three, artistName);
+        mExpandedView.setTextViewText(R.id.notification_expanded_base_line_three, artistName != null ? artistName : "---");
         // Album art
-        mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
+        if (albumArt != null) {
+            mExpandedView.setImageViewBitmap(R.id.notification_expanded_base_image, albumArt);
+        }
     }
 
     private static void setBigContentView(Notification notification, RemoteViews view) {
