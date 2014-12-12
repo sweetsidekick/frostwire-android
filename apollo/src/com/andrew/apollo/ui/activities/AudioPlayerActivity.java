@@ -482,6 +482,10 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         } catch (final Throwable e) {
             //$FALL-THROUGH$
         }
+
+        if (biller != null) {
+            biller.onDestroy();
+        }
     }
 
     /**
