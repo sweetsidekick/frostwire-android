@@ -11,7 +11,6 @@
 
 package com.andrew.apollo;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.andrew.apollo.utils.ApolloUtils;
@@ -33,8 +31,9 @@ import com.frostwire.android.R;
  *
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
-@SuppressLint("NewApi")
 public class NotificationHelper {
+
+    private static final String INTENT_AUDIO_PLAYER = "com.frostwire.android.AUDIO_PLAYER";
 
     /**
      * Notification ID
@@ -146,7 +145,7 @@ public class NotificationHelper {
      * Open to the now playing screen
      */
     private PendingIntent getPendingIntent() {
-        return PendingIntent.getActivity(mService, 0, new Intent("com.andrew.apollo.AUDIO_PLAYER")
+        return PendingIntent.getActivity(mService, 0, new Intent(INTENT_AUDIO_PLAYER)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
     }
 
