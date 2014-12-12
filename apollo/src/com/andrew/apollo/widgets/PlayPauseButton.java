@@ -24,6 +24,7 @@ import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.ThemeUtils;
 import com.andrew.apollo.widgets.theme.HoloSelector;
+import com.frostwire.android.gui.util.UIUtils;
 
 /**
  * A custom {@link ImageButton} that represents the "play and pause" button.
@@ -96,6 +97,7 @@ public class PlayPauseButton extends ImageButton implements OnClickListener, OnL
         } else {
             setContentDescription(getResources().getString(R.string.accessibility_play));
             setImageDrawable(mResources.getDrawable(PLAY));
+            UIUtils.showShortMessage(getContext(), getContext().getString(R.string.player_paused_press_and_hold_to_stop));
         }
     }
 
