@@ -72,8 +72,7 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
     @Override
     public void shutdown() {
         try {
-            // TODO:APOLLO
-            //MusicUtils.mService.shutdown();
+            MusicUtils.mService.shutdown();
         } catch (Throwable e) {
             e.printStackTrace();
         }

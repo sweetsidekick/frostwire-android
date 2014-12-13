@@ -695,6 +695,7 @@ public class MusicPlaybackService extends Service {
 
         // Remove any callbacks from the handler
         mPlayerHandler.removeCallbacksAndMessages(null);
+        mPlayerHandler.getLooper().quit();
 
         // Close the cursor
         closeCursor();
@@ -3038,6 +3039,10 @@ public class MusicPlaybackService extends Service {
             return mService.get().getAudioSessionId();
         }
 
+        @Override
+        public void shutdown() throws RemoteException {
+            mService.get().shutdown();
+        }
     }
 
     private static final class AudioOnPreparedListener implements MediaPlayer.OnPreparedListener {
@@ -3058,5 +3063,10 @@ public class MusicPlaybackService extends Service {
                 serviceRef.get().startActivity(i);
             }
         }
+    }
+
+    public void shutdown() {
+        stopForeground(true);
+        stopSelf();
     }
 }
