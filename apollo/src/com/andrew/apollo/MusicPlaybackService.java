@@ -3059,7 +3059,7 @@ public class MusicPlaybackService extends Service {
             if (Ref.alive(serviceRef) && serviceRef.get().launchPlayerActivity) {
                 serviceRef.get().launchPlayerActivity = false;
                 Intent i = new Intent(serviceRef.get(), AudioPlayerActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 serviceRef.get().startActivity(i);
             }
         }

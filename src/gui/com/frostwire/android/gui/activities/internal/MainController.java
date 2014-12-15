@@ -111,6 +111,7 @@ public final class MainController {
 
     public void launchMyMusic() {
         Intent i = new Intent(activity, com.andrew.apollo.ui.activities.HomeActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(i);
     }
 
@@ -148,7 +149,6 @@ public final class MainController {
     public void launchPlayerActivity() {
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
             Intent i = new Intent(activity, AudioPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);
         }

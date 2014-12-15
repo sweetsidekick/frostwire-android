@@ -356,7 +356,8 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Go back to the home activity
-                NavUtils.goHome(this);
+                //NavUtils.goHome(this);
+                finish();
                 return true;
             case R.id.menu_shuffle:
                 // Shuffle all the songs

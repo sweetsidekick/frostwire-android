@@ -134,7 +134,6 @@ public class PlayerNotifierView extends LinearLayout implements TimerObserver {
     public boolean onTouchEvent(MotionEvent event) {
         if (Engine.instance().getMediaPlayer().getCurrentFD() != null) {
             Intent i = new Intent(getContext(), AudioPlayerActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(i);
         }
