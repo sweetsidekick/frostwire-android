@@ -427,5 +427,6 @@ public final class UIUtils {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         activity.startActivity(intent);
         activity.finish();
+        activity.overridePendingTransition(0, 0);
     }
 }
