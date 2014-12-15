@@ -355,9 +355,9 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Go back to the home activity
-                //NavUtils.goHome(this);
-                finish();
+                // Go back to the music home activity
+                NavUtils.goHome(this);
+                //finish();
                 return true;
             case R.id.menu_shuffle:
                 // Shuffle all the songs
@@ -421,7 +421,8 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        NavUtils.goHome(this);
+        //NavUtils.goHome(this);
+        finish();
     }
 
     /**

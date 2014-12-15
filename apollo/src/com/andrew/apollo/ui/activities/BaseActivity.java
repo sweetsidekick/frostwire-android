@@ -49,6 +49,7 @@ import com.andrew.apollo.utils.ThemeUtils;
 import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.frostwire.android.gui.util.UIUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -219,7 +220,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                UIUtils.goToFrostWireMainActivity(this);
                 return true;
             /*case R.id.menu_settings:
                 // Settings

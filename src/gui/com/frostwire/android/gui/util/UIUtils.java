@@ -394,7 +394,6 @@ public final class UIUtils {
     /**
      * Checks setting to show or not the transfers window right after a download has started.
      * This should probably be moved elsewhere (similar to GUIMediator on the desktop)
-     * @param activity
      */
     public static void showTransfersOnDownloadStart(Context context) {
         if (ConfigurationManager.instance().showTransfersOnDownloadStart() && context != null) {
@@ -418,5 +417,15 @@ public final class UIUtils {
             view = new View(activity);
         }
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void goToFrostWireMainActivity(Activity activity) {
+        final Intent intent = new Intent(activity, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }
