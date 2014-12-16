@@ -13,6 +13,7 @@ package com.andrew.apollo.ui.activities;
 
 import static com.andrew.apollo.utils.MusicUtils.mService;
 
+import android.app.ActionBar;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
@@ -147,6 +148,15 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
         // Theme the action bar
         mResources.themeActionBar(getActionBar(), getString(R.string.app_name));
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        TextView actionBarTitleTextView = (TextView) findViewById(R.id.action_bar_title);
+        if (actionBarTitleTextView != null) {
+            actionBarTitleTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UIUtils.goToFrostWireMainActivity(BaseActivity.this);
+                }
+            });
+        }
 
         // Set the layout
         setContentView(setContentView());

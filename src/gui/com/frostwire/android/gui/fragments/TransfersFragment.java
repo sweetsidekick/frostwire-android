@@ -175,7 +175,7 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         super.onResume();
         initStorageRelatedRichNotifications(getView());
     }
-    
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
