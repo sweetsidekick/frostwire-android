@@ -3066,6 +3066,7 @@ public class MusicPlaybackService extends Service {
     }
 
     public void shutdown() {
+        mPlayPos = -1;
         stopForeground(true);
         stopSelf();
     }

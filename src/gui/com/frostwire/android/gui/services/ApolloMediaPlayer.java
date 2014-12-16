@@ -8,16 +8,17 @@ import android.app.Service;
 import android.os.RemoteException;
 
 import com.andrew.apollo.utils.MusicUtils;
+import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.core.player.Playlist;
 import com.frostwire.android.core.player.PlaylistItem;
+import com.frostwire.android.gui.Librarian;
 
 public class ApolloMediaPlayer implements CoreMediaPlayer {
 
     private final Service service;
 
-    private Playlist playlist;
     private Map<Long, FileDescriptor> idMap = new HashMap<Long, FileDescriptor>();
 
     public ApolloMediaPlayer(Service service) {
@@ -26,8 +27,6 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
 
     @Override
     public void play(Playlist playlist) {
-        this.playlist = playlist;
-
         List<PlaylistItem> items = playlist.getItems();
 
         idMap.clear();
@@ -46,10 +45,6 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
         }
 
         MusicUtils.playAll(service, list, position, false);
-    }
-
-    @Override
-    public void playPrevious() {
     }
 
     @Override
@@ -95,8 +90,17 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
     @Override
     public FileDescriptor getCurrentFD() {
         try {
-            long audioId = MusicUtils.mService.getAudioId();
-            return idMap.get(audioId);
+            long audioId = MusicUtils.getCurrentAudioId();
+            FileDescriptor fd = idMap.get(audioId);
+
+            if (audioId != -1 && fd == null) {
+                fd = Librarian.instance().getFileDescriptor(Constants.FILE_TYPE_AUDIO, (int) audioId, false);
+                if (fd != null) {
+                    idMap.put(audioId, fd);
+                }
+            }
+
+            return fd;
         } catch (Throwable e) {
         }
 
@@ -114,11 +118,6 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
 
     @Override
     public int getDuration() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
         return 0;
     }
 }

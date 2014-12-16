@@ -29,8 +29,6 @@ public interface CoreMediaPlayer {
 
     public void play(Playlist playlist);
 
-    public void playPrevious();
-
     public void playNext();
 
     public void togglePause();
@@ -60,6 +58,4 @@ public interface CoreMediaPlayer {
     public void start();
 
     public int getDuration();
-
-    public int getCurrentPosition();
 }

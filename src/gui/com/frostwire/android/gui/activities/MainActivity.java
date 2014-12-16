@@ -338,6 +338,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         super.onResume();
 
         refreshPeersFragment();
+        refreshPlayerItem();
         
         initializeOffercastLockScreen();
         initializeAppia();
