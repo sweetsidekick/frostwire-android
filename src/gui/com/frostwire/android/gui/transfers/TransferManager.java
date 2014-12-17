@@ -237,7 +237,7 @@ public final class TransferManager {
 
         long peerDownloadsBandwidth = 0;
         for (DownloadTransfer d : downloads) {
-            peerDownloadsBandwidth += d.getDownloadSpeed() / 1000;
+            peerDownloadsBandwidth += d.getDownloadSpeed();
         }
 
         return torrentDownloadsBandwidth + peerDownloadsBandwidth;
@@ -248,7 +248,7 @@ public final class TransferManager {
 
         long peerUploadsBandwidth = 0;
         for (UploadTransfer u : uploads) {
-            peerUploadsBandwidth += u.getUploadSpeed() / 1000;
+            peerUploadsBandwidth += u.getUploadSpeed();
         }
 
         return torrentUploadsBandwidth + peerUploadsBandwidth;
