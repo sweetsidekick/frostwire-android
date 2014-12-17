@@ -199,6 +199,16 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         mResources.themeActionBar(actionBar, getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        TextView actionBarTitleTextView = (TextView) findViewById(R.id.action_bar_title);
+        if (actionBarTitleTextView != null) {
+            actionBarTitleTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavUtils.goHome(AudioPlayerActivity.this);
+                }
+            });
+        }
+
         // Set the layout
         setContentView(R.layout.activity_player_base);
 
