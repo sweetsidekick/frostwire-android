@@ -53,6 +53,7 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.android.gui.views.ClickAdapter;
 import com.googlecode.mp4parser.util.Logger;
 
 import java.lang.ref.WeakReference;
@@ -153,12 +154,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
         getActionBar().setDisplayHomeAsUpEnabled(true);
         TextView actionBarTitleTextView = (TextView) findViewById(R.id.action_bar_title);
         if (actionBarTitleTextView != null) {
-            actionBarTitleTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UIUtils.goToFrostWireMainActivity(BaseActivity.this);
-                }
-            });
+            actionBarTitleTextView.setOnClickListener(new ActionBarTextViewClickListener(this));
         }
 
         // Set the layout
@@ -518,6 +514,18 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
             super.onLongClick(v);
             hideBottomActionBar();
             return true;
+        }
+    }
+
+    private final static class ActionBarTextViewClickListener extends ClickAdapter<BaseActivity> {
+
+        public ActionBarTextViewClickListener(BaseActivity owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(BaseActivity owner, View v) {
+            UIUtils.goToFrostWireMainActivity(owner);
         }
     }
 }
