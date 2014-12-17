@@ -19,6 +19,7 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -27,27 +28,16 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.andrew.apollo.Config;
-import com.frostwire.android.R;
 import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.menu.PhotoSelectionDialog;
 import com.andrew.apollo.menu.PhotoSelectionDialog.ProfileType;
-import com.andrew.apollo.ui.fragments.profile.AlbumSongFragment;
-import com.andrew.apollo.ui.fragments.profile.ArtistAlbumFragment;
-import com.andrew.apollo.ui.fragments.profile.ArtistSongFragment;
-import com.andrew.apollo.ui.fragments.profile.FavoriteFragment;
-import com.andrew.apollo.ui.fragments.profile.GenreSongFragment;
-import com.andrew.apollo.ui.fragments.profile.LastAddedFragment;
-import com.andrew.apollo.ui.fragments.profile.PlaylistSongFragment;
-import com.andrew.apollo.utils.ApolloUtils;
-import com.andrew.apollo.utils.MusicUtils;
-import com.andrew.apollo.utils.NavUtils;
-import com.andrew.apollo.utils.PreferenceUtils;
-import com.andrew.apollo.utils.SortOrder;
+import com.andrew.apollo.ui.fragments.profile.*;
+import com.andrew.apollo.utils.*;
 import com.andrew.apollo.widgets.ProfileTabCarousel;
 import com.andrew.apollo.widgets.ProfileTabCarousel.Listener;
+import com.frostwire.android.R;
 
 /**
  * The {@link Activity} is used to display the data for specific
@@ -510,18 +500,24 @@ public class ProfileActivity extends BaseActivity implements OnPageChangeListene
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_PHOTO) {
             if (resultCode == RESULT_OK) {
-                final Uri selectedImage = data.getData();
+                Uri selectedImage = data.getData();
+
+                if (selectedImage.toString().startsWith("content://com.android.providers.media.documents/document/image%3A")) {
+                    selectedImage = Uri.parse(selectedImage.toString().replace("com.android.providers.media.documents/document/image%3A","media/external/images/media/"));
+                }
+
                 final String[] filePathColumn = {
                     MediaStore.Images.Media.DATA
                 };
 
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null,
                         null, null);
+
                 if (cursor != null && cursor.moveToFirst()) {
                     final int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     final String picturePath = cursor.getString(columnIndex);
+
                     cursor.close();
-                    cursor = null;
 
                     String key = mProfileName;
                     if (isArtist()) {
@@ -548,10 +544,14 @@ public class ProfileActivity extends BaseActivity implements OnPageChangeListene
      * Starts an activity for result that returns an image from the Gallery.
      */
     public void selectNewPhoto() {
-        // First remove the old image
         removeFromCache();
-        // Now open the gallery
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+        final Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT < 19) {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent.setAction("android.intent.action.OPEN_DOCUMENT"); //Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
         intent.setType("image/*");
         startActivityForResult(intent, NEW_PHOTO);
     }
