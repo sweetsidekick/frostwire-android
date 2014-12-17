@@ -312,6 +312,16 @@ public final class MusicUtils {
         return false;
     }
 
+    public static final boolean isStopped() {
+        if (mService != null) {
+            try {
+                return mService.isStopped();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return true;
+    }
+
     /**
      * @return The current shuffle mode.
      */

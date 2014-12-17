@@ -14,6 +14,7 @@ package com.andrew.apollo.ui.activities;
 import static com.andrew.apollo.utils.MusicUtils.mService;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
@@ -40,6 +41,7 @@ import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
 import com.andrew.apollo.MusicStateListener;
 import com.andrew.apollo.widgets.RepeatingImageButton;
+import com.andrew.apollo.widgets.theme.BottomActionBar;
 import com.frostwire.android.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.Lists;
@@ -51,6 +53,7 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.gui.util.UIUtils;
+import com.googlecode.mp4parser.util.Logger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -161,7 +164,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
         // Set the layout
         setContentView(setContentView());
 
-        // Initialze the bottom action bar
+        // Initialize the bottom action bar
         initBottomActionBar();
     }
 
@@ -320,59 +323,78 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
      * Initializes the items in the bottom action bar.
      */
     private void initBottomActionBar() {
-        // Play and pause button
-        mPlayPauseButton = (PlayPauseButton)findViewById(R.id.action_button_play);
-        mPlayPauseButton.setPlayDrawable(R.drawable.btn_playback_play_bottom);
-        mPlayPauseButton.setPauseDrawable(R.drawable.btn_playback_pause_bottom);
+        if (!MusicUtils.isStopped()) {
+            // Play and pause button
+            mPlayPauseButton = (PlayPauseButton) findViewById(R.id.action_button_play);
+            mPlayPauseButton.setPlayDrawable(R.drawable.btn_playback_play_bottom);
+            mPlayPauseButton.setPauseDrawable(R.drawable.btn_playback_pause_bottom);
 
-        RepeatingImageButton prevButton = (RepeatingImageButton)findViewById(R.id.action_button_previous);
-        RepeatingImageButton nextButton = (RepeatingImageButton)findViewById(R.id.action_button_next);
-        prevButton.setPreviousDrawable(R.drawable.btn_playback_previous_bottom);
-        nextButton.setNextDrawable(R.drawable.btn_playback_next_bottom);
+            RepeatingImageButton prevButton = (RepeatingImageButton) findViewById(R.id.action_button_previous);
+            RepeatingImageButton nextButton = (RepeatingImageButton) findViewById(R.id.action_button_next);
+            prevButton.setPreviousDrawable(R.drawable.btn_playback_previous_bottom);
+            nextButton.setNextDrawable(R.drawable.btn_playback_next_bottom);
 
-        // Shuffle button
-        mShuffleButton = (ShuffleButton)findViewById(R.id.action_button_shuffle);
-        // Repeat button
-        mRepeatButton = (RepeatButton)findViewById(R.id.action_button_repeat);
-        // Track name
-        mTrackName = (TextView)findViewById(R.id.bottom_action_bar_line_one);
-        // Artist name
-        mArtistName = (TextView)findViewById(R.id.bottom_action_bar_line_two);
-        // Album art
-        mAlbumArt = (ImageView)findViewById(R.id.bottom_action_bar_album_art);
-        // Open to the currently playing album profile
-        mAlbumArt.setOnClickListener(mOpenCurrentAlbumProfile);
-        // Bottom action bar
-        final LinearLayout bottomActionBar = (LinearLayout)findViewById(R.id.bottom_action_bar);
-        // Display the now playing screen or shuffle if this isn't anything
-        // playing
-        bottomActionBar.setOnClickListener(mOpenNowPlaying);
+            // Shuffle button
+            mShuffleButton = (ShuffleButton) findViewById(R.id.action_button_shuffle);
+            // Repeat button
+            mRepeatButton = (RepeatButton) findViewById(R.id.action_button_repeat);
+            // Track name
+            mTrackName = (TextView) findViewById(R.id.bottom_action_bar_line_one);
+            // Artist name
+            mArtistName = (TextView) findViewById(R.id.bottom_action_bar_line_two);
+            // Album art
+            mAlbumArt = (ImageView) findViewById(R.id.bottom_action_bar_album_art);
+            // Open to the currently playing album profile
+            mAlbumArt.setOnClickListener(mOpenCurrentAlbumProfile);
+            // Bottom action bar
+            final LinearLayout bottomActionBar = (LinearLayout) findViewById(R.id.bottom_action_bar);
+            // Display the now playing screen or shuffle if this isn't anything
+            // playing
+            bottomActionBar.setOnClickListener(mOpenNowPlaying);
 
-        mPlayPauseButton.setOnLongClickListener(new StopListener(this, false));
+            //new StopListener(this, false)
+            mPlayPauseButton.setOnLongClickListener(new StopAndHideBottomActionBarListener(this, false));
+        } else {
+            hideBottomActionBar();
+        }
     }
 
     /**
      * Sets the track name, album name, and album art.
      */
     private void updateBottomActionBarInfo() {
-        // Set the track name
-        mTrackName.setText(MusicUtils.getTrackName());
-        // Set the artist name
-        mArtistName.setText(MusicUtils.getArtistName());
-        // Set the album art
-        ApolloUtils.getImageFetcher(this).loadCurrentArtwork(mAlbumArt);
+        if (!MusicUtils.isStopped() && mTrackName != null && mArtistName != null) {
+            // Set the track name
+            mTrackName.setText(MusicUtils.getTrackName());
+            // Set the artist name
+            mArtistName.setText(MusicUtils.getArtistName());
+            // Set the album art
+            ApolloUtils.getImageFetcher(this).loadCurrentArtwork(mAlbumArt);
+        }
+    }
+
+    /**
+     * Hides the bottom action bar container, the little player down there.
+     */
+    private void hideBottomActionBar() {
+        final BottomActionBar bottomActionBar = (BottomActionBar) findViewById(R.id.bottom_action_bar_parent);
+        bottomActionBar.setVisibility(View.GONE);
     }
 
     /**
      * Sets the correct drawable states for the playback controls.
      */
     private void updatePlaybackControls() {
-        // Set the play and pause image
-        mPlayPauseButton.updateState();
-        // Set the shuffle image
-        mShuffleButton.updateShuffleState();
-        // Set the repeat image
-        mRepeatButton.updateRepeatState();
+        if (!MusicUtils.isStopped() && mPlayPauseButton != null && mShuffleButton != null && mRepeatButton != null) {
+            // Set the play and pause image
+            mPlayPauseButton.updateState();
+            // Set the shuffle image
+            mShuffleButton.updateShuffleState();
+            // Set the repeat image
+            mRepeatButton.updateRepeatState();
+        } else {
+            hideBottomActionBar();
+        }
     }
 
     /**
@@ -448,13 +470,18 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
                 }
             } else if (action.equals(MusicPlaybackService.PLAYSTATE_CHANGED)) {
                 // Set the play and pause image
-                mReference.get().mPlayPauseButton.updateState();
+                if (!MusicUtils.isStopped() && mReference.get() != null && mReference.get().mPlayPauseButton != null) {
+                    mReference.get().mPlayPauseButton.updateState();
+                }
             } else if (action.equals(MusicPlaybackService.REPEATMODE_CHANGED)
                     || action.equals(MusicPlaybackService.SHUFFLEMODE_CHANGED)) {
-                // Set the repeat image
-                mReference.get().mRepeatButton.updateRepeatState();
-                // Set the shuffle image
-                mReference.get().mShuffleButton.updateShuffleState();
+                if (!MusicUtils.isStopped() && mReference.get() != null && mReference.get().mRepeatButton != null &&
+                        mReference.get().mShuffleButton != null) {
+                    // Set the repeat image
+                    mReference.get().mRepeatButton.updateRepeatState();
+                    // Set the shuffle image
+                    mReference.get().mShuffleButton.updateShuffleState();
+                }
             } else if (action.equals(MusicPlaybackService.REFRESH)) {
                 // Let the listener know to update a list
                 for (final MusicStateListener listener : mReference.get().mMusicStateListener) {
@@ -479,4 +506,18 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
      * @return The resource ID to be inflated.
      */
     public abstract int setContentView();
+
+    private class StopAndHideBottomActionBarListener extends StopListener {
+
+        public StopAndHideBottomActionBarListener(Activity activity, boolean finishOnStop) {
+            super(activity, finishOnStop);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            super.onLongClick(v);
+            hideBottomActionBar();
+            return true;
+        }
+    }
 }

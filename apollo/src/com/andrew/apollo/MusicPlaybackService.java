@@ -1935,6 +1935,14 @@ public class MusicPlaybackService extends Service {
     }
 
     /**
+     * This is not the same as being paused. This means there's no track loaded.
+     * @return True if there's no track loaded.
+     */
+    public boolean isStopped() {
+        return mCursor == null || mCursor.isClosed();
+    }
+
+    /**
      * True if the current track is a "favorite", false otherwise
      */
     public boolean isFavorite() {
@@ -2893,6 +2901,11 @@ public class MusicPlaybackService extends Service {
         @Override
         public boolean isPlaying() throws RemoteException {
             return mService.get().isPlaying();
+        }
+
+        @Override
+        public boolean isStopped() throws RemoteException {
+            return mService.get().isStopped();
         }
 
         /**
