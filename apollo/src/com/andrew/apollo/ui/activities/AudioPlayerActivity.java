@@ -71,6 +71,7 @@ import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
+import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.DonationsController;
 
 import java.lang.ref.WeakReference;
@@ -201,12 +202,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
 
         TextView actionBarTitleTextView = (TextView) findViewById(R.id.action_bar_title);
         if (actionBarTitleTextView != null) {
-            actionBarTitleTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NavUtils.goHome(AudioPlayerActivity.this);
-                }
-            });
+            actionBarTitleTextView.setOnClickListener(new ActionBarTextViewClickListener(this));
         }
 
         // Set the layout
@@ -1090,6 +1086,18 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
                     div3view.setVisibility(View.GONE);
                 }
             }
+        }
+    }
+
+    private final static class ActionBarTextViewClickListener extends ClickAdapter<AudioPlayerActivity> {
+
+        public ActionBarTextViewClickListener(AudioPlayerActivity owner) {
+            super(owner);
+        }
+
+        @Override
+        public void onClick(AudioPlayerActivity owner, View v) {
+            NavUtils.goHome(owner);
         }
     }
 }
