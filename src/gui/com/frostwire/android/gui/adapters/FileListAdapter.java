@@ -18,16 +18,6 @@
 
 package com.frostwire.android.gui.adapters;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.res.Resources;
@@ -39,40 +29,29 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.Peer;
 import com.frostwire.android.gui.adapters.FileListAdapter.FileDescriptorItem;
-import com.frostwire.android.gui.adapters.menu.DeleteFileMenuAction;
-import com.frostwire.android.gui.adapters.menu.DownloadCheckedMenuAction;
-import com.frostwire.android.gui.adapters.menu.DownloadMenuAction;
-import com.frostwire.android.gui.adapters.menu.OpenMenuAction;
-import com.frostwire.android.gui.adapters.menu.RenameFileMenuAction;
-import com.frostwire.android.gui.adapters.menu.SendFileMenuAction;
-import com.frostwire.android.gui.adapters.menu.SetAsRingtoneMenuAction;
-import com.frostwire.android.gui.adapters.menu.SetAsWallpaperMenuAction;
-import com.frostwire.android.gui.adapters.menu.SetSharedStateFileGrainedMenuAction;
-import com.frostwire.android.gui.adapters.menu.ToggleFileGrainedSharingMenuAction;
+import com.frostwire.android.gui.adapters.menu.*;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.ExistingDownload;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractListAdapter;
-import com.frostwire.android.gui.views.BrowseThumbnailImageButton;
+import com.frostwire.android.gui.views.*;
 import com.frostwire.android.gui.views.BrowseThumbnailImageButton.OverlayState;
-import com.frostwire.android.gui.views.ListAdapterFilter;
-import com.frostwire.android.gui.views.MenuAction;
-import com.frostwire.android.gui.views.MenuAdapter;
-import com.frostwire.android.gui.views.MenuBuilder;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.android.util.SystemUtils;
 import com.frostwire.util.Condition;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -174,7 +153,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
                     items.add(new SendFileMenuAction(context, fd)); //applications cause a force close with GMail
                 }
 
-                if (fd.fileType == Constants.FILE_TYPE_RINGTONES && numChecked <= 1) {
+                if ((fd.fileType == Constants.FILE_TYPE_RINGTONES || fd.fileType == Constants.FILE_TYPE_AUDIO) && numChecked <= 1) {
                     items.add(new SetAsRingtoneMenuAction(context, fd));
                 }
 

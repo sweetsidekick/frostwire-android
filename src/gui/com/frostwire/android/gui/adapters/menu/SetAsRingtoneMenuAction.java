@@ -21,10 +21,10 @@ package com.frostwire.android.gui.adapters.menu;
 import android.content.Context;
 import android.provider.MediaStore.Audio;
 import android.provider.Settings;
-
 import com.frostwire.android.R;
-import com.frostwire.android.core.FileDescriptor;
 import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.FileDescriptor;
+import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 
 /**
@@ -37,8 +37,7 @@ public class SetAsRingtoneMenuAction extends MenuAction {
     private final FileDescriptor fd;
 
     public SetAsRingtoneMenuAction(Context context, FileDescriptor fd) {
-        super(context, R.drawable.contextmenu_icon_ringtone, R.string.set_as_ringtone);
-
+        super(context, R.drawable.contextmenu_icon_ringtone, R.string.context_menu_use_as_ringtone);
         this.fd = fd;
     }
 
@@ -54,6 +53,8 @@ public class SetAsRingtoneMenuAction extends MenuAction {
 
         if (uri != null) {
             Settings.System.putString(context.getContentResolver(), Settings.System.RINGTONE, uri);
+            final String message = context.getString(R.string.set_as_ringtone, fd.title);
+            UIUtils.showLongMessage(context, message);
         }
     }
 }
