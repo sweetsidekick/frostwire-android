@@ -62,17 +62,12 @@ public class Playlist {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Playlist other = (Playlist)obj;
-        if (mPlaylistId != other.mPlaylistId) {
-            return false;
-        }
-        return TextUtils.equals(mPlaylistName, other.mPlaylistName);
+
+        final Playlist other = (Playlist) obj;
+        return mPlaylistId == other.mPlaylistId && TextUtils.equals(mPlaylistName, other.mPlaylistName);
     }
 
     /**
