@@ -1,8 +1,19 @@
-FrostWire 1.4.2 - DECEMBER/11/2014
+FrostWire 1.4.2 - DECEMBER/18/2014
+ - New: Music Player (forked out of Apollo Player).
+ - New: Playlist support.
+ - New: Browse music by Recent, Artists, Albums, Songs, Genres.
+ - New: Change cover art on Playlists, Songs.
+ - New: Shuffle All music.
+ - Torrent/Magnet caching improvements reduce the number of DHT
+   requests when searching, which makes search result parsing faster
+   in most cases.
  - When sharing files from 3rd party apps with FrostWire, the file
-   shared will be displayed by FrostWire. If the file is a .torrent
-   a torrent transfer will be started.
+   shared will be displayed by FrostWire as available via Wi-Fi sharing.
+   If the file is a .torrent the torrent transfer will start.
  - Not using wifi multicast lock for energy savings.
+ - 'Preferences' renamed to 'Settings'
+ - About activity moved out of navigation menu and into Settings screen.
+ - Audio files can now be set as ringtones from My Files > Audio.
 
 FrostWire 1.4.1 - DECEMBER/02/2014
  - Updated jlibtorrent binaries.
