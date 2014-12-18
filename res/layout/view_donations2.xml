@@ -33,8 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/support"
-            android:textColor="@color/app_text_highlight"
-            android:textSize="12sp" />
+            android:textColor="#40a5c3"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/view_donations_support_textview_2"
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="@string/application_label"
-            android:textColor="@color/app_text_highlight"
-            android:textSize="12sp"/>
+            android:textColor="#40a5c3"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <Button
