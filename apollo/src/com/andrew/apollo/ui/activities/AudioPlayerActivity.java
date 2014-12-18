@@ -67,6 +67,7 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.frostwire.android.gui.adapters.menu.AddToPlaylistMenuAction;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.util.UIUtils;
@@ -407,6 +408,11 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
                     MusicUtils.getCurrentAudioId()
                 }, null).show(getSupportFragmentManager(), "DeleteDialog");
                 return true;
+            case R.id.menu_audio_player_add_to_playlist:
+                AddToPlaylistMenuAction menuAction = new AddToPlaylistMenuAction(this, new long[] {
+                        MusicUtils.getCurrentAudioId()
+                });
+                menuAction.onClick();
             default:
                 break;
         }

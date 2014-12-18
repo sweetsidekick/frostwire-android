@@ -62,7 +62,6 @@ import java.util.Map.Entry;
  * 
  */
 public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
-
     private final Peer peer;
     private final boolean local;
     private final byte fileType;
@@ -171,13 +170,17 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
                 list = Arrays.asList(fd);
             }
 
-            //Share Selected
+            if (fd.fileType == Constants.FILE_TYPE_AUDIO) {
+                items.add(new AddToPlaylistMenuAction(context, list));
+            }
+
+            // Share Selected.
             items.add(new SetSharedStateFileGrainedMenuAction(context, this, list, true));
 
-            //Unshare Selected
+            // Unshare Selected.
             items.add(new SetSharedStateFileGrainedMenuAction(context, this, list, false));
 
-            //Toogle Shared States
+            // Toogle Shared States.
             items.add(new ToggleFileGrainedSharingMenuAction(context, this, list));
 
             if (fd.fileType != Constants.FILE_TYPE_APPLICATIONS) {

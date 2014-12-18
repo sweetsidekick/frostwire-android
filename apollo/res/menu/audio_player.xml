@@ -14,28 +14,32 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_audio_player_add_to_playlist"
+            android:showAsAction="never"
+            android:title="@string/add_to_playlist"/>
 
     <item
-        android:id="@+id/menu_audio_player_share"
-        android:showAsAction="never"
-        android:title="@string/menu_share"/>
+            android:id="@+id/menu_audio_player_share"
+            android:showAsAction="never"
+            android:title="@string/menu_share"/>
     <item
-        android:id="@+id/menu_audio_player_equalizer"
-        android:showAsAction="never"
-        android:title="@string/menu_equalizer"/>
+            android:id="@+id/menu_audio_player_equalizer"
+            android:showAsAction="never"
+            android:title="@string/menu_equalizer"/>
     <item
-        android:id="@+id/menu_audio_player_ringtone"
-        android:showAsAction="never"
-        android:title="@string/context_menu_use_as_ringtone"/>
+            android:id="@+id/menu_audio_player_ringtone"
+            android:showAsAction="never"
+            android:title="@string/context_menu_use_as_ringtone"/>
     <item
-        android:id="@+id/menu_audio_player_stop"
-        android:showAsAction="never"
-        android:title="@string/stop">
+            android:id="@+id/menu_audio_player_stop"
+            android:showAsAction="never"
+            android:title="@string/stop">
     </item>
     <item
-        android:id="@+id/menu_audio_player_delete"
-        android:showAsAction="never"
-        android:title="@string/context_menu_delete"/>
+            android:id="@+id/menu_audio_player_delete"
+            android:showAsAction="never"
+            android:title="@string/context_menu_delete"/>
 
 </menu>

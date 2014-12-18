@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.views;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.frostwire.android.R;
+import com.frostwire.util.Ref;
 
 /**
  * @author gubatron
@@ -37,12 +39,12 @@ import com.frostwire.android.R;
 public class MenuAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
-    private final Context context;
+    private final WeakReference<Context> contextRef;
     private final String title;
     private final List<MenuAction> items;
 
     public MenuAdapter(Context context, String title, List<MenuAction> items) {
-        this.context = context;
+        this.contextRef = new WeakReference<Context>(context);
         this.inflater = LayoutInflater.from(context);
         this.title = title;
         this.items = items;
@@ -53,7 +55,11 @@ public class MenuAdapter extends BaseAdapter {
     }
 
     public Context getContext() {
-        return context;
+        Context result = null;
+        if (Ref.alive(contextRef)) {
+            result = contextRef.get();
+        }
+        return result;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

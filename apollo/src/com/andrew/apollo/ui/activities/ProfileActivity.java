@@ -38,6 +38,7 @@ import com.andrew.apollo.utils.*;
 import com.andrew.apollo.widgets.ProfileTabCarousel;
 import com.andrew.apollo.widgets.ProfileTabCarousel.Listener;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.adapters.menu.CreateNewPlaylistMenuAction;
 
 /**
  * The {@link Activity} is used to display the data for specific
@@ -259,6 +260,7 @@ public class ProfileActivity extends BaseActivity implements OnPageChangeListene
             title = getString(R.string.menu_shuffle);
         }
         shuffle.setTitle(title);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -288,6 +290,10 @@ public class ProfileActivity extends BaseActivity implements OnPageChangeListene
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_new_playlist:
+                CreateNewPlaylistMenuAction createPlaylistAction = new CreateNewPlaylistMenuAction(this, null);
+                createPlaylistAction.onClick();
+                return true;
             case android.R.id.home:
                 // If an album profile, go up to the artist profile
                 if (isAlbum()) {
