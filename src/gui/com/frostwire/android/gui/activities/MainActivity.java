@@ -120,7 +120,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private TransfersFragment transfers;
     private BrowsePeersFragment peers;
     private BrowsePeersDisabledFragment peersDisabled;
-    private AboutFragment about;
 
     private Fragment currentFragment;
     private final Stack<Integer> fragmentsStack;
@@ -526,8 +525,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             setSelectedItem(R.id.menu_main_transfers);
         } else if (fragment instanceof BrowsePeersFragment || fragment instanceof BrowsePeersDisabledFragment) {
             setSelectedItem(R.id.menu_main_peers);
-        } else if (fragment instanceof AboutFragment) {
-            setSelectedItem(R.id.menu_main_about);
         }
 
         updateHeader(getCurrentFragment());
@@ -590,7 +587,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         transfers = (TransfersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_transfers);
         peers = (BrowsePeersFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers);
         peersDisabled = (BrowsePeersDisabledFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_browse_peers_disabled);
-        about = (AboutFragment) getFragmentManager().findFragmentById(R.id.activity_main_fragment_about);
 
         hideFragments(getFragmentManager().beginTransaction()).commit();
 
@@ -598,7 +594,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private FragmentTransaction hideFragments(FragmentTransaction ts) {
-        return ts.hide(search).hide(library).hide(transfers).hide(peers).hide(peersDisabled).hide(about);
+        return ts.hide(search).hide(library).hide(transfers).hide(peers).hide(peersDisabled);
     }
 
     private void setupInitialFragment(Bundle savedInstanceState) {
@@ -686,8 +682,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             return transfers;
         case R.id.menu_main_peers:
             return getWifiSharingFragment();
-        case R.id.menu_main_about:
-            return about;
         default:
             return null;
         }

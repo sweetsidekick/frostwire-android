@@ -41,10 +41,10 @@
           android:key="frostwire.prefs.storage.path"
           android:summary="@string/storage_preference_summary"
           android:title="@string/storage_preference_title" />
-        
+
     </PreferenceCategory>
-    
-    <PreferenceScreen 
+
+    <PreferenceScreen
         android:key="frostwire.prefs.networking.preference_category"
         android:title="@string/networking_preferences"
         android:persistent="false" >
@@ -123,7 +123,7 @@
             android:summary="@string/use_eztv"
             android:title="@string/use_eztv" />
     </PreferenceScreen>
-    <PreferenceScreen 
+    <PreferenceScreen
         android:key="frostwire.prefs.other.preference_category"
         android:title="@string/other_settings"
         android:persistent="false" >
@@ -152,7 +152,7 @@
             android:summary="@string/anonymous_usage_statistics_summary"
             android:title="@string/anonymous_usage_statistics" />
     </PreferenceScreen>
-    <PreferenceScreen 
+    <PreferenceScreen
         android:key="frostwire.prefs.torrent.preference_category"
         android:title="@string/torrent_settings"
         android:persistent="false" >
@@ -205,5 +205,16 @@
             android:title="@string/clear_search_cache"
             frostwire:button_text="@string/clear" />
     </PreferenceScreen>
+
+    <Preference
+        android:title="@string/about">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.frostwire.android"
+            android:targetClass="com.frostwire.android.gui.activities.AboutActivity"
+            />
+
+    </Preference>
 
 </PreferenceScreen>
