@@ -11,18 +11,10 @@
 
 package com.andrew.apollo.ui.activities;
 
-import static com.andrew.apollo.utils.MusicUtils.mService;
-
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,34 +22,30 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
 import com.andrew.apollo.MusicStateListener;
-import com.andrew.apollo.widgets.RepeatingImageButton;
-import com.andrew.apollo.widgets.theme.BottomActionBar;
-import com.frostwire.android.R;
-import com.andrew.apollo.utils.ApolloUtils;
-import com.andrew.apollo.utils.Lists;
-import com.andrew.apollo.utils.MusicUtils;
+import com.andrew.apollo.utils.*;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
-import com.andrew.apollo.utils.NavUtils;
-import com.andrew.apollo.utils.ThemeUtils;
 import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
+import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.andrew.apollo.widgets.theme.BottomActionBar;
+import com.frostwire.android.R;
+import com.frostwire.android.gui.adapters.menu.CreateNewPlaylistMenuAction;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.ClickAdapter;
-import com.googlecode.mp4parser.util.Logger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import static com.andrew.apollo.utils.MusicUtils.mService;
 
 /**
  * A base {@link FragmentActivity} used to update the bottom bar and
@@ -198,6 +186,8 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
         // Theme the search icon
         mResources.setSearchIcon(menu);
 
+        getMenuInflater().inflate(R.menu.new_playlist, menu);
+
         final SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
         // Add voice search
         final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
@@ -231,11 +221,12 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
             case android.R.id.home:
                 UIUtils.goToFrostWireMainActivity(this);
                 return true;
-            /*case R.id.menu_settings:
-                // Settings
-                NavUtils.openSettings(this);
-                return true;*/
+            case R.id.menu_new_playlist:
+                CreateNewPlaylistMenuAction createPlaylistAction = new CreateNewPlaylistMenuAction(this, null);
+                createPlaylistAction.onClick();
 
+                //TODO: Invalidate the playlist adapter to reflect new playlist.
+                return true;
             default:
                 break;
         }

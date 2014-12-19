@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 /**
  * @author gubatron
  * @author aldenml
- *
  */
 public class MenuBuilder implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
 
@@ -45,7 +44,6 @@ public class MenuBuilder implements DialogInterface.OnClickListener, DialogInter
     public void onClick(DialogInterface dialog, int which) {
         MenuAction item = (MenuAction) adapter.getItem(which);
         item.onClick();
-
         cleanup();
     }
 

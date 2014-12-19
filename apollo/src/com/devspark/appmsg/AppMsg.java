@@ -65,7 +65,7 @@ public class AppMsg {
 	 */
 	public static final Style STYLE_INFO = new Style(LENGTH_SHORT, R.color.info);
     
-    private final Activity mContext;
+    private final Context mContext;
     private int mDuration = LENGTH_SHORT;
     private View mView;
     private LayoutParams mLayoutParams;
@@ -78,7 +78,7 @@ public class AppMsg {
 	 *            The context to use. Usually your
 	 *            {@link android.app.Activity} object.
 	 */
-	public AppMsg(Activity context) {
+	public AppMsg(Context context) {
 		mContext = context;
 	}
     
@@ -95,7 +95,7 @@ public class AppMsg {
 	 *            or {@link #LENGTH_LONG}
 	 * 
 	 */
-    public static AppMsg makeText(Activity context, CharSequence text, Style style) {
+    public static AppMsg makeText(Context context, CharSequence text, Style style) {
     	AppMsg result = new AppMsg(context);
 
         LayoutInflater inflate = (LayoutInflater)
@@ -170,7 +170,10 @@ public class AppMsg {
      * Return the activity.
      */
     public Activity getActivity() {
-      return mContext;
+        if (mContext instanceof Activity) {
+            return (Activity) mContext;
+        }
+        return null;
     }
     
     /**

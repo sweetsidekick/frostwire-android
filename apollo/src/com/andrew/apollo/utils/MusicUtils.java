@@ -12,49 +12,42 @@
 package com.andrew.apollo.utils;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Audio.AlbumColumns;
-import android.provider.MediaStore.Audio.ArtistColumns;
-import android.provider.MediaStore.Audio.AudioColumns;
-import android.provider.MediaStore.Audio.Playlists;
-import android.provider.MediaStore.Audio.PlaylistsColumns;
+import android.provider.MediaStore.Audio.*;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.SubMenu;
 import android.widget.ArrayAdapter;
-
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-import com.frostwire.android.R;
 import com.andrew.apollo.loaders.FavoritesLoader;
 import com.andrew.apollo.loaders.LastAddedLoader;
 import com.andrew.apollo.loaders.PlaylistLoader;
 import com.andrew.apollo.loaders.SongLoader;
 import com.andrew.apollo.menu.FragmentMenuItems;
+import com.andrew.apollo.model.Playlist;
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 import com.devspark.appmsg.AppMsg;
+import com.frostwire.android.R;
+import com.googlecode.mp4parser.util.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.WeakHashMap;
+
 
 /**
  * A collection of helpers directly related to music or Apollo's service.
@@ -62,6 +55,8 @@ import java.util.WeakHashMap;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public final class MusicUtils {
+
+    private static Logger logger = Logger.getLogger(MusicUtils.class);
 
     public static IApolloService mService = null;
 
@@ -805,6 +800,34 @@ public final class MusicUtils {
             mContentValuesCache[i].put(Playlists.Members.PLAY_ORDER, base + offset + i);
             mContentValuesCache[i].put(Playlists.Members.AUDIO_ID, ids[offset + i]);
         }
+    }
+
+    public static List<Playlist> getPlaylists(final Context context) {
+        final List<Playlist> result = new ArrayList<Playlist>();
+        final ContentResolver resolver = context.getContentResolver();
+        final String[] projection = new String[]{
+                BaseColumns._ID,
+                MediaStore.Audio.PlaylistsColumns.NAME
+        };
+
+        try {
+            final Cursor cursor = resolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                    projection, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                do {
+                    result.add(new Playlist(cursor.getLong(0), cursor.getString(1)));
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+        } catch (Throwable e) {
+            logger.logError("Could not fetch playlists");
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     /**

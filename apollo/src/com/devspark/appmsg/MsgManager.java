@@ -62,13 +62,16 @@ class MsgManager extends Handler {
      */
     void add(AppMsg appMsg) {
         msgQueue.add(appMsg);
-        if (inAnimation == null) {
-            inAnimation = AnimationUtils.loadAnimation(appMsg.getActivity(),
-                    android.R.anim.fade_in);
-        }
-        if (outAnimation == null) {
-            outAnimation = AnimationUtils.loadAnimation(appMsg.getActivity(),
-                    android.R.anim.fade_out);
+
+        if (appMsg.getActivity() != null) {
+            if (inAnimation == null) {
+                inAnimation = AnimationUtils.loadAnimation(appMsg.getActivity(),
+                        android.R.anim.fade_in);
+            }
+            if (outAnimation == null) {
+                outAnimation = AnimationUtils.loadAnimation(appMsg.getActivity(),
+                        android.R.anim.fade_out);
+            }
         }
         displayMsg();
     }
@@ -137,7 +140,7 @@ class MsgManager extends Handler {
     }
 
     private void addMsgToView(AppMsg appMsg) {
-        if (appMsg.getView().getParent() == null) {
+        if (appMsg.getView().getParent() == null && appMsg.getActivity() != null) {
             appMsg.getActivity().addContentView(
                     appMsg.getView(),
                     appMsg.getLayoutParams());

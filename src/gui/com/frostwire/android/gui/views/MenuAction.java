@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import com.frostwire.util.Ref;
 
 /**
  * @author gubatron
@@ -64,6 +65,14 @@ public abstract class MenuAction {
         if (contextRef.get() != null) {
             onClick(contextRef.get());
         }
+    }
+
+    public Context getContext() {
+        Context result = null;
+        if (Ref.alive(contextRef)) {
+            result = contextRef.get();
+        }
+        return result;
     }
 
     protected abstract void onClick(Context context);

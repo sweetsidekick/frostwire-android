@@ -18,25 +18,19 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.AsyncTaskLoader;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.Loader;
+import android.content.*;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-
+import android.widget.RadioButton;
+import android.widget.TextView;
 import com.andrew.apollo.MusicPlaybackService;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
@@ -54,6 +48,8 @@ import com.frostwire.localpeer.Finger;
 import com.frostwire.logging.Logger;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+
+import java.util.List;
 
 /**
  * @author gubatron
@@ -575,8 +571,7 @@ public class BrowsePeerFragment extends AbstractFragment implements LoaderCallba
 
             @SuppressWarnings("unchecked")
             List<FileDescriptor> items = (List<FileDescriptor>) data[1];
-
-            adapter = new FileListAdapter(list.getContext(), items, peer, local, fileType) {
+            adapter = new FileListAdapter(getActivity(), items, peer, local, fileType) {
 
                 @Override
                 protected void onItemChecked(View v, boolean isChecked) {

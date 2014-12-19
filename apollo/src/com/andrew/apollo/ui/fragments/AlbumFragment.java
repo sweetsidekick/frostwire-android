@@ -11,35 +11,19 @@
 
 package com.andrew.apollo.ui.fragments;
 
-import static com.andrew.apollo.utils.PreferenceUtils.ALBUM_LAYOUT;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.text.TextUtils;
-import android.view.ContextMenu;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.andrew.apollo.Config;
 import com.andrew.apollo.MusicStateListener;
-import com.frostwire.android.R;
 import com.andrew.apollo.adapters.AlbumAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.loaders.AlbumLoader;
@@ -53,9 +37,12 @@ import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.NavUtils;
 import com.andrew.apollo.utils.PreferenceUtils;
+import com.frostwire.android.R;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
+
+import static com.andrew.apollo.utils.PreferenceUtils.ALBUM_LAYOUT;
 
 /**
  * This class is used to display all of the albums on a user's device.
