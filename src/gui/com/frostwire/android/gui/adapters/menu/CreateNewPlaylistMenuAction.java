@@ -58,7 +58,8 @@ public class CreateNewPlaylistMenuAction extends MenuAction {
         final LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         final EditText input = new EditText(getContext());
-        input.setText(R.string.create_playlist_prompt);
+        input.setText("");
+        input.setHint(R.string.create_playlist_prompt);
         input.selectAll();
         layout.addView(input, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         dialogBuilder.setView(layout);
@@ -67,7 +68,7 @@ public class CreateNewPlaylistMenuAction extends MenuAction {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String playlistName = input.getText().toString();
-                if (MusicUtils.getIdForPlaylist(getContext(),playlistName) != -1) {
+                if (MusicUtils.getIdForPlaylist(getContext(), playlistName) != -1) {
                     playlistName += "+";
                     input.setText(playlistName);
                     onClick(dialog, which);
