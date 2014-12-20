@@ -47,12 +47,12 @@ public class AddToPlaylistMenuAction extends MenuAction {
     private long[] fds;
 
     public AddToPlaylistMenuAction(Context context, List<FileDescriptor> fds) {
-        super(context, R.drawable.contextmenu_icon_playlist_add, R.string.add_to_playlist);
+        super(context, getIconResourceId(context), R.string.add_to_playlist);
         setFileIdList(fds);
     }
 
     public AddToPlaylistMenuAction(Context context, long[] fds) {
-        super(context, R.drawable.contextmenu_icon_playlist_add, R.string.add_to_playlist);
+        super(context, getIconResourceId(context), R.string.add_to_playlist);
         this.fds = fds;
     }
 
@@ -84,5 +84,11 @@ public class AddToPlaylistMenuAction extends MenuAction {
         }
 
         return actions;
+    }
+
+    private static int getIconResourceId(Context context) {
+        return context.getClass().getCanonicalName().contains("apollo") ?
+                R.drawable.contextmenu_icon_playlist_add_light:
+                R.drawable.contextmenu_icon_playlist_add_dark;
     }
 }

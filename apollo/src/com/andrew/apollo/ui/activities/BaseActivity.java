@@ -224,8 +224,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceCo
             case R.id.menu_new_playlist:
                 CreateNewPlaylistMenuAction createPlaylistAction = new CreateNewPlaylistMenuAction(this, null);
                 createPlaylistAction.onClick();
-
-                //TODO: Invalidate the playlist adapter to reflect new playlist.
                 return true;
             default:
                 break;

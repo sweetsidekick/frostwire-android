@@ -33,11 +33,12 @@ import com.frostwire.android.gui.views.MenuAction;
  * @author aldenml
  */
 public class AddToThisPlaylistMenuAction extends MenuAction {
+    //private final Logger logger = Logger.getLogger(AddToPlaylistMenuAction.class);
     private final long playlistId;
     private final long[] fileDescriptors;
 
     public AddToThisPlaylistMenuAction(Context context, long playlistId, String playlistName, long[] fileDescriptors) {
-        super(context, R.drawable.contextmenu_icon_playlist_add, playlistName);
+        super(context, getIconResourceId(context), playlistName);
         this.playlistId = playlistId;
         this.fileDescriptors = fileDescriptors;
     }
@@ -49,5 +50,11 @@ public class AddToThisPlaylistMenuAction extends MenuAction {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    private static int getIconResourceId(Context context) {
+        return context.getClass().getCanonicalName().contains("apollo") ?
+                R.drawable.contextmenu_icon_add_to_existing_playlist_light:
+                R.drawable.contextmenu_icon_add_to_existing_playlist_dark;
     }
 }

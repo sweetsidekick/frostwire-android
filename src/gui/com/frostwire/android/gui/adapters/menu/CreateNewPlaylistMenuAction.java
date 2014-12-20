@@ -40,7 +40,7 @@ public class CreateNewPlaylistMenuAction extends MenuAction {
     private final long[] fileDescriptors;
 
     public CreateNewPlaylistMenuAction(Context context, long[] fileDescriptors) {
-        super(context, R.drawable.contextmenu_icon_playlist_add, R.string.new_playlist);
+        super(context, getIconResourceId(context), R.string.new_playlist);
         this.fileDescriptors = fileDescriptors;
     }
 
@@ -84,9 +84,17 @@ public class CreateNewPlaylistMenuAction extends MenuAction {
 
     private void onClickCreatePlaylistButton(CharSequence text) {
         long playlistId = MusicUtils.createPlaylist(getContext(), text.toString());
+        MusicUtils.refresh();
 
         if (fileDescriptors != null) {
             MusicUtils.addToPlaylist(getContext(), fileDescriptors, playlistId);
         }
+    }
+
+    private static int getIconResourceId(Context context) {
+        return context.getClass().getCanonicalName().contains("apollo") ?
+                R.drawable.contextmenu_icon_playlist_add_light:
+                R.drawable.contextmenu_icon_playlist_add_dark;
+
     }
 }
