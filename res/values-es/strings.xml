@@ -43,7 +43,7 @@
     <string name="no_network_connection">No hay Conexión a la Red</string>
     <string name="leaving_already">¿Ya te vas?</string>
     <string name="search_label">Buscar</string>
-    <string name="settings_description">Preferencias de Búsqueda</string>
+    <string name="settings_description">Ajustes de Búsqueda</string>
     <string name="clear_finished">Borrar las Terminadas</string>
     <string name="support_free_software">Apoya el Software Gratuito</string>
     <string name="show_love">¿Te Gusta Frostwire?</string>
@@ -301,7 +301,7 @@
     <string name="download_type_not_supported">Este Tipo de Descarga no es Compatible</string>
     <string name="im_on_it">Estoy en ello…</string>
     <string name="hint_transfers">Usa el "menú" para acciones en grupo</string>
-    <string name="torrent_settings">Torrente</string>
+    <string name="torrent_settings">Ajustes de Torrentes</string>
     <string name="torrent_max_download_speed_summary">Velocidad Máxima de Descarga</string>
     <string name="torrent_max_download_speed"> Velocidad Máxima de Descarga </string>
     <string name="torrent_max_upload_speed_summary">Velocidad Máxima de Carga</string>
@@ -345,7 +345,7 @@
     <string name="welcome_to_frostwire">Bienvenido a FrostWire</string>
     <string name="let_apos_s_set_you_up_before_we_begin_">Vamos a configurar antes de comenzar.</string>
     <string name="how_others_see_you_on_the_local_network_wifi_">Cómo te ven los demás en la red local. (Wi-Fi)</string>
-    <string name="seeding_settings">Configuración de Compartido</string>
+    <string name="seeding_settings">Ajustes para Compartir</string>
     <string name="seeding_settings_explanation">Los usuarios de intenet de BitTorrent podrán descargar trozos del archivo de los datos que tus torrentes comparten.</string>
     <string name="seeding_wifi_settings_explanation">Comparte únicamente cuando uses una conexión de Wi-Fi. Así evitarás más cargos de la compañía telefónica. </string>
     <string name="intent_text">FrostWire es un programa de usuario a usuario para compartir archivos autorizados. La instalación y utilización del programa no constituye una licencia para la obtención y distribución del contenido no autorizado.</string>
@@ -494,5 +494,5 @@
     <string name="saving_to_internal_memory">Guardando en la Memoria Interna</string>
     <string name="storage_setting_confirm_dialog_text">Entiendo que todos los archivos descargados a la tarjeta SD por FrostWire serán borrados POR ANDROID en el momento que la aplicación FrostWire sea desinstalada de este dispositivo y no voy a mantener a FrostWire LLC como responsable de archivos perdidos.</string>
     <string name="saving_to_sd_card">Guardando en la tarjeta SD.</string>
-
+    <string name="wifi_sharing_settings">Compartiendo en Wi-Fi</string>
 </resources>

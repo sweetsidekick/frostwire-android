@@ -508,4 +508,5 @@
     <string name="http_download_status_save_dir_error">Save directory does not exist or can\'t be created</string>
     <string name="my_music">My Music</string>
     <string name="support">Support</string>
+    <string name="wifi_sharing_settings">Wi-Fi Sharing Settings</string>
 </resources>

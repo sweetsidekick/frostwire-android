@@ -187,7 +187,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void setupUPnPOption() {
-        final CheckBoxPreference preferenceUPnP = (CheckBoxPreference) findPreference(Constants.PREF_KEY_NETWORK_USE_UPNP);
+        final SwitchPreference preferenceUPnP = (SwitchPreference) findPreference(Constants.PREF_KEY_NETWORK_USE_UPNP);
 
         preferenceUPnP.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
