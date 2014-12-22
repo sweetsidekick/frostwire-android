@@ -1,4 +1,4 @@
-FrostWire 1.4.2 - DECEMBER/18/2014
+FrostWire 1.4.2 - DECEMBER/22/2014
  - New: Music Player (forked out of Apollo Player).
  - New: Playlist support.
  - New: Browse music by Recent, Artists, Albums, Songs, Genres.
@@ -14,6 +14,7 @@ FrostWire 1.4.2 - DECEMBER/18/2014
  - 'Preferences' renamed to 'Settings'
  - About activity moved out of navigation menu and into Settings screen.
  - Audio files can now be set as ringtones from My Files > Audio.
+ - Settings screen rearrangement.
 
 FrostWire 1.4.1 - DECEMBER/02/2014
  - Updated jlibtorrent binaries.
