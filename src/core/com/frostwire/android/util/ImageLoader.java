@@ -18,6 +18,7 @@
 
 package com.frostwire.android.util;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -28,6 +29,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
+import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.logging.Logger;
 import com.squareup.picasso.Picasso;
@@ -57,9 +59,13 @@ public final class ImageLoader {
 
     private static final String ALBUM_AUTHORITY = "album";
 
+    private static final String ARTIST_AUTHORITY = "artist";
+
     public static final Uri APPLICATION_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + APPLICATION_AUTHORITY);
 
     public static final Uri ALBUM_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + ALBUM_AUTHORITY);
+
+    public static final Uri ARTIST_THUMBNAILS_URI = Uri.parse(SCHEME_IMAGE_SLASH + ARTIST_AUTHORITY);
 
     private final ImageCache cache;
     private final Picasso picasso;
@@ -92,7 +98,8 @@ public final class ImageLoader {
 
         try {
 
-            Cursor cursor = context.getContentResolver().query(Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId), new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
+            Uri albumUri = Uri.withAppendedPath(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId);
+            Cursor cursor = context.getContentResolver().query(albumUri, new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
 
             try {
                 if (cursor.moveToFirst()) {
@@ -110,6 +117,13 @@ public final class ImageLoader {
         return bitmap;
     }
 
+    public static Uri getAlbumArtUri(final long albumId) {
+        return ContentUris.withAppendedId(ImageLoader.ALBUM_THUMBNAILS_URI, albumId);
+    }
+
+    public static Uri getArtistArtUri(String artistName) {
+        return Uri.withAppendedPath(ImageLoader.ARTIST_THUMBNAILS_URI, artistName);
+    }
 
     private ImageLoader(Context context) {
         File directory = SystemUtils.getCacheDir(context, "picasso");
@@ -187,6 +201,8 @@ public final class ImageLoader {
                 return loadApplication(data.uri);
             } else if (ALBUM_AUTHORITY.equals(authority)) {
                 return loadAlbum(data.uri);
+            } else if (ARTIST_AUTHORITY.equals(authority)) {
+                return loadFirstArtistAlbum(data.uri);
             }
             return null;
         }
@@ -209,7 +225,22 @@ public final class ImageLoader {
 
         private Result loadAlbum(Uri uri) throws IOException {
             String albumId = uri.getLastPathSegment();
+            if (albumId == null || albumId.equals("-1")) {
+                return null;
+            }
             Bitmap bitmap = getAlbumArt(context, albumId);
+            return (bitmap != null) ? new Result(bitmap, Picasso.LoadedFrom.DISK) : null;
+        }
+
+        private Result loadFirstArtistAlbum(Uri uri) throws IOException {
+            String artistName = uri.getLastPathSegment();
+            long albumId = MusicUtils.getFirstAlbumIdForArtist(context, artistName);
+
+            if (albumId == -1) {
+                return null;
+            }
+
+            Bitmap bitmap = getAlbumArt(context, String.valueOf(albumId));
             return (bitmap != null) ? new Result(bitmap, Picasso.LoadedFrom.DISK) : null;
         }
     }

@@ -19,15 +19,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.frostwire.android.R;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.ThemeUtils;
+import com.frostwire.android.util.ImageLoader;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.RejectedExecutionException;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading
@@ -385,7 +386,18 @@ public abstract class ImageWorker {
         if (key == null || mImageCache == null || imageView == null) {
             return;
         }
+
+        final ImageLoader loader = ImageLoader.getInstance(mContext.getApplicationContext());
+        if (ImageType.ALBUM.equals(imageType)) {
+            final Uri albumArtUri = loader.getAlbumArtUri(albumId);
+            loader.load(albumArtUri, imageView, R.drawable.default_artwork);
+        } else if (ImageType.ARTIST.equals(imageType)) {
+            final Uri artistArtUri = loader.getArtistArtUri(artistName);
+            loader.load(artistArtUri, imageView, R.drawable.default_artwork);
+        }
+
         // First, check the memory for the image
+        /**
         final Bitmap lruBitmap = mImageCache.getBitmapFromMemCache(key);
         if (lruBitmap != null && imageView != null) {
             // Bitmap found in memory cache
@@ -404,7 +416,7 @@ public abstract class ImageWorker {
                 // Executor has exhausted queue space, show default artwork
                 imageView.setImageBitmap(getDefaultArtwork());
             }
-        }
+        }*/
     }
 
     /**

@@ -771,6 +771,33 @@ public final class MusicUtils {
     }
 
     /**
+     * Returns the ID for the first album given an artist name.
+     *
+     * @param context The {@link Context} to use.
+     * @param artistName The name of the artist
+     * @return The ID for an album.
+     */
+    public static final long getFirstAlbumIdForArtist(final Context context, final String artistName) {
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, new String[] {
+                        BaseColumns._ID
+                }, AlbumColumns.ARTIST + "=?", new String[] {
+                        artistName
+                }, BaseColumns._ID);
+
+        int id = -1;
+        if (cursor != null) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                id = cursor.getInt(0);
+            }
+            cursor.close();
+            cursor = null;
+        }
+        return id;
+    }
+
+    /**
      * Plays songs from an album.
      *
      * @param context The {@link Context} to use.
