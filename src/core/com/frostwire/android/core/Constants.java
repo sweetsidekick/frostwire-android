@@ -84,6 +84,7 @@ public final class Constants {
     public static final String PREF_KEY_SEARCH_USE_MONOVA = "frostwire.prefs.search.use_monova";
     public static final String PREF_KEY_SEARCH_USE_YIFY = "frostwire.prefs.search.use_yify";
     public static final String PREF_KEY_SEARCH_USE_TORRENTSFM = "frostwire.prefs.search.use_torrentsfm";
+    public static final String PREF_KEY_SEARCH_USE_BTJUNKIE = "frostwire.prefs.search.use_btjunkie";
 
     public static final String PREF_KEY_SEARCH_PREFERENCE_CATEGORY = "frostwire.prefs.search.preference_category";
 

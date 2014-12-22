@@ -30,6 +30,7 @@ import com.frostwire.search.appia.AppiaSearchPerformer;
 import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
+import com.frostwire.search.btjunkie.BtjunkieSearchPerformer;
 import com.frostwire.search.domainalias.DomainAliasManager;
 import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.eztv.EztvSearchPerformer;
@@ -231,5 +232,18 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(TPB, YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, TORRENTSFM, APPIA);
+    public static final SearchEngine BTJUNKIE = new SearchEngine("Btjunkie.eu", Constants.PREF_KEY_SEARCH_USE_BTJUNKIE) {
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            BtjunkieSearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new BtjunkieSearchPerformer(new DomainAliasManager("btjunkie.eu"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No BtjunkieSearchPerformer, WiFi not up");
+            }
+            return performer;
+        }
+    };
+
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, TORRENTSFM, APPIA);
 }

@@ -136,6 +136,10 @@
                 android:summary="@string/use_bitsnoop"
                 android:title="@string/use_bitsnoop" />
         <CheckBoxPreference
+                android:key="frostwire.prefs.search.use_btjunkie"
+                android:summary="@string/use_btjunkie"
+                android:title="@string/use_btjunkie" />
+        <CheckBoxPreference
                 android:key="frostwire.prefs.search.use_extratorrent"
                 android:summary="@string/use_extratorrent"
                 android:title="@string/use_extratorrent" />

@@ -509,4 +509,5 @@
     <string name="my_music">My Music</string>
     <string name="support">Support</string>
     <string name="wifi_sharing_settings">Wi-Fi Sharing Settings</string>
+    <string name="use_btjunkie">Use BTJunkie</string>
 </resources>

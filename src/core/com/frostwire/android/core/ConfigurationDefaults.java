@@ -94,6 +94,7 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_MONOVA, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_YIFY, true);
         defaultValues.put(Constants.PREF_KEY_SEARCH_USE_TORRENTSFM, true);
+        defaultValues.put(Constants.PREF_KEY_SEARCH_USE_BTJUNKIE, true);
 
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_RANDOM_LISTENING_PORT, true);
         defaultValues.put(Constants.PREF_KEY_NETWORK_USE_UPNP, false);
