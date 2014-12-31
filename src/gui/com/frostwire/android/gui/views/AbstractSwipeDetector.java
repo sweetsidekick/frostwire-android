@@ -18,10 +18,12 @@
 
 package com.frostwire.android.gui.views;
 
+import android.os.SystemClock;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import com.googlecode.mp4parser.util.Logger;
 
 /**
  * 
@@ -31,6 +33,7 @@ import android.view.View.OnTouchListener;
  * 
  */
 public abstract class AbstractSwipeDetector extends SimpleOnGestureListener implements OnTouchListener {
+    private static Logger logger = Logger.getLogger(AbstractSwipeDetector.class);
     
     @SuppressWarnings("unused")
     private static final String TAG = "FW.AbstractSwipeDetector";
@@ -41,6 +44,7 @@ public abstract class AbstractSwipeDetector extends SimpleOnGestureListener impl
     private float upX;
     private float upY;
     private int  lastDownPointerId;
+    private long lastActionDown;
     
     public void onRightToLeftSwipe(){
     }
@@ -71,6 +75,11 @@ public abstract class AbstractSwipeDetector extends SimpleOnGestureListener impl
                 downX = event.getX();
                 downY = event.getY();
                 lastDownPointerId = event.getPointerId(0);
+                long now = System.currentTimeMillis();
+                if (now - lastActionDown <= 500) {
+                    return onDoubleTap(event);
+                }
+                lastActionDown = System.currentTimeMillis();
                 return true;
             }
             case MotionEvent.ACTION_UP: {
