@@ -11,53 +11,32 @@
 
 package com.andrew.apollo.ui.activities;
 
-import static com.andrew.apollo.utils.MusicUtils.mService;
-
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.SystemClock;
-import android.provider.MediaStore.Audio.Playlists;
+import android.os.*;
 import android.provider.MediaStore.Audio.Albums;
 import android.provider.MediaStore.Audio.Artists;
+import android.provider.MediaStore.Audio.Playlists;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
+import android.widget.*;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
-
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.MusicPlaybackService;
-import com.frostwire.android.R;
 import com.andrew.apollo.adapters.PagerAdapter;
 import com.andrew.apollo.cache.ImageFetcher;
-import com.andrew.apollo.ui.fragments.QueueFragment;
 import com.andrew.apollo.menu.DeleteDialog;
+import com.andrew.apollo.ui.fragments.QueueFragment;
 import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
@@ -67,6 +46,7 @@ import com.andrew.apollo.widgets.PlayPauseButton;
 import com.andrew.apollo.widgets.RepeatButton;
 import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
+import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.menu.AddToPlaylistMenuAction;
 import com.frostwire.android.gui.billing.Biller;
 import com.frostwire.android.gui.billing.BillerFactory;
@@ -74,8 +54,14 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.ClickAdapter;
 import com.frostwire.android.gui.views.DonationsController;
+import com.frostwire.util.Ref;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
+import com.googlecode.mp4parser.util.Logger;
 
 import java.lang.ref.WeakReference;
+
+import static com.andrew.apollo.utils.MusicUtils.mService;
 
 /**
  * Apollo's "now playing" interface.
@@ -213,7 +199,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         initPlaybackControls();
 
         mPlayPauseButton.setOnLongClickListener(new StopListener(this, true));
-        findViewById(R.id.audio_player_album_art).setOnTouchListener(new SwipeDetector());
+        findViewById(R.id.audio_player_album_art).setOnTouchListener(new PlayerGesturesDetector(this));
         initSupportFrostWire();
     }
 
@@ -375,8 +361,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
             case R.id.menu_favorite:
                 // Toggle the current track as a favorite and update the menu
                 // item
-                MusicUtils.toggleFavorite();
-                invalidateOptionsMenu();
+                toggleFavorite();
                 return true;
             case R.id.menu_audio_player_ringtone:
                 // Set the current track as a ringtone
@@ -749,7 +734,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
     }
 
     /**
-     * Used to scan forwards in time through the curren track
+     * Used to scan forwards in time through the current track
      * 
      * @param repcnt The repeat count
      * @param delta The long press duration
@@ -1040,11 +1025,17 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         }
     }
 
-    private static final class SwipeDetector extends AbstractSwipeDetector {
+    private static final class PlayerGesturesDetector extends AbstractSwipeDetector {
+        private final WeakReference<AudioPlayerActivity> audioPlayerActivityRef;
+
+        public PlayerGesturesDetector(AudioPlayerActivity audioPlayerActivity) {
+             audioPlayerActivityRef = new WeakReference<AudioPlayerActivity>(audioPlayerActivity);
+        }
         @Override
         public void onLeftToRightSwipe() {
             try {
                 MusicUtils.mService.prev();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             } catch (Throwable e) {
                 // ignore
             }
@@ -1054,6 +1045,7 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         public void onRightToLeftSwipe() {
             try {
                 MusicUtils.mService.next();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_SWIPE_SONG);
             } catch (Throwable e) {
                 // ignore
             }
@@ -1063,11 +1055,30 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
         public boolean onMultiTouchEvent(View v, MotionEvent event) {
             try {
                 MusicUtils.playOrPause();
+                UXStats.instance().log(UXAction.PLAYER_GESTURE_PAUSE_RESUME);
             } catch (Throwable e) {
                 // ignore
             }
             return true;
         }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            try {
+                if (Ref.alive(audioPlayerActivityRef)) {
+                    audioPlayerActivityRef.get().toggleFavorite();
+                }
+                UXStats.instance().log(UXAction.PLAYER_TOGGLE_FAVORITE);
+            } catch (Throwable t) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private void toggleFavorite() {
+        MusicUtils.toggleFavorite();
+        invalidateOptionsMenu();
     }
 
     private Biller biller;
