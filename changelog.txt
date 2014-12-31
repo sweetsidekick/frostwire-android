@@ -1,3 +1,6 @@
+FrostWire 1.4.3 - DECEMBER/30/2014
+ - Player un/favorites current track on double tap. Thanks @votaguz.
+
 FrostWire 1.4.2 - DECEMBER/22/2014
  - New: Music Player (forked out of Apollo Player).
  - New: Playlist support.
