@@ -18,13 +18,15 @@
 
 package com.frostwire.android.gui.util;
 
+import android.app.Activity;
 import android.content.Context;
-
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
+import com.ironsource.mobilcore.CallbackResponse;
+import com.ironsource.mobilcore.MobileCore;
 
 public class OfferUtils {
 
@@ -55,6 +57,40 @@ public class OfferUtils {
         } catch (Throwable t) {
         }
         return isAppiaSearchEnabled;
+    }
+
+    public static boolean isMobileCoreEnabled() {
+        ConfigurationManager config = null;
+        boolean isMobileCoreEnabled = false;
+        try {
+            config = ConfigurationManager.instance();
+            isMobileCoreEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) && !OSUtils.isAmazonDistribution();
+        }  catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return isMobileCoreEnabled;
+    }
+
+    /**
+     * If mobileCore is active, it will show the interstitial, then perform the callback.
+     * Otherwise, it will perform the callback logic.
+     *
+     * @param callerActivity
+     * @param mobileCoreStarted
+     * @param callbackResponse
+     */
+    public static void showInterstitial(Activity callerActivity, boolean mobileCoreStarted, CallbackResponse callbackResponse) {
+        if (isMobileCoreEnabled() && mobileCoreStarted && MobileCore.isInterstitialReady()) {
+            try {
+                MobileCore.showInterstitial(callerActivity, callbackResponse);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (callbackResponse != null) {
+                callbackResponse.onConfirmation(null);
+            }
+        }
     }
 
     public static void startOffercastLockScreen(final Context context) throws Exception {

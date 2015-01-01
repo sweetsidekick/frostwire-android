@@ -18,24 +18,19 @@
 
 package com.frostwire.android.gui.services;
 
-import java.io.File;
-import java.util.concurrent.ExecutorService;
-
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
-
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
+
+import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author gubatron
@@ -123,11 +118,19 @@ public final class Engine implements IEngineService {
     public void shutdown() {
         if (service != null) {
             if (connection != null) {
-                getApplication().unbindService(connection);
+                try {
+                    getApplication().unbindService(connection);
+                } catch (IllegalArgumentException e) {
+                }
             }
+
             if (receiver != null) {
-                getApplication().unregisterReceiver(receiver);
+                try {
+                    getApplication().unregisterReceiver(receiver);
+                } catch (IllegalArgumentException e) {
+                }
             }
+
             service.shutdown();
         }
     }
@@ -145,8 +148,11 @@ public final class Engine implements IEngineService {
             }
 
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Engine.this.service = ((EngineServiceBinder) service).getService();
-                registerStatusReceiver(context);
+                // avoids: java.lang.ClassCastException: android.os.BinderProxy cannot be cast to com.frostwire.android.gui.services.EngineService$EngineServiceBinder
+                if (service instanceof EngineServiceBinder) {
+                    Engine.this.service = ((EngineServiceBinder) service).getService();
+                    registerStatusReceiver(context);
+                }
             }
         }, Context.BIND_AUTO_CREATE);
     }

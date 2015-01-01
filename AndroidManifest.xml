@@ -254,6 +254,25 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
+		<!-- mobile core -->
+		<activity
+				android:name="com.ironsource.mobilcore.InterstitialVideoActivity"
+				android:configChanges="keyboardHidden|orientation|screenSize"
+				android:keepScreenOn="true"/>
+
+		<service
+				android:name="com.ironsource.mobilcore.MobileCoreReport"
+				android:enabled="true"
+				android:exported="false" android:process=":mcServiceProcess">
+		</service>
+
+		<receiver
+				android:name="com.ironsource.mobilcore.InstallationTracker"
+				android:enabled="true"
+				android:process=":installationTracker">
+		</receiver>
+		<!-- end of mobile core -->
+
 		<!-- offercast -->
 		<!-- 
 		<activity

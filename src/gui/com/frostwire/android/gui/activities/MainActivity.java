@@ -18,22 +18,11 @@
 
 package com.frostwire.android.gui.activities;
 
-import static com.andrew.apollo.utils.MusicUtils.mService;
-
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.Stack;
-
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -48,7 +37,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
@@ -63,30 +51,28 @@ import com.frostwire.android.gui.activities.internal.MainController;
 import com.frostwire.android.gui.activities.internal.MainMenuAdapter;
 import com.frostwire.android.gui.dialogs.TermsUseDialog;
 import com.frostwire.android.gui.dialogs.YesNoDialog;
-import com.frostwire.android.gui.fragments.AboutFragment;
-import com.frostwire.android.gui.fragments.BrowsePeerFragment;
-import com.frostwire.android.gui.fragments.BrowsePeersDisabledFragment;
-import com.frostwire.android.gui.fragments.BrowsePeersFragment;
-import com.frostwire.android.gui.fragments.MainFragment;
-import com.frostwire.android.gui.fragments.SearchFragment;
-import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.gui.fragments.*;
 import com.frostwire.android.gui.fragments.TransfersFragment.TransferStatus;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractActivity;
-import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.*;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
-import com.frostwire.android.gui.views.PlayerMenuItemView;
-import com.frostwire.android.gui.views.TimerObserver;
-import com.frostwire.android.gui.views.TimerService;
-import com.frostwire.android.gui.views.TimerSubscription;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.ironsource.mobilcore.AdUnitEventListener;
+import com.ironsource.mobilcore.CallbackResponse;
+import com.ironsource.mobilcore.MobileCore;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.Stack;
+
+import static com.andrew.apollo.utils.MusicUtils.mService;
 
 /**
  * 
@@ -102,6 +88,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private static final String CURRENT_FRAGMENT_KEY = "current_fragment";
     private static final String DUR_TOKEN_KEY = "dur_token";
     private static final String APPIA_STARTED_KEY = "appia_started";
+    private static final String MOBILE_CORE_STARTED_KEY = "mobile_core_started";
 
     private static final String LAST_BACK_DIALOG_ID = "last_back_dialog";
     private static final String SHUTDOWN_DIALOG_ID = "shutdown_dialog";
@@ -131,6 +118,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private boolean offercastLockScreenStarted = false;
     private boolean appiaStarted = false;
+    private boolean mobileCoreStarted = false;
 
     private TimerSubscription playerSubscription;
     
@@ -175,10 +163,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 switchContent(fragment, false);
             } catch (Throwable e) {
                 // don't break the app
-                handleLastBackPressed();
+                showLastBackDialog();
             }
         } else {
-            handleLastBackPressed();
+            showLastBackDialog();
         }
 
         syncSlideMenu();
@@ -338,7 +326,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         refreshPeersFragment();
         refreshPlayerItem();
-        
+
+        initializeMobileCore();
         initializeOffercastLockScreen();
         initializeAppia();
 
@@ -393,6 +382,26 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
+    private void initializeMobileCore() {
+        if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
+            try {
+                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.NATIVE_ADS);
+                mobileCoreStarted = true;
+                MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
+                    @Override
+                    public void onAdUnitEvent(MobileCore.AD_UNITS ad_units, EVENT_TYPE event_type) {
+                        LOG.debug("onAdUnitEvent - " + event_type.toString() + " -> " + ad_units.name());
+                    }
+                });
+            } catch (Throwable e) {
+                e.printStackTrace();
+                mobileCoreStarted = false;
+            }
+        } else if (mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
+            MobileCore.refreshOffers();
+        }
+    }
+
     private void initializeOffercastLockScreen() {
         if (!offercastLockScreenStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN)) {
             try {
@@ -412,6 +421,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         outState.putString(DUR_TOKEN_KEY, durToken);
         outState.putBoolean(APPIA_STARTED_KEY, appiaStarted);
+        outState.putBoolean(MOBILE_CORE_STARTED_KEY, mobileCoreStarted);
     }
 
     private ServiceToken mToken;
@@ -493,25 +503,43 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         return Engine.instance().isStarted() && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_NETWORK_USE_UPNP) ? peers : peersDisabled;
     }
 
-    private void handleLastBackPressed() {
+    private void showLastBackDialog() {
         YesNoDialog dlg = YesNoDialog.newInstance(LAST_BACK_DIALOG_ID, R.string.minimize_frostwire, R.string.are_you_sure_you_wanna_leave);
-        dlg.show(getFragmentManager());
+        dlg.show(getFragmentManager()); //see onDialogClick
     }
 
-    private void handleShutdownRequest() {
+    private void showShutdownDialog() {
         YesNoDialog dlg = YesNoDialog.newInstance(SHUTDOWN_DIALOG_ID, R.string.app_shutdown_dlg_title, R.string.app_shutdown_dlg_message);
-        dlg.show(getFragmentManager());
+        dlg.show(getFragmentManager()); //see onDialogClick
     }
 
     @Override
     public void onDialogClick(String tag, int which) {
         if (tag.equals(LAST_BACK_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
-            finish();
+            onLastDialogButtonPositive();
+        } else if (tag.equals(SHUTDOWN_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
+            onShutdownDialogButtonPositive();
         } else if (tag.equals(TermsUseDialog.TAG)) {
             controller.startWizardActivity();
-        } else if (tag.equals(SHUTDOWN_DIALOG_ID) && which == AbstractDialog.BUTTON_POSITIVE) {
-            controller.shutdown();
         }
+    }
+
+    private void onLastDialogButtonPositive() {
+        OfferUtils.showInterstitial(this, mobileCoreStarted, new CallbackResponse() {
+            @Override
+            public void onConfirmation(TYPE type) {
+                finish();
+            }
+        });
+    }
+
+    private void onShutdownDialogButtonPositive() {
+        OfferUtils.showInterstitial(this, mobileCoreStarted, new CallbackResponse() {
+            @Override
+            public void onConfirmation(TYPE type) {
+                controller.shutdown();
+            }
+        });
     }
 
     private void syncSlideMenu() {
@@ -567,7 +595,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                     } else if (id == R.id.menu_free_apps) {
                         controller.showFreeApps();
                     } else if (id == R.id.menu_main_shutdown) {
-                        handleShutdownRequest();
+                        showShutdownDialog();
                     } else if (id == R.id.menu_main_my_music) {
                         controller.launchMyMusic();
                     } else {
