@@ -25,7 +25,10 @@ import android.provider.MediaStore.Audio.Artists;
 import android.provider.MediaStore.Audio.Playlists;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -57,7 +60,6 @@ import com.frostwire.android.gui.views.DonationsController;
 import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.googlecode.mp4parser.util.Logger;
 
 import java.lang.ref.WeakReference;
 
