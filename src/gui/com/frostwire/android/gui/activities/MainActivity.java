@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.*;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -64,7 +65,6 @@ import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
-import com.ironsource.mobilcore.AdUnitEventListener;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 
@@ -184,6 +184,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
 
         if (intent.getBooleanExtra("shutdown-" + ConfigurationManager.instance().getUUIDString(), false)) {
+            stopMobileCoreServices();
             finish();
             Engine.instance().shutdown();
             return true;
@@ -240,6 +241,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         if (savedInstanceState != null) {
             durToken = savedInstanceState.getString(DUR_TOKEN_KEY);
             appiaStarted = savedInstanceState.getBoolean(APPIA_STARTED_KEY);
+            mobileCoreStarted = savedInstanceState.getBoolean(MOBILE_CORE_STARTED_KEY);
         }
 
         playerSubscription = TimerService.subscribe((TimerObserver) findView(R.id.activity_main_player_notifier), 1);
@@ -385,14 +387,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeMobileCore() {
         if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
             try {
+                enableMobileCoreInstallationTrackerReceiver(true);
                 MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ);
                 mobileCoreStarted = true;
-                MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
-                    @Override
-                    public void onAdUnitEvent(MobileCore.AD_UNITS ad_units, EVENT_TYPE event_type) {
-                        LOG.debug("onAdUnitEvent - " + event_type.toString() + " -> " + ad_units.name());
-                    }
-                });
             } catch (Throwable e) {
                 e.printStackTrace();
                 mobileCoreStarted = false;
@@ -400,6 +397,34 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         } else if (mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
             MobileCore.refreshOffers();
         }
+    }
+
+    /**
+     * Hack to stop mobile core service and broadcast receiver.
+     */
+    private void stopMobileCoreServices() {
+        try {
+            stopService(new Intent(this.getApplicationContext(),
+                    com.ironsource.mobilcore.MobileCoreReport.class));
+
+            enableMobileCoreInstallationTrackerReceiver(false);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    /**
+     * hack, I believe this is equivalent to manipulating the android manifest,
+     * but in the case of disabling, it does kill the com.frostwire.android:installationTracker process.
+     * @param enable
+     */
+    private void enableMobileCoreInstallationTrackerReceiver(boolean enable) {
+        ComponentName receiver = new ComponentName(this.getApplicationContext(),
+                com.ironsource.mobilcore.InstallationTracker.class);
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                enable ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                enable ? PackageManager.DONT_KILL_APP : 0);
     }
 
     private void initializeOffercastLockScreen() {
