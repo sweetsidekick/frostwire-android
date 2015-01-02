@@ -50,6 +50,7 @@ import com.frostwire.android.gui.tasks.DownloadSoundcloudFromUrlTask;
 import com.frostwire.android.gui.tasks.StartDownloadTask;
 import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
@@ -85,6 +86,7 @@ import com.frostwire.uxstats.UXStats;
 public final class SearchFragment extends AbstractFragment implements MainFragment, OnDialogClickListener {
 
     private static final Logger LOG = Logger.getLogger(SearchFragment.class);
+    private static int startedDownloadsBeforeSticky = 0;
 
     private SearchResultListAdapter adapter;
     private List<Slide> slides;
@@ -359,9 +361,18 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
     }
     
     private static void startDownload(Context ctx, SearchResult sr, String message) {
+        startedDownloadsBeforeSticky++;
         StartDownloadTask task = new StartDownloadTask(ctx, sr, message);
         UIUtils.showTransfersOnDownloadStart(ctx);
         task.execute();
+
+        if (startedDownloadsBeforeSticky == ConfigurationManager.instance().getInt(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_THRESHOLD)) {
+            OfferUtils.showSticky((Activity) ctx);
+
+            if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_REPEAT)) {
+                startedDownloadsBeforeSticky = 0;
+            }
+        }
     }
     
     private void startPromotionDownload(Slide slide) {

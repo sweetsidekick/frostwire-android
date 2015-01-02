@@ -18,6 +18,27 @@
 
 package com.frostwire.android.gui;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
+import com.frostwire.android.R;
+import com.frostwire.android.core.ConfigurationManager;
+import com.frostwire.android.core.Constants;
+import com.frostwire.android.core.HttpFetcher;
+import com.frostwire.android.core.SystemPaths;
+import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.gui.util.OSUtils;
+import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.util.ByteUtils;
+import com.frostwire.util.JsonUtils;
+import com.frostwire.util.StringUtils;
+import com.frostwire.uxstats.UXStats;
+import com.frostwire.uxstats.UXStatsConf;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,28 +48,6 @@ import java.security.MessageDigest;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.frostwire.android.R;
-import com.frostwire.android.core.ConfigurationManager;
-import com.frostwire.android.core.Constants;
-import com.frostwire.android.core.HttpFetcher;
-import com.frostwire.android.core.SystemPaths;
-import com.frostwire.android.gui.services.Engine;
-import com.frostwire.android.gui.util.OSUtils;
-import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.util.StringUtils;
-import com.frostwire.util.ByteUtils;
-import com.frostwire.util.JsonUtils;
-import com.frostwire.uxstats.UXStats;
-import com.frostwire.uxstats.UXStatsConf;
 
 /**
  * 
@@ -323,6 +322,10 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, update.config.appiaSearch);
 
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE, update.config.mobileCore);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_REPEAT, update.config.mobileCoreStickyRepeat);
+        ConfigurationManager.instance().setInt(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_THRESHOLD, update.config.mobileCoreStickyThreshold);
+
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
             String url = "http://ux.frostwire.com/aux";
             String os = OSUtils.getOSVersionString();
@@ -376,6 +379,9 @@ public final class SoftwareUpdater {
         public boolean appia = true;
         public boolean appiaSearch = true;
         public boolean offercastLockScreen = true;
+        public boolean mobileCore = true;
+        public boolean mobileCoreStickyRepeat = true;
+        public int mobileCoreStickyThreshold = Constants.STICKY_THRESHOLD;
 
         // ux stats
         public boolean uxEnabled = false;
