@@ -321,7 +321,10 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN, update.config.offercastLockScreen);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, update.config.appiaSearch);
+
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE, update.config.mobileCore);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_REPEAT, update.config.mobileCoreStickyRepeat);
+        ConfigurationManager.instance().setInt(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_THRESHOLD, update.config.mobileCoreStickyThreshold);
 
         if (update.config.uxEnabled && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_UXSTATS_ENABLED)) {
             String url = "http://ux.frostwire.com/aux";
@@ -377,6 +380,8 @@ public final class SoftwareUpdater {
         public boolean appiaSearch = true;
         public boolean offercastLockScreen = true;
         public boolean mobileCore = true;
+        public boolean mobileCoreStickyRepeat = true;
+        public int mobileCoreStickyThreshold = Constants.STICKY_THRESHOLD;
 
         // ux stats
         public boolean uxEnabled = false;

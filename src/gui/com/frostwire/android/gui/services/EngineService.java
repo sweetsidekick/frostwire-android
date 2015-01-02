@@ -45,6 +45,7 @@ import com.frostwire.android.util.ImageLoader;
 import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.ThreadPool;
+import com.ironsource.mobilcore.MobileCore;
 
 /**
  * @author gubatron

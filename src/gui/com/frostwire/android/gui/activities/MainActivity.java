@@ -385,7 +385,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeMobileCore() {
         if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
             try {
-                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.NATIVE_ADS);
+                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ);
                 mobileCoreStarted = true;
                 MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
                     @Override
