@@ -40,7 +40,7 @@ import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 import com.devspark.appmsg.AppMsg;
 import com.frostwire.android.R;
-import com.googlecode.mp4parser.util.Logger;
+import com.frostwire.logging.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import java.util.WeakHashMap;
  */
 public final class MusicUtils {
 
-    private static Logger logger = Logger.getLogger(MusicUtils.class);
+    private static Logger LOG = Logger.getLogger(MusicUtils.class);
 
     public static IApolloService mService = null;
 
@@ -850,8 +850,7 @@ public final class MusicUtils {
                 cursor.close();
             }
         } catch (Throwable e) {
-            logger.logError("Could not fetch playlists");
-            e.printStackTrace();
+            LOG.error("Could not fetch playlists", e);
         }
 
         return result;
@@ -910,18 +909,22 @@ public final class MusicUtils {
         };
         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistid);
         Cursor cursor = resolver.query(uri, projection, null, null, null);
-        cursor.moveToFirst();
-        final int base = cursor.getInt(0);
-        cursor.close();
-        cursor = null;
-        int numinserted = 0;
-        for (int offSet = 0; offSet < size; offSet += 1000) {
-            makeInsertItems(ids, offSet, 1000, base);
-            numinserted += resolver.bulkInsert(uri, mContentValuesCache);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            final int base = cursor.getInt(0);
+            cursor.close();
+            cursor = null;
+            int numinserted = 0;
+            for (int offSet = 0; offSet < size; offSet += 1000) {
+                makeInsertItems(ids, offSet, 1000, base);
+                numinserted += resolver.bulkInsert(uri, mContentValuesCache);
+            }
+            final String message = context.getResources().getQuantityString(
+                    R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
+            AppMsg.makeText((Activity) context, message, AppMsg.STYLE_CONFIRM).show();
+        } else {
+            LOG.warn("Unable to complete addToPlaylist, review the logic");
         }
-        final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtrackstoplaylist, numinserted, numinserted);
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
     }
 
     /**
@@ -1053,6 +1056,7 @@ public final class MusicUtils {
             return releaseDate;
         } catch (Throwable e) {
             // ignore this error since it's not critical
+            LOG.error("Error getting release date for album", e);
             return null;
         }
     }
