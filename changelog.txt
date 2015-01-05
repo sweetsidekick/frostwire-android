@@ -1,5 +1,7 @@
-FrostWire 1.4.3 - DECEMBER/30/2014
+FrostWire 1.4.3 - JANUARY/05/2015
  - Player un/favorites current track on double tap. Thanks @votaguz.
+ - Music Player database errors reported fixed.
+ - MobileCore ads integration. Ads can be turned off under settings.
 
 FrostWire 1.4.2 - DECEMBER/22/2014
  - New: Music Player (forked out of Apollo Player).
