@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2013, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2015, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,7 @@
 
 package com.frostwire.android.gui.views;
 
-import java.util.List;
-
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -29,10 +28,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.frostclick.Slide;
+import com.ironsource.mobilcore.MobileCore;
+import com.ironsource.mobilcore.NativeAdsAdapter;
+
+import java.util.List;
 
 /**
  * @author gubatron
@@ -66,8 +69,27 @@ public class PromotionsView extends LinearLayout {
     public void setSlides(List<Slide> slides) {
         if (gridview != null && slides != null) {
             this.slides = slides;
-            gridview.setAdapter(new PromotionsAdapter(gridview.getContext(), slides));
+            updateAdapter();
         }
+    }
+
+    public void updateAdapter() {
+        if (getSlides() != null) {
+            final PromotionsAdapter promotionsAdapter = new PromotionsAdapter(gridview.getContext(), getSlides());
+            if (OfferUtils.isMobileCoreEnabled() && OfferUtils.MOBILE_CORE_NATIVE_ADS_READY) {
+                initMobileCoreGridviewAdapter(promotionsAdapter);
+            } else {
+                gridview.setAdapter(promotionsAdapter);
+            }
+        }
+    }
+
+    private void initMobileCoreGridviewAdapter(PromotionsAdapter promotionsAdapter) {
+        final NativeAdsAdapter adsAdapter =
+                MobileCore.buildNativeAdsAdapter((Activity) gridview.getContext(),
+                        promotionsAdapter, R.layout.view_promotions_native_ads_item);
+        adsAdapter.setAdsFrequency(1,3);
+        gridview.setAdapter(adsAdapter);
     }
 
     @Override
@@ -106,7 +128,9 @@ public class PromotionsView extends LinearLayout {
 
     private void unbindPromotionDrawables() {
         for (int i = 0; gridview != null && i < gridview.getChildCount(); i++) {
-            unbindPromotionDrawable((ImageView) gridview.getChildAt(i));
+            if (gridview.getChildAt(i) instanceof ImageView) {
+                unbindPromotionDrawable((ImageView) gridview.getChildAt(i));
+            }
         }
     }
 

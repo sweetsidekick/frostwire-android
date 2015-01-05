@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2015, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,6 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -52,23 +46,15 @@ import com.frostwire.android.gui.transfers.HttpSlideSearchResult;
 import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
-import com.frostwire.android.gui.views.AbstractDialog;
+import com.frostwire.android.gui.views.*;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
-import com.frostwire.android.gui.views.AbstractFragment;
-import com.frostwire.android.gui.views.PromotionsView;
 import com.frostwire.android.gui.views.PromotionsView.OnPromotionClickListener;
-import com.frostwire.android.gui.views.SearchInputView;
 import com.frostwire.android.gui.views.SearchInputView.OnSearchListener;
-import com.frostwire.android.gui.views.SearchProgressView;
 import com.frostwire.frostclick.Slide;
 import com.frostwire.frostclick.SlideList;
 import com.frostwire.frostclick.TorrentPromotionSearchResult;
 import com.frostwire.logging.Logger;
-import com.frostwire.search.FileSearchResult;
-import com.frostwire.search.HttpSearchResult;
-import com.frostwire.search.SearchManagerListener;
-import com.frostwire.search.SearchPerformer;
-import com.frostwire.search.SearchResult;
+import com.frostwire.search.*;
 import com.frostwire.search.torrent.TorrentCrawledSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.util.HttpClient;
@@ -77,6 +63,11 @@ import com.frostwire.util.JsonUtils;
 import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author gubatron
@@ -185,6 +176,7 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
                 startPromotionDownload(slide);
             }
         });
+
 
         searchProgress = findView(view, R.id.fragment_search_search_progress);
         searchProgress.setCancelOnClickListener(new OnClickListener() {
