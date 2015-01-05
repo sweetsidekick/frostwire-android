@@ -616,6 +616,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                         showShutdownDialog();
                     } else if (id == R.id.menu_main_my_music) {
                         controller.launchMyMusic();
+                    } else {
                         listMenu.setItemChecked(position, true);
                         controller.switchFragment((int) id);
                     }
