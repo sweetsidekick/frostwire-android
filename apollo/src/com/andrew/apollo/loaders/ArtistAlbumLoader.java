@@ -103,19 +103,29 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
      * @param context The {@link Context} to use.
      * @param artistId The Id of the artist the albums belong to.
      */
-    public static final Cursor makeArtistAlbumCursor(final Context context, final Long artistId) {
-        return context.getContentResolver().query(
-                MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[] {
+    private static final Cursor makeArtistAlbumCursor(final Context context, final Long artistId) {
+        if (artistId == -1) {
+            // fix an error reported in Play console
+            return null;
+        }
+
+        try {
+            return context.getContentResolver().query(
+                    MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[]{
                         /* 0 */
-                        BaseColumns._ID,
+                            BaseColumns._ID,
                         /* 1 */
-                        AlbumColumns.ALBUM,
+                            AlbumColumns.ALBUM,
                         /* 2 */
-                        AlbumColumns.ARTIST,
+                            AlbumColumns.ARTIST,
                         /* 3 */
-                        AlbumColumns.NUMBER_OF_SONGS,
+                            AlbumColumns.NUMBER_OF_SONGS,
                         /* 4 */
-                        AlbumColumns.FIRST_YEAR
-                }, null, null, PreferenceUtils.getInstance(context).getArtistAlbumSortOrder());
+                            AlbumColumns.FIRST_YEAR
+                    }, null, null, PreferenceUtils.getInstance(context).getArtistAlbumSortOrder());
+        } catch (Throwable e) {
+            // ignore any error since it's not critical
+            return null;
+        }
     }
 }
