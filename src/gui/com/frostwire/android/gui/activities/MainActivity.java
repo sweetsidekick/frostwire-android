@@ -387,7 +387,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeMobileCore() {
         if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
             try {
-                enableMobileCoreInstallationTrackerReceiver(true);
                 MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ);
                 mobileCoreStarted = true;
             } catch (Throwable e) {
@@ -406,25 +405,9 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         try {
             stopService(new Intent(this.getApplicationContext(),
                     com.ironsource.mobilcore.MobileCoreReport.class));
-
-            enableMobileCoreInstallationTrackerReceiver(false);
         } catch (Throwable t) {
             t.printStackTrace();
         }
-    }
-
-    /**
-     * hack, I believe this is equivalent to manipulating the android manifest,
-     * but in the case of disabling, it does kill the com.frostwire.android:installationTracker process.
-     * @param enable
-     */
-    private void enableMobileCoreInstallationTrackerReceiver(boolean enable) {
-        ComponentName receiver = new ComponentName(this.getApplicationContext(),
-                com.ironsource.mobilcore.InstallationTracker.class);
-        PackageManager pm = this.getPackageManager();
-        pm.setComponentEnabledSetting(receiver,
-                enable ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                enable ? PackageManager.DONT_KILL_APP : 0);
     }
 
     private void initializeOffercastLockScreen() {
