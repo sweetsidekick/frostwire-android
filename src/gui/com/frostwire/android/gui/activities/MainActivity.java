@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2015, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.*;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -65,6 +64,7 @@ import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.ironsource.mobilcore.AdUnitEventListener;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 
@@ -387,7 +387,17 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeMobileCore() {
         if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
             try {
-                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ);
+                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ, MobileCore.AD_UNITS.NATIVE_ADS);
+                MobileCore.setNativeAdsBannerSupport(true);
+                MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
+                    @Override
+                    public void onAdUnitEvent(MobileCore.AD_UNITS ad_units, EVENT_TYPE event_type) {
+                        if (event_type.equals(EVENT_TYPE.AD_UNIT_READY) && ad_units.equals(MobileCore.AD_UNITS.NATIVE_ADS)) {
+                            OfferUtils.MOBILE_CORE_NATIVE_ADS_READY = true;
+
+                        }
+                    }
+                });
                 mobileCoreStarted = true;
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -606,7 +616,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                         showShutdownDialog();
                     } else if (id == R.id.menu_main_my_music) {
                         controller.launchMyMusic();
-                    } else {
                         listMenu.setItemChecked(position, true);
                         controller.switchFragment((int) id);
                     }

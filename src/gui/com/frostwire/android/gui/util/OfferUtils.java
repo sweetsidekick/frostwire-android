@@ -1,6 +1,6 @@
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ * Copyright (c) 2011-2015, FrostWire(TM). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import com.ironsource.mobilcore.MobileCore;
 public class OfferUtils {
 
     private static final Logger LOG = Logger.getLogger(OfferUtils.class);
+    public static boolean MOBILE_CORE_NATIVE_ADS_READY = false;
 
     /**
      * True if user has enabled support for frostwire, Appia is enabled and it's not an Amazon distribution build. 
