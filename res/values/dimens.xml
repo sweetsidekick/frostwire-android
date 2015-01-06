@@ -19,12 +19,12 @@
  */
 -->
 <resources>
-
     <dimen name="mainmenu_width">250dp</dimen>
     <dimen name="mainmenu_shadow_width">15dp</dimen>
     
     <!-- Donations View -->
     <dimen name="view_donations_button_width">50dp</dimen>
-    
 
+    <!-- Promotions -->
+    <dimen name="promo_download_button_width">150dp</dimen>
 </resources>

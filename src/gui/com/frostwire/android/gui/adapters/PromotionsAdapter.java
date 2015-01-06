@@ -55,7 +55,7 @@ public class PromotionsAdapter extends AbstractAdapter<Slide> {
     
     @Override
     public void setupView(View convertView, ViewGroup parent, Slide viewItem) {
-        ImageView imageView = (ImageView) convertView;
+        ImageView imageView = findView(convertView, R.id.view_promotions_item_image);
         
         GridView gridView = (GridView) parent;
         int promoWidth = getColumnWidth(gridView); //hack

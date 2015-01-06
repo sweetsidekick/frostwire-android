@@ -59,8 +59,11 @@ public class OfferUtils {
         }
         return isAppiaSearchEnabled;
     }
-
     public static boolean isMobileCoreEnabled() {
+        if (true) {
+            LOG.debug("Forcing isMobileCoreEnabled() -> true.");
+            return true;
+        }
         ConfigurationManager config = null;
         boolean isMobileCoreEnabled = false;
         try {

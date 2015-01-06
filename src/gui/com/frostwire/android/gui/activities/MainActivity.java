@@ -385,7 +385,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initializeMobileCore() {
-        if (!mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
+        if (!mobileCoreStarted && OfferUtils.isMobileCoreEnabled()) {
             try {
                 MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ, MobileCore.AD_UNITS.NATIVE_ADS);
                 MobileCore.setNativeAdsBannerSupport(true);
@@ -403,7 +403,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 e.printStackTrace();
                 mobileCoreStarted = false;
             }
-        } else if (mobileCoreStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE)) {
+        } else if (mobileCoreStarted && OfferUtils.isMobileCoreEnabled()) {
             MobileCore.refreshOffers();
         }
     }
