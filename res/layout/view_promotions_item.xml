@@ -47,7 +47,6 @@
                       android:layout_height="wrap_content"
                       android:text="@string/application_label"
                       android:textColor="@color/white"
-                      android:textStyle="bold"
                       android:textSize="10sp"
                       android:layout_marginLeft="3dp"
                       />
@@ -64,7 +63,7 @@
                 android:id="@+id/view_promotions_item_download_button"
                 android:layout_width="@dimen/promo_download_button_width"
                 android:layout_height="match_parent"
-                android:padding="3dp"
+                android:padding="6dp"
                 android:layout_margin="0dp"
                 android:background="@color/holo_blue_light"
                 android:drawableLeft="@drawable/promo_download_arrow_button"
