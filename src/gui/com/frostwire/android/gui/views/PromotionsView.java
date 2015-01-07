@@ -32,6 +32,7 @@ import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
 import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.frostclick.Slide;
+import com.frostwire.logging.Logger;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.NativeAdsAdapter;
 
@@ -40,9 +41,9 @@ import java.util.List;
 /**
  * @author gubatron
  * @author aldenml
- *
  */
 public class PromotionsView extends LinearLayout {
+    //private Logger LOG = Logger.getLogger(PromotionsView.class);
 
     private GridView gridview;
 
@@ -76,9 +77,12 @@ public class PromotionsView extends LinearLayout {
     public void updateAdapter() {
         if (getSlides() != null) {
             final PromotionsAdapter promotionsAdapter = new PromotionsAdapter(gridview.getContext(), getSlides());
+
+
             if (OfferUtils.isMobileCoreEnabled() && OfferUtils.MOBILE_CORE_NATIVE_ADS_READY) {
                 initMobileCoreGridviewAdapter(promotionsAdapter);
             } else {
+
                 gridview.setAdapter(promotionsAdapter);
             }
         }
@@ -88,7 +92,8 @@ public class PromotionsView extends LinearLayout {
         final NativeAdsAdapter adsAdapter =
                 MobileCore.buildNativeAdsAdapter((Activity) gridview.getContext(),
                         promotionsAdapter, R.layout.view_promotions_native_ads_item);
-        adsAdapter.setAdsFrequency(1,3);
+        adsAdapter.setAdsFrequency(1, 3);
+
         gridview.setAdapter(adsAdapter);
     }
 
@@ -103,6 +108,7 @@ public class PromotionsView extends LinearLayout {
         }
 
         gridview = (GridView) findViewById(R.id.view_promotions_gridview);
+
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Slide slide = (Slide) gridview.getAdapter().getItem(position);

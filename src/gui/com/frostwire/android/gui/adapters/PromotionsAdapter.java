@@ -18,20 +18,19 @@
 
 package com.frostwire.android.gui.adapters;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.gui.views.AbstractAdapter;
 import com.frostwire.android.util.ImageLoader;
 import com.frostwire.frostclick.Slide;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Adapter in control of the List View shown when we're browsing the files of
@@ -56,6 +55,16 @@ public class PromotionsAdapter extends AbstractAdapter<Slide> {
     @Override
     public void setupView(View convertView, ViewGroup parent, Slide viewItem) {
         ImageView imageView = findView(convertView, R.id.view_promotions_item_image);
+
+        /**
+        Button downloadButton = findView(convertView, R.id.view_promotions_item_download_button);
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+         */
         
         GridView gridView = (GridView) parent;
         int promoWidth = getColumnWidth(gridView); //hack
