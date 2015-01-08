@@ -40,6 +40,7 @@ import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 import com.devspark.appmsg.AppMsg;
 import com.frostwire.android.R;
+import com.frostwire.android.gui.fragments.SearchFragment;
 import com.frostwire.logging.Logger;
 
 import java.io.File;

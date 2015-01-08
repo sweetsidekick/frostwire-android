@@ -391,7 +391,16 @@ public final class SearchFragment extends AbstractFragment implements MainFragme
 
             return;
         }
-        startTransfer(sr, getString(R.string.downloading_promotion, sr.getDisplayName()));
+
+        String stringDownloadingPromo;
+
+        try {
+            stringDownloadingPromo = getString(R.string.downloading_promotion, sr.getDisplayName());
+        }  catch (Throwable e) {
+             stringDownloadingPromo = getString(R.string.azureus_manager_item_downloading);
+        }
+
+        startTransfer(sr, stringDownloadingPromo);
     }
 
     private void uxLogAction(SearchResult sr) {
