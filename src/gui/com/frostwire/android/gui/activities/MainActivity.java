@@ -404,7 +404,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                 mobileCoreStarted = false;
             }
         } else if (mobileCoreStarted && OfferUtils.isMobileCoreEnabled()) {
-            MobileCore.refreshOffers();
+            try {
+                MobileCore.refreshOffers();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
     }
 
