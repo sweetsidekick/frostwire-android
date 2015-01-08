@@ -50,7 +50,7 @@ git rebase master
 ```
    as you do this you may have to fix any possible conflicts, just follow the instruction git gives you if this is your first time.
 
-- Make sure to **squash** any cosmetic commits into the body of your work so that we don't pollude the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
+- Make sure to **squash** any cosmetic commits into the body of your work so that we don't pollute the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
 
 
 # Tip for commit
@@ -63,8 +63,8 @@ You can donate for development, thereby encouraging some developers or you can p
 
 ## Android Studio
 
-1. Make shure you have [Android Studio](https://developer.android.com/sdk/installing/studio.html) properly installed.
-2. Make shure you have frostwire-android, frostwire-common and frostwire-jlibtorrent repos in the same folder.
+1. Make sure you have [Android Studio](https://developer.android.com/sdk/installing/studio.html) properly installed.
+2. Make sure you have frostwire-android, frostwire-common and frostwire-jlibtorrent repos in the same folder.
 3. Open the project in android studio.
 4. Wait for gradle sync and indices to update.
 5. Should work out of the box.
@@ -81,4 +81,4 @@ If you want to know about legal content you can download and distribute legally 
 
 # License
 
-See [here](COPYING) for the license. Frostwire for Android is offered under the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html).
+See [COPYING](COPYING) for the license. Frostwire for Android is offered under the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html).
