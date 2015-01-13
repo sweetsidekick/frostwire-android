@@ -975,7 +975,16 @@ public final class Librarian {
                 updateFileDescriptor(uri, fd);
             } else if (uri.toString().startsWith("file://")) {
                 fd.filePath = uri.toString();
-                fd.fileType = (byte) MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(fd.filePath)).getId();
+                final String extension = FilenameUtils.getExtension(fd.filePath);
+                final MediaType mediaTypeForExtension = MediaType.getMediaTypeForExtension(extension);
+
+                if (mediaTypeForExtension != null) {
+                    fd.fileType = (byte) mediaTypeForExtension.getId();
+                } else {
+                    // set the file type to be a document if we don't know the given extension
+                    // we were having a NPE here.
+                    fd.fileType = (byte) MediaType.getDocumentMediaType().getId();
+                }
             }
         }
 
