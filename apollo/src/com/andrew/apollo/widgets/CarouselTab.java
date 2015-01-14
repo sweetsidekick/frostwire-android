@@ -120,8 +120,17 @@ public class CarouselTab extends FrameLayoutWithOverlay {
         if (artistImage == null) {
             artistImage = BitmapFactory.decodeResource(getResources(), R.drawable.theme_preview);
         }
-        final Bitmap blur = BitmapUtils.createBlurredBitmap(artistImage);
-        mPhoto.setImageBitmap(blur);
+
+        // Gubatron: this can fail on some devices with an internal NPE
+        // trying to copy the bitmap right to do the effect. let's protect it
+        if (artistImage != null) {
+            try {
+                final Bitmap blur = BitmapUtils.createBlurredBitmap(artistImage);
+                mPhoto.setImageBitmap(blur);
+            } catch (Throwable t) {
+                //don't blur if you can't.
+            }
+        }
     }
 
     /**
