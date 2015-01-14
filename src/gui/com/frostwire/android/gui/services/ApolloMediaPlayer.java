@@ -59,7 +59,7 @@ public class ApolloMediaPlayer implements CoreMediaPlayer {
     public void stop() {
         try {
             MusicUtils.mService.stop();
-        } catch (RemoteException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
