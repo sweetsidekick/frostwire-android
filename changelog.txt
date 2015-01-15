@@ -1,6 +1,9 @@
-FrostWire 1.4.4 - JANUARY/14/2015
+FrostWire 1.4.4 - JANUARY/15/2015
  - Fixes Out of memory errors on MobileCore library.
  - Fixes possible crash when exiting the app right after launching it.
+ - If storage location has ran out of space available FrostWire
+   will show a descriptive error message explaining why the download
+   has failed.
 
 FrostWire 1.4.3 - JANUARY/05/2015
  - Player un/favorites current track on double tap. Thanks @votaguz.
