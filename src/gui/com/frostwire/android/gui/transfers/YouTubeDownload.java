@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.frostwire.android.core.SystemPaths;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.transfers.TransferItem;
+import com.frostwire.util.OSUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import android.util.Log;
@@ -58,6 +60,7 @@ public final class YouTubeDownload implements DownloadTransfer {
     private static final int STATUS_WAITING = 5;
     private static final int STATUS_DEMUXING = 6;
     private static final int STATUS_SAVE_DIR_ERROR = 7;
+    private static final int STATUS_ERROR_DISK_FULL = 8;
 
     private static final int SPEED_AVERAGE_CALCULATION_INTERVAL_MILLISECONDS = 1000;
 
@@ -110,6 +113,10 @@ public final class YouTubeDownload implements DownloadTransfer {
 
         if (!savePath.isDirectory() && !savePath.mkdirs()) {
             this.status = STATUS_SAVE_DIR_ERROR;
+        }
+
+        if (TransfersFragment.isUsingSDCardPrivateStorage() && OSUtils.isSDCardAlmostFull()) {
+            this.status = STATUS_ERROR_DISK_FULL;
         }
     }
 
@@ -242,7 +249,7 @@ public final class YouTubeDownload implements DownloadTransfer {
     }
 
     private void start(final LinkInfo inf, final File temp) {
-        if (status == STATUS_SAVE_DIR_ERROR) {
+        if (status == STATUS_SAVE_DIR_ERROR || status == STATUS_ERROR_DISK_FULL || status == STATUS_ERROR) {
             return;
         }
 
@@ -276,6 +283,9 @@ public final class YouTubeDownload implements DownloadTransfer {
                 break;
             case STATUS_SAVE_DIR_ERROR:
                 resId = R.string.http_download_status_save_dir_error;
+                break;
+            case STATUS_ERROR_DISK_FULL:
+                resId = R.string.error_no_space_left_on_device;
                 break;
             case STATUS_CANCELLED:
                 resId = R.string.peer_http_download_status_cancelled;
@@ -328,7 +338,13 @@ public final class YouTubeDownload implements DownloadTransfer {
             } else {
                 Log.e(TAG, String.format("Error downloading url: %s", sr.getDownloadUrl()));
             }
+
             status = STATUS_ERROR;
+
+            if (e.getMessage() !=null && e.getMessage().contains("No space left on device")) {
+                status = STATUS_ERROR_DISK_FULL;
+            }
+
             cleanup();
         }
     }
