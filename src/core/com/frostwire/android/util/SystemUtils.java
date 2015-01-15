@@ -33,6 +33,7 @@ import android.os.StatFs;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.os.EnvironmentCompat;
 
+import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.logging.Logger;
 
 /**
@@ -224,16 +225,15 @@ public final class SystemUtils {
         return hasSdk(VERSION_CODE_KITKAT);
     }
 
-
-    public static long getSDCardAvailableBytes() {
-        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+    public static long getCurrentMountAvailableBytes() {
+        StatFs stat = new StatFs(ConfigurationManager.instance().getStoragePath());
         return ((long)stat.getBlockSize() * (long)stat.getAvailableBlocks());
     }
 
     /**
      * @return true if less than 10MB available
      */
-    public static boolean isSDCardAlmostFull() {
-        return getSDCardAvailableBytes() < 10000000;
+    public static boolean isCurrentMountAlmostFull() {
+        return getCurrentMountAvailableBytes() < 10000000;
     }
 }

@@ -97,7 +97,7 @@ public final class HttpDownload implements DownloadTransfer {
             this.status = STATUS_SAVE_DIR_ERROR;
         }
 
-        if (TransfersFragment.isUsingSDCardPrivateStorage() && SystemUtils.isSDCardAlmostFull()) {
+        if (SystemUtils.isCurrentMountAlmostFull()) {
             this.status = STATUS_ERROR_DISK_FULL;
         }
     }

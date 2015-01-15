@@ -35,7 +35,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     private long size;
     private List<TransferItem> items;
 
-    private boolean noSpaceAvailableInSDCard;
+    private boolean noSpaceAvailableInCurrentMount;
 
     public UIBittorrentDownload(TransferManager manager, BTDownload dl) {
         this.manager = manager;
@@ -51,7 +51,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
         }
 
         try {
-            noSpaceAvailableInSDCard = TransfersFragment.isUsingSDCardPrivateStorage() && SystemUtils.getSDCardAvailableBytes() < size;
+            noSpaceAvailableInCurrentMount = SystemUtils.getCurrentMountAvailableBytes() < size;
         } catch (Throwable t) {
 
         }
@@ -149,7 +149,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public String getStatus() {
-        if (noSpaceAvailableInSDCard) {
+        if (noSpaceAvailableInCurrentMount) {
             return TransferState.ERROR_DISK_FULL.toString();
         }
         return dl.getState().toString();
