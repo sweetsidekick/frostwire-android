@@ -128,6 +128,7 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.UPLOADING), c.getString(R.string.peer_http_upload_status_uploading));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.UNCOMPRESSING), c.getString(R.string.http_download_status_uncompressing));
         TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.DEMUXING), c.getString(R.string.transfer_status_demuxing));
+        TRANSFER_STATE_STRING_MAP.put(String.valueOf(TransferState.ERROR_DISK_FULL), c.getString(R.string.error_no_space_left_on_device));
     }
 
     @Override

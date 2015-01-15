@@ -223,4 +223,17 @@ public final class SystemUtils {
     public static final boolean hasKitKat() {
         return hasSdk(VERSION_CODE_KITKAT);
     }
+
+
+    public static long getSDCardAvailableBytes() {
+        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        return ((long)stat.getBlockSize() * (long)stat.getAvailableBlocks());
+    }
+
+    /**
+     * @return true if less than 10MB available
+     */
+    public static boolean isSDCardAlmostFull() {
+        return getSDCardAvailableBytes() < 10000000;
+    }
 }

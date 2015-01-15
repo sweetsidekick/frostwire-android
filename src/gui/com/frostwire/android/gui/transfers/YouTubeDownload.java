@@ -27,6 +27,7 @@ import java.util.Map;
 
 import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.fragments.TransfersFragment;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.util.OSUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -115,7 +116,7 @@ public final class YouTubeDownload implements DownloadTransfer {
             this.status = STATUS_SAVE_DIR_ERROR;
         }
 
-        if (TransfersFragment.isUsingSDCardPrivateStorage() && OSUtils.isSDCardAlmostFull()) {
+        if (TransfersFragment.isUsingSDCardPrivateStorage() && SystemUtils.isSDCardAlmostFull()) {
             this.status = STATUS_ERROR_DISK_FULL;
         }
     }

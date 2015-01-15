@@ -4,11 +4,14 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.Librarian;
 import com.frostwire.android.gui.NetworkManager;
+import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.services.Engine;
+import com.frostwire.android.util.SystemUtils;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
+import com.frostwire.transfers.TransferState;
 import com.frostwire.util.DirectoryUtils;
 
 import java.io.File;
@@ -32,6 +35,8 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     private long size;
     private List<TransferItem> items;
 
+    private boolean noSpaceAvailableInSDCard;
+
     public UIBittorrentDownload(TransferManager manager, BTDownload dl) {
         this.manager = manager;
         this.dl = dl;
@@ -43,6 +48,12 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
         if (!dl.wasPaused()) {
             dl.resume();
+        }
+
+        try {
+            noSpaceAvailableInSDCard = TransfersFragment.isUsingSDCardPrivateStorage() && SystemUtils.getSDCardAvailableBytes() < size;
+        } catch (Throwable t) {
+
         }
     }
 
@@ -138,6 +149,9 @@ public final class UIBittorrentDownload implements BittorrentDownload {
 
     @Override
     public String getStatus() {
+        if (noSpaceAvailableInSDCard) {
+            return TransferState.ERROR_DISK_FULL.toString();
+        }
         return dl.getState().toString();
     }
 
