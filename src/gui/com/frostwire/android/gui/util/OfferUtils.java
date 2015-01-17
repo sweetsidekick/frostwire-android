@@ -108,11 +108,14 @@ public class OfferUtils {
     }
 
     public static void onFreeAppsClick(Context context) {
-        if (isfreeAppsEnabled()) {
+        if (isfreeAppsEnabled() && isMobileCoreEnabled() && MobileCore.isDirectToMarketReady()) {
             try {
+                MobileCore.directToMarket();
+                /**
                 Appia appia = Appia.getAppia();
                 appia.cacheAppWall(context);
                 appia.displayWall(context, WallDisplayType.FULL_SCREEN);
+                 */
             } catch (Throwable t) {
                 LOG.error("can't show app wall", t);
                 t.printStackTrace();

@@ -387,7 +387,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeMobileCore() {
         if (!mobileCoreStarted && OfferUtils.isMobileCoreEnabled()) {
             try {
-                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.STICKEEZ, MobileCore.AD_UNITS.NATIVE_ADS);
+                MobileCore.init(this,Constants.MOBILE_CORE_DEVHASH, MobileCore.LOG_TYPE.DEBUG, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.DIRECT_TO_MARKET);
                 MobileCore.setNativeAdsBannerSupport(true);
                 MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
                     @Override
