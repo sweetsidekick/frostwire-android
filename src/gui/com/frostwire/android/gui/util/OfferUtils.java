@@ -110,7 +110,8 @@ public class OfferUtils {
     public static void onFreeAppsClick(Context context) {
         if (isfreeAppsEnabled() && isMobileCoreEnabled() && MobileCore.isDirectToMarketReady()) {
             try {
-                MobileCore.directToMarket();
+                LOG.debug("onFreeAppsClick");
+                MobileCore.directToMarket((Activity) context);
                 /**
                 Appia appia = Appia.getAppia();
                 appia.cacheAppWall(context);

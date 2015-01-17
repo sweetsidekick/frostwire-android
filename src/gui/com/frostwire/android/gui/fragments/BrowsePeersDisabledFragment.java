@@ -62,7 +62,7 @@ public class BrowsePeersDisabledFragment extends Fragment implements MainFragmen
         freeAppsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OfferUtils.onFreeAppsClick(v.getContext());
+                OfferUtils.onFreeAppsClick(getActivity());
             }
         });
 

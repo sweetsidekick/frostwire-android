@@ -61,6 +61,6 @@
         android:layout_marginTop="20dp"
         android:minHeight="45dp"
         android:minWidth="150dp"
-        android:text="@string/free_apps" />
+        android:text="@string/free_sponsored_app" />
 
 </LinearLayout>
