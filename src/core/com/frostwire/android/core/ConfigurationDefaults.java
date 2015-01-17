@@ -70,8 +70,6 @@ final class ConfigurationDefaults {
         defaultValues.put(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, true);
         defaultValues.put(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, true);
         defaultValues.put(Constants.PREF_KEY_GUI_USE_MOBILE_CORE, true);
-        defaultValues.put(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_THRESHOLD, Constants.STICKY_THRESHOLD);
-        defaultValues.put(Constants.PREF_KEY_GUI_MOBILE_CORE_STICKY_REPEAT, true);
 
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_DOWNLOAD_FOR_TORRENT_DEEP_SCAN, 20);
         defaultValues.put(Constants.PREF_KEY_SEARCH_COUNT_ROUNDS_FOR_TORRENT_DEEP_SCAN, 10);

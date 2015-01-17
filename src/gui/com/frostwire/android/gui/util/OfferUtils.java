@@ -93,17 +93,6 @@ public class OfferUtils {
         }
     }
 
-    public static void showSticky(Activity callerActivity) {
-        if (isMobileCoreEnabled() && MobileCore.isStickeeReady() && !MobileCore.isStickeeShowing()) {
-            try {
-                MobileCore.setStickeezPosition(MobileCore.EStickeezPosition.MIDDLE_RIGHT);
-                MobileCore.showStickee(callerActivity);
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static void startOffercastLockScreen(final Context context) throws Exception {
         if (!OSUtils.isAmazonDistribution()) {
             try {

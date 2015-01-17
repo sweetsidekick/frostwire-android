@@ -103,8 +103,6 @@ public final class Constants {
     public static final String PREF_KEY_GUI_INITIALIZE_APPIA = "frostwire.prefs.gui.initialize_appia";
     public static final String PREF_KEY_GUI_USE_APPIA_SEARCH = "frostwire.prefs.gui.use_appia_search";
     public static final String PREF_KEY_GUI_USE_MOBILE_CORE = "frostwire.prefs.gui.use_mobile_core";
-    public static final String PREF_KEY_GUI_MOBILE_CORE_STICKY_THRESHOLD = "frostwire.prefs.gui.mobile_core.sticky.threshold";
-    public static final String PREF_KEY_GUI_MOBILE_CORE_STICKY_REPEAT = "frostwire.prefs.gui.mobile_core.sticky_repeat";
 
     public static final String PREF_KEY_TORRENT_MAX_DOWNLOAD_SPEED = "frostwire.prefs.torrent.max_download_speed";
     public static final String PREF_KEY_TORRENT_MAX_UPLOAD_SPEED = "frostwire.prefs.torrent.max_upload_speed";

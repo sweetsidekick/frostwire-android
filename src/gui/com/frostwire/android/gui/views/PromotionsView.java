@@ -18,7 +18,6 @@
 
 package com.frostwire.android.gui.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -30,11 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.PromotionsAdapter;
-import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.frostclick.Slide;
-import com.frostwire.logging.Logger;
-import com.ironsource.mobilcore.MobileCore;
-import com.ironsource.mobilcore.NativeAdsAdapter;
 
 import java.util.List;
 
@@ -76,25 +71,8 @@ public class PromotionsView extends LinearLayout {
 
     public void updateAdapter() {
         if (getSlides() != null) {
-            final PromotionsAdapter promotionsAdapter = new PromotionsAdapter(gridview.getContext(), getSlides());
-
-
-            if (OfferUtils.isMobileCoreEnabled() && OfferUtils.MOBILE_CORE_NATIVE_ADS_READY) {
-                initMobileCoreGridviewAdapter(promotionsAdapter);
-            } else {
-
-                gridview.setAdapter(promotionsAdapter);
-            }
+            gridview.setAdapter(new PromotionsAdapter(gridview.getContext(), getSlides()));
         }
-    }
-
-    private void initMobileCoreGridviewAdapter(PromotionsAdapter promotionsAdapter) {
-        final NativeAdsAdapter adsAdapter =
-                MobileCore.buildNativeAdsAdapter((Activity) gridview.getContext(),
-                        promotionsAdapter, R.layout.view_promotions_native_ads_item);
-        adsAdapter.setAdsFrequency(1, 3);
-
-        gridview.setAdapter(adsAdapter);
     }
 
     @Override

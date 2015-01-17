@@ -18,20 +18,13 @@
 
 package com.frostwire.android.gui.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
@@ -46,6 +39,10 @@ import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import org.apache.commons.io.FilenameUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gubatron
