@@ -877,7 +877,10 @@ public final class MusicUtils {
                 values.put(PlaylistsColumns.NAME, name);
                 final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                         values);
-                result = Long.parseLong(uri.getLastPathSegment());
+
+                if (uri != null) {
+                    result = Long.parseLong(uri.getLastPathSegment());
+                }
             }
 
             if (cursor != null) {
