@@ -302,6 +302,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         // We make the file "Shared" so it's visible for other FrostWire devices on the local network.
         else if (action != null && (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_SEND_MULTIPLE))) {
             controller.handleSendAction(intent);
+            intent.setAction(null);
         }
 
         if (intent.hasExtra(Constants.EXTRA_DOWNLOAD_COMPLETE_NOTIFICATION)) {
