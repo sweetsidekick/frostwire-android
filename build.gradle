@@ -150,10 +150,10 @@ gradle.taskGraph.whenReady { taskGraph ->
                 dialog(modal: true,
                         title: 'Enter keystore data',
                         alwaysOnTop: true,
-                        resizable: false,
+                        resizable: true,
                         locationRelativeTo: null,
-                        pack: true,
-                        show: true
+                        show: true,
+                        size: [215, 147]
                 ) {
                     vbox {
                         label(text: "Key Alias:")
