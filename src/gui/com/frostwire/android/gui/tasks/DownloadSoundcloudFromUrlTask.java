@@ -36,6 +36,7 @@ import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractListAdapter;
 import com.frostwire.android.gui.views.ContextTask;
 import com.frostwire.android.util.ImageLoader;
+import com.frostwire.core.CommonConstants;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchResult;
 import com.frostwire.search.soundcloud.SoundCloudRedirectResponse;
@@ -131,8 +132,8 @@ public final class DownloadSoundcloudFromUrlTask extends ContextTask<List<Soundc
         }*/
         
         //resolve track information using http://api.soundcloud.com/resolve?url=<url>&client_id=b45b1aa10f1ac2941910a7f0d10f8e28
-        final String clientId="b45b1aa10f1ac2941910a7f0d10f8e28";
-        final String appVersion="dd9d3970";
+        final String clientId= CommonConstants.SOUNDCLOUD_CLIENTID;
+        final String appVersion=CommonConstants.SOUNDCLOUD_APP_VERSION;
         try {
             String url = soundcloudUrl;
             if (soundcloudUrl.contains("?in=")) {

@@ -65,6 +65,9 @@ public class SoundcloudDownload extends TemporaryDownloadTransfer<SoundcloudSear
 
     @Override
     public int getProgress() {
+        if (delegate != null && delegate.isComplete()) {
+            return 100;
+        }
         return delegate != null ? delegate.getProgress() : 0;
     }
 
