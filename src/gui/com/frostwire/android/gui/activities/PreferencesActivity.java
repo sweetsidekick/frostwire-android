@@ -20,7 +20,6 @@ package com.frostwire.android.gui.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.*;
@@ -28,7 +27,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -54,6 +52,8 @@ import com.frostwire.uxstats.UXStats;
  */
 public class PreferencesActivity extends PreferenceActivity {
 
+    //private static final Logger LOG = Logger.getLogger(PreferencesActivity.class);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +77,8 @@ public class PreferencesActivity extends PreferenceActivity {
             getIntent().setAction(null);
             invokeStoragePreference();
         }
+
+        updateConnectSwitch();
     }
 
     @Override
@@ -169,9 +171,11 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void updateConnectSwitch() {
         SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+        final OnPreferenceChangeListener onPreferenceChangeListener = preference.getOnPreferenceChangeListener();
+        preference.setOnPreferenceChangeListener(null);
+
         preference.setSummary(R.string.bittorrent_network_summary);
         preference.setEnabled(true);
-
         if (Engine.instance().isStarted()) {
             preference.setChecked(true);
         } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
@@ -179,11 +183,15 @@ public class PreferencesActivity extends PreferenceActivity {
         } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
             preference.setChecked(false);
         }
+        preference.setOnPreferenceChangeListener(onPreferenceChangeListener);
     }
 
     private void connectSwitchImOnIt(SwitchPreference preference) {
+        final OnPreferenceChangeListener onPreferenceChangeListener = preference.getOnPreferenceChangeListener();
+        preference.setOnPreferenceChangeListener(null);
         preference.setEnabled(false);
         preference.setSummary(R.string.im_on_it);
+        preference.setOnPreferenceChangeListener(onPreferenceChangeListener);
     }
 
     private void setupUPnPOption() {
@@ -203,17 +211,17 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void setupConnectSwitch() {
-        updateConnectSwitch();
         SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
+
         preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (Engine.instance().isStarted()) {
+                final boolean newStatus = ((Boolean) newValue).booleanValue();
+                if (Engine.instance().isStarted() && !newStatus) {
                     disconnect();
-                } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
+                } else if (newStatus && (Engine.instance().isStopped() || Engine.instance().isDisconnected())) {
                     connect();
                 }
-
                 return true;
             }
         });
