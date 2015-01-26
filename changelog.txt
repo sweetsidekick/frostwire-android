@@ -1,4 +1,4 @@
-FrostWire 1.4.4 - JANUARY/22/2015
+FrostWire 1.4.4 - JANUARY/26/2015
  - Finished transfers no longer should show as paused.
  - Fixes issue adding a whole torrent after having added a single
    file belonging to that same torrent to transfers. Now the whole
@@ -10,6 +10,8 @@ FrostWire 1.4.4 - JANUARY/22/2015
    has failed.
  - Removes free apps ads from home page and sticky ads on transfer screens.
  - Fixes issue where toast about shared file would not go away.
+ - Fixes settings screen issue where some android devices would automatically
+   toggle the BitTorrent connection.
 
 FrostWire 1.4.3 - JANUARY/05/2015
  - Player un/favorites current track on double tap. Thanks @votaguz.
