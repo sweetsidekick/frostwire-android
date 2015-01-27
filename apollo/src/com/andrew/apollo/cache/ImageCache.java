@@ -456,6 +456,8 @@ public final class ImageCache {
         } catch (final OutOfMemoryError evict) {
             // Log.e(TAG, "OutOfMemoryError - getArtworkFromFile - ", evict);
             evictAll();
+        }  catch (final NullPointerException e) {
+            // Log.e(TAG, "NullPointerException - getArtworkFromFile - ", e);
         }
         return artwork;
     }
