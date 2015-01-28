@@ -25,6 +25,8 @@ import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
+import com.frostwire.uxstats.UXAction;
+import com.frostwire.uxstats.UXStats;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
 
@@ -83,6 +85,7 @@ public class OfferUtils {
         if (isMobileCoreEnabled() && mobileCoreStarted && MobileCore.isInterstitialReady()) {
             try {
                 MobileCore.showInterstitial(callerActivity, callbackResponse);
+                UXStats.instance().log(UXAction.MISC_INTERSTITIAL_SHOW);
             } catch (Throwable e) {
                 e.printStackTrace();
             }

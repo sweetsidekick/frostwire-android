@@ -551,6 +551,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         OfferUtils.showInterstitial(this, mobileCoreStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
+                LOG.info("showInterstitial() -> CallbackResponse::onConfirmation(" + type + ")");
                 finish();
             }
         });
