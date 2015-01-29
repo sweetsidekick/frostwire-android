@@ -1,4 +1,4 @@
-FrostWire 1.4.4 - JANUARY/27/2015
+FrostWire 1.4.4 - JANUARY/29/2015
  - Finished transfers no longer should show as paused.
  - Fixes issue adding a whole torrent after having added a single
    file belonging to that same torrent to transfers. Now the whole
@@ -13,6 +13,7 @@ FrostWire 1.4.4 - JANUARY/27/2015
  - Fixes settings screen issue where some android devices would automatically
    toggle the BitTorrent connection.
  - Fixes issues with YouTube search.
+ - Urdu translation started.
 
 FrostWire 1.4.3 - JANUARY/05/2015
  - Player un/favorites current track on double tap. Thanks @votaguz.
