@@ -1,6 +1,7 @@
 FrostWire 1.4.5 - FEBRUARY/06/2015
+ - Youtube search improvements.
  - Removed Torrents.fm search, service was shutdown.
- - Youtube search updates.
+ - Fixes issue when removing last song on a playlist.
 
 FrostWire 1.4.4 - JANUARY/29/2015
  - Finished transfers no longer should show as paused.
