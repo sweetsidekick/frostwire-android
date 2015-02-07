@@ -230,8 +230,6 @@
     <string name="use_clearbits">Use ClearBits.net</string>
     <string name="use_tpb">Use TPB</string>
     <string name="use_tpb_summary">TPB is magnet based, works only on Wi-Fi</string>
-    <string name="use_torrentsfm">Use Torrents.fm</string>
-    <string name="use_torrentsfm_summary">Torrents.fm is magnet based, works only on Wi-Fi</string>
     <string name="use_monova">Use Monova</string>
     <string name="use_monova_summary">Monova is magnet based, works only on Wi-Fi</string>
     <string name="use_extratorrent">Use ExtraTorrent.com</string>

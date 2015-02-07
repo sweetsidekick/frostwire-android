@@ -41,7 +41,6 @@ import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
 import com.frostwire.search.tbp.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
-import com.frostwire.search.torrentsfm.TorrentsfmSearchPerformer;
 import com.frostwire.search.yify.YifySearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
 
@@ -219,19 +218,6 @@ public abstract class SearchEngine {
         }
     };
     
-    public static final SearchEngine TORRENTSFM = new SearchEngine("Torrents.fm", Constants.PREF_KEY_SEARCH_USE_TORRENTSFM) {
-        @Override
-        public SearchPerformer getPerformer(long token, String keywords) {
-            TorrentsfmSearchPerformer performer = null;
-            if (NetworkManager.instance().isDataWIFIUp()) {
-                performer = new TorrentsfmSearchPerformer(new DomainAliasManager("torrents.fm"), token, keywords, DEFAULT_TIMEOUT);
-            } else {
-                LOG.info("No TorrentsfmSearchPerformer, WiFi not up");
-            }
-            return performer;
-        }
-    };
-
     public static final SearchEngine BTJUNKIE = new SearchEngine("Btjunkie.eu", Constants.PREF_KEY_SEARCH_USE_BTJUNKIE) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -245,5 +231,5 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, TORRENTSFM, APPIA);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
 }
