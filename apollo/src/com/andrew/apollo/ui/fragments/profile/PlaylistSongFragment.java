@@ -31,6 +31,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.andrew.apollo.Config;
+import com.andrew.apollo.adapters.PlaylistAdapter;
 import com.frostwire.android.R;
 import com.andrew.apollo.adapters.ProfileSongAdapter;
 import com.andrew.apollo.dragdrop.DragSortListView;
@@ -131,12 +132,13 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Create the adpater
+        // Create the adapter
         mAdapter = new ProfileSongAdapter(
                 getActivity(),
                 R.layout.edit_track_list_item,
                 ProfileSongAdapter.DISPLAY_PLAYLIST_SETTING
         );
+
     }
 
     /**
@@ -298,9 +300,15 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
                     return true;
                 case FragmentMenuItems.REMOVE_FROM_PLAYLIST:
                     mAdapter.remove(mSong);
-                    mAdapter.notifyDataSetChanged();
                     MusicUtils.removeFromPlaylist(getActivity(), mSong.mSongId, mPlaylistId);
+                    final long[] songListForPlaylist = MusicUtils.getSongListForPlaylist(getActivity(), mPlaylistId);
+                    if (songListForPlaylist.length == 0) {
+                        mAdapter.clear();
+                        mListView.setVisibility(View.GONE);
+                    }
                     getLoaderManager().restartLoader(LOADER, null, this);
+                    SystemClock.sleep(100);
+                    mAdapter.notifyDataSetChanged();
                     return true;
                 default:
                     break;

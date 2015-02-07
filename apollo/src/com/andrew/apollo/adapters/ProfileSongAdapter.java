@@ -118,6 +118,8 @@ public class ProfileSongAdapter extends ArrayAdapter<Song> {
         mLayoutId = layoutId;
         // Know what to put in line two
         mDisplaySetting = setting;
+
+        setNotifyOnChange(true);
     }
 
     /**
@@ -244,6 +246,7 @@ public class ProfileSongAdapter extends ArrayAdapter<Song> {
      * Method that unloads and clears the items in the adapter
      */
     public void unload() {
+        mCount.clear();
         clear();
     }
 
