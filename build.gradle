@@ -136,6 +136,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.google.android.gms:play-services:6.5.87'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 

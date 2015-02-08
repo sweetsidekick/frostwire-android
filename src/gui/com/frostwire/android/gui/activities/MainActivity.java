@@ -376,7 +376,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeAppia() {
         if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
             try {
-                Appia appia = Appia.getAppia();
+                Appia appia = Appia.getAppia(this);
                 appia.setSiteId(3867);
                 appiaStarted = true;
             } catch (Throwable t) {

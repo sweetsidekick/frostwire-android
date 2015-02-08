@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
+import com.appia.sdk.BannerAdSize;
 import com.appia.sdk.InterstitialSize;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -104,10 +105,10 @@ public class OfferUtils {
             }
         } else if (isAppiaInterstitialEnabled() && appiaStarted) {
             try {
-                final Appia appia = Appia.getAppia();
-                InterstitialSize size = OSUtils.isScreenOrientationPortrait(callerActivity) ?
-                        InterstitialSize.SIZE_768x1024 : InterstitialSize.SIZE_1024x768;
-                appia.displayInterstitial(callerActivity, size);
+                final Appia appia = Appia.getAppia(callerActivity);
+                BannerAdSize size = OSUtils.isScreenOrientationPortrait(callerActivity) ?
+                        BannerAdSize.SIZE_768x1024 : BannerAdSize.SIZE_1024x768;
+                appia.displayInterstitial(callerActivity, null, size);
             } catch (Throwable e) {
                 e.printStackTrace();
             }
