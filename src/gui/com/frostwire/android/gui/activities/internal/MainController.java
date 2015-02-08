@@ -19,6 +19,7 @@
 package com.frostwire.android.gui.activities.internal;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import com.andrew.apollo.ui.activities.AudioPlayerActivity;
@@ -99,9 +100,9 @@ public final class MainController {
         activity.startActivity(intent);
     }
 
-    public void showFreeApps() {
+    public void showFreeApps(Context context) {
         try {
-            Appia appia = Appia.getAppia();
+            Appia appia = Appia.getAppia(context);
             appia.cacheAppWall(activity);
             appia.displayWall(activity, WallDisplayType.FULL_SCREEN);
         } catch (Throwable e) {

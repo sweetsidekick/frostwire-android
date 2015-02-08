@@ -41,6 +41,7 @@ import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
 import com.appia.sdk.Appia;
+import com.appia.sdk.InterstitialSize;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -233,9 +234,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         });
 
         setupFragments();
-
         setupMenuItems();
-
         setupInitialFragment(savedInstanceState);
 
         if (savedInstanceState != null) {
@@ -348,7 +347,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         checkLastSeenVersion();
         registerMainBroadcastReceiver();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -378,6 +377,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             try {
                 Appia appia = Appia.getAppia(this);
                 appia.setSiteId(3867);
+                appia.startSession();
+                appia.setHardwareAcceleratedWall(true);
                 appiaStarted = true;
             } catch (Throwable t) {
                 appiaStarted = false;
@@ -617,7 +618,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                     } else if (id == R.id.menu_launch_tv) {
                         controller.launchFrostWireTV();
                     } else if (id == R.id.menu_free_apps) {
-                        controller.showFreeApps();
+                        controller.showFreeApps(MainActivity.this);
                     } else if (id == R.id.menu_main_shutdown) {
                         showShutdownDialog();
                     } else if (id == R.id.menu_main_my_music) {
