@@ -548,7 +548,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void onLastDialogButtonPositive() {
-        OfferUtils.showInterstitial(this, mobileCoreStarted, new CallbackResponse() {
+        OfferUtils.showInterstitial(this, mobileCoreStarted, appiaStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
                 LOG.info("showInterstitial() -> CallbackResponse::onConfirmation(" + type + ")");
@@ -558,7 +558,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void onShutdownDialogButtonPositive() {
-        OfferUtils.showInterstitial(this, mobileCoreStarted, new CallbackResponse() {
+        OfferUtils.showInterstitial(this, mobileCoreStarted, appiaStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
                 controller.shutdown();

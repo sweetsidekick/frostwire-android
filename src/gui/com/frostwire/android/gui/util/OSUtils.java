@@ -19,6 +19,8 @@
 
 package com.frostwire.android.gui.util;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import com.frostwire.android.core.Constants;
 
@@ -48,5 +50,14 @@ public final class OSUtils {
 
     public static boolean isAmazonDistribution() {
         return Constants.IS_AMAZON_DISTRIBUTION;
+    }
+
+    public static boolean isScreenOrientationPortrait(Context context) {
+        try {
+            return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        } catch (Throwable t) {
+            //let's assume the user is holding the device in its natural way if we fail to retrieve the current orientation
+            return true;
+        }
     }
 }

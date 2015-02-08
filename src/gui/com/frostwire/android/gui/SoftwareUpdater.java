@@ -321,6 +321,7 @@ public final class SoftwareUpdater {
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN, update.config.offercastLockScreen);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA, update.config.appia);
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_SEARCH, update.config.appiaSearch);
+        ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_APPIA_INTERSTITIAL, update.config.appiaInterstitial);
 
         ConfigurationManager.instance().setBoolean(Constants.PREF_KEY_GUI_USE_MOBILE_CORE, update.config.mobileCore);
 
@@ -376,11 +377,9 @@ public final class SoftwareUpdater {
         public boolean tv = true;
         public boolean appia = true;
         public boolean appiaSearch = true;
+        public boolean appiaInterstitial = true;
         public boolean offercastLockScreen = true;
         public boolean mobileCore = true;
-        public boolean mobileCoreStickyRepeat = true;
-        public int mobileCoreStickyThreshold = Constants.STICKY_THRESHOLD;
-
         // ux stats
         public boolean uxEnabled = false;
         public int uxPeriod = 3600;

@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import com.appia.sdk.Appia;
 import com.appia.sdk.Appia.WallDisplayType;
+import com.appia.sdk.InterstitialSize;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
@@ -61,6 +62,18 @@ public class OfferUtils {
         }
         return isAppiaSearchEnabled;
     }
+
+    public static boolean isAppiaInterstitialEnabled() {
+        ConfigurationManager config = null;
+        boolean isAppiaInterstitialEnabled = false;
+        try {
+            config = ConfigurationManager.instance();
+            isAppiaInterstitialEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_USE_APPIA_INTERSTITIAL)) && !OSUtils.isAmazonDistribution();
+        } catch (Throwable t) {
+        }
+        return isAppiaInterstitialEnabled;
+    }
+
     public static boolean isMobileCoreEnabled() {
         ConfigurationManager config = null;
         boolean isMobileCoreEnabled = false;
@@ -81,7 +94,7 @@ public class OfferUtils {
      * @param mobileCoreStarted
      * @param callbackResponse
      */
-    public static void showInterstitial(Activity callerActivity, boolean mobileCoreStarted, CallbackResponse callbackResponse) {
+    public static void showInterstitial(Activity callerActivity, boolean mobileCoreStarted, boolean appiaStarted, CallbackResponse callbackResponse) {
         if (isMobileCoreEnabled() && mobileCoreStarted && MobileCore.isInterstitialReady()) {
             try {
                 MobileCore.showInterstitial(callerActivity, callbackResponse);
@@ -89,7 +102,17 @@ public class OfferUtils {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        } else {
+        } else if (isAppiaInterstitialEnabled() && appiaStarted) {
+            try {
+                final Appia appia = Appia.getAppia();
+                InterstitialSize size = OSUtils.isScreenOrientationPortrait(callerActivity) ?
+                        InterstitialSize.SIZE_768x1024 : InterstitialSize.SIZE_1024x768;
+                appia.displayInterstitial(callerActivity, size);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+        else {
             if (callbackResponse != null) {
                 callbackResponse.onConfirmation(null);
             }
