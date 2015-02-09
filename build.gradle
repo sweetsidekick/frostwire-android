@@ -25,7 +25,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.0.1'
     }
 }
 
@@ -104,7 +104,7 @@ android {
     buildTypes {
 
         release {
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
 
         debug {
@@ -132,16 +132,17 @@ android {
 }
 
 dependencies {
-    compile ('com.android.support:support-v4:21.0.2') {
+    compile ('com.android.support:support-v4:21.0.3') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.google.android.gms:play-services-ads:6.5.87'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.hasTask(":assembleRelease")) {
+    /*
+    if (taskGraph.hasTask(':assembleRelease')) {
 
         def myKeyAlias = ""
         def myKeyPassword = ""
@@ -179,5 +180,5 @@ gradle.taskGraph.whenReady { taskGraph ->
         android.signingConfigs.release.keyAlias = myKeyAlias
         android.signingConfigs.release.storePassword = myKeyPassword
         android.signingConfigs.release.keyPassword = myKeyPassword
-    }
+    }*/
 }

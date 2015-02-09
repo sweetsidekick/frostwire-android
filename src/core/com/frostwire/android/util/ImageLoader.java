@@ -194,7 +194,7 @@ public final class ImageLoader {
         }
 
         @Override
-        public Result load(Request data) throws IOException {
+        public Result load(Request data, int networkPolicy) throws IOException {
             String authority = data.uri.getAuthority();
 
             if (APPLICATION_AUTHORITY.equals(authority)) {

@@ -82,6 +82,11 @@ final class ImageCache implements Cache {
         mem.clear();
     }
 
+    @Override
+    public void clearKeyUri(String keyPrefix) {
+        mem.clearKeyUri(keyPrefix);
+    }
+
     private InputStream getInputStream(Bitmap bmp) {
         ByteArrayOutputStream out = new ByteArrayOutputStream(bmp.getByteCount());
         bmp.compress(CompressFormat.PNG, 100, out);
