@@ -104,7 +104,7 @@ android {
     buildTypes {
 
         release {
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
 
         debug {
@@ -141,7 +141,6 @@ dependencies {
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    /*
     if (taskGraph.hasTask(':assembleRelease')) {
 
         def myKeyAlias = ""
@@ -180,5 +179,5 @@ gradle.taskGraph.whenReady { taskGraph ->
         android.signingConfigs.release.keyAlias = myKeyAlias
         android.signingConfigs.release.storePassword = myKeyPassword
         android.signingConfigs.release.keyPassword = myKeyPassword
-    }*/
+    }
 }
