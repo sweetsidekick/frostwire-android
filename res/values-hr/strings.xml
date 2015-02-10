@@ -55,8 +55,8 @@
     <string name="peer">Peer</string>
     <string name="peers">Peer-ovi</string>
     <string name="copy">Kopiraj</string>
-    <string name="audio">Audio</string>
-    <string name="audio_music">Audio/Glazba</string>
+    <string name="audio">Zvučni</string>
+    <string name="audio_music">Zvučni/Glazba</string>
     <string name="video">Video</string>
     <string name="application">Aplikacija</string>
     <string name="applications">Aplikacije</string>
@@ -169,7 +169,7 @@
     <string name="delete_file_menu_action">Izbrisati</string>
     <string name="open_menu_action">Otvori %s</string>
     <string name="media_type_all_types">Svi tipovi</string>
-    <string name="media_type_audio">Audio</string>
+    <string name="media_type_audio">Zvučni</string>
     <string name="media_type_video">Video</string>
     <string name="media_type_images">Slike</string>
     <string name="media_type_torrents">Torrenti</string>
