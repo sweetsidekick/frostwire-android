@@ -2,7 +2,7 @@
 <!--
 /*
  * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
- * Copyright (c) 2011-2014, FrostWire(R). All rights reserved.
+ * Copyright (c) 2011-2015, FrostWire(R). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,16 +106,6 @@
         android:background="@color/body_background_gray_light"
         android:fadingEdge="none"
         android:groupIndicator="@android:color/transparent" />
-
-    <LinearLayout
-        android:id="@+id/activity_mediaplayer_donations_view_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="visible" >
-
-        <include layout="@layout/view_donations" />
-    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

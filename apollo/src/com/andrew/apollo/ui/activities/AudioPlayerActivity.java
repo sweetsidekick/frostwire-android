@@ -51,12 +51,8 @@ import com.andrew.apollo.widgets.RepeatingImageButton;
 import com.andrew.apollo.widgets.ShuffleButton;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.adapters.menu.AddToPlaylistMenuAction;
-import com.frostwire.android.gui.billing.Biller;
-import com.frostwire.android.gui.billing.BillerFactory;
-import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractSwipeDetector;
 import com.frostwire.android.gui.views.ClickAdapter;
-import com.frostwire.android.gui.views.DonationsController;
 import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -202,7 +198,6 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
 
         mPlayPauseButton.setOnLongClickListener(new StopListener(this, true));
         findViewById(R.id.audio_player_album_art).setOnTouchListener(new PlayerGesturesDetector(this));
-        initSupportFrostWire();
     }
 
     /**
@@ -490,10 +485,6 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
             unregisterReceiver(mPlaybackStatus);
         } catch (final Throwable e) {
             //$FALL-THROUGH$
-        }
-
-        if (biller != null) {
-            biller.onDestroy();
         }
     }
 
@@ -1081,31 +1072,6 @@ public class AudioPlayerActivity extends FragmentActivity implements ServiceConn
     private void toggleFavorite() {
         MusicUtils.toggleFavorite();
         invalidateOptionsMenu();
-    }
-
-    private Biller biller;
-    private final DonationsController donationsController = new DonationsController();
-
-    private void initSupportFrostWire() {
-        View donationsView = findViewById(R.id.activity_audio_player_donations);
-        biller = BillerFactory.getInstance(this);
-
-        if (donationsView != null && biller != null) {
-            donationsView.setVisibility(View.GONE);
-
-            if (biller.isInAppBillingSupported()) {
-                UIUtils.supportFrostWire(donationsView);
-            }
-
-            if (donationsView.getVisibility() == View.VISIBLE) {
-                donationsController.setup(this, donationsView, biller);
-            } else {
-                View div3view = findViewById(R.id.activity_audio_player_div3);
-                if (div3view !=null){
-                    div3view.setVisibility(View.GONE);
-                }
-            }
-        }
     }
 
     private final static class ActionBarTextViewClickListener extends ClickAdapter<AudioPlayerActivity> {

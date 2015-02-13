@@ -18,15 +18,8 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.frostwire.android.gui.util.UIUtils;
-import org.apache.commons.io.IOUtils;
-
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -35,12 +28,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.Constants;
-import com.frostwire.android.gui.billing.Biller;
-import com.frostwire.android.gui.billing.BillerFactory;
-import com.frostwire.android.gui.views.DonationsController;
+import com.frostwire.android.gui.util.UIUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author gubatron
@@ -49,19 +43,12 @@ import com.frostwire.android.gui.views.DonationsController;
  */
 public class AboutFragment extends Fragment implements MainFragment {
 
-    private Biller biller;
-    private final DonationsController donationsController;
-
     public AboutFragment() {
-        this.donationsController = new DonationsController();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        biller = BillerFactory.getInstance(getActivity());
-
-        donationsController.setup(getActivity(), getView(), biller);
     }
     
     @Override
@@ -103,9 +90,6 @@ public class AboutFragment extends Fragment implements MainFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (biller != null) {
-            biller.onDestroy();
-        }
     }
 
     private String getAboutText() {
