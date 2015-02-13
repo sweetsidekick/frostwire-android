@@ -24,6 +24,7 @@ import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.*;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -41,7 +42,6 @@ import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
 import com.appia.sdk.Appia;
-import com.appia.sdk.InterstitialSize;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -329,9 +329,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         refreshPeersFragment();
         refreshPlayerItem();
 
-        initializeMobileCore();
-        initializeOffercastLockScreen();
-        initializeAppia();
+        initAffiliatesAsync();
 
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
@@ -346,6 +344,25 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
         checkLastSeenVersion();
         registerMainBroadcastReceiver();
+    }
+
+    private void initAffiliatesAsync() {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                initializeMobileCore();
+                return null;
+            }
+        }.execute();
+
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                initializeAppia();
+                return null;
+            }
+        }.execute();
+
     }
 
     @Override
@@ -375,7 +392,7 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     private void initializeAppia() {
         if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
             try {
-                Appia appia = Appia.getAppia(this);
+                Appia appia = Appia.getAppia(MainActivity.this);
                 appia.setSiteId(3867);
                 appia.startSession();
                 appia.setHardwareAcceleratedWall(true);
@@ -423,17 +440,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
                     com.ironsource.mobilcore.MobileCoreReport.class));
         } catch (Throwable t) {
             t.printStackTrace();
-        }
-    }
-
-    private void initializeOffercastLockScreen() {
-        if (!offercastLockScreenStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_OFFERCAST_LOCKSCREEN)) {
-            try {
-                OfferUtils.startOffercastLockScreen(getApplicationContext());
-                offercastLockScreenStarted = true;
-            } catch (Exception e) {
-                offercastLockScreenStarted = false;
-            }
         }
     }
 
