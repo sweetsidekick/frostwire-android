@@ -205,24 +205,6 @@
 
                 <include layout="@layout/audio_player_controls" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/layout_divider_1_gray" />
-
-            <LinearLayout
-                android:layout_gravity="bottom"
-                android:id="@+id/activity_audio_player_donations"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/body_background_gray"
-                android:baselineAligned="false"
-                android:divider="@drawable/layout_divider_1_gray"
-                android:showDividers="middle"
-                android:visibility="visible" >
-            </LinearLayout>
-
         </LinearLayout>
     </RelativeLayout>
 

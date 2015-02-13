@@ -185,6 +185,7 @@
             android:layout_alignBottom="@android:id/progress"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@android:id/progress"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:textSize="@dimen/text_size_medium"
             app:themeResource="audio_player_current_time" />
@@ -230,22 +231,6 @@
                 <include layout="@layout/audio_player_controls" />
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/layout_divider_1_gray" />
-
-            <LinearLayout
-                android:id="@+id/activity_audio_player_donations"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/body_background_gray"
-                android:divider="@drawable/layout_divider_1_gray"
-                android:showDividers="middle">
-            </LinearLayout>
-
         </LinearLayout>
     </RelativeLayout>
 
