@@ -851,5 +851,4 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         searchFragment.performYTSearch(ytUrl);
         switchContent(searchFragment);
     }
-
 }

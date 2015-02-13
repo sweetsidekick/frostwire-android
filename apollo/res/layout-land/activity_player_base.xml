@@ -221,9 +221,6 @@
                 android:divider="@drawable/layout_divider_1_gray"
                 android:showDividers="middle"
                 android:visibility="visible" >
-
-                <include
-                    layout="@layout/view_donations2" />
             </LinearLayout>
 
         </LinearLayout>

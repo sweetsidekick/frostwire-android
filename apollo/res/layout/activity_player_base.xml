@@ -244,9 +244,6 @@
                 android:background="@color/body_background_gray"
                 android:divider="@drawable/layout_divider_1_gray"
                 android:showDividers="middle">
-
-                <include layout="@layout/view_donations2" />
-
             </LinearLayout>
 
         </LinearLayout>

@@ -18,13 +18,6 @@
 
 package com.frostwire.android.gui.fragments;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipData.Item;
@@ -37,13 +30,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -51,31 +40,20 @@ import com.frostwire.android.gui.NetworkManager;
 import com.frostwire.android.gui.activities.MainActivity;
 import com.frostwire.android.gui.activities.PreferencesActivity;
 import com.frostwire.android.gui.adapters.TransferListAdapter;
-import com.frostwire.android.gui.billing.Biller;
-import com.frostwire.android.gui.billing.BillerFactory;
 import com.frostwire.android.gui.dialogs.MenuDialog;
 import com.frostwire.android.gui.dialogs.MenuDialog.MenuItem;
 import com.frostwire.android.gui.tasks.DownloadSoundcloudFromUrlTask;
-import com.frostwire.android.gui.transfers.BittorrentDownload;
-import com.frostwire.android.gui.transfers.HttpDownload;
-import com.frostwire.android.gui.transfers.SoundcloudDownload;
-import com.frostwire.android.gui.transfers.Transfer;
-import com.frostwire.android.gui.transfers.TransferManager;
-import com.frostwire.android.gui.transfers.YouTubeDownload;
+import com.frostwire.android.gui.transfers.*;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.AbstractDialog.OnDialogClickListener;
-import com.frostwire.android.gui.views.AbstractFragment;
-import com.frostwire.android.gui.views.ClearableEditTextView;
+import com.frostwire.android.gui.views.*;
 import com.frostwire.android.gui.views.ClearableEditTextView.OnActionListener;
-import com.frostwire.android.gui.views.ClickAdapter;
-import com.frostwire.android.gui.views.DonationsController;
-import com.frostwire.android.gui.views.RichNotification;
-import com.frostwire.android.gui.views.TimerObserver;
-import com.frostwire.android.gui.views.TimerService;
-import com.frostwire.android.gui.views.TimerSubscription;
 import com.frostwire.logging.Logger;
 import com.frostwire.util.Ref;
 import com.frostwire.util.StringUtils;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * 
@@ -106,31 +84,20 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
 
     private TimerSubscription subscription;
 
-    private Biller biller;
-    private final DonationsController donationsController;
-
     public TransfersFragment() {
         super(R.layout.fragment_transfers);
-
         this.transferComparator = new TransferComparator();
         this.buttonAddTransferListener = new ButtonAddTransferListener(this);
         this.buttonMenuListener = new ButtonMenuListener(this);
-
         selectedStatus = TransferStatus.ALL;
-
-        this.donationsController = new DonationsController();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        initSupportFrostWire();
-
         if (savedInstanceState != null) {
             selectedStatus = TransferStatus.valueOf(savedInstanceState.getString(SELECTED_STATUS_STATE_KEY, TransferStatus.ALL.name()));
         }
-
         addTransferUrlTextView = findView(getView(), R.id.fragment_transfers_add_transfer_text_input);
         addTransferUrlTextView.replaceSearchIconDrawable(R.drawable.clearable_edittext_add_icon);
         addTransferUrlTextView.setFocusable(true);
@@ -138,30 +105,9 @@ public class TransfersFragment extends AbstractFragment implements TimerObserver
         addTransferUrlTextView.setOnKeyListener(new AddTransferTextListener(this));
     }
 
-    private void initSupportFrostWire() {
-        View donationsView = getActivity().findViewById(R.id.activity_mediaplayer_donations_view_placeholder);
-
-        biller = BillerFactory.getInstance(getActivity());
-
-        if (biller != null) {
-            donationsView.setVisibility(View.GONE);
-
-            if (biller.isInAppBillingSupported()) {
-                UIUtils.supportFrostWire(donationsView);
-            }
-
-            if (donationsView.getVisibility() == View.VISIBLE) {
-                donationsController.setup(getActivity(), donationsView, biller);
-            }
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (biller != null) {
-            biller.onDestroy();
-        }
     }
     
     @Override
