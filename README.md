@@ -2,9 +2,9 @@
 
 **A file sharing client, media player and simple file manager for your Android devices.**
 
-FrostWire for Android lets you search and download files from the BitTorrent network and several popular cloud services and it also lets you share files with other FrostWire for Android devices on the same local network (via WiFi)
+FrostWire for Android lets you search and download files from the BitTorrent network and several popular cloud services and it also lets you share files with other FrostWire for Android devices on the same local network (via WiFi).
 
-The local sharing happens through a simple JSON/HTTP protocol (still to be documented, you can look at how it works on the code for now, very very simple)
+The local sharing happens through a simple JSON/HTTP protocol (this is still to be documented but you can look at how it works on the code for now, very very simple).
 
 ![](http://i.imgur.com/U20h8cL.png)
 - - -
@@ -50,10 +50,10 @@ git rebase master
 ```
    as you do this you may have to fix any possible conflicts, just follow the instruction git gives you if this is your first time.
 
-- Make sure to **squash** any cosmetic commits into the body of your work so that we don't pollute the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
+- Make sure to `squash` any cosmetic commits into the body of your work so that we don't pollute the history and you don't get more bitcoins than you should from the rest of the collaborators for things like fixing a typo you just introduced on your branch.
 
 
-# Tip for commit
+# Tip4Commit
 
 You can donate for development, thereby encouraging some developers or you can participate and get a tip for commits approved us.
 
@@ -64,8 +64,8 @@ You can donate for development, thereby encouraging some developers or you can p
 ## Android Studio
 
 1. Make sure you have [Android Studio](https://developer.android.com/sdk/installing/studio.html) properly installed.
-2. Make sure you have frostwire-android, frostwire-common and frostwire-jlibtorrent repos in the same folder.
-3. Open the project in android studio.
+2. Make sure you have `frostwire-android`, `frostwire-common` and `frostwire-jlibtorrent` repos in the same folder.
+3. Open the project in Android Studio.
 4. Wait for gradle sync and indices to update.
 5. Should work out of the box.
 
