@@ -90,13 +90,24 @@ public class NotificationHelper {
         // Set up the content view
         initCollapsedLayout(trackName, artistName, albumArt);
 
+        //  Save this for debugging
+        pendingintent = getPendingIntent();
+
         // Notification Builder
         mNotification = new NotificationCompat.Builder(mService)
                 .setSmallIcon(R.drawable.frostwire_notification)
-                .setContentIntent(getPendingIntent())
+                .setContentIntent(pendingintent)
                 .setPriority(0)//(Notification.PRIORITY_DEFAULT)
                 .setContent(mNotificationTemplate)
                 .build();
+        if (mNotification == null) {
+            throw new NullPointerException(
+                     String.format("%1$s: %2$s: (%3$s, %4$s, %5$s, %6$d, Bitmap?%7$b, %8$b) PendingIntent?%9$b",
+                     getClass().getName(), mService.getPackageName(),
+                     albumName, artistName, trackName, albumId,
+                     albumArt instanceof Bitmap, isPlaying,
+                     pendingintent instanceof PendingIntent));
+        }
         // Control playback from the notification
         initPlaybackActions(isPlaying);
         if (ApolloUtils.hasJellyBean()) {
@@ -109,6 +120,7 @@ public class NotificationHelper {
             // Set up the expanded content view
             initExpandedLayout(trackName, albumName, artistName, albumArt);
         }
+        // d7fa67cc74 NotificationHelper.java:102
         mService.startForeground(APOLLO_MUSIC_SERVICE, mNotification);
     }
 
