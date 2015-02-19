@@ -169,12 +169,14 @@ public abstract class AbstractListAdapter<T> extends BaseAdapter implements Filt
     public T getItem(int position) {
         try {
             return visualList.get(position);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (e instanceof IndexOutOfBoundsException) {
-                throw new Exception(getClass().getName() + ": " + position + " of " + getCount(), e);
+                IndexOutOfBoundsException ioobe = new IndexOutOfBoundsException(getClass().getName() + ": " + position + " of " + getCount());
+                ioobe.setStackTrace(e.getStackTrace());
+                throw ioobe;
             }
-            throw e;
         }
+        return null;
     }
 
     public long getItemId(int position) {
