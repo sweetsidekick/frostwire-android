@@ -125,17 +125,12 @@ public class MainApplication extends Application {
         // this hack is only due to the remaining vuze TOTorrent code
         URL.setURLStreamHandlerFactory(new AzURLStreamHandlerFactory());
 
-        BTContext ctx = new BTContext();
-        ctx.homeDir = SystemPaths.getLibTorrent(this);
-        ctx.torrentsDir = SystemPaths.getTorrents();
-        ctx.dataDir = SystemPaths.getTorrentData();
-        ctx.port0 = 0;
-        ctx.port1 = 0;
-        ctx.iface = "0.0.0.0";
-        ctx.optimizeMemory = true;
-
-        BTEngine.ctx = ctx;
-
+        BTEngine.ctx = new BTContext();
+        BTEngine.getInstance().reloadBTContext(SystemPaths.getTorrents(),
+                SystemPaths.getTorrentData(),
+                SystemPaths.getLibTorrent(this),
+                0,0,"0.0.0.0",false,false);
+        BTEngine.ctx.optimizeMemory = true;
         BTEngine.getInstance().start();
     }
 
