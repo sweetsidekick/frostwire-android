@@ -61,6 +61,7 @@ public class StartDownloadTask extends ContextTask<DownloadTransfer> {
             transfer = TransferManager.instance().download(sr);
         } catch (Throwable e) {
             LOG.warn("Error adding new download from result: " + sr, e);
+            e.printStackTrace();
         }
         return transfer;
     }
