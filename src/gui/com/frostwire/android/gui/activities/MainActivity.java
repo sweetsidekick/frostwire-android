@@ -347,22 +347,16 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initAffiliatesAsync() {
-        new AsyncTask() {
+        new Thread() {
             @Override
-            protected Object doInBackground(Object[] params) {
-                initializeMobileCore();
-                return null;
-            }
-        }.execute();
-
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
+            public void run() {
                 initializeAppia();
-                return null;
             }
-        }.execute();
+        }.start();
 
+        // MC needs to be created in UI thread to properly set handlers
+        // otherwise we get a runtime exception and worker thread dies.
+        initializeMobileCore();
     }
 
     @Override
