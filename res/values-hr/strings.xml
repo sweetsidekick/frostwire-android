@@ -99,7 +99,7 @@
     <string name="clear_messages">Izbriši poruku</string>
     <string name="chat_actions">Akcije razgovora</string>
     <string name="preferences">Postavke</string>
-    <string name="please_connect">Spojite se kako bi ste koristili ovu opciju</string>
+    <string name="please_connect">Spojite se kako biste koristili ovu opciju</string>
     <string name="remove">Maknuti</string>
     <string name="try_valid_port_next_time">Pokušajte valjani port sljedeći put 1000 i 65500</string>
     <string name="still_listening_on_port">Još uvijek slušam na portu</string>
@@ -108,7 +108,7 @@
     <string name="now_on_port">Sada na portu</string>
     <string name="stop_all_transfers_message">Ovo će poništiti sva preuzimanja u tijeku. Svi preneseni podatci biti će izgubljeni. Jeste li sigurni?</string>
     <string name="files">datoteke</string>
-    <string name="touch_filetype_icon">Dodirnite ikonu kako bi ste promijenili tip datoteke</string>
+    <string name="touch_filetype_icon">Dodirnite ikonu kako biste promijenili tip datoteke</string>
     <string name="tos_title">Uvjeti korištenja</string>
     <string name="tos_accept">Prihvati</string>
     <string name="tos_refuse">Odbij</string>
@@ -403,19 +403,19 @@
     <string name="no_results_feedback">Nema pronađenih rezultata.\n\nProvjerite vašu internetsku vezu ili\nprobajte druge pretražne uvjete.</string>
     <string name="paused_song_name">Paused %s</string>
     <string name="seed">Dijeli</string>
-    <string name="you_need_a_bitcoin_wallet_app">You need a Bitcoin wallet installed on you device to submit a BTC donation.</string>
+    <string name="you_need_a_bitcoin_wallet_app">Morate imati instaliranu Bitcoin lisnicu na vašem uređaju kako biste slali BTC donacije.</string>
     <string name="transfers_select_all">svi</string>
     <string name="crawl_cache_size">Crawl cache %1$.2fMB</string>
     <string name="there_is_n_torrents_indexed">%d torrenata indeksirano</string>
     <string name="wifi_sharing_disabled">Wi-Fi dijeljenje je ugašeno.\n\nWi-Fi dijeljenje se može koristiti za lokalno dijeljenje datoteka između FrostWire uređaja spojenih na istu Wi-Fi mrežu.\n\n&lt;a href=\"http://bit.ly/1tVReSt\"&gt;Saznaj više.&lt;/a&gt;</string>
     <string name="pausing">Pauziram</string>
     <string name="how_others_see_you_on_the_local_network_wifi_">Kako vas ostali vide na lokalnoj mreži (Wi-Fi)</string>
-    <string name="yes_no_cancel_transfer_question">Are you sure you want to stop and remove this download from the list (no data will be erased)?</string>
+    <string name="yes_no_cancel_transfer_question">Jeste li sigurni da želite zaustaviti i obrisati ovo preuzimanje sa liste (podatci neće biti obrisani)?</string>
     <string name="activity_about_droidwire_description">FrostWire za Android</string>
     <string name="dialog_new_transfer_check_text">Pokaži ovo sljedeći put</string>
     <string name="prepend_shortcut_label"></string>
-    <string name="azureus_manager_not_created">Download can\'t be created with SD card mounted</string>
-    <string name="anonymous_usage_statistics_summary">Send anonymous usage statistics. No information regarding content searched, shared or played nor any information that can personally identify you will be stored on disk or sent through the network.</string>
+    <string name="azureus_manager_not_created">Preuzimanje ne može biti stvoreno sa mountanom SD karticom</string>
+    <string name="anonymous_usage_statistics_summary">Šalji anonimne statistike korištenja. Informacije o traženim, djeljenim ili sviranim sadržajima i infomacije koje vas mogu osobno identificirati neće biti spremljene na disk ili poslane kroz mrežu.</string>
     <string name="my_music">Moja glazba</string>
     <string name="torrent_max_downloads">Maksimalni broj preuzimanja</string>
     <string name="error_moving_incomplete">Greška: premještaj neuspješan</string>
@@ -476,7 +476,7 @@
     <string name="translators">Prevoditelji</string>
     <string name="error_not_enough_peers">Pokušajte ponovno, nema dovoljno preuzimatelja</string>
     <string name="seed_finished_torrents_summary">Dijeli djelove torrent preuzimanja sa svima na Internetu putem BitTorrenta</string>
-    <string name="support_frostwire_summary">Pokazuj reklame kako bi ste podržali razvoj ove aplikacije.</string>
+    <string name="support_frostwire_summary">Pokazuj reklame kako biste podržali razvoj ove aplikacije.</string>
     <string name="searchable_activity_label">Pretražna aktivnost</string>
     <string name="menu_enter_shortcut_label">Enter</string>
     <string name="view_transfer_list_item_icon_description">Ikona vrste datoteke</string>
@@ -485,7 +485,7 @@
     <string name="playing_song_name">Sviram %s</string>
     <string name="seeds">Dijelitelji</string>
     <string name="torrent_transfer_paused_disconnected_from_bittorrent">Prijenos je pauziran jer niste spojeni. (provjerite vašu BitTorrent vezu u postavkama)</string>
-    <string name="type_here_to_filter">Pišite ovdje kako bi ste filtrirali</string>
+    <string name="type_here_to_filter">Pišite ovdje kako biste filtrirali</string>
     <string name="please_update_to_v">Molimo nadogradite na inačicu %s</string>
     <string name="free_sponsored_app">Besplatna sponzorirana aplikacija</string>
     <string name="stop_all_transfers">Ovo će zaustaviti sve prijenose</string>
@@ -496,7 +496,7 @@
     <string name="seeding_has_been_turned_off">Dijeljenje je ugašeno</string>
     <string name="dialog_new_transfer_title">Pokreni ovo preuzimanje?</string>
     <string name="torrent_max_uploads_summary">Maksimalni broj slanja</string>
-    <string name="use_upnp_port_mapping_summary">Dugo pritisnite kako bi ste ručno postavili broj porta</string>
+    <string name="use_upnp_port_mapping_summary">Dugo pritisnite kako biste ručno postavili broj porta</string>
     <string name="activity_media_player_image_description">Slika medija</string>
     <string name="clear_complete_transfers">Ovo će očistiti sve završene prijenose</string>
     <string name="torrent_max_upload_speed">Maksimalna brzina slanja</string>
