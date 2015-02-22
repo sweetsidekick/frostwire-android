@@ -1,4 +1,5 @@
 FrostWire 1.4.7 - FEBURARY/21/2015
+ - Monova search fixed.
  - Removed Support FrostWire controls.
  - Croatian translation update.
  - Crashes and bug fixes.

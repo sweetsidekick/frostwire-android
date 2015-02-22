@@ -59,15 +59,15 @@ public class OfferUtils {
         return isAppiaSearchEnabled;
     }
 
-    public static boolean isAppiaInterstitialEnabled() {
+    public static boolean isRevMobEnabled() {
         ConfigurationManager config = null;
-        boolean isAppiaInterstitialEnabled = false;
+        boolean isRevMobEnabled = false;
         try {
             config = ConfigurationManager.instance();
-            isAppiaInterstitialEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_USE_APPIA_INTERSTITIAL)) && !OSUtils.isAmazonDistribution();
+            isRevMobEnabled = config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && !OSUtils.isAmazonDistribution();
         } catch (Throwable t) {
         }
-        return isAppiaInterstitialEnabled;
+        return isRevMobEnabled;
     }
 
     public static boolean isMobileCoreEnabled() {

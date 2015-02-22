@@ -433,6 +433,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initializeRevMob() {
+        if (revMobStarted || !OfferUtils.isRevMobEnabled()) {
+            return;
+        }
+
         try {
             final RevMob revMob = RevMob.start(this);
             fullscreenForGoingHome = revMob.createFullscreen(this, new RevMobAdsListener() {
