@@ -68,6 +68,9 @@ import com.frostwire.uxstats.UXStats;
 import com.ironsource.mobilcore.AdUnitEventListener;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
+import com.revmob.RevMob;
+import com.revmob.RevMobAdsListener;
+import com.revmob.ads.fullscreen.RevMobFullscreen;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -117,9 +120,11 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     // not sure about this variable, quick solution for now
     private String durToken;
 
-    private boolean offercastLockScreenStarted = false;
     private boolean appiaStarted = false;
     private boolean mobileCoreStarted = false;
+    private boolean revMobStarted = false;
+    private RevMobFullscreen fullscreenForShutdown;
+    private RevMobFullscreen fullscreenForGoingHome;
 
     private TimerSubscription playerSubscription;
     
@@ -347,6 +352,8 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initAffiliatesAsync() {
+        initializeRevMob(); // TO DO: put in thread.
+
         new Thread() {
             @Override
             public void run() {
@@ -424,6 +431,121 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         }
     }
+
+    private void initializeRevMob() {
+        try {
+            final RevMob revMob = RevMob.start(this);
+            fullscreenForGoingHome = revMob.createFullscreen(this, new RevMobAdsListener() {
+                @Override
+                public void onRevMobSessionIsStarted() {
+
+                }
+
+                @Override
+                public void onRevMobSessionNotStarted(String s) {
+
+                }
+
+                @Override
+                public void onRevMobAdReceived() {
+
+                }
+
+                @Override
+                public void onRevMobAdNotReceived(String s) {
+                    LOG.debug("ad wasn't received - " + s);
+                    revMobStarted = false;
+                }
+
+                @Override
+                public void onRevMobAdDisplayed() {
+
+                }
+
+                @Override
+                public void onRevMobAdDismiss() {
+                    finish();
+                }
+
+                @Override
+                public void onRevMobAdClicked() {
+                    LOG.debug("ad clicked.");
+                }
+
+                @Override
+                public void onRevMobEulaIsShown() {
+
+                }
+
+                @Override
+                public void onRevMobEulaWasAcceptedAndDismissed() {
+
+                }
+
+                @Override
+                public void onRevMobEulaWasRejected() {
+
+                }
+            });
+
+            fullscreenForShutdown = revMob.createFullscreen(this, new RevMobAdsListener() {
+                @Override
+                public void onRevMobSessionIsStarted() {
+
+                }
+
+                @Override
+                public void onRevMobSessionNotStarted(String s) {
+
+                }
+
+                @Override
+                public void onRevMobAdReceived() {
+
+                }
+
+                @Override
+                public void onRevMobAdNotReceived(String s) {
+                    LOG.debug("ad wasn't received - " + s);
+                    revMobStarted = false;
+                }
+
+                @Override
+                public void onRevMobAdDisplayed() {
+
+                }
+
+                @Override
+                public void onRevMobAdDismiss() {
+                     controller.shutdown();
+                }
+
+                @Override
+                public void onRevMobAdClicked() {
+
+                }
+
+                @Override
+                public void onRevMobEulaIsShown() {
+
+                }
+
+                @Override
+                public void onRevMobEulaWasAcceptedAndDismissed() {
+
+                }
+
+                @Override
+                public void onRevMobEulaWasRejected() {
+
+                }
+            });
+            revMobStarted = true;
+        } catch (Throwable e) {
+            revMobStarted = false;
+        }
+    }
+
 
     /**
      * Hack to stop mobile core service and broadcast receiver.
@@ -548,23 +670,46 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
+    private void showRevMobInterstitialForShutdown() {
+        if (fullscreenForShutdown != null && revMobStarted) {
+            fullscreenForShutdown.show();
+        } else {
+            controller.shutdown();
+        }
+    }
+
+    private void showRevMobInterstitialForGoingHome() {
+        if (fullscreenForGoingHome != null && revMobStarted) {
+            fullscreenForGoingHome.show();
+        } else {
+            finish();
+        }
+    }
+
+
     private void onLastDialogButtonPositive() {
-        OfferUtils.showInterstitial(this, mobileCoreStarted, appiaStarted, new CallbackResponse() {
+        showRevMobInterstitialForGoingHome();
+        /**
+        OfferUtils.showMobileCoreInterstitial(this, mobileCoreStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
                 LOG.info("showInterstitial() -> CallbackResponse::onConfirmation(" + type + ")");
                 finish();
             }
         });
+         */
     }
 
     private void onShutdownDialogButtonPositive() {
-        OfferUtils.showInterstitial(this, mobileCoreStarted, appiaStarted, new CallbackResponse() {
+        showRevMobInterstitialForShutdown();
+        /**
+        OfferUtils.showMobileCoreInterstitial(this, mobileCoreStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
                 controller.shutdown();
             }
         });
+         */
     }
 
     private void syncSlideMenu() {

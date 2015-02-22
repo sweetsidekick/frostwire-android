@@ -20,11 +20,6 @@ package com.frostwire.android.gui.util;
 
 import android.app.Activity;
 import android.content.Context;
-import com.appia.sdk.Appia;
-import com.appia.sdk.Appia.WallDisplayType;
-import com.appia.sdk.BannerAd;
-import com.appia.sdk.BannerAdSize;
-import com.appia.sdk.InterstitialSize;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.logging.Logger;
@@ -48,7 +43,6 @@ public class OfferUtils {
         try {
             config = ConfigurationManager.instance();
             isFreeAppsEnabled = (config.getBoolean(Constants.PREF_KEY_GUI_SUPPORT_FROSTWIRE) && config.getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) && !OSUtils.isAmazonDistribution();
-            //config.getBoolean(Constants.PREF_KEY_GUI_SHOW_FREE_APPS_MENU_ITEM);
         } catch (Throwable t) {
         }
         return isFreeAppsEnabled;
@@ -77,6 +71,9 @@ public class OfferUtils {
     }
 
     public static boolean isMobileCoreEnabled() {
+        if (true) {
+            return false;
+        }
         ConfigurationManager config = null;
         boolean isMobileCoreEnabled = false;
         try {
@@ -96,7 +93,8 @@ public class OfferUtils {
      * @param mobileCoreStarted
      * @param callbackResponse
      */
-    public static void showInterstitial(Activity callerActivity, boolean mobileCoreStarted, boolean appiaStarted, CallbackResponse callbackResponse) {
+    public static void showMobileCoreInterstitial(Activity callerActivity, boolean mobileCoreStarted, CallbackResponse callbackResponse) {
+
         if (isMobileCoreEnabled() && mobileCoreStarted && MobileCore.isInterstitialReady()) {
             try {
                 MobileCore.showInterstitial(callerActivity, callbackResponse);
@@ -104,22 +102,7 @@ public class OfferUtils {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        } /*
-         else if (isAppiaInterstitialEnabled() && appiaStarted) {
-            try {
-                final Appia appia = Appia.getAppia(callerActivity);
-                BannerAdSize size = OSUtils.isScreenOrientationPortrait(callerActivity) ?
-                        BannerAdSize.SIZE_320x480 : BannerAdSize.SIZE_480x320;
-
-                appia.displayInterstitial(callerActivity, null, size);
-                if (callbackResponse != null) {
-                    callbackResponse.onConfirmation(null);
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
         }
-        */
         else {
             if (callbackResponse != null) {
                 callbackResponse.onConfirmation(null);
@@ -127,19 +110,6 @@ public class OfferUtils {
         }
     }
 
-    public static void startOffercastLockScreen(final Context context) throws Exception {
-        if (!OSUtils.isAmazonDistribution()) {
-            try {
-                /*
-                OffercastSDK offercast = OffercastSDK.getInstance(context);
-                offercast.authorize();
-                LOG.info("Offercast started.");
-                */
-            } catch (Exception e) {
-                LOG.error("Offercast could not start.", e);
-            }
-        }
-    }
 
     public static void onFreeAppsClick(Context context) {
         if (isfreeAppsEnabled() && isMobileCoreEnabled() && MobileCore.isDirectToMarketReady()) {

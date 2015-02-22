@@ -49,6 +49,8 @@
         <meta-data android:name="com.google.android.gms.version"
                    android:value="@integer/google_play_services_version" />
 
+        <meta-data android:name="com.revmob.app.id" android:value="54e90d12e1d5bba209d2c631"/>
+
 		<!-- activities -->
 
 		<activity android:name="com.frostwire.android.gui.activities.MainActivity"
@@ -274,22 +276,12 @@
 		</receiver>
 		<!-- end of mobile core -->
 
-		<!-- offercast -->
-		<!-- 
-		<activity
-			android:name="com.offercast.android.sdk.devicereg.termsandconditions.TermsAndConditionsActivity"
-			android:label="@string/application_label" android:screenOrientation="portrait" />
-		<service android:name="com.offercast.android.sdk.system.service.OfferCastService" />
-		<receiver android:name="com.offercast.android.sdk.system.receiver.OfferCastReceiver"
-			android:enabled="true" android:exported="false">
-			<intent-filter android:priority="1001">
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
-			</intent-filter>
-		</receiver>
-		<meta-data android:name="ocm-application-id" android:value="8"/>
-		<meta-data android:name="ocm-access-token" android:value="805d0103-c3ab-4421-9708-cdc6328247fb"/>
-		 -->
-			
+        <!-- Rev mob -->
+        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+                  android:theme="@android:style/Theme.Translucent"
+                  android:configChanges="keyboardHidden|orientation">
+        </activity>
+
 	    <!--  appia activities -->
 		<activity
 		    android:name="com.appia.sdk.DisplayFullscreenAppWallActivity"
