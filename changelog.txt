@@ -1,4 +1,5 @@
-FrostWire 1.4.7 - FEBURARY/21/2015
+FrostWire 1.4.7 - FEBURARY/22/2015
+ - TPB search fixed.
  - Monova search fixed.
  - Removed Support FrostWire controls.
  - Croatian translation update.
