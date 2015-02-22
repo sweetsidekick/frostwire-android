@@ -1,3 +1,9 @@
+FrostWire 1.4.7 - FEBURARY/21/2015
+ - Removed Support FrostWire controls.
+ - Croatian translation update.
+ - Crashes and bug fixes.
+ - RevMob integration.
+
 FrostWire 1.4.6 - FEBRUARY/09/2015
  - Fixes issue where finished torrents would re-download the last pieces on startup.
  - Updated Picasso image caching library.
