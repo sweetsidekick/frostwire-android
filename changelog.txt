@@ -1,10 +1,11 @@
-FrostWire 1.4.7 - FEBURARY/22/2015
+FrostWire 1.4.7 - FEBURARY/23/2015
  - TPB search fixed.
  - Monova search fixed.
  - Removed Support FrostWire controls.
- - Croatian translation update.
- - Crashes and bug fixes.
+- SoundCloud download issue fixed.
  - RevMob integration.
+ - Crashes and bug fixes.
+ - Croatian translation update.
 
 FrostWire 1.4.6 - FEBRUARY/09/2015
  - Fixes issue where finished torrents would re-download the last pieces on startup.
