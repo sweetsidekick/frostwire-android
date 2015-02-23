@@ -68,6 +68,11 @@ public abstract class TemporaryDownloadTransfer<T extends SearchResult> implemen
     
     protected File getFinalFile(File savePath, byte fileType) {
         File path = SystemPaths.getSaveDirectory(fileType);
+
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+
         File finalFile = new File(path, savePath.getName());
         return finalFile;
     }
