@@ -96,6 +96,9 @@ public final class YouTubeDownload implements DownloadTransfer {
 
         File savePath = SystemPaths.getTorrentData();
 
+        ensureDirectoryExits(savePath);
+        ensureDirectoryExits(SystemPaths.getTemp());
+
         completeFile = buildFile(savePath, filename);
         tempVideo = buildTempFile(FilenameUtils.getBaseName(filename), "video");
         tempAudio = buildTempFile(FilenameUtils.getBaseName(filename), "audio");
@@ -108,16 +111,18 @@ public final class YouTubeDownload implements DownloadTransfer {
         httpClient = HttpClientFactory.newInstance();
         httpClient.setListener(httpClientListener);
 
-        if (savePath == null) {
-            this.status = STATUS_SAVE_DIR_ERROR;
-        }
-
-        if (!savePath.isDirectory() && !savePath.mkdirs()) {
-            this.status = STATUS_SAVE_DIR_ERROR;
-        }
-
         if (SystemUtils.isCurrentMountAlmostFull()) {
             this.status = STATUS_ERROR_DISK_FULL;
+        }
+    }
+
+    private void ensureDirectoryExits(File dir) {
+        if (dir == null) {
+            this.status = STATUS_SAVE_DIR_ERROR;
+        }
+
+        if (!dir.isDirectory() && !dir.mkdirs()) {
+            this.status = STATUS_SAVE_DIR_ERROR;
         }
     }
 
