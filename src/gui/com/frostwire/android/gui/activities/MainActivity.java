@@ -24,7 +24,6 @@ import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.*;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -41,7 +40,6 @@ import android.widget.RelativeLayout;
 import com.andrew.apollo.IApolloService;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.MusicUtils.ServiceToken;
-import com.appia.sdk.Appia;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -68,9 +66,6 @@ import com.frostwire.uxstats.UXStats;
 import com.ironsource.mobilcore.AdUnitEventListener;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.MobileCore;
-import com.revmob.RevMob;
-import com.revmob.RevMobAdsListener;
-import com.revmob.ads.fullscreen.RevMobFullscreen;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -122,9 +117,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
 
     private boolean appiaStarted = false;
     private boolean mobileCoreStarted = false;
-    private boolean revMobStarted = false;
-    private RevMobFullscreen fullscreenForShutdown;
-    private RevMobFullscreen fullscreenForGoingHome;
 
     private TimerSubscription playerSubscription;
     
@@ -352,15 +344,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
     }
 
     private void initAffiliatesAsync() {
-        initializeRevMob(); // TO DO: put in thread.
-
-        new Thread() {
-            @Override
-            public void run() {
-                initializeAppia();
-            }
-        }.start();
-
         // MC needs to be created in UI thread to properly set handlers
         // otherwise we get a runtime exception and worker thread dies.
         initializeMobileCore();
@@ -390,20 +373,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         registerReceiver(mainBroadcastReceiver, bf);
     }
 
-    private void initializeAppia() {
-        if (!appiaStarted && ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIALIZE_APPIA)) {
-            try {
-                Appia appia = Appia.getAppia(MainActivity.this);
-                appia.setSiteId(3867);
-                appia.startSession();
-                appia.setHardwareAcceleratedWall(true);
-                appiaStarted = true;
-            } catch (Throwable t) {
-                appiaStarted = false;
-            }
-        }
-    }
-
     private void initializeMobileCore() {
         if (!mobileCoreStarted && OfferUtils.isMobileCoreEnabled()) {
             try {
@@ -431,125 +400,6 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
             }
         }
     }
-
-    private void initializeRevMob() {
-        if (revMobStarted || !OfferUtils.isRevMobEnabled()) {
-            return;
-        }
-
-        try {
-            final RevMob revMob = RevMob.start(this);
-            fullscreenForGoingHome = revMob.createFullscreen(this, new RevMobAdsListener() {
-                @Override
-                public void onRevMobSessionIsStarted() {
-
-                }
-
-                @Override
-                public void onRevMobSessionNotStarted(String s) {
-
-                }
-
-                @Override
-                public void onRevMobAdReceived() {
-
-                }
-
-                @Override
-                public void onRevMobAdNotReceived(String s) {
-                    LOG.debug("ad wasn't received - " + s);
-                    revMobStarted = false;
-                }
-
-                @Override
-                public void onRevMobAdDisplayed() {
-
-                }
-
-                @Override
-                public void onRevMobAdDismiss() {
-                    finish();
-                }
-
-                @Override
-                public void onRevMobAdClicked() {
-                    LOG.debug("ad clicked.");
-                }
-
-                @Override
-                public void onRevMobEulaIsShown() {
-
-                }
-
-                @Override
-                public void onRevMobEulaWasAcceptedAndDismissed() {
-
-                }
-
-                @Override
-                public void onRevMobEulaWasRejected() {
-
-                }
-            });
-
-            fullscreenForShutdown = revMob.createFullscreen(this, new RevMobAdsListener() {
-                @Override
-                public void onRevMobSessionIsStarted() {
-
-                }
-
-                @Override
-                public void onRevMobSessionNotStarted(String s) {
-
-                }
-
-                @Override
-                public void onRevMobAdReceived() {
-
-                }
-
-                @Override
-                public void onRevMobAdNotReceived(String s) {
-                    LOG.debug("ad wasn't received - " + s);
-                    revMobStarted = false;
-                }
-
-                @Override
-                public void onRevMobAdDisplayed() {
-
-                }
-
-                @Override
-                public void onRevMobAdDismiss() {
-                     controller.shutdown();
-                }
-
-                @Override
-                public void onRevMobAdClicked() {
-
-                }
-
-                @Override
-                public void onRevMobEulaIsShown() {
-
-                }
-
-                @Override
-                public void onRevMobEulaWasAcceptedAndDismissed() {
-
-                }
-
-                @Override
-                public void onRevMobEulaWasRejected() {
-
-                }
-            });
-            revMobStarted = true;
-        } catch (Throwable e) {
-            revMobStarted = false;
-        }
-    }
-
 
     /**
      * Hack to stop mobile core service and broadcast receiver.
@@ -674,46 +524,24 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         }
     }
 
-    private void showRevMobInterstitialForShutdown() {
-        if (fullscreenForShutdown != null && revMobStarted) {
-            fullscreenForShutdown.show();
-        } else {
-            controller.shutdown();
-        }
-    }
-
-    private void showRevMobInterstitialForGoingHome() {
-        if (fullscreenForGoingHome != null && revMobStarted) {
-            fullscreenForGoingHome.show();
-        } else {
-            finish();
-        }
-    }
-
-
     private void onLastDialogButtonPositive() {
-        showRevMobInterstitialForGoingHome();
-        /**
         OfferUtils.showMobileCoreInterstitial(this, mobileCoreStarted, new CallbackResponse() {
             @Override
-            public void onConfirmation(TYPE type) {
+            public void onConfirmation(CallbackResponse.TYPE type) {
                 LOG.info("showInterstitial() -> CallbackResponse::onConfirmation(" + type + ")");
                 finish();
             }
         });
-         */
     }
 
     private void onShutdownDialogButtonPositive() {
-        showRevMobInterstitialForShutdown();
-        /**
         OfferUtils.showMobileCoreInterstitial(this, mobileCoreStarted, new CallbackResponse() {
             @Override
             public void onConfirmation(TYPE type) {
                 controller.shutdown();
             }
         });
-         */
+
     }
 
     private void syncSlideMenu() {

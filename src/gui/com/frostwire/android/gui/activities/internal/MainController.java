@@ -23,8 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import com.andrew.apollo.ui.activities.AudioPlayerActivity;
-import com.appia.sdk.Appia;
-import com.appia.sdk.Appia.WallDisplayType;
 import com.frostwire.android.R;
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
@@ -39,6 +37,7 @@ import com.frostwire.android.gui.fragments.TransfersFragment;
 import com.frostwire.android.gui.fragments.TransfersFragment.TransferStatus;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.transfers.TransferManager;
+import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
 
@@ -101,13 +100,7 @@ public final class MainController {
     }
 
     public void showFreeApps(Context context) {
-        try {
-            Appia appia = Appia.getAppia(context);
-            appia.cacheAppWall(activity);
-            appia.displayWall(activity, WallDisplayType.FULL_SCREEN);
-        } catch (Throwable e) {
-            LOG.error("Can't show app wall", e);
-        }
+        OfferUtils.onFreeAppsClick(context);
     }
 
     public void launchMyMusic() {

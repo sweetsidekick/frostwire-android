@@ -71,9 +71,6 @@ public class OfferUtils {
     }
 
     public static boolean isMobileCoreEnabled() {
-        if (true) {
-            return false;
-        }
         ConfigurationManager config = null;
         boolean isMobileCoreEnabled = false;
         try {
@@ -116,11 +113,6 @@ public class OfferUtils {
             try {
                 LOG.debug("onFreeAppsClick");
                 MobileCore.directToMarket((Activity) context);
-                /**
-                Appia appia = Appia.getAppia();
-                appia.cacheAppWall(context);
-                appia.displayWall(context, WallDisplayType.FULL_SCREEN);
-                 */
             } catch (Throwable t) {
                 LOG.error("can't show app wall", t);
                 t.printStackTrace();

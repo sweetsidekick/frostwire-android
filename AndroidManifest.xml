@@ -49,8 +49,6 @@
         <meta-data android:name="com.google.android.gms.version"
                    android:value="@integer/google_play_services_version" />
 
-        <meta-data android:name="com.revmob.app.id" android:value="54e90d12e1d5bba209d2c631"/>
-
 		<!-- activities -->
 
 		<activity android:name="com.frostwire.android.gui.activities.MainActivity"
@@ -276,43 +274,7 @@
 		</receiver>
 		<!-- end of mobile core -->
 
-        <!-- Rev mob -->
-        <activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
-                  android:theme="@android:style/Theme.Translucent"
-                  android:configChanges="keyboardHidden|orientation">
-        </activity>
-
-	    <!--  appia activities -->
-		<activity
-		    android:name="com.appia.sdk.DisplayFullscreenAppWallActivity"
-		    android:configChanges="keyboard|keyboardHidden|orientation"
-		    android:theme="@android:style/Theme.Dialog" >
-		</activity>
-		<activity
-		    android:name="com.appia.sdk.DisplayAppWallActivity"
-		    android:configChanges="keyboard|keyboardHidden|orientation"
-		    android:theme="@android:style/Theme.Dialog" >
-		</activity>
-		<activity
-		    android:name="com.appia.sdk.DisplayBannerActivity"
-		    android:configChanges="keyboard|keyboardHidden|orientation"
-		    android:theme="@android:style/Theme.Dialog" >
-		</activity>
-		<service 
-		    android:name="com.appia.sdk.AppiaReferrerService"
-		    android:process=":com.appia.sdk.AppiaReferrerServiceProcess">
-		</service>
-		<service 
-		    android:name="org.openudid.OpenUDID_service">
-		    <intent-filter>
-		        <action android:name="org.OpenUDID.GETUDID" />
-		    </intent-filter>
-		</service>
-	    <!--  eof appia activities -->
-
-
 		<!-- providers -->
-
 		<provider android:name="com.frostwire.android.core.providers.DocumentsProvider"
 			android:authorities="com.frostwire.android.core.providers.Documents" android:exported="true" />
 		<provider android:name="com.frostwire.android.core.providers.SharingProvider"
