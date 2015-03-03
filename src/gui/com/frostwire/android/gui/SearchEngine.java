@@ -31,6 +31,7 @@ import com.frostwire.search.extratorrent.ExtratorrentSearchPerformer;
 import com.frostwire.search.eztv.EztvSearchPerformer;
 import com.frostwire.search.frostclick.FrostClickSearchPerformer;
 import com.frostwire.search.frostclick.UserAgent;
+import com.frostwire.search.kat.KATSearchPerformer;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
@@ -97,7 +98,7 @@ public abstract class SearchEngine {
 
     public static SearchEngine forName(String name) {
         for (SearchEngine engine : getEngines()) {
-            if (engine.getName().equals(name)) {
+            if (engine.getName().equalsIgnoreCase(name)) {
                 return engine;
             }
         }
@@ -220,7 +221,19 @@ public abstract class SearchEngine {
         }
     };
 
+    public static final SearchEngine KAT = new SearchEngine("KAT", Constants.PREF_KEY_SEARCH_USE_KAT) {
 
+        @Override
+        public SearchPerformer getPerformer(long token, String keywords) {
+            KATSearchPerformer performer = null;
+            if (NetworkManager.instance().isDataWIFIUp()) {
+                performer = new KATSearchPerformer(new DomainAliasManager("kickass.to"), token, keywords, DEFAULT_TIMEOUT);
+            } else {
+                LOG.info("No KATSearchPerformer, WiFi not up");
+            }
+            return performer;
+        }
+    };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, KAT, BTJUNKIE);
 }
