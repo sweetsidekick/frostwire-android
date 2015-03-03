@@ -1,3 +1,9 @@
+FrostWire 1.4.9 - MARCH/03/2015
+ - Fixed BTJunkie search issues causing ANR crashes.
+ - Removed Appia Search.
+ - Clean up: Removed Appia, RevMob, Google In-App purchasing libraries.
+ - Updated Croatian translation. Thanks @win32re.
+
 FrostWire 1.4.8 - FEBRUARY/25/2015
  - Fixes YT file save issue.
 
