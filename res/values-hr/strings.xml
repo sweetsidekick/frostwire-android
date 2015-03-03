@@ -335,7 +335,7 @@
     <string name="hint_transfers">Koristite "menu" za skup akcija</string>
     <string name="show_transers_on_download_start">Pokazi transfere na početku preuzimanja</string>
     <string name="storage_preference_title">Odaberi lokaciju spremanja</string>
-    <string name="loading_all">Ucitavam sve</string>
+    <string name="loading_all">Učitavam sve</string>
     <string name="torrent_max_total_connections">Maksimum ukupnih konekcija</string>
     <string name="one_file_shared">Jedna datoteka je bila dijeljenja sa FrostWire uredjajima na istoj Wi-Fi mreži.</string>
     <string name="delete_n_torrents_indexed">Obrisano %d indeksiranih torrenata</string>
@@ -401,7 +401,7 @@
     <string name="use_soundcloud">Koristi Soundcloud.com</string>
     <string name="transfers_context_menu_clear_finished">Očisti sve završene prijenose</string>
     <string name="no_results_feedback">Nema pronađenih rezultata.\n\nProvjerite vašu internetsku vezu ili\nprobajte druge pretražne uvjete.</string>
-    <string name="paused_song_name">Paused %s</string>
+    <string name="paused_song_name">Pauzirano %s</string>
     <string name="seed">Dijeli</string>
     <string name="you_need_a_bitcoin_wallet_app">Morate imati instaliranu Bitcoin lisnicu na vašem uređaju kako biste slali BTC donacije.</string>
     <string name="transfers_select_all">svi</string>
@@ -449,15 +449,15 @@
     <string name="cancel_menu_action">Zaustavi prijenose</string>
     <string name="canceling">Zaustavljam</string>
     <string name="sent_file_to_chat">Datoteka poslana u Chat</string>
-    <string name="http_download_status_save_dir_error">Save directory does not exist or can\'t be created</string>
+    <string name="http_download_status_save_dir_error">Mapa za spremanje ne postoji ili ne može biti stvorena</string>
     <string name="view_transfer_list_item_group_indicator_description">Više/manje informacija</string>
-    <string name="n_files_shared">%d files has been shared to FrostWire devices on the same Wi-Fi network.</string>
+    <string name="n_files_shared">%d datoteka su podijeljenje FrostWire uređajima na istoj Wi-Fi mreži.</string>
     <string name="install_bitcoin_wallet">Instaliraj Bitcoin lisnicu</string>
     <string name="device_storage">Spremište uređaja</string>
-    <string name="let_apos_s_set_you_up_before_we_begin_">Let\'s set you up before we begin.</string>
+    <string name="let_apos_s_set_you_up_before_we_begin_">Idemo vas postaviti prije nego što počnemo.</string>
     <string name="use_yify_summary">Yify je baziran na magnet poveznicama i radi samo na Wi-Fiu</string>
     <string name="media_type_applications">Aplikacije</string>
-    <string name="clear_search_cache_summary">Clear search cache entries</string>
+    <string name="clear_search_cache_summary">Očisti unose predmemorije traženja</string>
     <string name="delete_file_menu_action_count">Obriši (%s)</string>
     <string name="file_descriptor_sd_mounted">Ova datoteka je bila obrisana sa SD kartice ili je SD kartica koju ste umetnuli drugačija.</string>
     <string name="cancel_delete_menu_action">Zaustavi i obriši podatke</string>
@@ -471,8 +471,8 @@
     <string name="app_shutdown_dlg_title">Ugasi</string>
     <string name="are_you_sure_delete_current_track">Jeste li sigurni da želite obrisati trenutnu pjesmu?</string>
     <string name="bittorrent_network_summary">Status veze</string>
-    <string name="broadcast_discovery">Broadcast Discovery</string>
-    <string name="seed_finished_torrents_wifi_only_summary">Seeds only when connected via Wi-Fi to save bandwidth on your data plan</string>
+    <string name="broadcast_discovery">Otkrivanje prijenosa</string>
+    <string name="seed_finished_torrents_wifi_only_summary">Dijeli samo kada ste spojeni na Wi-Fi kako biste sačuvali promet na vašem podatkovnom planu</string>
     <string name="translators">Prevoditelji</string>
     <string name="error_not_enough_peers">Pokušajte ponovno, nema dovoljno preuzimatelja</string>
     <string name="seed_finished_torrents_summary">Dijeli djelove torrent preuzimanja sa svima na Internetu putem BitTorrenta</string>
@@ -489,7 +489,7 @@
     <string name="please_update_to_v">Molimo nadogradite na inačicu %s</string>
     <string name="free_sponsored_app">Besplatna sponzorirana aplikacija</string>
     <string name="stop_all_transfers">Ovo će zaustaviti sve prijenose</string>
-    <string name="use_mobile_data_summary">Koristi mobilnu mrežu za BitTorrent preuzimanja. Primjenjuje se podatkovna tarifa. Koristite pažljivo.</string>
+    <string name="use_mobile_data_summary">Koristiti mobilnu mrežu za BitTorrent preuzimanja. Primjenjuje se podatkovna tarifa. Koristite pažljivo.</string>
     <string name="intent_text">FrostWire je klijent-klijent program samo za dijeljenje ododbrenih datoteka. Instaliranje i korištenje programa ne dobavljuje licencu za dobavljanje i distribuciju neovlaštenog sadržaja.</string>
     <string name="azureus_peer_manager_status_finishedin">Završeno u</string>
     <string name="support">Podrži</string>
@@ -509,7 +509,7 @@
     <string name="saving_to_sd_card">Spremam na SD karticu.</string>
     <string name="torrent_max_peers_summary">Maksimalni broj preuzimatelja</string>
     <string name="torrent_max_downloads_summary">Maksimalni broj preuzimanja</string>
-    <string name="transfers_context_menu_stop_delete_data">Zaustavi i obriši podatke</string>
+    <string name="transfers_context_menu_stop_delete_data">Zaustaviti i obrisati podatke</string>
     <string name="search_settings">Postavke traženja</string>
     <string name="media_player_failed">Media player failed</string>
     <string name="use_btjunkie">Koristi BTJunkie</string>
