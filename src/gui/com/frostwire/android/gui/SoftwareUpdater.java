@@ -33,6 +33,7 @@ import com.frostwire.android.core.SystemPaths;
 import com.frostwire.android.gui.services.Engine;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.android.gui.util.UIUtils;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.ByteUtils;
 import com.frostwire.util.JsonUtils;
 import com.frostwire.util.StringUtils;
@@ -56,6 +57,8 @@ import java.util.Set;
  * 
  */
 public final class SoftwareUpdater {
+
+    private static final Logger LOG = Logger.getLogger(SoftwareUpdater.class);
 
     public interface ConfigurationUpdateListener {
         void onConfigurationUpdate();
@@ -303,7 +306,10 @@ public final class SoftwareUpdater {
             for (String name : update.config.activeSearchEngines.keySet()) {
                 SearchEngine engine = SearchEngine.forName(name);
                 if (engine != null) {
+                    //LOG.info(engine.getName() + " is remotely active: " + update.config.activeSearchEngines.get(name));
                     engine.setActive(update.config.activeSearchEngines.get(name));
+                } else {
+                    LOG.warn("Can't find any search engine by the name of: '" + name + "'");
                 }
             }
         }

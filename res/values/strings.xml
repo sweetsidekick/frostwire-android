@@ -226,12 +226,13 @@
     <string name="media_player_failed">Media player failed</string>
     <string name="activity_media_player_name">Media Player</string>
     <string name="search_settings">Search Settings</string>
-    <string name="use_kat">Use KAT.ph</string>
     <string name="use_clearbits">Use ClearBits.net</string>
     <string name="use_tpb">Use TPB</string>
     <string name="use_tpb_summary">TPB is magnet based, works only on Wi-Fi</string>
     <string name="use_monova">Use Monova</string>
     <string name="use_monova_summary">Monova is magnet based, works only on Wi-Fi</string>
+    <string name="use_kat">Use KAT</string>
+    <string name="use_kat_summary">KAT is magnet based, works only on Wi-Fi</string>
     <string name="use_extratorrent">Use ExtraTorrent.com</string>
     <string name="use_isohunt">Use ISOHunt.com</string>
     <string name="use_mininova">Use Mininova.org</string>

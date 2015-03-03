@@ -39,6 +39,7 @@ import com.frostwire.android.gui.transfers.TransferManager;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.preference.SimpleActionPreference;
 import com.frostwire.android.gui.views.preference.StoragePreference;
+import com.frostwire.logging.Logger;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
@@ -52,7 +53,13 @@ import com.frostwire.uxstats.UXStats;
  */
 public class PreferencesActivity extends PreferenceActivity {
 
-    //private static final Logger LOG = Logger.getLogger(PreferencesActivity.class);
+    private static final Logger LOG = Logger.getLogger(PreferencesActivity.class);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupComponents();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +71,7 @@ public class PreferencesActivity extends PreferenceActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        setupConnectSwitch();
-        setupSeedingOptions();
-        setupNickname();
-        setupClearIndex();
-        setupSearchEngines();
-        setupUPnPOption();
-        setupUXStatsOption();
+        setupComponents();
 
         String action = getIntent().getAction();
         if (action != null && action.equals(Constants.ACTION_SETTINGS_SELECT_STORAGE)) {
@@ -79,6 +80,16 @@ public class PreferencesActivity extends PreferenceActivity {
         }
 
         updateConnectSwitch();
+    }
+
+    private void setupComponents() {
+        setupConnectSwitch();
+        setupSeedingOptions();
+        setupNickname();
+        setupClearIndex();
+        setupSearchEngines();
+        setupUPnPOption();
+        setupUXStatsOption();
     }
 
     @Override
@@ -103,63 +114,78 @@ public class PreferencesActivity extends PreferenceActivity {
         final CheckBoxPreference preferenceSeeding = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS);
         final CheckBoxPreference preferenceSeedingWifiOnly = (CheckBoxPreference) findPreference(Constants.PREF_KEY_TORRENT_SEED_FINISHED_TORRENTS_WIFI_ONLY);
 
-        preferenceSeedingWifiOnly.setEnabled(preferenceSeeding.isChecked());
+        if (preferenceSeeding != null) {
+            preferenceSeeding.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newVal = (Boolean) newValue;
+                    if (!newVal) { // not seeding at all
+                        TransferManager.instance().stopSeedingTorrents();
+                        UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
+                    }
+                    preferenceSeedingWifiOnly.setEnabled(newVal);
 
-        preferenceSeeding.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean newVal = (Boolean) newValue;
-                if (!newVal) { // not seeding at all
-                    TransferManager.instance().stopSeedingTorrents();
-                    UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
+                    UXStats.instance().log(newVal ? UXAction.SHARING_SEEDING_ENABLED : UXAction.SHARING_SEEDING_DISABLED);
+
+                    return true;
                 }
-                preferenceSeedingWifiOnly.setEnabled(newVal);
+            });
+        }
 
-                UXStats.instance().log(newVal ? UXAction.SHARING_SEEDING_ENABLED : UXAction.SHARING_SEEDING_DISABLED);
+        if (preferenceSeedingWifiOnly != null) {
+            preferenceSeedingWifiOnly.setEnabled(preferenceSeeding.isChecked());
 
-                return true;
-            }
-        });
-
-        preferenceSeedingWifiOnly.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean newVal = (Boolean) newValue;
-                if (newVal && !NetworkManager.instance().isDataWIFIUp()) { // not seeding on mobile data
-                    TransferManager.instance().stopSeedingTorrents();
-                    UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
+            preferenceSeedingWifiOnly.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newVal = (Boolean) newValue;
+                    if (newVal && !NetworkManager.instance().isDataWIFIUp()) { // not seeding on mobile data
+                        TransferManager.instance().stopSeedingTorrents();
+                        UIUtils.showShortMessage(PreferencesActivity.this, R.string.seeding_has_been_turned_off);
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     private void setupNickname() {
         EditTextPreference preference = (EditTextPreference) findPreference(Constants.PREF_KEY_GUI_NICKNAME);
-        preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String newText = ((String) newValue).trim();
-                return !StringUtils.isNullOrEmpty(newText, true);
-            }
-        });
+        if (preference != null) {
+            preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String newText = ((String) newValue).trim();
+                    return !StringUtils.isNullOrEmpty(newText, true);
+                }
+            });
+        }
     }
 
     private void setupClearIndex() {
         final SimpleActionPreference preference = (SimpleActionPreference) findPreference("frostwire.prefs.internal.clear_index");
-        updateIndexSummary(preference);
-        preference.setOnActionListener(new OnClickListener() {
-            public void onClick(View v) {
-                LocalSearchEngine.instance().clearCache();
-                UIUtils.showShortMessage(PreferencesActivity.this, R.string.deleted_crawl_cache);
-                updateIndexSummary(preference);
-            }
-        });
+
+        if (preference != null) {
+            updateIndexSummary(preference);
+            preference.setOnActionListener(new OnClickListener() {
+                public void onClick(View v) {
+                    LocalSearchEngine.instance().clearCache();
+                    UIUtils.showShortMessage(PreferencesActivity.this, R.string.deleted_crawl_cache);
+                    updateIndexSummary(preference);
+                }
+            });
+        }
     }
 
     private void setupSearchEngines() {
         PreferenceScreen category = (PreferenceScreen) findPreference(Constants.PREF_KEY_SEARCH_PREFERENCE_CATEGORY);
-        for (SearchEngine engine : SearchEngine.getEngines()) {
-            CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
-            if (!engine.isActive()) {
-                category.removePreference(preference);
+        if (category != null) {
+            for (SearchEngine engine : SearchEngine.getEngines()) {
+                CheckBoxPreference preference = (CheckBoxPreference) findPreference(engine.getPreferenceKey());
+                if (preference != null) { //it could already have been removed due to remote config value.
+                    //LOG.info(engine.getName() + " is enabled: " + engine.isActive());
+                    if (!engine.isActive()) {
+                        LOG.info("removing preference.");
+                        category.removePreference(preference);
+                    }
+                }
             }
         }
     }
@@ -171,19 +197,21 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void updateConnectSwitch() {
         SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
-        final OnPreferenceChangeListener onPreferenceChangeListener = preference.getOnPreferenceChangeListener();
-        preference.setOnPreferenceChangeListener(null);
+        if (preference != null) {
+            final OnPreferenceChangeListener onPreferenceChangeListener = preference.getOnPreferenceChangeListener();
+            preference.setOnPreferenceChangeListener(null);
 
-        preference.setSummary(R.string.bittorrent_network_summary);
-        preference.setEnabled(true);
-        if (Engine.instance().isStarted()) {
-            preference.setChecked(true);
-        } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
-            connectSwitchImOnIt(preference);
-        } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
-            preference.setChecked(false);
+            preference.setSummary(R.string.bittorrent_network_summary);
+            preference.setEnabled(true);
+            if (Engine.instance().isStarted()) {
+                preference.setChecked(true);
+            } else if (Engine.instance().isStarting() || Engine.instance().isStopping()) {
+                connectSwitchImOnIt(preference);
+            } else if (Engine.instance().isStopped() || Engine.instance().isDisconnected()) {
+                preference.setChecked(false);
+            }
+            preference.setOnPreferenceChangeListener(onPreferenceChangeListener);
         }
-        preference.setOnPreferenceChangeListener(onPreferenceChangeListener);
     }
 
     private void connectSwitchImOnIt(SwitchPreference preference) {
@@ -196,49 +224,52 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private void setupUPnPOption() {
         final SwitchPreference preferenceUPnP = (SwitchPreference) findPreference(Constants.PREF_KEY_NETWORK_USE_UPNP);
-
-        preferenceUPnP.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean newVal = (Boolean) newValue;
-                if (newVal) {
-                    PeerManager.instance().start();
-                } else {
-                    PeerManager.instance().stop();
+        if (preferenceUPnP != null) {
+            preferenceUPnP.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newVal = (Boolean) newValue;
+                    if (newVal) {
+                        PeerManager.instance().start();
+                    } else {
+                        PeerManager.instance().stop();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     private void setupConnectSwitch() {
         SwitchPreference preference = (SwitchPreference) findPreference("frostwire.prefs.internal.connect_disconnect");
-
-        preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final boolean newStatus = ((Boolean) newValue).booleanValue();
-                if (Engine.instance().isStarted() && !newStatus) {
-                    disconnect();
-                } else if (newStatus && (Engine.instance().isStopped() || Engine.instance().isDisconnected())) {
-                    connect();
+        if (preference != null) {
+            preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    final boolean newStatus = ((Boolean) newValue).booleanValue();
+                    if (Engine.instance().isStarted() && !newStatus) {
+                        disconnect();
+                    } else if (newStatus && (Engine.instance().isStopped() || Engine.instance().isDisconnected())) {
+                        connect();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     private void setupUXStatsOption() {
         final CheckBoxPreference checkPref = (CheckBoxPreference) findPreference(Constants.PREF_KEY_UXSTATS_ENABLED);
-
-        checkPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean newVal = (Boolean) newValue;
-                if (!newVal) { // not send ux stats
-                    UXStats.instance().setContext(null);
+        if (checkPref != null) {
+            checkPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newVal = (Boolean) newValue;
+                    if (!newVal) { // not send ux stats
+                        UXStats.instance().setContext(null);
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     private void connect() {
