@@ -18,16 +18,11 @@
 
 package com.frostwire.android.gui;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.gui.util.OSUtils;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.SearchPerformer;
-import com.frostwire.search.appia.AppiaSearchPerformer;
-import com.frostwire.search.appia.AppiaSearchPerformer.AppiaSearchThrottle;
 import com.frostwire.search.archiveorg.ArchiveorgSearchPerformer;
 import com.frostwire.search.bitsnoop.BitSnoopSearchPerformer;
 import com.frostwire.search.btjunkie.BtjunkieSearchPerformer;
@@ -39,10 +34,13 @@ import com.frostwire.search.frostclick.UserAgent;
 import com.frostwire.search.mininova.MininovaSearchPerformer;
 import com.frostwire.search.monova.MonovaSearchPerformer;
 import com.frostwire.search.soundcloud.SoundcloudSearchPerformer;
-import com.frostwire.search.tpb.TPBSearchPerformer;
 import com.frostwire.search.torlock.TorLockSearchPerformer;
+import com.frostwire.search.tpb.TPBSearchPerformer;
 import com.frostwire.search.yify.YifySearchPerformer;
 import com.frostwire.search.youtube.YouTubeSearchPerformer;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 
@@ -169,16 +167,7 @@ public abstract class SearchEngine {
             return new EztvSearchPerformer(new DomainAliasManager("eztv.it"), token, keywords, DEFAULT_TIMEOUT);
         }
     };
-    
-    public static final SearchEngine APPIA = new SearchEngine("Appia", Constants.PREF_KEY_SEARCH_USE_APPIA) {
-        private AppiaSearchThrottle throttle = new AppiaSearchThrottle();
-        
-        @Override
-        public SearchPerformer getPerformer(long token, String keywords) {
-            return new AppiaSearchPerformer(new DomainAliasManager(AppiaSearchPerformer.HTTP_SERVER_NAME), token, keywords, DEFAULT_TIMEOUT, FROSTWIRE_ANDROID_USER_AGENT, LocalSearchEngine.instance().getAndroidId(), throttle);
-        }
-    };
-    
+
     public static final SearchEngine TPB = new SearchEngine("TPB", Constants.PREF_KEY_SEARCH_USE_TPB) {
         @Override
         public SearchPerformer getPerformer(long token, String keywords) {
@@ -231,5 +220,5 @@ public abstract class SearchEngine {
         }
     };
 
-    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV, APPIA);
+    private static final List<SearchEngine> ALL_ENGINES = Arrays.asList(YIFY, YOUTUBE, FROSTCLICK, MONOVA, MININOVA, BITSNOOP, EXTRATORRENT, BTJUNKIE, TPB, SOUNCLOUD, ARCHIVE, TORLOCK, EZTV);
 }
