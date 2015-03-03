@@ -20,7 +20,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.frostwire.android" android:installLocation="auto"
-	android:versionCode="175" android:versionName="1.4.8">
+	android:versionCode="176" android:versionName="1.4.9">
 
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21" />
 
