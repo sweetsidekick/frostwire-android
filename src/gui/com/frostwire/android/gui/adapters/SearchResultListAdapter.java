@@ -34,7 +34,6 @@ import com.frostwire.android.util.ImageLoader;
 import com.frostwire.licences.License;
 import com.frostwire.search.FileSearchResult;
 import com.frostwire.search.SearchResult;
-import com.frostwire.search.appia.AppiaSearchResult;
 import com.frostwire.search.torrent.TorrentSearchResult;
 import com.frostwire.search.youtube.YouTubeCrawledSearchResult;
 import com.frostwire.uxstats.UXAction;
@@ -95,9 +94,6 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         if (sr instanceof YouTubeCrawledSearchResult) {
             populateYouTubePart(view, (YouTubeCrawledSearchResult) sr);
         }
-        if (sr instanceof AppiaSearchResult) {
-            populateAppiaPart(view, (AppiaSearchResult) sr);
-        }
         populateThumbnail(view, sr);
     }
 
@@ -156,38 +152,13 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         }
     }
 
-    protected void populateAppiaPart(View view, AppiaSearchResult sr) {
-        TextView adIndicator = findView(view, R.id.view_bittorrent_search_result_list_item_ad_indicator);
-        adIndicator.setVisibility(View.VISIBLE);
-
-        TextView extra = findView(view, R.id.view_bittorrent_search_result_list_item_text_extra);
-        extra.setText(sr.getCategoryName() + " : " + sr.getDescription());
-
-        //TextView seeds = findView(view, R.id.view_bittorrent_search_result_list_item_text_seeds);
-        //String license = sr.getLicense().equals(License.UNKNOWN) ? "" : " - " + sr.getLicense();
-
-        TextView sourceLink = findView(view, R.id.view_bittorrent_search_result_list_item_text_source);
-        sourceLink.setText(sr.getSource());
-        sourceLink.setTag(sr.getDetailsUrl());
-        sourceLink.setPaintFlags(sourceLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        sourceLink.setOnClickListener(linkListener);
-    }
-
     @Override
     protected void onItemClicked(View v) {
         SearchResult sr = (SearchResult) v.getTag();
-        if (sr instanceof AppiaSearchResult) {
-            onAppiaSearchResultClicked((AppiaSearchResult) sr);
-        } else {
-            searchResultClicked(sr);
-        }
+        searchResultClicked(sr);
     }
 
     protected void searchResultClicked(SearchResult sr) {
-    }
-
-    protected void onAppiaSearchResultClicked(AppiaSearchResult sr) {
-        UIUtils.openURL(this.getContext(), sr.getDetailsUrl());
     }
 
     private void filter() {
@@ -200,11 +171,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
         ArrayList<SearchResult> l = new ArrayList<SearchResult>();
         for (SearchResult sr : results) {
             MediaType mt = null;
-            if (sr instanceof AppiaSearchResult) {
-                mt = ((AppiaSearchResult) sr).getMediaType();
-            } else {
-                mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
-            }
+            mt = MediaType.getMediaTypeForExtension(FilenameUtils.getExtension(((FileSearchResult) sr).getFilename()));
 
             if (accept(sr, mt)) {
                 l.add(sr);
@@ -216,7 +183,7 @@ public class SearchResultListAdapter extends AbstractListAdapter<SearchResult> {
     }
 
     private boolean accept(SearchResult sr, MediaType mt) {
-        if (sr instanceof FileSearchResult || sr instanceof AppiaSearchResult) {
+        if (sr instanceof FileSearchResult) {
             if (mt == null) {
                 return false;
             }
