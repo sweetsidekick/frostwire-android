@@ -326,11 +326,10 @@ public class MainActivity extends AbstractActivity implements ConfigurationUpdat
         refreshPeersFragment();
         refreshPlayerItem();
 
-        initAffiliatesAsync();
-
         if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_TOS_ACCEPTED)) {
             if (ConfigurationManager.instance().getBoolean(Constants.PREF_KEY_GUI_INITIAL_SETTINGS_COMPLETE)) {
                 mainResume();
+                initAffiliatesAsync();
             } else {
                 controller.startWizardActivity();
             }
