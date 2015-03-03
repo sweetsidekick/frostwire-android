@@ -236,19 +236,10 @@ public final class SoftwareUpdater {
      * returns true if mv is older.
      */
     private boolean isFrostWireOld(byte[] mv, byte[] lv) {
-        if (mv[0] < lv[0]) {
-            return true;
-        }
-
-        if (mv[0] == lv[0] && mv[1] < lv[1]) {
-            return true;
-        }
-
-        if (mv[0] == lv[0] && mv[1] == lv[1] && mv[2] < lv[2]) {
-            return true;
-        }
-
-        return false;
+        boolean a = mv[0] < lv[0];
+        boolean b = mv[0] == lv[0] && mv[1] < lv[1];
+        boolean c = mv[0] == lv[0] && mv[1] == lv[1] && mv[2] < lv[2];
+        return a || b || c;
     }
 
     private static String getMD5(File f) {
