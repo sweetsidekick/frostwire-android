@@ -1,6 +1,7 @@
 FrostWire 1.4.9 - MARCH/03/2015
  - New KAT search.
  - Fixed BTJunkie search issues causing ANR crashes.
+ - Fixed Mininova search. Few results coming in due to low seed numbers.
  - Removed Appia Search.
  - Clean up: Removed Appia, RevMob, Google In-App purchasing libraries.
  - Updated Croatian translation. Thanks @win32re.
