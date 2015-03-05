@@ -35,12 +35,10 @@ import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.logging.Logger;
 import com.frostwire.search.CrawlPagedWebSearchPerformer;
 import com.frostwire.util.DirectoryUtils;
-import org.gudy.azureus2.core3.util.protocol.AzURLStreamHandlerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URL;
 
 /**
  * @author gubatron
@@ -122,9 +120,6 @@ public class MainApplication extends Application {
     }
 
     private void setupBTEngine() {
-        // this hack is only due to the remaining vuze TOTorrent code
-        URL.setURLStreamHandlerFactory(new AzURLStreamHandlerFactory());
-
         BTEngine.ctx = new BTContext();
         BTEngine.getInstance().reloadBTContext(SystemPaths.getTorrents(),
                 SystemPaths.getTorrentData(),
