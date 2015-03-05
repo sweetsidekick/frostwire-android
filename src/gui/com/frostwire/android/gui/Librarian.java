@@ -954,10 +954,9 @@ public final class Librarian {
                     fd = getFileDescriptor(new File(uri.getPath()));
                 } else {
                     TableFetcher fetcher = TableFetchers.getFetcher(uri);
-
-                    fd = new FileDescriptor();
-                    fd.fileType = fetcher.getFileType();
-                    fd.id = Integer.valueOf(uri.getLastPathSegment());
+                    byte fileType = fetcher.getFileType();
+                    int id = Integer.valueOf(uri.getLastPathSegment());
+                    fd = getFileDescriptor(fileType, id, false);
                 }
             }
         } catch (Throwable e) {
