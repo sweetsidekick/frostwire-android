@@ -44,15 +44,22 @@ public class SimpleFloatViewManager implements DragSortListView.FloatViewManager
         v.setPressed(false);
 
         v.setDrawingCacheEnabled(true);
-        mFloatBitmap = Bitmap.createBitmap(v.getDrawingCache());
-        v.setDrawingCacheEnabled(false);
+        final Bitmap drawingCache = v.getDrawingCache();
 
-        ImageView iv = new ImageView(mListView.getContext());
-        iv.setBackgroundColor(mFloatBGColor);
-        iv.setPadding(0, 0, 0, 0);
-        iv.setImageBitmap(mFloatBitmap);
+        if (drawingCache != null) {
+            mFloatBitmap = Bitmap.createBitmap(drawingCache);
+            v.setDrawingCacheEnabled(false);
 
-        return iv;
+            ImageView iv = new ImageView(mListView.getContext());
+            iv.setBackgroundColor(mFloatBGColor);
+            iv.setPadding(0, 0, 0, 0);
+            iv.setImageBitmap(mFloatBitmap);
+
+            return iv;
+        } else {
+            v.setDrawingCacheEnabled(false);
+            return null;
+        }
     }
 
     /**
