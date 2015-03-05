@@ -19,7 +19,7 @@
 package com.frostwire.android.gui.transfers;
 
 import com.frostwire.bittorrent.BTEngine;
-import com.frostwire.jlibtorrent.FileEntry;
+import com.frostwire.jlibtorrent.FileStorage;
 import com.frostwire.jlibtorrent.TorrentInfo;
 import com.frostwire.logging.Logger;
 import com.frostwire.transfers.TransferItem;
@@ -200,9 +200,10 @@ public class TorrentFetcherDownload implements BittorrentDownload {
     private boolean[] calculateSelection(TorrentInfo ti, String path) {
         boolean[] selection = new boolean[ti.getNumFiles()];
 
+        FileStorage fs = ti.getFiles();
         for (int i = 0; i < selection.length; i++) {
-            FileEntry e = ti.getFileAt(i);
-            if (path.endsWith(e.getPath())) {
+            String filePath = fs.getFilePath(i);
+            if (path.endsWith(filePath)) {
                 selection[i] = true;
             }
         }
