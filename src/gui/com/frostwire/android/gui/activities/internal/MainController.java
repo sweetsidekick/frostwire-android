@@ -41,6 +41,7 @@ import com.frostwire.android.gui.util.OfferUtils;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.logging.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -160,13 +161,16 @@ public final class MainController {
     private void handleSendMultipleFiles(Intent intent) {
         ArrayList<Uri> fileUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (fileUris != null && fileUris.size() > 0) {
+            int sharedFiles = 0;
             for (Uri uri : fileUris) {
-                shareFileByUri(uri);
+                if (shareFileByUri(uri)) {
+                    sharedFiles++;
+                }
             }
 
             FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(fileUris.get(0));
             showFile(fileDescriptor);
-            UIUtils.showLongMessage(activity, activity.getString(R.string.n_files_shared, fileUris.size()));
+            UIUtils.showLongMessage(activity, activity.getString(R.string.n_files_shared, sharedFiles));
         }
     }
 
@@ -186,9 +190,12 @@ public final class MainController {
                 activity.switchFragment(R.id.menu_main_transfers);
             } else {
                 try {
-                    shareFileByUri(uri);
-                    showFile(fileDescriptor);
-                    UIUtils.showLongMessage(activity, R.string.one_file_shared);
+                    if (shareFileByUri(uri)) {
+                        showFile(fileDescriptor);
+                        UIUtils.showLongMessage(activity, R.string.one_file_shared);
+                    } else {
+                        UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
+                    }
                 } catch (Throwable t) {
                     UIUtils.showLongMessage(activity, R.string.couldnt_share_file);
                 }
@@ -203,16 +210,20 @@ public final class MainController {
         }
     }
 
-    private void shareFileByUri(Uri uri) {
+    private boolean shareFileByUri(Uri uri) {
+        boolean result = false;
         if (uri == null) {
-            return;
+            return false;
         }
 
         FileDescriptor fileDescriptor = Librarian.instance().getFileDescriptor(uri);
 
-        if (fileDescriptor != null) {
+        if (fileDescriptor != null && new File(fileDescriptor.filePath).exists()) {
             fileDescriptor.shared = true;
             Librarian.instance().updateSharedStates(fileDescriptor.fileType, Arrays.asList(fileDescriptor));
+            result = true;
         }
+
+        return result;
     }
 }
