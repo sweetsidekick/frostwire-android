@@ -317,6 +317,8 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
         // Check for any errors
         if (data.isEmpty()) {
+            mAdapter.unload();
+            mAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -328,6 +330,7 @@ public class QueueFragment extends Fragment implements LoaderCallbacks<List<Song
         }
         // Build the cache
         mAdapter.buildCache();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

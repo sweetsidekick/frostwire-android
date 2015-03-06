@@ -12,6 +12,8 @@
 package com.andrew.apollo.adapters;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -256,5 +258,4 @@ public class ProfileSongAdapter extends ArrayAdapter<Song> {
     public void setCount(final List<Song> data) {
         mCount = data;
     }
-
 }

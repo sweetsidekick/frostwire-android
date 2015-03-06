@@ -302,6 +302,7 @@ public class AlbumFragment extends Fragment implements LoaderCallbacks<List<Albu
         }
         // Build the cache
         mAdapter.buildCache();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

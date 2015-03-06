@@ -311,6 +311,7 @@ public class ArtistFragment extends Fragment implements LoaderCallbacks<List<Art
         }
         // Build the cache
         mAdapter.buildCache();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

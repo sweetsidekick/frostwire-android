@@ -262,8 +262,12 @@ public class AlbumSongFragment extends Fragment implements LoaderCallbacks<List<
                 case FragmentMenuItems.DELETE:
                     DeleteDialog.newInstance(mSong.mSongName, new long[] {
                         mSelectedId
-                    }, null).show(getFragmentManager(), "DeleteDialog");
-                    refresh();
+                    }, null).setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+                        @Override
+                        public void onDelete(long[] id) {
+                            refresh();
+                        }
+                    }).show(getFragmentManager(), "DeleteDialog");
                     return true;
                 default:
                     break;
@@ -296,6 +300,8 @@ public class AlbumSongFragment extends Fragment implements LoaderCallbacks<List<
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
         // Check for any errors
         if (data.isEmpty()) {
+            mAdapter.unload();
+            mAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -307,6 +313,7 @@ public class AlbumSongFragment extends Fragment implements LoaderCallbacks<List<
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -326,8 +333,6 @@ public class AlbumSongFragment extends Fragment implements LoaderCallbacks<List<
         // Otherwise, if the user has scrolled enough to move the header, it
         // becomes misplaced and needs to be reset.
         mListView.setSelection(0);
-        // Wait a moment for the preference to change.
-        SystemClock.sleep(10);
         mAdapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(LOADER, getArguments(), this);
     }

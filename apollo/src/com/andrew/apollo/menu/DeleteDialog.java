@@ -18,7 +18,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import android.view.View;
+import android.widget.ArrayAdapter;
 import com.andrew.apollo.Config;
+import com.andrew.apollo.model.Song;
 import com.frostwire.android.R;
 import com.andrew.apollo.cache.ImageFetcher;
 import com.andrew.apollo.utils.ApolloUtils;
@@ -47,8 +50,12 @@ public class DeleteDialog extends DialogFragment {
      */
     private ImageFetcher mFetcher;
 
+    private DeleteDialogCallback onDeleteCallback;
+
     /**
      * Empty constructor as per the {@link Fragment} documentation
+     * @param song
+     * @param songAdapter
      */
     public DeleteDialog() {
     }
@@ -67,6 +74,11 @@ public class DeleteDialog extends DialogFragment {
         args.putString("cachekey", key);
         frag.setArguments(args);
         return frag;
+    }
+
+    public DeleteDialog setOnDeleteCallback(DeleteDialogCallback callback) {
+        onDeleteCallback = callback;
+        return this;
     }
 
     /**
@@ -96,9 +108,15 @@ public class DeleteDialog extends DialogFragment {
                         mFetcher.removeFromCache(key);
                         // Delete the selected item(s)
                         MusicUtils.deleteTracks(getActivity(), mItemList);
+
                         if (getActivity() instanceof DeleteDialogCallback) {
-                            ((DeleteDialogCallback)getActivity()).onDelete(mItemList);
+                            ((DeleteDialogCallback) getActivity()).onDelete(mItemList);
                         }
+
+                        if (onDeleteCallback != null) {
+                            onDeleteCallback.onDelete(mItemList);
+                        }
+
                         dialog.dismiss();
                     }
                 }).setNegativeButton(R.string.cancel, new OnClickListener() {

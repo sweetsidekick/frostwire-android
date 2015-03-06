@@ -68,7 +68,7 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
     /**
      * LoaderCallbacks identifier
      */
-    private static final int LOADER = 0;
+    private static final int LOADER = 312931820;
 
     /**
      * The adapter for the list
@@ -291,30 +291,35 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
                     MusicUtils.setRingtone(getActivity(), mSelectedId);
                     return true;
                 case FragmentMenuItems.DELETE:
-                    DeleteDialog.newInstance(mSong.mSongName, new long[] {
-                        mSelectedId
-                    }, null).show(getFragmentManager(), "DeleteDialog");
-                    SystemClock.sleep(10);
-                    mAdapter.notifyDataSetChanged();
-                    getLoaderManager().restartLoader(LOADER, null, this);
+                    onDelete();
                     return true;
                 case FragmentMenuItems.REMOVE_FROM_PLAYLIST:
-                    mAdapter.remove(mSong);
-                    MusicUtils.removeFromPlaylist(getActivity(), mSong.mSongId, mPlaylistId);
-                    final long[] songListForPlaylist = MusicUtils.getSongListForPlaylist(getActivity(), mPlaylistId);
-                    if (songListForPlaylist.length == 0) {
-                        mAdapter.clear();
-                        mListView.setVisibility(View.GONE);
-                    }
-                    getLoaderManager().restartLoader(LOADER, null, this);
-                    SystemClock.sleep(100);
-                    mAdapter.notifyDataSetChanged();
+                    onRemoveFromPlaylist();
                     return true;
                 default:
                     break;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void onRemoveFromPlaylist() {
+        mAdapter.remove(mSong);
+        mAdapter.notifyDataSetChanged();
+        MusicUtils.removeFromPlaylist(getActivity(), mSong.mSongId, mPlaylistId);
+        getLoaderManager().restartLoader(LOADER, null, this);
+    }
+
+    private void onDelete() {
+        DeleteDialog.newInstance(mSong.mSongName,
+                new long[]{ mSelectedId },
+                null).setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+            @Override
+            public void onDelete(long[] id) {
+                mAdapter.notifyDataSetChanged();
+                getLoaderManager().restartLoader(LOADER, null, PlaylistSongFragment.this);
+            }
+        }).show(getFragmentManager(), "DeleteDialog");
     }
 
     /**
@@ -341,6 +346,8 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
         // Check for any errors
         if (data.isEmpty()) {
+            mAdapter.unload();
+            mAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -348,10 +355,11 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
         mAdapter.unload();
         // Return the correct count
         mAdapter.setCount(data);
-        // Add the data to the adpater
+        // Add the data to the adapter
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -382,6 +390,7 @@ public class PlaylistSongFragment extends Fragment implements LoaderCallbacks<Li
     public void remove(final int which) {
         mSong = mAdapter.getItem(which - 1);
         mAdapter.remove(mSong);
+        mListView.invalidate();
         mAdapter.notifyDataSetChanged();
         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", mPlaylistId);
         getActivity().getContentResolver().delete(uri,

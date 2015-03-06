@@ -303,7 +303,6 @@ public class SongFragment extends Fragment implements LoaderCallbacks<List<Song>
             mListView.setEmptyView(empty);
             return;
         }
-
         // Start fresh
         mAdapter.unload();
         // Add the data to the adpater
@@ -312,6 +311,7 @@ public class SongFragment extends Fragment implements LoaderCallbacks<List<Song>
         }
         // Build the cache
         mAdapter.buildCache();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

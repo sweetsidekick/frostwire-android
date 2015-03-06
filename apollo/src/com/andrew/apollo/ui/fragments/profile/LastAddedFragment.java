@@ -264,10 +264,14 @@ public class LastAddedFragment extends Fragment implements LoaderCallbacks<List<
                 case FragmentMenuItems.DELETE:
                     DeleteDialog.newInstance(mSong.mSongName, new long[] {
                         mSelectedId
-                    }, null).show(getFragmentManager(), "DeleteDialog");
-                    SystemClock.sleep(10);
-                    mAdapter.notifyDataSetChanged();
-                    getLoaderManager().restartLoader(LOADER, null, this);
+                    }, null).setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+                        @Override
+                        public void onDelete(long[] id) {
+                            mAdapter.notifyDataSetChanged();
+                            getLoaderManager().restartLoader(LOADER, null, LastAddedFragment.this);
+                        }
+                    }).
+                    show(getFragmentManager(), "DeleteDialog");
                     return true;
                 default:
                     break;
@@ -315,6 +319,7 @@ public class LastAddedFragment extends Fragment implements LoaderCallbacks<List<
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

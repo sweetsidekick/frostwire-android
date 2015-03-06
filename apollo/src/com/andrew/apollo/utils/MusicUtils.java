@@ -945,9 +945,13 @@ public final class MusicUtils {
         resolver.delete(uri, Playlists.Members.AUDIO_ID + " = ? ", new String[] {
             Long.toString(id)
         });
-        final String message = context.getResources().getQuantityString(
-                R.plurals.NNNtracksfromplaylist, 1, 1);
-        AppMsg.makeText((Activity)context, message, AppMsg.STYLE_CONFIRM).show();
+        try {
+            final String message = context.getResources().getQuantityString(
+                    R.plurals.NNNtracksfromplaylist, 1, 1);
+            AppMsg.makeText((Activity) context, message, AppMsg.STYLE_CONFIRM).show();
+        } catch (Throwable t) {
+            // java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+        }
     }
 
     /**
@@ -1402,13 +1406,16 @@ public final class MusicUtils {
             // as from the album art cache
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                // Remove from current playlist
+                // Remove from current playlist.
                 final long id = c.getLong(0);
                 removeTrack(id);
-                // Remove from the favorites playlist
+                // Remove from the favorites playlist.
                 FavoritesStore.getInstance(context).removeItem(id);
                 // Remove any items in the recents database
                 RecentStore.getInstance(context).removeItem(c.getLong(2));
+                // Remove from all remaining playlists.
+                removeSongFromAllPlaylists(context, id);
+
                 c.moveToNext();
             }
 
@@ -1459,6 +1466,16 @@ public final class MusicUtils {
         MusicUtils.playAll(context, list, pos, false);
     }
 
+    public static void removeSongFromAllPlaylists(final Context context, final long songId) {
+        final List<Playlist> playlists = getPlaylists(context);
+
+        if (!playlists.isEmpty()) {
+            for (Playlist playlist : playlists) {
+                removeFromPlaylist(context, songId, playlist.mPlaylistId);
+            }
+        }
+    }
+
     private static final long[] getSongListForAdapter(ArrayAdapter<Song> adapter) {
         if (adapter == null) {
             return sEmptyList;
@@ -1473,5 +1490,4 @@ public final class MusicUtils {
         }
         return list;
     }
-
 }

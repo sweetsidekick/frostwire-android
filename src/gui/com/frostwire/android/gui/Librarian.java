@@ -34,6 +34,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.WindowManager;
+import com.andrew.apollo.utils.MusicUtils;
 import com.frostwire.android.core.*;
 import com.frostwire.android.core.player.EphemeralPlaylist;
 import com.frostwire.android.core.player.PlaylistItem;
@@ -249,15 +250,19 @@ public final class Librarian {
         }
     }
 
-    public void deleteFiles(byte fileType, Collection<FileDescriptor> fds) {
+    public void deleteFiles(byte fileType, Collection<FileDescriptor> fds, final Context context) {
         List<Integer> ids = new ArrayList<Integer>(fds.size());
-
+        final int audioMediaType = MediaType.getAudioMediaType().getId();
         for (FileDescriptor fd : fds) {
             if (new File(fd.filePath).delete()) {
                 ids.add(fd.id);
                 deleteSharedState(fd.fileType, fd.id);
+                if (context != null && fileType == fd.fileType && fileType == audioMediaType) {
+                    MusicUtils.removeSongFromAllPlaylists(context, fd.id);
+                }
             }
         }
+
 
         try {
             ContentResolver cr = context.getContentResolver();

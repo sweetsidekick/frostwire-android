@@ -314,7 +314,6 @@ public class RecentFragment extends Fragment implements LoaderCallbacks<List<Alb
             }
             return;
         }
-
         // Start fresh
         mAdapter.unload();
         // Add the data to the adpater
@@ -323,6 +322,7 @@ public class RecentFragment extends Fragment implements LoaderCallbacks<List<Alb
         }
         // Build the cache
         mAdapter.buildCache();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

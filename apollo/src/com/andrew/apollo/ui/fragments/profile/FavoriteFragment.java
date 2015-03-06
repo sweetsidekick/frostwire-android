@@ -266,10 +266,13 @@ public class FavoriteFragment extends Fragment implements LoaderCallbacks<List<S
                 case FragmentMenuItems.DELETE:
                     DeleteDialog.newInstance(mSong.mSongName, new long[] {
                         mSelectedId
-                    }, null).show(getFragmentManager(), "DeleteDialog");
-                    SystemClock.sleep(10);
-                    mAdapter.notifyDataSetChanged();
-                    getLoaderManager().restartLoader(LOADER, null, this);
+                    }, null).setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+                        @Override
+                        public void onDelete(long[] id) {
+                            mAdapter.notifyDataSetChanged();
+                            getLoaderManager().restartLoader(LOADER, null, FavoriteFragment.this);
+                        }
+                    }).show(getFragmentManager(), "DeleteDialog");
                     return true;
                 default:
                     break;
@@ -317,6 +320,7 @@ public class FavoriteFragment extends Fragment implements LoaderCallbacks<List<S
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

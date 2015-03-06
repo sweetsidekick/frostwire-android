@@ -235,9 +235,14 @@ public class ArtistAlbumFragment extends Fragment implements LoaderCallbacks<Lis
                     MusicUtils.addToPlaylist(getActivity(), mAlbumList, id);
                     return true;
                 case FragmentMenuItems.DELETE:
-                    DeleteDialog.newInstance(mAlbum.mAlbumName, mAlbumList, null).show(
-                            getFragmentManager(), "DeleteDialog");
-                    refresh();
+                    DeleteDialog.newInstance(mAlbum.mAlbumName, mAlbumList, null).
+                            setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+                                @Override
+                                public void onDelete(long[] id) {
+                                    refresh();
+                                }
+                            }).
+                            show(getFragmentManager(), "DeleteDialog");
                     return true;
                 default:
                     break;
@@ -276,6 +281,8 @@ public class ArtistAlbumFragment extends Fragment implements LoaderCallbacks<Lis
     public void onLoadFinished(final Loader<List<Album>> loader, final List<Album> data) {
         // Check for any errors
         if (data.isEmpty()) {
+            mAdapter.unload();
+            mAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -287,6 +294,7 @@ public class ArtistAlbumFragment extends Fragment implements LoaderCallbacks<Lis
         for (final Album album : data) {
             mAdapter.add(album);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -324,8 +332,6 @@ public class ArtistAlbumFragment extends Fragment implements LoaderCallbacks<Lis
         // Otherwise, if the user has scrolled enough to move the header, it
         // becomes misplaced and needs to be reset.
         mListView.setSelection(0);
-        // Wait a moment for the preference to change.
-        SystemClock.sleep(10);
         mAdapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(LOADER, getArguments(), this);
     }

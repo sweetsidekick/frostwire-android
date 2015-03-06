@@ -69,7 +69,7 @@ public class DeleteFileMenuAction extends MenuAction {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                Librarian.instance().deleteFiles(adapter.getFileType(), new ArrayList<FileDescriptor>(files));
+                Librarian.instance().deleteFiles(adapter.getFileType(), new ArrayList<FileDescriptor>(files), getContext());
                 return null;
             }
         }.execute();

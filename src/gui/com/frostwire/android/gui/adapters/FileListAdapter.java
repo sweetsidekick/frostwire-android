@@ -515,7 +515,7 @@ public class FileListAdapter extends AbstractListAdapter<FileDescriptorItem> {
         if (!f.exists()) {
             if (SystemUtils.isSecondaryExternalStorageMounted(f.getAbsoluteFile())) {
                 UIUtils.showShortMessage(getContext(), R.string.file_descriptor_sd_mounted);
-                Librarian.instance().deleteFiles(fileType, Arrays.asList(fd));
+                Librarian.instance().deleteFiles(fileType, Arrays.asList(fd), getContext());
                 deleteItem(fd);
             } else {
                 UIUtils.showShortMessage(getContext(), R.string.file_descriptor_sd_unmounted);

@@ -256,10 +256,15 @@ public class ArtistSongFragment extends Fragment implements LoaderCallbacks<List
                     MusicUtils.setRingtone(getActivity(), mSelectedId);
                     return true;
                 case FragmentMenuItems.DELETE:
-                    DeleteDialog.newInstance(mSong.mSongName, new long[] {
-                        mSelectedId
-                    }, null).show(getFragmentManager(), "DeleteDialog");
-                    refresh();
+                    DeleteDialog.newInstance(mSong.mSongName, new long[]{
+                            mSelectedId
+                    }, null).setOnDeleteCallback(new DeleteDialog.DeleteDialogCallback() {
+                        @Override
+                        public void onDelete(long[] id) {
+                            refresh();
+                        }
+                    }).
+                    show(getFragmentManager(), "DeleteDialog");
                     return true;
                 default:
                     break;
@@ -292,6 +297,8 @@ public class ArtistSongFragment extends Fragment implements LoaderCallbacks<List
     public void onLoadFinished(final Loader<List<Song>> loader, final List<Song> data) {
         // Check for any errors
         if (data.isEmpty()) {
+            mAdapter.unload();
+            mAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -303,6 +310,7 @@ public class ArtistSongFragment extends Fragment implements LoaderCallbacks<List
         for (final Song song : data) {
             mAdapter.add(song);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
