@@ -1,4 +1,5 @@
 FrostWire 1.5.0 - MARCH/05/2015
+ - Fixes bug where songs that were deleted were not being cleared from playlists.
  - Fixes bug where sharing on WiFi from certain 3rd-party file explorers wouldn't work.
  - Fixes bug where file descriptors fetched by content:// uris wouldn't have a disk path available.
  - Fixes 2 crashes on music player.
