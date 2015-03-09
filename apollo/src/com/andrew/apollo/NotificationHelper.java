@@ -91,7 +91,7 @@ public class NotificationHelper {
         initCollapsedLayout(trackName, artistName, albumArt);
 
         //  Save this for debugging
-        pendingintent = getPendingIntent();
+        PendingIntent pendingintent = getPendingIntent();
 
         // Notification Builder
         mNotification = new NotificationCompat.Builder(mService)
