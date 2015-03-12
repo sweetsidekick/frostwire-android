@@ -147,10 +147,10 @@
     <string name="disabled">wyłączony</string>
     <string name="open">Otwórz</string>
     <string name="connected_to">Podłączony do</string>
-    <string name="sharing_preferences">Preferencje Udostępniania</string>
+    <string name="sharing_preferences">Ustawienia Udostępniania</string>
     <string name="nickname">Nick</string>
     <string name="how_other_users_will_see_you">Jak inni użytkownicy będą cię widzieć</string>
-    <string name="networking_preferences">Preferencje Sieci</string>
+    <string name="networking_preferences">Ustawienia Sieci</string>
     <string name="simultaneous_uploads">Połączenia Wychodzące</string>
     <string name="simultaneous_uploads_summary">Ustaw ile chcesz wysłać w tym samym czasie.</string>
     <string name="send_my_geo_location">Wyślij moją lokalizację</string>
@@ -300,7 +300,7 @@
     <string name="download_type_not_supported">Pobieranie typy nie są obsługiwane</string>
     <string name="im_on_it">Pracuję nad tym...</string>
     <string name="hint_transfers">Użyj "menu" dla większego wyboru akcji</string>
-    <string name="torrent_settings">Preferencje Torrentów</string>
+    <string name="torrent_settings">Ustawienia Torrentów</string>
     <string name="torrent_max_download_speed_summary">Maksymalna Szybkość Pobierania</string>
     <string name="torrent_max_download_speed">Maksymalna Szybkość Pobierania</string>
     <string name="torrent_max_upload_speed_summary">Maksymalna Szybkość Wysyłania</string>
@@ -505,4 +505,19 @@
     <string name="canceling">Anulowanie</string>
     <string name="torrent_max_peers">Maksimum Peerów</string>
     <string name="torrent_max_peers_summary">Maksimum Peerów</string>
+    <string name="wifi_sharing_settings">Ustawienia Udostępniania przez Wi-Fi</string>
+    <string name="app_shutdown_dlg_message">Zamknięcie aplikacji zakończy wszystkie transfery i serwisy. Jesteś pewien?</string>
+    <string name="use_kat_summary">KAT jest oparty na magnetach, działa tylko na Wi-Fi</string>
+    <string name="error_no_space_left_on_device">Błąd: Brak miejsca na zachowanie pliku</string>
+    <string name="my_music">Moja Muzyka</string>
+    <string name="yes_no_cancel_transfer_question_cloud">Czy jesteś pewnien, że chcesz zatrzymać i usunąć ten transfer z listy?</str\
+ing>
+    <string name="free_download">Darmowe Ściągnięcie</string>
+    <string name="couldnt_share_file">Nie mogłem udostępnic tego pliku. Dziwna ścieżka.</string>
+    <string name="http_download_status_save_dir_error">Kartoteka docelowa nie istnieje lub nie może być stworzona.</string>
+    <string name="app_shutdown_dlg_title">Zamknięcie</string>
+    <string name="error_not_enough_peers">Spróbuj ponowie, nie wystarczająco peerów</string>
+    <string name="free_sponsored_app">Darmowa Sponsorowana Aplikacja</string>
+    <string name="support">Pomoc</string>
+    <string name="use_btjunkie">Używaj BTJunkie</string>
 </resources>
