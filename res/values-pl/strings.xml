@@ -510,8 +510,7 @@
     <string name="use_kat_summary">KAT jest oparty na magnetach, działa tylko na Wi-Fi</string>
     <string name="error_no_space_left_on_device">Błąd: Brak miejsca na zachowanie pliku</string>
     <string name="my_music">Moja Muzyka</string>
-    <string name="yes_no_cancel_transfer_question_cloud">Czy jesteś pewnien, że chcesz zatrzymać i usunąć ten transfer z listy?</str\
-ing>
+    <string name="yes_no_cancel_transfer_question_cloud">Czy jesteś pewnien, że chcesz zatrzymać i usunąć ten transfer z listy?</string>
     <string name="free_download">Darmowe Ściągnięcie</string>
     <string name="couldnt_share_file">Nie mogłem udostępnic tego pliku. Dziwna ścieżka.</string>
     <string name="http_download_status_save_dir_error">Kartoteka docelowa nie istnieje lub nie może być stworzona.</string>
