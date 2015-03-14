@@ -143,7 +143,9 @@ public class BrowsePeersFragment extends AbstractFragment implements TimerObserv
             @Override
             protected void onPostExecute(Void result) {
                 MainActivity activity = (MainActivity) getActivity();
-                activity.switchFragment(R.id.menu_main_peers);
+                if (activity != null) {
+                    activity.switchFragment(R.id.menu_main_peers);
+                }
             }
         };
 
