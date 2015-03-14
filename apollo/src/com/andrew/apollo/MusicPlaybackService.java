@@ -1474,7 +1474,14 @@ public class MusicPlaybackService extends Service {
         }
         editor.putInt("curpos", mPlayPos);
         if (mPlayer != null && mPlayer.isInitialized()) {
-            editor.putLong("seekpos", mPlayer.position());
+            try {
+                final long pos = mPlayer.position();
+                editor.putLong("seekpos", pos);
+            } catch (Throwable e) {
+                // usually an IllegalStateException coming
+                // from com.andrew.apollo.MusicPlaybackService$MultiPlayer.position
+                // which comes from a native call to MediaPlayer.getCurrentPosition()
+            }
         }
         editor.putInt("repeatmode", mRepeatMode);
         editor.putInt("shufflemode", mShuffleMode);
