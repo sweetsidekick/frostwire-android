@@ -55,10 +55,9 @@ public class SendBitcoinTipAction extends MenuAction {
             try {
                 String bitcoinUriPrefix = "bitcoin:";
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(
-                        (!bitcoinAddress.startsWith(bitcoinUriPrefix) ? bitcoinUriPrefix : "") +
-                        bitcoinAddress +
-                        ((itemName != null) ? "&label=" + itemName : "")));
+                final String uri = (!bitcoinAddress.startsWith(bitcoinUriPrefix) ? bitcoinUriPrefix : "") +
+                        bitcoinAddress;
+                intent.setData(Uri.parse(uri));
                 context.startActivity(intent);
             } catch (Throwable e) {
                 UIUtils.showLongMessage(getContext(), R.string.you_need_a_bitcoin_wallet_app);
