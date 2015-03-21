@@ -18,6 +18,7 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.torrent.PaymentOptions;
 import com.frostwire.transfers.TransferItem;
 
 import java.io.File;
@@ -150,6 +151,16 @@ final class InvalidBittorrentDownload implements BittorrentDownload, InvalidTran
 
     @Override
     public void resume() {
+    }
+
+    @Override
+    public boolean hasPaymentOptions() {
+        return false;
+    }
+
+    @Override
+    public PaymentOptions getPaymentOptions() {
+        return null;
     }
 
     @Override

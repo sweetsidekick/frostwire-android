@@ -18,6 +18,8 @@
 
 package com.frostwire.android.gui.transfers;
 
+import com.frostwire.torrent.PaymentOptions;
+
 import java.util.List;
 
 /**
@@ -44,4 +46,8 @@ public interface BittorrentDownload extends DownloadTransfer {
     public void pause();
 
     public void resume();
+
+    public boolean hasPaymentOptions();
+
+    public PaymentOptions getPaymentOptions();
 }

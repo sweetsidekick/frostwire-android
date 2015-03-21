@@ -10,6 +10,7 @@ import com.frostwire.android.util.SystemUtils;
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.logging.Logger;
+import com.frostwire.torrent.PaymentOptions;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.transfers.TransferState;
 import com.frostwire.util.DirectoryUtils;
@@ -109,6 +110,14 @@ public final class UIBittorrentDownload implements BittorrentDownload {
     @Override
     public boolean isSeeding() {
         return dl.isSeeding();
+    }
+
+    public boolean hasPaymentOptions() {
+        return this.dl.getPaymentOptions() != null;
+    }
+
+    public PaymentOptions getPaymentOptions() {
+        return this.dl.getPaymentOptions();
     }
 
     @Override

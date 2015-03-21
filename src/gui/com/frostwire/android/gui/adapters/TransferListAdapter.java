@@ -22,13 +22,14 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+import com.frostwire.android.gui.adapters.menu.*;
+import com.frostwire.torrent.PaymentOptions;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.transfers.TransferState;
 import org.apache.commons.io.FilenameUtils;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,26 +46,18 @@ import com.frostwire.android.core.ConfigurationManager;
 import com.frostwire.android.core.Constants;
 import com.frostwire.android.core.MediaType;
 import com.frostwire.android.gui.NetworkManager;
-import com.frostwire.android.gui.adapters.menu.BrowsePeerMenuAction;
-import com.frostwire.android.gui.adapters.menu.CancelMenuAction;
-import com.frostwire.android.gui.adapters.menu.OpenMenuAction;
-import com.frostwire.android.gui.adapters.menu.PauseDownloadMenuAction;
-import com.frostwire.android.gui.adapters.menu.ResumeDownloadMenuAction;
 import com.frostwire.android.gui.transfers.BittorrentDownload;
 import com.frostwire.android.gui.transfers.DownloadTransfer;
 import com.frostwire.android.gui.transfers.HttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpDownload;
 import com.frostwire.android.gui.transfers.PeerHttpUpload;
 import com.frostwire.android.gui.transfers.SoundcloudDownload;
-import com.frostwire.android.gui.transfers.TorrentFetcherDownload;
 import com.frostwire.android.gui.transfers.Transfer;
 import com.frostwire.android.gui.transfers.YouTubeDownload;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
 import com.frostwire.android.gui.views.MenuAdapter;
 import com.frostwire.android.gui.views.MenuBuilder;
-import com.frostwire.uxstats.UXAction;
-import com.frostwire.uxstats.UXStats;
 
 /**
  * 
@@ -321,6 +314,17 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
             }
 
             items.add(new CancelMenuAction(context.get(), download, !download.isComplete()));
+
+            if (download.hasPaymentOptions()) {
+                PaymentOptions po = download.getPaymentOptions();
+                if (po.bitcoin != null) {
+                    items.add(new SendBitcoinTipAction(context.get(), po));
+                }
+
+                if (po.paypalUrl != null) {
+                    items.add(new SendFiatTipAction(context.get(), po)) ;
+                }
+            }
         } else if (tag instanceof DownloadTransfer) {
             DownloadTransfer download = (DownloadTransfer) tag;
             title = download.getDisplayName();
@@ -453,6 +457,11 @@ public class TransferListAdapter extends BaseExpandableListAdapter {
 
         buttonAction.setTag(download);
         buttonAction.setOnClickListener(viewOnClickListener);
+
+
+        if (download.hasPaymentOptions()) {
+            //TODO: Display tipping/icon.
+        }
     }
 
     private void populatePeerDownload(View view, PeerHttpDownload download) {
