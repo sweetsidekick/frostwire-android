@@ -28,8 +28,17 @@ import android.telephony.TelephonyManager;
 import com.frostwire.android.core.CoreRuntimeException;
 import com.frostwire.android.core.player.CoreMediaPlayer;
 import com.frostwire.android.gui.services.EngineService.EngineServiceBinder;
+import com.frostwire.jlibtorrent.Sha1Hash;
+import com.frostwire.logging.Logger;
+import com.frostwire.util.ByteUtils;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -38,10 +47,13 @@ import java.util.concurrent.ExecutorService;
  *
  */
 public final class Engine implements IEngineService {
-
+    private static final Logger LOG = Logger.getLogger(Engine.class);
     private EngineService service;
     private ServiceConnection connection;
     private EngineBroadcastReceiver receiver;
+    private Map<String,byte[]> notifiedDownloads;
+    private final Object notifiedDatWriteLock;
+    private final File notifiedDat;
 
     private static Engine instance;
 
@@ -60,7 +72,49 @@ public final class Engine implements IEngineService {
     }
 
     private Engine(Application context) {
+        notifiedDatWriteLock = new Object();
+        this.notifiedDat = new File(context.getFilesDir(),"notified.dat");
+        loadNotifiedDownloads();
         startEngineService(context);
+    }
+
+    /**
+     * loads a dictionary of infohashes that have been already
+     * notified from notified.dat. This binary file packs together
+     * infohashes 20 bytes at the time.
+     *
+     * this method goes through the file, 20 bytes at the time and populates
+     * a HashMap we can use to query wether or not we should notify the user
+     * in constant time.
+     *
+     * When we have a new infohash, the file conveniently grows by appending the
+     * new 20 bytes of the new hash.
+     */
+    private void loadNotifiedDownloads() {
+        notifiedDownloads = new HashMap<String, byte[]>();
+
+        if (!notifiedDat.exists()) {
+            try {
+                notifiedDat.createNewFile();
+            } catch (Throwable e) {
+                e.printStackTrace();
+                LOG.error("Could not create notified.dat",e);
+            }
+        } else {
+            try {
+                FileInputStream fis = new FileInputStream(notifiedDat);
+                while (fis.available() > 0) {
+                    //each entry on the file is a fixed sha1 hash.
+                    byte[] buffer = new byte[20];
+                    fis.read(buffer,0,20);
+                    notifiedDownloads.put(ByteUtils.encodeHex(buffer).toLowerCase(),buffer);
+                }
+
+                IOUtils.closeQuietly(fis);
+            } catch (Throwable e) {
+                LOG.error("Error reading notified.dat", e);
+            }
+        }
     }
 
     @Override
@@ -108,10 +162,60 @@ public final class Engine implements IEngineService {
         return EngineService.threadPool;
     }
 
-    public void notifyDownloadFinished(String displayName, File file) {
+    public void notifyDownloadFinished(String displayName, File file, String optionalInfoHash) {
         if (service != null) {
+            if (optionalInfoHash != null && !optionalInfoHash.equals("0000000000000000000000000000000000000000")) {
+                if (!updateNotifiedTorrentDownloads(optionalInfoHash)) {
+                    // did not update, we already knew about it. skip notification.
+                    return;
+                }
+            }
             service.notifyDownloadFinished(displayName, file);
         }
+    }
+
+    private boolean updateNotifiedTorrentDownloads(String optionalInfoHash) {
+        boolean result = false;
+        optionalInfoHash = optionalInfoHash.toLowerCase();
+        if (notifiedDownloads.containsKey(optionalInfoHash)) {
+            LOG.info("Skipping notification on " + optionalInfoHash);
+        } else {
+            result = appendNewNotifiedInfoHash(optionalInfoHash);
+        }
+        return result;
+    }
+
+    private boolean appendNewNotifiedInfoHash(String infoHash) {
+        boolean result = false;
+        if (notifiedDownloads != null && infoHash != null && infoHash.length() == 40) {
+            byte[] infoHashBytes = ByteUtils.decodeHex(infoHash);
+
+            synchronized (notifiedDatWriteLock) {
+                try {
+                    // Another partial download might have just finished writing
+                    // this info hash while I was waiting for the file lock.
+                    if (!notifiedDownloads.containsKey(infoHash)) {
+                        RandomAccessFile raf = new RandomAccessFile(notifiedDat, "rw");
+                        raf.seek(notifiedDat.length());
+                        raf.write(infoHashBytes, 0, 20);
+                        raf.close();
+
+                        // only if we can write to disk, we'll update the map.
+                        notifiedDownloads.put(infoHash, infoHashBytes);
+                        result = true;
+                    }
+                } catch (Throwable e) {
+                    LOG.error("Could not append infohash to notified.dat", e);
+                    result = false;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public void notifyDownloadFinished(String displayName, File file) {
+        notifyDownloadFinished(displayName, file, null);
     }
 
     @Override

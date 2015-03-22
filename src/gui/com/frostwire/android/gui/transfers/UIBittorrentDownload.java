@@ -238,7 +238,7 @@ public final class UIBittorrentDownload implements BittorrentDownload {
             pauseSeedingIfNecessary(dl);
             TransferManager.instance().incrementDownloadsToReview();
             File saveLocation = getSavePath().getAbsoluteFile();
-            Engine.instance().notifyDownloadFinished(getDisplayName(), saveLocation);
+            Engine.instance().notifyDownloadFinished(getDisplayName(), saveLocation, dl.getInfoHash());
             Librarian.instance().scan(saveLocation);
         }
 
