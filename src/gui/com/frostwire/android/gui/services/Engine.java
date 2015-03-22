@@ -71,7 +71,7 @@ public final class Engine implements IEngineService {
     }
 
     private Engine(Application context) {
-        notifiedDat = new File(context.getFilesDir(),"notified.dat");
+        notifiedDat = new File(context.getExternalFilesDir(null),"notified.dat");
         loadNotifiedDownloads();
         startEngineService(context);
     }
