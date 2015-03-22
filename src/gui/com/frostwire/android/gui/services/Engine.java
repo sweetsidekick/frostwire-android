@@ -52,7 +52,6 @@ public final class Engine implements IEngineService {
     private ServiceConnection connection;
     private EngineBroadcastReceiver receiver;
     private Map<String,byte[]> notifiedDownloads;
-    private final Object notifiedDatWriteLock;
     private final File notifiedDat;
 
     private static Engine instance;
@@ -72,8 +71,7 @@ public final class Engine implements IEngineService {
     }
 
     private Engine(Application context) {
-        notifiedDatWriteLock = new Object();
-        this.notifiedDat = new File(context.getFilesDir(),"notified.dat");
+        notifiedDat = new File(context.getFilesDir(),"notified.dat");
         loadNotifiedDownloads();
         startEngineService(context);
     }
@@ -190,7 +188,7 @@ public final class Engine implements IEngineService {
         if (notifiedDownloads != null && infoHash != null && infoHash.length() == 40) {
             byte[] infoHashBytes = ByteUtils.decodeHex(infoHash);
 
-            synchronized (notifiedDatWriteLock) {
+            synchronized (notifiedDat) {
                 try {
                     // Another partial download might have just finished writing
                     // this info hash while I was waiting for the file lock.
