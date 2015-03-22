@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 import com.frostwire.android.gui.adapters.menu.*;
-import com.frostwire.torrent.PaymentOptions;
+import com.frostwire.bittorrent.PaymentOptions;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.transfers.TransferState;
 import org.apache.commons.io.FilenameUtils;

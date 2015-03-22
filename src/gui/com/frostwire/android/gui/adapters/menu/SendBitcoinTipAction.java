@@ -24,7 +24,7 @@ import android.net.Uri;
 import com.frostwire.android.R;
 import com.frostwire.android.gui.util.UIUtils;
 import com.frostwire.android.gui.views.MenuAction;
-import com.frostwire.torrent.PaymentOptions;
+import com.frostwire.bittorrent.PaymentOptions;
 import com.frostwire.util.Ref;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
