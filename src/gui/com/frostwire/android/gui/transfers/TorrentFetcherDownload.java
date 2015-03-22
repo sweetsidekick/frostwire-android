@@ -22,7 +22,7 @@ import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.jlibtorrent.FileStorage;
 import com.frostwire.jlibtorrent.TorrentInfo;
 import com.frostwire.logging.Logger;
-import com.frostwire.torrent.PaymentOptions;
+import com.frostwire.bittorrent.PaymentOptions;
 import com.frostwire.transfers.TransferItem;
 import com.frostwire.transfers.TransferState;
 import com.frostwire.util.HttpClientFactory;
